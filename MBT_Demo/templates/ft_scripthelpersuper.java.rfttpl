@@ -1,0 +1,14 @@
+%helpersuperclass:packageDeclaration%
+
+import com.rational.test.ft.script.RationalTestScript;
+
+/**
+ * Description   : Super class for script helper
+ * 
+ * @author %system:user.name%
+ * @since  %date:MMMM dd, yyyy%
+ */
+public abstract class %helpersuperclass:name% extends RationalTestScript
+{
+	//TODO Insert shared functionality here
+}

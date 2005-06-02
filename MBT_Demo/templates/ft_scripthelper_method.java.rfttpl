@@ -1,0 +1,19 @@
+	/**
+	 * %map:description% with default state.
+	 *		%map:properties%
+	 */
+	protected %helper:testObjectInterfaceName% %helper:methodName%() 
+	{
+		return new %helper:testObjectInterfaceName%(
+                        getMappedTestObject("%helper:methodName%"));
+	}
+	/**
+	 * %map:description% with specific test context and state.
+	 *		%map:properties%
+	 */
+	protected %helper:testObjectInterfaceName% %helper:methodName%(TestObject anchor, long flags) 
+	{
+		return new %helper:testObjectInterfaceName%(
+                        getMappedTestObject("%helper:methodName%"), anchor, flags);
+	}
+	
