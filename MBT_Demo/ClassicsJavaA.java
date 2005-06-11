@@ -1,3 +1,19 @@
+//This file is part of the Model-based Testing java package
+//Copyright (C) 2005  Kristian Karl
+//
+//This program is free software; you can redistribute it and/or
+//modify it under the terms of the GNU General Public License
+//as published by the Free Software Foundation; either version 2
+//of the License, or (at your option) any later version.
+//
+//This program is distributed in the hope that it will be useful,
+//but WITHOUT ANY WARRANTY; without even the implied warranty of
+//MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//GNU General Public License for more details.
+//
+//You should have received a copy of the GNU General Public License
+//along with this program; if not, write to the Free Software
+//Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 
 import resources.ClassicsJavaAHelper;
@@ -17,20 +33,11 @@ public class ClassicsJavaA extends ClassicsJavaAHelper
 	private static Logger  _logger = Logger.getLogger( ClassicsJavaA.class );
 	private static Random  _radomGenerator = new Random();
 
-	private static String _dataPath = new String( "C:/dev/ft/Model-Based Testing/Functional Tester/MBT_Demo/data/" );
-	private static String _yEdPath  = new String( "C:/dev/ft/Model-Based Testing/Functional Tester/MBT_Demo/yEd/" );
+	private static String _dataPath = new String( "C:/Documents and Settings/Kristian Karl/Mina dokument/tigris/MBT_Demo/data/" );
+	private static String _yEdPath  = new String( "C:/Documents and Settings/Kristian Karl/Mina dokument/tigris/MBT_Demo/yEd/" );
 
 	private ModelBasedTesting _mbt;
 
-	/**
-	 * Script Name   : <b>ClassicsJavaA</b>
-	 * Generated     : <b>2004-nov-30 10:54:19</b>
-	 * Description   : XDE Tester Script
-	 * Original Host : WinNT Version 4.0  Build 1381 (Service Pack 6)
-	 *
-	 * @since  2004/11/30
-	 * @author krikar
-	 */
 	public void testMain (Object[] args)
 	{
 		BasicConfigurator.configure();

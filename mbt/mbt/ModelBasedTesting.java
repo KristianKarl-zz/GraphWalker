@@ -100,7 +100,7 @@ public class ModelBasedTesting
 
 		runningTime *= 1000;
 
-		// Starta körningen. Körningen är slumpvis genomgång av graf-datat.
+		// Start the run. The run is a ranomized walk through the graph.
 		while ( ( currentTime - startTime ) < runningTime )
 		{
 			executeMethod( false );
