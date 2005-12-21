@@ -22,4 +22,5 @@ package mbt;
  */
 public class GoBackToPreviousVertexException extends Exception
 {
+	private static final long serialVersionUID = -2597269122921601356L;
 }

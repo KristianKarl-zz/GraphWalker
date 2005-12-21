@@ -17,39 +17,65 @@
 
 package mbt;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.FilenameFilter;
+import java.io.IOException;
 import java.lang.reflect.Method;
-import java.util.*;
-import java.io.*;
-import org.apache.log4j.*;
-import org.jdom.JDOMException;
-import org.jdom.input.SAXBuilder;
-import org.jdom.Document;
-import org.jdom.filter.*;
-import org.jdom.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Random;
+import java.util.Set;
+import java.util.Vector;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import java.util.regex.*;
-import edu.uci.ics.jung.graph.impl.*;
-import edu.uci.ics.jung.utils.*;
+import org.apache.log4j.Logger;
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.JDOMException;
+import org.jdom.filter.ElementFilter;
+import org.jdom.input.SAXBuilder;
+
+import edu.uci.ics.jung.algorithms.shortestpath.DijkstraShortestPath;
+import edu.uci.ics.jung.graph.Edge;
+import edu.uci.ics.jung.graph.Vertex;
+import edu.uci.ics.jung.graph.decorators.Indexer;
+import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
+import edu.uci.ics.jung.graph.impl.DirectedSparseVertex;
+import edu.uci.ics.jung.graph.impl.SparseGraph;
+import edu.uci.ics.jung.io.GraphMLFile;
+import edu.uci.ics.jung.utils.Pair;
+import edu.uci.ics.jung.utils.UserData;
 
 /**
  * @author Kristian Karl
  */
 public class ModelBasedTesting
 {
-	private static SparseGraph _graph          = new SparseGraph();
-	private static SAXBuilder  _parser         = new SAXBuilder();
-	private static Random      _radomGenerator = new Random();
 
-	private static String  START_NODE           = "Start";
-	private static String  ID_KEY               = "id";
-	private static String  LABEL_KEY            = "label";
-	private static String  VISITED_KEY          = "visited";
-	private static String  WEIGHT_KEY           = "weight";
-	private static String  STATE_KEY            = "state";
-	private static String  CONDITION_KEY        = "condition";
-	private static String  VARIABLE_KEY         = "variable";
-	private static String  BACK_KEY             = "back";
-	private static String  NO_HISTORY	        = "no history";
+	private SparseGraph _graph          = new SparseGraph();
+	private SAXBuilder  _parser         = new SAXBuilder();
+	private Random      _radomGenerator = new Random();
+
+	private String  START_NODE           = "Start";
+	private String  ID_KEY               = "id";
+	private String  FILE_KEY             = "file";
+	private String  LABEL_KEY            = "label";
+	private String  VISITED_KEY          = "visited";
+	private String  WEIGHT_KEY           = "weight";
+	private String  STATE_KEY            = "state";
+	private String  CONDITION_KEY        = "condition";
+	private String  VARIABLE_KEY         = "variable";
+	private String  BACK_KEY             = "back";
+	private String  NO_HISTORY	         = "no history";
+	private String  NO_MERGE	         = "no merge";
 
 	private Document 			 _doc;
 	private String   			 _graphmlFileName;
@@ -63,6 +89,8 @@ public class ModelBasedTesting
 	private LinkedList 			 _history      = new LinkedList();
 	private long				 _start_time;
 	private long				 _end_time;
+	private boolean				 _runUntilAllEdgesVisited = false;
+	private List				 _shortestPathToVertex = null;
 
 	public ModelBasedTesting( String graphmlFileName_,
 							  Object object_,
@@ -72,7 +100,7 @@ public class ModelBasedTesting
 		_object          = object_;
 		_logger          = logger_;
 
-		parseFile();
+		readFiles();
 	}
 
 	public ModelBasedTesting( String graphmlFileName_,
@@ -82,14 +110,136 @@ public class ModelBasedTesting
 		_object          = null;
 		_logger          = logger_;
 
-		parseFile();
+		readFiles();
+	}
+
+	public ModelBasedTesting( String graphmlFileName_,
+			  Object object_ )
+	{
+		_graphmlFileName = graphmlFileName_;
+		_object          = object_;
+		_logger          = null;
+		
+		readFiles();
+	}
+
+	public void writeGraph( String mergedGraphml_ )
+	{
+		StringBuffer sourceFile = new StringBuffer();
+		try {
+			FileWriter file = new FileWriter( mergedGraphml_ );
+			
+			sourceFile.append( "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" );
+			sourceFile.append( "<graphml xmlns=\"http://graphml.graphdrawing.org/xmlns/graphml\"  xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://graphml.graphdrawing.org/xmlns/graphml http://www.yworks.com/xml/schema/graphml/1.0/ygraphml.xsd\" xmlns:y=\"http://www.yworks.com/xml/graphml\">\n" );
+			sourceFile.append( "  <key id=\"d0\" for=\"node\" yfiles.type=\"nodegraphics\"/>\n" );
+			sourceFile.append( "  <key id=\"d1\" for=\"edge\" yfiles.type=\"edgegraphics\"/>\n" );
+			sourceFile.append( "  <graph id=\"G\" edgedefault=\"directed\">\n" );
+
+	        int numVertices = _graph.getVertices().size();
+	        Indexer id = Indexer.getIndexer( _graph );
+	        for ( int i = 0; i < numVertices; i++ )
+	        {
+	            Vertex v = (Vertex) id.getVertex(i);
+	            int vId = i+1;
+
+				sourceFile.append( "    <node id=\"n" + vId + "\">\n" );
+				sourceFile.append( "      <data key=\"d0\" >\n" );
+				sourceFile.append( "        <y:ShapeNode >\n" );
+				sourceFile.append( "          <y:Geometry  x=\"241.875\" y=\"158.701171875\" width=\"95.0\" height=\"30.0\"/>\n" );
+				sourceFile.append( "          <y:Fill color=\"#CCCCFF\"  transparent=\"false\"/>\n" );
+				sourceFile.append( "          <y:BorderStyle type=\"line\" width=\"1.0\" color=\"#000000\" />\n" );
+				sourceFile.append( "          <y:NodeLabel x=\"1.5\" y=\"5.6494140625\" width=\"92.0\" height=\"18.701171875\" visible=\"true\" alignment=\"center\" fontFamily=\"Dialog\" fontSize=\"12\" fontStyle=\"plain\" textColor=\"#000000\" modelName=\"internal\" modelPosition=\"c\" autoSizePolicy=\"content\">" + v.getUserDatum( LABEL_KEY ) + "</y:NodeLabel>\n" );
+				sourceFile.append( "          <y:Shape type=\"rectangle\"/>\n" );
+				sourceFile.append( "        </y:ShapeNode>\n" );
+				sourceFile.append( "      </data>\n" );
+				sourceFile.append( "    </node>\n" );
+			}
+
+	        for ( Iterator edgeIterator = _graph.getEdges().iterator(); edgeIterator.hasNext(); ) 
+	        {
+	            Edge e = (Edge) edgeIterator.next();
+	            Pair p = e.getEndpoints();
+	            Vertex src = (Vertex) p.getFirst();
+	            Vertex dest = (Vertex) p.getSecond();
+	            int srcId = id.getIndex(src)+1;
+	            int destId = id.getIndex(dest)+1;
+	            
+	            sourceFile.append( "    <edge source=\"n" + srcId + "\" target=\"n" + destId + "\">\n" );
+	            sourceFile.append( "      <data key=\"d1\" >\n" );
+	            sourceFile.append( "        <y:PolyLineEdge >\n" );
+	            sourceFile.append( "          <y:Path sx=\"-23.75\" sy=\"15.0\" tx=\"-23.75\" ty=\"-15.0\">\n" );
+	            sourceFile.append( "            <y:Point x=\"273.3125\" y=\"95.0\"/>\n" );
+	            sourceFile.append( "            <y:Point x=\"209.5625\" y=\"95.0\"/>\n" );
+	            sourceFile.append( "            <y:Point x=\"209.5625\" y=\"143.701171875\"/>\n" );
+	            sourceFile.append( "            <y:Point x=\"265.625\" y=\"143.701171875\"/>\n" );
+	            sourceFile.append( "          </y:Path>\n" );
+	            sourceFile.append( "          <y:LineStyle type=\"line\" width=\"1.0\" color=\"#000000\" />\n" );
+	            sourceFile.append( "          <y:Arrows source=\"none\" target=\"standard\"/>\n" );
+	            sourceFile.append( "          <y:EdgeLabel x=\"-148.25\" y=\"30.000000000000014\" width=\"169.0\" height=\"18.701171875\" visible=\"true\" alignment=\"center\" fontFamily=\"Dialog\" fontSize=\"12\" fontStyle=\"plain\" textColor=\"#000000\" modelName=\"free\" modelPosition=\"anywhere\" preferredPlacement=\"on_edge\" distance=\"2.0\" ratio=\"0.5\">" + e.getUserDatum( LABEL_KEY ) + "</y:EdgeLabel>\n" );
+	            sourceFile.append( "          <y:BendStyle smoothed=\"false\"/>\n" );
+	            sourceFile.append( "        </y:PolyLineEdge>\n" );
+	            sourceFile.append( "      </data>\n" );
+	            sourceFile.append( "    </edge>\n" );
+	            
+	        }
+	        
+	        sourceFile.append( "  </graph>\n" );
+	        sourceFile.append( "</graphml>\n" );
+	        
+			file.write( sourceFile.toString() );
+			file.flush();
+		} 
+		catch (IOException e) 
+		{
+			e.printStackTrace();
+		}
+	}
+
+	private void readFiles()
+	{
+		File file = new File( _graphmlFileName );
+		if ( file.isFile() )
+		{
+			parseFile( _graphmlFileName );
+		}
+		else if ( file.isDirectory() )
+		{
+		    // Only accpets files which suffix is .graphml
+		    FilenameFilter filter = new FilenameFilter()
+		    {
+		        public boolean accept( File dir, String name )
+		        {
+		            return name.endsWith( ".graphml" );
+		        }
+		    };
+
+
+		    File [] allChildren = file.listFiles( filter );
+		    for ( int i = 0; i < allChildren.length; ++i )
+		    {
+		    	parseFile( allChildren[ i ].getAbsolutePath() );
+		    }
+
+		    mergeVertices();
+
+		    /*Layout l = new FRLayout( _graph );
+		    Renderer r = new PluggableRenderer();
+		    VisualizationViewer vv = new VisualizationViewer( l, r );
+		    JFrame jf = new JFrame();
+		    jf.getContentPane().add( vv );
+		    jf.show();*/
+		}
+		else
+		{
+			throw new RuntimeException( "\"" + _graphmlFileName + "\" is not a file or a directory. Please specify a valid .graphml file or a directory containing .graphml files" );
+		}
 	}
 
 	/**
 	 * @param runningTime
 	 * The time, in seconds, to run this test.
 	 */
-	public void runRandomWalk( long runningTime )
+	public void runRandomWalk( long runningTime ) throws FoundNoEdgeException
 	{
 		findStartingVertex();
 
@@ -100,7 +250,7 @@ public class ModelBasedTesting
 
 		runningTime *= 1000;
 
-		// Start the run. The run is a ranomized walk through the graph.
+		// Start the execution which is random.
 		while ( ( currentTime - startTime ) < runningTime )
 		{
 			executeMethod( false );
@@ -113,7 +263,7 @@ public class ModelBasedTesting
 	/**
 	 * Run the test untill all vertices (nodes) are visited.
 	 */
-	public void runUntilAllVerticesVisited()
+	public void runUntilAllVerticesVisited() throws FoundNoEdgeException
 	{
 		findStartingVertex();
 
@@ -133,8 +283,10 @@ public class ModelBasedTesting
 	/**
 	 * Run the test untill all edges (arrows, or transistions) are visited.
 	 */
-	public void runUntilAllEdgesVisited()
+	public void runUntilAllEdgesVisited() throws FoundNoEdgeException
 	{
+		_runUntilAllEdgesVisited = true;
+
 		findStartingVertex();
 
 		_start_time = System.currentTimeMillis();
@@ -154,7 +306,7 @@ public class ModelBasedTesting
 	 * Run the test untill all edges (arrows, or transistions), and
 	 * all vertices (nodes) are visited
 	 */
-	public void runUntilAllVerticesAndEdgesVisited()
+	public void runUntilAllVerticesAndEdgesVisited() throws FoundNoEdgeException
 	{
 		findStartingVertex();
 
@@ -168,16 +320,6 @@ public class ModelBasedTesting
 				break;
 			}
 		}
-	}
-
-
-	private void goBackToPreviousVertex()
-	{
-		if ( _prevVertex == null  )
-		{
-			throw new RuntimeException( "goBackToPreviousVertex(): _prevVertex is null" );
-		}
-		_nextVertex = _prevVertex;
 	}
 
 
@@ -226,12 +368,12 @@ public class ModelBasedTesting
 	/**
 	 * Parses the graphml file, and load into the internal graph structure _graph
 	 */
-	private void parseFile()
+	private void parseFile( String fileName )
 	{
 		try
 		{
-			_logger.info( "Parsing file: " + _graphmlFileName );
-			_doc = _parser.build( _graphmlFileName );
+			_logger.info( "Parsing file: " + fileName );
+			_doc = _parser.build( fileName );
 
 			// Parse all vertices (nodes)
 			Iterator iter = _doc.getDescendants( new ElementFilter( "node" ) );
@@ -262,6 +404,7 @@ public class ModelBasedTesting
 
 							v.addUserDatum( ID_KEY, 	 element.getAttributeValue( "id" ), UserData.SHARED );
 							v.addUserDatum( VISITED_KEY, new Integer( 0 ), 					UserData.SHARED );
+							v.addUserDatum( FILE_KEY, 	 fileName, 							UserData.SHARED );
 
 							String str = nodeLabel.getTextTrim();
 							Pattern p = Pattern.compile( "(.*)", Pattern.MULTILINE );
@@ -279,6 +422,21 @@ public class ModelBasedTesting
 							_logger.debug( "Added node: " + v.getUserDatum( LABEL_KEY ) );
 
 
+
+
+
+							// If no merge is defined, find it...
+							// If defined, it means that when merging graphs, this specific vertex will not be merged.
+							p = Pattern.compile( "(no merge)", Pattern.MULTILINE );
+							m = p.matcher( str );
+							if ( m.find() )
+							{
+								v.addUserDatum( NO_MERGE, m.group( 1 ), UserData.SHARED );
+								_logger.debug( "Found no merge for edge: " + label );
+							}
+
+							
+							
 							// NOTE: Only for html applications
 							// In browsers, the usage of the 'Back'-button can be used.
 							// If defined, with a value value, which depicts the probability for the edge
@@ -318,157 +476,166 @@ public class ModelBasedTesting
 					_logger.debug( "id: " + element.getAttributeValue( "id" ) );
 
 					Iterator iter2 = element.getDescendants( new ElementFilter( "EdgeLabel" ) );
-					while ( iter2.hasNext() )
+					Element edgeLabel = null;
+					if ( iter2.hasNext() )
 					{
 						Object o2 = iter2.next();
 						if ( o2 instanceof Element )
 						{
-							Element edgeLabel = (Element)o2;
+							edgeLabel = (Element)o2;
 							_logger.debug( "Full name: " + edgeLabel.getQualifiedName() );
 							_logger.debug( "Name: " + edgeLabel.getTextTrim() );
-							_logger.debug( "source: " + element.getAttributeValue( "source" ) );
-							_logger.debug( "target: " + element.getAttributeValue( "target" ) );
+						}
+					}
+					_logger.debug( "source: " + element.getAttributeValue( "source" ) );
+					_logger.debug( "target: " + element.getAttributeValue( "target" ) );
 
-							DirectedSparseVertex source = null;
-							DirectedSparseVertex dest = null;
+					DirectedSparseVertex source = null;
+					DirectedSparseVertex dest = null;
 
-							for ( int i = 0; i < vertices.length; i++ )
+					for ( int i = 0; i < vertices.length; i++ )
+					{
+						DirectedSparseVertex vertex = (DirectedSparseVertex)vertices[ i ];
+
+						// Find source vertex
+						if ( vertex.getUserDatum( ID_KEY ).equals( element.getAttributeValue( "source" ) ) &&
+							 vertex.getUserDatum( FILE_KEY ).equals( fileName ) )
+						{
+							source = vertex;
+						}
+						if ( vertex.getUserDatum( ID_KEY ).equals( element.getAttributeValue( "target" ) ) &&
+							 vertex.getUserDatum( FILE_KEY ).equals( fileName ) )
+						{
+							dest = vertex;
+						}
+					}
+					if ( source == null )
+					{
+						String msg = "Could not find starting node for edge. Name: " + element.getAttributeValue( "source" );
+						_logger.error( msg );
+						throw new RuntimeException( msg );
+					}
+					if ( dest == null )
+					{
+						String msg = "Could not find end node for edge. Name: " + element.getAttributeValue( "target" );
+						_logger.error( msg );
+						throw new RuntimeException( msg );
+					}
+
+
+					DirectedSparseEdge e = new DirectedSparseEdge( source, dest );
+					_graph.addEdge( e );
+					e.addUserDatum( ID_KEY,   element.getAttributeValue( "id" ), UserData.SHARED );
+					e.addUserDatum( FILE_KEY, fileName, 						 UserData.SHARED );
+
+
+					if ( edgeLabel != null )
+					{
+						String str = edgeLabel.getTextTrim();
+						Pattern p = Pattern.compile( "(.*)", Pattern.MULTILINE );
+						Matcher m = p.matcher( str );
+						String label = null;
+						if ( m.find() )
+						{
+							label = m.group( 1 );
+							e.addUserDatum( LABEL_KEY, label, UserData.SHARED );
+							_logger.debug( "Found label= " + label + " for edge id: " + edgeLabel.getQualifiedName() );
+						}
+						else
+						{
+							throw new RuntimeException( "Label for edge must be defined." );
+						}
+
+
+
+						// If weight is defined, find it...
+						// weight must be associated with a value, which depicts the probability for the edge
+						// to be executed.
+						// A value of 0.05 is the same as 5% chance of going down this road.
+						p = Pattern.compile( "(weight=(.*))", Pattern.MULTILINE );
+						m = p.matcher( str );
+						if ( m.find() )
+						{
+							Float weight;
+							String value = m.group( 2 );
+							try
 							{
-								DirectedSparseVertex vertex = (DirectedSparseVertex)vertices[ i ];
-
-								// Find source vertex
-								if ( vertex.getUserDatum( ID_KEY ).equals( element.getAttributeValue( "source" ) ) )
-								{
-									source = vertex;
-								}
-								if ( vertex.getUserDatum( ID_KEY ).equals( element.getAttributeValue( "target" ) ) )
-								{
-									dest = vertex;
-								}
+								weight = Float.valueOf( value.trim() );
+								_logger.debug( "Found weight= " + weight + " for edge: " + label );
 							}
-							if ( source == null )
+							catch ( NumberFormatException error )
 							{
-								String msg = "Could not find starting node for edge. Name: " + element.getAttributeValue( "source" );
-								_logger.error( msg );
-								throw new RuntimeException( msg );
+								throw new RuntimeException( "For label: " + label + ", weight is not a correct float value: " + error.toString() );
 							}
-							if ( dest == null )
+							e.addUserDatum( WEIGHT_KEY, weight, UserData.SHARED );
+						}
+
+
+
+						// If No_history is defined, find it...
+						// If defined, it means that when executing this edge, it shall not
+						// be added to the history list of passed edgses.
+						p = Pattern.compile( "(No_history)", Pattern.MULTILINE );
+						m = p.matcher( str );
+						if ( m.find() )
+						{
+							e.addUserDatum( NO_HISTORY, m.group( 1 ), UserData.SHARED );
+							_logger.debug( "Found No_history for edge: " + label );
+						}
+
+
+
+						// If condition used defined, find it...
+						p = Pattern.compile( "(if: (.*)=(.*))", Pattern.MULTILINE );
+						m = p.matcher( str );
+						HashMap conditions = null;
+						while ( m.find( ) )
+						{
+							if ( conditions == null )
 							{
-								String msg = "Could not find end node for edge. Name: " + element.getAttributeValue( "target" );
-								_logger.error( msg );
-								throw new RuntimeException( msg );
+								conditions = new HashMap();
 							}
+							String variable = m.group( 2 );
+							Boolean state   = Boolean.valueOf( m.group( 3 ) );
+							conditions.put( variable, state );
+							_logger.debug( "Condition: " + variable + " = " +  state );
+						}
+						if ( conditions != null )
+						{
+							e.addUserDatum( CONDITION_KEY, conditions, UserData.SHARED );
+						}
 
-							String str = edgeLabel.getTextTrim();
 
-							DirectedSparseEdge e = new DirectedSparseEdge( source, dest );
-							_graph.addEdge( e );
-							e.addUserDatum( ID_KEY, element.getAttributeValue( "id" ), UserData.SHARED );
 
-							Pattern p = Pattern.compile( "(.*)", Pattern.MULTILINE );
-							Matcher m = p.matcher( str );
-							String label;
-							if ( m.find() )
+						// If state are defined, find them...
+						HashMap states = null;
+						p = Pattern.compile( "(state: (.*)=(.*))", Pattern.MULTILINE );
+						m = p.matcher( str );
+						while ( m.find( ) )
+						{
+							if ( states == null )
 							{
-								label = m.group( 1 );
-								e.addUserDatum( LABEL_KEY, label, UserData.SHARED );
-								_logger.debug( "Found label= " + label + " for edge id: " + edgeLabel.getQualifiedName() );
+								states = new HashMap();
 							}
-							else
-							{
-								throw new RuntimeException( "Label must be defined." );
-							}
+							String variable = m.group( 2 );
+							Boolean state   = Boolean.valueOf( m.group( 3 ) );
+							states.put( variable, state );
+							_logger.debug( "State: " + variable + " = " +  state );
+						}
+						if ( states != null )
+						{
+							e.addUserDatum( STATE_KEY, states, UserData.SHARED );
+						}
 
 
 
-							// If weight is defined, find it...
-							// weight must be associated with a value, which depicts the probability for the edge
-							// to be executed.
-							// A value of 0.05 is the same as 5% chance of going down this road.
-							p = Pattern.compile( "(weight=(.*))", Pattern.MULTILINE );
-							m = p.matcher( str );
-							if ( m.find() )
-							{
-								Float weight;
-								String value = m.group( 2 );
-								try
-								{
-									weight = Float.valueOf( value.trim() );
-									_logger.debug( "Found weight= " + weight + " for edge: " + label );
-								}
-								catch ( NumberFormatException error )
-								{
-									throw new RuntimeException( "For label: " + label + ", weight is not a correct float value: " + error.toString() );
-								}
-								e.addUserDatum( WEIGHT_KEY, weight, UserData.SHARED );
-							}
-
-
-
-							// If No_history is defined, find it...
-							// If defined, it means that when executing this edge, it shall not
-							// be added to the history list of passed edgses.
-							p = Pattern.compile( "(No_history)", Pattern.MULTILINE );
-							m = p.matcher( str );
-							if ( m.find() )
-							{
-								e.addUserDatum( NO_HISTORY, m.group( 1 ), UserData.SHARED );
-								_logger.debug( "Found No_history for edge: " + label );
-							}
-
-
-
-							// If condition used defined, find it...
-							p = Pattern.compile( "(if: (.*)=(.*))", Pattern.MULTILINE );
-							m = p.matcher( str );
-							HashMap conditions = null;
-							while ( m.find( ) )
-							{
-								if ( conditions == null )
-								{
-									conditions = new HashMap();
-								}
-								String variable = m.group( 2 );
-								Boolean state   = Boolean.valueOf( m.group( 3 ) );
-								conditions.put( variable, state );
-								_logger.debug( "Condition: " + variable + " = " +  state );
-							}
-							if ( conditions != null )
-							{
-								e.addUserDatum( CONDITION_KEY, conditions, UserData.SHARED );
-							}
-
-
-
-							// If state are defined, find them...
-							HashMap states = null;
-							p = Pattern.compile( "(state: (.*)=(.*))", Pattern.MULTILINE );
-							m = p.matcher( str );
-							while ( m.find( ) )
-							{
-								if ( states == null )
-								{
-									states = new HashMap();
-								}
-								String variable = m.group( 2 );
-								Boolean state   = Boolean.valueOf( m.group( 3 ) );
-								states.put( variable, state );
-								_logger.debug( "State: " + variable + " = " +  state );
-							}
-							if ( states != null )
-							{
-								e.addUserDatum( STATE_KEY, states, UserData.SHARED );
-							}
-
-
-
-							// If string variables are defined, find them...
-							HashMap variables = null;
-							p = Pattern.compile( "(string: (.*)=(.*))", Pattern.MULTILINE );
-							m = p.matcher( str );
-							while ( m.find( ) )
-							{
-								if ( variables == null )
+						// If string variables are defined, find them...
+						HashMap variables = null;
+						p = Pattern.compile( "(string: (.*)=(.*))", Pattern.MULTILINE );
+						m = p.matcher( str );
+						while ( m.find( ) )
+						{
+							if ( variables == null )
 								{
 									variables = new HashMap();
 								}
@@ -516,30 +683,235 @@ public class ModelBasedTesting
 								e.addUserDatum( VARIABLE_KEY, variables, UserData.SHARED );
 							}
 
+						}
+						e.addUserDatum( VISITED_KEY, new Integer( 0 ), UserData.SHARED );
+						_logger.debug( "Adderade edge: \"" + e.getUserDatum( LABEL_KEY ) + "\"" );
+					}
+				}
+		}
+		catch ( JDOMException e )
+		{
+			_logger.error( e );
+			throw new RuntimeException( "Kunde inte skanna filen: " + fileName );
+		}
+		catch ( IOException e )
+		{
+			e.printStackTrace();
+			throw new RuntimeException( "Kunde inte skanna filen: " + fileName );
+		}
+	}
 
-							e.addUserDatum( VISITED_KEY, new Integer( 0 ), UserData.SHARED );
-							_logger.debug( "Adderade edge: " + e.getUserDatum( LABEL_KEY ) );
+
+	// When multiple graps are read from several files, cgances are that there are vertices that has
+	// no out edges, which are continued in a different file. These has to be merged.
+	private void mergeVertices()
+	{
+		Vector startnodes = new Vector();
+		Object[] vertices = _graph.getVertices().toArray();
+		for ( int i = 0; i < vertices.length; i++ )
+		{
+			DirectedSparseVertex startVertex = (DirectedSparseVertex)vertices[ i ];
+
+			// Find all vertices that are start nodes (START_NODE)
+			if ( startVertex.getUserDatum( LABEL_KEY ).equals( START_NODE ) )
+			{
+				// we are only interested of START_NODE's with 1 out edge
+				Object[] edges = startVertex.getOutEdges().toArray();
+				if ( edges.length == 1 )
+				{
+					// The out edge should have no label
+					DirectedSparseEdge edge = (DirectedSparseEdge)edges[ 0 ];
+					if ( !edge.containsUserDatumKey( LABEL_KEY ) )
+					{
+						startnodes.add( (DirectedSparseVertex)edge.getDest() );
+
+						DirectedSparseVertex vertexToBeReplaced = findVertexWithSameName( (DirectedSparseVertex)edge.getDest() );
+						while ( vertexToBeReplaced != null )
+						{
+							replaceVertex( vertexToBeReplaced, (DirectedSparseVertex)edge.getDest() );
+							vertexToBeReplaced = findVertexWithSameName( (DirectedSparseVertex)edge.getDest() );
 						}
 					}
 				}
 			}
 		}
-		catch ( JDOMException e )
+
+
+		vertices = _graph.getVertices().toArray();
+		for ( int i = 0; i < vertices.length; i++ )
 		{
-			_logger.error( e );
-			throw new RuntimeException( "Kunde inte skanna filen: " + _graphmlFileName );
+			DirectedSparseVertex startVertex = (DirectedSparseVertex)vertices[ i ];
+
+			// Find all vertecis that are start nodes (START_NODE)
+			if ( startVertex.getUserDatum( LABEL_KEY ).equals( START_NODE ) )
+			{
+				// we are only interested of START_NODE's with 1 out edge
+				Object[] edges = startVertex.getOutEdges().toArray();
+				if ( edges.length == 1 )
+				{
+					// The out edge should have no label
+					DirectedSparseEdge edge = (DirectedSparseEdge)edges[ 0 ];
+					if ( !edge.containsUserDatumKey( LABEL_KEY ) )
+					{
+						_graph.removeVertex( startVertex );
+						startVertex = null;
+					}
+				}
+			}
 		}
-		catch ( IOException e )
+
+
+
+		Vector loneNodes = new Vector();
+		vertices = _graph.getVertices().toArray();
+		for ( int i = 0; i < vertices.length; i++ )
 		{
-			_logger.error( e );
-			throw new RuntimeException( "Kunde inte skanna filen: " + _graphmlFileName );
+			DirectedSparseVertex vertex = (DirectedSparseVertex)vertices[ i ];
+
+			// Find all vertices that have no out edges
+			if ( vertex.getOutEdges().toArray().length == 0 )
+			{
+				loneNodes.add( vertex );
+			}
+		}
+
+
+		for (Iterator iter = loneNodes.iterator(); iter.hasNext();)
+		{
+			DirectedSparseVertex src = (DirectedSparseVertex) iter.next();
+
+			vertices = _graph.getVertices().toArray();
+			for ( int i = 0; i < vertices.length; i++ )
+			{
+				DirectedSparseVertex dst = (DirectedSparseVertex)vertices[ i ];
+
+				// Match nodes with no out edges with nodes with the same name, and has
+				// out edges.
+				if ( dst.getUserDatum( LABEL_KEY ).equals( src.getUserDatum( LABEL_KEY ) ) &&
+					 dst.getOutEdges().toArray().length > 0 &&
+					 !dst.containsUserDatumKey( NO_MERGE ) )
+				{
+					replaceVertex( src, dst );
+					dst = null;
+				}
+			}
 		}
 	}
+
+
+
+
+	private DirectedSparseVertex findVertexWithSameName( DirectedSparseVertex source )
+	{
+		DirectedSparseVertex vertex = null;
+		Object[] vertices = _graph.getVertices().toArray();
+		for ( int i = 0; i < vertices.length; i++ )
+		{
+			vertex = (DirectedSparseVertex)vertices[ i ];
+
+			// Find all vertecis that are start nodes (START_NODE)
+			if ( vertex.getUserDatum( LABEL_KEY ).equals( source.getUserDatum( LABEL_KEY ) ) )
+			{
+				if ( vertex != source )
+				{
+					return vertex;
+				}
+			}
+		}
+		return null;
+	}
+
+
+
+	private void replaceVertex( DirectedSparseVertex src, DirectedSparseVertex dst )
+	{
+		if ( dst.containsUserDatumKey( NO_MERGE ) )
+		{
+			throw new RuntimeException( "Merging not allowed for vertex: " +  dst.getUserDatum( LABEL_KEY ) + ", it is defined \"no merge\" in graph" );
+		}
+		
+		Object[] src_edges = src.getInEdges().toArray();
+		for ( int i = 0; i < src_edges.length; i++ )
+		{
+			DirectedSparseEdge src_in_edge = (DirectedSparseEdge)src_edges[ i ];
+			DirectedSparseEdge dst_in_edge = new DirectedSparseEdge( src_in_edge.getSource(), dst );
+
+			if ( src_in_edge.containsUserDatumKey( LABEL_KEY ) )
+			{
+				dst_in_edge.addUserDatum( LABEL_KEY, src_in_edge.getUserDatum( LABEL_KEY ), UserData.SHARED );
+			}
+			if ( src_in_edge.containsUserDatumKey( VISITED_KEY ) )
+			{
+				dst_in_edge.addUserDatum( VISITED_KEY, src_in_edge.getUserDatum( VISITED_KEY ), UserData.SHARED );
+			}
+			if ( src_in_edge.containsUserDatumKey( WEIGHT_KEY ) )
+			{
+				dst_in_edge.addUserDatum( WEIGHT_KEY, src_in_edge.getUserDatum( WEIGHT_KEY ), UserData.SHARED );
+			}
+			if ( src_in_edge.containsUserDatumKey( NO_HISTORY ) )
+			{
+				dst_in_edge.addUserDatum( NO_HISTORY, src_in_edge.getUserDatum( NO_HISTORY ), UserData.SHARED );
+			}
+			if ( src_in_edge.containsUserDatumKey( CONDITION_KEY ) )
+			{
+				dst_in_edge.addUserDatum( CONDITION_KEY, src_in_edge.getUserDatum( CONDITION_KEY ), UserData.SHARED );
+			}
+			if ( src_in_edge.containsUserDatumKey( STATE_KEY ) )
+			{
+				dst_in_edge.addUserDatum( STATE_KEY, src_in_edge.getUserDatum( STATE_KEY ), UserData.SHARED );
+			}
+			if ( src_in_edge.containsUserDatumKey( VARIABLE_KEY ) )
+			{
+				dst_in_edge.addUserDatum( VARIABLE_KEY, src_in_edge.getUserDatum( VARIABLE_KEY ), UserData.SHARED );
+			}
+
+			_graph.addEdge( dst_in_edge );
+			_graph.removeEdge( src_in_edge );
+			src_in_edge = null;
+		}
+
+		src_edges = src.getOutEdges().toArray();
+		for ( int i = 0; i < src_edges.length; i++ )
+		{
+			DirectedSparseEdge src_out_edge = (DirectedSparseEdge)src_edges[ i ];
+			DirectedSparseEdge dst_out_edge = new DirectedSparseEdge( dst, src_out_edge.getDest() );
+			dst_out_edge.addUserDatum( LABEL_KEY,   src_out_edge.getUserDatum( LABEL_KEY ), UserData.SHARED );
+			dst_out_edge.addUserDatum( VISITED_KEY, src_out_edge.getUserDatum( VISITED_KEY ), UserData.SHARED );
+
+			if ( src_out_edge.containsUserDatumKey( WEIGHT_KEY ) )
+			{
+				dst_out_edge.addUserDatum( WEIGHT_KEY, src_out_edge.getUserDatum( WEIGHT_KEY ), UserData.SHARED );
+			}
+			if ( src_out_edge.containsUserDatumKey( NO_HISTORY ) )
+			{
+				dst_out_edge.addUserDatum( NO_HISTORY, src_out_edge.getUserDatum( NO_HISTORY ), UserData.SHARED );
+			}
+			if ( src_out_edge.containsUserDatumKey( CONDITION_KEY ) )
+			{
+				dst_out_edge.addUserDatum( CONDITION_KEY, src_out_edge.getUserDatum( CONDITION_KEY ), UserData.SHARED );
+			}
+			if ( src_out_edge.containsUserDatumKey( STATE_KEY ) )
+			{
+				dst_out_edge.addUserDatum( STATE_KEY, src_out_edge.getUserDatum( STATE_KEY ), UserData.SHARED );
+			}
+			if ( src_out_edge.containsUserDatumKey( VARIABLE_KEY ) )
+			{
+				dst_out_edge.addUserDatum( VARIABLE_KEY, src_out_edge.getUserDatum( VARIABLE_KEY ), UserData.SHARED );
+			}
+
+			_graph.addEdge( dst_out_edge );
+			_graph.removeEdge( src_out_edge );
+			src_out_edge = null;
+		}
+		_graph.removeVertex( src );
+		src = null;
+	}
+
 
 	public String get_statistics()
 	{
 		String stat = new String();
-		String new_line = new String( "<br>" );
+		String new_line = new String( "\n" );
 
 		Object[] vertices = _graph.getVertices().toArray();
 		Object[] edges    = _graph.getEdges().toArray();
@@ -557,7 +929,7 @@ public class ModelBasedTesting
 			Integer vistited = (Integer)edge.getUserDatum( VISITED_KEY );
 			if ( vistited.intValue() == 0 )
 			{
-				stat += "Not tested (Edge): " + (String)edge.getUserDatum( ID_KEY ) + ", " + (String)edge.getUserDatum( LABEL_KEY ) + new_line;
+				stat += "Not tested (Edge): " + (String)edge.getUserDatum( LABEL_KEY ) + ", from: " + (String)edge.getSource().getUserDatum( LABEL_KEY ) + ", to: " + (String)edge.getDest().getUserDatum( LABEL_KEY ) + new_line;
 			}
 			else
 			{
@@ -566,7 +938,7 @@ public class ModelBasedTesting
 			totalNumOfVisitedEdges += vistited.intValue();
 		}
 
-		// Logga vilka noder som inte är besökta.
+		// Logga vilka noder som inte ?r bes?kta.
 		for ( int i = 0; i < vertices.length; i++ )
 		{
 			DirectedSparseVertex vertex = (DirectedSparseVertex)vertices[ i ];
@@ -574,7 +946,7 @@ public class ModelBasedTesting
 			Integer vistited = (Integer)vertex.getUserDatum( VISITED_KEY );
 			if ( vistited.intValue() == 0 )
 			{
-				stat += "Not tested (Vertex): " + (String)vertex.getUserDatum( ID_KEY ) + ", " + (String)vertex.getUserDatum( LABEL_KEY ) + new_line;
+				stat += "Not tested (Vertex): " + (String)vertex.getUserDatum( LABEL_KEY ) + new_line;
 			}
 			else
 			{
@@ -594,7 +966,7 @@ public class ModelBasedTesting
 	/**
 	 * Return the instance of the graph
 	 */
-	public static SparseGraph get_graph() {
+	public SparseGraph get_graph() {
 		return _graph;
 	}
 
@@ -651,7 +1023,7 @@ public class ModelBasedTesting
 				}
 			}
 
-			_logger.info( sourceFile.toString() );
+			_logger.debug( sourceFile.toString() );
 
 
 			FileWriter file = new FileWriter( fileName );
@@ -685,7 +1057,7 @@ public class ModelBasedTesting
 						sourceFile.append( " */\n" );
 						sourceFile.append( "public void PressBackButton()\n" );
 						sourceFile.append( "{\n" );
-						sourceFile.append( "	logInfo( \"Edge: PressBackButton\" );\n" );
+						sourceFile.append( "	_logger.info( \"Edge: PressBackButton\" );\n" );
 						sourceFile.append( "	throw new RuntimeException( \"Not implemented. This line can be removed.\" );\n" );
 						sourceFile.append( "}\n\n" );
 					}
@@ -703,7 +1075,7 @@ public class ModelBasedTesting
 						sourceFile.append( " */\n" );
 						sourceFile.append( "public void " + (String)vertex.getUserDatum( LABEL_KEY ) + "()\n" );
 						sourceFile.append( "{\n" );
-						sourceFile.append( "	logInfo( \"Vertex: " + (String)vertex.getUserDatum( LABEL_KEY ) + "\" );\n" );
+						sourceFile.append( "	_logger.info( \"Vertex: " + (String)vertex.getUserDatum( LABEL_KEY ) + "\" );\n" );
 						sourceFile.append( "	throw new RuntimeException( \"Not implemented. This line can be removed.\" );\n" );
 						sourceFile.append( "}\n\n" );
 					}
@@ -739,7 +1111,7 @@ public class ModelBasedTesting
 						sourceFile.append( " */\n" );
 						sourceFile.append( "public void " + (String)edge.getUserDatum( LABEL_KEY ) + "()\n" );
 						sourceFile.append( "{\n" );
-						sourceFile.append( "	logInfo( \"Edge: " + (String)edge.getUserDatum( LABEL_KEY ) + "\" );\n" );
+						sourceFile.append( "	_logger.info( \"Edge: " + (String)edge.getUserDatum( LABEL_KEY ) + "\" );\n" );
 
 						if ( edge.containsUserDatumKey( STATE_KEY ) )
 						{
@@ -763,7 +1135,7 @@ public class ModelBasedTesting
 								Boolean value	 = (Boolean)map.get( variable );
 								sourceFile.append( "	if ( " + variable + " != " + value + " )\n" );
 								sourceFile.append( "	{\n" );
-								sourceFile.append( "	  logInfo( \"Not a valid path until condition is fullfilled\" );\n" );
+								sourceFile.append( "	  _logger.info( \"Not a valid path until condition is fullfilled\" );\n" );
 								sourceFile.append( "	  throw new GoBackToPreviousVertexException();\n" );
 								sourceFile.append( "	}\n" );
 							}
@@ -799,7 +1171,7 @@ public class ModelBasedTesting
 							}
 						}
 
-						sourceFile.append( "	throw new RuntimeException( \"Ej implementerat\" );\n" );
+						sourceFile.append( "	throw new RuntimeException( \"Not implemented\" );\n" );
 						sourceFile.append( "}\n\n" );
 					}
 				}
@@ -846,7 +1218,7 @@ public class ModelBasedTesting
 		}
 	}
 
-	private void executeMethod( boolean optimize )
+	private void executeMethod( boolean optimize ) throws FoundNoEdgeException
 	{
 		DirectedSparseEdge edge 	= null;
 		Object[] 		   outEdges = null;
@@ -872,11 +1244,11 @@ public class ModelBasedTesting
 						{
 							_nextVertex = vertex;
 							String label = "PressBackButton";
-							_logger.debug( "Invoke method for edge: " + label );
+							_logger.debug( "Invoke method for edge: \"" + label + "\"" );
 							invokeMethod( label );
 
 							label = nodeLabel;
-							_logger.debug( "Invoke method for vertex: " + label );
+							_logger.debug( "Invoke method for vertex: \"" + label + "\"" );
 							invokeMethod( label );
 						}
 						catch( GoBackToPreviousVertexException e )
@@ -899,7 +1271,49 @@ public class ModelBasedTesting
 
 		outEdges = shuffle( outEdges );
 
-		if ( optimize )
+		if ( _shortestPathToVertex == null && _runUntilAllEdgesVisited == true )
+		{
+			Vector unvisitedEdges = returnUnvisitedEdge();
+			if ( unvisitedEdges.size() == 0)
+			{
+				_logger.debug( "All edges has been visited!" );
+				return;
+			}
+			_logger.info( "Found " + unvisitedEdges.size() + " unvisited edges." );
+
+
+			Object[] shuffledList = shuffle( unvisitedEdges.toArray() );
+			DirectedSparseEdge e = (DirectedSparseEdge)shuffledList[ 0 ];
+			if ( e == null )
+			{
+				throw new RuntimeException( "Found an empty edge!" );
+			}
+			_logger.info( "Selecting edge: " + getCompleteEdgeName( e ) );
+			_shortestPathToVertex = new DijkstraShortestPath( _graph ).getPath( _nextVertex, e.getSource() );
+			_shortestPathToVertex.add( e );
+			_logger.info( "Intend to take the shortest path between: " + (String)_nextVertex.getUserDatum( LABEL_KEY ) + " ==> " + (String)e.getDest().getUserDatum( LABEL_KEY ) + " (from: " + (String)e.getSource().getUserDatum( LABEL_KEY ) + "), using " + _shortestPathToVertex.size() + " hops." );
+
+			String paths = "";
+			for (Iterator iter = _shortestPathToVertex.iterator(); iter.hasNext();)
+			{
+				DirectedSparseEdge item = (DirectedSparseEdge) iter.next();
+				paths += " ==> " + getCompleteEdgeName( item );
+			}
+			_logger.info( paths );
+		}
+
+		if ( _shortestPathToVertex != null && _shortestPathToVertex.size() > 0 )
+		{
+			edge = (DirectedSparseEdge)_shortestPathToVertex.get( 0 );
+			_shortestPathToVertex.remove( 0 );
+			_logger.debug( "Removed edge: " + getCompleteEdgeName( edge ) + " from the shortest path list, " + _shortestPathToVertex.size() + " hops remaining." );
+
+			if ( _shortestPathToVertex.size() == 0 )
+			{
+				_shortestPathToVertex = null;
+			}
+		}
+		else if ( optimize )
 		{
 			// Look for an edge that has not been visited yet.
 			for ( int i = 0; i < outEdges.length; i++ )
@@ -918,7 +1332,7 @@ public class ModelBasedTesting
 					}
 					else
 					{
-						_logger.debug( "Found an edge which has not been visited yet: " + (String)edge.getUserDatum( LABEL_KEY ) );
+						_logger.debug( "Found an edge which has not been visited yet: " + getCompleteEdgeName( edge ) );
 						break;
 					}
 				}
@@ -939,7 +1353,7 @@ public class ModelBasedTesting
 		{
 			throw new RuntimeException( "Did not find any edge." );
 		}
-		_logger.debug( "Edge = " + (String)edge.getUserDatum( LABEL_KEY ) );
+		_logger.debug( "Edge = \"" + getCompleteEdgeName( edge ) + "\"" );
 
 		_prevVertex = _nextVertex;
 		_nextVertex = (DirectedSparseVertex)edge.getDest();
@@ -947,14 +1361,14 @@ public class ModelBasedTesting
 		try
 		{
 			String label = (String)edge.getUserDatum( LABEL_KEY );
-			_logger.debug( "Invoke method for edge: " + label );
+			_logger.debug( "Invoke method for edge: \"" + label + "\"" );
 			invokeMethod( label );
 			Integer vistited = (Integer)edge.getUserDatum( VISITED_KEY );
 			vistited = new Integer( vistited.intValue() + 1 );
 			edge.setUserDatum( VISITED_KEY, vistited, UserData.SHARED );
 
 			label = (String)edge.getDest().getUserDatum( LABEL_KEY );
-			_logger.debug( "Invoke method for vertex: " + label );
+			_logger.debug( "Invoke method for vertex: \"" + label + "\"" );
 			invokeMethod( label );
 			vistited = (Integer)edge.getDest().getUserDatum( VISITED_KEY );
 			vistited = new Integer( vistited.intValue() + 1 );
@@ -967,13 +1381,13 @@ public class ModelBasedTesting
 			}
 			if ( edge.containsUserDatumKey( NO_HISTORY ) == false )
 			{
-				_logger.debug( "Add to history: " +  (String)edge.getDest().getUserDatum( LABEL_KEY ) );
+				_logger.debug( "Add to history: " +  getCompleteEdgeName( edge ) );
 				_history.add( (String)edge.getDest().getUserDatum( LABEL_KEY ) );
 			}
 		}
 		catch( GoBackToPreviousVertexException e )
 		{
-			_logger.debug( "The edge: " + (String)edge.getUserDatum( LABEL_KEY ) + " can not be run due to unfullfilled conditions." );
+			_logger.debug( "The edge: " + getCompleteEdgeName( edge ) + " can not be run due to unfullfilled conditions." );
 			_logger.debug( "Trying from vertex: " + (String)_prevVertex.getUserDatum( LABEL_KEY ) + " again." );
 			_rejectedEdge = edge;
 			_nextVertex   = _prevVertex;
@@ -986,8 +1400,11 @@ public class ModelBasedTesting
 
 		try
 		{
-			Method meth = cls.getMethod( method, null );
-			meth.invoke( _object, null  );
+			if ( method.compareTo( "" ) != 0 )
+			{
+				Method meth = cls.getMethod( method, null );
+				meth.invoke( _object, null  );
+			}
 		}
 		catch( NoSuchMethodException e )
 		{
@@ -1021,7 +1438,7 @@ public class ModelBasedTesting
 	 * @param DirectedSparseVertex
 	 * @return DirectedSparseEdge
 	 */
-	DirectedSparseEdge getWeightedEdge( DirectedSparseVertex vertex )
+	DirectedSparseEdge getWeightedEdge( DirectedSparseVertex vertex ) throws FoundNoEdgeException
 	{
 		Object[] edges = vertex.getOutEdges().toArray();
 		DirectedSparseEdge edge = null;
@@ -1069,14 +1486,15 @@ public class ModelBasedTesting
 			if ( index < weight )
 			{
 				edge = (DirectedSparseEdge)edges[ i ];
-				_logger.debug( "Selected edge is: " + (String)edge.getUserDatum( LABEL_KEY ) );
+				_logger.debug( "Selected edge is: " + getCompleteEdgeName( edge ) );
 				break;
 			}
 		}
 
 		if ( edge == null )
 		{
-			throw new RuntimeException( "Did not find any edge." );
+			_logger.error( "Vertex: " + (String)vertex.getUserDatum( LABEL_KEY ) + ", has no out edges. Test ends here!" );
+			throw new FoundNoEdgeException();
 		}
 
 		return edge;
@@ -1099,5 +1517,36 @@ public class ModelBasedTesting
 			array[ index ] = leftObject;
 		}
 		return array;
+	}
+
+
+
+	/**
+	 * This functions returns a list of edges, which has not yet been visited
+	 * @return DirectedSparseEdge
+	 */
+	private Vector returnUnvisitedEdge()
+	{
+		Vector edgesNotVisited = new Vector();
+
+		for ( int i = 0; i < _edges.length; i++ )
+		{
+			DirectedSparseEdge edge = (DirectedSparseEdge)_edges[ i ];
+
+			Integer vistited = (Integer)edge.getUserDatum( VISITED_KEY );
+			if ( vistited.intValue() == 0 )
+			{
+				edgesNotVisited.add( edge );
+				_logger.debug( "Unvisited: " +  getCompleteEdgeName( edge ) );
+			}
+		}
+
+		return edgesNotVisited;
+	}
+
+	private String getCompleteEdgeName( DirectedSparseEdge edge )
+	{
+		String str = (String)edge.getUserDatum( LABEL_KEY ) + " (" + (String)edge.getSource().getUserDatum( LABEL_KEY ) + " -> " + (String)edge.getDest().getUserDatum( LABEL_KEY ) + ")";
+		return str;
 	}
 }

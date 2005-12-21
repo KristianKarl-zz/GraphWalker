@@ -28,14 +28,11 @@ public class GenerateJavaCode {
 	private static Logger _logger = Logger.getLogger( GenerateJavaCode.class );
 	private static ModelBasedTesting _mtb;
 
-	public GenerateJavaCode()
-	{
-	}
 
 	public static void main(String[] args)
 	{
 		BasicConfigurator.configure();
-		_logger.setLevel( Level.ALL );
+		_logger.setLevel( Level.INFO );
 
 		if ( args.length < 2 )
 		{
