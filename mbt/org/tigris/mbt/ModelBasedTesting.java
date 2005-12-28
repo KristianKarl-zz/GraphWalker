@@ -15,7 +15,7 @@
 //along with this program; if not, write to the Free Software
 //Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-package mbt;
+package org.tigris.mbt;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -221,13 +221,6 @@ public class ModelBasedTesting
 		    }
 
 		    mergeVertices();
-
-		    /*Layout l = new FRLayout( _graph );
-		    Renderer r = new PluggableRenderer();
-		    VisualizationViewer vv = new VisualizationViewer( l, r );
-		    JFrame jf = new JFrame();
-		    jf.getContentPane().add( vv );
-		    jf.show();*/
 		}
 		else
 		{
@@ -934,7 +927,7 @@ public class ModelBasedTesting
 			totalNumOfVisitedEdges += vistited.intValue();
 		}
 
-		// Logga vilka noder som inte ?r bes?kta.
+		// Log vertices which has not been visited
 		for ( int i = 0; i < vertices.length; i++ )
 		{
 			DirectedSparseVertex vertex = (DirectedSparseVertex)vertices[ i ];

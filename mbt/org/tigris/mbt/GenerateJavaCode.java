@@ -15,10 +15,9 @@
 //along with this program; if not, write to the Free Software
 //Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-package mbt;
+package org.tigris.mbt;
 
 import org.apache.log4j.*;
-import mbt.ModelBasedTesting;
 
 /**
  * @author Kristian Karl
@@ -36,7 +35,7 @@ public class GenerateJavaCode {
 
 		if ( args.length < 2 )
 		{
-			_logger.warn( "Saknar argument" );
+			_logger.warn( "Too few arguments" );
 			displayHelpMessage();
 			return;
 		}

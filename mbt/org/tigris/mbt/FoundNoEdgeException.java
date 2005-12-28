@@ -15,12 +15,9 @@
 //along with this program; if not, write to the Free Software
 //Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-package mbt;
+package org.tigris.mbt;
 
-/**
- * @author Kristian Karl
- */
-public class GoBackToPreviousVertexException extends Exception
+public class FoundNoEdgeException extends Exception
 {
 	private static final long serialVersionUID = -2597269122921601356L;
 }
