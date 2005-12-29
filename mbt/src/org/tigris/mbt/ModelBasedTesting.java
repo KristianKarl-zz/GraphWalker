@@ -37,6 +37,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -92,33 +93,23 @@ public class ModelBasedTesting
 	private List				 _shortestPathToVertex = null;
 
 	public ModelBasedTesting( String graphmlFileName_,
-							  Object object_,
-							  Logger logger_ )
+			  				  Object object_ )
 	{
 		_graphmlFileName = graphmlFileName_;
 		_object          = object_;
-		_logger          = logger_;
-
+		_logger          = Logger.getLogger( ModelBasedTesting.class );
+		PropertyConfigurator.configure("log4j.properties");
+		
 		readFiles();
 	}
 
-	public ModelBasedTesting( String graphmlFileName_,
-							  Logger logger_ )
+	public ModelBasedTesting( String graphmlFileName_ )
 	{
 		_graphmlFileName = graphmlFileName_;
 		_object          = null;
-		_logger          = logger_;
+		_logger          = Logger.getLogger( ModelBasedTesting.class );
+		PropertyConfigurator.configure("log4j.properties");
 
-		readFiles();
-	}
-
-	public ModelBasedTesting( String graphmlFileName_,
-			  Object object_ )
-	{
-		_graphmlFileName = graphmlFileName_;
-		_object          = object_;
-		_logger          = null;
-		
 		readFiles();
 	}
 
@@ -187,7 +178,7 @@ public class ModelBasedTesting
 	        
 			file.write( sourceFile.toString() );
 			file.flush();
-			_logger.debug( "Wrote: " +  mergedGraphml_ );
+			_logger.info( "Wrote: " +  mergedGraphml_ );
 		} 
 		catch (IOException e) 
 		{
@@ -702,6 +693,7 @@ public class ModelBasedTesting
 		Vector A = new Vector();
 		Vector B = new Vector();
 		Vector C = new Vector();
+		Vector mergedVertecis = new Vector();
 		
 		
 		// Find all vertices, which has a in-edge,
@@ -750,7 +742,7 @@ public class ModelBasedTesting
 		// Pick a vertex V1 from the array B
 		for ( Iterator iter = B.iterator(); iter.hasNext(); )
 		{
-			boolean mergeSuccessfull = false;
+			boolean mergeSuccessful = false;
 			DirectedSparseVertex v1 = (DirectedSparseVertex) iter.next();
 			_logger.debug( "Investigating vertex V1(" + v1.hashCode() + "): " + v1.getUserDatum( LABEL_KEY ) );
 
@@ -788,6 +780,7 @@ public class ModelBasedTesting
 					DirectedSparseEdge e1 = new DirectedSparseEdge( e2.getSource(), v1 );
 					e1.importUserData( e2 );
 					_graph.addEdge( e1 );
+					mergeSuccessful = true;
 				}
 				
 				// For all out-edges for vertex V2, change
@@ -799,15 +792,31 @@ public class ModelBasedTesting
 					DirectedSparseEdge e1 = new DirectedSparseEdge( v1, e2.getDest() );
 					e1.importUserData( e2 );
 					_graph.addEdge( e1 );
+					mergeSuccessful = true;
 				}
 								
 				_logger.debug( "Merging vertex V2(" + v2.hashCode() + ") with V1(" + v1.hashCode()+ "): " + v1.getUserDatum( LABEL_KEY ) );
+				mergedVertecis.add( v2 );
 				_graph.removeVertex( v2 );
 			}
 			
-			if ( mergeSuccessfull == false )
+			
+			// Notify the user if there are vertices which has not been succefully merged.
+			if ( mergeSuccessful == false )
 			{
-				_logger.warn( "Could not merge vertex: " + v1.getUserDatum( LABEL_KEY ) + "(" + v1.hashCode() + ")" );
+				for ( Iterator iterMerged = mergedVertecis.iterator(); iterMerged.hasNext(); )
+				{
+					DirectedSparseVertex v = (DirectedSparseVertex) iterMerged.next();
+					if ( v.getUserDatum( LABEL_KEY ).equals( v1.getUserDatum( LABEL_KEY ) ) )
+					{
+						mergeSuccessful = true;
+						break;
+					}
+				}
+				if ( mergeSuccessful == false )
+				{
+					_logger.warn( "Could not merge vertex: " + v1.getUserDatum( LABEL_KEY ) + "(" + v1.hashCode() + ")" );
+				}
 			}
 		}
 
@@ -897,7 +906,7 @@ public class ModelBasedTesting
 }
 
 
-	public String get_statistics()
+	public String getStatistics()
 	{
 		String stat = new String();
 		String new_line = new String( "\n" );
@@ -955,7 +964,7 @@ public class ModelBasedTesting
 	/**
 	 * Return the instance of the graph
 	 */
-	public SparseGraph get_graph() {
+	public SparseGraph getGraph() {
 		return _graph;
 	}
 

@@ -17,39 +17,33 @@
 
 package org.tigris.mbt;
 
-import org.apache.log4j.*;
 
 /**
  * @author Kristian Karl
  */
-public class GenerateJavaCode {
-
-	private static Logger _logger = Logger.getLogger( GenerateJavaCode.class );
+public class GenerateJavaCode
+{
 	private static ModelBasedTesting _mtb;
 
 
 	public static void main(String[] args)
 	{
-		BasicConfigurator.configure();
-		_logger.setLevel( Level.INFO );
-
 		if ( args.length < 2 )
 		{
-			_logger.warn( "Too few arguments" );
+			System.out.println( "Too few arguments" );
 			displayHelpMessage();
 			return;
 		}
 
 		try
 		{
-			_mtb = new ModelBasedTesting( args[ 0 ],
-										  _logger );
+			_mtb = new ModelBasedTesting( args[ 0 ] );
 
 			_mtb.generateJavaCode_XDE( args[ 1 ] );
 		}
 		catch ( RuntimeException e )
 		{
-			_logger.error( e.getMessage() );
+			System.out.println( e.getMessage() );
 		}
 	}
 
