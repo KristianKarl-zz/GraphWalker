@@ -145,6 +145,7 @@ public class ModelBasedTesting
 				sourceFile.append( "    </node>\n" );
 			}
 
+	        int i = 0;
 	        for ( Iterator edgeIterator = _graph.getEdges().iterator(); edgeIterator.hasNext(); ) 
 	        {
 	            Edge e = (Edge) edgeIterator.next();
@@ -153,8 +154,9 @@ public class ModelBasedTesting
 	            Vertex dest = (Vertex) p.getSecond();
 	            int srcId = id.getIndex(src)+1;
 	            int destId = id.getIndex(dest)+1;
+	            int nId = ++i;
 	            
-	            sourceFile.append( "    <edge source=\"n" + srcId + "\" target=\"n" + destId + "\">\n" );
+	            sourceFile.append( "    <edge id=\"" + nId + "\" source=\"n" + srcId + "\" target=\"n" + destId + "\">\n" );
 	            sourceFile.append( "      <data key=\"d1\" >\n" );
 	            sourceFile.append( "        <y:PolyLineEdge >\n" );
 	            sourceFile.append( "          <y:Path sx=\"-23.75\" sy=\"15.0\" tx=\"-23.75\" ty=\"-15.0\">\n" );
