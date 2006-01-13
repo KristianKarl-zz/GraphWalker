@@ -61,21 +61,24 @@ public class ModelBasedTesting
 {
 
 	private SparseGraph _graph          = new SparseGraph();
+	private Vector 		_graphList 		= new Vector();
 	private SAXBuilder  _parser         = new SAXBuilder();
 	private Random      _radomGenerator = new Random();
-
-	private String  START_NODE           = "Start";
-	private String  ID_KEY               = "id";
-	private String  FILE_KEY             = "file";
-	private String  LABEL_KEY            = "label";
-	private String  VISITED_KEY          = "visited";
-	private String  WEIGHT_KEY           = "weight";
-	private String  STATE_KEY            = "state";
-	private String  CONDITION_KEY        = "condition";
-	private String  VARIABLE_KEY         = "variable";
-	private String  BACK_KEY             = "back";
-	private String  NO_HISTORY	         = "no history";
-	private String  NO_MERGE	         = "no merge";
+	
+	private String  START_NODE            = "Start";
+	private String  ID_KEY                = "id";
+	private String  FILE_KEY              = "file";
+	private String  LABEL_KEY             = "label";
+	private String  VISITED_KEY           = "visited";
+	private String  WEIGHT_KEY            = "weight";
+	private String  STATE_KEY             = "state";
+	private String  CONDITION_KEY         = "condition";
+	private String  VARIABLE_KEY          = "variable";
+	private String  BACK_KEY              = "back";
+	private String  NO_HISTORY	          = "no history";
+	private String  MERGE	              = "merge";
+	private String  NO_MERGE	          = "no merge";
+	private String  SUBGRAPH_START_VERTEX = "subgraph start vertex";
 
 	private Document 			 _doc;
 	private String   			 _graphmlFileName;
@@ -126,7 +129,7 @@ public class ModelBasedTesting
 			sourceFile.append( "  <graph id=\"G\" edgedefault=\"directed\">\n" );
 
 	        int numVertices = _graph.getVertices().size();
-	        Indexer id = Indexer.getIndexer( _graph );
+	        Indexer id = Indexer.getAndUpdateIndexer( _graph );
 	        for ( int i = 0; i < numVertices; i++ )
 	        {
 	            Vertex v = (Vertex) id.getVertex(i);
@@ -193,7 +196,7 @@ public class ModelBasedTesting
 		File file = new File( _graphmlFileName );
 		if ( file.isFile() )
 		{
-			parseFile( _graphmlFileName );
+			_graph = parseFile( _graphmlFileName );
 		}
 		else if ( file.isDirectory() )
 		{
@@ -210,10 +213,10 @@ public class ModelBasedTesting
 		    File [] allChildren = file.listFiles( filter );
 		    for ( int i = 0; i < allChildren.length; ++i )
 		    {
-		    	parseFile( allChildren[ i ].getAbsolutePath() );
+		    	_graphList.add( parseFile( allChildren[ i ].getAbsolutePath() ) );
 		    }
 
-		    mergeVertices();
+		    analyseSubGraphs();
 		}
 		else
 		{
@@ -354,13 +357,16 @@ public class ModelBasedTesting
 	/**
 	 * Parses the graphml file, and load into the internal graph structure _graph
 	 */
-	private void parseFile( String fileName )
+	private SparseGraph parseFile( String fileName )
 	{
+		SparseGraph graph = new SparseGraph();
+		graph.addUserDatum( FILE_KEY, fileName, UserData.SHARED );
+
 		try
 		{
 			_logger.info( "Parsing file: " + fileName );
 			_doc = _parser.build( fileName );
-
+			
 			// Parse all vertices (nodes)
 			Iterator iter = _doc.getDescendants( new ElementFilter( "node" ) );
 			while ( iter.hasNext() )
@@ -386,7 +392,7 @@ public class ModelBasedTesting
 							_logger.debug( "Full name: " + nodeLabel.getQualifiedName() );
 							_logger.debug( "Name: " + nodeLabel.getTextTrim() );
 
-							DirectedSparseVertex v = (DirectedSparseVertex) _graph.addVertex( new DirectedSparseVertex() );
+							DirectedSparseVertex v = (DirectedSparseVertex) graph.addVertex( new DirectedSparseVertex() );
 
 							v.addUserDatum( ID_KEY, 	 element.getAttributeValue( "id" ), UserData.SHARED );
 							v.addUserDatum( VISITED_KEY, new Integer( 0 ), 					UserData.SHARED );
@@ -411,14 +417,28 @@ public class ModelBasedTesting
 
 
 
+							// If merge is defined, find it...
+							// If defined, it means that the node will be merged with all other nodes wit the same name,
+							// but not replaced by any subgraphs
+							p = Pattern.compile( "(MERGE)", Pattern.MULTILINE );
+							m = p.matcher( str );
+							if ( m.find() )
+							{
+								v.addUserDatum( MERGE, m.group( 1 ), UserData.SHARED );
+								_logger.debug( "Found MERGE for edge: " + label );
+							}
+
+							
+							
 							// If no merge is defined, find it...
-							// If defined, it means that when merging graphs, this specific vertex will not be merged.
-							p = Pattern.compile( "(no merge)", Pattern.MULTILINE );
+							// If defined, it means that when merging graphs, this specific vertex will not be merged
+							// or replaced by any subgraphs
+							p = Pattern.compile( "(NO_MERGE)", Pattern.MULTILINE );
 							m = p.matcher( str );
 							if ( m.find() )
 							{
 								v.addUserDatum( NO_MERGE, m.group( 1 ), UserData.SHARED );
-								_logger.debug( "Found no merge for edge: " + label );
+								_logger.debug( "Found NO_MERGE for edge: " + label );
 							}
 
 							
@@ -449,7 +469,7 @@ public class ModelBasedTesting
 				}
 			}
 
-			Object[] vertices = _graph.getVertices().toArray();
+			Object[] vertices = graph.getVertices().toArray();
 
 			// Parse all edges (arrows or transtitions)
 			iter = _doc.getDescendants( new ElementFilter( "edge" ) );
@@ -510,7 +530,7 @@ public class ModelBasedTesting
 
 
 					DirectedSparseEdge e = new DirectedSparseEdge( source, dest );
-					_graph.addEdge( e );
+					graph.addEdge( e );
 					e.addUserDatum( ID_KEY,   element.getAttributeValue( "id" ), UserData.SHARED );
 					e.addUserDatum( FILE_KEY, fileName, 						 UserData.SHARED );
 
@@ -685,229 +705,242 @@ public class ModelBasedTesting
 			e.printStackTrace();
 			throw new RuntimeException( "Kunde inte skanna filen: " + fileName );
 		}
+		
+		return graph;
 	}
 
 
-	// When multiple graps are read from several files, cgances are that there are vertices that has
+	// When multiple graps are read from several files, chances are that there are vertices that has
 	// no out edges, which are continued in a different file. These has to be merged.
-	private void mergeVertices()
+	private void analyseSubGraphs()
 	{
-		Vector A = new Vector();
-		Vector B = new Vector();
-		Vector C = new Vector();
-		Vector mergedVertecis = new Vector();
-		
-		
-		// Find all vertices, which has a in-edge,
-		// with an empty label, and comes from
-		// a Start node.
-		// Store the Start nodes in a temporary array A.
-		// Store the found vertices in a temporary array B.		
-		Object[] vertices = _graph.getVertices().toArray();
-		for ( int i = 0; i < vertices.length; i++ )
+		boolean foundStartGraph = false;
+		for ( Iterator iter = _graphList.iterator(); iter.hasNext(); )
 		{
-			DirectedSparseVertex startVertex = (DirectedSparseVertex)vertices[ i ];
-
-			// Find all vertices that are start nodes (START_NODE)
-			if ( startVertex.getUserDatum( LABEL_KEY ).equals( START_NODE ) )
+			SparseGraph g = (SparseGraph) iter.next();
+			
+			Object[] vertices = g.getVertices().toArray();
+			for ( int i = 0; i < vertices.length; i++ )
 			{
-				// we are only interested of START_NODE's with 1 out edge
-				Object[] edges = startVertex.getOutEdges().toArray();
-				if ( edges.length == 1 )
+				DirectedSparseVertex v = (DirectedSparseVertex)vertices[ i ];
+
+				// Find all vertices that are start nodes (START_NODE)
+				if ( v.getUserDatum( LABEL_KEY ).equals( START_NODE ) )
 				{
-					// The out edge should have no label
+					Object[] edges = v.getOutEdges().toArray();
+					if ( edges.length != 1 )
+					{
+						throw new RuntimeException( "A start nod can only have one out edge, look in file: " + g.getUserDatum( FILE_KEY ) );
+					}
 					DirectedSparseEdge edge = (DirectedSparseEdge)edges[ 0 ];
-					if ( !edge.containsUserDatumKey( LABEL_KEY ) )
+					g.addUserDatum( LABEL_KEY, edge.getDest().getUserDatum(LABEL_KEY), UserData.SHARED );
+					if ( edge.containsUserDatumKey( LABEL_KEY ) )
 					{
-						A.add( startVertex );
-						B.add( (DirectedSparseVertex)edge.getDest() );
+						if ( foundStartGraph == true )
+						{
+							throw new RuntimeException( "A start nod can only exist in one file, see files " + 
+									                    _graph.getUserDatum( FILE_KEY )+ ", and " + g.getUserDatum( FILE_KEY ) );
+						}
+						foundStartGraph = true;
+						_graph = g;
 					}
+					else
+					{
+						// Since the edge does not contain a label, this is a subgraph
+						// Mark the destination node of the edge to a subgraph starting node
+						edge.getDest().addUserDatum( SUBGRAPH_START_VERTEX, SUBGRAPH_START_VERTEX, UserData.SHARED );
+					}
+				}
+			}			
+		}
+		
+		_logger.debug( "Investigating graph: " + _graph.getUserDatum( LABEL_KEY ) );
+
+		for ( int i = 0; i < _graphList.size(); i++ )
+		{
+			SparseGraph g = (SparseGraph)_graphList.elementAt( i );
+			_logger.debug( "With graph: " + g.getUserDatum( LABEL_KEY ) + " in file: " + g.getUserDatum( FILE_KEY ) );
+			
+			if ( _graph.getUserDatum( LABEL_KEY ).equals( g.getUserDatum( LABEL_KEY ) ) )
+			{
+				_logger.debug( "  Graphs are the same, next..." );
+				continue;
+			}
+			
+			Object[] vertices = _graph.getVertices().toArray();
+			for ( int j = 0; j < vertices.length; j++ )
+			{
+				DirectedSparseVertex v1 = (DirectedSparseVertex)vertices[ j ];
+				_logger.debug( "Investigating vertex(" + v1.hashCode() + "): " + v1.getUserDatum( LABEL_KEY ) );
+				
+				if ( v1.getUserDatum( LABEL_KEY ).equals( g.getUserDatum( LABEL_KEY ) ) )
+				{
+					if ( v1.containsUserDatumKey( MERGE ) )
+					{
+						_logger.debug( "The vertex is marked MERGE, and will not be replaced by a subgraph.");
+						continue;
+					}
+					if ( v1.containsUserDatumKey( NO_MERGE ) )
+					{
+						_logger.debug( "The vertex is marked NO_MERGE, and will not be replaced by a subgraph.");
+						continue;
+					}
+					
+					_logger.debug( "A subgraph'ed vertex: " + v1.getUserDatum( LABEL_KEY ) + 
+							       " in graph: " + g.getUserDatum( FILE_KEY )  +
+							       ", equals a node in the graph in file: " +
+							       _graph.getUserDatum( FILE_KEY ) );
+					
+					appendGraph( _graph, g );
+					//writeGraph("/tmp/debug_append.graphml");
+					copySubGraphs( _graph, v1 );
+					//writeGraph("/tmp/debug_merge.graphml");
+
+					vertices = _graph.getVertices().toArray();
+					i = -1;
+					j = -1;
 				}
 			}
 		}
-		_logger.debug( "Found " + B.size() + " vertices to merge." );
 		
-
-		
-		
-		// Remove all Start nodes stored in the
-		// array A found above.
-		for ( Iterator iter = A.iterator(); iter.hasNext(); )
+		// Merge all nodes marked MERGE
+		Object[] list1 = _graph.getVertices().toArray();
+		for ( int i = 0; i < list1.length; i++ )
 		{
-			DirectedSparseVertex vertex = (DirectedSparseVertex) iter.next();
-			_graph.removeVertex( vertex );
-		}
-		_logger.debug( "Removed " + A.size() + " vertices (Start) from graph." );
-
-		
-		
-		// Pick a vertex V1 from the array B
-		for ( Iterator iter = B.iterator(); iter.hasNext(); )
-		{
-			boolean mergeSuccessful = false;
-			DirectedSparseVertex v1 = (DirectedSparseVertex) iter.next();
-			_logger.debug( "Investigating vertex V1(" + v1.hashCode() + "): " + v1.getUserDatum( LABEL_KEY ) );
-
-			vertices = _graph.getVertices().toArray();
-			for ( int i = 0; i < vertices.length; i++ )
+			DirectedSparseVertex v1 = (DirectedSparseVertex)list1[ i ];
+			
+			if ( v1.containsUserDatumKey( MERGE ) == false )
 			{
-				DirectedSparseVertex v2 = (DirectedSparseVertex)vertices[ i ];
+				continue;
+			}
+			
+			Object[] list2 = _graph.getVertices().toArray();
+			for ( int j = 0; j < list2.length; j++ )
+			{
+				DirectedSparseVertex v2 = (DirectedSparseVertex)list2[ j ];
 				
-				if ( v2.getUserDatum( LABEL_KEY ).equals( v1.getUserDatum( LABEL_KEY ) ) == false )
-				{
-					continue;
-				}
-				if ( v2.containsUserDatumKey( NO_MERGE ) )
-				{
-					continue;
-				}
 				if ( v1.hashCode() == v2.hashCode() )
 				{
 					continue;
 				}
-				if ( v1.getGraph() == null )
+				if ( v1.getUserDatum( LABEL_KEY ).equals( v2.getUserDatum( LABEL_KEY ) ) == false )
 				{
 					continue;
-				}
-
-				_logger.debug( "Found vertex V2(" + v2.hashCode() + "): " + v2.getUserDatum( LABEL_KEY ) );
-					
-					
-				// For all in-edges for vertex V2, change
-				// the dest vertex (for that edge) from V2 to V1
-				Object[] in_edges = v2.getInEdges().toArray();
-				for ( int j = 0; j < in_edges.length; j++ )
-				{
-					DirectedSparseEdge e2 = (DirectedSparseEdge)in_edges[ j ];
-					DirectedSparseEdge e1 = new DirectedSparseEdge( e2.getSource(), v1 );
-					e1.importUserData( e2 );
-					_graph.addEdge( e1 );
-					mergeSuccessful = true;
 				}
 				
-				// For all out-edges for vertex V2, change
-				// the source vertex (for that edge) from V2 to V1
-				Object[] out_edges = v2.getOutEdges().toArray();
-				for ( int j = 0; j < out_edges.length; j++ )
-				{
-					DirectedSparseEdge e2 = (DirectedSparseEdge)out_edges[ j ];
-					DirectedSparseEdge e1 = new DirectedSparseEdge( v1, e2.getDest() );
-					e1.importUserData( e2 );
-					_graph.addEdge( e1 );
-					mergeSuccessful = true;
-				}
-								
-				_logger.debug( "Merging vertex V2(" + v2.hashCode() + ") with V1(" + v1.hashCode()+ "): " + v1.getUserDatum( LABEL_KEY ) );
-				mergedVertecis.add( v2 );
-				_graph.removeVertex( v2 );
-			}
-			
-			
-			// Notify the user if there are vertices which has not been succefully merged.
-			if ( mergeSuccessful == false )
-			{
-				for ( Iterator iterMerged = mergedVertecis.iterator(); iterMerged.hasNext(); )
-				{
-					DirectedSparseVertex v = (DirectedSparseVertex) iterMerged.next();
-					if ( v.getUserDatum( LABEL_KEY ).equals( v1.getUserDatum( LABEL_KEY ) ) )
-					{
-						mergeSuccessful = true;
-						break;
-					}
-				}
-				if ( mergeSuccessful == false )
-				{
-					_logger.warn( "Could not merge vertex: " + v1.getUserDatum( LABEL_KEY ) + "(" + v1.hashCode() + ")" );
-				}
-			}
-		}
+				_logger.debug( "Merging vertex(" + v1.hashCode() + "): " + v1.getUserDatum( LABEL_KEY ) +
+						       "with vertex(" + v2.hashCode() );
 
-		
-		// Find all vertices which has no
-		// out-edges and NO_MERGE not defined.
-		// Store the vertices in array C		
-		vertices = _graph.getVertices().toArray();
-		for ( int i = 0; i < vertices.length; i++ )
-		{
-			DirectedSparseVertex v = (DirectedSparseVertex)vertices[ i ];
-
-			if ( v.getOutEdges().isEmpty() &&
-				 v.containsUserDatumKey( NO_MERGE ) == false )
-			{
-				_logger.debug( "Found vertex V(" + v.hashCode() + "): " + v.getUserDatum( LABEL_KEY ) + ", with no out-edges" );
-				C.add( v );
-			}
-		}
-
-		
-		// Pick a vertex V1 from the array C
-		for ( Iterator iter = C.iterator(); iter.hasNext(); )
-		{
-			DirectedSparseVertex v1 = (DirectedSparseVertex) iter.next();
-
-			vertices = _graph.getVertices().toArray();
-			for ( int i = 0; i < vertices.length; i++ )
-			{
-				DirectedSparseVertex v2 = (DirectedSparseVertex)vertices[ i ];
-
-				// Find a vertex V2 with an identical label,
-				// and NO_MERGE not defined, and has out-edges
-				if ( v2.getUserDatum( LABEL_KEY ).equals( v1.getUserDatum( LABEL_KEY ) ) == false )
+				Object[] inEdges = v1.getInEdges().toArray();
+				for (int x = 0; x < inEdges.length; x++)
 				{
-					continue;
+					DirectedSparseEdge edge = (DirectedSparseEdge)inEdges[ x ];
+					DirectedSparseEdge new_edge = (DirectedSparseEdge)_graph.addEdge( new DirectedSparseEdge( edge.getSource(), v2 ) );
+					new_edge.importUserData( edge );
 				}
-				if ( v2.containsUserDatumKey( NO_MERGE ) )
+				Object[] outEdges = v1.getOutEdges().toArray();
+				for (int x = 0; x < outEdges.length; x++)
 				{
-					continue;
+					DirectedSparseEdge edge = (DirectedSparseEdge)outEdges[ x ];
+					DirectedSparseEdge new_edge = (DirectedSparseEdge)_graph.addEdge( new DirectedSparseEdge( v2, edge.getDest() ) );
+					new_edge.importUserData( edge );
 				}
-				if ( v1.hashCode() == v2.hashCode() )
-				{
-					continue;
-				}
-				if ( v1.getGraph() == null )
-				{
-					continue;
-				}
-				if ( v2.getOutEdges().isEmpty() )
-				{
-					continue;
-				}
-
-				_logger.debug( "Found vertex V2(" + v2.hashCode() + "): " + v2.getUserDatum( LABEL_KEY ) );
-
-				// For all in-edges for vertex V1, change
-				// the dest vertex (for that edge) from V1 to V2
-				Object[] in_edges = v1.getInEdges().toArray();
-				for ( int j = 0; j < in_edges.length; j++ )
-				{
-					DirectedSparseEdge e2 = (DirectedSparseEdge)in_edges[ j ];
-					DirectedSparseEdge e1 = new DirectedSparseEdge( e2.getSource(), v2 );
-					e1.importUserData( e2 );
-					_graph.addEdge( e1 );
-				}
-
-				// Remove vertex V1
-				_logger.debug( "Merging vertex V1(" + v1.hashCode() + ") with V2(" + v2.hashCode()+ "): " + v2.getUserDatum( LABEL_KEY ) );
-				_graph.removeVertex( v1 );
-			}
-		}
-		
-		
-		// Check for vertices that has no out-edges
-		vertices = _graph.getVertices().toArray();
-		for ( int i = 0; i < vertices.length; i++ )
-		{
-			DirectedSparseVertex v = (DirectedSparseVertex)vertices[ i ];
-			if ( v.getOutEdges().isEmpty() )
-			{
-				_logger.warn( "Found a vertex acting as a Cul-de-Sac: " + v.getUserDatum( LABEL_KEY ) + "(" + v.hashCode() + ")" );
-			}
-		}
+				_logger.debug( "Remvoing merged vertex(" + v1.hashCode() + ")" );
+			}			
+			_graph.removeVertex( v1 );
+		}		
 		
 		_logger.debug( "Done merging" );
-}
+	}
 
+	private void appendGraph( SparseGraph dst, SparseGraph src )
+	{
+		HashMap map = new HashMap();
+		Object[] vertices = src.getVertices().toArray();
+		for ( int i = 0; i < vertices.length; i++ )
+		{
+			DirectedSparseVertex v = (DirectedSparseVertex)vertices[ i ];
+			if ( v.getUserDatum( LABEL_KEY ).equals( START_NODE ) )
+			{
+				continue;
+			}
+			DirectedSparseVertex new_v = new DirectedSparseVertex();
+			new_v.importUserData( v );
+			dst.addVertex( new_v );
+			map.put( new Integer( v.hashCode() ), new_v );
+		}
+		Object[] edges = src.getEdges().toArray();
+		for ( int i = 0; i < edges.length; i++ )
+		{
+			DirectedSparseEdge e = (DirectedSparseEdge)edges[ i ];
+			if ( e.containsUserDatumKey( LABEL_KEY ) == false )
+			{
+				continue;
+			}
+			DirectedSparseEdge new_e = new DirectedSparseEdge( (DirectedSparseVertex)map.get( new Integer( e.getSource().hashCode() ) ), (DirectedSparseVertex)map.get( new Integer( e.getDest().hashCode() ) ) );
+			new_e.importUserData( e );
+			dst.addEdge( new_e );
+		}
+	}
+	
+	private void copySubGraphs( SparseGraph g, DirectedSparseVertex targetVertex )
+	{
+		DirectedSparseVertex sourceVertex = null;
+		Object[] vertices = g.getVertices().toArray();
+		for ( int i = 0; i < vertices.length; i++ )
+		{
+			DirectedSparseVertex v = (DirectedSparseVertex)vertices[ i ];			
+			if ( v.getUserDatum( LABEL_KEY ).equals( targetVertex.getUserDatum( LABEL_KEY ) ) )
+			{
+				if ( v.containsUserDatumKey( SUBGRAPH_START_VERTEX ) == false )
+				{
+					continue;
+				}
+				if ( v.containsUserDatumKey( MERGE ) )
+				{
+					continue;
+				}
+				if ( v.containsUserDatumKey( NO_MERGE ) )
+				{
+					continue;
+				}
+				if ( v.hashCode() == targetVertex.hashCode() )
+				{
+					continue;
+				}
+				
+				sourceVertex = v;
+				break;
+			}
+		}
+		
+		if ( sourceVertex == null )
+		{
+			return;
+		}
+		
+		_logger.info( "Start merging target vertex(" + targetVertex.hashCode() + ") with source vertex(" +
+				      sourceVertex.hashCode() + "), " + sourceVertex.getUserDatum( LABEL_KEY ) );
 
+		Object[] inEdges = sourceVertex.getInEdges().toArray();
+		for (int i = 0; i < inEdges.length; i++)
+		{
+			DirectedSparseEdge edge = (DirectedSparseEdge)inEdges[ i ];
+			DirectedSparseEdge new_edge = (DirectedSparseEdge)g.addEdge( new DirectedSparseEdge( edge.getSource(), targetVertex ) );
+			new_edge.importUserData( edge );
+		}
+		Object[] outEdges = sourceVertex.getOutEdges().toArray();
+		for (int i = 0; i < outEdges.length; i++)
+		{
+			DirectedSparseEdge edge = (DirectedSparseEdge)outEdges[ i ];
+			DirectedSparseEdge new_edge = (DirectedSparseEdge)g.addEdge( new DirectedSparseEdge( targetVertex, edge.getDest() ) );
+			new_edge.importUserData( edge );
+		}
+		_logger.debug( "Remvoing source vertex(" + sourceVertex.hashCode() + ")" );
+		g.removeVertex( sourceVertex );
+		targetVertex.addUserDatum( NO_MERGE, "no merge", UserData.SHARED );
+	}
+	
 	public String getStatistics()
 	{
 		String stat = new String();
@@ -1291,14 +1324,15 @@ public class ModelBasedTesting
 			_logger.info( "Selecting edge: " + getCompleteEdgeName( e ) );
 			_shortestPathToVertex = new DijkstraShortestPath( _graph ).getPath( _nextVertex, e.getSource() );
 			_shortestPathToVertex.add( e );
-			_logger.info( "Intend to take the shortest path between: " + (String)_nextVertex.getUserDatum( LABEL_KEY ) + " ==> " + (String)e.getDest().getUserDatum( LABEL_KEY ) + " (from: " + (String)e.getSource().getUserDatum( LABEL_KEY ) + "), using " + _shortestPathToVertex.size() + " hops." );
+			_logger.info( "Intend to take the shortest path between: " + (String)_nextVertex.getUserDatum( LABEL_KEY ) + " and " + (String)e.getDest().getUserDatum( LABEL_KEY ) + " (from: " + (String)e.getSource().getUserDatum( LABEL_KEY ) + "), using " + _shortestPathToVertex.size() + " hops." );
 
-			String paths = "";
+			String paths = "The route is: ";
 			for (Iterator iter = _shortestPathToVertex.iterator(); iter.hasNext();)
 			{
 				DirectedSparseEdge item = (DirectedSparseEdge) iter.next();
-				paths += " ==> " + getCompleteEdgeName( item );
+				paths += getCompleteEdgeName( item ) + " ==> ";
 			}
+			paths += " Done!";
 			_logger.info( paths );
 		}
 
