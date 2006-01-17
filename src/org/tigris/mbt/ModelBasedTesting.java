@@ -64,7 +64,7 @@ public class ModelBasedTesting
 	private Vector 		_graphList 		= new Vector();
 	private SAXBuilder  _parser         = new SAXBuilder();
 	private Random      _radomGenerator = new Random();
-	
+
 	private String  START_NODE            = "Start";
 	private String  ID_KEY                = "id";
 	private String  FILE_KEY              = "file";
@@ -102,7 +102,7 @@ public class ModelBasedTesting
 		_object          = object_;
 		_logger          = Logger.getLogger( ModelBasedTesting.class );
 		PropertyConfigurator.configure("log4j.properties");
-		
+
 		readFiles();
 	}
 
@@ -121,7 +121,7 @@ public class ModelBasedTesting
 		StringBuffer sourceFile = new StringBuffer();
 		try {
 			FileWriter file = new FileWriter( mergedGraphml_ );
-			
+
 			sourceFile.append( "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n" );
 			sourceFile.append( "<graphml xmlns=\"http://graphml.graphdrawing.org/xmlns/graphml\"  xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://graphml.graphdrawing.org/xmlns/graphml http://www.yworks.com/xml/schema/graphml/1.0/ygraphml.xsd\" xmlns:y=\"http://www.yworks.com/xml/graphml\">\n" );
 			sourceFile.append( "  <key id=\"d0\" for=\"node\" yfiles.type=\"nodegraphics\"/>\n" );
@@ -149,7 +149,7 @@ public class ModelBasedTesting
 			}
 
 	        int i = 0;
-	        for ( Iterator edgeIterator = _graph.getEdges().iterator(); edgeIterator.hasNext(); ) 
+	        for ( Iterator edgeIterator = _graph.getEdges().iterator(); edgeIterator.hasNext(); )
 	        {
 	            Edge e = (Edge) edgeIterator.next();
 	            Pair p = e.getEndpoints();
@@ -158,7 +158,7 @@ public class ModelBasedTesting
 	            int srcId = id.getIndex(src)+1;
 	            int destId = id.getIndex(dest)+1;
 	            int nId = ++i;
-	            
+
 	            sourceFile.append( "    <edge id=\"" + nId + "\" source=\"n" + srcId + "\" target=\"n" + destId + "\">\n" );
 	            sourceFile.append( "      <data key=\"d1\" >\n" );
 	            sourceFile.append( "        <y:PolyLineEdge >\n" );
@@ -175,17 +175,17 @@ public class ModelBasedTesting
 	            sourceFile.append( "        </y:PolyLineEdge>\n" );
 	            sourceFile.append( "      </data>\n" );
 	            sourceFile.append( "    </edge>\n" );
-	            
+
 	        }
-	        
+
 	        sourceFile.append( "  </graph>\n" );
 	        sourceFile.append( "</graphml>\n" );
-	        
+
 			file.write( sourceFile.toString() );
 			file.flush();
 			_logger.info( "Wrote: " +  mergedGraphml_ );
-		} 
-		catch (IOException e) 
+		}
+		catch (IOException e)
 		{
 			e.printStackTrace();
 		}
@@ -366,7 +366,7 @@ public class ModelBasedTesting
 		{
 			_logger.info( "Parsing file: " + fileName );
 			_doc = _parser.build( fileName );
-			
+
 			// Parse all vertices (nodes)
 			Iterator iter = _doc.getDescendants( new ElementFilter( "node" ) );
 			while ( iter.hasNext() )
@@ -428,8 +428,8 @@ public class ModelBasedTesting
 								_logger.debug( "Found MERGE for edge: " + label );
 							}
 
-							
-							
+
+
 							// If no merge is defined, find it...
 							// If defined, it means that when merging graphs, this specific vertex will not be merged
 							// or replaced by any subgraphs
@@ -441,8 +441,8 @@ public class ModelBasedTesting
 								_logger.debug( "Found NO_MERGE for edge: " + label );
 							}
 
-							
-							
+
+
 							// NOTE: Only for html applications
 							// In browsers, the usage of the 'Back'-button can be used.
 							// If defined, with a value value, which depicts the probability for the edge
@@ -705,7 +705,7 @@ public class ModelBasedTesting
 			e.printStackTrace();
 			throw new RuntimeException( "Kunde inte skanna filen: " + fileName );
 		}
-		
+
 		return graph;
 	}
 
@@ -718,7 +718,7 @@ public class ModelBasedTesting
 		for ( Iterator iter = _graphList.iterator(); iter.hasNext(); )
 		{
 			SparseGraph g = (SparseGraph) iter.next();
-			
+
 			Object[] vertices = g.getVertices().toArray();
 			for ( int i = 0; i < vertices.length; i++ )
 			{
@@ -733,46 +733,44 @@ public class ModelBasedTesting
 						throw new RuntimeException( "A start nod can only have one out edge, look in file: " + g.getUserDatum( FILE_KEY ) );
 					}
 					DirectedSparseEdge edge = (DirectedSparseEdge)edges[ 0 ];
-					g.addUserDatum( LABEL_KEY, edge.getDest().getUserDatum(LABEL_KEY), UserData.SHARED );
 					if ( edge.containsUserDatumKey( LABEL_KEY ) )
 					{
 						if ( foundStartGraph == true )
 						{
-							throw new RuntimeException( "A start nod can only exist in one file, see files " + 
+							throw new RuntimeException( "A start nod can only exist in one file, see files " +
 									                    _graph.getUserDatum( FILE_KEY )+ ", and " + g.getUserDatum( FILE_KEY ) );
 						}
 						foundStartGraph = true;
 						_graph = g;
+						_logger.debug( "Found the mother graph in the file: " +  _graph.getUserDatum( FILE_KEY ) );
 					}
 					else
 					{
 						// Since the edge does not contain a label, this is a subgraph
 						// Mark the destination node of the edge to a subgraph starting node
 						edge.getDest().addUserDatum( SUBGRAPH_START_VERTEX, SUBGRAPH_START_VERTEX, UserData.SHARED );
+						g.addUserDatum( LABEL_KEY, edge.getDest().getUserDatum( LABEL_KEY ), UserData.SHARED );
 					}
 				}
-			}			
+			}
 		}
-		
-		_logger.debug( "Investigating graph: " + _graph.getUserDatum( LABEL_KEY ) );
 
 		for ( int i = 0; i < _graphList.size(); i++ )
 		{
 			SparseGraph g = (SparseGraph)_graphList.elementAt( i );
-			_logger.debug( "With graph: " + g.getUserDatum( LABEL_KEY ) + " in file: " + g.getUserDatum( FILE_KEY ) );
-			
-			if ( _graph.getUserDatum( LABEL_KEY ).equals( g.getUserDatum( LABEL_KEY ) ) )
+
+			if ( _graph.hashCode() == g.hashCode() )
 			{
-				_logger.debug( "  Graphs are the same, next..." );
 				continue;
 			}
-			
+			_logger.debug( "Analysing graph in file: " + g.getUserDatum( FILE_KEY ) );
+
 			Object[] vertices = _graph.getVertices().toArray();
 			for ( int j = 0; j < vertices.length; j++ )
 			{
 				DirectedSparseVertex v1 = (DirectedSparseVertex)vertices[ j ];
 				_logger.debug( "Investigating vertex(" + v1.hashCode() + "): " + v1.getUserDatum( LABEL_KEY ) );
-				
+
 				if ( v1.getUserDatum( LABEL_KEY ).equals( g.getUserDatum( LABEL_KEY ) ) )
 				{
 					if ( v1.containsUserDatumKey( MERGE ) )
@@ -785,12 +783,12 @@ public class ModelBasedTesting
 						_logger.debug( "The vertex is marked NO_MERGE, and will not be replaced by a subgraph.");
 						continue;
 					}
-					
-					_logger.debug( "A subgraph'ed vertex: " + v1.getUserDatum( LABEL_KEY ) + 
+
+					_logger.debug( "A subgraph'ed vertex: " + v1.getUserDatum( LABEL_KEY ) +
 							       " in graph: " + g.getUserDatum( FILE_KEY )  +
 							       ", equals a node in the graph in file: " +
 							       _graph.getUserDatum( FILE_KEY ) );
-					
+
 					appendGraph( _graph, g );
 					//writeGraph("/tmp/debug_append.graphml");
 					copySubGraphs( _graph, v1 );
@@ -802,23 +800,24 @@ public class ModelBasedTesting
 				}
 			}
 		}
-		
+
 		// Merge all nodes marked MERGE
 		Object[] list1 = _graph.getVertices().toArray();
 		for ( int i = 0; i < list1.length; i++ )
 		{
 			DirectedSparseVertex v1 = (DirectedSparseVertex)list1[ i ];
-			
+
 			if ( v1.containsUserDatumKey( MERGE ) == false )
 			{
 				continue;
 			}
-			
+
+			boolean v1IsMerged = false;
 			Object[] list2 = _graph.getVertices().toArray();
 			for ( int j = 0; j < list2.length; j++ )
 			{
 				DirectedSparseVertex v2 = (DirectedSparseVertex)list2[ j ];
-				
+
 				if ( v1.hashCode() == v2.hashCode() )
 				{
 					continue;
@@ -827,7 +826,7 @@ public class ModelBasedTesting
 				{
 					continue;
 				}
-				
+
 				_logger.debug( "Merging vertex(" + v1.hashCode() + "): " + v1.getUserDatum( LABEL_KEY ) +
 						       "with vertex(" + v2.hashCode() );
 
@@ -845,11 +844,16 @@ public class ModelBasedTesting
 					DirectedSparseEdge new_edge = (DirectedSparseEdge)_graph.addEdge( new DirectedSparseEdge( v2, edge.getDest() ) );
 					new_edge.importUserData( edge );
 				}
+				v1IsMerged = true;
+			}
+
+			if ( v1IsMerged )
+			{
 				_logger.debug( "Remvoing merged vertex(" + v1.hashCode() + ")" );
-			}			
-			_graph.removeVertex( v1 );
-		}		
-		
+				_graph.removeVertex( v1 );
+			}
+		}
+
 		_logger.debug( "Done merging" );
 	}
 
@@ -882,14 +886,14 @@ public class ModelBasedTesting
 			dst.addEdge( new_e );
 		}
 	}
-	
+
 	private void copySubGraphs( SparseGraph g, DirectedSparseVertex targetVertex )
 	{
 		DirectedSparseVertex sourceVertex = null;
 		Object[] vertices = g.getVertices().toArray();
 		for ( int i = 0; i < vertices.length; i++ )
 		{
-			DirectedSparseVertex v = (DirectedSparseVertex)vertices[ i ];			
+			DirectedSparseVertex v = (DirectedSparseVertex)vertices[ i ];
 			if ( v.getUserDatum( LABEL_KEY ).equals( targetVertex.getUserDatum( LABEL_KEY ) ) )
 			{
 				if ( v.containsUserDatumKey( SUBGRAPH_START_VERTEX ) == false )
@@ -908,17 +912,17 @@ public class ModelBasedTesting
 				{
 					continue;
 				}
-				
+
 				sourceVertex = v;
 				break;
 			}
 		}
-		
+
 		if ( sourceVertex == null )
 		{
 			return;
 		}
-		
+
 		_logger.info( "Start merging target vertex(" + targetVertex.hashCode() + ") with source vertex(" +
 				      sourceVertex.hashCode() + "), " + sourceVertex.getUserDatum( LABEL_KEY ) );
 
@@ -940,7 +944,7 @@ public class ModelBasedTesting
 		g.removeVertex( sourceVertex );
 		targetVertex.addUserDatum( NO_MERGE, "no merge", UserData.SHARED );
 	}
-	
+
 	public String getStatistics()
 	{
 		String stat = new String();
@@ -1302,6 +1306,11 @@ public class ModelBasedTesting
 		outEdges = _nextVertex.getOutEdges().toArray();
 		_logger.debug( "Number of outgoing edges = " + outEdges.length );
 
+		if ( outEdges.length == 0 )
+		{
+			throw new RuntimeException( "Found a cul-de-sac, I have to stop now..." );
+		}
+
 		outEdges = shuffle( outEdges );
 
 		if ( _shortestPathToVertex == null && _runUntilAllEdgesVisited == true )
@@ -1323,8 +1332,20 @@ public class ModelBasedTesting
 			}
 			_logger.info( "Selecting edge: " + getCompleteEdgeName( e ) );
 			_shortestPathToVertex = new DijkstraShortestPath( _graph ).getPath( _nextVertex, e.getSource() );
+
+			// DijkstraShortestPath.getPath returns 0 if there is no way to reach the destination. But,
+			// DijkstraShortestPath.getPath also returns 0 paths if the the source and destination vertex are the same, even if there is
+			// an edge there (self-loop). So we have to check for that.
+			if ( _shortestPathToVertex.size() == 0 )
+			{
+				if ( _nextVertex.hashCode() != e.getSource().hashCode() )
+				{
+					throw new RuntimeException( "There is no way to reach: " + getCompleteEdgeName( e ) + ", from: " + _nextVertex.getUserDatum( LABEL_KEY ) );
+				}
+			}
+
 			_shortestPathToVertex.add( e );
-			_logger.info( "Intend to take the shortest path between: " + (String)_nextVertex.getUserDatum( LABEL_KEY ) + " and " + (String)e.getDest().getUserDatum( LABEL_KEY ) + " (from: " + (String)e.getSource().getUserDatum( LABEL_KEY ) + "), using " + _shortestPathToVertex.size() + " hops." );
+			_logger.info( "Intend to take the shortest path between: " + _nextVertex.getUserDatum( LABEL_KEY ) + " and " + (String)e.getDest().getUserDatum( LABEL_KEY ) + " (from: " + e.getSource().getUserDatum( LABEL_KEY ) + "), using " + _shortestPathToVertex.size() + " hops." );
 
 			String paths = "The route is: ";
 			for (Iterator iter = _shortestPathToVertex.iterator(); iter.hasNext();)
@@ -1444,7 +1465,7 @@ public class ModelBasedTesting
 		{
 			_logger.error( e );
 			_logger.error( "Try to invoke method: " + method );
-			throw new RuntimeException( "The methoden is not defined: " + method );
+			throw new RuntimeException( "The method is not defined: " + method );
 		}
 		catch( java.lang.reflect.InvocationTargetException e )
 		{
