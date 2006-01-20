@@ -79,6 +79,7 @@ public class ModelBasedTesting
 	private String  MERGE	              = "merge";
 	private String  NO_MERGE	          = "no merge";
 	private String  SUBGRAPH_START_VERTEX = "subgraph start vertex";
+	private String  BLOCKED	              = "BLOCKED";
 
 	private Document 			 _doc;
 	private String   			 _graphmlFileName;
@@ -411,7 +412,7 @@ public class ModelBasedTesting
 							{
 								throw new RuntimeException( "Label must be defined." );
 							}
-							_logger.debug( "Added node: " + v.getUserDatum( LABEL_KEY ) );
+							_logger.debug( "Added vertex: " + v.getUserDatum( LABEL_KEY ) );
 
 
 
@@ -425,7 +426,7 @@ public class ModelBasedTesting
 							if ( m.find() )
 							{
 								v.addUserDatum( MERGE, m.group( 1 ), UserData.SHARED );
-								_logger.debug( "Found MERGE for edge: " + label );
+								_logger.debug( "Found MERGE for vertex: " + label );
 							}
 
 
@@ -438,7 +439,22 @@ public class ModelBasedTesting
 							if ( m.find() )
 							{
 								v.addUserDatum( NO_MERGE, m.group( 1 ), UserData.SHARED );
-								_logger.debug( "Found NO_MERGE for edge: " + label );
+								_logger.debug( "Found NO_MERGE for vertex: " + label );
+							}
+
+
+
+							// If BLOCKED is defined, find it...
+							// If defined, it means that this vertex will not be added to the graph
+							// Sometimes it can be useful during testing to mark vertcies as BLOCKED
+							// due to bugs in the system you test. When the bug is removed, the BLOCKED
+							// tag can be removed.
+							p = Pattern.compile( "(BLOCKED)", Pattern.MULTILINE );
+							m = p.matcher( str );
+							if ( m.find() )
+							{
+								_logger.debug( "Found BLOCKED. This vetex will be removed from the graph: " + label );
+								v.addUserDatum( BLOCKED, BLOCKED, UserData.SHARED );
 							}
 
 
@@ -462,6 +478,7 @@ public class ModelBasedTesting
 								{
 									throw new RuntimeException( "For label: " + label + ", back is not a correct float value: " + error.toString() );
 								}
+								_logger.debug( "Found FLOAT value: " + probability + ", for vertex: " + label );
 								v.addUserDatum( BACK_KEY, probability, UserData.SHARED );
 							}
 						}
@@ -574,6 +591,21 @@ public class ModelBasedTesting
 								throw new RuntimeException( "For label: " + label + ", weight is not a correct float value: " + error.toString() );
 							}
 							e.addUserDatum( WEIGHT_KEY, weight, UserData.SHARED );
+						}
+
+
+
+						// If BLOCKED is defined, find it...
+						// If defined, it means that this edge will not be added to the graph
+						// Sometimes it can be useful during testing to mark edges as BLOCKED
+						// due to bugs in the system you test. When the bug is removed, the BLOCKED
+						// tag can be removed.
+						p = Pattern.compile( "(BLOCKED)", Pattern.MULTILINE );
+						m = p.matcher( str );
+						if ( m.find() )
+						{
+							_logger.debug( "Found BLOCKED. This edge will be removed from the graph: " + label );
+							e.addUserDatum( BLOCKED, BLOCKED, UserData.SHARED );
 						}
 
 
@@ -706,9 +738,35 @@ public class ModelBasedTesting
 			throw new RuntimeException( "Kunde inte skanna filen: " + fileName );
 		}
 
+		removeBlockedEntities( graph );
+
 		return graph;
 	}
 
+
+	private void removeBlockedEntities( SparseGraph graph )
+	{
+		Object[] vertices = graph.getVertices().toArray();
+		for ( int i = 0; i < vertices.length; i++ )
+		{
+			DirectedSparseVertex v = (DirectedSparseVertex)vertices[ i ];
+			if ( v.containsUserDatumKey(BLOCKED) )
+			{
+				_logger.debug( "Removing this vertex because it is BLOCKED: " + v.getUserDatum( LABEL_KEY ) );
+				graph.removeVertex( v );
+			}
+		}
+		Object[] edges = graph.getEdges().toArray();
+		for ( int i = 0; i < edges.length; i++ )
+		{
+			DirectedSparseEdge e = (DirectedSparseEdge)edges[ i ];
+			if ( e.containsUserDatumKey(BLOCKED) )
+			{
+				_logger.debug( "Removing this edge because it is BLOCKED: " + e.getUserDatum( LABEL_KEY ) );
+				graph.removeEdge( e );
+			}
+		}
+	}
 
 	// When multiple graps are read from several files, chances are that there are vertices that has
 	// no out edges, which are continued in a different file. These has to be merged.
@@ -818,6 +876,10 @@ public class ModelBasedTesting
 			{
 				DirectedSparseVertex v2 = (DirectedSparseVertex)list2[ j ];
 
+				if ( v2.containsUserDatumKey( NO_MERGE ) )
+				{
+					continue;
+				}
 				if ( v1.hashCode() == v2.hashCode() )
 				{
 					continue;
@@ -828,7 +890,7 @@ public class ModelBasedTesting
 				}
 
 				_logger.debug( "Merging vertex(" + v1.hashCode() + "): " + v1.getUserDatum( LABEL_KEY ) +
-						       "with vertex(" + v2.hashCode() );
+						       " with vertex (" + v2.hashCode() + ")" );
 
 				Object[] inEdges = v1.getInEdges().toArray();
 				for (int x = 0; x < inEdges.length; x++)
@@ -1321,7 +1383,7 @@ public class ModelBasedTesting
 				_logger.debug( "All edges has been visited!" );
 				return;
 			}
-			_logger.info( "Found " + unvisitedEdges.size() + " unvisited edges." );
+			_logger.info( "Found " + unvisitedEdges.size() + " unvisited edges (" + _graph.getEdges().size() + ")" );
 
 
 			Object[] shuffledList = shuffle( unvisitedEdges.toArray() );
@@ -1345,7 +1407,7 @@ public class ModelBasedTesting
 			}
 
 			_shortestPathToVertex.add( e );
-			_logger.info( "Intend to take the shortest path between: " + _nextVertex.getUserDatum( LABEL_KEY ) + " and " + (String)e.getDest().getUserDatum( LABEL_KEY ) + " (from: " + e.getSource().getUserDatum( LABEL_KEY ) + "), using " + _shortestPathToVertex.size() + " hops." );
+			_logger.info( "Intend to take the shortest (" + _shortestPathToVertex.size() + " hops) path between: " + _nextVertex.getUserDatum( LABEL_KEY ) + " and " + (String)e.getDest().getUserDatum( LABEL_KEY ) + " (from: " + e.getSource().getUserDatum( LABEL_KEY ) + ")" );
 
 			String paths = "The route is: ";
 			for (Iterator iter = _shortestPathToVertex.iterator(); iter.hasNext();)
