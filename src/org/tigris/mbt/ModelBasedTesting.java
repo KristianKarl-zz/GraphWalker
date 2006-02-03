@@ -65,21 +65,23 @@ public class ModelBasedTesting
 	private SAXBuilder  _parser         = new SAXBuilder();
 	private Random      _radomGenerator = new Random();
 
-	private String  START_NODE            = "Start";
-	private String  ID_KEY                = "id";
-	private String  FILE_KEY              = "file";
-	private String  LABEL_KEY             = "label";
-	private String  VISITED_KEY           = "visited";
-	private String  WEIGHT_KEY            = "weight";
-	private String  STATE_KEY             = "state";
-	private String  CONDITION_KEY         = "condition";
-	private String  VARIABLE_KEY          = "variable";
-	private String  BACK_KEY              = "back";
-	private String  NO_HISTORY	          = "no history";
-	private String  MERGE	              = "merge";
-	private String  NO_MERGE	          = "no merge";
-	private String  SUBGRAPH_START_VERTEX = "subgraph start vertex";
-	private String  BLOCKED	              = "BLOCKED";
+	private String  START_NODE                = "Start";
+	private String  ID_KEY                    = "id";
+	private String  FILE_KEY                  = "file";
+	private String  LABEL_KEY                 = "label";
+	private String  VISITED_KEY               = "visited";
+	private String  WEIGHT_KEY                = "weight";
+	private String  STATE_KEY                 = "state";
+	private String  CONDITION_KEY             = "condition";
+	private String  VARIABLE_KEY              = "variable";
+	private String  BACK_KEY                  = "back";
+	private String  NO_HISTORY	              = "no history";
+	private String  MERGE	                  = "merge";
+	private String  NO_MERGE	          	  = "no merge";
+	private String  MERGED_BY_MBT	          = "merged by mbt";
+	private String  MOTHER_GRAPH_START_VERTEX = "mother graph start vertex";
+	private String  SUBGRAPH_START_VERTEX     = "subgraph start vertex";
+	private String  BLOCKED	                  = "BLOCKED";
 
 	private Document 			 _doc;
 	private String   			 _graphmlFileName;
@@ -91,8 +93,9 @@ public class ModelBasedTesting
 	private DirectedSparseVertex _prevVertex   = null;
 	private DirectedSparseEdge 	 _rejectedEdge = null;
 	private LinkedList 			 _history      = new LinkedList();
+	private Vector 			     _pathHistory  = new Vector();
 	private long				 _start_time;
-	private long				 _end_time;
+	private long				 _end_time     = 0;
 	private boolean				 _runUntilAllEdgesVisited = false;
 	private List				 _shortestPathToVertex = null;
 
@@ -102,7 +105,7 @@ public class ModelBasedTesting
 		_graphmlFileName = graphmlFileName_;
 		_object          = object_;
 		_logger          = Logger.getLogger( ModelBasedTesting.class );
-		PropertyConfigurator.configure("log4j.properties");
+		//PropertyConfigurator.configure("log4j.properties");
 
 		readFiles();
 	}
@@ -421,7 +424,7 @@ public class ModelBasedTesting
 							// If merge is defined, find it...
 							// If defined, it means that the node will be merged with all other nodes wit the same name,
 							// but not replaced by any subgraphs
-							p = Pattern.compile( "(MERGE)", Pattern.MULTILINE );
+							p = Pattern.compile( "\\n(MERGE)", Pattern.MULTILINE );
 							m = p.matcher( str );
 							if ( m.find() )
 							{
@@ -434,7 +437,7 @@ public class ModelBasedTesting
 							// If no merge is defined, find it...
 							// If defined, it means that when merging graphs, this specific vertex will not be merged
 							// or replaced by any subgraphs
-							p = Pattern.compile( "(NO_MERGE)", Pattern.MULTILINE );
+							p = Pattern.compile( "\\n(NO_MERGE)", Pattern.MULTILINE );
 							m = p.matcher( str );
 							if ( m.find() )
 							{
@@ -449,7 +452,7 @@ public class ModelBasedTesting
 							// Sometimes it can be useful during testing to mark vertcies as BLOCKED
 							// due to bugs in the system you test. When the bug is removed, the BLOCKED
 							// tag can be removed.
-							p = Pattern.compile( "(BLOCKED)", Pattern.MULTILINE );
+							p = Pattern.compile( "\\n(BLOCKED)", Pattern.MULTILINE );
 							m = p.matcher( str );
 							if ( m.find() )
 							{
@@ -464,7 +467,7 @@ public class ModelBasedTesting
 							// If defined, with a value value, which depicts the probability for the edge
 							// to be executed, tha back-button will be pressed in the browser.
 							// A value of 0.05 is the same as 5% chance of going down this road.
-							p = Pattern.compile( "(back=(.*))", Pattern.MULTILINE );
+							p = Pattern.compile( "\\n(back=(.*))", Pattern.MULTILINE );
 							m = p.matcher( str );
 							if ( m.find( ) )
 							{
@@ -561,12 +564,25 @@ public class ModelBasedTesting
 						if ( m.find() )
 						{
 							label = m.group( 1 );
-							e.addUserDatum( LABEL_KEY, label, UserData.SHARED );
-							_logger.debug( "Found label= " + label + " for edge id: " + edgeLabel.getQualifiedName() );
+							if ( !label.equalsIgnoreCase("") )
+							{
+								e.addUserDatum( LABEL_KEY, label, UserData.SHARED );
+								_logger.debug( "Found label= " + label + " for edge id: " + edgeLabel.getQualifiedName() );
+							}
 						}
 						else
 						{
 							throw new RuntimeException( "Label for edge must be defined." );
+						}
+
+						if ( label == null || label.equalsIgnoreCase("") )
+						{
+							DirectedSparseVertex srcV = (DirectedSparseVertex)e.getSource();
+							String s = (String)srcV.getUserDatum( LABEL_KEY );
+							if ( s.compareTo( START_NODE ) != 0 )
+							{
+								throw new RuntimeException( "Label for a edge comming from a non-Start vertex, must be defined." );
+							}
 						}
 
 
@@ -575,7 +591,7 @@ public class ModelBasedTesting
 						// weight must be associated with a value, which depicts the probability for the edge
 						// to be executed.
 						// A value of 0.05 is the same as 5% chance of going down this road.
-						p = Pattern.compile( "(weight=(.*))", Pattern.MULTILINE );
+						p = Pattern.compile( "\\n(weight=(.*))", Pattern.MULTILINE );
 						m = p.matcher( str );
 						if ( m.find() )
 						{
@@ -600,7 +616,7 @@ public class ModelBasedTesting
 						// Sometimes it can be useful during testing to mark edges as BLOCKED
 						// due to bugs in the system you test. When the bug is removed, the BLOCKED
 						// tag can be removed.
-						p = Pattern.compile( "(BLOCKED)", Pattern.MULTILINE );
+						p = Pattern.compile( "\\n(BLOCKED)", Pattern.MULTILINE );
 						m = p.matcher( str );
 						if ( m.find() )
 						{
@@ -613,7 +629,7 @@ public class ModelBasedTesting
 						// If No_history is defined, find it...
 						// If defined, it means that when executing this edge, it shall not
 						// be added to the history list of passed edgses.
-						p = Pattern.compile( "(No_history)", Pattern.MULTILINE );
+						p = Pattern.compile( "\\n(No_history)", Pattern.MULTILINE );
 						m = p.matcher( str );
 						if ( m.find() )
 						{
@@ -624,7 +640,7 @@ public class ModelBasedTesting
 
 
 						// If condition used defined, find it...
-						p = Pattern.compile( "(if: (.*)=(.*))", Pattern.MULTILINE );
+						p = Pattern.compile( "\\n(if: (.*)=(.*))", Pattern.MULTILINE );
 						m = p.matcher( str );
 						HashMap conditions = null;
 						while ( m.find( ) )
@@ -647,7 +663,7 @@ public class ModelBasedTesting
 
 						// If state are defined, find them...
 						HashMap states = null;
-						p = Pattern.compile( "(state: (.*)=(.*))", Pattern.MULTILINE );
+						p = Pattern.compile( "\\n(state: (.*)=(.*))", Pattern.MULTILINE );
 						m = p.matcher( str );
 						while ( m.find( ) )
 						{
@@ -669,7 +685,7 @@ public class ModelBasedTesting
 
 						// If string variables are defined, find them...
 						HashMap variables = null;
-						p = Pattern.compile( "(string: (.*)=(.*))", Pattern.MULTILINE );
+						p = Pattern.compile( "\\n(string: (.*)=(.*))", Pattern.MULTILINE );
 						m = p.matcher( str );
 						while ( m.find( ) )
 						{
@@ -686,7 +702,7 @@ public class ModelBasedTesting
 
 
 							// If integer variables are defined, find them...
-							p = Pattern.compile( "(integer: (.*)=(.*))", Pattern.MULTILINE );
+							p = Pattern.compile( "\\n(integer: (.*)=(.*))", Pattern.MULTILINE );
 							m = p.matcher( str );
 							while ( m.find( ) )
 							{
@@ -703,7 +719,7 @@ public class ModelBasedTesting
 
 
 							// If integer variables are defined, find them...
-							p = Pattern.compile( "(float: (.*)=(.*))", Pattern.MULTILINE );
+							p = Pattern.compile( "\\n(float: (.*)=(.*))", Pattern.MULTILINE );
 							m = p.matcher( str );
 							while ( m.find( ) )
 							{
@@ -800,6 +816,7 @@ public class ModelBasedTesting
 						}
 						foundStartGraph = true;
 						_graph = g;
+						edge.getDest().addUserDatum( MOTHER_GRAPH_START_VERTEX, MOTHER_GRAPH_START_VERTEX, UserData.SHARED );
 						_logger.debug( "Found the mother graph in the file: " +  _graph.getUserDatum( FILE_KEY ) );
 					}
 					else
@@ -841,6 +858,11 @@ public class ModelBasedTesting
 						_logger.debug( "The vertex is marked NO_MERGE, and will not be replaced by a subgraph.");
 						continue;
 					}
+					if ( v1.containsUserDatumKey( MERGED_BY_MBT ) )
+					{
+						_logger.debug( "The vertex is marked MERGED_BY_MBT, and will not be replaced by a subgraph.");
+						continue;
+					}
 
 					_logger.debug( "A subgraph'ed vertex: " + v1.getUserDatum( LABEL_KEY ) +
 							       " in graph: " + g.getUserDatum( FILE_KEY )  +
@@ -876,15 +898,15 @@ public class ModelBasedTesting
 			{
 				DirectedSparseVertex v2 = (DirectedSparseVertex)list2[ j ];
 
+				if ( v1.getUserDatum( LABEL_KEY ).equals( v2.getUserDatum( LABEL_KEY ) ) == false )
+				{
+					continue;
+				}
 				if ( v2.containsUserDatumKey( NO_MERGE ) )
 				{
 					continue;
 				}
 				if ( v1.hashCode() == v2.hashCode() )
-				{
-					continue;
-				}
-				if ( v1.getUserDatum( LABEL_KEY ).equals( v2.getUserDatum( LABEL_KEY ) ) == false )
 				{
 					continue;
 				}
@@ -916,7 +938,17 @@ public class ModelBasedTesting
 			}
 		}
 
-		_logger.debug( "Done merging" );
+		Object[] list = _graph.getVertices().toArray();
+		for ( int i = 0; i < list.length; i++ )
+		{
+			DirectedSparseVertex v = (DirectedSparseVertex)list[ i ];
+			if ( v.getOutEdges().size() <= 0 )
+			{
+				_logger.warn( "Found a cul-de-sac. Vertex has no out-edges:  " + (String)v.getUserDatum( LABEL_KEY ) );
+			}
+		}
+
+		_logger.info( "Done merging" );
 	}
 
 	private void appendGraph( SparseGraph dst, SparseGraph src )
@@ -970,6 +1002,10 @@ public class ModelBasedTesting
 				{
 					continue;
 				}
+				if ( v.containsUserDatumKey( MERGED_BY_MBT ) )
+				{
+					continue;
+				}
 				if ( v.hashCode() == targetVertex.hashCode() )
 				{
 					continue;
@@ -1004,7 +1040,7 @@ public class ModelBasedTesting
 		}
 		_logger.debug( "Remvoing source vertex(" + sourceVertex.hashCode() + ")" );
 		g.removeVertex( sourceVertex );
-		targetVertex.addUserDatum( NO_MERGE, "no merge", UserData.SHARED );
+		targetVertex.addUserDatum( MERGED_BY_MBT, MERGED_BY_MBT, UserData.SHARED );
 	}
 
 	public String getStatistics()
@@ -1052,11 +1088,17 @@ public class ModelBasedTesting
 				numOfVisitedVertices++;
 			}
 			totalNumOfVisitedVertices += vistited.intValue();
-		}
+		}		
 		stat += "Test coverage edges: " + numOfVisitedEdges + "/" + edges.length + " => " +  (numOfVisitedEdges / (float)edges.length * 100) + "%" + new_line;
 		stat += "Test coverage vertices: " + numOfVisitedVertices + "/" + vertices.length + " => " + (numOfVisitedVertices / (float)vertices.length * 100)  + "%" + new_line;
 		stat += "Number of visited edges: " + totalNumOfVisitedEdges + new_line;
 		stat += "Number of visited vertices: " + totalNumOfVisitedVertices + new_line;
+		
+		if ( _end_time == 0 )
+		{
+			_end_time = System.currentTimeMillis();
+		}
+		
 		stat += "Execution time: " + ( ( _end_time - _start_time ) / 1000 ) + " seconds" + new_line;
 
 		return stat;
@@ -1322,6 +1364,11 @@ public class ModelBasedTesting
 		DirectedSparseEdge edge 	= null;
 		Object[] 		   outEdges = null;
 
+		if (_nextVertex.containsUserDatumKey( MOTHER_GRAPH_START_VERTEX ) )
+		{
+			_pathHistory.clear();
+		}
+
 		if ( _nextVertex.containsUserDatumKey( BACK_KEY ) && _history. size() >= 3 )
 		{
 			Float probability = (Float)_nextVertex.getUserDatum( BACK_KEY );
@@ -1370,6 +1417,7 @@ public class ModelBasedTesting
 
 		if ( outEdges.length == 0 )
 		{
+			_logger.error( "Vertex has no out-edges:  " + (String)_nextVertex.getUserDatum( LABEL_KEY ) );
 			throw new RuntimeException( "Found a cul-de-sac, I have to stop now..." );
 		}
 
@@ -1514,6 +1562,8 @@ public class ModelBasedTesting
 	private void invokeMethod( String method ) throws GoBackToPreviousVertexException
 	{
 		Class cls = _object.getClass();
+
+		_pathHistory.add( method );
 
 		try
 		{
@@ -1665,5 +1715,28 @@ public class ModelBasedTesting
 	{
 		String str = (String)edge.getUserDatum( LABEL_KEY ) + " (" + (String)edge.getSource().getUserDatum( LABEL_KEY ) + " -> " + (String)edge.getDest().getUserDatum( LABEL_KEY ) + ") " + edge.hashCode() + "(" + edge.getSource().hashCode() + " -> " + edge.getDest().hashCode() + ")";
 		return str;
+	}
+
+	public void writeWalkedPath( String fileName )
+	{
+		try
+		{
+			FileWriter file = new FileWriter( fileName );
+
+			StringBuffer strBuff = new StringBuffer();
+
+			for (Iterator iter = _pathHistory.iterator(); iter.hasNext();)
+			{
+				String element = (String) iter.next();
+				strBuff.append( element + "\n" );
+			}
+
+			file.write( strBuff.toString() );
+			file.flush();
+		}
+		catch ( IOException e )
+		{
+			_logger.error( e.getMessage() );
+		}
 	}
 }
