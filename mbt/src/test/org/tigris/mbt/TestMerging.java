@@ -21,26 +21,27 @@ public class TestMerging extends TestCase
     public void test01()
     {
     	ModelBasedTesting mbt = new ModelBasedTesting( "graphml/test01" );
-    	assertTrue( mbt.getGraph().getEdges().size() == 9 );
-    	assertTrue( mbt.getGraph().getVertices().size() == 6 );
     	mbt.writeGraph( "graphml/merged/test01.graphml" );
+    	assertTrue( mbt.getGraph().getEdges().size() == 9 );
+    	assertTrue( mbt.getGraph().getVertices().size() == 7 );
     }
     
     // Test merging of 2 simple graphs, with  nodes containing key word NO_MERGE
     public void test02()
     {
     	ModelBasedTesting mbt = new ModelBasedTesting( "graphml/test02" );
-    	assertTrue( mbt.getGraph().getEdges().size() == 11 );
-    	assertTrue( mbt.getGraph().getVertices().size() == 7 );
     	mbt.writeGraph( "graphml/merged/test02.graphml" );
+    	assertTrue( mbt.getGraph().getEdges().size() == 11 );
+    	assertTrue( mbt.getGraph().getVertices().size() == 8 );
     }
     
-    // Test merging of 22 complex graphs
+    // Test merging a folder consisting 162 graphs
     public void test03()
     {
     	ModelBasedTesting mbt = new ModelBasedTesting( "graphml/test03" );
-    	assertTrue( mbt.getGraph().getEdges().size() == 415 );
-    	assertTrue( mbt.getGraph().getVertices().size() == 180 );
     	mbt.writeGraph( "graphml/merged/test03.graphml" );
+    	assertTrue( mbt.getGraph().getEdges().size() == 1587 );
+    	assertTrue( mbt.getGraph().getVertices().size() == 799l );
     }
+    
 }
