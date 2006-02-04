@@ -8,10 +8,10 @@ xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns/graphml http://www.ywo
     <node id="n0">
       <data key="d0" >
         <y:ShapeNode >
-          <y:Geometry  x="10.0" y="0.0" width="50.0" height="30.0"/>
+          <y:Geometry  x="23.0" y="0.0" width="40.0" height="30.0"/>
           <y:Fill color="#00FF00"  transparent="false"/>
           <y:BorderStyle type="line" width="1.0" color="#000000" />
-          <y:NodeLabel x="10.5" y="5.6494140625" width="29.0" height="18.701171875" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" modelName="internal" modelPosition="c" autoSizePolicy="content">Start</y:NodeLabel>
+          <y:NodeLabel x="5.0" y="6.0185546875" width="30.0" height="17.962890625" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" modelName="internal" modelPosition="c" autoSizePolicy="content">Start</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>
@@ -19,10 +19,10 @@ xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns/graphml http://www.ywo
     <node id="n1">
       <data key="d0" >
         <y:ShapeNode >
-          <y:Geometry  x="27.5" y="88.701171875" width="30.0" height="30.0"/>
+          <y:Geometry  x="37.5" y="87.962890625" width="22.0" height="30.0"/>
           <y:Fill color="#CCCCFF"  transparent="false"/>
           <y:BorderStyle type="line" width="1.0" color="#000000" />
-          <y:NodeLabel x="9.5" y="5.6494140625" width="11.0" height="18.701171875" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" modelName="internal" modelPosition="c" autoSizePolicy="content">A</y:NodeLabel>
+          <y:NodeLabel x="5.0" y="6.0185546875" width="12.0" height="17.962890625" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" modelName="internal" modelPosition="c" autoSizePolicy="content">A</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>
@@ -30,10 +30,10 @@ xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns/graphml http://www.ywo
     <node id="n2">
       <data key="d0" >
         <y:ShapeNode >
-          <y:Geometry  x="-15.0" y="177.40234375" width="30.0" height="30.0"/>
+          <y:Geometry  x="0.0" y="175.92578125" width="21.0" height="30.0"/>
           <y:Fill color="#CCCCFF"  transparent="false"/>
           <y:BorderStyle type="line" width="1.0" color="#000000" />
-          <y:NodeLabel x="9.0" y="5.6494140625" width="12.0" height="18.701171875" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" modelName="internal" modelPosition="c" autoSizePolicy="content">B</y:NodeLabel>
+          <y:NodeLabel x="5.0" y="6.0185546875" width="11.0" height="17.962890625" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" modelName="internal" modelPosition="c" autoSizePolicy="content">B</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>
@@ -41,10 +41,10 @@ xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns/graphml http://www.ywo
     <node id="n3">
       <data key="d0" >
         <y:ShapeNode >
-          <y:Geometry  x="60.0" y="177.40234375" width="30.0" height="30.0"/>
+          <y:Geometry  x="66.0" y="175.92578125" width="22.0" height="30.0"/>
           <y:Fill color="#CCCCFF"  transparent="false"/>
           <y:BorderStyle type="line" width="1.0" color="#000000" />
-          <y:NodeLabel x="8.5" y="5.6494140625" width="13.0" height="18.701171875" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" modelName="internal" modelPosition="c" autoSizePolicy="content">C</y:NodeLabel>
+          <y:NodeLabel x="5.0" y="6.0185546875" width="12.0" height="17.962890625" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" modelName="internal" modelPosition="c" autoSizePolicy="content">C</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>
@@ -52,10 +52,10 @@ xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns/graphml http://www.ywo
     <edge id="e0" source="n0" target="n1">
       <data key="d1" >
         <y:PolyLineEdge >
-          <y:Path sx="0.0" sy="15.0" tx="-7.5" ty="-15.0"/>
+          <y:Path sx="0.0" sy="15.0" tx="-5.5" ty="-15.0"/>
           <y:LineStyle type="line" width="1.0" color="#000000" />
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel x="-12.5" y="10.0" width="25.0" height="18.701171875" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">doA</y:EdgeLabel>
+          <y:EdgeLabel x="-13.5" y="10.0" width="27.0" height="17.962890625" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">doA</y:EdgeLabel>
           <y:BendStyle smoothed="true"/>
         </y:PolyLineEdge>
       </data>
@@ -63,13 +63,13 @@ xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns/graphml http://www.ywo
     <edge id="e1" source="n1" target="n2">
       <data key="d1" >
         <y:PolyLineEdge >
-          <y:Path sx="-7.5" sy="15.0" tx="0.0" ty="-15.0">
-            <y:Point x="35.0" y="128.701171875"/>
-            <y:Point x="0.0" y="148.701171875"/>
+          <y:Path sx="-5.5" sy="15.0" tx="0.0" ty="-15.0">
+            <y:Point x="43.0" y="132.962890625"/>
+            <y:Point x="10.5" y="132.962890625"/>
           </y:Path>
           <y:LineStyle type="line" width="1.0" color="#000000" />
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel x="-47.99999999999999" y="30.0" width="26.0" height="18.701171875" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">doB</y:EdgeLabel>
+          <y:EdgeLabel x="-45.5" y="30.0" width="26.0" height="17.962890625" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">doB</y:EdgeLabel>
           <y:BendStyle smoothed="true"/>
         </y:PolyLineEdge>
       </data>
@@ -77,13 +77,13 @@ xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns/graphml http://www.ywo
     <edge id="e2" source="n1" target="n3">
       <data key="d1" >
         <y:PolyLineEdge >
-          <y:Path sx="7.5" sy="15.0" tx="0.0" ty="-15.0">
-            <y:Point x="50.0" y="128.701171875"/>
-            <y:Point x="75.0" y="148.701171875"/>
+          <y:Path sx="5.5" sy="15.0" tx="0.0" ty="-15.0">
+            <y:Point x="54.0" y="132.962890625"/>
+            <y:Point x="77.0" y="132.962890625"/>
           </y:Path>
           <y:LineStyle type="line" width="1.0" color="#000000" />
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel x="11.5" y="30.0" width="27.0" height="18.701171875" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">doC</y:EdgeLabel>
+          <y:EdgeLabel x="9.5" y="30.0" width="27.0" height="17.962890625" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">doC</y:EdgeLabel>
           <y:BendStyle smoothed="true"/>
         </y:PolyLineEdge>
       </data>
@@ -91,15 +91,15 @@ xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns/graphml http://www.ywo
     <edge id="e3" source="n3" target="n1">
       <data key="d1" >
         <y:PolyLineEdge >
-          <y:Path sx="0.0" sy="15.0" tx="7.5" ty="-15.0">
-            <y:Point x="75.0" y="222.40234375"/>
-            <y:Point x="120.0" y="222.40234375"/>
-            <y:Point x="120.0" y="73.701171875"/>
-            <y:Point x="50.0" y="73.701171875"/>
+          <y:Path sx="0.0" sy="15.0" tx="5.5" ty="-15.0">
+            <y:Point x="77.0" y="220.92578125"/>
+            <y:Point x="119.0" y="220.92578125"/>
+            <y:Point x="119.0" y="72.962890625"/>
+            <y:Point x="54.0" y="72.962890625"/>
           </y:Path>
           <y:LineStyle type="line" width="1.0" color="#000000" />
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel x="32.5" y="-58.701171875" width="25.0" height="18.701171875" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">doA</y:EdgeLabel>
+          <y:EdgeLabel x="28.5" y="-57.962890625" width="27.0" height="17.962890625" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">doA</y:EdgeLabel>
           <y:BendStyle smoothed="true"/>
         </y:PolyLineEdge>
       </data>
