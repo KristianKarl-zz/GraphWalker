@@ -36,18 +36,11 @@ import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.filter.ElementFilter;
-import org.jdom.input.SAXBuilder;
 
 import edu.uci.ics.jung.algorithms.shortestpath.DijkstraShortestPath;
 import edu.uci.ics.jung.graph.Edge;
 import edu.uci.ics.jung.graph.Vertex;
-import edu.uci.ics.jung.graph.decorators.Indexer;
 import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
 import edu.uci.ics.jung.graph.impl.DirectedSparseVertex;
 import edu.uci.ics.jung.graph.impl.SparseGraph;
@@ -60,10 +53,10 @@ import edu.uci.ics.jung.utils.UserData;
 public class ModelBasedTesting
 {
 
-	private SparseGraph _graph          = new SparseGraph();
-	private Vector 		_graphList 		= new Vector();
-	private SAXBuilder  _parser         = new SAXBuilder();
-	private Random      _radomGenerator = new Random();
+	private SparseGraph 				_graph          = new SparseGraph();
+	private java.util.Vector 			_graphList 		= new Vector();
+	private org.jdom.input.SAXBuilder  	_parser         = new org.jdom.input.SAXBuilder();
+	private java.util.Random      		_radomGenerator = new Random();
 
 	private String  START_NODE                = "Start";
 	private String  ID_KEY                    = "id";
@@ -75,36 +68,36 @@ public class ModelBasedTesting
 	private String  CONDITION_KEY             = "condition";
 	private String  VARIABLE_KEY              = "variable";
 	private String  BACK_KEY                  = "back";
-	private String  NO_HISTORY	              = "no history";
-	private String  MERGE	                  = "merge";
-	private String  NO_MERGE	          	  = "no merge";
-	private String  MERGED_BY_MBT	          = "merged by mbt";
+	private String  NO_HISTORY	            = "no history";
+	private String  MERGE	                  	= "merge";
+	private String  NO_MERGE	          	  	= "no merge";
+	private String  MERGED_BY_MBT	          	= "merged by mbt";
 	private String  MOTHER_GRAPH_START_VERTEX = "mother graph start vertex";
 	private String  SUBGRAPH_START_VERTEX     = "subgraph start vertex";
-	private String  BLOCKED	                  = "BLOCKED";
+	private String  BLOCKED	                = "BLOCKED";
 
-	private Document 			 _doc;
-	private String   			 _graphmlFileName;
-	private Object   			 _object;
-	private Logger   			 _logger;
-	private Object[] 			 _vertices     = null;
-	private Object[]             _edges        = null;
-	private DirectedSparseVertex _nextVertex   = null;
-	private DirectedSparseVertex _prevVertex   = null;
-	private DirectedSparseEdge 	 _rejectedEdge = null;
-	private LinkedList 			 _history      = new LinkedList();
-	private Vector 			     _pathHistory  = new Vector();
-	private long				 _start_time;
-	private long				 _end_time     = 0;
-	private boolean				 _runUntilAllEdgesVisited = false;
-	private List				 _shortestPathToVertex = null;
+	private org.jdom.Document 		_doc;
+	private String   				_graphmlFileName;
+	private Object   			 	_object;
+	private org.apache.log4j.Logger _logger;
+	private Object[] 			 	_vertices     = null;
+	private Object[]             	_edges        = null;
+	private DirectedSparseVertex 	_nextVertex   = null;
+	private DirectedSparseVertex 	_prevVertex   = null;
+	private DirectedSparseEdge 	 	_rejectedEdge = null;
+	private LinkedList 			 	_history      = new LinkedList();
+	private Vector 			     	_pathHistory  = new Vector();
+	private long				 	_start_time;
+	private long				 	_end_time     = 0;
+	private boolean				 	_runUntilAllEdgesVisited = false;
+	private List				 	_shortestPathToVertex = null;
 
 	public ModelBasedTesting( String graphmlFileName_,
 			  				  Object object_ )
 	{
 		_graphmlFileName = graphmlFileName_;
 		_object          = object_;
-		_logger          = Logger.getLogger( ModelBasedTesting.class );
+		_logger          = org.apache.log4j.Logger.getLogger( ModelBasedTesting.class );
 		//PropertyConfigurator.configure("log4j.properties");
 
 		readFiles();
@@ -114,7 +107,7 @@ public class ModelBasedTesting
 	{
 		_graphmlFileName = graphmlFileName_;
 		_object          = null;
-		_logger          = Logger.getLogger( ModelBasedTesting.class );
+		_logger          = org.apache.log4j.Logger.getLogger( ModelBasedTesting.class );
 		PropertyConfigurator.configure("log4j.properties");
 
 		readFiles();
@@ -133,7 +126,7 @@ public class ModelBasedTesting
 			sourceFile.append( "  <graph id=\"G\" edgedefault=\"directed\">\n" );
 
 	        int numVertices = _graph.getVertices().size();
-	        Indexer id = Indexer.getAndUpdateIndexer( _graph );
+	        edu.uci.ics.jung.graph.decorators.Indexer id = edu.uci.ics.jung.graph.decorators.Indexer.getAndUpdateIndexer( _graph );
 	        for ( int i = 0; i < numVertices; i++ )
 	        {
 	            Vertex v = (Vertex) id.getVertex(i);
@@ -246,7 +239,7 @@ public class ModelBasedTesting
 		// Start the execution which is random.
 		while ( ( currentTime - startTime ) < runningTime )
 		{
-			executeMethod( false );
+			executeMethod( false, false );
 			currentTime = System.currentTimeMillis();
 			_end_time = currentTime;
 		}
@@ -263,7 +256,7 @@ public class ModelBasedTesting
 		_start_time = System.currentTimeMillis();
 		while ( true )
 		{
-			executeMethod( true );
+			executeMethod( true, false );
 			_end_time = System.currentTimeMillis();
 			if ( isAllVerticesVisited() )
 			{
@@ -285,7 +278,7 @@ public class ModelBasedTesting
 		_start_time = System.currentTimeMillis();
 		while ( true )
 		{
-			executeMethod( true );
+			executeMethod( true, false );
 			_end_time = System.currentTimeMillis();
 			if ( isAllEdgesVisited() )
 			{
@@ -306,7 +299,7 @@ public class ModelBasedTesting
 		_start_time = System.currentTimeMillis();
 		while ( true )
 		{
-			executeMethod( true );
+			executeMethod( true, false );
 			_end_time = System.currentTimeMillis();
 			if ( isAllVerticesVisited() && isAllEdgesVisited() )
 			{
@@ -372,13 +365,13 @@ public class ModelBasedTesting
 			_doc = _parser.build( fileName );
 
 			// Parse all vertices (nodes)
-			Iterator iter = _doc.getDescendants( new ElementFilter( "node" ) );
+			Iterator iter = _doc.getDescendants( new org.jdom.filter.ElementFilter( "node" ) );
 			while ( iter.hasNext() )
 			{
 				Object o = iter.next();
-				if ( o instanceof Element )
+				if ( o instanceof org.jdom.Element )
 				{
-					Element element = (Element)o;
+					org.jdom.Element element = (org.jdom.Element)o;
 					if ( element.getAttributeValue( "yfiles.foldertype" ) != null )
 					{
 						_logger.debug( "Excluded node: " + element.getAttributeValue( "yfiles.foldertype" ) );
@@ -386,13 +379,13 @@ public class ModelBasedTesting
 					}
 					_logger.debug( "id: " + element.getAttributeValue( "id" ) );
 
-					Iterator iter2 = element.getDescendants( new ElementFilter( "NodeLabel" ) );
+					Iterator iter2 = element.getDescendants( new org.jdom.filter.ElementFilter( "NodeLabel" ) );
 					while ( iter2.hasNext() )
 					{
 						Object o2 = iter2.next();
-						if ( o2 instanceof Element )
+						if ( o2 instanceof org.jdom.Element )
 						{
-							Element nodeLabel = (Element)o2;
+							org.jdom.Element nodeLabel = (org.jdom.Element)o2;
 							_logger.debug( "Full name: " + nodeLabel.getQualifiedName() );
 							_logger.debug( "Name: " + nodeLabel.getTextTrim() );
 
@@ -492,23 +485,23 @@ public class ModelBasedTesting
 			Object[] vertices = graph.getVertices().toArray();
 
 			// Parse all edges (arrows or transtitions)
-			iter = _doc.getDescendants( new ElementFilter( "edge" ) );
+			iter = _doc.getDescendants( new org.jdom.filter.ElementFilter( "edge" ) );
 			while ( iter.hasNext() )
 			{
 				Object o = iter.next();
-				if ( o instanceof Element )
+				if ( o instanceof org.jdom.Element )
 				{
-					Element element = (Element)o;
+					org.jdom.Element element = (org.jdom.Element)o;
 					_logger.debug( "id: " + element.getAttributeValue( "id" ) );
 
-					Iterator iter2 = element.getDescendants( new ElementFilter( "EdgeLabel" ) );
-					Element edgeLabel = null;
+					Iterator iter2 = element.getDescendants( new org.jdom.filter.ElementFilter( "EdgeLabel" ) );
+					org.jdom.Element edgeLabel = null;
 					if ( iter2.hasNext() )
 					{
 						Object o2 = iter2.next();
-						if ( o2 instanceof Element )
+						if ( o2 instanceof org.jdom.Element )
 						{
-							edgeLabel = (Element)o2;
+							edgeLabel = (org.jdom.Element)o2;
 							_logger.debug( "Full name: " + edgeLabel.getQualifiedName() );
 							_logger.debug( "Name: " + edgeLabel.getTextTrim() );
 						}
@@ -744,7 +737,7 @@ public class ModelBasedTesting
 						{
 							DirectedSparseVertex v = (DirectedSparseVertex)e.getSource();
 							str = (String)v.getUserDatum( LABEL_KEY );
-							if ( v.equals( "Start" ) == false )
+							if ( str.equals( "Start" ) == false )
 							{
 								throw new RuntimeException( "Found an edge with no (or empty) label. This is only allowed when the source vertex is a Start vertex." );
 							}
@@ -754,7 +747,7 @@ public class ModelBasedTesting
 					}
 				}
 		}
-		catch ( JDOMException e )
+		catch ( org.jdom.JDOMException e )
 		{
 			_logger.error( e );
 			throw new RuntimeException( "Kunde inte skanna filen: " + fileName );
@@ -1126,6 +1119,29 @@ public class ModelBasedTesting
 		return _graph;
 	}
 
+	public void generateTests()
+	{
+		_runUntilAllEdgesVisited = true;
+
+		try
+		{
+			findStartingVertex();
+
+			while ( true )
+			{
+				executeMethod( true, true );
+				if ( isAllEdgesVisited() )
+				{
+					break;
+				}
+			}
+		}
+        catch ( Exception e )
+		{
+			e.printStackTrace();
+        }
+	}
+	
 	public void generateJavaCode_XDE( String fileName )
 	{
 		boolean _existBack = false;
@@ -1374,12 +1390,12 @@ public class ModelBasedTesting
 		}
 	}
 
-	private void executeMethod( boolean optimize ) throws FoundNoEdgeException
+	private void executeMethod( boolean optimize, boolean dryRun ) throws FoundNoEdgeException
 	{
 		DirectedSparseEdge edge 	= null;
 		Object[] 		   outEdges = null;
 
-		if (_nextVertex.containsUserDatumKey( MOTHER_GRAPH_START_VERTEX ) )
+		if ( _nextVertex.containsUserDatumKey( MOTHER_GRAPH_START_VERTEX ) && dryRun == false )
 		{
 			_pathHistory.clear();
 		}
@@ -1406,11 +1422,11 @@ public class ModelBasedTesting
 							_nextVertex = vertex;
 							String label = "PressBackButton";
 							_logger.debug( "Invoke method for edge: \"" + label + "\"" );
-							invokeMethod( label );
+							invokeMethod( label, dryRun );
 
 							label = nodeLabel;
 							_logger.debug( "Invoke method for vertex: \"" + label + "\"" );
-							invokeMethod( label );
+							invokeMethod( label, dryRun );
 						}
 						catch( GoBackToPreviousVertexException e )
 						{
@@ -1542,14 +1558,14 @@ public class ModelBasedTesting
 		{
 			String label = (String)edge.getUserDatum( LABEL_KEY );
 			_logger.debug( "Invoke method for edge: \"" + label + "\"" );
-			invokeMethod( label );
+			invokeMethod( label, dryRun );
 			Integer vistited = (Integer)edge.getUserDatum( VISITED_KEY );
 			vistited = new Integer( vistited.intValue() + 1 );
 			edge.setUserDatum( VISITED_KEY, vistited, UserData.SHARED );
 
 			label = (String)edge.getDest().getUserDatum( LABEL_KEY );
 			_logger.debug( "Invoke method for vertex: \"" + label + "\"" );
-			invokeMethod( label );
+			invokeMethod( label, dryRun );
 			vistited = (Integer)edge.getDest().getUserDatum( VISITED_KEY );
 			vistited = new Integer( vistited.intValue() + 1 );
 			edge.getDest().setUserDatum( VISITED_KEY, vistited, UserData.SHARED );
@@ -1574,18 +1590,30 @@ public class ModelBasedTesting
 		}
 	}
 
-	private void invokeMethod( String method ) throws GoBackToPreviousVertexException
+	private void invokeMethod( String method, boolean dryRun ) throws GoBackToPreviousVertexException
 	{
-		Class cls = _object.getClass();
+		Class cls = null;
+		
+		if ( dryRun == false )
+		{
+			cls = _object.getClass();
+			_pathHistory.add( method );
+		}
 
-		_pathHistory.add( method );
 
 		try
 		{
 			if ( method.compareTo( "" ) != 0 )
 			{
-				Method meth = cls.getMethod( method, null );
-				meth.invoke( _object, null  );
+				if ( dryRun )
+				{
+					System.out.println( method );
+				}
+				else
+				{
+					Method meth = cls.getMethod( method, null );
+					meth.invoke( _object, null  );
+				}
 			}
 		}
 		catch( NoSuchMethodException e )
