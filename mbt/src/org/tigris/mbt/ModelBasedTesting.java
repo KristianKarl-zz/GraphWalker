@@ -738,6 +738,17 @@ public class ModelBasedTesting
 							}
 
 						}
+					
+						String str = (String)e.getUserDatum( LABEL_KEY );
+						if ( str == null || str.equals( "" ) )
+						{
+							DirectedSparseVertex v = (DirectedSparseVertex)e.getSource();
+							str = (String)v.getUserDatum( LABEL_KEY );
+							if ( v.equals( "Start" ) == false )
+							{
+								throw new RuntimeException( "Found an edge with no (or empty) label. This is only allowed when the source vertex is a Start vertex." );
+							}
+						}
 						e.addUserDatum( VISITED_KEY, new Integer( 0 ), UserData.SHARED );
 						_logger.debug( "Adderade edge: \"" + e.getUserDatum( LABEL_KEY ) + "\"" );
 					}
@@ -892,8 +903,8 @@ public class ModelBasedTesting
 				continue;
 			}
 
-			boolean v1IsMerged = false;
 			Object[] list2 = _graph.getVertices().toArray();
+			Vector mergedVertices = new Vector();
 			for ( int j = 0; j < list2.length; j++ )
 			{
 				DirectedSparseVertex v2 = (DirectedSparseVertex)list2[ j ];
@@ -907,6 +918,10 @@ public class ModelBasedTesting
 					continue;
 				}
 				if ( v1.hashCode() == v2.hashCode() )
+				{
+					continue;
+				}
+				if ( mergedVertices.contains( v1 ) )
 				{
 					continue;
 				}
@@ -928,10 +943,10 @@ public class ModelBasedTesting
 					DirectedSparseEdge new_edge = (DirectedSparseEdge)_graph.addEdge( new DirectedSparseEdge( v2, edge.getDest() ) );
 					new_edge.importUserData( edge );
 				}
-				v1IsMerged = true;
+				mergedVertices.add( v1 );
 			}
 
-			if ( v1IsMerged )
+			if ( mergedVertices.isEmpty() == false )
 			{
 				_logger.debug( "Remvoing merged vertex(" + v1.hashCode() + ")" );
 				_graph.removeVertex( v1 );
@@ -1088,17 +1103,17 @@ public class ModelBasedTesting
 				numOfVisitedVertices++;
 			}
 			totalNumOfVisitedVertices += vistited.intValue();
-		}		
+		}
 		stat += "Test coverage edges: " + numOfVisitedEdges + "/" + edges.length + " => " +  (numOfVisitedEdges / (float)edges.length * 100) + "%" + new_line;
 		stat += "Test coverage vertices: " + numOfVisitedVertices + "/" + vertices.length + " => " + (numOfVisitedVertices / (float)vertices.length * 100)  + "%" + new_line;
 		stat += "Number of visited edges: " + totalNumOfVisitedEdges + new_line;
 		stat += "Number of visited vertices: " + totalNumOfVisitedVertices + new_line;
-		
+
 		if ( _end_time == 0 )
 		{
 			_end_time = System.currentTimeMillis();
 		}
-		
+
 		stat += "Execution time: " + ( ( _end_time - _start_time ) / 1000 ) + " seconds" + new_line;
 
 		return stat;
@@ -1123,202 +1138,202 @@ public class ModelBasedTesting
 
 		StringBuffer sourceFile = new StringBuffer();
 
+		/**
+		 * Read the original file first. If the methods already are defined in the file,
+		 * leave those methods alone.
+		 */
+		BufferedReader input = null;
 		try
 		{
-			/**
-			 * Read the original file first. If the methods already are defined in the file,
-			 * leave those methods alone.
-			 */
-			BufferedReader input = null;
+			_logger.debug( "Try to open file: " + fileName );
+			input = new BufferedReader( new FileReader( fileName ) );
+			String line = null;
+			while ( ( line = input.readLine() ) != null )
+			{
+				sourceFile.append( line );
+				sourceFile.append( System.getProperty( "line.separator" ) );
+			}
+		}
+		catch ( FileNotFoundException e )
+		{
+			_logger.error( "File not found exception: " + e.getMessage() );
+		}
+		catch ( IOException e )
+		{
+			_logger.error( "IO exception: " + e.getMessage() );
+		}
+		finally
+		{
 			try
 			{
-				_logger.debug( "Try to open file: " + fileName );
-				input = new BufferedReader( new FileReader( fileName ) );
-				String line = null;
-				while ( ( line = input.readLine() ) != null )
+				if ( input != null )
 				{
-					sourceFile.append( line );
-					sourceFile.append( System.getProperty( "line.separator" ) );
+					input.close();
 				}
-			}
-			catch ( FileNotFoundException e )
-			{
-				_logger.error( "File not found exception: " + e.getMessage() );
 			}
 			catch ( IOException e )
 			{
 				_logger.error( "IO exception: " + e.getMessage() );
 			}
-			finally
+		}
+
+		_logger.debug( sourceFile.toString() );
+
+
+		for ( int i = 0; i < _vertices.length; i++ )
+		{
+			DirectedSparseVertex vertex = (DirectedSparseVertex)_vertices[ i ];
+
+			boolean duplicated = false;
+			for ( Iterator iter = writtenVertices.iterator(); iter.hasNext(); )
 			{
-				try
+				String str = (String) iter.next();
+				if ( str.equals( (String)vertex.getUserDatum( LABEL_KEY ) ) == true )
 				{
-					if ( input != null )
-					{
-						input.close();
-					}
-				}
-				catch ( IOException e )
-				{
-					_logger.error( "IO exception: " + e.getMessage() );
+					duplicated = true;
+					break;
 				}
 			}
 
-			_logger.debug( sourceFile.toString() );
+			if ( _existBack == false )
+			{
+				_existBack = true;
 
+				Pattern p = Pattern.compile( "public void PressBackButton\\(\\)(.|[\\n\\r])*?\\{(.|[\\n\\r])*?\\}", Pattern.MULTILINE );
+				Matcher m = p.matcher( sourceFile );
 
+				if ( m.find() == false )
+				{
+					sourceFile.append( "/**\n" );
+					sourceFile.append( " * This method implements the edge: PressBackButton\n" );
+					sourceFile.append( " */\n" );
+					sourceFile.append( "public void PressBackButton()\n" );
+					sourceFile.append( "{\n" );
+					sourceFile.append( "	_logger.info( \"Edge: PressBackButton\" );\n" );
+					sourceFile.append( "	throw new RuntimeException( \"Not implemented. This line can be removed.\" );\n" );
+					sourceFile.append( "}\n\n" );
+				}
+			}
+
+			if ( duplicated == false )
+			{
+				Pattern p = Pattern.compile( "public void " + (String)vertex.getUserDatum( LABEL_KEY ) + "\\(\\)(.|[\\n\\r])*?\\{(.|[\\n\\r])*?\\}", Pattern.MULTILINE );
+				Matcher m = p.matcher( sourceFile );
+
+				if ( m.find() == false )
+				{
+					sourceFile.append( "/**\n" );
+					sourceFile.append( " * This method implements the verification of the vertex: " + (String)vertex.getUserDatum( LABEL_KEY ) + "\n" );
+					sourceFile.append( " */\n" );
+					sourceFile.append( "public void " + (String)vertex.getUserDatum( LABEL_KEY ) + "()\n" );
+					sourceFile.append( "{\n" );
+					sourceFile.append( "	_logger.info( \"Vertex: " + (String)vertex.getUserDatum( LABEL_KEY ) + "\" );\n" );
+					sourceFile.append( "	throw new RuntimeException( \"Not implemented. This line can be removed.\" );\n" );
+					sourceFile.append( "}\n\n" );
+				}
+			}
+
+			writtenVertices.add( (String)vertex.getUserDatum( LABEL_KEY ) );
+		}
+
+		for ( int i = 0; i < _edges.length; i++ )
+		{
+			DirectedSparseEdge edge = (DirectedSparseEdge)_edges[ i ];
+
+			boolean duplicated = false;
+			for ( Iterator iter = writtenEdges.iterator(); iter.hasNext(); )
+			{
+				String str = (String) iter.next();
+				if ( str.equals( (String)edge.getUserDatum( LABEL_KEY ) ) == true )
+				{
+					duplicated = true;
+					break;
+				}
+			}
+
+			if ( duplicated == false )
+			{
+				Pattern p = Pattern.compile( "public void " + (String)edge.getUserDatum( LABEL_KEY ) + "\\(\\)(.|[\\n\\r])*?\\{(.|[\\n\\r])*?\\}", Pattern.MULTILINE );
+				Matcher m = p.matcher( sourceFile );
+
+				if ( m.find() == false )
+				{
+					sourceFile.append( "/**\n" );
+					sourceFile.append( " * This method implemets the edge: " + (String)edge.getUserDatum( LABEL_KEY ) + "\n" );
+					sourceFile.append( " */\n" );
+					sourceFile.append( "public void " + (String)edge.getUserDatum( LABEL_KEY ) + "()\n" );
+					sourceFile.append( "{\n" );
+					sourceFile.append( "	_logger.info( \"Edge: " + (String)edge.getUserDatum( LABEL_KEY ) + "\" );\n" );
+
+					if ( edge.containsUserDatumKey( STATE_KEY ) )
+					{
+						HashMap map = (HashMap)edge.getUserDatum( STATE_KEY );
+						Set variables = map.keySet();
+						for ( Iterator iter = variables.iterator(); iter.hasNext();)
+						{
+							String  variable = (String) iter.next();
+							Boolean value	 = (Boolean)map.get( variable );
+							sourceFile.append( "	boolean " + variable + " = " + value + ";\n" );
+						}
+					}
+
+					if ( edge.containsUserDatumKey( CONDITION_KEY ) )
+					{
+						HashMap map = (HashMap)edge.getUserDatum( CONDITION_KEY );
+						Set variables = map.keySet();
+						for ( Iterator iter = variables.iterator(); iter.hasNext();)
+						{
+							String  variable = (String) iter.next();
+							Boolean value	 = (Boolean)map.get( variable );
+							sourceFile.append( "	if ( " + variable + " != " + value + " )\n" );
+							sourceFile.append( "	{\n" );
+							sourceFile.append( "	  _logger.info( \"Not a valid path until condition is fullfilled\" );\n" );
+							sourceFile.append( "	  throw new GoBackToPreviousVertexException();\n" );
+							sourceFile.append( "	}\n" );
+						}
+					}
+
+					if ( edge.containsUserDatumKey( VARIABLE_KEY ) )
+					{
+						HashMap map = (HashMap)edge.getUserDatum( VARIABLE_KEY );
+						Set variables = map.keySet();
+						for ( Iterator iter = variables.iterator(); iter.hasNext();)
+						{
+							String variable = (String) iter.next();
+							Object object = map.get( variable );
+							if ( object == null )
+							{
+								throw new RuntimeException( "An object in the hash map was null!" );
+							}
+							if ( object instanceof String )
+							{
+								String value  = (String)map.get( variable );
+								sourceFile.append( "	String " + variable + " = \"" + value + "\";\n" );
+							}
+							if ( object instanceof Integer )
+							{
+								Integer value = (Integer)map.get( variable );
+								sourceFile.append( "	String " + variable + " = " + value + ";\n" );
+							}
+							if ( object instanceof Float )
+							{
+								Float value	= (Float)map.get( variable );
+								sourceFile.append( "	String " + variable + " = " + value + ";\n" );
+							}
+						}
+					}
+
+					sourceFile.append( "	throw new RuntimeException( \"Not implemented\" );\n" );
+					sourceFile.append( "}\n\n" );
+				}
+			}
+
+			writtenEdges.add( (String)edge.getUserDatum( LABEL_KEY ) );
+		}
+
+		try
+		{
 			FileWriter file = new FileWriter( fileName );
-
-			for ( int i = 0; i < _vertices.length; i++ )
-			{
-				DirectedSparseVertex vertex = (DirectedSparseVertex)_vertices[ i ];
-
-				boolean duplicated = false;
-				for ( Iterator iter = writtenVertices.iterator(); iter.hasNext(); )
-				{
-					String str = (String) iter.next();
-					if ( str.equals( (String)vertex.getUserDatum( LABEL_KEY ) ) == true )
-					{
-						duplicated = true;
-						break;
-					}
-				}
-
-				if ( _existBack == false )
-				{
-					_existBack = true;
-
-					Pattern p = Pattern.compile( "public void PressBackButton\\(\\)(.|[\\n\\r])*?\\{(.|[\\n\\r])*?\\}", Pattern.MULTILINE );
-					Matcher m = p.matcher( sourceFile );
-
-					if ( m.find() == false )
-					{
-						sourceFile.append( "/**\n" );
-						sourceFile.append( " * This method implements the edge: PressBackButton\n" );
-						sourceFile.append( " */\n" );
-						sourceFile.append( "public void PressBackButton()\n" );
-						sourceFile.append( "{\n" );
-						sourceFile.append( "	_logger.info( \"Edge: PressBackButton\" );\n" );
-						sourceFile.append( "	throw new RuntimeException( \"Not implemented. This line can be removed.\" );\n" );
-						sourceFile.append( "}\n\n" );
-					}
-				}
-
-				if ( duplicated == false )
-				{
-					Pattern p = Pattern.compile( "public void " + (String)vertex.getUserDatum( LABEL_KEY ) + "\\(\\)(.|[\\n\\r])*?\\{(.|[\\n\\r])*?\\}", Pattern.MULTILINE );
-					Matcher m = p.matcher( sourceFile );
-
-					if ( m.find() == false )
-					{
-						sourceFile.append( "/**\n" );
-						sourceFile.append( " * This method implements the verification of the vertex: " + (String)vertex.getUserDatum( LABEL_KEY ) + "\n" );
-						sourceFile.append( " */\n" );
-						sourceFile.append( "public void " + (String)vertex.getUserDatum( LABEL_KEY ) + "()\n" );
-						sourceFile.append( "{\n" );
-						sourceFile.append( "	_logger.info( \"Vertex: " + (String)vertex.getUserDatum( LABEL_KEY ) + "\" );\n" );
-						sourceFile.append( "	throw new RuntimeException( \"Not implemented. This line can be removed.\" );\n" );
-						sourceFile.append( "}\n\n" );
-					}
-				}
-
-				writtenVertices.add( (String)vertex.getUserDatum( LABEL_KEY ) );
-			}
-
-			for ( int i = 0; i < _edges.length; i++ )
-			{
-				DirectedSparseEdge edge = (DirectedSparseEdge)_edges[ i ];
-
-				boolean duplicated = false;
-				for ( Iterator iter = writtenEdges.iterator(); iter.hasNext(); )
-				{
-					String str = (String) iter.next();
-					if ( str.equals( (String)edge.getUserDatum( LABEL_KEY ) ) == true )
-					{
-						duplicated = true;
-						break;
-					}
-				}
-
-				if ( duplicated == false )
-				{
-					Pattern p = Pattern.compile( "public void " + (String)edge.getUserDatum( LABEL_KEY ) + "\\(\\)(.|[\\n\\r])*?\\{(.|[\\n\\r])*?\\}", Pattern.MULTILINE );
-					Matcher m = p.matcher( sourceFile );
-
-					if ( m.find() == false )
-					{
-						sourceFile.append( "/**\n" );
-						sourceFile.append( " * This method implemets the edge: " + (String)edge.getUserDatum( LABEL_KEY ) + "\n" );
-						sourceFile.append( " */\n" );
-						sourceFile.append( "public void " + (String)edge.getUserDatum( LABEL_KEY ) + "()\n" );
-						sourceFile.append( "{\n" );
-						sourceFile.append( "	_logger.info( \"Edge: " + (String)edge.getUserDatum( LABEL_KEY ) + "\" );\n" );
-
-						if ( edge.containsUserDatumKey( STATE_KEY ) )
-						{
-							HashMap map = (HashMap)edge.getUserDatum( STATE_KEY );
-							Set variables = map.keySet();
-							for ( Iterator iter = variables.iterator(); iter.hasNext();)
-							{
-								String  variable = (String) iter.next();
-								Boolean value	 = (Boolean)map.get( variable );
-								sourceFile.append( "	boolean " + variable + " = " + value + ";\n" );
-							}
-						}
-
-						if ( edge.containsUserDatumKey( CONDITION_KEY ) )
-						{
-							HashMap map = (HashMap)edge.getUserDatum( CONDITION_KEY );
-							Set variables = map.keySet();
-							for ( Iterator iter = variables.iterator(); iter.hasNext();)
-							{
-								String  variable = (String) iter.next();
-								Boolean value	 = (Boolean)map.get( variable );
-								sourceFile.append( "	if ( " + variable + " != " + value + " )\n" );
-								sourceFile.append( "	{\n" );
-								sourceFile.append( "	  _logger.info( \"Not a valid path until condition is fullfilled\" );\n" );
-								sourceFile.append( "	  throw new GoBackToPreviousVertexException();\n" );
-								sourceFile.append( "	}\n" );
-							}
-						}
-
-						if ( edge.containsUserDatumKey( VARIABLE_KEY ) )
-						{
-							HashMap map = (HashMap)edge.getUserDatum( VARIABLE_KEY );
-							Set variables = map.keySet();
-							for ( Iterator iter = variables.iterator(); iter.hasNext();)
-							{
-								String variable = (String) iter.next();
-								Object object = map.get( variable );
-								if ( object == null )
-								{
-									throw new RuntimeException( "An object in the hash map was null!" );
-								}
-								if ( object instanceof String )
-								{
-									String value  = (String)map.get( variable );
-									sourceFile.append( "	String " + variable + " = \"" + value + "\";\n" );
-								}
-								if ( object instanceof Integer )
-								{
-									Integer value = (Integer)map.get( variable );
-									sourceFile.append( "	String " + variable + " = " + value + ";\n" );
-								}
-								if ( object instanceof Float )
-								{
-									Float value	= (Float)map.get( variable );
-									sourceFile.append( "	String " + variable + " = " + value + ";\n" );
-								}
-							}
-						}
-
-						sourceFile.append( "	throw new RuntimeException( \"Not implemented\" );\n" );
-						sourceFile.append( "}\n\n" );
-					}
-				}
-
-				writtenEdges.add( (String)edge.getUserDatum( LABEL_KEY ) );
-			}
 			file.write( sourceFile.toString() );
 			file.flush();
 		}
