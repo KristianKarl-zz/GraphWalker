@@ -37,6 +37,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.log4j.PropertyConfigurator;
+import org.jdom.Document;
+import org.jdom.JDOMException;
+import org.jdom.input.SAXBuilder;
 
 import edu.uci.ics.jung.algorithms.shortestpath.DijkstraShortestPath;
 import edu.uci.ics.jung.graph.Edge;
@@ -55,7 +58,6 @@ public class ModelBasedTesting
 
 	private SparseGraph 				_graph          = new SparseGraph();
 	private java.util.Vector 			_graphList 		= new Vector();
-	private org.jdom.input.SAXBuilder  	_parser         = new org.jdom.input.SAXBuilder();
 	private java.util.Random      		_radomGenerator = new Random();
 
 	private String  START_NODE                = "Start";
@@ -76,7 +78,6 @@ public class ModelBasedTesting
 	private String  SUBGRAPH_START_VERTEX     = "subgraph start vertex";
 	private String  BLOCKED	                = "BLOCKED";
 
-	private org.jdom.Document 		_doc;
 	private String   				_graphmlFileName;
 	private Object   			 	_object;
 	private org.apache.log4j.Logger _logger;
@@ -358,14 +359,15 @@ public class ModelBasedTesting
 	{
 		SparseGraph graph = new SparseGraph();
 		graph.addUserDatum( FILE_KEY, fileName, UserData.SHARED );
-
+		SAXBuilder parser = new SAXBuilder( "org.apache.crimson.parser.XMLReaderImpl", false );		
+				
 		try
 		{
 			_logger.info( "Parsing file: " + fileName );
-			_doc = _parser.build( fileName );
+			Document doc = parser.build( fileName );
 
 			// Parse all vertices (nodes)
-			Iterator iter = _doc.getDescendants( new org.jdom.filter.ElementFilter( "node" ) );
+			Iterator iter = doc.getDescendants( new org.jdom.filter.ElementFilter( "node" ) );
 			while ( iter.hasNext() )
 			{
 				Object o = iter.next();
@@ -485,7 +487,7 @@ public class ModelBasedTesting
 			Object[] vertices = graph.getVertices().toArray();
 
 			// Parse all edges (arrows or transtitions)
-			iter = _doc.getDescendants( new org.jdom.filter.ElementFilter( "edge" ) );
+			iter = doc.getDescendants( new org.jdom.filter.ElementFilter( "edge" ) );
 			while ( iter.hasNext() )
 			{
 				Object o = iter.next();
@@ -747,7 +749,7 @@ public class ModelBasedTesting
 					}
 				}
 		}
-		catch ( org.jdom.JDOMException e )
+		catch ( JDOMException e )
 		{
 			_logger.error( e );
 			throw new RuntimeException( "Kunde inte skanna filen: " + fileName );
