@@ -19,7 +19,7 @@ public class GenerateTests {
 			_mtb = new ModelBasedTesting( args[ 0 ] );
 			_mtb.generateTests();
 		}
-		catch ( RuntimeException e )
+		catch ( Exception e )
 		{
 			e.printStackTrace();
 		}
