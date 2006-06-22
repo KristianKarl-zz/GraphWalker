@@ -1144,7 +1144,7 @@ public class ModelBasedTesting
         }
 	}
 	
-	public void generateJavaCode_XDE( String fileName )
+	public void generateJavaCode( String fileName )
 	{
 		boolean _existBack = false;
 
@@ -1342,6 +1342,164 @@ public class ModelBasedTesting
 					}
 
 					sourceFile.append( "	throw new RuntimeException( \"Not implemented\" );\n" );
+					sourceFile.append( "}\n\n" );
+				}
+			}
+
+			writtenEdges.add( (String)edge.getUserDatum( LABEL_KEY ) );
+		}
+
+		try
+		{
+			FileWriter file = new FileWriter( fileName );
+			file.write( sourceFile.toString() );
+			file.flush();
+		}
+		catch ( IOException e )
+		{
+			_logger.error( e.getMessage() );
+		}
+	}
+
+	public void generatePerlCode( String fileName )
+	{
+		boolean _existBack = false;
+
+		_vertices = _graph.getVertices().toArray();
+		_edges    = _graph.getEdges().toArray();
+
+		ArrayList writtenVertices = new ArrayList();
+		ArrayList writtenEdges    = new ArrayList();
+
+		StringBuffer sourceFile = new StringBuffer();
+
+		/**
+		 * Read the original file first. If the methods already are defined in the file,
+		 * leave those methods alone.
+		 */
+		BufferedReader input = null;
+		try
+		{
+			_logger.debug( "Try to open file: " + fileName );
+			input = new BufferedReader( new FileReader( fileName ) );
+			String line = null;
+			while ( ( line = input.readLine() ) != null )
+			{
+				sourceFile.append( line );
+				sourceFile.append( System.getProperty( "line.separator" ) );
+			}
+		}
+		catch ( FileNotFoundException e )
+		{
+			_logger.error( "File not found exception: " + e.getMessage() );
+		}
+		catch ( IOException e )
+		{
+			_logger.error( "IO exception: " + e.getMessage() );
+		}
+		finally
+		{
+			try
+			{
+				if ( input != null )
+				{
+					input.close();
+				}
+			}
+			catch ( IOException e )
+			{
+				_logger.error( "IO exception: " + e.getMessage() );
+			}
+		}
+
+		_logger.debug( sourceFile.toString() );
+
+
+		for ( int i = 0; i < _vertices.length; i++ )
+		{
+			DirectedSparseVertex vertex = (DirectedSparseVertex)_vertices[ i ];
+
+			boolean duplicated = false;
+			for ( Iterator iter = writtenVertices.iterator(); iter.hasNext(); )
+			{
+				String str = (String) iter.next();
+				if ( str.equals( (String)vertex.getUserDatum( LABEL_KEY ) ) == true )
+				{
+					duplicated = true;
+					break;
+				}
+			}
+
+			if ( _existBack == false )
+			{
+				_existBack = true;
+
+				Pattern p = Pattern.compile( "sub PressBackButton\\(\\)(.|[\\n\\r])*?\\{(.|[\\n\\r])*?\\}", Pattern.MULTILINE );
+				Matcher m = p.matcher( sourceFile );
+
+				if ( m.find() == false )
+				{
+					sourceFile.append( "#\n" );
+					sourceFile.append( "# This method implements the edge: PressBackButton\n" );
+					sourceFile.append( "#\n" );
+					sourceFile.append( "sub PressBackButton()\n" );
+					sourceFile.append( "{\n" );
+					sourceFile.append( "	print \"Edge: PressBackButton\n\";" );
+					sourceFile.append( "	die \"Not implemented.\";\n" );
+					sourceFile.append( "}\n\n" );
+				}
+			}
+
+			if ( duplicated == false )
+			{
+				Pattern p = Pattern.compile( "sub " + (String)vertex.getUserDatum( LABEL_KEY ) + "\\(\\)(.|[\\n\\r])*?\\{(.|[\\n\\r])*?\\}", Pattern.MULTILINE );
+				Matcher m = p.matcher( sourceFile );
+
+				if ( m.find() == false )
+				{
+					sourceFile.append( "#\n" );
+					sourceFile.append( "# This method implements the verification of the vertex: " + (String)vertex.getUserDatum( LABEL_KEY ) + "\n" );
+					sourceFile.append( "#\n" );
+					sourceFile.append( "sub " + (String)vertex.getUserDatum( LABEL_KEY ) + "()\n" );
+					sourceFile.append( "{\n" );
+					sourceFile.append( "	print \"Vertex: " + (String)vertex.getUserDatum( LABEL_KEY ) + "\n\";" );
+					sourceFile.append( "	die \"Not implemented.\";\n" );
+					sourceFile.append( "}\n\n" );
+				}
+			}
+
+			writtenVertices.add( (String)vertex.getUserDatum( LABEL_KEY ) );
+		}
+
+		for ( int i = 0; i < _edges.length; i++ )
+		{
+			DirectedSparseEdge edge = (DirectedSparseEdge)_edges[ i ];
+
+			boolean duplicated = false;
+			for ( Iterator iter = writtenEdges.iterator(); iter.hasNext(); )
+			{
+				String str = (String) iter.next();
+				if ( str.equals( (String)edge.getUserDatum( LABEL_KEY ) ) == true )
+				{
+					duplicated = true;
+					break;
+				}
+			}
+
+			if ( duplicated == false )
+			{
+				Pattern p = Pattern.compile( "sub " + (String)edge.getUserDatum( LABEL_KEY ) + "\\(\\)(.|[\\n\\r])*?\\{(.|[\\n\\r])*?\\}", Pattern.MULTILINE );
+				Matcher m = p.matcher( sourceFile );
+
+				if ( m.find() == false )
+				{
+					sourceFile.append( "#\n" );
+					sourceFile.append( "# This method implemets the edge: " + (String)edge.getUserDatum( LABEL_KEY ) + "\n" );
+					sourceFile.append( "#\n" );
+					sourceFile.append( "sub " + (String)edge.getUserDatum( LABEL_KEY ) + "()\n" );
+					sourceFile.append( "{\n" );
+					sourceFile.append( "	print \"Edge: " + (String)edge.getUserDatum( LABEL_KEY ) + "\n\";" );
+					sourceFile.append( "	die \"Not implemented.\";\n" );
 					sourceFile.append( "}\n\n" );
 				}
 			}

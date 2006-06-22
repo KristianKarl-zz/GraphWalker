@@ -39,7 +39,7 @@ public class GenerateJavaCode
 		{
 			_mtb = new ModelBasedTesting( args[ 0 ] );
 
-			_mtb.generateJavaCode_XDE( args[ 1 ] );
+			_mtb.generateJavaCode( args[ 1 ] );
 		}
 		catch ( RuntimeException e )
 		{
