@@ -104,8 +104,8 @@ public class TestMerging extends TestCase
     	try
     	{
 	    	ModelBasedTesting mbt = new ModelBasedTesting( "graphml/test02" );
-	    	mbt.generateJavaCode_XDE( "graphml/java/test02.java" );	
-	    	mbt.generateJavaCode_XDE( "graphml/java/test02.java" );	
+	    	mbt.generateJavaCode( "graphml/java/test02.java" );	
+	    	mbt.generateJavaCode( "graphml/java/test02.java" );	
 		}
 		catch ( RuntimeException e)
 		{
