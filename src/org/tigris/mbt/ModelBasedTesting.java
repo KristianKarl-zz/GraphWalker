@@ -69,7 +69,6 @@ public class ModelBasedTesting
 	private String  STATE_KEY                 = "state";
 	private String  CONDITION_KEY             = "condition";
 	private String  VARIABLE_KEY              = "variable";
-	private String  BACK_KEY                  = "back";
 	private String  NO_HISTORY	            = "no history";
 	private String  MERGE	                  	= "merge";
 	private String  NO_MERGE	          	  	= "no merge";
@@ -453,31 +452,6 @@ public class ModelBasedTesting
 							{
 								_logger.debug( "Found BLOCKED. This vetex will be removed from the graph: " + label );
 								v.addUserDatum( BLOCKED, BLOCKED, UserData.SHARED );
-							}
-
-
-
-							// NOTE: Only for html applications
-							// In browsers, the usage of the 'Back'-button can be used.
-							// If defined, with a value value, which depicts the probability for the edge
-							// to be executed, tha back-button will be pressed in the browser.
-							// A value of 0.05 is the same as 5% chance of going down this road.
-							p = Pattern.compile( "\\n(back=(.*))", Pattern.MULTILINE );
-							m = p.matcher( str );
-							if ( m.find( ) )
-							{
-								Float probability;
-								String value = m.group( 2 );
-								try
-								{
-									probability = Float.valueOf( value.trim() );
-								}
-								catch ( NumberFormatException error )
-								{
-									throw new RuntimeException( "For label: " + label + ", back is not a correct float value: " + error.toString() );
-								}
-								_logger.debug( "Found FLOAT value: " + probability + ", for vertex: " + label );
-								v.addUserDatum( BACK_KEY, probability, UserData.SHARED );
 							}
 						}
 					}
@@ -1146,8 +1120,6 @@ public class ModelBasedTesting
 	
 	public void generateJavaCode( String fileName )
 	{
-		boolean _existBack = false;
-
 		_vertices = _graph.getVertices().toArray();
 		_edges    = _graph.getEdges().toArray();
 
@@ -1210,26 +1182,6 @@ public class ModelBasedTesting
 				{
 					duplicated = true;
 					break;
-				}
-			}
-
-			if ( _existBack == false )
-			{
-				_existBack = true;
-
-				Pattern p = Pattern.compile( "public void PressBackButton\\(\\)(.|[\\n\\r])*?\\{(.|[\\n\\r])*?\\}", Pattern.MULTILINE );
-				Matcher m = p.matcher( sourceFile );
-
-				if ( m.find() == false )
-				{
-					sourceFile.append( "/**\n" );
-					sourceFile.append( " * This method implements the edge: PressBackButton\n" );
-					sourceFile.append( " */\n" );
-					sourceFile.append( "public void PressBackButton()\n" );
-					sourceFile.append( "{\n" );
-					sourceFile.append( "	_logger.info( \"Edge: PressBackButton\" );\n" );
-					sourceFile.append( "	throw new RuntimeException( \"Not implemented. This line can be removed.\" );\n" );
-					sourceFile.append( "}\n\n" );
 				}
 			}
 
@@ -1363,8 +1315,6 @@ public class ModelBasedTesting
 
 	public void generatePerlCode( String fileName )
 	{
-		boolean _existBack = false;
-
 		_vertices = _graph.getVertices().toArray();
 		_edges    = _graph.getEdges().toArray();
 
@@ -1427,26 +1377,6 @@ public class ModelBasedTesting
 				{
 					duplicated = true;
 					break;
-				}
-			}
-
-			if ( _existBack == false )
-			{
-				_existBack = true;
-
-				Pattern p = Pattern.compile( "sub PressBackButton\\(\\)(.|[\\n\\r])*?\\{(.|[\\n\\r])*?\\}", Pattern.MULTILINE );
-				Matcher m = p.matcher( sourceFile );
-
-				if ( m.find() == false )
-				{
-					sourceFile.append( "#\n" );
-					sourceFile.append( "# This method implements the edge: PressBackButton\n" );
-					sourceFile.append( "#\n" );
-					sourceFile.append( "sub PressBackButton()\n" );
-					sourceFile.append( "{\n" );
-					sourceFile.append( "	print \"Edge: PressBackButton\";\n" );
-					sourceFile.append( "	die \"Not implemented.\";\n" );
-					sourceFile.append( "}\n\n" );
 				}
 			}
 
@@ -1559,47 +1489,6 @@ public class ModelBasedTesting
 		{
 			_pathHistory.clear();
 		}
-
-		if ( _nextVertex.containsUserDatumKey( BACK_KEY ) && _history. size() >= 3 )
-		{
-			Float probability = (Float)_nextVertex.getUserDatum( BACK_KEY );
-			int index = _radomGenerator.nextInt( 100 );
-			if ( index < ( probability.floatValue() * 100 ) )
-			{
-				String str =  (String)_history.removeLast();
-				_logger.debug( "Remove from history: " + str );
-				String  nodeLabel = (String)_history.getLast();
-				_logger.debug( "Reversing a vertex. From: " + (String)_nextVertex.getUserDatum( LABEL_KEY ) + ", to: " + nodeLabel );
-
-				Object[] vertices = _graph.getVertices().toArray();
-				for ( int i = 0; i < vertices.length; i++ )
-				{
-					DirectedSparseVertex vertex = (DirectedSparseVertex)vertices[ i ];
-					if ( nodeLabel == (String)vertex.getUserDatum( LABEL_KEY ) )
-					{
-						try
-						{
-							_nextVertex = vertex;
-							String label = "PressBackButton";
-							_logger.debug( "Invoke method for edge: \"" + label + "\"" );
-							invokeMethod( label, dryRun );
-
-							label = nodeLabel;
-							_logger.debug( "Invoke method for vertex: \"" + label + "\"" );
-							invokeMethod( label, dryRun );
-						}
-						catch( GoBackToPreviousVertexException e )
-						{
-							throw new RuntimeException( "An GoBackToPreviousVertexException was thrown where it should not be thrown." );
-						}
-
-						return;
-					}
-				}
-				throw new RuntimeException( "An attempt was made to reverse to vertex: " + nodeLabel + ", and did not find it." );
-			}
-		}
-
 
 		_logger.debug( "Vertex = " + (String)_nextVertex.getUserDatum( LABEL_KEY ) );
 
