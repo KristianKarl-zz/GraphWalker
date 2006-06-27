@@ -1444,7 +1444,7 @@ public class ModelBasedTesting
 					sourceFile.append( "#\n" );
 					sourceFile.append( "sub PressBackButton()\n" );
 					sourceFile.append( "{\n" );
-					sourceFile.append( "	print \"Edge: PressBackButton\n\";" );
+					sourceFile.append( "	print \"Edge: PressBackButton\";\n" );
 					sourceFile.append( "	die \"Not implemented.\";\n" );
 					sourceFile.append( "}\n\n" );
 				}
@@ -1462,7 +1462,7 @@ public class ModelBasedTesting
 					sourceFile.append( "#\n" );
 					sourceFile.append( "sub " + (String)vertex.getUserDatum( LABEL_KEY ) + "()\n" );
 					sourceFile.append( "{\n" );
-					sourceFile.append( "	print \"Vertex: " + (String)vertex.getUserDatum( LABEL_KEY ) + "\n\";" );
+					sourceFile.append( "	print \"Vertex: " + (String)vertex.getUserDatum( LABEL_KEY ) + "\";\n" );
 					sourceFile.append( "	die \"Not implemented.\";\n" );
 					sourceFile.append( "}\n\n" );
 				}
@@ -1498,7 +1498,7 @@ public class ModelBasedTesting
 					sourceFile.append( "#\n" );
 					sourceFile.append( "sub " + (String)edge.getUserDatum( LABEL_KEY ) + "()\n" );
 					sourceFile.append( "{\n" );
-					sourceFile.append( "	print \"Edge: " + (String)edge.getUserDatum( LABEL_KEY ) + "\n\";" );
+					sourceFile.append( "	print \"Edge: " + (String)edge.getUserDatum( LABEL_KEY ) + "\";\n" );
 					sourceFile.append( "	die \"Not implemented.\";\n" );
 					sourceFile.append( "}\n\n" );
 				}
