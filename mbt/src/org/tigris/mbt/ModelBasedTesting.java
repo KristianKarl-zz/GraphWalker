@@ -28,7 +28,6 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -1433,8 +1432,8 @@ public class ModelBasedTesting
 					sourceFile.append( "#\n" );
 					sourceFile.append( "sub " + (String)vertex.getUserDatum( LABEL_KEY ) + "()\n" );
 					sourceFile.append( "{\n" );
-					sourceFile.append( "	print \"Vertex: " + (String)vertex.getUserDatum( LABEL_KEY ) + "\";\n" );
-					sourceFile.append( "	die \"Not implemented.\";\n" );
+					sourceFile.append( "	print \"Vertex: " + (String)vertex.getUserDatum( LABEL_KEY ) + "\\n\";\n" );
+					sourceFile.append( "	die \"Not implemented.\\n\";\n" );
 					sourceFile.append( "}\n\n" );
 				}
 			}
@@ -1469,8 +1468,8 @@ public class ModelBasedTesting
 					sourceFile.append( "#\n" );
 					sourceFile.append( "sub " + (String)edge.getUserDatum( LABEL_KEY ) + "()\n" );
 					sourceFile.append( "{\n" );
-					sourceFile.append( "	print \"Edge: " + (String)edge.getUserDatum( LABEL_KEY ) + "\";\n" );
-					sourceFile.append( "	die \"Not implemented.\";\n" );
+					sourceFile.append( "	print \"Edge: " + (String)edge.getUserDatum( LABEL_KEY ) + "\\n\";\n" );
+					sourceFile.append( "	die \"Not implemented.\\n\";\n" );
 					sourceFile.append( "}\n\n" );
 				}
 			}
