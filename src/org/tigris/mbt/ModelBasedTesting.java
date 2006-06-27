@@ -60,22 +60,21 @@ public class ModelBasedTesting
 	private java.util.Vector 			_graphList 		= new Vector();
 	private java.util.Random      		_radomGenerator = new Random();
 
-	private String  START_NODE                = "Start";
-	private String  ID_KEY                    = "id";
-	private String  FILE_KEY                  = "file";
-	private String  LABEL_KEY                 = "label";
-	private String  VISITED_KEY               = "visited";
-	private String  WEIGHT_KEY                = "weight";
-	private String  STATE_KEY                 = "state";
-	private String  CONDITION_KEY             = "condition";
-	private String  VARIABLE_KEY              = "variable";
-	private String  NO_HISTORY	            = "no history";
+	private String  START_NODE                  = "Start";
+	private String  ID_KEY                      = "id";
+	private String  FILE_KEY                    = "file";
+	private String  LABEL_KEY                   = "label";
+	private String  VISITED_KEY                 = "visited";
+	private String  WEIGHT_KEY                  = "weight";
+	private String  STATE_KEY                   = "state";
+	private String  CONDITION_KEY               = "condition";
+	private String  VARIABLE_KEY                = "variable";
 	private String  MERGE	                  	= "merge";
 	private String  NO_MERGE	          	  	= "no merge";
 	private String  MERGED_BY_MBT	          	= "merged by mbt";
-	private String  MOTHER_GRAPH_START_VERTEX = "mother graph start vertex";
-	private String  SUBGRAPH_START_VERTEX     = "subgraph start vertex";
-	private String  BLOCKED	                = "BLOCKED";
+	private String  MOTHER_GRAPH_START_VERTEX   = "mother graph start vertex";
+	private String  SUBGRAPH_START_VERTEX       = "subgraph start vertex";
+	private String  BLOCKED	                    = "BLOCKED";
 
 	private String   				_graphmlFileName;
 	private Object   			 	_object;
@@ -85,8 +84,8 @@ public class ModelBasedTesting
 	private DirectedSparseVertex 	_nextVertex   = null;
 	private DirectedSparseVertex 	_prevVertex   = null;
 	private DirectedSparseEdge 	 	_rejectedEdge = null;
-	private LinkedList 			 	_history      = new LinkedList();
 	private Vector 			     	_pathHistory  = new Vector();
+	private Vector 			     	_testSequence = new Vector();
 	private long				 	_start_time;
 	private long				 	_end_time     = 0;
 	private boolean				 	_runUntilAllEdgesVisited = false;
@@ -285,6 +284,37 @@ public class ModelBasedTesting
 				break;
 			}
 		}
+	}
+
+
+	/**
+	 * Returns a list of names of vertices and edges to be executed.
+	 */
+	public Vector getTestSequence()
+	{
+		_runUntilAllEdgesVisited = true;
+
+		try
+		{
+			findStartingVertex();
+
+			while ( true )
+			{
+				executeMethod( true, true );
+				if ( isAllEdgesVisited() )
+				{
+					break;
+				}
+			}
+			
+			return _testSequence;
+		}
+        catch ( Exception e )
+		{
+			e.printStackTrace();
+        }
+        
+        return null;
 	}
 
 
@@ -591,19 +621,6 @@ public class ModelBasedTesting
 						{
 							_logger.debug( "Found BLOCKED. This edge will be removed from the graph: " + label );
 							e.addUserDatum( BLOCKED, BLOCKED, UserData.SHARED );
-						}
-
-
-
-						// If No_history is defined, find it...
-						// If defined, it means that when executing this edge, it shall not
-						// be added to the history list of passed edgses.
-						p = Pattern.compile( "\\n(No_history)", Pattern.MULTILINE );
-						m = p.matcher( str );
-						if ( m.find() )
-						{
-							e.addUserDatum( NO_HISTORY, m.group( 1 ), UserData.SHARED );
-							_logger.debug( "Found No_history for edge: " + label );
 						}
 
 
@@ -1111,6 +1128,16 @@ public class ModelBasedTesting
 					break;
 				}
 			}
+			
+			StringBuffer strBuff = new StringBuffer();
+
+			for (Iterator iter = _testSequence.iterator(); iter.hasNext();)
+			{
+				String element = (String) iter.next();
+				strBuff.append( element + "\n" );
+			}
+
+			System.out.println( strBuff.toString() );
 		}
         catch ( Exception e )
 		{
@@ -1632,17 +1659,6 @@ public class ModelBasedTesting
 			vistited = (Integer)edge.getDest().getUserDatum( VISITED_KEY );
 			vistited = new Integer( vistited.intValue() + 1 );
 			edge.getDest().setUserDatum( VISITED_KEY, vistited, UserData.SHARED );
-
-			if ( ((String)edge.getDest().getUserDatum( LABEL_KEY )).equals( "Stop" ) )
-			{
-				_logger.debug( "Clearing the history" );
-				_history.clear();
-			}
-			if ( edge.containsUserDatumKey( NO_HISTORY ) == false )
-			{
-				_logger.debug( "Add to history: " +  getCompleteEdgeName( edge ) );
-				_history.add( (String)edge.getDest().getUserDatum( LABEL_KEY ) );
-			}
 		}
 		catch( GoBackToPreviousVertexException e )
 		{
@@ -1670,7 +1686,7 @@ public class ModelBasedTesting
 			{
 				if ( dryRun )
 				{
-					System.out.println( method );
+					_testSequence.add( method );
 				}
 				else
 				{
