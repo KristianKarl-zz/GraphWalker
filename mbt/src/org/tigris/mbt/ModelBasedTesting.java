@@ -1174,6 +1174,13 @@ public class ModelBasedTesting
 		{
 			DirectedSparseVertex vertex = (DirectedSparseVertex)_vertices[ i ];
 
+			// Do not write the Start vertex to file, it's only used as
+			// an entry point.
+			if ( vertex.getUserDatum( LABEL_KEY ).equals( START_NODE ) )
+			{
+				continue;
+			}
+
 			boolean duplicated = false;
 			for ( Iterator iter = writtenVertices.iterator(); iter.hasNext(); )
 			{
@@ -1368,6 +1375,13 @@ public class ModelBasedTesting
 		for ( int i = 0; i < _vertices.length; i++ )
 		{
 			DirectedSparseVertex vertex = (DirectedSparseVertex)_vertices[ i ];
+
+			// Do not write the Start vertex to file, it's only used as
+			// an entry point.
+			if ( vertex.getUserDatum( LABEL_KEY ).equals( START_NODE ) )
+			{
+				continue;
+			}
 
 			boolean duplicated = false;
 			for ( Iterator iter = writtenVertices.iterator(); iter.hasNext(); )
