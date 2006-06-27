@@ -29,7 +29,7 @@ public class GeneratePerlCode
 	private static void displayHelpMessage()
 	{
 		System.out.println( "GeneratePerlCode <input file> <output file>" );
-		System.out.println( "   input file is a graphml (yEd) formatted file." );
+		System.out.println( "   input file is a graphml file." );
 		System.out.println( "   ouput file is where the output is written to." );
 	}
 }
