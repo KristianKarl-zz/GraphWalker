@@ -785,6 +785,7 @@ public class ModelBasedTesting
 	private void analyseSubGraphs()
 	{
 		boolean foundStartGraph = false;
+		
 		for ( Iterator iter = _graphList.iterator(); iter.hasNext(); )
 		{
 			SparseGraph g = (SparseGraph) iter.next();
@@ -817,6 +818,23 @@ public class ModelBasedTesting
 					}
 					else
 					{
+						// Verify that current subgraph is not already defined
+						for ( Iterator iter_g = _graphList.iterator(); iter_g.hasNext(); )
+						{
+							SparseGraph tmp_graph = (SparseGraph) iter_g.next();
+							if ( tmp_graph.containsUserDatumKey( LABEL_KEY ) )
+							{
+								String name = (String) tmp_graph.getUserDatum( LABEL_KEY );
+								if ( name.compareTo( edge.getDest().getUserDatum( LABEL_KEY ) ) == 0 )
+								{
+									throw new RuntimeException( "Found 2 subgraphs with the same name: '" + 
+											                    edge.getDest().getUserDatum( LABEL_KEY ) + 
+											                    "', the second defined in file: " + 
+											                    g.getUserDatum( FILE_KEY ) );
+								}
+							}
+						}
+						
 						// Since the edge does not contain a label, this is a subgraph
 						// Mark the destination node of the edge to a subgraph starting node
 						edge.getDest().addUserDatum( SUBGRAPH_START_VERTEX, SUBGRAPH_START_VERTEX, UserData.SHARED );
