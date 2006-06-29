@@ -9,7 +9,7 @@ public class RunPerlScript {
 	public void run(String[] args)
 	{
 		boolean pass = true;
-		ModelBasedTesting mbt = new ModelBasedTesting( args[ 0 ], this );
+		ModelBasedTesting mbt = new ModelBasedTesting( args[ 0 ] );
 		Vector list = mbt.getTestSequence();
 		
 		for (Iterator iter = list.iterator(); iter.hasNext();)
