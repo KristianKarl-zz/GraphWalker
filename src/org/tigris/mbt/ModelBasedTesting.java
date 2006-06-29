@@ -1433,7 +1433,8 @@ public class ModelBasedTesting
 					sourceFile.append( "sub " + (String)vertex.getUserDatum( LABEL_KEY ) + "()\n" );
 					sourceFile.append( "{\n" );
 					sourceFile.append( "	print \"Vertex: " + (String)vertex.getUserDatum( LABEL_KEY ) + "\\n\";\n" );
-					sourceFile.append( "	die \"Not implemented.\\n\";\n" );
+					sourceFile.append( "	print \"Not implemented.\\n\";\n" );
+					sourceFile.append( "	exit 1;\n" );
 					sourceFile.append( "}\n\n" );
 				}
 			}
@@ -1469,7 +1470,8 @@ public class ModelBasedTesting
 					sourceFile.append( "sub " + (String)edge.getUserDatum( LABEL_KEY ) + "()\n" );
 					sourceFile.append( "{\n" );
 					sourceFile.append( "	print \"Edge: " + (String)edge.getUserDatum( LABEL_KEY ) + "\\n\";\n" );
-					sourceFile.append( "	die \"Not implemented.\\n\";\n" );
+					sourceFile.append( "	print \"Not implemented.\\n\";\n" );
+					sourceFile.append( "	exit 1;\n" );
 					sourceFile.append( "}\n\n" );
 				}
 			}
@@ -1570,6 +1572,7 @@ public class ModelBasedTesting
 			{
 				if ( _nextVertex.hashCode() != e.getSource().hashCode() )
 				{
+					_logger.error( "There is no way to reach: " + getCompleteEdgeName( e ) + ", from: " + _nextVertex.getUserDatum( LABEL_KEY ) );
 					throw new RuntimeException( "There is no way to reach: " + getCompleteEdgeName( e ) + ", from: " + _nextVertex.getUserDatum( LABEL_KEY ) );
 				}
 			}
