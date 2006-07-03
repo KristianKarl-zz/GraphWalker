@@ -1,9 +1,9 @@
 /**
- * This method implements the edge: PressBackButton
+ * This method implements the verification of the vertex: B
  */
-public void PressBackButton()
+public void B()
 {
-	_logger.info( "Edge: PressBackButton" );
+	_logger.info( "Vertex: B" );
 	throw new RuntimeException( "Not implemented. This line can be removed." );
 }
 
@@ -17,20 +17,20 @@ public void C()
 }
 
 /**
+ * This method implements the verification of the vertex: E
+ */
+public void E()
+{
+	_logger.info( "Vertex: E" );
+	throw new RuntimeException( "Not implemented. This line can be removed." );
+}
+
+/**
  * This method implements the verification of the vertex: D
  */
 public void D()
 {
 	_logger.info( "Vertex: D" );
-	throw new RuntimeException( "Not implemented. This line can be removed." );
-}
-
-/**
- * This method implements the verification of the vertex: B
- */
-public void B()
-{
-	_logger.info( "Vertex: B" );
 	throw new RuntimeException( "Not implemented. This line can be removed." );
 }
 
@@ -44,21 +44,39 @@ public void A()
 }
 
 /**
- * This method implements the verification of the vertex: Start
+ * This method implemets the edge: doB
  */
-public void Start()
+public void doB()
 {
-	_logger.info( "Vertex: Start" );
-	throw new RuntimeException( "Not implemented. This line can be removed." );
+	_logger.info( "Edge: doB" );
+	throw new RuntimeException( "Not implemented" );
 }
 
 /**
- * This method implements the verification of the vertex: E
+ * This method implemets the edge: doCSpecial
  */
-public void E()
+public void doCSpecial()
 {
-	_logger.info( "Vertex: E" );
-	throw new RuntimeException( "Not implemented. This line can be removed." );
+	_logger.info( "Edge: doCSpecial" );
+	throw new RuntimeException( "Not implemented" );
+}
+
+/**
+ * This method implemets the edge: doC
+ */
+public void doC()
+{
+	_logger.info( "Edge: doC" );
+	throw new RuntimeException( "Not implemented" );
+}
+
+/**
+ * This method implemets the edge: doA
+ */
+public void doA()
+{
+	_logger.info( "Edge: doA" );
+	throw new RuntimeException( "Not implemented" );
 }
 
 /**
@@ -76,42 +94,6 @@ public void doE()
 public void doD()
 {
 	_logger.info( "Edge: doD" );
-	throw new RuntimeException( "Not implemented" );
-}
-
-/**
- * This method implemets the edge: doA
- */
-public void doA()
-{
-	_logger.info( "Edge: doA" );
-	throw new RuntimeException( "Not implemented" );
-}
-
-/**
- * This method implemets the edge: doCSpecial
- */
-public void doCSpecial()
-{
-	_logger.info( "Edge: doCSpecial" );
-	throw new RuntimeException( "Not implemented" );
-}
-
-/**
- * This method implemets the edge: doB
- */
-public void doB()
-{
-	_logger.info( "Edge: doB" );
-	throw new RuntimeException( "Not implemented" );
-}
-
-/**
- * This method implemets the edge: doC
- */
-public void doC()
-{
-	_logger.info( "Edge: doC" );
 	throw new RuntimeException( "Not implemented" );
 }
 
