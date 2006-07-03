@@ -1,8 +1,8 @@
 package test.org.tigris.mbt;
 
-import org.tigris.mbt.ModelBasedTesting;
-
 import junit.framework.TestCase;
+
+import org.tigris.mbt.ModelBasedTesting;
 
 public class TestMerging extends TestCase
 {
@@ -56,8 +56,8 @@ public class TestMerging extends TestCase
     	{
 	    	ModelBasedTesting mbt = new ModelBasedTesting( "graphml/test03" );
 	    	mbt.writeGraph( "graphml/merged/test03.graphml" );
-	    	assertTrue( mbt.getGraph().getEdges().size() == 1578 );
-	    	assertTrue( mbt.getGraph().getVertices().size() == 799 );
+	    	assertTrue( mbt.getGraph().getEdges().size() == 1550 );
+	    	assertTrue( mbt.getGraph().getVertices().size() == 788 );
     	}
     	catch ( RuntimeException e)
     	{
@@ -72,12 +72,11 @@ public class TestMerging extends TestCase
     	{
         	ModelBasedTesting mbt = new ModelBasedTesting( "graphml/merged/test01.graphml" );
     		mbt.generateTests();
-    	}
-    	catch ( Exception e )
-    	{
-    		System.out.println(e.getMessage());
-    		assertTrue( e.getMessage().matches("There is no way to reach|Found a cul-de-sac"));
-    	}
+    	} catch (Exception e) {
+    		String msg = e.getMessage();
+    		System.out.println( msg );
+    		assertTrue( msg.matches( ".*There is no way to reach.*|.*Found a cul-de-sac, I have to stop now.*" ) );
+		}
     }
     
     // Test Generating Tests
@@ -106,6 +105,25 @@ public class TestMerging extends TestCase
 	    	ModelBasedTesting mbt = new ModelBasedTesting( "graphml/test02" );
 	    	mbt.generateJavaCode( "graphml/java/test02.java" );	
 	    	mbt.generateJavaCode( "graphml/java/test02.java" );	
+		}
+		catch ( RuntimeException e)
+		{
+			fail( e.getMessage() );
+		}
+    }
+    
+    // Test Generate Perl Code
+    public void test07()
+    {
+    	java.io.File file = new java.io.File( "graphml/perl/test02.pl" );
+    	file.delete();
+    	file = null;
+    	
+    	try
+    	{
+	    	ModelBasedTesting mbt = new ModelBasedTesting( "graphml/test02" );
+	    	mbt.generatePerlCode( "graphml/perl/test02.pl" );	
+	    	mbt.generatePerlCode( "graphml/perl/test02.pl" );	
 		}
 		catch ( RuntimeException e)
 		{
