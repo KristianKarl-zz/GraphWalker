@@ -821,16 +821,22 @@ public class ModelBasedTesting
 						// Verify that current subgraph is not already defined
 						for ( Iterator iter_g = _graphList.iterator(); iter_g.hasNext(); )
 						{
+							if ( iter.hashCode() == iter_g.hashCode() )
+							{
+								continue;
+							}
+							
 							SparseGraph tmp_graph = (SparseGraph) iter_g.next();
 							if ( tmp_graph.containsUserDatumKey( LABEL_KEY ) )
 							{
 								String name = (String) tmp_graph.getUserDatum( LABEL_KEY );
-								if ( name.compareTo( edge.getDest().getUserDatum( LABEL_KEY ) ) == 0 )
+								if ( name.compareTo( (String)edge.getDest().getUserDatum( LABEL_KEY ) ) == 0 )
 								{
-									throw new RuntimeException( "Found 2 subgraphs with the same name: '" + 
+									throw new RuntimeException( "Found 2 subgraphs using the same name: '" + 
 											                    edge.getDest().getUserDatum( LABEL_KEY ) + 
-											                    "', the second defined in file: " + 
-											                    g.getUserDatum( FILE_KEY ) );
+											                    "', they are defined in files: '" + 
+											                    g.getUserDatum( FILE_KEY ) + "', and :'"+
+											                    tmp_graph.getUserDatum( FILE_KEY ) + "'" );
 								}
 							}
 						}
@@ -1129,37 +1135,30 @@ public class ModelBasedTesting
 		return _graph;
 	}
 
-	public void generateTests()
+	public void generateTests() throws RuntimeException, FoundNoEdgeException
 	{
 		_runUntilAllEdgesVisited = true;
 
-		try
+		findStartingVertex();
+
+		while ( true )
 		{
-			findStartingVertex();
-
-			while ( true )
+			executeMethod( true, true );
+			if ( isAllEdgesVisited() )
 			{
-				executeMethod( true, true );
-				if ( isAllEdgesVisited() )
-				{
-					break;
-				}
+				break;
 			}
-			
-			StringBuffer strBuff = new StringBuffer();
-
-			for (Iterator iter = _testSequence.iterator(); iter.hasNext();)
-			{
-				String element = (String) iter.next();
-				strBuff.append( element + "\n" );
-			}
-
-			System.out.println( strBuff.toString() );
 		}
-        catch ( Exception e )
+		
+		StringBuffer strBuff = new StringBuffer();
+
+		for (Iterator iter = _testSequence.iterator(); iter.hasNext();)
 		{
-			e.printStackTrace();
-        }
+			String element = (String) iter.next();
+			strBuff.append( element + "\n" );
+		}
+
+		System.out.println( strBuff.toString() );
 	}
 	
 	public void generateJavaCode( String fileName )
