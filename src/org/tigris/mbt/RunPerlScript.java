@@ -49,7 +49,10 @@ public class RunPerlScript {
 
 		RunPerlScript test = new RunPerlScript();
 		test.run(args);
-		System.exit(0);
+		
+		// By some reason, calling JOptionPane.showMessageDialog hangs the process,
+		// so we have to call System.exit to make a clean getaway. 
+		System.exit( 0 );
 	}
 	
 	
