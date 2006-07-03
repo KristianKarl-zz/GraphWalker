@@ -12,6 +12,7 @@ public class RunPerlScript {
 		ModelBasedTesting mbt = new ModelBasedTesting( args[ 0 ] );
 		Vector list = mbt.getTestSequence();
 		
+		long startTime = System.currentTimeMillis();
 		for (Iterator iter = list.iterator(); iter.hasNext();)
 		{
 			String element = (String) iter.next();
@@ -21,6 +22,7 @@ public class RunPerlScript {
 				break;
 			}
 		}
+		long endTime = System.currentTimeMillis();
 		
 		String message = "";
 		if ( pass )
@@ -31,6 +33,7 @@ public class RunPerlScript {
 		{	
 			message = "The test failed.";
 		}
+		message += " Execution time: " + ( ( endTime - startTime ) / 1000 ) + " seconds";
 		System.out.println( message );
 		JOptionPane.showMessageDialog( null, message );
 	}
