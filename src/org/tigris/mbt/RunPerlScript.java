@@ -1,59 +1,151 @@
 package org.tigris.mbt;
 
-import java.util.Iterator;
-import java.util.Vector;
-import javax.swing.JOptionPane;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.OptionBuilder;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
+import org.apache.commons.cli.PosixParser;
 
-public class RunPerlScript {
+
+
+public class RunPerlScript 
+{
+	static private String graphmlFile;
+	static private String perlScript;
+	static private boolean random;
+	static private long seconds;
 	
-	public void run(String[] args)
+	public void run()
 	{
-		boolean pass = true;
-		ModelBasedTesting mbt = new ModelBasedTesting( args[ 0 ] );
-		Vector list = mbt.getTestSequence();
+		ModelBasedTesting mbt = new ModelBasedTesting( graphmlFile );	
+		mbt.reset();
 		
-		long startTime = System.currentTimeMillis();
-		for (Iterator iter = list.iterator(); iter.hasNext();)
+		String methods[] = null;
+		while ( true )
 		{
-			String element = (String) iter.next();
-			if ( run_Perl_Subrotine( "perl " + args[ 1 ] + " " + element ) != 0 )
+			methods = mbt.getEdgeAndVertex( random, seconds );
+
+			// getEdgeAndVertex caught an exception, and returned null
+			if ( methods == null )
 			{
-				pass = false;
+				break;
+			}
+
+			// No more edges or vertices to be executed
+			if ( methods[ 0 ].compareTo( "" ) == 0 && methods[ 1 ].compareTo( "" ) == 0 )
+			{
+				break;
+			}
+			
+			if ( run_Perl_Subrotine( "perl " + perlScript + " " + methods[ 0 ] ) != 0 )
+			{
+				break;
+			}
+			if ( run_Perl_Subrotine( "perl " + perlScript + " " + methods[ 1 ] ) != 0 )
+			{
 				break;
 			}
 		}
-		long endTime = System.currentTimeMillis();
 		
-		String message = "";
-		if ( pass )
-		{
-			message = "The test passed.";
-		}
-		else
-		{	
-			message = "The test failed.";
-		}
-		message += " Execution time: " + ( ( endTime - startTime ) / 1000 ) + " seconds";
-		System.out.println( message );
-		JOptionPane.showMessageDialog( null, message );
+		System.out.println( mbt.getStatistics() );
 	}
 	
 	public static void main(String[] args)
-	{		
-		if ( args.length < 2 )
+	{
+		try 
 		{
-			System.out.println( "Too few arguments" );
-			displayHelpMessage();
-			return;
-		}
+			Options opt = new Options();
+			opt.addOption( "h", "help", false, "Print help for this application" );
+			opt.addOption( "r", "random", false, "Run the test with a random walk. Can not be combined with --optimize. " + 
+												 "This argument also needs the --time to be set." );
+			opt.addOption( "o", "optimize", false, "Run the test optimized. Can not be combined with --random." );			
+			opt.addOption( OptionBuilder.withArgName( "file" )
+                    .withDescription( "The graphml file containing the model of the test" )
+                    .hasArg()
+                    .withLongOpt( "graphml" )
+                    .create( "g" ) );
+			opt.addOption( OptionBuilder.withArgName( "file" )
+                    .withDescription( "The perl script implementing the model." )
+                    .hasArg()
+                    .withLongOpt( "perl" )
+                    .create( "p" ) );
+			opt.addOption( OptionBuilder.withLongOpt( "time" )
+					.withArgName( "=seconds" )
+                    .withDescription( "The time in seconds for the random walk to run." )
+                    .withValueSeparator( '=' )
+                    .hasArg()
+                    .create( "t" ) );
+			
+			CommandLineParser parser = new PosixParser();
+	        CommandLine cl = parser.parse( opt, args );
+	        
+            if ( cl.hasOption( "h" ) ) 
+            {
+                HelpFormatter f = new HelpFormatter();
+                f.printHelp( "RunPerlScript", opt );
+            }
+            else
+            {
+	            
+	            if ( cl.hasOption( "r" ) && cl.hasOption( "o" ) )
+	            {
+	            	System.out.println( "Can not set --random and --optimize at the same time." );
+	                HelpFormatter f = new HelpFormatter();
+	                f.printHelp( "RunPerlScript", opt );
+	                return;
+	            }
 
-		RunPerlScript test = new RunPerlScript();
-		test.run(args);
-		
-		// By some reason, calling JOptionPane.showMessageDialog hangs the process,
-		// so we have to call System.exit to make a clean getaway. 
-		System.exit( 0 );
-	}
+	            if ( cl.hasOption( "r" ) ) 
+	            {
+	            	random = true;
+	            	if ( cl.hasOption( "t" ) )
+	            	{
+	            		seconds = Integer.valueOf( cl.getOptionValue( "t" ) ).longValue();
+	            	}
+	            	else
+	            	{
+		            	System.out.println( "When running in --random mode, the --time must also be set." );
+		                HelpFormatter f = new HelpFormatter();
+		                f.printHelp( "RunPerlScript", opt );
+		                return;
+	            	}
+	            }
+	            
+	            if ( cl.hasOption( "o" ) ) 
+	            {
+	            	random = false;
+	            }
+
+	            if ( !cl.hasOption( "g" ) )
+	            {
+	            	System.out.println( "Missing the graphml file, See --graphml or -g" );
+	                HelpFormatter f = new HelpFormatter();
+	                f.printHelp( "RunPerlScript", opt );
+	                return;	            	
+	            }
+
+	            if ( !cl.hasOption( "p" ) )
+	            {
+	            	System.out.println( "Missing the perl script, See --perl or -p" );
+	                HelpFormatter f = new HelpFormatter();
+	                f.printHelp( "RunPerlScript", opt );
+	                return;	            	
+	            }
+
+            	graphmlFile = cl.getOptionValue( "g" );
+            	perlScript  = cl.getOptionValue( "p" );            	
+            	
+    			RunPerlScript test = new RunPerlScript();
+    			test.run();
+			}
+        }
+        catch ( ParseException e ) 
+        {
+            e.printStackTrace();
+        }
+ }
 	
 	
 	/**
@@ -102,12 +194,5 @@ public class RunPerlScript {
 			e.printStackTrace();
 		}
 		return result;
-	}
-
-	private static void displayHelpMessage()
-	{
-		System.out.println( "RunPerlScript <graphml file> <Perl script>" );
-		System.out.println( "   <graphml file> The graphml file containing the model of the test" );
-		System.out.println( "   <Perl script>  The perl script implementing the model." );
 	}
 }
