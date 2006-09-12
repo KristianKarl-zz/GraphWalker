@@ -19,6 +19,16 @@ sub A()
 }
 
 #
+# This method implements the verification of the vertex: B
+#
+sub B()
+{
+	print "Vertex: B\n";
+	print "Not implemented.\n";
+	exit 1;
+}
+
+#
 # This method implements the verification of the vertex: E
 #
 sub E()
@@ -39,11 +49,21 @@ sub D()
 }
 
 #
-# This method implements the verification of the vertex: B
+# This method implemets the edge: doC
 #
-sub B()
+sub doC()
 {
-	print "Vertex: B\n";
+	print "Edge: doC\n";
+	print "Not implemented.\n";
+	exit 1;
+}
+
+#
+# This method implemets the edge: doCSpecial
+#
+sub doCSpecial()
+{
+	print "Edge: doCSpecial\n";
 	print "Not implemented.\n";
 	exit 1;
 }
@@ -69,16 +89,6 @@ sub doA()
 }
 
 #
-# This method implemets the edge: doC
-#
-sub doC()
-{
-	print "Edge: doC\n";
-	print "Not implemented.\n";
-	exit 1;
-}
-
-#
 # This method implemets the edge: doD
 #
 sub doD()
@@ -94,16 +104,6 @@ sub doD()
 sub doE()
 {
 	print "Edge: doE\n";
-	print "Not implemented.\n";
-	exit 1;
-}
-
-#
-# This method implemets the edge: doCSpecial
-#
-sub doCSpecial()
-{
-	print "Edge: doCSpecial\n";
 	print "Not implemented.\n";
 	exit 1;
 }
