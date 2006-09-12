@@ -88,7 +88,8 @@ public class ModelBasedTesting
 	private long				 	_start_time;
 	private long				 	_end_time     = 0;
 	private boolean				 	_runUntilAllEdgesVisited = false;
-	private List				 	_shortestPathToVertex = null;
+	private List				 	_shortestPathToVertex = null ;
+	private String[]   				_executeEdgeAndLabel = new String[ 2];
 
 	public ModelBasedTesting( String graphmlFileName_,
 			  				  Object object_ )
@@ -225,13 +226,10 @@ public class ModelBasedTesting
 	 */
 	public void runRandomWalk( long runningTime ) throws FoundNoEdgeException
 	{
-		findStartingVertex();
+		reset();
 
-		long startTime = System.currentTimeMillis();
-		long currentTime = startTime;
-		_start_time = startTime;
-
-
+		long startTime = _start_time;
+		long currentTime = _start_time;
 		runningTime *= 1000;
 
 		// Start the execution which is random.
@@ -243,15 +241,25 @@ public class ModelBasedTesting
 		}
 	}
 
+	
+	/**
+	 * Put mbt back in inital state, which means that test will begin
+	 * at the Start vertex. 
+	 */
+	public void reset()
+	{
+		findStartingVertex();
+		_start_time = System.currentTimeMillis();
+	}
+
 
 	/**
 	 * Run the test untill all vertices (nodes) are visited.
 	 */
 	public void runUntilAllVerticesVisited() throws FoundNoEdgeException
 	{
-		findStartingVertex();
+		reset();
 
-		_start_time = System.currentTimeMillis();
 		while ( true )
 		{
 			executeMethod( true, false );
@@ -270,10 +278,8 @@ public class ModelBasedTesting
 	public void runUntilAllEdgesVisited() throws FoundNoEdgeException
 	{
 		_runUntilAllEdgesVisited = true;
+		reset();
 
-		findStartingVertex();
-
-		_start_time = System.currentTimeMillis();
 		while ( true )
 		{
 			executeMethod( true, false );
@@ -292,11 +298,10 @@ public class ModelBasedTesting
 	public Vector getTestSequence()
 	{
 		_runUntilAllEdgesVisited = true;
+		reset();
 
 		try
 		{
-			findStartingVertex();
-
 			while ( true )
 			{
 				executeMethod( true, true );
@@ -312,6 +317,56 @@ public class ModelBasedTesting
 		{
 			e.printStackTrace();
         }
+        
+        return null;
+	}
+
+
+	/**
+	 * Returns the 2 lables of the next edge and vertex to be tested. 
+	 */
+	public String[] getEdgeAndVertex( boolean randomWalk, long executionTime )
+	{
+
+		if ( randomWalk )
+		{
+			_runUntilAllEdgesVisited = false;
+			if ( ( System.currentTimeMillis() - _start_time ) < executionTime * 1000 )
+			{
+				try
+				{
+					executeMethod( false, true );
+					if ( isAllEdgesVisited() )
+					{
+						_executeEdgeAndLabel[ 0 ] = "";
+						_executeEdgeAndLabel[ 1 ] = "";
+					}
+					return _executeEdgeAndLabel;
+				}
+		        catch ( Exception e )
+				{
+					e.printStackTrace();
+		        }
+			}			
+		}
+		else
+		{
+			_runUntilAllEdgesVisited = true;
+			try
+			{
+				executeMethod( true, true );
+				if ( isAllEdgesVisited() )
+				{
+					_executeEdgeAndLabel[ 0 ] = "";
+					_executeEdgeAndLabel[ 1 ] = "";
+				}
+				return _executeEdgeAndLabel;
+			}
+	        catch ( Exception e )
+			{
+				e.printStackTrace();
+	        }
+		}
         
         return null;
 	}
@@ -429,16 +484,24 @@ public class ModelBasedTesting
 							Pattern p = Pattern.compile( "(.*)", Pattern.MULTILINE );
 							Matcher m = p.matcher( str );
 							String label;
-							if ( m.find( ))
+							if ( m.find() )
 							{
 								label = m.group( 1 );
+								if ( label.length() <= 0 )
+								{
+									throw new RuntimeException( "Vertex is missing its label in file: \"" + fileName + "\"" );
+								}
+								if ( label.matches( ".*[\\s].*" ) )
+								{
+									throw new RuntimeException( "Vertex has a label '" + label  + "', containing whitespaces in file: \"" + fileName + "\"" );
+								}
 								v.addUserDatum( LABEL_KEY, label, UserData.SHARED );
 							}
 							else
 							{
-								throw new RuntimeException( "Label must be defined." );
+								throw new RuntimeException( "Label must be defined in file: \"" + fileName + "\"" );
 							}
-							_logger.debug( "Added vertex: " + v.getUserDatum( LABEL_KEY ) );
+							_logger.debug( "Added vertex: " + v.getUserDatum( LABEL_KEY ) + ", with id: " + v.hashCode() );
 
 
 
@@ -535,13 +598,13 @@ public class ModelBasedTesting
 					}
 					if ( source == null )
 					{
-						String msg = "Could not find starting node for edge. Name: " + element.getAttributeValue( "source" );
+						String msg = "Could not find starting node for edge. Name: " + element.getAttributeValue( "source" ) + " In file \"" + fileName + "\"";
 						_logger.error( msg );
 						throw new RuntimeException( msg );
 					}
 					if ( dest == null )
 					{
-						String msg = "Could not find end node for edge. Name: " + element.getAttributeValue( "target" );
+						String msg = "Could not find end node for edge. Name: " + element.getAttributeValue( "target" ) + " In file \"" + fileName + "\"";
 						_logger.error( msg );
 						throw new RuntimeException( msg );
 					}
@@ -562,15 +625,19 @@ public class ModelBasedTesting
 						if ( m.find() )
 						{
 							label = m.group( 1 );
-							if ( !label.equalsIgnoreCase("") )
+							if ( label.length() > 0 )
 							{
+								if ( label.matches( ".*[\\s].*" ) )
+								{
+									throw new RuntimeException( "Edge has a label '" + label + "',  '" + getCompleteEdgeName( e ) + "', containing whitespaces in file: \"" + fileName + "\"" );
+								}
 								e.addUserDatum( LABEL_KEY, label, UserData.SHARED );
 								_logger.debug( "Found label= " + label + " for edge id: " + edgeLabel.getQualifiedName() );
 							}
 						}
 						else
 						{
-							throw new RuntimeException( "Label for edge must be defined." );
+							throw new RuntimeException( "Label for edge must be defined in file \"" + fileName + "\"" );
 						}
 
 						if ( label == null || label.equalsIgnoreCase("") )
@@ -579,7 +646,7 @@ public class ModelBasedTesting
 							String s = (String)srcV.getUserDatum( LABEL_KEY );
 							if ( s.compareTo( START_NODE ) != 0 )
 							{
-								throw new RuntimeException( "Label for a edge comming from a non-Start vertex, must be defined." );
+								throw new RuntimeException( "Label for an edge comming from a non-Start vertex,  '" + getCompleteEdgeName( e ) + "', must be defined in file: \"" + fileName + "\"" );
 							}
 						}
 
@@ -602,7 +669,7 @@ public class ModelBasedTesting
 							}
 							catch ( NumberFormatException error )
 							{
-								throw new RuntimeException( "For label: " + label + ", weight is not a correct float value: " + error.toString() );
+								throw new RuntimeException( "For label: " + label + ", weight is not a correct float value: " + error.toString() + " In file \"" + fileName + "\"" );
 							}
 							e.addUserDatum( WEIGHT_KEY, weight, UserData.SHARED );
 						}
@@ -721,33 +788,33 @@ public class ModelBasedTesting
 							{
 								e.addUserDatum( VARIABLE_KEY, variables, UserData.SHARED );
 							}
-
 						}
-					
+
 						String str = (String)e.getUserDatum( LABEL_KEY );
 						if ( str == null || str.equals( "" ) )
-						{
+						 {
 							DirectedSparseVertex v = (DirectedSparseVertex)e.getSource();
 							str = (String)v.getUserDatum( LABEL_KEY );
 							if ( str.equals( "Start" ) == false )
 							{
-								throw new RuntimeException( "Found an edge with no (or empty) label. This is only allowed when the source vertex is a Start vertex." );
+								throw new RuntimeException( "Found an edge with no (or empty) label. This is only allowed when the source vertex is a Start vertex. In file \"" + fileName + "\"" );
 							}
 						}
+						
 						e.addUserDatum( VISITED_KEY, new Integer( 0 ), UserData.SHARED );
-						_logger.debug( "Adderade edge: \"" + e.getUserDatum( LABEL_KEY ) + "\"" );
+						_logger.debug( "Adderade edge: " + e.getUserDatum( LABEL_KEY ) + ", with id: " + e.hashCode() );
 					}
 				}
 		}
 		catch ( JDOMException e )
 		{
 			_logger.error( e );
-			throw new RuntimeException( "Kunde inte skanna filen: " + fileName );
+			throw new RuntimeException( "Could not parse file: \"" + fileName + "\"" );
 		}
 		catch ( IOException e )
 		{
 			e.printStackTrace();
-			throw new RuntimeException( "Kunde inte skanna filen: " + fileName );
+			throw new RuntimeException( "Could not parse file: \"" + fileName + "\"" );
 		}
 
 		removeBlockedEntities( graph );
@@ -789,6 +856,8 @@ public class ModelBasedTesting
 		for ( Iterator iter = _graphList.iterator(); iter.hasNext(); )
 		{
 			SparseGraph g = (SparseGraph) iter.next();
+
+			_logger.debug( "Analyzing graph: " + g.getUserDatum( FILE_KEY ) );
 
 			Object[] vertices = g.getVertices().toArray();
 			for ( int i = 0; i < vertices.length; i++ )
@@ -845,11 +914,55 @@ public class ModelBasedTesting
 						// Mark the destination node of the edge to a subgraph starting node
 						edge.getDest().addUserDatum( SUBGRAPH_START_VERTEX, SUBGRAPH_START_VERTEX, UserData.SHARED );
 						g.addUserDatum( LABEL_KEY, edge.getDest().getUserDatum( LABEL_KEY ), UserData.SHARED );
+						_logger.debug( "Found sub-graph: " + g.getUserDatum( LABEL_KEY ) + ", in file '" + g.getUserDatum( FILE_KEY ) + "'" );
+						_logger.debug( "Added SUBGRAPH_START_VERTEX to vertex: " + edge.getDest().hashCode() );
 					}
 				}
 			}
 		}
 
+		// Look for duplicated vertices in each sub-graph. If a vertex is found, which represents
+		// the name of the sub-graph (the vertex which the Start vertex points to) is duplicated
+		// in the same sub-graph, this will lead to an infinit recursive loop.
+		for ( int i = 0; i < _graphList.size(); i++ )
+		{
+			SparseGraph g = (SparseGraph)_graphList.elementAt( i );
+
+			// Exclude the mother graph
+			if ( _graph.hashCode() == g.hashCode() )
+			{
+				continue;
+			}
+
+			_logger.debug( "Looking for infinit recursive loop in file: " + g.getUserDatum( FILE_KEY ) );
+
+			String subgraph_label = (String)g.getUserDatum( LABEL_KEY );
+			Object[] vertices = g.getVertices().toArray();
+			for ( int j = 0; j < vertices.length; j++ )
+			{
+				DirectedSparseVertex v = (DirectedSparseVertex)vertices[ j ];
+				String label = (String)v.getUserDatum( LABEL_KEY );
+				if ( label.equals( subgraph_label ) )
+				{
+					if ( v.containsUserDatumKey( SUBGRAPH_START_VERTEX ) )
+					{
+						continue;
+					}
+					if ( v.containsUserDatumKey( NO_MERGE ) )
+					{
+						continue;
+					}
+					
+					_logger.error( "Vertex: " + label + ", with id: " + v.hashCode() + ", is a duplicate in a subgraph" );
+					throw new RuntimeException( "Found a subgraph containing a duplicate vertex with name: " + 
+		                    					v.getUserDatum( LABEL_KEY ) + 
+		                    					", in file: '" + 
+		                    					g.getUserDatum( FILE_KEY ) + "'" );
+					
+				}
+			}
+		}
+		
 		for ( int i = 0; i < _graphList.size(); i++ )
 		{
 			SparseGraph g = (SparseGraph)_graphList.elementAt( i );
@@ -890,9 +1003,7 @@ public class ModelBasedTesting
 							       _graph.getUserDatum( FILE_KEY ) );
 
 					appendGraph( _graph, g );
-					//writeGraph("/tmp/debug_append.graphml");
 					copySubGraphs( _graph, v1 );
-					//writeGraph("/tmp/debug_merge.graphml");
 
 					vertices = _graph.getVertices().toArray();
 					i = -1;
@@ -1668,6 +1779,10 @@ public class ModelBasedTesting
 			String label = (String)edge.getUserDatum( LABEL_KEY );
 			_logger.debug( "Invoke method for edge: \"" + label + "\"" );
 			invokeMethod( label, dryRun );
+			if ( dryRun )
+			{
+				_executeEdgeAndLabel[ 0 ] = label;
+			}
 			Integer vistited = (Integer)edge.getUserDatum( VISITED_KEY );
 			vistited = new Integer( vistited.intValue() + 1 );
 			edge.setUserDatum( VISITED_KEY, vistited, UserData.SHARED );
@@ -1675,6 +1790,10 @@ public class ModelBasedTesting
 			label = (String)edge.getDest().getUserDatum( LABEL_KEY );
 			_logger.debug( "Invoke method for vertex: \"" + label + "\"" );
 			invokeMethod( label, dryRun );
+			if ( dryRun )
+			{
+				_executeEdgeAndLabel[ 1 ] = label;
+			}
 			vistited = (Integer)edge.getDest().getUserDatum( VISITED_KEY );
 			vistited = new Integer( vistited.intValue() + 1 );
 			edge.getDest().setUserDatum( VISITED_KEY, vistited, UserData.SHARED );
