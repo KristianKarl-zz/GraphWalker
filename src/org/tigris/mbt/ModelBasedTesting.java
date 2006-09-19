@@ -192,7 +192,7 @@ public class ModelBasedTesting
 		File file = new File( _graphmlFileName );
 		if ( file.isFile() )
 		{
-			_graph = parseFile( _graphmlFileName );
+	    	_graphList.add( parseFile( _graphmlFileName ) );
 		}
 		else if ( file.isDirectory() )
 		{
@@ -205,19 +205,17 @@ public class ModelBasedTesting
 		        }
 		    };
 
-
 		    File [] allChildren = file.listFiles( filter );
 		    for ( int i = 0; i < allChildren.length; ++i )
 		    {
 		    	_graphList.add( parseFile( allChildren[ i ].getAbsolutePath() ) );
 		    }
-
-		    analyseSubGraphs();
 		}
 		else
 		{
 			throw new RuntimeException( "\"" + _graphmlFileName + "\" is not a file or a directory. Please specify a valid .graphml file or a directory containing .graphml files" );
 		}
+	    analyseSubGraphs();
 	}
 
 	/**
