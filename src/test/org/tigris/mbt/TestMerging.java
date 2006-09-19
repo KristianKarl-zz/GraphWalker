@@ -249,4 +249,38 @@ public class TestMerging extends TestCase
     		assertTrue( msg.matches( "Vertex has a label 'Containing a whitespace', containing whitespaces in file: \\\".*graphml.test14.C\\.graphml\\\"" ) );
     	}
     }
+    
+    // Verify that a single graphml file with an edge comming from the START vertex with an empty label is catched 
+    public void test15()
+    {
+    	try
+    	{
+	    	ModelBasedTesting mbt = new ModelBasedTesting( "graphml/test15/test15.graphml" );
+    		mbt.generateTests();
+	    	fail( "Missing error message" );
+    	}
+    	catch ( Exception e)
+    	{
+    		String msg = e.getMessage();
+    		System.out.println(e.getMessage());
+    		assertTrue( msg.matches( "Did not found the starting vertex in the graph." ) );
+    	}
+    }
+    
+    // Verify that a folder containing a mother graph file with an edge comming from the START vertex with an empty label is catched
+    public void test16()
+    {
+    	try
+    	{
+	    	ModelBasedTesting mbt = new ModelBasedTesting( "graphml/test16/" );
+    		mbt.generateTests();
+	    	fail( "Missing error message" );
+    	}
+    	catch ( Exception e)
+    	{
+    		String msg = e.getMessage();
+    		System.out.println(e.getMessage());
+    		assertTrue( msg.matches( "Did not found the starting vertex in the graph." ) );
+    	}
+    }
 }
