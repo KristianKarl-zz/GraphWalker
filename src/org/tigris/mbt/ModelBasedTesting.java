@@ -849,11 +849,14 @@ public class ModelBasedTesting
 	// no out edges, which are continued in a different file. These has to be merged.
 	private void analyseSubGraphs()
 	{
-		boolean foundStartGraph = false;
+		boolean foundMotherStartGraph = false;
+		boolean foundSubStartGraph = false;
+		_graph = null;
 		
 		for ( Iterator iter = _graphList.iterator(); iter.hasNext(); )
 		{
 			SparseGraph g = (SparseGraph) iter.next();
+			foundSubStartGraph = false;
 
 			_logger.debug( "Analyzing graph: " + g.getUserDatum( FILE_KEY ) );
 
@@ -868,23 +871,38 @@ public class ModelBasedTesting
 					Object[] edges = v.getOutEdges().toArray();
 					if ( edges.length != 1 )
 					{
-						throw new RuntimeException( "A start nod can only have one out edge, look in file: " + g.getUserDatum( FILE_KEY ) );
+						throw new RuntimeException( "A Start vertex can only have one out edge, look in file: " + g.getUserDatum( FILE_KEY ) );
 					}
 					DirectedSparseEdge edge = (DirectedSparseEdge)edges[ 0 ];
 					if ( edge.containsUserDatumKey( LABEL_KEY ) )
 					{
-						if ( foundStartGraph == true )
+						if ( foundMotherStartGraph )
 						{
-							throw new RuntimeException( "A start nod can only exist in one file, see files " +
-									                    _graph.getUserDatum( FILE_KEY )+ ", and " + g.getUserDatum( FILE_KEY ) );
+							if ( _graph.getUserDatum( FILE_KEY ).equals( g.getUserDatum( FILE_KEY ) ) )
+							{
+								throw new RuntimeException( "Only one Start vertex can exist in one file, see file '" +
+					                    _graph.getUserDatum( FILE_KEY )+ "'" );
+							}
+							else
+							{
+								throw new RuntimeException( "Only one Start vertex can exist in one file, see files " +
+					                    _graph.getUserDatum( FILE_KEY )+ ", and " + g.getUserDatum( FILE_KEY ) );								
+							}
 						}
-						foundStartGraph = true;
+
+						foundMotherStartGraph = true;
 						_graph = g;
 						edge.getDest().addUserDatum( MOTHER_GRAPH_START_VERTEX, MOTHER_GRAPH_START_VERTEX, UserData.SHARED );
 						_logger.debug( "Found the mother graph in the file: " +  _graph.getUserDatum( FILE_KEY ) );
 					}
 					else
 					{
+						if ( foundSubStartGraph == true )
+						{
+							throw new RuntimeException( "Only one Start vertex can exist in one file, see file '" +
+				                    g.getUserDatum( FILE_KEY )+ "'" );		
+						}
+						
 						// Verify that current subgraph is not already defined
 						for ( Iterator iter_g = _graphList.iterator(); iter_g.hasNext(); )
 						{
@@ -908,8 +926,18 @@ public class ModelBasedTesting
 							}
 						}
 						
+						if ( foundMotherStartGraph == true )
+						{
+							if ( _graph.getUserDatum( FILE_KEY ).equals( g.getUserDatum( FILE_KEY ) ) )
+							{
+								throw new RuntimeException( "Only one Start vertex can exist in one file, see file '" +
+					                    _graph.getUserDatum( FILE_KEY )+ "'" );
+							}
+						}
+
 						// Since the edge does not contain a label, this is a subgraph
 						// Mark the destination node of the edge to a subgraph starting node
+						foundSubStartGraph = true;
 						edge.getDest().addUserDatum( SUBGRAPH_START_VERTEX, SUBGRAPH_START_VERTEX, UserData.SHARED );
 						g.addUserDatum( LABEL_KEY, edge.getDest().getUserDatum( LABEL_KEY ), UserData.SHARED );
 						_logger.debug( "Found sub-graph: " + g.getUserDatum( LABEL_KEY ) + ", in file '" + g.getUserDatum( FILE_KEY ) + "'" );
@@ -917,6 +945,11 @@ public class ModelBasedTesting
 					}
 				}
 			}
+		}
+		
+		if ( _graph == null )
+		{
+			throw new RuntimeException( "Did not find a Start vertex with an out edge with a label." );		
 		}
 
 		// Look for duplicated vertices in each sub-graph. If a vertex is found, which represents
@@ -1642,7 +1675,7 @@ public class ModelBasedTesting
 
 		if ( _nextVertex == null )
 		{
-			String msg = "Did not found the starting vertex in the graph.";
+			String msg = "Did not find the starting vertex in the graph.";
 			_logger.error( msg );
 			throw new RuntimeException( msg );
 		}
