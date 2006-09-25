@@ -20,7 +20,7 @@ package org.tigris.mbt;
 
 public class ParseGraphs 
 {
-	private static ModelBasedTesting _mtb;
+	private static ModelBasedTesting _mbt;
 
 	public static void main(String[] args) 
 	{
@@ -33,9 +33,9 @@ public class ParseGraphs
 	
 		try
 		{
-			_mtb = new ModelBasedTesting( args[ 0 ] );
+			_mbt = new ModelBasedTesting( args[ 0 ] );
 	
-			_mtb.writeGraph( args[ 1 ] );
+			_mbt.writeGraph( _mbt.getGraph(), args[ 1 ] );
 		}
 		catch ( RuntimeException e )
 		{
