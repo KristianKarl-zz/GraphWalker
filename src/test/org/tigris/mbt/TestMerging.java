@@ -17,13 +17,14 @@ public class TestMerging extends TestCase
         junit.textui.TestRunner.main(testCaseName);
     }
 
+
     // Test merging of 2 simple graphs
     public void test01()
     {
     	try
     	{
 	    	ModelBasedTesting mbt = new ModelBasedTesting( "graphml/test01" );
-	    	mbt.writeGraph( "graphml/merged/test01.graphml" );
+	    	mbt.writeGraph( mbt.getGraph(), "graphml/merged/test01.graphml" );
 	    	assertTrue( mbt.getGraph().getEdges().size() == 9 );
 	    	assertTrue( mbt.getGraph().getVertices().size() == 7 );
     	}
@@ -40,7 +41,7 @@ public class TestMerging extends TestCase
     	try
     	{
 	    	ModelBasedTesting mbt = new ModelBasedTesting( "graphml/test02" );
-	    	mbt.writeGraph( "graphml/merged/test02.graphml" );
+	    	mbt.writeGraph( mbt.getGraph(), "graphml/merged/test02.graphml" );
 	    	assertTrue( mbt.getGraph().getEdges().size() == 11 );
 	    	assertTrue( mbt.getGraph().getVertices().size() == 8 );
     	}
@@ -57,7 +58,7 @@ public class TestMerging extends TestCase
     	try
     	{
 	    	ModelBasedTesting mbt = new ModelBasedTesting( "graphml/test03" );
-	    	mbt.writeGraph( "graphml/merged/test03.graphml" );
+	    	mbt.writeGraph( mbt.getGraph(), "graphml/merged/test03.graphml" );
 	    	assertTrue( mbt.getGraph().getEdges().size() == 1550 );
 	    	assertTrue( mbt.getGraph().getVertices().size() == 788 );
     	}
@@ -343,6 +344,37 @@ public class TestMerging extends TestCase
     		String msg = e.getMessage();
     		System.out.println(e.getMessage());
     		assertTrue( msg.matches( "A Start vertex can only have one out edge, look in file: graphml/test20/test20.graphml" ) );
+    	}
+    }
+
+    // Verify that UML notes can be added to the graphml file.
+    public void test21()
+    {
+    	try
+    	{
+	    	ModelBasedTesting mbt = new ModelBasedTesting( "graphml/test21" );
+	    	mbt.generateJavaCode( "graphml/merged/test21.java" );	
+    	}
+    	catch ( Exception e)
+    	{
+	    	fail( e.getMessage() );
+    	}
+    }
+
+    // Verify that a graph containing a Stop vertex is correctly merged.
+    public void test22()
+    {
+    	try
+    	{
+	    	ModelBasedTesting mbt = new ModelBasedTesting( "graphml/test22" );
+	    	mbt.writeGraph( mbt.getGraph(), "graphml/merged/test22.graphml" );
+	    	assertTrue( mbt.getGraph().getEdges().size() == 8 );
+	    	assertTrue( mbt.getGraph().getVertices().size() == 8 );
+    	}
+    	catch ( Exception e)
+    	{
+    		System.out.println(e.getMessage());
+	    	fail( e.getMessage() );
     	}
     }
 }

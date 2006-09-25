@@ -60,6 +60,7 @@ public class ModelBasedTesting
 	private java.util.Random      		_radomGenerator = new Random();
 
 	private String  START_NODE                  = "Start";
+	private String  STOP_NODE                   = "Stop";
 	private String  ID_KEY                      = "id";
 	private String  FILE_KEY                    = "file";
 	private String  LABEL_KEY                   = "label";
@@ -112,7 +113,7 @@ public class ModelBasedTesting
 		readFiles();
 	}
 
-	public void writeGraph( String mergedGraphml_ )
+	public void writeGraph( SparseGraph g, String mergedGraphml_ )
 	{
 		StringBuffer sourceFile = new StringBuffer();
 		try {
@@ -124,8 +125,8 @@ public class ModelBasedTesting
 			sourceFile.append( "  <key id=\"d1\" for=\"edge\" yfiles.type=\"edgegraphics\"/>\n" );
 			sourceFile.append( "  <graph id=\"G\" edgedefault=\"directed\">\n" );
 
-	        int numVertices = _graph.getVertices().size();
-	        edu.uci.ics.jung.graph.decorators.Indexer id = edu.uci.ics.jung.graph.decorators.Indexer.getAndUpdateIndexer( _graph );
+	        int numVertices = g.getVertices().size();
+	        edu.uci.ics.jung.graph.decorators.Indexer id = edu.uci.ics.jung.graph.decorators.Indexer.getAndUpdateIndexer( g );
 	        for ( int i = 0; i < numVertices; i++ )
 	        {
 	            Vertex v = (Vertex) id.getVertex(i);
@@ -145,7 +146,7 @@ public class ModelBasedTesting
 			}
 
 	        int i = 0;
-	        for ( Iterator edgeIterator = _graph.getEdges().iterator(); edgeIterator.hasNext(); )
+	        for ( Iterator edgeIterator = g.getEdges().iterator(); edgeIterator.hasNext(); )
 	        {
 	            Edge e = (Edge) edgeIterator.next();
 	            Pair p = e.getEndpoints();
@@ -448,10 +449,10 @@ public class ModelBasedTesting
 			Document doc = parser.build( fileName );
 
 			// Parse all vertices (nodes)
-			Iterator iter = doc.getDescendants( new org.jdom.filter.ElementFilter( "node" ) );
-			while ( iter.hasNext() )
+			Iterator iter_node = doc.getDescendants( new org.jdom.filter.ElementFilter( "node" ) );
+			while ( iter_node.hasNext() )
 			{
-				Object o = iter.next();
+				Object o = iter_node.next();
 				if ( o instanceof org.jdom.Element )
 				{
 					org.jdom.Element element = (org.jdom.Element)o;
@@ -460,12 +461,18 @@ public class ModelBasedTesting
 						_logger.debug( "Excluded node: " + element.getAttributeValue( "yfiles.foldertype" ) );
 						continue;
 					}
+					Iterator iterUMLNoteIter = element.getDescendants( new org.jdom.filter.ElementFilter( "UMLNoteNode" ) );
+					if ( iterUMLNoteIter.hasNext() )
+					{
+						_logger.debug( "Excluded node: UMLNoteNode" );
+						continue;
+					}
 					_logger.debug( "id: " + element.getAttributeValue( "id" ) );
 
-					Iterator iter2 = element.getDescendants( new org.jdom.filter.ElementFilter( "NodeLabel" ) );
-					while ( iter2.hasNext() )
+					Iterator iterNodeLabel = element.getDescendants( new org.jdom.filter.ElementFilter( "NodeLabel" ) );
+					while ( iterNodeLabel.hasNext() )
 					{
-						Object o2 = iter2.next();
+						Object o2 = iterNodeLabel.next();
 						if ( o2 instanceof org.jdom.Element )
 						{
 							org.jdom.Element nodeLabel = (org.jdom.Element)o2;
@@ -551,10 +558,10 @@ public class ModelBasedTesting
 			Object[] vertices = graph.getVertices().toArray();
 
 			// Parse all edges (arrows or transtitions)
-			iter = doc.getDescendants( new org.jdom.filter.ElementFilter( "edge" ) );
-			while ( iter.hasNext() )
+			Iterator iter_edge = doc.getDescendants( new org.jdom.filter.ElementFilter( "edge" ) );
+			while ( iter_edge.hasNext() )
 			{
-				Object o = iter.next();
+				Object o = iter_edge.next();
 				if ( o instanceof org.jdom.Element )
 				{
 					org.jdom.Element element = (org.jdom.Element)o;
@@ -792,15 +799,18 @@ public class ModelBasedTesting
 						if ( str == null || str.equals( "" ) )
 						 {
 							DirectedSparseVertex v = (DirectedSparseVertex)e.getSource();
-							str = (String)v.getUserDatum( LABEL_KEY );
-							if ( str.equals( "Start" ) == false )
+							String srcVertexStr = (String)v.getUserDatum( LABEL_KEY );
+							v = (DirectedSparseVertex)e.getDest();
+							String dstVertexStr = (String)v.getUserDatum( LABEL_KEY );
+							if ( srcVertexStr.equals( "Start" ) == false && 
+								 dstVertexStr.equals( "Stop" ) == false )
 							{
-								throw new RuntimeException( "Found an edge with no (or empty) label. This is only allowed when the source vertex is a Start vertex. In file \"" + fileName + "\"" );
+								throw new RuntimeException( "Found an edge with no (or empty) label. This is only allowed when the source vertex is a Start vertex, or the destination vertex is a Stop vertex. In file \"" + fileName + "\"" );
 							}
 						}
 						
 						e.addUserDatum( VISITED_KEY, new Integer( 0 ), UserData.SHARED );
-						_logger.debug( "Adderade edge: " + e.getUserDatum( LABEL_KEY ) + ", with id: " + e.hashCode() );
+						_logger.debug( "Added edge: " + e.getUserDatum( LABEL_KEY ) + ", with id: " + e.hashCode() );
 					}
 				}
 		}
@@ -992,6 +1002,7 @@ public class ModelBasedTesting
 					
 				}
 			}
+			_logger.debug( "Nope! Did not find any infinit recursive loops." );
 		}
 		
 		for ( int i = 0; i < _graphList.size(); i++ )
@@ -1117,6 +1128,7 @@ public class ModelBasedTesting
 		_logger.info( "Done merging" );
 	}
 
+	// Copies the graph src, into the graph dst
 	private void appendGraph( SparseGraph dst, SparseGraph src )
 	{
 		HashMap map = new HashMap();
@@ -1139,16 +1151,24 @@ public class ModelBasedTesting
 			DirectedSparseEdge e = (DirectedSparseEdge)edges[ i ];
 			if ( e.containsUserDatumKey( LABEL_KEY ) == false )
 			{
-				continue;
+				DirectedSparseVertex v = (DirectedSparseVertex)e.getDest();
+				if ( v.getUserDatum( LABEL_KEY ).equals( STOP_NODE ) == false )
+				{
+					continue;
+				}
 			}
-			DirectedSparseEdge new_e = new DirectedSparseEdge( (DirectedSparseVertex)map.get( new Integer( e.getSource().hashCode() ) ), (DirectedSparseVertex)map.get( new Integer( e.getDest().hashCode() ) ) );
+			DirectedSparseEdge new_e = new DirectedSparseEdge( (DirectedSparseVertex) map.get(new Integer(e.getSource().hashCode())), (DirectedSparseVertex) map.get(new Integer(e.getDest().hashCode())));
 			new_e.importUserData( e );
 			dst.addEdge( new_e );
 		}
 	}
 
+
+	// Replaces the vertex targetVertex and all its in and out edges, in the graph g, with all
+	// other vertices with the same name.
 	private void copySubGraphs( SparseGraph g, DirectedSparseVertex targetVertex )
 	{
+		Object[] targetVertexOutEdges = targetVertex.getOutEdges().toArray();
 		DirectedSparseVertex sourceVertex = null;
 		Object[] vertices = g.getVertices().toArray();
 		for ( int i = 0; i < vertices.length; i++ )
@@ -1187,7 +1207,7 @@ public class ModelBasedTesting
 			return;
 		}
 
-		_logger.info( "Start merging target vertex(" + targetVertex.hashCode() + ") with source vertex(" +
+		_logger.debug( "Start merging target vertex(" + targetVertex.hashCode() + ") with source vertex(" +
 				      sourceVertex.hashCode() + "), " + sourceVertex.getUserDatum( LABEL_KEY ) );
 
 		Object[] inEdges = sourceVertex.getInEdges().toArray();
@@ -1207,6 +1227,45 @@ public class ModelBasedTesting
 		_logger.debug( "Remvoing source vertex(" + sourceVertex.hashCode() + ")" );
 		g.removeVertex( sourceVertex );
 		targetVertex.addUserDatum( MERGED_BY_MBT, MERGED_BY_MBT, UserData.SHARED );
+
+		
+		// Merge the Stop vertex, if it exists
+		DirectedSparseVertex stopVertex = null;
+		vertices = g.getVertices().toArray();
+		for ( int i = 0; i < vertices.length; i++ )
+		{
+			DirectedSparseVertex v = (DirectedSparseVertex)vertices[ i ];
+			if ( v.getUserDatum( LABEL_KEY ).equals( STOP_NODE ) )
+			{
+				if ( stopVertex != null )
+				{
+					throw new RuntimeException( "Found more than 1 Stop vertex in file (Only one Stop vertex per file is allowed): '" + 
+        					g.getUserDatum( FILE_KEY ) + "'" );					
+				}
+				stopVertex = v;
+			}
+		}
+		if ( stopVertex != null )
+		{
+			inEdges = stopVertex.getInEdges().toArray();
+			for ( int i = 0; i < inEdges.length; i++ )
+			{
+				DirectedSparseEdge edge = (DirectedSparseEdge)inEdges[ i ];
+				DirectedSparseVertex srcVertex = (DirectedSparseVertex)edge.getSource();
+				for ( int j = 0; j < targetVertexOutEdges.length; j++ )
+				{
+					edge = (DirectedSparseEdge)targetVertexOutEdges[ j ];
+					
+					DirectedSparseEdge new_edge = (DirectedSparseEdge)g.addEdge( new DirectedSparseEdge( srcVertex, edge.getDest() ) );
+					new_edge.importUserData( edge );
+					_logger.debug( "Merged the edge: " + getCompleteEdgeName( edge ) + " (old) with: " + getCompleteEdgeName( new_edge ) + "(new)" );
+					_logger.debug( "Removing edge: " + getCompleteEdgeName( edge ) );
+					g.removeEdge( edge );
+				}				
+			}			
+			_logger.debug( "Removing the Stop vertex: " + stopVertex.hashCode()  );
+			g.removeVertex( stopVertex );
+		}
 	}
 
 	public String getStatistics()
