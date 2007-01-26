@@ -89,8 +89,10 @@ public class ModelBasedTesting
 	private long				 	_start_time;
 	private long				 	_end_time     = 0;
 	private boolean				 	_runUntilAllEdgesVisited = false;
+	private boolean				 	_changedStratedgyFromRunUntilAllEdgesVisited = false;
 	private List				 	_shortestPathToVertex = null ;
 	private String[]   				_executeEdgeAndLabel = new String[ 2];
+	private int						_latestNumberOfUnvisetedEdges;
 
 	public ModelBasedTesting( String graphmlFileName_,
 			  				  Object object_ )
@@ -167,7 +169,12 @@ public class ModelBasedTesting
 	            sourceFile.append( "          </y:Path>\n" );
 	            sourceFile.append( "          <y:LineStyle type=\"line\" width=\"1.0\" color=\"#000000\" />\n" );
 	            sourceFile.append( "          <y:Arrows source=\"none\" target=\"standard\"/>\n" );
-	            sourceFile.append( "          <y:EdgeLabel x=\"-148.25\" y=\"30.000000000000014\" width=\"169.0\" height=\"18.701171875\" visible=\"true\" alignment=\"center\" fontFamily=\"Dialog\" fontSize=\"12\" fontStyle=\"plain\" textColor=\"#000000\" modelName=\"free\" modelPosition=\"anywhere\" preferredPlacement=\"on_edge\" distance=\"2.0\" ratio=\"0.5\">" + e.getUserDatum( LABEL_KEY ) + "</y:EdgeLabel>\n" );
+	            
+	            if ( e.getUserDatum( LABEL_KEY ) != null )
+	            {
+	            	sourceFile.append( "          <y:EdgeLabel x=\"-148.25\" y=\"30.000000000000014\" width=\"169.0\" height=\"18.701171875\" visible=\"true\" alignment=\"center\" fontFamily=\"Dialog\" fontSize=\"12\" fontStyle=\"plain\" textColor=\"#000000\" modelName=\"free\" modelPosition=\"anywhere\" preferredPlacement=\"on_edge\" distance=\"2.0\" ratio=\"0.5\">" + e.getUserDatum( LABEL_KEY ) + "</y:EdgeLabel>\n" );
+	            }
+	            
 	            sourceFile.append( "          <y:BendStyle smoothed=\"false\"/>\n" );
 	            sourceFile.append( "        </y:PolyLineEdge>\n" );
 	            sourceFile.append( "      </data>\n" );
@@ -378,7 +385,7 @@ public class ModelBasedTesting
 	public void runUntilAllVerticesAndEdgesVisited() throws FoundNoEdgeException
 	{
 		findStartingVertex();
-
+		_runUntilAllEdgesVisited = true;
 		_start_time = System.currentTimeMillis();
 		while ( true )
 		{
@@ -645,7 +652,7 @@ public class ModelBasedTesting
 							throw new RuntimeException( "Label for edge must be defined in file \"" + fileName + "\"" );
 						}
 
-						if ( label == null || label.equalsIgnoreCase("") )
+						/*if ( label == null || label.equalsIgnoreCase("") )
 						{
 							DirectedSparseVertex srcV = (DirectedSparseVertex)e.getSource();
 							String s = (String)srcV.getUserDatum( LABEL_KEY );
@@ -653,7 +660,7 @@ public class ModelBasedTesting
 							{
 								throw new RuntimeException( "Label for an edge comming from a non-Start vertex,  '" + getCompleteEdgeName( e ) + "', must be defined in file: \"" + fileName + "\"" );
 							}
-						}
+						}*/
 
 
 
@@ -795,7 +802,7 @@ public class ModelBasedTesting
 							}
 						}
 
-						String str = (String)e.getUserDatum( LABEL_KEY );
+						/*String str = (String)e.getUserDatum( LABEL_KEY );
 						if ( str == null || str.equals( "" ) )
 						 {
 							DirectedSparseVertex v = (DirectedSparseVertex)e.getSource();
@@ -807,7 +814,7 @@ public class ModelBasedTesting
 							{
 								throw new RuntimeException( "Found an edge with no (or empty) label. This is only allowed when the source vertex is a Start vertex, or the destination vertex is a Stop vertex. In file \"" + fileName + "\"" );
 							}
-						}
+						}*/
 						
 						e.addUserDatum( VISITED_KEY, new Integer( 0 ), UserData.SHARED );
 						_logger.debug( "Added edge: " + e.getUserDatum( LABEL_KEY ) + ", with id: " + e.hashCode() );
@@ -1044,8 +1051,11 @@ public class ModelBasedTesting
 							       ", equals a node in the graph in file: " +
 							       _graph.getUserDatum( FILE_KEY ) );
 
+					//writeGraph( _graph, "/tmp/merged.graphml" );
 					appendGraph( _graph, g );
+					//writeGraph( _graph, "/tmp/merged.graphml" );
 					copySubGraphs( _graph, v1 );
+					//writeGraph( _graph, "/tmp/merged.graphml" );
 
 					vertices = _graph.getVertices().toArray();
 					i = -1;
@@ -1143,21 +1153,20 @@ public class ModelBasedTesting
 			DirectedSparseVertex new_v = new DirectedSparseVertex();
 			new_v.importUserData( v );
 			dst.addVertex( new_v );
+			_logger.debug("Associated vertex: " + v + " to new vertex: " + new_v );
 			map.put( new Integer( v.hashCode() ), new_v );
 		}
 		Object[] edges = src.getEdges().toArray();
 		for ( int i = 0; i < edges.length; i++ )
 		{
 			DirectedSparseEdge e = (DirectedSparseEdge)edges[ i ];
-			if ( e.containsUserDatumKey( LABEL_KEY ) == false )
+			DirectedSparseVertex v1 = (DirectedSparseVertex)map.get(new Integer(e.getSource().hashCode()));
+			DirectedSparseVertex v2 = (DirectedSparseVertex)map.get(new Integer(e.getDest().hashCode()));
+			if ( v1 == null || v2 == null )
 			{
-				DirectedSparseVertex v = (DirectedSparseVertex)e.getDest();
-				if ( v.getUserDatum( LABEL_KEY ).equals( STOP_NODE ) == false )
-				{
-					continue;
-				}
+				continue;
 			}
-			DirectedSparseEdge new_e = new DirectedSparseEdge( (DirectedSparseVertex) map.get(new Integer(e.getSource().hashCode())), (DirectedSparseVertex) map.get(new Integer(e.getDest().hashCode())));
+			DirectedSparseEdge new_e = new DirectedSparseEdge( v1, v2 );
 			new_e.importUserData( e );
 			dst.addEdge( new_e );
 		}
@@ -1247,6 +1256,7 @@ public class ModelBasedTesting
 		}
 		if ( stopVertex != null )
 		{
+			Vector edgesToBeRemoved = new Vector();
 			inEdges = stopVertex.getInEdges().toArray();
 			for ( int i = 0; i < inEdges.length; i++ )
 			{
@@ -1259,10 +1269,25 @@ public class ModelBasedTesting
 					DirectedSparseEdge new_edge = (DirectedSparseEdge)g.addEdge( new DirectedSparseEdge( srcVertex, edge.getDest() ) );
 					new_edge.importUserData( edge );
 					_logger.debug( "Merged the edge: " + getCompleteEdgeName( edge ) + " (old) with: " + getCompleteEdgeName( new_edge ) + "(new)" );
-					_logger.debug( "Removing edge: " + getCompleteEdgeName( edge ) );
-					g.removeEdge( edge );
+					edgesToBeRemoved.add( edge );
+					/*try {
+						g.removeEdge( edge );						
+						_logger.debug( "Removing edge: " + getCompleteEdgeName( edge ) );
+					} catch (java.lang.IllegalArgumentException e) {
+						_logger.error( getCompleteEdgeName( edge ) + ", was not found in graph g" );
+					}*/
 				}				
-			}			
+			}
+			for (Iterator iter = edgesToBeRemoved.iterator(); iter.hasNext();)
+			{
+				DirectedSparseEdge element = (DirectedSparseEdge) iter.next();
+				try {
+					g.removeEdge( element );
+					_logger.debug( "Removing edge: " + getCompleteEdgeName( element ) );
+				} catch (java.lang.IllegalArgumentException e) {
+					_logger.error( getCompleteEdgeName( element ) + ", was not found in graph g" );
+				}
+			}
 			_logger.debug( "Removing the Stop vertex: " + stopVertex.hashCode()  );
 			g.removeVertex( stopVertex );
 		}
@@ -1336,18 +1361,27 @@ public class ModelBasedTesting
 		return _graph;
 	}
 
-	public void generateTests() throws RuntimeException, FoundNoEdgeException
+	public void generateTests( Boolean random, long length ) throws RuntimeException, FoundNoEdgeException
 	{
-		_runUntilAllEdgesVisited = true;
-
 		findStartingVertex();
-
-		while ( true )
+		if ( random == true )
 		{
-			executeMethod( true, true );
-			if ( isAllEdgesVisited() )
+			_runUntilAllEdgesVisited = false;
+			for ( long index = 0; index < length; index++  )
 			{
-				break;
+				executeMethod( false, true );
+			}
+		}
+		else
+		{
+			_runUntilAllEdgesVisited = true;
+			while ( true )
+			{
+				executeMethod( true, true );
+				if ( isAllEdgesVisited() )
+				{
+					break;
+				}
 			}
 		}
 		
@@ -1460,12 +1494,16 @@ public class ModelBasedTesting
 		for ( int i = 0; i < _edges.length; i++ )
 		{
 			DirectedSparseEdge edge = (DirectedSparseEdge)_edges[ i ];
+			if ( edge.getUserDatum( LABEL_KEY ) == null )
+			{
+				continue;
+			}
 
 			boolean duplicated = false;
 			for ( Iterator iter = writtenEdges.iterator(); iter.hasNext(); )
 			{
 				String str = (String) iter.next();
-				if ( str.equals( (String)edge.getUserDatum( LABEL_KEY ) ) == true )
+				if ( str.equals( edge.getUserDatum( LABEL_KEY ) ) == true )
 				{
 					duplicated = true;
 					break;
@@ -1773,6 +1811,15 @@ public class ModelBasedTesting
 			}
 			_logger.info( "Found " + unvisitedEdges.size() + " unvisited edges (" + _graph.getEdges().size() + ")" );
 
+			if ( unvisitedEdges.size() == _latestNumberOfUnvisetedEdges )
+			{
+				_logger.warn( "The number of unvisited edges has not decreased. This is not normal, perhaps due to unfullfilled conditions." );
+				_logger.warn( "MBT will now change strategy and abandon the optimized runUntillAllEdgesAndVerticesVisited, to a random walk." );
+				_runUntilAllEdgesVisited = false;
+				_changedStratedgyFromRunUntilAllEdgesVisited = true;
+			}
+			
+			_latestNumberOfUnvisetedEdges = unvisitedEdges.size(); 
 
 			Object[] shuffledList = shuffle( unvisitedEdges.toArray() );
 			DirectedSparseEdge e = (DirectedSparseEdge)shuffledList[ 0 ];
@@ -1863,6 +1910,13 @@ public class ModelBasedTesting
 
 		_prevVertex = _nextVertex;
 		_nextVertex = (DirectedSparseVertex)edge.getDest();
+		
+		if ( _changedStratedgyFromRunUntilAllEdgesVisited )
+		{
+			_changedStratedgyFromRunUntilAllEdgesVisited = false;
+			_runUntilAllEdgesVisited = true;
+			_logger.warn( "MBT will now try to change strategy back to runUntillAllEdgesAndVerticesVisited." );
+		}
 
 		try
 		{
@@ -1890,10 +1944,18 @@ public class ModelBasedTesting
 		}
 		catch( GoBackToPreviousVertexException e )
 		{
-			_logger.debug( "The edge: " + getCompleteEdgeName( edge ) + " can not be run due to unfullfilled conditions." );
-			_logger.debug( "Trying from vertex: " + (String)_prevVertex.getUserDatum( LABEL_KEY ) + " again." );
+			_logger.info( "The edge: " + getCompleteEdgeName( edge ) + " can not be run due to unfullfilled conditions." );
+			_logger.info( "Trying from vertex: " + (String)_prevVertex.getUserDatum( LABEL_KEY ) + " again." );
 			_rejectedEdge = edge;
 			_nextVertex   = _prevVertex;
+
+			if ( _runUntilAllEdgesVisited )
+			{
+				_shortestPathToVertex = null;
+				_runUntilAllEdgesVisited = false;
+				_changedStratedgyFromRunUntilAllEdgesVisited = true;
+				_logger.warn( "MBT will now change strategy and abandon the optimized runUntillAllEdgesAndVerticesVisited, to a random walk." );
+			}
 		}
 	}
 
@@ -1905,6 +1967,12 @@ public class ModelBasedTesting
 		{
 			cls = _object.getClass();
 			_pathHistory.add( method );
+		}
+
+		if ( method == null )
+		{
+			_pathHistory.add( "" );
+			return;
 		}
 
 
