@@ -33,7 +33,6 @@ public class GenerateTests {
 					.withArgName( "=length" )
                     .withDescription( "The length of the test sequence. Supply an integer, which tells MBT how many " + 
                     		"vertices a test sequence shall contain." )
-                    .withValueSeparator( '=' )
                     .hasArg()
                     .create( "l" ) );
 			
