@@ -483,8 +483,8 @@ public class ModelBasedTesting
 						if ( o2 instanceof org.jdom.Element )
 						{
 							org.jdom.Element nodeLabel = (org.jdom.Element)o2;
-							_logger.debug( "Full name: " + nodeLabel.getQualifiedName() );
-							_logger.debug( "Name: " + nodeLabel.getTextTrim() );
+							_logger.debug( "Full name: '" + nodeLabel.getQualifiedName() + "'" );
+							_logger.debug( "Name: '" + nodeLabel.getTextTrim() + "'" );
 
 							DirectedSparseVertex v = (DirectedSparseVertex) graph.addVertex( new DirectedSparseVertex() );
 
@@ -582,8 +582,8 @@ public class ModelBasedTesting
 						if ( o2 instanceof org.jdom.Element )
 						{
 							edgeLabel = (org.jdom.Element)o2;
-							_logger.debug( "Full name: " + edgeLabel.getQualifiedName() );
-							_logger.debug( "Name: " + edgeLabel.getTextTrim() );
+							_logger.debug( "Full name: '" + edgeLabel.getQualifiedName() + "'" );
+							_logger.debug( "Name: '" + edgeLabel.getTextTrim() + "'" );
 						}
 					}
 					_logger.debug( "source: " + element.getAttributeValue( "source" ) );
@@ -610,13 +610,13 @@ public class ModelBasedTesting
 					}
 					if ( source == null )
 					{
-						String msg = "Could not find starting node for edge. Name: " + element.getAttributeValue( "source" ) + " In file \"" + fileName + "\"";
+						String msg = "Could not find starting node for edge. Name: '" + element.getAttributeValue( "source" ) + "' In file \"" + fileName + "\"";
 						_logger.error( msg );
 						throw new RuntimeException( msg );
 					}
 					if ( dest == null )
 					{
-						String msg = "Could not find end node for edge. Name: " + element.getAttributeValue( "target" ) + " In file \"" + fileName + "\"";
+						String msg = "Could not find end node for edge. Name: '" + element.getAttributeValue( "target" ) + "' In file \"" + fileName + "\"";
 						_logger.error( msg );
 						throw new RuntimeException( msg );
 					}
