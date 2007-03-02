@@ -513,7 +513,7 @@ public class ModelBasedTesting
 							{
 								throw new RuntimeException( "Label must be defined in file: \"" + fileName + "\"" );
 							}
-							_logger.debug( "Added vertex: " + v.getUserDatum( LABEL_KEY ) + ", with id: " + v.hashCode() );
+							_logger.debug( "Added vertex: '" + v.getUserDatum( LABEL_KEY ) + "', with id: " + v.hashCode() );
 
 
 
@@ -817,7 +817,7 @@ public class ModelBasedTesting
 						}*/
 						
 						e.addUserDatum( VISITED_KEY, new Integer( 0 ), UserData.SHARED );
-						_logger.debug( "Added edge: " + e.getUserDatum( LABEL_KEY ) + ", with id: " + e.hashCode() );
+						_logger.debug( "Added edge: '" + e.getUserDatum( LABEL_KEY ) + "', with id: " + e.hashCode() );
 					}
 				}
 		}
@@ -846,7 +846,7 @@ public class ModelBasedTesting
 			DirectedSparseVertex v = (DirectedSparseVertex)vertices[ i ];
 			if ( v.containsUserDatumKey(BLOCKED) )
 			{
-				_logger.debug( "Removing this vertex because it is BLOCKED: " + v.getUserDatum( LABEL_KEY ) );
+				_logger.debug( "Removing this vertex because it is BLOCKED: '" + v.getUserDatum( LABEL_KEY ) + "'" );
 				graph.removeVertex( v );
 			}
 		}
@@ -856,7 +856,7 @@ public class ModelBasedTesting
 			DirectedSparseEdge e = (DirectedSparseEdge)edges[ i ];
 			if ( e.containsUserDatumKey(BLOCKED) )
 			{
-				_logger.debug( "Removing this edge because it is BLOCKED: " + e.getUserDatum( LABEL_KEY ) );
+				_logger.debug( "Removing this edge because it is BLOCKED: '" + e.getUserDatum( LABEL_KEY ) + "'" );
 				graph.removeEdge( e );
 			}
 		}
@@ -957,7 +957,7 @@ public class ModelBasedTesting
 						foundSubStartGraph = true;
 						edge.getDest().addUserDatum( SUBGRAPH_START_VERTEX, SUBGRAPH_START_VERTEX, UserData.SHARED );
 						g.addUserDatum( LABEL_KEY, edge.getDest().getUserDatum( LABEL_KEY ), UserData.SHARED );
-						_logger.debug( "Found sub-graph: " + g.getUserDatum( LABEL_KEY ) + ", in file '" + g.getUserDatum( FILE_KEY ) + "'" );
+						_logger.debug( "Found sub-graph: '" + g.getUserDatum( LABEL_KEY ) + "', in file '" + g.getUserDatum( FILE_KEY ) + "'" );
 						_logger.debug( "Added SUBGRAPH_START_VERTEX to vertex: " + edge.getDest().hashCode() );
 					}
 				}
@@ -1002,9 +1002,9 @@ public class ModelBasedTesting
 					}
 					
 					_logger.error( "Vertex: " + label + ", with id: " + v.hashCode() + ", is a duplicate in a subgraph" );
-					throw new RuntimeException( "Found a subgraph containing a duplicate vertex with name: " + 
+					throw new RuntimeException( "Found a subgraph containing a duplicate vertex with name: '" + 
 		                    					v.getUserDatum( LABEL_KEY ) + 
-		                    					", in file: '" + 
+		                    					"', in file: '" + 
 		                    					g.getUserDatum( FILE_KEY ) + "'" );
 					
 				}
@@ -1026,7 +1026,7 @@ public class ModelBasedTesting
 			for ( int j = 0; j < vertices.length; j++ )
 			{
 				DirectedSparseVertex v1 = (DirectedSparseVertex)vertices[ j ];
-				_logger.debug( "Investigating vertex(" + v1.hashCode() + "): " + v1.getUserDatum( LABEL_KEY ) );
+				_logger.debug( "Investigating vertex(" + v1.hashCode() + "): '" + v1.getUserDatum( LABEL_KEY ) + "'" );
 
 				if ( v1.getUserDatum( LABEL_KEY ).equals( g.getUserDatum( LABEL_KEY ) ) )
 				{
@@ -1046,10 +1046,10 @@ public class ModelBasedTesting
 						continue;
 					}
 
-					_logger.debug( "A subgraph'ed vertex: " + v1.getUserDatum( LABEL_KEY ) +
-							       " in graph: " + g.getUserDatum( FILE_KEY )  +
-							       ", equals a node in the graph in file: " +
-							       _graph.getUserDatum( FILE_KEY ) );
+					_logger.debug( "A subgraph'ed vertex: '" + v1.getUserDatum( LABEL_KEY ) +
+							       "' in graph: " + g.getUserDatum( FILE_KEY )  +
+							       ", equals a node in the graph in file: '" +
+							       _graph.getUserDatum( FILE_KEY ) + "'" );
 
 					//writeGraph( _graph, "/tmp/merged.graphml" );
 					appendGraph( _graph, g );
@@ -1098,8 +1098,8 @@ public class ModelBasedTesting
 					continue;
 				}
 
-				_logger.debug( "Merging vertex(" + v1.hashCode() + "): " + v1.getUserDatum( LABEL_KEY ) +
-						       " with vertex (" + v2.hashCode() + ")" );
+				_logger.debug( "Merging vertex(" + v1.hashCode() + "): '" + v1.getUserDatum( LABEL_KEY ) +
+						       "' with vertex (" + v2.hashCode() + ")" );
 
 				Object[] inEdges = v1.getInEdges().toArray();
 				for (int x = 0; x < inEdges.length; x++)
@@ -1131,7 +1131,7 @@ public class ModelBasedTesting
 			DirectedSparseVertex v = (DirectedSparseVertex)list[ i ];
 			if ( v.getOutEdges().size() <= 0 )
 			{
-				_logger.warn( "Found a cul-de-sac. Vertex has no out-edges:  " + (String)v.getUserDatum( LABEL_KEY ) );
+				_logger.warn( "Found a cul-de-sac. Vertex has no out-edges: '" + (String)v.getUserDatum( LABEL_KEY ) + "'" );
 			}
 		}
 
@@ -1217,7 +1217,7 @@ public class ModelBasedTesting
 		}
 
 		_logger.debug( "Start merging target vertex(" + targetVertex.hashCode() + ") with source vertex(" +
-				      sourceVertex.hashCode() + "), " + sourceVertex.getUserDatum( LABEL_KEY ) );
+				      sourceVertex.hashCode() + "), '" + sourceVertex.getUserDatum( LABEL_KEY ) + "'" );
 
 		Object[] inEdges = sourceVertex.getInEdges().toArray();
 		for (int i = 0; i < inEdges.length; i++)
@@ -1314,7 +1314,7 @@ public class ModelBasedTesting
 			Integer vistited = (Integer)edge.getUserDatum( VISITED_KEY );
 			if ( vistited.intValue() == 0 )
 			{
-				stat += "Not tested (Edge): " + (String)edge.getUserDatum( LABEL_KEY ) + ", from: " + (String)edge.getSource().getUserDatum( LABEL_KEY ) + ", to: " + (String)edge.getDest().getUserDatum( LABEL_KEY ) + new_line;
+				stat += "Not tested (Edge): '" + (String)edge.getUserDatum( LABEL_KEY ) + "', from: '" + (String)edge.getSource().getUserDatum( LABEL_KEY ) + "', to: '" + (String)edge.getDest().getUserDatum( LABEL_KEY ) + "'" + new_line;
 			}
 			else
 			{
@@ -1331,7 +1331,7 @@ public class ModelBasedTesting
 			Integer vistited = (Integer)vertex.getUserDatum( VISITED_KEY );
 			if ( vistited.intValue() == 0 )
 			{
-				stat += "Not tested (Vertex): " + (String)vertex.getUserDatum( LABEL_KEY ) + new_line;
+				stat += "Not tested (Vertex): '" + (String)vertex.getUserDatum( LABEL_KEY ) + "'" +new_line;
 			}
 			else
 			{
@@ -1361,7 +1361,7 @@ public class ModelBasedTesting
 		return _graph;
 	}
 
-	public void generateTests( Boolean random, long length ) throws RuntimeException, FoundNoEdgeException
+	public void generateTests( boolean random, long length ) throws RuntimeException, FoundNoEdgeException
 	{
 		findStartingVertex();
 		if ( random == true )
@@ -1478,7 +1478,7 @@ public class ModelBasedTesting
 				if ( m.find() == false )
 				{
 					sourceFile.append( "/**\n" );
-					sourceFile.append( " * This method implements the verification of the vertex: " + (String)vertex.getUserDatum( LABEL_KEY ) + "\n" );
+					sourceFile.append( " * This method implements the verification of the vertex: '" + (String)vertex.getUserDatum( LABEL_KEY ) + "'\n" );
 					sourceFile.append( " */\n" );
 					sourceFile.append( "public void " + (String)vertex.getUserDatum( LABEL_KEY ) + "()\n" );
 					sourceFile.append( "{\n" );
@@ -1518,7 +1518,7 @@ public class ModelBasedTesting
 				if ( m.find() == false )
 				{
 					sourceFile.append( "/**\n" );
-					sourceFile.append( " * This method implemets the edge: " + (String)edge.getUserDatum( LABEL_KEY ) + "\n" );
+					sourceFile.append( " * This method implemets the edge: '" + (String)edge.getUserDatum( LABEL_KEY ) + "'\n" );
 					sourceFile.append( " */\n" );
 					sourceFile.append( "public void " + (String)edge.getUserDatum( LABEL_KEY ) + "()\n" );
 					sourceFile.append( "{\n" );
@@ -1684,7 +1684,7 @@ public class ModelBasedTesting
 				if ( m.find() == false )
 				{
 					sourceFile.append( "#\n" );
-					sourceFile.append( "# This method implements the verification of the vertex: " + (String)vertex.getUserDatum( LABEL_KEY ) + "\n" );
+					sourceFile.append( "# This method implements the verification of the vertex: '" + (String)vertex.getUserDatum( LABEL_KEY ) + "'\n" );
 					sourceFile.append( "#\n" );
 					sourceFile.append( "sub " + (String)vertex.getUserDatum( LABEL_KEY ) + "()\n" );
 					sourceFile.append( "{\n" );
@@ -1721,7 +1721,7 @@ public class ModelBasedTesting
 				if ( m.find() == false )
 				{
 					sourceFile.append( "#\n" );
-					sourceFile.append( "# This method implemets the edge: " + (String)edge.getUserDatum( LABEL_KEY ) + "\n" );
+					sourceFile.append( "# This method implemets the edge: '" + (String)edge.getUserDatum( LABEL_KEY ) + "'\n" );
 					sourceFile.append( "#\n" );
 					sourceFile.append( "sub " + (String)edge.getUserDatum( LABEL_KEY ) + "()\n" );
 					sourceFile.append( "{\n" );
@@ -1788,14 +1788,14 @@ public class ModelBasedTesting
 			_pathHistory.clear();
 		}
 
-		_logger.debug( "Vertex = " + (String)_nextVertex.getUserDatum( LABEL_KEY ) );
+		_logger.debug( "Vertex = '" + (String)_nextVertex.getUserDatum( LABEL_KEY ) + "'" );
 
 		outEdges = _nextVertex.getOutEdges().toArray();
 		_logger.debug( "Number of outgoing edges = " + outEdges.length );
 
 		if ( outEdges.length == 0 )
 		{
-			_logger.error( "Vertex has no out-edges:  " + (String)_nextVertex.getUserDatum( LABEL_KEY ) );
+			_logger.error( "Vertex has no out-edges: '" + (String)_nextVertex.getUserDatum( LABEL_KEY ) + "'" );
 			throw new RuntimeException( "Found a cul-de-sac, I have to stop now..." );
 		}
 
@@ -1837,13 +1837,13 @@ public class ModelBasedTesting
 			{
 				if ( _nextVertex.hashCode() != e.getSource().hashCode() )
 				{
-					_logger.error( "There is no way to reach: " + getCompleteEdgeName( e ) + ", from: " + _nextVertex.getUserDatum( LABEL_KEY ) );
-					throw new RuntimeException( "There is no way to reach: " + getCompleteEdgeName( e ) + ", from: " + _nextVertex.getUserDatum( LABEL_KEY ) );
+					_logger.error( "There is no way to reach: " + getCompleteEdgeName( e ) + ", from: '" + _nextVertex.getUserDatum( LABEL_KEY ) + "'" );
+					throw new RuntimeException( "There is no way to reach: " + getCompleteEdgeName( e ) + ", from: '" + _nextVertex.getUserDatum( LABEL_KEY ) + "'" );
 				}
 			}
 
 			_shortestPathToVertex.add( e );
-			_logger.info( "Intend to take the shortest (" + _shortestPathToVertex.size() + " hops) path between: " + _nextVertex.getUserDatum( LABEL_KEY ) + " and " + (String)e.getDest().getUserDatum( LABEL_KEY ) + " (from: " + e.getSource().getUserDatum( LABEL_KEY ) + ")" );
+			_logger.info( "Intend to take the shortest (" + _shortestPathToVertex.size() + " hops) path between: '" + _nextVertex.getUserDatum( LABEL_KEY ) + "' and '" + (String)e.getDest().getUserDatum( LABEL_KEY ) + "' (from: '" + e.getSource().getUserDatum( LABEL_KEY ) + "')" );
 
 			String paths = "The route is: ";
 			for (Iterator iter = _shortestPathToVertex.iterator(); iter.hasNext();)
@@ -1945,7 +1945,7 @@ public class ModelBasedTesting
 		catch( GoBackToPreviousVertexException e )
 		{
 			_logger.info( "The edge: " + getCompleteEdgeName( edge ) + " can not be run due to unfullfilled conditions." );
-			_logger.info( "Trying from vertex: " + (String)_prevVertex.getUserDatum( LABEL_KEY ) + " again." );
+			_logger.info( "Trying from vertex: '" + (String)_prevVertex.getUserDatum( LABEL_KEY ) + "' again." );
 			_rejectedEdge = edge;
 			_nextVertex   = _prevVertex;
 
@@ -2050,7 +2050,7 @@ public class ModelBasedTesting
 
 		if ( sum > 1 )
 		{
-			throw new RuntimeException( "The sum of all weight from vertex: " + (String)vertex.getUserDatum( LABEL_KEY ) + " adds to more than 1" );
+			throw new RuntimeException( "The sum of all weight from vertex: '" + (String)vertex.getUserDatum( LABEL_KEY ) + "' adds to more than 1" );
 		}
 
 		float rest = ( 1 - sum ) / numberOfZeros;
@@ -2064,7 +2064,7 @@ public class ModelBasedTesting
 			{
 				probabilities[ i ] = rest;
 			}
-			_logger.debug( "The edge: " + (String)((DirectedSparseEdge)edges[ i ]).getUserDatum( LABEL_KEY ) + " is given the probability of " + probabilities[ i ] * 100 + "%"  );
+			_logger.debug( "The edge: '" + (String)((DirectedSparseEdge)edges[ i ]).getUserDatum( LABEL_KEY ) + "' is given the probability of " + probabilities[ i ] * 100 + "%"  );
 
 			weight = weight + probabilities[ i ] * 100;
 			_logger.debug( "Current weight is: " + weight  );
@@ -2078,7 +2078,7 @@ public class ModelBasedTesting
 
 		if ( edge == null )
 		{
-			_logger.error( "Vertex: " + (String)vertex.getUserDatum( LABEL_KEY ) + ", has no out edges. Test ends here!" );
+			_logger.error( "Vertex: '" + (String)vertex.getUserDatum( LABEL_KEY ) + "', has no out edges. Test ends here!" );
 			throw new FoundNoEdgeException();
 		}
 
@@ -2131,7 +2131,7 @@ public class ModelBasedTesting
 
 	private String getCompleteEdgeName( DirectedSparseEdge edge )
 	{
-		String str = (String)edge.getUserDatum( LABEL_KEY ) + " (" + (String)edge.getSource().getUserDatum( LABEL_KEY ) + " -> " + (String)edge.getDest().getUserDatum( LABEL_KEY ) + ") " + edge.hashCode() + "(" + edge.getSource().hashCode() + " -> " + edge.getDest().hashCode() + ")";
+		String str = "'" + (String)edge.getUserDatum( LABEL_KEY ) + "' ('" + (String)edge.getSource().getUserDatum( LABEL_KEY ) + "' -> '" + (String)edge.getDest().getUserDatum( LABEL_KEY ) + "') " + edge.hashCode() + "(" + edge.getSource().hashCode() + " -> " + edge.getDest().hashCode() + ")";
 		return str;
 	}
 
