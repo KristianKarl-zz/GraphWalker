@@ -34,7 +34,7 @@ public class RunPerlScript
 			}
 
 			// No more edges or vertices to be executed
-			if ( methods[ 0 ].compareTo( "" ) == 0 && methods[ 1 ].compareTo( "" ) == 0 )
+			if ( methods[ 0 ].compareTo( "" ) == 0 && methods[ 2 ].compareTo( "" ) == 0 )
 			{
 				break;
 			}
@@ -43,7 +43,7 @@ public class RunPerlScript
 			{
 				break;
 			}
-			if ( run_Perl_Subrotine( "perl " + perlScript + " " + methods[ 1 ] ) != 0 )
+			if ( run_Perl_Subrotine( "perl " + perlScript + " " + methods[ 2 ] ) != 0 )
 			{
 				break;
 			}

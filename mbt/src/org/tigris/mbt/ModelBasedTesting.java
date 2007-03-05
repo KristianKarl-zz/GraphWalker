@@ -91,7 +91,13 @@ public class ModelBasedTesting
 	private boolean				 	_runUntilAllEdgesVisited = false;
 	private boolean				 	_changedStratedgyFromRunUntilAllEdgesVisited = false;
 	private List				 	_shortestPathToVertex = null ;
-	private String[]   				_executeEdgeAndLabel = new String[ 2];
+	
+	// The array will conatin the lebel an id of the edge, and the vertex
+	// _executeEdgeAndLabel[ 0 ] The label of the edge
+	// _executeEdgeAndLabel[ 1 ] The id of the edge
+	// _executeEdgeAndLabel[ 2 ] The label of the vertex
+	// _executeEdgeAndLabel[ 3 ] The id of the vetrex
+	private String[]   				_executeEdgeAndLabel = new String[ 4 ];
 	private int						_latestNumberOfUnvisetedEdges;
 
 	public ModelBasedTesting( String graphmlFileName_,
@@ -249,6 +255,30 @@ public class ModelBasedTesting
 
 	
 	/**
+	 * This will set the next vertex to vertexId.   
+	 */
+	public void SetCurrentVertex( String vertexId ) throws RuntimeException
+	{
+		_logger.debug( "Searching for vertex with id: " + vertexId );
+		Object[] vertices = _graph.getVertices().toArray();
+		for ( int i = 0; i < vertices.length; i++ )
+		{
+			DirectedSparseVertex v = (DirectedSparseVertex)vertices[ i ];
+			String id = (String)v.getUserDatum( ID_KEY );
+			if ( id.equals( vertexId ) )
+			{
+				_shortestPathToVertex = null;
+				_nextVertex = v;
+				_logger.debug( "Setting next vertex: '" + (String)v.getUserDatum( LABEL_KEY ) + "', with id: " + id );
+				return;
+			}
+		}
+		_logger.debug( "Did not find a vertex with id: " + vertexId );
+		throw new RuntimeException("Did not find a vertex with id: " + vertexId );
+	}
+
+
+	/**
 	 * Put mbt back in inital state, which means that test will begin
 	 * at the Start vertex. 
 	 */
@@ -345,7 +375,7 @@ public class ModelBasedTesting
 					if ( isAllEdgesVisited() )
 					{
 						_executeEdgeAndLabel[ 0 ] = "";
-						_executeEdgeAndLabel[ 1 ] = "";
+						_executeEdgeAndLabel[ 2 ] = "";
 					}
 					return _executeEdgeAndLabel;
 				}
@@ -1921,22 +1951,24 @@ public class ModelBasedTesting
 		try
 		{
 			String label = (String)edge.getUserDatum( LABEL_KEY );
-			_logger.debug( "Invoke method for edge: \"" + label + "\"" );
+			_logger.debug( "Invoke method for edge: '" + label + "' and id: " + (String)edge.getUserDatum( ID_KEY ) );
 			invokeMethod( label, dryRun );
 			if ( dryRun )
 			{
 				_executeEdgeAndLabel[ 0 ] = label;
+				_executeEdgeAndLabel[ 1 ] = (String)edge.getUserDatum( ID_KEY );
 			}
 			Integer vistited = (Integer)edge.getUserDatum( VISITED_KEY );
 			vistited = new Integer( vistited.intValue() + 1 );
 			edge.setUserDatum( VISITED_KEY, vistited, UserData.SHARED );
 
 			label = (String)edge.getDest().getUserDatum( LABEL_KEY );
-			_logger.debug( "Invoke method for vertex: \"" + label + "\"" );
+			_logger.debug( "Invoke method for vertex: '" + label + "' and id: " +  (String)edge.getDest().getUserDatum( ID_KEY ) );
 			invokeMethod( label, dryRun );
 			if ( dryRun )
 			{
-				_executeEdgeAndLabel[ 1 ] = label;
+				_executeEdgeAndLabel[ 2 ] = label;
+				_executeEdgeAndLabel[ 3 ] = (String)edge.getDest().getUserDatum( ID_KEY );
 			}
 			vistited = (Integer)edge.getDest().getUserDatum( VISITED_KEY );
 			vistited = new Integer( vistited.intValue() + 1 );
