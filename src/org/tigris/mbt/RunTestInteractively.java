@@ -149,7 +149,6 @@ public class RunTestInteractively {
 			// methods[ 2 ] The label of the vertex
 			// methods[ 3 ] The id of the vetrex
 			String methods[] = null;
-			String previousVertex = "";
 			String previousVertexId = "";
 			while ( true )
 			{
@@ -188,9 +187,7 @@ public class RunTestInteractively {
 					mbt.SetCurrentVertex( previousVertexId );
 					continue;
 				}
-				previousVertex = methods[ 2 ];
 				previousVertexId = methods[ 3 ];
-				System.out.println( "Previous vertex: '" + previousVertex + "', with id: " + previousVertexId );
 			}
 		}
 		catch ( Exception e )
