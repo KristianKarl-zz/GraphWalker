@@ -1,5 +1,8 @@
 package org.tigris.mbt;
 
+import java.util.Iterator;
+import java.util.Vector;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.HelpFormatter;
@@ -101,7 +104,15 @@ public class GenerateTests {
 		try
 		{
 			ModelBasedTesting mbt = new ModelBasedTesting( graphmlFile );	
-			mbt.generateTests( random, length);
+			
+			Vector testSequence = mbt.generateTests( random, length);
+			StringBuffer strBuff = new StringBuffer();
+			for (Iterator iter = testSequence.iterator(); iter.hasNext();)
+			{
+				String element = (String) iter.next();
+				strBuff.append( element + "\n" );
+			}
+			System.out.println( strBuff.toString() );
 		}
 		catch ( Exception e )
 		{
