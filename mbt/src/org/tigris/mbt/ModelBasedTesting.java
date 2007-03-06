@@ -1391,7 +1391,7 @@ public class ModelBasedTesting
 		return _graph;
 	}
 
-	public void generateTests( boolean random, long length ) throws RuntimeException, FoundNoEdgeException
+	public Vector generateTests( boolean random, long length ) throws RuntimeException, FoundNoEdgeException
 	{
 		findStartingVertex();
 		if ( random == true )
@@ -1415,15 +1415,7 @@ public class ModelBasedTesting
 			}
 		}
 		
-		StringBuffer strBuff = new StringBuffer();
-
-		for (Iterator iter = _testSequence.iterator(); iter.hasNext();)
-		{
-			String element = (String) iter.next();
-			strBuff.append( element + "\n" );
-		}
-
-		System.out.println( strBuff.toString() );
+		return _testSequence;
 	}
 	
 	public void generateJavaCode( String fileName )
