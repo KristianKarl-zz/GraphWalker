@@ -1818,7 +1818,7 @@ public class ModelBasedTesting
 		if ( outEdges.length == 0 )
 		{
 			_logger.error( "Vertex has no out-edges: '" + (String)_nextVertex.getUserDatum( LABEL_KEY ) + "'" );
-			throw new RuntimeException( "Found a cul-de-sac, I have to stop now..." );
+			throw new RuntimeException( "Found a cul-de-sac: '" + (String)_nextVertex.getUserDatum( LABEL_KEY ) + "' I have to stop now..." );
 		}
 
 		outEdges = shuffle( outEdges );
