@@ -62,6 +62,9 @@ public class ModelBasedTesting
 	private String  START_NODE                  = "Start";
 	private String  STOP_NODE                   = "Stop";
 	private String  ID_KEY                      = "id";
+	private String  IMAGE_KEY                   = "image";
+	private String  WIDTH_KEY                   = "width";
+	private String  HEIGHT_KEY                  = "height";
 	private String  FILE_KEY                    = "file";
 	private String  LABEL_KEY                   = "label";
 	private String  VISITED_KEY                 = "visited";
@@ -142,13 +145,33 @@ public class ModelBasedTesting
 
 				sourceFile.append( "    <node id=\"n" + vId + "\">\n" );
 				sourceFile.append( "      <data key=\"d0\" >\n" );
-				sourceFile.append( "        <y:ShapeNode >\n" );
-				sourceFile.append( "          <y:Geometry  x=\"241.875\" y=\"158.701171875\" width=\"95.0\" height=\"30.0\"/>\n" );
+
+				if ( v.containsUserDatumKey( IMAGE_KEY ) )
+				{
+					sourceFile.append( "        <y:ImageNode >\n" );
+					sourceFile.append( "          <y:Geometry  x=\"241.875\" y=\"158.701171875\" width=\"" + v.getUserDatum( WIDTH_KEY ) + "\" height=\"" + v.getUserDatum( HEIGHT_KEY ) + "\"/>\n" );
+				}
+				else
+				{
+					sourceFile.append( "        <y:ShapeNode >\n" );
+					sourceFile.append( "          <y:Geometry  x=\"241.875\" y=\"158.701171875\" width=\"95.0\" height=\"30.0\"/>\n" );
+				}
+				
 				sourceFile.append( "          <y:Fill color=\"#CCCCFF\"  transparent=\"false\"/>\n" );
 				sourceFile.append( "          <y:BorderStyle type=\"line\" width=\"1.0\" color=\"#000000\" />\n" );
 				sourceFile.append( "          <y:NodeLabel x=\"1.5\" y=\"5.6494140625\" width=\"92.0\" height=\"18.701171875\" visible=\"true\" alignment=\"center\" fontFamily=\"Dialog\" fontSize=\"12\" fontStyle=\"plain\" textColor=\"#000000\" modelName=\"internal\" modelPosition=\"c\" autoSizePolicy=\"content\">" + v.getUserDatum( LABEL_KEY ) + "</y:NodeLabel>\n" );
-				sourceFile.append( "          <y:Shape type=\"rectangle\"/>\n" );
-				sourceFile.append( "        </y:ShapeNode>\n" );
+				
+				if ( v.containsUserDatumKey( IMAGE_KEY ) )
+				{
+					sourceFile.append( "          <y:Image href=\"" + v.getUserDatum( IMAGE_KEY ) + "\"/>\n" );
+					sourceFile.append( "        </y:ImageNode>\n" );
+				}
+				else
+				{
+					sourceFile.append( "          <y:Shape type=\"rectangle\"/>\n" );
+					sourceFile.append( "        </y:ShapeNode>\n" );
+				}
+				
 				sourceFile.append( "      </data>\n" );
 				sourceFile.append( "    </node>\n" );
 			}
@@ -506,6 +529,9 @@ public class ModelBasedTesting
 					}
 					_logger.debug( "id: " + element.getAttributeValue( "id" ) );
 
+					// Used to remember which vertext to store the image location.
+					DirectedSparseVertex currentVertex = null;
+					
 					Iterator iterNodeLabel = element.getDescendants( new org.jdom.filter.ElementFilter( "NodeLabel" ) );
 					while ( iterNodeLabel.hasNext() )
 					{
@@ -517,10 +543,11 @@ public class ModelBasedTesting
 							_logger.debug( "Name: '" + nodeLabel.getTextTrim() + "'" );
 
 							DirectedSparseVertex v = (DirectedSparseVertex) graph.addVertex( new DirectedSparseVertex() );
+							currentVertex = v;
 
-							v.addUserDatum( ID_KEY, 	 element.getAttributeValue( "id" ), UserData.SHARED );
-							v.addUserDatum( VISITED_KEY, new Integer( 0 ), 					UserData.SHARED );
-							v.addUserDatum( FILE_KEY, 	 fileName, 							UserData.SHARED );
+							v.addUserDatum( ID_KEY, 	 element.getAttributeValue( "id" ),     UserData.SHARED );
+							v.addUserDatum( VISITED_KEY, new Integer( 0 ), 					    UserData.SHARED );
+							v.addUserDatum( FILE_KEY, 	 fileName, 							    UserData.SHARED );
 
 							String str = nodeLabel.getTextTrim();
 							Pattern p = Pattern.compile( "(.*)", Pattern.MULTILINE );
@@ -587,6 +614,34 @@ public class ModelBasedTesting
 								_logger.debug( "Found BLOCKED. This vetex will be removed from the graph: " + label );
 								v.addUserDatum( BLOCKED, BLOCKED, UserData.SHARED );
 							}
+						}
+					}
+					
+					// Using the yEd editor, an image can be used to depict the vertex. When merging multiple
+					// graphs into one, the code below, stores the image location, which will be used when
+					// writing that merged graphml file.
+					Iterator iterImage = element.getDescendants( new org.jdom.filter.ElementFilter( "Image" ) );
+					while ( iterImage.hasNext() && currentVertex != null)
+					{
+						Object o2 = iterImage.next();
+						if ( o2 instanceof org.jdom.Element )
+						{
+							org.jdom.Element image = (org.jdom.Element)o2;
+							_logger.debug( "Image: '" + image.getAttributeValue( "href" ) + "'" );
+							currentVertex.addUserDatum( IMAGE_KEY, image.getAttributeValue( "href" ), UserData.SHARED );
+						}
+					}
+					Iterator iterGeometry = element.getDescendants( new org.jdom.filter.ElementFilter( "Geometry" ) );
+					while ( iterGeometry.hasNext() && currentVertex != null)
+					{
+						Object o2 = iterGeometry.next();
+						if ( o2 instanceof org.jdom.Element )
+						{
+							org.jdom.Element geometry = (org.jdom.Element)o2;
+							_logger.debug( "width: '" + geometry.getAttributeValue( "width" ) + "'" );
+							_logger.debug( "height: '" + geometry.getAttributeValue( "height" ) + "'" );
+							currentVertex.addUserDatum( WIDTH_KEY, geometry.getAttributeValue( "width" ), UserData.SHARED );							
+							currentVertex.addUserDatum( HEIGHT_KEY, geometry.getAttributeValue( "height" ), UserData.SHARED );
 						}
 					}
 				}
