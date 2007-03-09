@@ -67,6 +67,7 @@ public class ModelBasedTesting
 	private String  HEIGHT_KEY                  = "height";
 	private String  FILE_KEY                    = "file";
 	private String  LABEL_KEY                   = "label";
+	private String  FULL_LABEL_KEY              = "full_label";
 	private String  VISITED_KEY                 = "visited";
 	private String  WEIGHT_KEY                  = "weight";
 	private String  STATE_KEY                   = "state";
@@ -159,7 +160,7 @@ public class ModelBasedTesting
 				
 				sourceFile.append( "          <y:Fill color=\"#CCCCFF\"  transparent=\"false\"/>\n" );
 				sourceFile.append( "          <y:BorderStyle type=\"line\" width=\"1.0\" color=\"#000000\" />\n" );
-				sourceFile.append( "          <y:NodeLabel x=\"1.5\" y=\"5.6494140625\" width=\"92.0\" height=\"18.701171875\" visible=\"true\" alignment=\"center\" fontFamily=\"Dialog\" fontSize=\"12\" fontStyle=\"plain\" textColor=\"#000000\" modelName=\"internal\" modelPosition=\"c\" autoSizePolicy=\"content\">" + v.getUserDatum( LABEL_KEY ) + "</y:NodeLabel>\n" );
+				sourceFile.append( "          <y:NodeLabel x=\"1.5\" y=\"5.6494140625\" width=\"92.0\" height=\"18.701171875\" visible=\"true\" alignment=\"center\" fontFamily=\"Dialog\" fontSize=\"12\" fontStyle=\"plain\" textColor=\"#000000\" modelName=\"internal\" modelPosition=\"c\" autoSizePolicy=\"content\">" + v.getUserDatum( FULL_LABEL_KEY ) + "</y:NodeLabel>\n" );
 				
 				if ( v.containsUserDatumKey( IMAGE_KEY ) )
 				{
@@ -199,9 +200,9 @@ public class ModelBasedTesting
 	            sourceFile.append( "          <y:LineStyle type=\"line\" width=\"1.0\" color=\"#000000\" />\n" );
 	            sourceFile.append( "          <y:Arrows source=\"none\" target=\"standard\"/>\n" );
 	            
-	            if ( e.getUserDatum( LABEL_KEY ) != null )
+	            if ( e.getUserDatum( FULL_LABEL_KEY ) != null )
 	            {
-	            	sourceFile.append( "          <y:EdgeLabel x=\"-148.25\" y=\"30.000000000000014\" width=\"169.0\" height=\"18.701171875\" visible=\"true\" alignment=\"center\" fontFamily=\"Dialog\" fontSize=\"12\" fontStyle=\"plain\" textColor=\"#000000\" modelName=\"free\" modelPosition=\"anywhere\" preferredPlacement=\"on_edge\" distance=\"2.0\" ratio=\"0.5\">" + e.getUserDatum( LABEL_KEY ) + "</y:EdgeLabel>\n" );
+	            	sourceFile.append( "          <y:EdgeLabel x=\"-148.25\" y=\"30.000000000000014\" width=\"169.0\" height=\"18.701171875\" visible=\"true\" alignment=\"center\" fontFamily=\"Dialog\" fontSize=\"12\" fontStyle=\"plain\" textColor=\"#000000\" modelName=\"free\" modelPosition=\"anywhere\" preferredPlacement=\"on_edge\" distance=\"2.0\" ratio=\"0.5\">" + e.getUserDatum( FULL_LABEL_KEY ) + "</y:EdgeLabel>\n" );
 	            }
 	            
 	            sourceFile.append( "          <y:BendStyle smoothed=\"false\"/>\n" );
@@ -545,9 +546,10 @@ public class ModelBasedTesting
 							DirectedSparseVertex v = (DirectedSparseVertex) graph.addVertex( new DirectedSparseVertex() );
 							currentVertex = v;
 
-							v.addUserDatum( ID_KEY, 	 element.getAttributeValue( "id" ),     UserData.SHARED );
-							v.addUserDatum( VISITED_KEY, new Integer( 0 ), 					    UserData.SHARED );
-							v.addUserDatum( FILE_KEY, 	 fileName, 							    UserData.SHARED );
+							v.addUserDatum( ID_KEY, 	 	element.getAttributeValue( "id" ), UserData.SHARED );
+							v.addUserDatum( VISITED_KEY, 	new Integer( 0 ), 				   UserData.SHARED );
+							v.addUserDatum( FILE_KEY, 	 	fileName, 						   UserData.SHARED );
+							v.addUserDatum( FULL_LABEL_KEY, nodeLabel.getTextTrim(), 		   UserData.SHARED );
 
 							String str = nodeLabel.getTextTrim();
 							Pattern p = Pattern.compile( "(.*)", Pattern.MULTILINE );
@@ -716,6 +718,7 @@ public class ModelBasedTesting
 					if ( edgeLabel != null )
 					{
 						String str = edgeLabel.getTextTrim();
+						e.addUserDatum( FULL_LABEL_KEY, str, UserData.SHARED );
 						Pattern p = Pattern.compile( "(.*)", Pattern.MULTILINE );
 						Matcher m = p.matcher( str );
 						String label = null;
