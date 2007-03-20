@@ -1373,7 +1373,7 @@ public class ModelBasedTesting
 					g.removeEdge( element );
 					_logger.debug( "Removing edge: " + getCompleteEdgeName( element ) );
 				} catch (java.lang.IllegalArgumentException e) {
-					_logger.error( getCompleteEdgeName( element ) + ", was not found in graph g" );
+					_logger.error( getCompleteEdgeName( element ) + ", was not found in graph: '" + g.getUserDatum( FILE_KEY ) + "'");
 				}
 			}
 			_logger.debug( "Removing the Stop vertex: " + stopVertex.hashCode()  );
