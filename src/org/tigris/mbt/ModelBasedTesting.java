@@ -160,7 +160,7 @@ public class ModelBasedTesting
 				
 				sourceFile.append( "          <y:Fill color=\"#CCCCFF\"  transparent=\"false\"/>\n" );
 				sourceFile.append( "          <y:BorderStyle type=\"line\" width=\"1.0\" color=\"#000000\" />\n" );
-				sourceFile.append( "          <y:NodeLabel x=\"1.5\" y=\"5.6494140625\" width=\"92.0\" height=\"18.701171875\" visible=\"true\" alignment=\"center\" fontFamily=\"Dialog\" fontSize=\"12\" fontStyle=\"plain\" textColor=\"#000000\" modelName=\"internal\" modelPosition=\"c\" autoSizePolicy=\"content\">" + v.getUserDatum( FULL_LABEL_KEY ) + "</y:NodeLabel>\n" );
+				sourceFile.append( "          <y:NodeLabel x=\"1.5\" y=\"5.6494140625\" width=\"92.0\" height=\"18.701171875\" visible=\"true\" alignment=\"center\" fontFamily=\"Dialog\" fontSize=\"12\" fontStyle=\"plain\" textColor=\"#000000\" modelName=\"internal\" modelPosition=\"c\" autoSizePolicy=\"content\">" + v.getUserDatum( FULL_LABEL_KEY ) + "&#xA;id=" + v.getUserDatum( ID_KEY ) + "</y:NodeLabel>\n" );
 				
 				if ( v.containsUserDatumKey( IMAGE_KEY ) )
 				{
@@ -202,7 +202,7 @@ public class ModelBasedTesting
 	            
 	            if ( e.getUserDatum( FULL_LABEL_KEY ) != null )
 	            {
-	            	sourceFile.append( "          <y:EdgeLabel x=\"-148.25\" y=\"30.000000000000014\" width=\"169.0\" height=\"18.701171875\" visible=\"true\" alignment=\"center\" fontFamily=\"Dialog\" fontSize=\"12\" fontStyle=\"plain\" textColor=\"#000000\" modelName=\"free\" modelPosition=\"anywhere\" preferredPlacement=\"on_edge\" distance=\"2.0\" ratio=\"0.5\">" + e.getUserDatum( FULL_LABEL_KEY ) + "</y:EdgeLabel>\n" );
+	            	sourceFile.append( "          <y:EdgeLabel x=\"-148.25\" y=\"30.000000000000014\" width=\"169.0\" height=\"18.701171875\" visible=\"true\" alignment=\"center\" fontFamily=\"Dialog\" fontSize=\"12\" fontStyle=\"plain\" textColor=\"#000000\" modelName=\"free\" modelPosition=\"anywhere\" preferredPlacement=\"on_edge\" distance=\"2.0\" ratio=\"0.5\">" + e.getUserDatum( FULL_LABEL_KEY ) + "&#xA;id=" + e.getUserDatum( ID_KEY ) + "</y:EdgeLabel>\n" );
 	            }
 	            
 	            sourceFile.append( "          <y:BendStyle smoothed=\"false\"/>\n" );
