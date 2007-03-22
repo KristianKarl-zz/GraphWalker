@@ -35,6 +35,7 @@ import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.jdom.Document;
 import org.jdom.JDOMException;
@@ -293,7 +294,7 @@ public class ModelBasedTesting
 			{
 				_shortestPathToVertex = null;
 				_nextVertex = v;
-				_logger.debug( "Setting next vertex: '" + (String)v.getUserDatum( LABEL_KEY ) + "', with hash code: " + hashCode );
+				_logger.debug( "Backtracking to vertex: '" + (String)v.getUserDatum( LABEL_KEY ) + "', with hash code: " + hashCode );
 				return;
 			}
 		}
@@ -401,6 +402,8 @@ public class ModelBasedTesting
 						_executeEdgeAndLabel[ 0 ] = "";
 						_executeEdgeAndLabel[ 2 ] = "";
 					}
+				    _logger.debug( "Edge =   " + _executeEdgeAndLabel[ 0 ] + ", with id=" + _executeEdgeAndLabel[ 1 ] );
+				    _logger.debug( "Vertex = " + _executeEdgeAndLabel[ 2 ] + ", with id=" + _executeEdgeAndLabel[ 3 ] );
 					return _executeEdgeAndLabel;
 				}
 		        catch ( Exception e )
@@ -1449,6 +1452,13 @@ public class ModelBasedTesting
 		return _graph;
 	}
 
+	/**
+	 * Return the logger
+	 */
+	public Logger getLogger() {
+		return _logger;
+	}
+
 	public Vector generateTests( boolean random, long length ) throws RuntimeException, FoundNoEdgeException
 	{
 		findStartingVertex();
@@ -2001,7 +2011,7 @@ public class ModelBasedTesting
 		try
 		{
 			String label = (String)edge.getUserDatum( LABEL_KEY );
-			_logger.debug( "Invoke method for edge: '" + label + "' and id: " + (String)edge.getUserDatum( ID_KEY ) );
+			_logger.debug( "Invoke method for edge: '" + label + "' and hash code: " + edge.hashCode() );
 			invokeMethod( label, dryRun );
 			if ( dryRun )
 			{
@@ -2013,7 +2023,7 @@ public class ModelBasedTesting
 			edge.setUserDatum( VISITED_KEY, vistited, UserData.SHARED );
 
 			label = (String)edge.getDest().getUserDatum( LABEL_KEY );
-			_logger.debug( "Invoke method for vertex: '" + label + "' and id: " +  (String)edge.getDest().getUserDatum( ID_KEY ) );
+			_logger.debug( "Invoke method for vertex: '" + label + "' and hash code: " +  edge.getDest().hashCode() );
 			invokeMethod( label, dryRun );
 			if ( dryRun )
 			{
