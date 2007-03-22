@@ -166,6 +166,7 @@ public class RunTestInteractively {
 					break;
 				}
 				
+				mbt.getLogger().info("Edge: " + methods[ 0 ] + ", id=" + methods[ 1 ] );
 				System.out.println( methods[ 0 ] );
 				try
 				{
@@ -173,10 +174,12 @@ public class RunTestInteractively {
 				}
 				catch ( GoBackToPreviousVertexException e )
 				{
+					mbt.getLogger().info("== BACKTRACKING ==" );
 					mbt.SetCurrentVertex( previousVertexHashCode );
 					continue;
 				}
 					
+				mbt.getLogger().info("Vertex: " + methods[ 2 ] + ", id=" + methods[ 3 ] );
 				System.out.println( methods[ 2 ] );
 				try
 				{
@@ -184,6 +187,7 @@ public class RunTestInteractively {
 				}
 				catch ( GoBackToPreviousVertexException e )
 				{
+					mbt.getLogger().info("== BACKTRACKING ==" );
 					mbt.SetCurrentVertex( previousVertexHashCode );
 					continue;
 				}
