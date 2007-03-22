@@ -149,7 +149,7 @@ public class RunTestInteractively {
 			// methods[ 2 ] The label of the vertex
 			// methods[ 3 ] The id of the vetrex
 			String methods[] = null;
-			String previousVertexId = "";
+			int previousVertexHashCode = 0;
 			while ( true )
 			{
 				methods = mbt.getEdgeAndVertex( random, seconds );
@@ -173,7 +173,7 @@ public class RunTestInteractively {
 				}
 				catch ( GoBackToPreviousVertexException e )
 				{
-					mbt.SetCurrentVertex( previousVertexId );
+					mbt.SetCurrentVertex( previousVertexHashCode );
 					continue;
 				}
 					
@@ -184,10 +184,10 @@ public class RunTestInteractively {
 				}
 				catch ( GoBackToPreviousVertexException e )
 				{
-					mbt.SetCurrentVertex( previousVertexId );
+					mbt.SetCurrentVertex( previousVertexHashCode );
 					continue;
 				}
-				previousVertexId = methods[ 3 ];
+				previousVertexHashCode = new Integer( methods[ 3 ] ).intValue();
 			}
 		}
 		catch ( Exception e )

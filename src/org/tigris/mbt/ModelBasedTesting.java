@@ -98,9 +98,9 @@ public class ModelBasedTesting
 	
 	// The array will conatin the lebel an id of the edge, and the vertex
 	// _executeEdgeAndLabel[ 0 ] The label of the edge
-	// _executeEdgeAndLabel[ 1 ] The id of the edge
+	// _executeEdgeAndLabel[ 1 ] The hash code of the edge
 	// _executeEdgeAndLabel[ 2 ] The label of the vertex
-	// _executeEdgeAndLabel[ 3 ] The id of the vetrex
+	// _executeEdgeAndLabel[ 3 ] The hash code of the vertex
 	private String[]   				_executeEdgeAndLabel = new String[ 4 ];
 	private int						_latestNumberOfUnvisetedEdges;
 
@@ -160,7 +160,7 @@ public class ModelBasedTesting
 				
 				sourceFile.append( "          <y:Fill color=\"#CCCCFF\"  transparent=\"false\"/>\n" );
 				sourceFile.append( "          <y:BorderStyle type=\"line\" width=\"1.0\" color=\"#000000\" />\n" );
-				sourceFile.append( "          <y:NodeLabel x=\"1.5\" y=\"5.6494140625\" width=\"92.0\" height=\"18.701171875\" visible=\"true\" alignment=\"center\" fontFamily=\"Dialog\" fontSize=\"12\" fontStyle=\"plain\" textColor=\"#000000\" modelName=\"internal\" modelPosition=\"c\" autoSizePolicy=\"content\">" + v.getUserDatum( FULL_LABEL_KEY ) + "&#xA;id=" + v.getUserDatum( ID_KEY ) + "</y:NodeLabel>\n" );
+				sourceFile.append( "          <y:NodeLabel x=\"1.5\" y=\"5.6494140625\" width=\"92.0\" height=\"18.701171875\" visible=\"true\" alignment=\"center\" fontFamily=\"Dialog\" fontSize=\"12\" fontStyle=\"plain\" textColor=\"#000000\" modelName=\"internal\" modelPosition=\"c\" autoSizePolicy=\"content\">" + v.getUserDatum( FULL_LABEL_KEY ) + "&#xA;id=" + v.hashCode() + "</y:NodeLabel>\n" );
 				
 				if ( v.containsUserDatumKey( IMAGE_KEY ) )
 				{
@@ -202,7 +202,7 @@ public class ModelBasedTesting
 	            
 	            if ( e.getUserDatum( FULL_LABEL_KEY ) != null )
 	            {
-	            	sourceFile.append( "          <y:EdgeLabel x=\"-148.25\" y=\"30.000000000000014\" width=\"169.0\" height=\"18.701171875\" visible=\"true\" alignment=\"center\" fontFamily=\"Dialog\" fontSize=\"12\" fontStyle=\"plain\" textColor=\"#000000\" modelName=\"free\" modelPosition=\"anywhere\" preferredPlacement=\"on_edge\" distance=\"2.0\" ratio=\"0.5\">" + e.getUserDatum( FULL_LABEL_KEY ) + "&#xA;id=" + e.getUserDatum( ID_KEY ) + "</y:EdgeLabel>\n" );
+	            	sourceFile.append( "          <y:EdgeLabel x=\"-148.25\" y=\"30.000000000000014\" width=\"169.0\" height=\"18.701171875\" visible=\"true\" alignment=\"center\" fontFamily=\"Dialog\" fontSize=\"12\" fontStyle=\"plain\" textColor=\"#000000\" modelName=\"free\" modelPosition=\"anywhere\" preferredPlacement=\"on_edge\" distance=\"2.0\" ratio=\"0.5\">" + e.getUserDatum( FULL_LABEL_KEY ) + "&#xA;id=" + e.hashCode() + "</y:EdgeLabel>\n" );
 	            }
 	            
 	            sourceFile.append( "          <y:BendStyle smoothed=\"false\"/>\n" );
@@ -281,24 +281,24 @@ public class ModelBasedTesting
 	/**
 	 * This will set the next vertex to vertexId.   
 	 */
-	public void SetCurrentVertex( String vertexId ) throws RuntimeException
+	public void SetCurrentVertex( int vertexHashCode ) throws RuntimeException
 	{
-		_logger.debug( "Searching for vertex with id: " + vertexId );
+		_logger.debug( "Searching for vertex with hash code: " + vertexHashCode );
 		Object[] vertices = _graph.getVertices().toArray();
 		for ( int i = 0; i < vertices.length; i++ )
 		{
 			DirectedSparseVertex v = (DirectedSparseVertex)vertices[ i ];
-			String id = (String)v.getUserDatum( ID_KEY );
-			if ( id.equals( vertexId ) )
+			int hashCode = v.hashCode();
+			if ( hashCode == vertexHashCode )
 			{
 				_shortestPathToVertex = null;
 				_nextVertex = v;
-				_logger.debug( "Setting next vertex: '" + (String)v.getUserDatum( LABEL_KEY ) + "', with id: " + id );
+				_logger.debug( "Setting next vertex: '" + (String)v.getUserDatum( LABEL_KEY ) + "', with hash code: " + hashCode );
 				return;
 			}
 		}
-		_logger.debug( "Did not find a vertex with id: " + vertexId );
-		throw new RuntimeException("Did not find a vertex with id: " + vertexId );
+		_logger.debug( "Did not find a vertex with hash code: " + vertexHashCode );
+		throw new RuntimeException("Did not find a vertex with id: " + vertexHashCode );
 	}
 
 
@@ -2006,7 +2006,7 @@ public class ModelBasedTesting
 			if ( dryRun )
 			{
 				_executeEdgeAndLabel[ 0 ] = label;
-				_executeEdgeAndLabel[ 1 ] = (String)edge.getUserDatum( ID_KEY );
+				_executeEdgeAndLabel[ 1 ] = new Integer( edge.hashCode() ).toString();
 			}
 			Integer vistited = (Integer)edge.getUserDatum( VISITED_KEY );
 			vistited = new Integer( vistited.intValue() + 1 );
@@ -2018,7 +2018,7 @@ public class ModelBasedTesting
 			if ( dryRun )
 			{
 				_executeEdgeAndLabel[ 2 ] = label;
-				_executeEdgeAndLabel[ 3 ] = (String)edge.getDest().getUserDatum( ID_KEY );
+				_executeEdgeAndLabel[ 3 ] = new Integer( edge.getDest().hashCode() ).toString();
 			}
 			vistited = (Integer)edge.getDest().getUserDatum( VISITED_KEY );
 			vistited = new Integer( vistited.intValue() + 1 );
