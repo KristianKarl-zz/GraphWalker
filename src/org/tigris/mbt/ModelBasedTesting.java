@@ -397,11 +397,6 @@ public class ModelBasedTesting
 				try
 				{
 					executeMethod( false, true );
-					if ( isAllEdgesVisited() )
-					{
-						_executeEdgeAndLabel[ 0 ] = "";
-						_executeEdgeAndLabel[ 2 ] = "";
-					}
 				    _logger.debug( "Edge =   " + _executeEdgeAndLabel[ 0 ] + ", with id=" + _executeEdgeAndLabel[ 1 ] );
 				    _logger.debug( "Vertex = " + _executeEdgeAndLabel[ 2 ] + ", with id=" + _executeEdgeAndLabel[ 3 ] );
 					return _executeEdgeAndLabel;
