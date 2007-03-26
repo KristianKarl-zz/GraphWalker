@@ -198,6 +198,7 @@ public class RunTestInteractively {
 		{
 			e.printStackTrace();
 		}
+		mbt.getLogger().info( mbt.getStatistics() );
 		System.out.println( mbt.getStatistics() );
 	}
 }
