@@ -1340,38 +1340,77 @@ public class ModelBasedTesting
 				stopVertex = v;
 			}
 		}
+		
+		// All edges going to the Stop vertex, needs to be merged to the destination vertex.
+		// The destination vertex, is pointed to by the vertex which is expanded by the sub graph.
 		if ( stopVertex != null )
 		{
 			Vector edgesToBeRemoved = new Vector();
 			inEdges = stopVertex.getInEdges().toArray();
+			_logger.debug( "The stop vertex has: " + inEdges.length + " in-edges" );
 			for ( int i = 0; i < inEdges.length; i++ )
 			{
-				DirectedSparseEdge edge = (DirectedSparseEdge)inEdges[ i ];
-				DirectedSparseVertex srcVertex = (DirectedSparseVertex)edge.getSource();
-				for ( int j = 0; j < targetVertexOutEdges.length; j++ )
+				DirectedSparseEdge inEdge = (DirectedSparseEdge)inEdges[ i ];
+				DirectedSparseVertex srcVertex = (DirectedSparseVertex)inEdge.getSource();
+				
+				_logger.debug( "The target vertex has: " + targetVertexOutEdges.length + " out-edges" );
+				if ( targetVertexOutEdges.length == 1 )
 				{
-					edge = (DirectedSparseEdge)targetVertexOutEdges[ j ];
-					
-					DirectedSparseEdge new_edge = (DirectedSparseEdge)g.addEdge( new DirectedSparseEdge( srcVertex, edge.getDest() ) );
-					new_edge.importUserData( edge );
-					_logger.debug( "Merged the edge: " + getCompleteEdgeName( edge ) + " (old) with: " + getCompleteEdgeName( new_edge ) + "(new)" );
-					edgesToBeRemoved.add( edge );
-					/*try {
-						g.removeEdge( edge );						
-						_logger.debug( "Removing edge: " + getCompleteEdgeName( edge ) );
-					} catch (java.lang.IllegalArgumentException e) {
-						_logger.error( getCompleteEdgeName( edge ) + ", was not found in graph g" );
-					}*/
-				}				
+					DirectedSparseEdge outEdge = (DirectedSparseEdge)targetVertexOutEdges[ 0 ];
+					DirectedSparseEdge new_edge = (DirectedSparseEdge)g.addEdge( new DirectedSparseEdge( srcVertex, outEdge.getDest() ) );
+					new_edge.importUserData( inEdge );
+					_logger.debug( "Replacing the target vertex out-edge: " + getCompleteEdgeName( outEdge ) + " (old) with: " + getCompleteEdgeName( new_edge ) + "(new)" );
+					edgesToBeRemoved.add( inEdge );
+					edgesToBeRemoved.add( outEdge );
+				}
+				else
+				{
+					for ( int j = 0; j < targetVertexOutEdges.length; j++ )
+					{
+						DirectedSparseEdge outEdge = (DirectedSparseEdge)targetVertexOutEdges[ j ];
+						
+						// Compare labels. If equal they are to be merged, else not
+						String inEdgeLabel = (String)inEdge.getUserDatum( LABEL_KEY );
+						String outEdgeLabel = (String)outEdge.getUserDatum( LABEL_KEY );
+						if ( outEdgeLabel == null && inEdgeLabel == null )
+						{
+							DirectedSparseEdge new_edge = (DirectedSparseEdge)g.addEdge( new DirectedSparseEdge( srcVertex, outEdge.getDest() ) );
+							new_edge.importUserData( inEdge );
+							_logger.debug( "Replacing the target vertex out-edge: " + getCompleteEdgeName( outEdge ) + " (old) with: " + getCompleteEdgeName( new_edge ) + "(new)" );
+							edgesToBeRemoved.add( inEdge );
+							edgesToBeRemoved.add( outEdge );
+						}
+						else if ( outEdgeLabel != null && inEdgeLabel != null &&
+								  outEdgeLabel == inEdgeLabel )
+						{
+							DirectedSparseEdge new_edge = (DirectedSparseEdge)g.addEdge( new DirectedSparseEdge( srcVertex, outEdge.getDest() ) );
+							if ( inEdgeLabel.length() > outEdgeLabel.length() )
+							{
+								new_edge.importUserData( inEdge );
+							}
+							else
+							{
+								new_edge.importUserData( outEdge );
+							}
+							_logger.debug( "Replacing the target vertex out-edge: " + getCompleteEdgeName( outEdge ) + " (old) with: " + getCompleteEdgeName( new_edge ) + "(new)" );
+							edgesToBeRemoved.add( inEdge );
+							edgesToBeRemoved.add( outEdge );
+						}
+					}				
+				}
 			}
+
+			
+			// Now remove the edges that has been copied.
 			for (Iterator iter = edgesToBeRemoved.iterator(); iter.hasNext();)
 			{
 				DirectedSparseEdge element = (DirectedSparseEdge) iter.next();
 				try {
 					g.removeEdge( element );
 					_logger.debug( "Removing edge: " + getCompleteEdgeName( element ) );
+					_logger.debug( getCompleteEdgeName( element ) + ", was found and removed from graph,: '" + g.getUserDatum( FILE_KEY ) + "'");
 				} catch (java.lang.IllegalArgumentException e) {
-					_logger.error( getCompleteEdgeName( element ) + ", was not found in graph: '" + g.getUserDatum( FILE_KEY ) + "'");
+					_logger.debug( getCompleteEdgeName( element ) + ", was not found in graph: '" + g.getUserDatum( FILE_KEY ) + "', this is ok, since it probably been removed before. (I know, not ver good progamming practice here)");
 				}
 			}
 			_logger.debug( "Removing the Stop vertex: " + stopVertex.hashCode()  );
