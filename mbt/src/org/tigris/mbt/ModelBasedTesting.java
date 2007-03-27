@@ -2049,7 +2049,14 @@ public class ModelBasedTesting
 			invokeMethod( label, dryRun );
 			if ( dryRun )
 			{
-				_executeEdgeAndLabel[ 0 ] = label;
+				if ( label == null )
+				{
+					_executeEdgeAndLabel[ 0 ] = "";
+				}
+				else
+				{
+					_executeEdgeAndLabel[ 0 ] = label;
+				}
 				_executeEdgeAndLabel[ 1 ] = new Integer( edge.hashCode() ).toString();
 			}
 			Integer vistited = (Integer)edge.getUserDatum( VISITED_KEY );
