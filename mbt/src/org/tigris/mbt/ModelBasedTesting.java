@@ -715,7 +715,7 @@ public class ModelBasedTesting
 
 					if ( edgeLabel != null )
 					{
-						String str = edgeLabel.getTextTrim();
+						String str = edgeLabel.getText();
 						e.addUserDatum( FULL_LABEL_KEY, str, UserData.SHARED );
 						Pattern p = Pattern.compile( "(.*)", Pattern.MULTILINE );
 						Matcher m = p.matcher( str );
@@ -730,23 +730,13 @@ public class ModelBasedTesting
 									throw new RuntimeException( "Edge has a label '" + label + "',  '" + getCompleteEdgeName( e ) + "', containing whitespaces in file: '" + fileName + "'" );
 								}
 								e.addUserDatum( LABEL_KEY, label, UserData.SHARED );
-								_logger.debug( "Found label= " + label + " for edge id: " + edgeLabel.getQualifiedName() );
+								_logger.debug( "Found label = '" + label + "' for edge id: " + edgeLabel.getQualifiedName() );
 							}
 						}
 						else
 						{
 							throw new RuntimeException( "Label for edge must be defined in file '" + fileName + "'" );
 						}
-
-						/*if ( label == null || label.equalsIgnoreCase("") )
-						{
-							DirectedSparseVertex srcV = (DirectedSparseVertex)e.getSource();
-							String s = (String)srcV.getUserDatum( LABEL_KEY );
-							if ( s.compareTo( START_NODE ) != 0 )
-							{
-								throw new RuntimeException( "Label for an edge comming from a non-Start vertex,  '" + getCompleteEdgeName( e ) + "', must be defined in file: '" + fileName + "'" );
-							}
-						}*/
 
 
 
@@ -888,20 +878,6 @@ public class ModelBasedTesting
 							}
 						}
 
-						/*String str = (String)e.getUserDatum( LABEL_KEY );
-						if ( str == null || str.equals( "" ) )
-						 {
-							DirectedSparseVertex v = (DirectedSparseVertex)e.getSource();
-							String srcVertexStr = (String)v.getUserDatum( LABEL_KEY );
-							v = (DirectedSparseVertex)e.getDest();
-							String dstVertexStr = (String)v.getUserDatum( LABEL_KEY );
-							if ( srcVertexStr.equals( "Start" ) == false && 
-								 dstVertexStr.equals( "Stop" ) == false )
-							{
-								throw new RuntimeException( "Found an edge with no (or empty) label. This is only allowed when the source vertex is a Start vertex, or the destination vertex is a Stop vertex. In file '" + fileName + "'" );
-							}
-						}*/
-						
 						e.addUserDatum( VISITED_KEY, new Integer( 0 ), UserData.SHARED );
 						_logger.debug( "Added edge: '" + e.getUserDatum( LABEL_KEY ) + "', with id: " + e.hashCode() );
 					}
