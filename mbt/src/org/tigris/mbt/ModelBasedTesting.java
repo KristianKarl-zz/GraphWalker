@@ -252,7 +252,7 @@ public class ModelBasedTesting
 		}
 		else
 		{
-			throw new RuntimeException( "\"" + _graphmlFileName + "\" is not a file or a directory. Please specify a valid .graphml file or a directory containing .graphml files" );
+			throw new RuntimeException( "'" + _graphmlFileName + "' is not a file or a directory. Please specify a valid .graphml file or a directory containing .graphml files" );
 		}
 	    analyseSubGraphs();
 	}
@@ -558,17 +558,17 @@ public class ModelBasedTesting
 								label = m.group( 1 );
 								if ( label.length() <= 0 )
 								{
-									throw new RuntimeException( "Vertex is missing its label in file: \"" + fileName + "\"" );
+									throw new RuntimeException( "Vertex is missing its label in file: '" + fileName + "'" );
 								}
 								if ( label.matches( ".*[\\s].*" ) )
 								{
-									throw new RuntimeException( "Vertex has a label '" + label  + "', containing whitespaces in file: \"" + fileName + "\"" );
+									throw new RuntimeException( "Vertex has a label '" + label  + "', containing whitespaces in file: '" + fileName + "'" );
 								}
 								v.addUserDatum( LABEL_KEY, label, UserData.SHARED );
 							}
 							else
 							{
-								throw new RuntimeException( "Label must be defined in file: \"" + fileName + "\"" );
+								throw new RuntimeException( "Label must be defined in file: '" + fileName + "'" );
 							}
 							_logger.debug( "Added vertex: '" + v.getUserDatum( LABEL_KEY ) + "', with id: " + v.hashCode() );
 
@@ -695,13 +695,13 @@ public class ModelBasedTesting
 					}
 					if ( source == null )
 					{
-						String msg = "Could not find starting node for edge. Name: '" + element.getAttributeValue( "source" ) + "' In file \"" + fileName + "\"";
+						String msg = "Could not find starting node for edge. Name: '" + element.getAttributeValue( "source" ) + "' In file '" + fileName + "'";
 						_logger.error( msg );
 						throw new RuntimeException( msg );
 					}
 					if ( dest == null )
 					{
-						String msg = "Could not find end node for edge. Name: '" + element.getAttributeValue( "target" ) + "' In file \"" + fileName + "\"";
+						String msg = "Could not find end node for edge. Name: '" + element.getAttributeValue( "target" ) + "' In file '" + fileName + "'";
 						_logger.error( msg );
 						throw new RuntimeException( msg );
 					}
@@ -727,7 +727,7 @@ public class ModelBasedTesting
 							{
 								if ( label.matches( ".*[\\s].*" ) )
 								{
-									throw new RuntimeException( "Edge has a label '" + label + "',  '" + getCompleteEdgeName( e ) + "', containing whitespaces in file: \"" + fileName + "\"" );
+									throw new RuntimeException( "Edge has a label '" + label + "',  '" + getCompleteEdgeName( e ) + "', containing whitespaces in file: '" + fileName + "'" );
 								}
 								e.addUserDatum( LABEL_KEY, label, UserData.SHARED );
 								_logger.debug( "Found label= " + label + " for edge id: " + edgeLabel.getQualifiedName() );
@@ -735,7 +735,7 @@ public class ModelBasedTesting
 						}
 						else
 						{
-							throw new RuntimeException( "Label for edge must be defined in file \"" + fileName + "\"" );
+							throw new RuntimeException( "Label for edge must be defined in file '" + fileName + "'" );
 						}
 
 						/*if ( label == null || label.equalsIgnoreCase("") )
@@ -744,7 +744,7 @@ public class ModelBasedTesting
 							String s = (String)srcV.getUserDatum( LABEL_KEY );
 							if ( s.compareTo( START_NODE ) != 0 )
 							{
-								throw new RuntimeException( "Label for an edge comming from a non-Start vertex,  '" + getCompleteEdgeName( e ) + "', must be defined in file: \"" + fileName + "\"" );
+								throw new RuntimeException( "Label for an edge comming from a non-Start vertex,  '" + getCompleteEdgeName( e ) + "', must be defined in file: '" + fileName + "'" );
 							}
 						}*/
 
@@ -767,7 +767,7 @@ public class ModelBasedTesting
 							}
 							catch ( NumberFormatException error )
 							{
-								throw new RuntimeException( "For label: " + label + ", weight is not a correct float value: " + error.toString() + " In file \"" + fileName + "\"" );
+								throw new RuntimeException( "For label: " + label + ", weight is not a correct float value: " + error.toString() + " In file '" + fileName + "'" );
 							}
 							e.addUserDatum( WEIGHT_KEY, weight, UserData.SHARED );
 						}
@@ -898,7 +898,7 @@ public class ModelBasedTesting
 							if ( srcVertexStr.equals( "Start" ) == false && 
 								 dstVertexStr.equals( "Stop" ) == false )
 							{
-								throw new RuntimeException( "Found an edge with no (or empty) label. This is only allowed when the source vertex is a Start vertex, or the destination vertex is a Stop vertex. In file \"" + fileName + "\"" );
+								throw new RuntimeException( "Found an edge with no (or empty) label. This is only allowed when the source vertex is a Start vertex, or the destination vertex is a Stop vertex. In file '" + fileName + "'" );
 							}
 						}*/
 						
@@ -910,12 +910,12 @@ public class ModelBasedTesting
 		catch ( JDOMException e )
 		{
 			_logger.error( e );
-			throw new RuntimeException( "Could not parse file: \"" + fileName + "\"" );
+			throw new RuntimeException( "Could not parse file: '" + fileName + "'" );
 		}
 		catch ( IOException e )
 		{
 			e.printStackTrace();
-			throw new RuntimeException( "Could not parse file: \"" + fileName + "\"" );
+			throw new RuntimeException( "Could not parse file: '" + fileName + "'" );
 		}
 
 		removeBlockedEntities( graph );
@@ -2030,7 +2030,7 @@ public class ModelBasedTesting
 		{
 			throw new RuntimeException( "Did not find any edge." );
 		}
-		_logger.debug( "Edge = \"" + getCompleteEdgeName( edge ) + "\"" );
+		_logger.debug( "Edge = '" + getCompleteEdgeName( edge ) + "'" );
 
 		_prevVertex = _nextVertex;
 		_nextVertex = (DirectedSparseVertex)edge.getDest();
