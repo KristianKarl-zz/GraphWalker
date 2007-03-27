@@ -1913,7 +1913,7 @@ public class ModelBasedTesting
 
 			if ( unvisitedEdges.size() == _latestNumberOfUnvisetedEdges )
 			{
-				_logger.warn( "The number of unvisited edges has not decreased. This is not normal, perhaps due to unfullfilled conditions." );
+				_logger.warn( "The number of unvisited edges has not decreased. This may be caused by unfullfilled conditions." );
 				_logger.warn( "MBT will now change strategy and abandon the optimized runUntillAllEdgesAndVerticesVisited, to a random walk." );
 				_runUntilAllEdgesVisited = false;
 				_changedStratedgyFromRunUntilAllEdgesVisited = true;
