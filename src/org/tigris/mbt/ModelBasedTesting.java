@@ -1917,42 +1917,45 @@ public class ModelBasedTesting
 				_logger.warn( "MBT will now change strategy and abandon the optimized runUntillAllEdgesAndVerticesVisited, to a random walk." );
 				_runUntilAllEdgesVisited = false;
 				_changedStratedgyFromRunUntilAllEdgesVisited = true;
+				_shortestPathToVertex = null;
 			}
-			
-			_latestNumberOfUnvisetedEdges = unvisitedEdges.size(); 
-
-			Object[] shuffledList = shuffle( unvisitedEdges.toArray() );
-			DirectedSparseEdge e = (DirectedSparseEdge)shuffledList[ 0 ];
-			if ( e == null )
+			else
 			{
-				throw new RuntimeException( "Found an empty edge!" );
-			}
-			_logger.info( "Selecting edge: " + getCompleteEdgeName( e ) );
-			_shortestPathToVertex = new DijkstraShortestPath( _graph ).getPath( _nextVertex, e.getSource() );
-
-			// DijkstraShortestPath.getPath returns 0 if there is no way to reach the destination. But,
-			// DijkstraShortestPath.getPath also returns 0 paths if the the source and destination vertex are the same, even if there is
-			// an edge there (self-loop). So we have to check for that.
-			if ( _shortestPathToVertex.size() == 0 )
-			{
-				if ( _nextVertex.hashCode() != e.getSource().hashCode() )
+				_latestNumberOfUnvisetedEdges = unvisitedEdges.size(); 
+	
+				Object[] shuffledList = shuffle( unvisitedEdges.toArray() );
+				DirectedSparseEdge e = (DirectedSparseEdge)shuffledList[ 0 ];
+				if ( e == null )
 				{
-					_logger.error( "There is no way to reach: " + getCompleteEdgeName( e ) + ", from: '" + _nextVertex.getUserDatum( LABEL_KEY ) + "'" );
-					throw new RuntimeException( "There is no way to reach: " + getCompleteEdgeName( e ) + ", from: '" + _nextVertex.getUserDatum( LABEL_KEY ) + "'" );
+					throw new RuntimeException( "Found an empty edge!" );
 				}
+				_logger.info( "Selecting edge: " + getCompleteEdgeName( e ) );
+				_shortestPathToVertex = new DijkstraShortestPath( _graph ).getPath( _nextVertex, e.getSource() );
+	
+				// DijkstraShortestPath.getPath returns 0 if there is no way to reach the destination. But,
+				// DijkstraShortestPath.getPath also returns 0 paths if the the source and destination vertex are the same, even if there is
+				// an edge there (self-loop). So we have to check for that.
+				if ( _shortestPathToVertex.size() == 0 )
+				{
+					if ( _nextVertex.hashCode() != e.getSource().hashCode() )
+					{
+						_logger.error( "There is no way to reach: " + getCompleteEdgeName( e ) + ", from: '" + _nextVertex.getUserDatum( LABEL_KEY ) + "'" );
+						throw new RuntimeException( "There is no way to reach: " + getCompleteEdgeName( e ) + ", from: '" + _nextVertex.getUserDatum( LABEL_KEY ) + "'" );
+					}
+				}
+	
+				_shortestPathToVertex.add( e );
+				_logger.info( "Intend to take the shortest (" + _shortestPathToVertex.size() + " hops) path between: '" + _nextVertex.getUserDatum( LABEL_KEY ) + "' and '" + (String)e.getDest().getUserDatum( LABEL_KEY ) + "' (from: '" + e.getSource().getUserDatum( LABEL_KEY ) + "')" );
+	
+				String paths = "The route is: ";
+				for (Iterator iter = _shortestPathToVertex.iterator(); iter.hasNext();)
+				{
+					DirectedSparseEdge item = (DirectedSparseEdge) iter.next();
+					paths += getCompleteEdgeName( item ) + " ==> ";
+				}
+				paths += " Done!";
+				_logger.info( paths );
 			}
-
-			_shortestPathToVertex.add( e );
-			_logger.info( "Intend to take the shortest (" + _shortestPathToVertex.size() + " hops) path between: '" + _nextVertex.getUserDatum( LABEL_KEY ) + "' and '" + (String)e.getDest().getUserDatum( LABEL_KEY ) + "' (from: '" + e.getSource().getUserDatum( LABEL_KEY ) + "')" );
-
-			String paths = "The route is: ";
-			for (Iterator iter = _shortestPathToVertex.iterator(); iter.hasNext();)
-			{
-				DirectedSparseEdge item = (DirectedSparseEdge) iter.next();
-				paths += getCompleteEdgeName( item ) + " ==> ";
-			}
-			paths += " Done!";
-			_logger.info( paths );
 		}
 
 		if ( _shortestPathToVertex != null && _shortestPathToVertex.size() > 0 )
@@ -1966,7 +1969,7 @@ public class ModelBasedTesting
 				_shortestPathToVertex = null;
 			}
 		}
-		else if ( optimize )
+		else if ( optimize && _changedStratedgyFromRunUntilAllEdgesVisited == false)
 		{
 			// Look for an edge that has not been visited yet.
 			for ( int i = 0; i < outEdges.length; i++ )
