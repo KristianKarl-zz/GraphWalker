@@ -1939,8 +1939,9 @@ public class ModelBasedTesting
 				{
 					if ( _nextVertex.hashCode() != e.getSource().hashCode() )
 					{
-						_logger.error( "There is no way to reach: " + getCompleteEdgeName( e ) + ", from: '" + _nextVertex.getUserDatum( LABEL_KEY ) + "'" );
-						throw new RuntimeException( "There is no way to reach: " + getCompleteEdgeName( e ) + ", from: '" + _nextVertex.getUserDatum( LABEL_KEY ) + "'" );
+						String msg = "There is no way to reach: " + getCompleteEdgeName( e ) + ", from: '" + _nextVertex.getUserDatum( LABEL_KEY ) + "' " + _nextVertex.hashCode();
+						_logger.error( msg );
+						throw new RuntimeException( msg );
 					}
 				}
 	
