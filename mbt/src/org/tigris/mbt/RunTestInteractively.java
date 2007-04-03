@@ -115,8 +115,11 @@ public class RunTestInteractively {
 			case 1:
 				throw new GoBackToPreviousVertexException();
 				
+			case 2:
+				throw new RuntimeException( "Test ended normally" );					
+				
 			default:
-				throw new RuntimeException( "Unkown input data: '" + input + "', only '0' or '1' is allowed." );					
+				throw new RuntimeException( "Unkown input data: '" + input + "', only '0', '1' or '2' is allowed." );					
 		}
 	}
 	
@@ -196,7 +199,10 @@ public class RunTestInteractively {
 		}
 		catch ( Exception e )
 		{
-			e.printStackTrace();
+			if ( e.getMessage() != "Test ended normally" )
+			{
+			  e.printStackTrace();
+			}
 		}
 		mbt.getLogger().info( mbt.getStatistics() );
 		System.out.println( mbt.getStatistics() );
