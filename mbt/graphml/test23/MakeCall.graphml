@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created by yFiles 2.4.2.2 -->
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns/graphml" xmlns:y="http://www.yworks.com/xml/graphml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns/graphml http://www.yworks.com/xml/schema/graphml/1.0/ygraphml.xsd">
+  <key id="d0" for="node" yfiles.type="nodegraphics"/>
+  <key id="d1" for="node" attr.name="url" attr.type="string"/>
+  <key id="d2" for="node" attr.name="description" attr.type="string"/>
+  <key id="d3" for="edge" yfiles.type="edgegraphics"/>
+  <key id="d4" for="edge" attr.name="url" attr.type="string"/>
+  <key id="d5" for="edge" attr.name="description" attr.type="string"/>
+  <graph id="G" edgedefault="directed">
+    <node id="n0">
+      <data key="d0" >
+        <y:ShapeNode >
+          <y:Geometry  x="0.0" y="-137.86785714285713" width="42.0" height="30.0"/>
+          <y:Fill color="#00FF00"  transparent="false"/>
+          <y:BorderStyle type="line" width="1.0" color="#000000" />
+          <y:NodeLabel x="5.0" y="5.036865234375" width="32.0" height="19.92626953125" visible="true" alignment="center" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" hasBackgroundColor="false" hasLineColor="false" modelName="internal" modelPosition="c" autoSizePolicy="content">Start</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+      <data key="d1" ></data>
+      <data key="d2" ></data>
+    </node>
+    <node id="n1">
+      <data key="d0" >
+        <y:ShapeNode >
+          <y:Geometry  x="62.0" y="-137.86785714285713" width="80.0" height="30.0"/>
+          <y:Fill color="#FFCC00"  transparent="false"/>
+          <y:BorderStyle type="line" width="1.0" color="#000000" />
+          <y:NodeLabel x="5.0" y="5.036865234375" width="70.0" height="19.92626953125" visible="true" alignment="center" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" hasBackgroundColor="false" hasLineColor="false" modelName="internal" modelPosition="c" autoSizePolicy="content">v_MakeCall</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+      <data key="d1" ></data>
+      <data key="d2" ></data>
+    </node>
+    <node id="n2">
+      <data key="d0" >
+        <y:ImageNode >
+          <y:Geometry  x="927.0" y="-238.70119047619048" width="176.0" height="220.0"/>
+          <y:Fill color="#FFCC00"  transparent="false"/>
+          <y:BorderStyle type="line" width="1.0" color="#000000" />
+          <y:NodeLabel x="40.5" y="224.0" width="95.0" height="35.8525390625" visible="true" alignment="center" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" hasBackgroundColor="false" hasLineColor="false" modelName="sides" modelPosition="s" autoSizePolicy="content">v_StatusScreen&#xA;MERGE</y:NodeLabel>
+          <y:Image href="file:/C:/neocode/n2/test/graphs/img/v_StatusScreen.png"/>
+        </y:ImageNode>
+      </data>
+      <data key="d1" ></data>
+      <data key="d2" ></data>
+    </node>
+    <node id="n3">
+      <data key="d0" >
+        <y:ImageNode >
+          <y:Geometry  x="162.0" y="-232.86785714285713" width="176.0" height="220.0"/>
+          <y:Fill color="#FFCC00"  transparent="false"/>
+          <y:BorderStyle type="line" width="1.0" color="#000000" />
+          <y:NodeLabel x="45.0" y="224.0" width="86.0" height="19.92626953125" visible="true" alignment="center" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" hasBackgroundColor="false" hasLineColor="false" modelName="sides" modelPosition="s" autoSizePolicy="content">v_InitiatingCall</y:NodeLabel>
+          <y:Image href="file:/C:/neocode/n2/test/graphs/img/v_InitiatingCall.png"/>
+        </y:ImageNode>
+      </data>
+      <data key="d1" ></data>
+      <data key="d2" ></data>
+    </node>
+    <node id="n4">
+      <data key="d0" >
+        <y:ImageNode >
+          <y:Geometry  x="596.0" y="-172.03452380952382" width="176.0" height="220.0"/>
+          <y:Fill color="#FFCC00"  transparent="false"/>
+          <y:BorderStyle type="line" width="1.0" color="#000000" />
+          <y:NodeLabel x="47.0" y="224.0" width="82.0" height="19.92626953125" visible="true" alignment="center" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" hasBackgroundColor="false" hasLineColor="false" modelName="sides" modelPosition="s" autoSizePolicy="content">v_NoSIMCard</y:NodeLabel>
+          <y:Image href="file:/C:/neocode/n2/test/graphs/img/v_NoSIMCard.png"/>
+        </y:ImageNode>
+      </data>
+      <data key="d1" ></data>
+      <data key="d2" ></data>
+    </node>
+    <edge id="e0" source="n0" target="n1">
+      <data key="d3" >
+        <y:PolyLineEdge >
+          <y:Path sx="21.0" sy="-0.0" tx="-40.0" ty="-0.0"/>
+          <y:LineStyle type="line" width="1.0" color="#000000" />
+          <y:Arrows source="none" target="standard"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+      <data key="d4" ></data>
+      <data key="d5" ></data>
+    </edge>
+    <edge id="e1" source="n3" target="n2">
+      <data key="d3" >
+        <y:PolyLineEdge >
+          <y:Path sx="88.0" sy="-54.999999999999986" tx="-88.0" ty="-73.33333333333334">
+            <y:Point x="353.0" y="-177.86785714285713"/>
+            <y:Point x="353.0" y="-211.38531746031745"/>
+            <y:Point x="874.5" y="-211.38531746031745"/>
+            <y:Point x="874.5" y="-202.03452380952382"/>
+          </y:Path>
+          <y:LineStyle type="line" width="1.0" color="#000000" />
+          <y:Arrows source="none" target="standard"/>
+          <y:EdgeLabel x="288.470703125" y="-42.8680445110987" width="115.0" height="18.701171875" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" backgroundColor="#FFFF99" lineColor="#FF6600" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_SweepCloseView</y:EdgeLabel>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+      <data key="d4" ></data>
+      <data key="d5" ></data>
+    </edge>
+    <edge id="e2" source="n1" target="n3">
+      <data key="d3" >
+        <y:PolyLineEdge >
+          <y:Path sx="40.0" sy="-0.0" tx="-88.0" ty="-0.0"/>
+          <y:LineStyle type="line" width="1.0" color="#000000" />
+          <y:Arrows source="none" target="standard"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+      <data key="d4" ></data>
+      <data key="d5" ></data>
+    </edge>
+    <edge id="e3" source="n3" target="n4">
+      <data key="d3" >
+        <y:PolyLineEdge >
+          <y:Path sx="88.0" sy="55.0" tx="-88.0" ty="-0.0">
+            <y:Point x="353.0" y="-67.86785714285715"/>
+            <y:Point x="353.0" y="-62.03452380952381"/>
+          </y:Path>
+          <y:LineStyle type="line" width="1.0" color="#000000" />
+          <y:Arrows source="none" target="standard"/>
+          <y:EdgeLabel x="29.970703125" y="-18.21842273530507" width="218.0" height="48.103515625" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" backgroundColor="#FFFF99" lineColor="#FF6600" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_NoSIMCard&#xA;BACKTRACKING&#xA;/* If no SIM card inserted in the phone */</y:EdgeLabel>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+      <data key="d4" ></data>
+      <data key="d5" ></data>
+    </edge>
+    <edge id="e4" source="n4" target="n2">
+      <data key="d3" >
+        <y:PolyLineEdge >
+          <y:Path sx="88.0" sy="55.0" tx="-88.0" ty="73.33333333333334">
+            <y:Point x="787.0" y="-7.034523809523812"/>
+            <y:Point x="787.0" y="-0.0"/>
+            <y:Point x="906.0" y="-0.0"/>
+            <y:Point x="906.0" y="-55.36785714285713"/>
+          </y:Path>
+          <y:LineStyle type="line" width="1.0" color="#000000" />
+          <y:Arrows source="none" target="standard"/>
+          <y:EdgeLabel x="55.970703125" y="-2.3160619735717773" width="63.0" height="18.701171875" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" backgroundColor="#FFFF99" lineColor="#FF6600" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_Wait_5s</y:EdgeLabel>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+      <data key="d4" ></data>
+      <data key="d5" ></data>
+    </edge>
+    <edge id="e5" source="n4" target="n2">
+      <data key="d3" >
+        <y:PolyLineEdge >
+          <y:Path sx="88.0" sy="-55.00000000000001" tx="-88.0" ty="-0.0">
+            <y:Point x="787.0" y="-117.03452380952382"/>
+            <y:Point x="787.0" y="-128.70119047619048"/>
+          </y:Path>
+          <y:LineStyle type="line" width="1.0" color="#000000" />
+          <y:Arrows source="none" target="standard"/>
+          <y:EdgeLabel x="29.970703125" y="-21.01725340343657" width="115.0" height="18.701171875" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" backgroundColor="#FFFF99" lineColor="#FF6600" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_SweepCloseView</y:EdgeLabel>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+      <data key="d4" ></data>
+      <data key="d5" ></data>
+    </edge>
+  </graph>
+</graphml>
