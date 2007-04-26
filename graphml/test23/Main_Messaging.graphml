@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created by yFiles 2.4.2.2 -->
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns/graphml" xmlns:y="http://www.yworks.com/xml/graphml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns/graphml http://www.yworks.com/xml/schema/graphml/1.0/ygraphml.xsd">
+  <key id="d0" for="node" yfiles.type="nodegraphics"/>
+  <key id="d1" for="edge" yfiles.type="edgegraphics"/>
+  <graph id="G" edgedefault="directed">
+    <node id="n0">
+      <data key="d0" >
+        <y:ShapeNode >
+          <y:Geometry  x="0.0" y="-1121.4327380952382" width="42.0" height="30.0"/>
+          <y:Fill color="#00FF00"  transparent="false"/>
+          <y:BorderStyle type="line" width="1.0" color="#000000" />
+          <y:NodeLabel x="5.0" y="5.036865234375" width="32.0" height="19.92626953125" visible="true" alignment="center" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" hasBackgroundColor="false" hasLineColor="false" modelName="internal" modelPosition="c" autoSizePolicy="content">Start</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n1">
+      <data key="d0" >
+        <y:ImageNode >
+          <y:Geometry  x="117.0" y="-1216.4327380952382" width="176.0" height="220.0"/>
+          <y:Fill color="#99CCFF"  transparent="false"/>
+          <y:BorderStyle type="line" width="1.0" color="#000000" />
+          <y:NodeLabel x="40.5" y="224.0" width="95.0" height="19.92626953125" visible="true" alignment="center" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" hasBackgroundColor="false" hasLineColor="false" modelName="sides" modelPosition="s" autoSizePolicy="content">v_StatusScreen</y:NodeLabel>
+          <y:Image href="file:/C:/neocode/n2/test/graphs/img/v_StatusScreen.png"/>
+        </y:ImageNode>
+      </data>
+    </node>
+    <node id="n2">
+      <data key="d0" >
+        <y:ImageNode >
+          <y:Geometry  x="475.0" y="-606.0301587301587" width="176.0" height="220.0"/>
+          <y:Fill color="#99CCFF"  transparent="false"/>
+          <y:BorderStyle type="line" width="1.0" color="#000000" />
+          <y:NodeLabel x="50.0" y="224.0" width="76.0" height="19.92626953125" visible="true" alignment="center" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" hasBackgroundColor="false" hasLineColor="false" modelName="sides" modelPosition="s" autoSizePolicy="content">v_StartMenu</y:NodeLabel>
+          <y:Image href="file:/C:/neocode/n2/test/graphs/img/v_StartMenu.png"/>
+        </y:ImageNode>
+      </data>
+    </node>
+    <node id="n3">
+      <data key="d0" >
+        <y:ImageNode >
+          <y:Geometry  x="862.0" y="-347.6059523809524" width="176.0" height="220.0"/>
+          <y:Fill color="#FFCC00"  transparent="false"/>
+          <y:BorderStyle type="line" width="1.0" color="#000000" />
+          <y:NodeLabel x="33.0" y="224.0" width="110.0" height="35.8525390625" visible="true" alignment="center" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" hasBackgroundColor="false" hasLineColor="false" modelName="sides" modelPosition="s" autoSizePolicy="content">v_MessagingInbox&#xA;SUBGRAPH</y:NodeLabel>
+          <y:Image href="file:/C:/neocode/n2/test/graphs/img/v_MessagingInbox.png"/>
+        </y:ImageNode>
+      </data>
+    </node>
+    <edge id="e0" source="n0" target="n1">
+      <data key="d1" >
+        <y:PolyLineEdge >
+          <y:Path sx="21.0" sy="-0.0" tx="-88.0" ty="-0.0"/>
+          <y:LineStyle type="line" width="1.0" color="#000000" />
+          <y:Arrows source="none" target="standard"/>
+          <y:EdgeLabel x="10.0" y="-9.350584774925665" width="34.0" height="18.701171875" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" hasBackgroundColor="false" hasLineColor="false" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_Init</y:EdgeLabel>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e1" source="n1" target="n2">
+      <data key="d1" >
+        <y:PolyLineEdge >
+          <y:Path sx="88.0" sy="55.0" tx="-88.0" ty="73.33333333333337">
+            <y:Point x="308.0" y="-1051.4327380952382"/>
+            <y:Point x="308.0" y="-422.6968253968254"/>
+          </y:Path>
+          <y:LineStyle type="line" width="1.0" color="#000000" />
+          <y:Arrows source="none" target="standard"/>
+          <y:EdgeLabel x="29.970703125" y="619.3853279234871" width="142.0" height="18.701171875" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" backgroundColor="#FFFF99" lineColor="#FF6600" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_SweepShowStartMenu</y:EdgeLabel>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e2" source="n2" target="n3">
+      <data key="d1" >
+        <y:PolyLineEdge >
+          <y:Path sx="88.0" sy="-0.0" tx="-88.0" ty="-0.0">
+            <y:Point x="711.0" y="-496.03015873015875"/>
+            <y:Point x="711.0" y="-237.60595238095237"/>
+          </y:Path>
+          <y:LineStyle type="line" width="1.0" color="#000000" />
+          <y:Arrows source="none" target="standard"/>
+          <y:EdgeLabel x="74.970703125" y="249.07361304873513" width="76.0" height="18.701171875" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" backgroundColor="#FFFF99" lineColor="#FF6600" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_TapIcon_6</y:EdgeLabel>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+  </graph>
+</graphml>
