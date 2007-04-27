@@ -8,6 +8,8 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
 
+import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
+
 
 
 public class RunPerlScript 
@@ -16,34 +18,28 @@ public class RunPerlScript
 	static private String perlScript;
 	static private boolean random;
 	static private long seconds;
+	private String  LABEL_KEY = "label";
 	
 	public void run()
 	{
 		ModelBasedTesting mbt = new ModelBasedTesting( graphmlFile );	
 		mbt.reset();
 		
-		String methods[] = null;
 		while ( true )
 		{
-			methods = mbt.getEdgeAndVertex( random, seconds );
+			DirectedSparseEdge edge = mbt.getEdgeAndVertex( random, seconds );
 
 			// getEdgeAndVertex caught an exception, and returned null
-			if ( methods == null )
+			if ( edge == null )
 			{
 				break;
 			}
 
-			// No more edges or vertices to be executed
-			if ( methods[ 0 ].compareTo( "" ) == 0 && methods[ 2 ].compareTo( "" ) == 0 )
+			if ( run_Perl_Subrotine( "perl " + perlScript + " " + edge.getUserDatum( LABEL_KEY ) ) != 0 )
 			{
 				break;
 			}
-			
-			if ( run_Perl_Subrotine( "perl " + perlScript + " " + methods[ 0 ] ) != 0 )
-			{
-				break;
-			}
-			if ( run_Perl_Subrotine( "perl " + perlScript + " " + methods[ 2 ] ) != 0 )
+			if ( run_Perl_Subrotine( "perl " + perlScript + " " + edge.getDest().getUserDatum( LABEL_KEY ) ) != 0 )
 			{
 				break;
 			}
