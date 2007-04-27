@@ -12,10 +12,14 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
 
+import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
+
 public class RunTestInteractively {
 	static private String graphmlFile;
 	static private boolean random;
 	static private long seconds;
+	private String  LABEL_KEY = "label";
+	private String  INDEX_KEY = "index";
 
 
 	public static void main(String[] args)
@@ -147,30 +151,19 @@ public class RunTestInteractively {
 			mbt.reset();
 			
 			// The array will conatin the lebel an id of the edge, and the vertex
-			// methods[ 0 ] The label of the edge
-			// methods[ 1 ] The id of the edge
-			// methods[ 2 ] The label of the vertex
-			// methods[ 3 ] The id of the vetrex
-			String methods[] = null;
-			int previousVertexHashCode = 0;
+			Integer previousVertexIndex = null;
 			while ( true )
 			{
-				methods = mbt.getEdgeAndVertex( random, seconds );
+				DirectedSparseEdge edge = mbt.getEdgeAndVertex( random, seconds );
 
 				// getEdgeAndVertex caught an exception, and returned null
-				if ( methods == null )
+				if ( edge == null )
 				{
 					break;
 				}
 
-				// No more edges or vertices to be executed
-				if ( methods[ 0 ].compareTo( "" ) == 0 && methods[ 1 ].compareTo( "" ) == 0 )
-				{
-					break;
-				}
-				
-				mbt.getLogger().info("Edge: " + methods[ 0 ] + ", id=" + methods[ 1 ] );
-				System.out.println( methods[ 0 ] );
+				mbt.getLogger().info( "Edge: " + edge.getUserDatum( LABEL_KEY ) + ", index=" + edge.getUserDatum( INDEX_KEY ) );
+				System.out.println( edge.getUserDatum( LABEL_KEY ) );
 				try
 				{
 					checkInput( new Integer( readFromStdin() ).intValue() );
@@ -178,12 +171,12 @@ public class RunTestInteractively {
 				catch ( GoBackToPreviousVertexException e )
 				{
 					mbt.getLogger().info("== BACKTRACKING ==" );
-					mbt.SetCurrentVertex( previousVertexHashCode );
+					mbt.SetCurrentVertex( previousVertexIndex );
 					continue;
 				}
 					
-				mbt.getLogger().info("Vertex: " + methods[ 2 ] + ", id=" + methods[ 3 ] );
-				System.out.println( methods[ 2 ] );
+				mbt.getLogger().info( "Vertex: " + edge.getDest().getUserDatum( LABEL_KEY ) + ", index=" + edge.getDest().getUserDatum( INDEX_KEY ) );
+				System.out.println( edge.getDest().getUserDatum( LABEL_KEY ) );
 				try
 				{
 					checkInput( new Integer( readFromStdin() ).intValue() );
@@ -191,10 +184,10 @@ public class RunTestInteractively {
 				catch ( GoBackToPreviousVertexException e )
 				{
 					mbt.getLogger().info("== BACKTRACKING ==" );
-					mbt.SetCurrentVertex( previousVertexHashCode );
+					mbt.SetCurrentVertex( previousVertexIndex );
 					continue;
 				}
-				previousVertexHashCode = new Integer( methods[ 3 ] ).intValue();
+				previousVertexIndex = (Integer)edge.getDest().getUserDatum( INDEX_KEY );
 			}
 		}
 		catch ( Exception e )

@@ -4,12 +4,15 @@ import junit.framework.TestCase;
 
 import org.tigris.mbt.ModelBasedTesting;
 
+import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
 import edu.uci.ics.jung.graph.impl.DirectedSparseVertex;
 import edu.uci.ics.jung.graph.impl.SparseGraph;
 
 public class TestMerging extends TestCase
 {
-    public TestMerging( String testName )
+	private String  INDEX_KEY = "index";
+
+	public TestMerging( String testName )
     {
         super(testName);
     }
@@ -28,13 +31,32 @@ public class TestMerging extends TestCase
 		{
 			DirectedSparseVertex v1 = (DirectedSparseVertex)vertices1[ i ];
 			int hits = 0;
-			int hashCode1 = v1.hashCode();
+			Integer index1 = (Integer)v1.getUserDatum( INDEX_KEY );
 	    	Object[] vertices2 = g.getVertices().toArray();
 			for ( int j = 0; j < vertices1.length; j++ )
 			{
 				DirectedSparseVertex v2 = (DirectedSparseVertex)vertices2[ j ];
-				int hashCode2 = v2.hashCode();
-				if ( hashCode1 == hashCode2 )
+				Integer index2 = (Integer)v2.getUserDatum( INDEX_KEY );
+				if ( index1.intValue() == index2.intValue() )
+				{
+					hits++;
+		    	}
+	    	}
+	    	assertTrue( hits == 1 );
+		}					
+
+		Object[] edges1 = g.getEdges().toArray();
+		for ( int i = 0; i < vertices1.length; i++ )
+		{
+			DirectedSparseEdge e1 = (DirectedSparseEdge)edges1[ i ];
+			int hits = 0;
+			Integer index1 = (Integer)e1.getUserDatum( INDEX_KEY );
+	    	Object[] edges2 = g.getEdges().toArray();
+			for ( int j = 0; j < vertices1.length; j++ )
+			{
+				DirectedSparseEdge e2 = (DirectedSparseEdge)edges2[ j ];
+				Integer index2 = (Integer)e2.getUserDatum( INDEX_KEY );
+				if ( index1.intValue() == index2.intValue() )
 				{
 					hits++;
 		    	}
@@ -421,6 +443,22 @@ public class TestMerging extends TestCase
 	    	mbt.writeGraph( mbt.getGraph(), "graphml/merged/test23.graphml" );
 	    	assertTrue( mbt.getGraph().getEdges().size() == 8 );
 	    	assertTrue( mbt.getGraph().getVertices().size() == 8 );
+	    	verifyIds( mbt.getGraph() );
+    	}
+    	catch ( Exception e)
+    	{
+    		System.out.println(e.getMessage());
+	    	fail( e.getMessage() );
+    	}
+    }
+
+    // Verify that a graph containing a Stop vertex is correctly merged.
+    public void test24()
+    {
+    	try
+    	{
+	    	ModelBasedTesting mbt = new ModelBasedTesting( "graphml/test24" );
+	    	mbt.writeGraph( mbt.getGraph(), "graphml/merged/test24.graphml" );
 	    	verifyIds( mbt.getGraph() );
     	}
     	catch ( Exception e)
