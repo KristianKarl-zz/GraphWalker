@@ -163,7 +163,15 @@ public class RunTestInteractively {
 				}
 
 				mbt.getLogger().info( "Edge: " + edge.getUserDatum( LABEL_KEY ) + ", index=" + edge.getUserDatum( INDEX_KEY ) );
-				System.out.println( edge.getUserDatum( LABEL_KEY ) );
+				if ( edge.containsUserDatumKey( LABEL_KEY ) )
+				{
+					System.out.println( edge.getUserDatum( LABEL_KEY ) );
+				}
+				else
+				{
+					System.out.println( "" );
+				}
+				
 				try
 				{
 					checkInput( new Integer( readFromStdin() ).intValue() );
