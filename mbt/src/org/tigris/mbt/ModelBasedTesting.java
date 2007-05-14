@@ -162,7 +162,7 @@ public class ModelBasedTesting
 				
 				sourceFile.append( "          <y:Fill color=\"#CCCCFF\"  transparent=\"false\"/>\n" );
 				sourceFile.append( "          <y:BorderStyle type=\"line\" width=\"1.0\" color=\"#000000\" />\n" );
-				sourceFile.append( "          <y:NodeLabel x=\"1.5\" y=\"5.6494140625\" width=\"92.0\" height=\"18.701171875\" visible=\"true\" alignment=\"center\" fontFamily=\"Dialog\" fontSize=\"12\" fontStyle=\"plain\" textColor=\"#000000\" modelName=\"internal\" modelPosition=\"c\" autoSizePolicy=\"content\">" + v.getUserDatum( FULL_LABEL_KEY ) + "&#xA;id=" + v.getUserDatum( INDEX_KEY ) + "</y:NodeLabel>\n" );
+				sourceFile.append( "          <y:NodeLabel x=\"1.5\" y=\"5.6494140625\" width=\"92.0\" height=\"18.701171875\" visible=\"true\" alignment=\"center\" fontFamily=\"Dialog\" fontSize=\"12\" fontStyle=\"plain\" textColor=\"#000000\" modelName=\"internal\" modelPosition=\"c\" autoSizePolicy=\"content\">" + v.getUserDatum( FULL_LABEL_KEY ) + "&#xA;INDEX=" + v.getUserDatum( INDEX_KEY ) + "</y:NodeLabel>\n" );
 				
 				if ( v.containsUserDatumKey( IMAGE_KEY ) )
 				{
@@ -204,7 +204,7 @@ public class ModelBasedTesting
 	            
 	            if ( e.getUserDatum( FULL_LABEL_KEY ) != null )
 	            {
-	            	sourceFile.append( "          <y:EdgeLabel x=\"-148.25\" y=\"30.000000000000014\" width=\"169.0\" height=\"18.701171875\" visible=\"true\" alignment=\"center\" fontFamily=\"Dialog\" fontSize=\"12\" fontStyle=\"plain\" textColor=\"#000000\" modelName=\"free\" modelPosition=\"anywhere\" preferredPlacement=\"on_edge\" distance=\"2.0\" ratio=\"0.5\">" + e.getUserDatum( FULL_LABEL_KEY ) + "&#xA;id=" + e.getUserDatum( INDEX_KEY ) + "</y:EdgeLabel>\n" );
+	            	sourceFile.append( "          <y:EdgeLabel x=\"-148.25\" y=\"30.000000000000014\" width=\"169.0\" height=\"18.701171875\" visible=\"true\" alignment=\"center\" fontFamily=\"Dialog\" fontSize=\"12\" fontStyle=\"plain\" textColor=\"#000000\" modelName=\"free\" modelPosition=\"anywhere\" preferredPlacement=\"on_edge\" distance=\"2.0\" ratio=\"0.5\">" + e.getUserDatum( FULL_LABEL_KEY ) + "&#xA;INDEX=" + e.getUserDatum( INDEX_KEY ) + "</y:EdgeLabel>\n" );
 	            }
 	            
 	            sourceFile.append( "          <y:BendStyle smoothed=\"false\"/>\n" );
@@ -616,6 +616,20 @@ public class ModelBasedTesting
 								_logger.debug( "Found BLOCKED. This vetex will be removed from the graph: " + label );
 								v.addUserDatum( BLOCKED, BLOCKED, UserData.SHARED );
 							}
+
+
+
+							// If INDEX is defined, find it...
+							// If defined, it means that this vertex has already a unique id gnerated
+							// by mbt before, so we use this instead..
+							p = Pattern.compile( "\\n(INDEX=(.*))", Pattern.MULTILINE );
+							m = p.matcher( str );
+							if ( m.find() )
+							{
+								String index_key = m.group( 2 );
+								_logger.debug( "Found INDEX. This vertex will use the INDEX key: " + index_key );
+								v.setUserDatum( INDEX_KEY, new Integer( index_key ), UserData.SHARED );
+							}
 						}
 					}
 					
@@ -822,6 +836,20 @@ public class ModelBasedTesting
 						if ( states != null )
 						{
 							e.addUserDatum( STATE_KEY, states, UserData.SHARED );
+						}
+
+						
+						
+						// If INDEX is defined, find it...
+						// If defined, it means that this edge has already a unique id generated
+						// by mbt before, so we use this instead..
+						p = Pattern.compile( "\\n(INDEX=(.*))", Pattern.MULTILINE );
+						m = p.matcher( str );
+						if ( m.find() )
+						{
+							String index_key = m.group( 2 );
+							_logger.debug( "Found INDEX. This edge will use the INDEX key: " + index_key );
+							e.setUserDatum( INDEX_KEY, new Integer( index_key ), UserData.SHARED );
 						}
 
 
