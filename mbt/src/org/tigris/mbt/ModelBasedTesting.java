@@ -96,9 +96,9 @@ public class ModelBasedTesting
 	private long				 	_start_time;
 	private long				 	_end_time     = 0;
 	private boolean				 	_runUntilAllEdgesVisited = false;
-	private boolean				 	_changedStratedgyFromRunUntilAllEdgesVisited = false;
+	private boolean				 	_backtracking = false;
 	private List				 	_shortestPathToVertex = null ;
-	private int						_latestNumberOfUnvisetedEdges;
+	private int						_latestNumberOfUnvisitedEdges;
 	private int				    	_vertexAndEdgeIndex = 0;
 	
 	public int getNewVertexAndEdgeIndex()
@@ -295,6 +295,7 @@ public class ModelBasedTesting
 			{
 				_shortestPathToVertex = null;
 				_nextVertex = v;
+				_backtracking = true;
 				_logger.debug( "Backtracking to vertex: '" + (String)v.getUserDatum( LABEL_KEY ) + "', with index: " + index.intValue() );
 				return;
 			}
@@ -1951,65 +1952,63 @@ public class ModelBasedTesting
 			}
 			_logger.info( "Found " + unvisitedEdges.size() + " unvisited edges (" + _graph.getEdges().size() + ")" );
 
-			if ( unvisitedEdges.size() == _latestNumberOfUnvisetedEdges )
+			DirectedSparseEdge e = null;
+			do
 			{
-				_logger.warn( "The number of unvisited edges has not decreased. This may be caused by unfullfilled conditions." );
-				_logger.warn( "MBT will now change strategy and abandon the optimized runUntillAllEdgesAndVerticesVisited, to a random walk." );
-				_runUntilAllEdgesVisited = false;
-				_changedStratedgyFromRunUntilAllEdgesVisited = true;
-				_shortestPathToVertex = null;
-			}
-			else
-			{
-				_latestNumberOfUnvisetedEdges = unvisitedEdges.size(); 
-
-				DirectedSparseEdge e = null;
-				do
+				_logger.debug( "Number of unvisited edges:        " + unvisitedEdges.size() );
+				_logger.debug( "Latest number of unvisited edges: " + _latestNumberOfUnvisitedEdges );
+				if ( e == null && _backtracking == false )
 				{
-					if ( e == null )
-					{
-						Object[] shuffledList = shuffle( unvisitedEdges.toArray() );
-						e = (DirectedSparseEdge)shuffledList[ 0 ];
-					}
-					// We have tried the unvisited edges, but did not get a reachable path. So we try anything now.
-					else
-					{
-						Object[] shuffledList = shuffle( _graph.getEdges().toArray() );
-						e = (DirectedSparseEdge)shuffledList[ 0 ];
-					}
-					
-					if ( e == null )
-					{
-						throw new RuntimeException( "Found an empty edge!" );
-					}
-					_logger.info( "Selecting edge: " + getCompleteEdgeName( e ) );
-					_shortestPathToVertex = new DijkstraShortestPath( _graph ).getPath( _nextVertex, e.getSource() );
-		
-					// DijkstraShortestPath.getPath returns 0 if there is no way to reach the destination. But,
-					// DijkstraShortestPath.getPath also returns 0 paths if the the source and destination vertex are the same, even if there is
-					// an edge there (self-loop). So we have to check for that.
-					if ( _shortestPathToVertex.size() == 0 )
-					{
-						if ( _nextVertex.getUserDatum( INDEX_KEY ) != e.getSource().getUserDatum( INDEX_KEY ) )
-						{
-							String msg = "There is no way to reach: " + getCompleteEdgeName( e ) + ", from: '" + _nextVertex.getUserDatum( LABEL_KEY ) + "' " + _nextVertex.getUserDatum( INDEX_KEY );
-							_logger.warn( msg );
-						}
-					}
-				} while ( _shortestPathToVertex.size() == 0 ); 
-	
-				_shortestPathToVertex.add( e );
-				_logger.info( "Intend to take the shortest (" + _shortestPathToVertex.size() + " hops) path between: '" + _nextVertex.getUserDatum( LABEL_KEY ) + "' and '" + (String)e.getDest().getUserDatum( LABEL_KEY ) + "' (from: '" + e.getSource().getUserDatum( LABEL_KEY ) + "')" );
-	
-				String paths = "The route is: ";
-				for (Iterator iter = _shortestPathToVertex.iterator(); iter.hasNext();)
-				{
-					DirectedSparseEdge item = (DirectedSparseEdge) iter.next();
-					paths += getCompleteEdgeName( item ) + " ==> ";
+					_logger.info( "Strategy: Optimized - Get an unvisited edge, selected randomly from the graph." );
+					Object[] shuffledList = shuffle( unvisitedEdges.toArray() );
+					e = (DirectedSparseEdge)shuffledList[ 0 ];
 				}
-				paths += " Done!";
-				_logger.info( paths );
+				else if ( unvisitedEdges.size() == _latestNumberOfUnvisitedEdges || _backtracking == true )
+				{
+					_logger.info( "Strategy: Random from vertex - Get a random out edge from the currrent vertex: '" + _prevVertex.getUserDatum( LABEL_KEY ) + "'" );
+					Object[] shuffledList = shuffle( _prevVertex.getOutEdges().toArray() );
+					e = (DirectedSparseEdge)shuffledList[ 0 ];					
+				}
+				// We have tried the unvisited edges, but did not get a reachable path. So we try anything now.
+				else
+				{
+					_logger.info( "Strategy: Truly random - Get any edge, selected randomly from the graph." );
+					Object[] shuffledList = shuffle( _graph.getEdges().toArray() );
+					e = (DirectedSparseEdge)shuffledList[ 0 ];
+				}
+				
+				if ( e == null )
+				{
+					throw new RuntimeException( "Found an empty edge!" );
+				}
+				_logger.info( "Selecting edge: " + getCompleteEdgeName( e ) );
+				_shortestPathToVertex = new DijkstraShortestPath( _graph ).getPath( _nextVertex, e.getSource() );
+	
+				// DijkstraShortestPath.getPath returns 0 if there is no way to reach the destination. But,
+				// DijkstraShortestPath.getPath also returns 0 paths if the the source and destination vertex are the same, even if there is
+				// an edge there (self-loop). So we have to check for that.
+				if ( _shortestPathToVertex.size() == 0 )
+				{
+					if ( _nextVertex.getUserDatum( INDEX_KEY ) != e.getSource().getUserDatum( INDEX_KEY ) )
+					{
+						String msg = "There is no way to reach: " + getCompleteEdgeName( e ) + ", from: '" + _nextVertex.getUserDatum( LABEL_KEY ) + "' " + _nextVertex.getUserDatum( INDEX_KEY );
+						_logger.warn( msg );
+					}
+				}
+			} while ( _shortestPathToVertex.size() == 0 && ( _nextVertex.getUserDatum( INDEX_KEY ) != e.getSource().getUserDatum( INDEX_KEY ) ) ); 
+
+			_latestNumberOfUnvisitedEdges = unvisitedEdges.size(); 
+			_shortestPathToVertex.add( e );
+			_logger.info( "Intend to take the shortest (" + _shortestPathToVertex.size() + " hops) path between: '" + _nextVertex.getUserDatum( LABEL_KEY ) + "' and '" + (String)e.getDest().getUserDatum( LABEL_KEY ) + "' (from: '" + e.getSource().getUserDatum( LABEL_KEY ) + "')" );
+
+			String paths = "The route is: ";
+			for (Iterator iter = _shortestPathToVertex.iterator(); iter.hasNext();)
+			{
+				DirectedSparseEdge item = (DirectedSparseEdge) iter.next();
+				paths += getCompleteEdgeName( item ) + " ==> ";
 			}
+			paths += " Done!";
+			_logger.info( paths );
 		}
 
 		if ( _shortestPathToVertex != null && _shortestPathToVertex.size() > 0 )
@@ -2023,7 +2022,7 @@ public class ModelBasedTesting
 				_shortestPathToVertex = null;
 			}
 		}
-		else if ( optimize && _changedStratedgyFromRunUntilAllEdgesVisited == false)
+		else if ( optimize )
 		{
 			// Look for an edge that has not been visited yet.
 			for ( int i = 0; i < outEdges.length; i++ )
@@ -2068,13 +2067,6 @@ public class ModelBasedTesting
 		_prevVertex = _nextVertex;
 		_nextVertex = (DirectedSparseVertex)edge.getDest();
 		
-		if ( _changedStratedgyFromRunUntilAllEdgesVisited )
-		{
-			_changedStratedgyFromRunUntilAllEdgesVisited = false;
-			_runUntilAllEdgesVisited = true;
-			_logger.warn( "MBT will now try to change strategy back to runUntillAllEdgesAndVerticesVisited." );
-		}
-
 		try
 		{
 			String label = (String)edge.getUserDatum( LABEL_KEY );
@@ -2092,6 +2084,7 @@ public class ModelBasedTesting
 			edge.getDest().setUserDatum( VISITED_KEY, vistited, UserData.SHARED );
 			
 			_currentEdge = edge;
+			_backtracking = false;
 		}
 		catch( GoBackToPreviousVertexException e )
 		{
@@ -2104,8 +2097,6 @@ public class ModelBasedTesting
 			{
 				_shortestPathToVertex = null;
 				_runUntilAllEdgesVisited = false;
-				_changedStratedgyFromRunUntilAllEdgesVisited = true;
-				_logger.warn( "MBT will now change strategy and abandon the optimized runUntillAllEdgesAndVerticesVisited, to a random walk." );
 			}
 		}
 	}
