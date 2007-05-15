@@ -1962,28 +1962,41 @@ public class ModelBasedTesting
 			else
 			{
 				_latestNumberOfUnvisetedEdges = unvisitedEdges.size(); 
-	
-				Object[] shuffledList = shuffle( unvisitedEdges.toArray() );
-				DirectedSparseEdge e = (DirectedSparseEdge)shuffledList[ 0 ];
-				if ( e == null )
+
+				DirectedSparseEdge e = null;
+				do
 				{
-					throw new RuntimeException( "Found an empty edge!" );
-				}
-				_logger.info( "Selecting edge: " + getCompleteEdgeName( e ) );
-				_shortestPathToVertex = new DijkstraShortestPath( _graph ).getPath( _nextVertex, e.getSource() );
-	
-				// DijkstraShortestPath.getPath returns 0 if there is no way to reach the destination. But,
-				// DijkstraShortestPath.getPath also returns 0 paths if the the source and destination vertex are the same, even if there is
-				// an edge there (self-loop). So we have to check for that.
-				if ( _shortestPathToVertex.size() == 0 )
-				{
-					if ( _nextVertex.getUserDatum( INDEX_KEY ) != e.getSource().getUserDatum( INDEX_KEY ) )
+					if ( e == null )
 					{
-						String msg = "There is no way to reach: " + getCompleteEdgeName( e ) + ", from: '" + _nextVertex.getUserDatum( LABEL_KEY ) + "' " + _nextVertex.getUserDatum( INDEX_KEY );
-						_logger.error( msg );
-						throw new RuntimeException( msg );
+						Object[] shuffledList = shuffle( unvisitedEdges.toArray() );
+						e = (DirectedSparseEdge)shuffledList[ 0 ];
 					}
-				}
+					// We have tried the unvisited edges, but did not get a reachable path. So we try anything now.
+					else
+					{
+						Object[] shuffledList = shuffle( _graph.getEdges().toArray() );
+						e = (DirectedSparseEdge)shuffledList[ 0 ];
+					}
+					
+					if ( e == null )
+					{
+						throw new RuntimeException( "Found an empty edge!" );
+					}
+					_logger.info( "Selecting edge: " + getCompleteEdgeName( e ) );
+					_shortestPathToVertex = new DijkstraShortestPath( _graph ).getPath( _nextVertex, e.getSource() );
+		
+					// DijkstraShortestPath.getPath returns 0 if there is no way to reach the destination. But,
+					// DijkstraShortestPath.getPath also returns 0 paths if the the source and destination vertex are the same, even if there is
+					// an edge there (self-loop). So we have to check for that.
+					if ( _shortestPathToVertex.size() == 0 )
+					{
+						if ( _nextVertex.getUserDatum( INDEX_KEY ) != e.getSource().getUserDatum( INDEX_KEY ) )
+						{
+							String msg = "There is no way to reach: " + getCompleteEdgeName( e ) + ", from: '" + _nextVertex.getUserDatum( LABEL_KEY ) + "' " + _nextVertex.getUserDatum( INDEX_KEY );
+							_logger.warn( msg );
+						}
+					}
+				} while ( _shortestPathToVertex.size() == 0 ); 
 	
 				_shortestPathToVertex.add( e );
 				_logger.info( "Intend to take the shortest (" + _shortestPathToVertex.size() + " hops) path between: '" + _nextVertex.getUserDatum( LABEL_KEY ) + "' and '" + (String)e.getDest().getUserDatum( LABEL_KEY ) + "' (from: '" + e.getSource().getUserDatum( LABEL_KEY ) + "')" );
