@@ -20,6 +20,7 @@ package org.tigris.mbt;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.FilenameFilter;
@@ -35,8 +36,11 @@ import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
+import org.apache.log4j.SimpleLayout;
+import org.apache.log4j.WriterAppender;
 import org.jdom.Document;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
@@ -112,7 +116,28 @@ public class ModelBasedTesting
 		_graphmlFileName = graphmlFileName_;
 		_object          = object_;
 		_logger          = org.apache.log4j.Logger.getLogger( ModelBasedTesting.class );
-		//PropertyConfigurator.configure("log4j.properties");
+
+		if ( new File( "mbt.properties" ).exists() )
+		{
+			PropertyConfigurator.configure("mbt.properties");
+		}
+		else
+		{
+			SimpleLayout layout = new SimpleLayout();
+			WriterAppender writerAppender = null;
+	 		try
+	 		{
+	 			FileOutputStream fileOutputStream = new FileOutputStream( "mbt.log" );
+	 			writerAppender = new WriterAppender( layout, fileOutputStream );
+	 		} 
+	 		catch ( Exception e )
+	 		{
+				e.printStackTrace();
+	 		}
+	 
+	 		_logger.addAppender( writerAppender );
+	 		_logger.setLevel( (Level)Level.ERROR );
+		}
 
 		readFiles();
 	}
@@ -122,7 +147,28 @@ public class ModelBasedTesting
 		_graphmlFileName = graphmlFileName_;
 		_object          = null;
 		_logger          = org.apache.log4j.Logger.getLogger( ModelBasedTesting.class );
-		PropertyConfigurator.configure("log4j.properties");
+		
+		if ( new File( "mbt.properties" ).exists() )
+		{
+			PropertyConfigurator.configure("mbt.properties");
+		}
+		else
+		{
+			SimpleLayout layout = new SimpleLayout();
+			WriterAppender writerAppender = null;
+	 		try
+	 		{
+	 			FileOutputStream fileOutputStream = new FileOutputStream( "mbt.log" );
+	 			writerAppender = new WriterAppender( layout, fileOutputStream );
+	 		}
+	 		catch ( Exception e )
+	 		{
+				e.printStackTrace();
+	 		}
+	 
+	 		_logger.addAppender( writerAppender );
+	 		_logger.setLevel( (Level)Level.ERROR );
+		}
 
 		readFiles();
 	}
