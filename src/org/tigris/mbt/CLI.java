@@ -31,75 +31,379 @@ public class CLI
 
 	public static void main(String[] args)
 	{
-		try 
+		Options opt = new Options();
+
+		if ( args.length < 1 )
 		{
-			Options opt = new Options();
-			opt.addOption( "h", "help", false, "Print help for this application." );
-			opt.addOption( "i", "interactively", false, "Run the test interactively. " +			
-													    "MBT will return a test sequence, one line at a time to standard output, " +
-													    "it will wait until a line is fed back via standard input. The data fed back can be: " +
-													    "'0' which means, continue the test as normal, " +
-													    "'1' which means go back to previous vertex (backtracking), " +
-													    "'2' will end the test normally, " +
-													    "anything else will abort the execution. ");
-			opt.addOption( "r", "random", false, "Run the test with a random walk. Can not be combined with --optimize. " + 
-												 "This argument also needs the --time to be set." );
-			opt.addOption( "o", "optimize", false, "Run the test optimized. Can not be combined with --random." );			
-			opt.addOption( "q", "test_methods", false, "Will generate an output of the unique tests in the graph." );			
-			opt.addOption( "s", "test_sequence", false, "Will generate a sequence of tests." );			
-			opt.addOption( OptionBuilder.withLongOpt( "length" )
+			System.out.println( "Type 'java -jar mbt.jar help' for usage." );
+			return;
+		}
+		else
+		{
+			if ( args[ 0 ].equals( "help" ) )
+			{
+				if ( args.length == 1 )
+				{
+					System.out.println( "usage: 'java -jar mbt.jar <COMMAND> [OPTION] [ARGUMENT]'\n" );
+					System.out.println( "Type 'java -jar mbt.jar help <COMMAND>' to get specific help about a command." );
+					System.out.println( "Valid commands are:" );
+					System.out.println( "    help" );
+					System.out.println( "    dynamic" );
+					System.out.println( "    static" );
+					System.out.println( "    methods" );
+					System.out.println( "    merge" );
+					System.out.println( "    perl" );
+					System.out.println( "    java_output" );
+					System.out.println( "    perl_output" );
+					return;
+				}
+				else if ( args[ 1 ].equals( "dynamic" ) )
+				{
+					opt.addOption( "r", "random", false, "Run the test with a random walk. Can not be combined with --optimize. " + 
+					 									 "This argument also needs the --time to be set." );
+					opt.addOption( "o", "optimize", false, "Run the test optimized. Can not be combined with --random." );
+					opt.addOption( OptionBuilder.withArgName( "file" )
+		                    .withDescription( "The file (or folder) containing graphml formatted files." )
+		                    .hasArg()
+		                    .withLongOpt( "input_graphml" )
+		                    .create( "g" ) );
+					opt.addOption( OptionBuilder.withLongOpt( "time" )
+							.withArgName( "=seconds" )
+		                    .withDescription( "The time in seconds for the random walk to run." )
+		                    .withValueSeparator( '=' )
+		                    .hasArg()
+		                    .create( "t" ) );
+					
+					System.out.println( "Run the test dynamically.\n" +			
+										"MBT will return a test sequence, one line at a time to standard output, " +
+										"it will wait until a line is fed back via standard input. The data fed back can be:\n" +
+										"  '0' which means, continue the test as normal\n" +
+										"  '1' which means go back to previous vertex (backtracking)\n" +
+										"  '2' will end the test normally\n" +
+										"anything else will abort the execution.\n" );					
+
+					HelpFormatter f = new HelpFormatter();
+	                f.printHelp( "'java -jar mbt.jar dynamic [OPTION] [ARGUMENT]'", opt );
+	                
+					return;
+				}
+				else if ( args[ 1 ].equals( "static" ) )
+				{
+					opt.addOption( "r", "random", false, "Run the test with a random walk. Can not be combined with --optimize. " + 
+					 									 "This argument also needs the --time to be set." );
+					opt.addOption( "o", "optimize", false, "Run the test optimized. Can not be combined with --random." );
+					opt.addOption( OptionBuilder.withArgName( "file" )
+		                    .withDescription( "The file (or folder) containing graphml formatted files." )
+		                    .hasArg()
+		                    .withLongOpt( "input_graphml" )
+		                    .create( "g" ) );
+					opt.addOption( OptionBuilder.withLongOpt( "length" )
+							.withArgName( "=length" )
+		                    .withDescription( "The length of the test sequence. Supply an integer, which tells MBT how many " + 
+		                    		"vertices a test sequence shall contain." )
+		                    .hasArg()
+		                    .create( "n" ) );
+					
+					System.out.println( "Generate a test sequence statically.\n" +			
+										"MBT will return the whole test sequence in one go.\n" );					
+
+					HelpFormatter f = new HelpFormatter();
+	                f.printHelp( "'java -jar mbt.jar static [OPTION] [ARGUMENT]'", opt );
+	                
+					return;
+				}
+				else if ( args[ 1 ].equals( "methods" ) )
+				{
+					opt.addOption( OptionBuilder.withArgName( "file" )
+		                    .withDescription( "The file (or folder) containing graphml formatted files." )
+		                    .hasArg()
+		                    .withLongOpt( "input_graphml" )
+		                    .create( "g" ) );
+					
+					System.out.println( "Generate all methods, or tests existing in the model.\n" +			
+										"MBT will parse the graph(s), and return all methods (or tests) that" +
+										" exists in the graph(s). The list will onyl print out a unique name once." +
+										" The list is printed to stdout.\n" );					
+
+					HelpFormatter f = new HelpFormatter();
+	                f.printHelp( "'java -jar mbt.jar methods [OPTION] [ARGUMENT]'", opt );
+	                
+					return;
+				}
+				else if ( args[ 1 ].equals( "merge" ) )
+				{
+					opt.addOption( OptionBuilder.withArgName( "file" )
+						.withDescription( "The folder containing graphml formatted files." )
+						.hasArg()
+						.withLongOpt( "input_graphml" )
+						.create( "g" ) );
+					opt.addOption( OptionBuilder.withArgName( "file" )
+						.withDescription( "The ouput file is where the merged graphml file is written to." )
+						.hasArg()
+						.withLongOpt( "output_graphml" )
+						.create( "l" ) );
+					
+					System.out.println( "Merge several graphml files into one single graphml file.\n" +			
+										"The files to be merged, shall all exist in a single folder.\n" );					
+
+					HelpFormatter f = new HelpFormatter();
+	                f.printHelp( "'java -jar mbt.jar merge [OPTION] [ARGUMENT]'", opt );
+	                
+					return;
+				}
+				else if ( args[ 1 ].equals( "perl" ) )
+				{
+					opt.addOption( OptionBuilder.withArgName( "file" )
+						.withDescription( "The folder containing graphml formatted files." )
+						.hasArg()
+						.withLongOpt( "input_graphml" )
+						.create( "g" ) );
+					opt.addOption( "r", "random", false, "Run the test with a random walk. Can not be combined with --optimize. " + 
+						"This argument also needs the --time to be set." );
+					opt.addOption( "o", "optimize", false, "Run the test optimized. Can not be combined with --random." );			
+					opt.addOption( OptionBuilder.withArgName( "file" )
+						.withDescription( "The perl script implementing the model." )
+						.hasArg()
+						.withLongOpt( "perl" )
+						.create( "p" ) );
+					opt.addOption( OptionBuilder.withLongOpt( "time" )
+						.withArgName( "=seconds" )
+						.withDescription( "The time in seconds for the random walk to run." )
+						.withValueSeparator( '=' )
+						.hasArg()
+						.create( "t" ) );
+					
+					System.out.println( "Run a perl script, implementing the model.\n" +
+							"MBT will launch the desgnated perl script, and call the subroutines" +
+							" in that script accorning to the model.\n" );					
+
+					HelpFormatter f = new HelpFormatter();
+	                f.printHelp( "'java -jar mbt.jar perl [OPTION] [ARGUMENT]'", opt );
+	                
+					return;
+				}
+				else if ( args[ 1 ].equals( "java_output" ) )
+				{
+					opt.addOption( OptionBuilder.withArgName( "file" )
+						.withDescription( "The folder containing graphml formatted files." )
+						.hasArg()
+						.withLongOpt( "input_graphml" )
+						.create( "g" ) );
+					opt.addOption( OptionBuilder.withArgName( "file" )
+	                    .withDescription( "The ouput java source file." )
+	                    .hasArg()
+	                    .withLongOpt( "source_file" )
+	                    .create( "s" ) );
+					
+					System.out.println( "Generate java code.\n" +			
+										"MBT will generate java code of all methods, that are non-existing" +
+										" within a desgnated java source file. This utility helps the user" +
+										" to automatically add all those methods existing in the graph(s)" +
+										" but not in the implementation.\n" );					
+
+					HelpFormatter f = new HelpFormatter();
+	                f.printHelp( "'java -jar mbt.jar java_output [OPTION] [ARGUMENT]'", opt );
+	                
+					return;
+				}
+				else if ( args[ 1 ].equals( "perl_output" ) )
+				{
+					opt.addOption( OptionBuilder.withArgName( "file" )
+						.withDescription( "The folder containing graphml formatted files." )
+						.hasArg()
+						.withLongOpt( "input_graphml" )
+						.create( "g" ) );
+					opt.addOption( OptionBuilder.withArgName( "file" )
+	                    .withDescription( "The ouput perl source file." )
+	                    .hasArg()
+	                    .withLongOpt( "source_file" )
+	                    .create( "s" ) );
+					
+					System.out.println( "Generate perl code.\n" +			
+										"MBT will generate perl code of all methods, that are non-existing" +
+										" within a desgnated perl source file. This utility helps the user" +
+										" to automatically add all those methods existing in the graph(s)" +
+										" but not in the implementation.\n" );					
+
+					HelpFormatter f = new HelpFormatter();
+	                f.printHelp( "'java -jar mbt.jar perl_output [OPTION] [ARGUMENT]'", opt );
+	                
+					return;
+				}
+				else
+				{
+					System.out.println( "Type 'java -jar mbt.jar help' for usage." );
+					return;
+				}
+			}
+			else if ( args[ 0 ].equals( "dynamic" ) )
+			{
+				opt.addOption( "r", "random", false, "Run the test with a random walk. Can not be combined with --optimize. " + 
+				 "This argument also needs the --time to be set." );
+				opt.addOption( "o", "optimize", false, "Run the test optimized. Can not be combined with --random." );
+				opt.addOption( OptionBuilder.withArgName( "file" )
+					.withDescription( "The file (or folder) containing graphml formatted files." )
+					.hasArg()
+					.withLongOpt( "input_graphml" )
+					.create( "g" ) );
+				opt.addOption( OptionBuilder.withLongOpt( "time" )
+					.withArgName( "=seconds" )
+					.withDescription( "The time in seconds for the random walk to run." )
+					.withValueSeparator( '=' )
+					.hasArg()
+					.create( "t" ) );
+			}
+			else if ( args[ 0 ].equals( "static" ) )
+			{
+				opt.addOption( "r", "random", false, "Run the test with a random walk. Can not be combined with --optimize. " + 
+					"This argument also needs the --time to be set." );
+				opt.addOption( "o", "optimize", false, "Run the test optimized. Can not be combined with --random." );
+				opt.addOption( OptionBuilder.withArgName( "file" )
+					.withDescription( "The file (or folder) containing graphml formatted files." )
+					.hasArg()
+					.withLongOpt( "input_graphml" )
+					.create( "g" ) );
+				opt.addOption( OptionBuilder.withLongOpt( "length" )
 					.withArgName( "=length" )
-                    .withDescription( "The length of the test sequence. Supply an integer, which tells MBT how many " + 
-                    		"vertices a test sequence shall contain." )
-                    .hasArg()
-                    .create( "n" ) );
-			opt.addOption( OptionBuilder.withArgName( "file" )
-                    .withDescription( "The file (or folder) containing graphml (yEd) formatted files." )
-                    .hasArg()
-                    .withLongOpt( "input_graphml" )
-                    .create( "g" ) );
-			opt.addOption( OptionBuilder.withArgName( "file" )
-                    .withDescription( "The ouput file is where the merged graphml file is written to." )
-                    .hasArg()
-                    .withLongOpt( "output_graphml" )
-                    .create( "l" ) );
-			opt.addOption( OptionBuilder.withArgName( "file" )
-                    .withDescription( "The ouput perl source file." )
-                    .hasArg()
-                    .withLongOpt( "perl_source" )
-                    .create( "e" ) );
-			opt.addOption( OptionBuilder.withArgName( "file" )
+					.withDescription( "The length of the test sequence. Supply an integer, which tells MBT how many " + 
+					"vertices a test sequence shall contain." )
+					.hasArg()
+					.create( "n" ) );
+			}
+			else if ( args[ 0 ].equals( "methods" ) )
+			{
+				opt.addOption( OptionBuilder.withArgName( "file" )
+					.withDescription( "The file (or folder) containing graphml formatted files." )
+					.hasArg()
+					.withLongOpt( "input_graphml" )
+					.create( "g" ) );
+			}
+			else if ( args[ 0 ].equals( "merge" ) )
+			{
+				opt.addOption( OptionBuilder.withArgName( "file" )
+					.withDescription( "The folder containing graphml formatted files." )
+					.hasArg()
+					.withLongOpt( "input_graphml" )
+					.create( "g" ) );
+				opt.addOption( OptionBuilder.withArgName( "file" )
+					.withDescription( "The ouput file is where the merged graphml file is written to." )
+					.hasArg()
+					.withLongOpt( "output_graphml" )
+					.create( "l" ) );
+			}
+			else if ( args[ 0 ].equals( "perl" ) )
+			{
+				opt.addOption( OptionBuilder.withArgName( "file" )
+					.withDescription( "The folder containing graphml formatted files." )
+					.hasArg()
+					.withLongOpt( "input_graphml" )
+					.create( "g" ) );
+				opt.addOption( "r", "random", false, "Run the test with a random walk. Can not be combined with --optimize. " + 
+					"This argument also needs the --time to be set." );
+				opt.addOption( "o", "optimize", false, "Run the test optimized. Can not be combined with --random." );			
+				opt.addOption( OptionBuilder.withArgName( "file" )
+					.withDescription( "The perl script implementing the model." )
+					.hasArg()
+					.withLongOpt( "perl" )
+					.create( "p" ) );
+				opt.addOption( OptionBuilder.withLongOpt( "time" )
+					.withArgName( "=seconds" )
+					.withDescription( "The time in seconds for the random walk to run." )
+					.withValueSeparator( '=' )
+					.hasArg()
+					.create( "t" ) );
+			}
+			else if ( args[ 0 ].equals( "java_output" ) )
+			{
+				opt.addOption( OptionBuilder.withArgName( "file" )
+					.withDescription( "The folder containing graphml formatted files." )
+					.hasArg()
+					.withLongOpt( "input_graphml" )
+					.create( "g" ) );
+				opt.addOption( OptionBuilder.withArgName( "file" )
                     .withDescription( "The ouput java source file." )
                     .hasArg()
-                    .withLongOpt( "java_source" )
-                    .create( "j" ) );
-			opt.addOption( OptionBuilder.withArgName( "file" )
-                    .withDescription( "The perl script implementing the model." )
+                    .withLongOpt( "source_file" )
+                    .create( "s" ) );
+			}
+			else if ( args[ 0 ].equals( "perl_output" ) )
+			{
+				opt.addOption( OptionBuilder.withArgName( "file" )
+					.withDescription( "The folder containing graphml formatted files." )
+					.hasArg()
+					.withLongOpt( "input_graphml" )
+					.create( "g" ) );
+				opt.addOption( OptionBuilder.withArgName( "file" )
+                    .withDescription( "The ouput perl source file." )
                     .hasArg()
-                    .withLongOpt( "perl" )
-                    .create( "p" ) );
-			opt.addOption( OptionBuilder.withLongOpt( "time" )
-					.withArgName( "=seconds" )
-                    .withDescription( "The time in seconds for the random walk to run." )
-                    .withValueSeparator( '=' )
-                    .hasArg()
-                    .create( "t" ) );
+                    .withLongOpt( "source_file" )
+                    .create( "s" ) );
+			}
+			else
+			{
+				System.out.println( "Unkown cammand: " + args[ 0 ] );
+				System.out.println( "Type 'java -jar mbt.jar help' for usage." );
+				return;
+				
+			}
+		}
 			
+		try 
+		{			
 			CommandLineParser parser = new PosixParser();
 	        CommandLine cl = parser.parse( opt, args );
 	        
-            if ( cl.hasOption( "h" ) ) 
-            {
-                HelpFormatter f = new HelpFormatter();
-                f.printHelp( "Model-based testing", opt );
-            }
-            else if ( cl.hasOption( "s" ) )
-            {
+			if ( args[ 0 ].equals( "dynamic" ) )
+			{
+	            if ( cl.hasOption( "r" ) && cl.hasOption( "o" ) )
+	            {
+	            	System.out.println( "Can not set --random and --optimize at the same time." );
+	                return;
+	            }
+
+	            if ( !cl.hasOption( "r" ) && !cl.hasOption( "o" ) )
+	            {
+	            	System.out.println( "Either --random or --optimize must bet set." );
+	                return;
+	            }
+
+	            if ( cl.hasOption( "r" ) ) 
+	            {
+	            	random = true;
+	            	if ( cl.hasOption( "t" ) )
+	            	{
+	            		seconds = Integer.valueOf( cl.getOptionValue( "t" ) ).longValue();
+	            	}
+	            	else
+	            	{
+		            	System.out.println( "When running in --random mode, the --time must also be set." );
+		                return;
+	            	}
+	            }
+	            
+	            if ( cl.hasOption( "o" ) ) 
+	            {
+	            	random = false;
+	            }
+
+	            if ( !cl.hasOption( "g" ) )
+	            {
+	            	System.out.println( "Missing the input graphml file (folder), See --intput_graphml or -g" );
+	                return;	            	
+	            }
+
+            	graphmlFile = cl.getOptionValue( "g" );
+            	
+            	CLI cli = new CLI();
+    			cli.runInteractively();
+			}
+			else if ( args[ 0 ].equals( "static" ) )
+			{
 	            if ( cl.hasOption( "r" ) && cl.hasOption( "o" ) )
 	            {
 	            	System.out.println( "Can not set --random and --optimize at the same time." );
 	                HelpFormatter f = new HelpFormatter();
-	                f.printHelp( "Model-based testing", opt );
+	                f.printHelp( "java -jar mbt.jar [OPTION]...", opt );
 	                return;
 	            }
 
@@ -113,8 +417,6 @@ public class CLI
 	            	else
 	            	{
 		            	System.out.println( "When running in --random mode, the --length must also be set." );
-		                HelpFormatter f = new HelpFormatter();
-		                f.printHelp( "Model-based testing", opt );
 		                return;
 	            	}
 	            }
@@ -123,25 +425,19 @@ public class CLI
 	            	if ( cl.hasOption( "n" ) )
 	            	{
 		            	System.out.println( "When running in --optimize mode, the --length option can not be used." );
-		                HelpFormatter f = new HelpFormatter();
-		                f.printHelp( "Model-based testing", opt );
 		                return;
 	            	}
 	            	random = false;
 	            }
 	            else
 	            {
-	            	System.out.println( "When generating a test sequence, --test_sequence, either --optimize or --random must be defined." );
-	                HelpFormatter f = new HelpFormatter();
-	                f.printHelp( "Model-based testing", opt );
+	            	System.out.println( "When generating a test sequence, either --optimize or --random must be defined." );
 	                return;	            	
 	            }
 
 	            if ( !cl.hasOption( "g" ) )
 	            {
-	            	System.out.println( "Missing the graphml file, See --graphml or -g" );
-	                HelpFormatter f = new HelpFormatter();
-	                f.printHelp( "Model-based testing", opt );
+	            	System.out.println( "Missing the input graphml file (folder), See --intput_graphml or -g" );
 	                return;	            	
 	            }
 
@@ -149,75 +445,28 @@ public class CLI
             	
             	CLI cli = new CLI();
     			cli.generateTests();
-            }
-            else if ( cl.hasOption( "q" ) )
-            {
+			}
+			else if ( args[ 0 ].equals( "methods" ) )
+			{
 	            if ( !cl.hasOption( "g" ) )
 	            {
-	            	System.out.println( "Missing the graphml file, See --graphml or -g" );
-	                HelpFormatter f = new HelpFormatter();
-	                f.printHelp( "Model-based testing", opt );
+	            	System.out.println( "Missing the input graphml file (folder), See --intput_graphml or -g" );
 	                return;	            	
 	            }
             	graphmlFile = cl.getOptionValue( "g" );
             	CLI cli = new CLI();
     			cli.generateTestMethods();	            
-            }
-            else if ( cl.hasOption( "e" ) )
-            {
+			}
+			else if ( args[ 0 ].equals( "merge" ) )
+			{
 	            if ( !cl.hasOption( "g" ) )
 	            {
-	            	System.out.println( "Missing the graphml file, See --graphml or -g" );
-	                HelpFormatter f = new HelpFormatter();
-	                f.printHelp( "Model-based testing", opt );
+	            	System.out.println( "Missing the input graphml file (folder), See --intput_graphml or -g" );
 	                return;	            	
 	            }
-	            
-            	graphmlFile = cl.getOptionValue( "g" );
-            	outputFile  = cl.getOptionValue( "e" );            	
-
-            	try
-	    		{
-	    			ModelBasedTesting mtb = new ModelBasedTesting( graphmlFile );
-					mtb.generatePerlCode( outputFile );
-	    		}
-	    		catch ( RuntimeException e )
-	    		{
-	    			e.printStackTrace();
-	    			System.out.println( e.getMessage() );
-	    		}            	
-            }
-            else if ( cl.hasOption( "j" ) )
-            {
-	            if ( !cl.hasOption( "g" ) )
+	            if ( !cl.hasOption( "l" ) )
 	            {
-	            	System.out.println( "Missing the graphml file, See --graphml or -g" );
-	                HelpFormatter f = new HelpFormatter();
-	                f.printHelp( "Model-based testing", opt );
-	                return;	            	
-	            }
-	            
-            	graphmlFile = cl.getOptionValue( "g" );
-            	outputFile  = cl.getOptionValue( "j" );            	
-
-            	try
-	    		{
-	    			ModelBasedTesting mtb = new ModelBasedTesting( graphmlFile );
-					mtb.generateJavaCode( outputFile );
-	    		}
-	    		catch ( RuntimeException e )
-	    		{
-	    			e.printStackTrace();
-	    			System.out.println( e.getMessage() );
-	    		}            	
-            }
-            else if ( cl.hasOption( "l" ) )
-            {
-	            if ( !cl.hasOption( "g" ) )
-	            {
-	            	System.out.println( "Missing the graphml file, See --graphml or -g" );
-	                HelpFormatter f = new HelpFormatter();
-	                f.printHelp( "Model-based testing", opt );
+	            	System.out.println( "Missing the output graphml file, See --output_graphml or -l" );
 	                return;	            	
 	            }
 	            
@@ -234,14 +483,12 @@ public class CLI
 	    			e.printStackTrace();
 	    			System.out.println( e.getMessage() );
 	    		}            	
-            }
-            else if ( cl.hasOption( "p" ) )
-            {
+			}
+			else if ( args[ 0 ].equals( "perl" ) )
+			{
 	            if ( cl.hasOption( "r" ) && cl.hasOption( "o" ) )
 	            {
 	            	System.out.println( "Can not set --random and --optimize at the same time." );
-	                HelpFormatter f = new HelpFormatter();
-	                f.printHelp( "Model-based testing", opt );
 	                return;
 	            }
 
@@ -255,8 +502,6 @@ public class CLI
 	            	else
 	            	{
 		            	System.out.println( "When running in --random mode, the --time must also be set." );
-		                HelpFormatter f = new HelpFormatter();
-		                f.printHelp( "Model-based testing", opt );
 		                return;
 	            	}
 	            }
@@ -268,17 +513,13 @@ public class CLI
 
 	            if ( !cl.hasOption( "g" ) )
 	            {
-	            	System.out.println( "Missing the graphml file, See --graphml or -g" );
-	                HelpFormatter f = new HelpFormatter();
-	                f.printHelp( "Model-based testing", opt );
+	            	System.out.println( "Missing the input graphml file (folder), See --intput_graphml or -g" );
 	                return;	            	
 	            }
 
 	            if ( !cl.hasOption( "p" ) )
 	            {
 	            	System.out.println( "Missing the perl script, See --perl or -p" );
-	                HelpFormatter f = new HelpFormatter();
-	                f.printHelp( "Model-based testing", opt );
 	                return;	            	
 	            }
 
@@ -287,56 +528,61 @@ public class CLI
             	
             	CLI cli = new CLI();
     			cli.runPerlScript();
-            }
-            else if ( cl.hasOption( "i" ) )
-            {	            
-	            if ( cl.hasOption( "r" ) && cl.hasOption( "o" ) )
-	            {
-	            	System.out.println( "Can not set --random and --optimize at the same time." );
-	                HelpFormatter f = new HelpFormatter();
-	                f.printHelp( "Model-based testing", opt );
-	                return;
-	            }
-
-	            if ( cl.hasOption( "r" ) ) 
-	            {
-	            	random = true;
-	            	if ( cl.hasOption( "t" ) )
-	            	{
-	            		seconds = Integer.valueOf( cl.getOptionValue( "t" ) ).longValue();
-	            	}
-	            	else
-	            	{
-		            	System.out.println( "When running in --random mode, the --time must also be set." );
-		                HelpFormatter f = new HelpFormatter();
-		                f.printHelp( "Model-based testing", opt );
-		                return;
-	            	}
-	            }
-	            
-	            if ( cl.hasOption( "o" ) ) 
-	            {
-	            	random = false;
-	            }
-
+			}
+			else if ( args[ 0 ].equals( "java_output" ) )
+			{
 	            if ( !cl.hasOption( "g" ) )
 	            {
-	            	System.out.println( "Missing the graphml file, See --graphml or -g" );
-	                HelpFormatter f = new HelpFormatter();
-	                f.printHelp( "Model-based testing", opt );
+	            	System.out.println( "Missing the input graphml file (folder), See --intput_graphml or -g" );
 	                return;	            	
 	            }
-
+	            if ( !cl.hasOption( "s" ) )
+	            {
+	            	System.out.println( "Missing the ouput perl source file, See --source_file or -s" );
+	                return;	            	
+	            }
+	            
             	graphmlFile = cl.getOptionValue( "g" );
-            	
-            	CLI cli = new CLI();
-    			cli.runInteractively();
+            	outputFile  = cl.getOptionValue( "s" );            	
+
+            	try
+	    		{
+	    			ModelBasedTesting mtb = new ModelBasedTesting( graphmlFile );
+					mtb.generateJavaCode( outputFile );
+	    		}
+	    		catch ( RuntimeException e )
+	    		{
+	    			e.printStackTrace();
+	    			System.out.println( e.getMessage() );
+	    		}            	
 			}
-            else 
-            {
-                HelpFormatter f = new HelpFormatter();
-                f.printHelp( "Model-based testing", opt );
-            }
+			else if ( args[ 0 ].equals( "perl_output" ) )
+			{
+	            if ( !cl.hasOption( "g" ) )
+	            {
+	            	System.out.println( "Missing the input graphml file (folder), See --intput_graphml or -g" );
+	                return;	            	
+	            }
+	            if ( !cl.hasOption( "s" ) )
+	            {
+	            	System.out.println( "Missing the ouput perl source file, See --source_file or -s" );
+	                return;	            	
+	            }
+	            
+            	graphmlFile = cl.getOptionValue( "g" );
+            	outputFile  = cl.getOptionValue( "s" );            	
+
+            	try
+	    		{
+	    			ModelBasedTesting mtb = new ModelBasedTesting( graphmlFile );
+					mtb.generatePerlCode( outputFile );
+	    		}
+	    		catch ( RuntimeException e )
+	    		{
+	    			e.printStackTrace();
+	    			System.out.println( e.getMessage() );
+	    		}            	
+			}
         }
         catch ( ParseException e ) 
         {
