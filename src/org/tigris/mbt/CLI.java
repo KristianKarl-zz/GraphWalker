@@ -55,7 +55,6 @@ public class CLI
 					System.out.println( "    merge" );
 					System.out.println( "    perl" );
 					System.out.println( "    java_output" );
-					System.out.println( "    perl_output" );
 					System.out.println( "    perl_output\n" );
 					System.out.println( "Type 'java -jar mbt.jar -v (--version)' to version information." );
 					return;
@@ -344,7 +343,7 @@ public class CLI
 			}
 			else if ( args[ 0 ].equals( "-v" ) || args[ 0 ].equals( "--version" ) )
 			{
-				System.out.println( "org.tigris.mbt version 1.0 (r145)\n" );
+				System.out.println( "org.tigris.mbt version 1.0 (r146)\n" );
 				System.out.println( "org.tigris.mbt is open source software licesed undr GPL" );
 				System.out.println( "The software (and it's source) can be downloaded at http://mbt.tigris.org/\n" );
 				System.out.println( "This package contains following software packages:" );
