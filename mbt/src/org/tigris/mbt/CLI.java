@@ -56,6 +56,8 @@ public class CLI
 					System.out.println( "    perl" );
 					System.out.println( "    java_output" );
 					System.out.println( "    perl_output" );
+					System.out.println( "    perl_output\n" );
+					System.out.println( "Type 'java -jar mbt.jar -v (--version)' to version information." );
 					return;
 				}
 				else if ( args[ 1 ].equals( "dynamic" ) )
@@ -340,12 +342,26 @@ public class CLI
                     .withLongOpt( "source_file" )
                     .create( "s" ) );
 			}
+			else if ( args[ 0 ].equals( "-v" ) || args[ 0 ].equals( "--version" ) )
+			{
+				System.out.println( "org.tigris.mbt version 1.0 (r143)\n" );
+				System.out.println( "org.tigris.mbt is open source software licesed undr GPL" );
+				System.out.println( "The software (and it's source) can be downloaded at http://mbt.tigris.org/\n" );
+				System.out.println( "This package contains following software packages:" );
+				System.out.println( "  crimson-1.1.3.jar            http://xml.apache.org/crimson/" );
+				System.out.println( "  commons-collections-3.1.jar  http://jakarta.apache.org/commons/collections/" );
+				System.out.println( "  jdom-1.0.jar                 http://www.jdom.org/" );
+				System.out.println( "  log4j-1.2.8.jar              http://logging.apache.org/log4j/" );
+				System.out.println( "  commons-cli-1.0.jar          http://jakarta.apache.org/commons/cli/" );
+				System.out.println( "  colt-1.2.jar                 http://dsd.lbl.gov/~hoschek/colt/" );
+				System.out.println( "  jung-1.7.6.jar               http://jung.sourceforge.net/" );
+				return;
+			}
 			else
 			{
 				System.out.println( "Unkown cammand: " + args[ 0 ] );
 				System.out.println( "Type 'java -jar mbt.jar help' for usage." );
-				return;
-				
+				return;				
 			}
 		}
 			
