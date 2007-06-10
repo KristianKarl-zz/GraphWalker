@@ -685,9 +685,12 @@ public class CLI
 				}
 				catch ( GoBackToPreviousVertexException e )
 				{
-					mbt.getLogger().info("== BACKTRACKING ==" );
-					mbt.SetCurrentVertex( previousVertexIndex );
-					continue;
+					if ( previousVertexIndex != null )
+					{
+						mbt.getLogger().info("== BACKTRACKING ==" );
+						mbt.SetCurrentVertex( previousVertexIndex );						
+						continue;
+					}
 				}
 					
 				mbt.getLogger().info( "Vertex: " + edge.getDest().getUserDatum( LABEL_KEY ) + ", index=" + edge.getDest().getUserDatum( INDEX_KEY ) );
@@ -698,9 +701,12 @@ public class CLI
 				}
 				catch ( GoBackToPreviousVertexException e )
 				{
-					mbt.getLogger().info("== BACKTRACKING ==" );
-					mbt.SetCurrentVertex( previousVertexIndex );
-					continue;
+					if ( previousVertexIndex != null )
+					{
+						mbt.getLogger().info("== BACKTRACKING ==" );
+						mbt.SetCurrentVertex( previousVertexIndex );
+						continue;
+					}
 				}
 				previousVertexIndex = (Integer)edge.getDest().getUserDatum( INDEX_KEY );
 			}
