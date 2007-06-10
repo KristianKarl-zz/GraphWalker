@@ -11,6 +11,7 @@ import java.util.Vector;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.MissingArgumentException;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
@@ -357,13 +358,15 @@ public class CLI
 			{
 	            if ( cl.hasOption( "r" ) && cl.hasOption( "o" ) )
 	            {
-	            	System.out.println( "Can not set --random and --optimize at the same time." );
+	            	System.out.println( "Can not set -r (--random) and -o (--optimize) at the same time." );
+	            	System.out.println( "Type 'java -jar mbt.jar help dynamic' for help." );
 	                return;
 	            }
 
 	            if ( !cl.hasOption( "r" ) && !cl.hasOption( "o" ) )
 	            {
-	            	System.out.println( "Either --random or --optimize must bet set." );
+	            	System.out.println( "Either -r (--random) or -o (--optimize) must bet set." );
+	            	System.out.println( "Type 'java -jar mbt.jar help dynamic' for help." );
 	                return;
 	            }
 
@@ -376,7 +379,8 @@ public class CLI
 	            	}
 	            	else
 	            	{
-		            	System.out.println( "When running in --random mode, the --time must also be set." );
+		            	System.out.println( "When running in -r (--random) mode, the -t (--time) must also be set." );
+		            	System.out.println( "Type 'java -jar mbt.jar help dynamic' for help." );
 		                return;
 	            	}
 	            }
@@ -388,7 +392,8 @@ public class CLI
 
 	            if ( !cl.hasOption( "g" ) )
 	            {
-	            	System.out.println( "Missing the input graphml file (folder), See --intput_graphml or -g" );
+	            	System.out.println( "Missing the input graphml file (folder), See -g (--intput_graphml)" );
+	            	System.out.println( "Type 'java -jar mbt.jar help dynamic' for help." );
 	                return;	            	
 	            }
 
@@ -401,9 +406,8 @@ public class CLI
 			{
 	            if ( cl.hasOption( "r" ) && cl.hasOption( "o" ) )
 	            {
-	            	System.out.println( "Can not set --random and --optimize at the same time." );
-	                HelpFormatter f = new HelpFormatter();
-	                f.printHelp( "java -jar mbt.jar [OPTION]...", opt );
+	            	System.out.println( "Can not set -r (--random) and -o (--optimize) at the same time." );
+	            	System.out.println( "Type 'java -jar mbt.jar help static' for help." );
 	                return;
 	            }
 
@@ -416,7 +420,8 @@ public class CLI
 	            	}
 	            	else
 	            	{
-		            	System.out.println( "When running in --random mode, the --length must also be set." );
+		            	System.out.println( "When running in -r (--random) mode, the -n (--length) must also be set." );
+		            	System.out.println( "Type 'java -jar mbt.jar help static' for help." );
 		                return;
 	            	}
 	            }
@@ -424,20 +429,23 @@ public class CLI
 	            {
 	            	if ( cl.hasOption( "n" ) )
 	            	{
-		            	System.out.println( "When running in --optimize mode, the --length option can not be used." );
+		            	System.out.println( "When running in -o (--optimize) mode, the -n (--length) option can not be used." );
+		            	System.out.println( "Type 'java -jar mbt.jar help static' for help." );
 		                return;
 	            	}
 	            	random = false;
 	            }
 	            else
 	            {
-	            	System.out.println( "When generating a test sequence, either --optimize or --random must be defined." );
+	            	System.out.println( "When generating a test sequence, either -o( --optimize) or -r (--random) must be defined." );
+	            	System.out.println( "Type 'java -jar mbt.jar help static' for help." );
 	                return;	            	
 	            }
 
 	            if ( !cl.hasOption( "g" ) )
 	            {
-	            	System.out.println( "Missing the input graphml file (folder), See --intput_graphml or -g" );
+	            	System.out.println( "Missing the input graphml file (folder), See -g (--intput_graphml)" );
+	            	System.out.println( "Type 'java -jar mbt.jar help static' for help." );
 	                return;	            	
 	            }
 
@@ -450,7 +458,8 @@ public class CLI
 			{
 	            if ( !cl.hasOption( "g" ) )
 	            {
-	            	System.out.println( "Missing the input graphml file (folder), See --intput_graphml or -g" );
+	            	System.out.println( "Missing the input graphml file (folder), See -g (--intput_graphml)" );
+	            	System.out.println( "Type 'java -jar mbt.jar help methods' for help." );
 	                return;	            	
 	            }
             	graphmlFile = cl.getOptionValue( "g" );
@@ -461,12 +470,14 @@ public class CLI
 			{
 	            if ( !cl.hasOption( "g" ) )
 	            {
-	            	System.out.println( "Missing the input graphml file (folder), See --intput_graphml or -g" );
+	            	System.out.println( "Missing the input graphml file (folder), See -g (--intput_graphml)" );
+	            	System.out.println( "Type 'java -jar mbt.jar help merge' for help." );
 	                return;	            	
 	            }
 	            if ( !cl.hasOption( "l" ) )
 	            {
-	            	System.out.println( "Missing the output graphml file, See --output_graphml or -l" );
+	            	System.out.println( "Missing the output graphml file, See -l (--output_graphml)" );
+	            	System.out.println( "Type 'java -jar mbt.jar help merge' for help." );
 	                return;	            	
 	            }
 	            
@@ -488,8 +499,9 @@ public class CLI
 			{
 	            if ( cl.hasOption( "r" ) && cl.hasOption( "o" ) )
 	            {
-	            	System.out.println( "Can not set --random and --optimize at the same time." );
-	                return;
+	            	System.out.println( "Can not set -r (--random) and -o (--optimize) at the same time." );
+	            	System.out.println( "Type 'java -jar mbt.jar help perl' for help." );
+	            	return;
 	            }
 
 	            if ( cl.hasOption( "r" ) ) 
@@ -501,7 +513,8 @@ public class CLI
 	            	}
 	            	else
 	            	{
-		            	System.out.println( "When running in --random mode, the --time must also be set." );
+		            	System.out.println( "When running in -r (--random) mode, the -t (--time) must also be set." );
+		            	System.out.println( "Type 'java -jar mbt.jar help perl' for help." );
 		                return;
 	            	}
 	            }
@@ -513,13 +526,15 @@ public class CLI
 
 	            if ( !cl.hasOption( "g" ) )
 	            {
-	            	System.out.println( "Missing the input graphml file (folder), See --intput_graphml or -g" );
+	            	System.out.println( "Missing the input graphml file (folder), See -g (--intput_graphml)" );
+	            	System.out.println( "Type 'java -jar mbt.jar help perl' for help." );
 	                return;	            	
 	            }
 
 	            if ( !cl.hasOption( "p" ) )
 	            {
-	            	System.out.println( "Missing the perl script, See --perl or -p" );
+	            	System.out.println( "Missing the perl script, See -p (--perl)" );
+	            	System.out.println( "Type 'java -jar mbt.jar help perl' for help." );
 	                return;	            	
 	            }
 
@@ -533,12 +548,14 @@ public class CLI
 			{
 	            if ( !cl.hasOption( "g" ) )
 	            {
-	            	System.out.println( "Missing the input graphml file (folder), See --intput_graphml or -g" );
+	            	System.out.println( "Missing the input graphml file (folder), See -g (--intput_graphml)" );
+	            	System.out.println( "Type 'java -jar mbt.jar help java_output' for help." );
 	                return;	            	
 	            }
 	            if ( !cl.hasOption( "s" ) )
 	            {
-	            	System.out.println( "Missing the ouput perl source file, See --source_file or -s" );
+	            	System.out.println( "Missing the ouput perl source file, See -s (--source_file)" );
+	            	System.out.println( "Type 'java -jar mbt.jar help java_output' for help." );
 	                return;	            	
 	            }
 	            
@@ -560,12 +577,14 @@ public class CLI
 			{
 	            if ( !cl.hasOption( "g" ) )
 	            {
-	            	System.out.println( "Missing the input graphml file (folder), See --intput_graphml or -g" );
+	            	System.out.println( "Missing the input graphml file (folder), See -g (--intput_graphml)" );
+	            	System.out.println( "Type 'java -jar mbt.jar help perl_output' for help." );
 	                return;	            	
 	            }
 	            if ( !cl.hasOption( "s" ) )
 	            {
-	            	System.out.println( "Missing the ouput perl source file, See --source_file or -s" );
+	            	System.out.println( "Missing the ouput perl source file, See -s (--source_file)" );
+	            	System.out.println( "Type 'java -jar mbt.jar help perl_output' for help." );
 	                return;	            	
 	            }
 	            
@@ -583,6 +602,11 @@ public class CLI
 	    			System.out.println( e.getMessage() );
 	    		}            	
 			}
+        }
+		catch ( MissingArgumentException e )
+        {
+			System.out.println( e.getMessage() );
+        	System.out.println( "Type 'java -jar mbt.jar help " + args[ 0 ] + "' for help." );
         }
         catch ( ParseException e ) 
         {
