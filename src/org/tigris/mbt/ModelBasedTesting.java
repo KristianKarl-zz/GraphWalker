@@ -1191,11 +1191,8 @@ public class ModelBasedTesting
 							       ", equals a node in the graph in file: '" +
 							       _graph.getUserDatum( FILE_KEY ) + "'" );
 
-					//writeGraph( _graph, "/tmp/merged.graphml" );
 					appendGraph( _graph, g );
-					//writeGraph( _graph, "/tmp/merged.graphml" );
-					copySubGraphs( _graph, v1 );
-					//writeGraph( _graph, "/tmp/merged.graphml" );
+					copySubGraphs( _graph, g, v1 );
 
 					vertices = _graph.getVertices().toArray();
 					i = -1;
@@ -1319,11 +1316,11 @@ public class ModelBasedTesting
 
 	// Replaces the vertex targetVertex and all its in and out edges, in the graph g, with all
 	// other vertices with the same name.
-	private void copySubGraphs( SparseGraph g, DirectedSparseVertex targetVertex )
+	private void copySubGraphs( SparseGraph mainGraph, SparseGraph subGraph, DirectedSparseVertex targetVertex )
 	{
 		Object[] targetVertexOutEdges = targetVertex.getOutEdges().toArray();
 		DirectedSparseVertex sourceVertex = null;
-		Object[] vertices = g.getVertices().toArray();
+		Object[] vertices = mainGraph.getVertices().toArray();
 		for ( int i = 0; i < vertices.length; i++ )
 		{
 			DirectedSparseVertex v = (DirectedSparseVertex)vertices[ i ];
@@ -1367,7 +1364,7 @@ public class ModelBasedTesting
 		for (int i = 0; i < inEdges.length; i++)
 		{
 			DirectedSparseEdge edge = (DirectedSparseEdge)inEdges[ i ];
-			DirectedSparseEdge new_edge = (DirectedSparseEdge)g.addEdge( new DirectedSparseEdge( edge.getSource(), targetVertex ) );
+			DirectedSparseEdge new_edge = (DirectedSparseEdge)mainGraph.addEdge( new DirectedSparseEdge( edge.getSource(), targetVertex ) );
 			new_edge.importUserData( edge );
 			new_edge.setUserDatum( INDEX_KEY, new Integer( getNewVertexAndEdgeIndex() ), UserData.SHARED );
 		}
@@ -1375,18 +1372,19 @@ public class ModelBasedTesting
 		for (int i = 0; i < outEdges.length; i++)
 		{
 			DirectedSparseEdge edge = (DirectedSparseEdge)outEdges[ i ];
-			DirectedSparseEdge new_edge = (DirectedSparseEdge)g.addEdge( new DirectedSparseEdge( targetVertex, edge.getDest() ) );
+			DirectedSparseEdge new_edge = (DirectedSparseEdge)mainGraph.addEdge( new DirectedSparseEdge( targetVertex, edge.getDest() ) );
 			new_edge.importUserData( edge );
 			new_edge.setUserDatum( INDEX_KEY, new Integer( getNewVertexAndEdgeIndex() ), UserData.SHARED );
 		}
 		_logger.debug( "Remvoing source vertex(" + sourceVertex.getUserDatum( INDEX_KEY ) + ")" );
-		g.removeVertex( sourceVertex );
+		mainGraph.removeVertex( sourceVertex );
 		targetVertex.addUserDatum( MERGED_BY_MBT, MERGED_BY_MBT, UserData.SHARED );
 
 		
-		// Merge the Stop vertex, if it exists
+		// Check if there exists a Stop vertex.
+		// Also check if there is only one.
 		DirectedSparseVertex stopVertex = null;
-		vertices = g.getVertices().toArray();
+		vertices = mainGraph.getVertices().toArray();
 		for ( int i = 0; i < vertices.length; i++ )
 		{
 			DirectedSparseVertex v = (DirectedSparseVertex)vertices[ i ];
@@ -1395,11 +1393,120 @@ public class ModelBasedTesting
 				if ( stopVertex != null )
 				{
 					throw new RuntimeException( "Found more than 1 Stop vertex in file (Only one Stop vertex per file is allowed): '" + 
-        					g.getUserDatum( FILE_KEY ) + "'" );					
+							mainGraph.getUserDatum( FILE_KEY ) + "'" );					
 				}
 				stopVertex = v;
 			}
 		}
+		
+		
+		// Verify that the edges in the subgraph (going to the Stop vertex)
+		// has exactly the same corresonding edges in the graph using the sub-graph
+		if ( stopVertex != null )
+		{
+			inEdges = stopVertex.getInEdges().toArray();
+			/*if ( inEdges.length == 1 )
+			{
+				DirectedSparseEdge inEdge = (DirectedSparseEdge)inEdges[ 0 ];
+				String label = (String)inEdge.getUserDatum( LABEL_KEY );
+				if ( label != null && label.length() != 0 )
+				{
+					_logger.error( "Can not merge the sub-graph: '" + subGraph.getUserDatum( FILE_KEY ) + "', from: '" + targetVertex.getUserDatum( FILE_KEY ) + "'" );
+					_logger.error( "There is only one in-edge to the Stop vertex, and it has a label: '" + label + "'");
+					_logger.error( "The target vertex: '" + targetVertex.getUserDatum( LABEL_KEY ) + "' has: " + targetVertexOutEdges.length + " out-edges" );
+					throw new RuntimeException( "Can not merge the sub-graph: '" + subGraph.getUserDatum( FILE_KEY ) + "', from: '" + targetVertex.getUserDatum( FILE_KEY ) + "'" );
+				}
+			}
+			else if ( targetVertexOutEdges.length == 1 )
+			{
+				DirectedSparseEdge outEdge = (DirectedSparseEdge)targetVertexOutEdges[ 0 ];
+				String label = (String)outEdge.getUserDatum( LABEL_KEY );
+				if ( label != null && label.length() != 0 )
+				{
+					_logger.error( "Can not merge the sub-graph: '" + subGraph.getUserDatum( FILE_KEY ) + "', from: '" + targetVertex.getUserDatum( FILE_KEY ) + "'" );
+					_logger.error( "There is only one out-edge from the target vertex: '" + targetVertex.getUserDatum( LABEL_KEY ) + "'" );
+					_logger.error( "The stop vertex has: " + inEdges.length + " in-edges" );
+					throw new RuntimeException( "Can not merge the sub-graph: '" + subGraph.getUserDatum( FILE_KEY ) + "', from: '" + targetVertex.getUserDatum( FILE_KEY ) + "'" );
+				}
+			}*/
+			// Check to see that there is an edge with the same name in both lists. 
+			if ( inEdges.length < targetVertexOutEdges.length )
+			{
+				_logger.debug( "The number of in-edges to the Stop vertex is less than the out-edges from the target vertex." );
+				for ( int i = 0; i < inEdges.length; i++ )
+				{
+					DirectedSparseEdge inEdge = (DirectedSparseEdge)inEdges[ i ];
+					String inEdgeLabel = (String)inEdge.getUserDatum( LABEL_KEY );
+					
+					if ( inEdgeLabel == null || inEdgeLabel.length() != 0 )
+					{
+						_logger.debug( "inEdgeLabel is null or empty" );
+						break;
+					}
+						
+					boolean foundName = false;
+					for ( int j = 0; j < targetVertexOutEdges.length; j++ )
+					{
+						DirectedSparseEdge outEdge = (DirectedSparseEdge)targetVertexOutEdges[ j ];
+						String outEdgeLabel = (String)outEdge.getUserDatum( LABEL_KEY );
+						_logger.debug( "Checking inEdgeLabel: '" +  inEdgeLabel + "' against outEdgeLabel: '" + outEdgeLabel + "'" );
+						if ( ( inEdgeLabel == null && outEdgeLabel == null ) || 
+							 ( inEdgeLabel != null && outEdgeLabel != null &&
+							   inEdgeLabel.equals( outEdgeLabel ) ) ) 
+						{
+							_logger.debug( "Found a match for: '" + inEdgeLabel + "'" );
+							foundName = true;
+							break;
+						}
+					}
+					if ( foundName == false )
+					{
+						_logger.error( "Can not merge the sub-graph: '" + subGraph.getUserDatum( FILE_KEY ) + "', from: '" + targetVertex.getUserDatum( FILE_KEY ) + "'" );
+						_logger.error( "There is no matching edge: '" + inEdgeLabel + "'" );
+						throw new RuntimeException( "Can not merge the sub-graph: '" + subGraph.getUserDatum( FILE_KEY ) + "', from: '" + targetVertex.getUserDatum( FILE_KEY ) + "'" );
+					}
+				}
+			}
+			else
+			{
+				_logger.debug( "The number of in-edges to the Stop vertex is more or equal than the out-edges from the target vertex." );
+				for ( int i = 0; i < targetVertexOutEdges.length; i++ )
+				{
+					DirectedSparseEdge outEdge = (DirectedSparseEdge)targetVertexOutEdges[ i ];
+					String outEdgeLabel = (String)outEdge.getUserDatum( LABEL_KEY );
+					
+					if ( outEdgeLabel == null || outEdgeLabel.length() != 0 )
+					{
+						_logger.debug( "outEdgeLabel is null or empty" );
+						break;
+					}
+						
+					boolean foundName = false;
+					for ( int j = 0; j < inEdges.length; j++ )
+					{
+						DirectedSparseEdge inEdge = (DirectedSparseEdge)inEdges[ j ];
+						String inEdgeLabel = (String)inEdge.getUserDatum( LABEL_KEY );
+						_logger.debug( "Checking outEdgeLabel: '" +  outEdgeLabel + "' against inEdgeLabel: '" + inEdgeLabel + "'" );
+						
+						if ( ( outEdgeLabel == null && inEdgeLabel == null ) || 
+							 ( outEdgeLabel != null && inEdgeLabel != null &&
+							   outEdgeLabel.equals( inEdgeLabel ) ) ) 
+						{
+							_logger.debug( "Found a match for: '" + outEdgeLabel + "'" );
+							foundName = true;
+							break;
+						}
+					}
+					if ( foundName == false )
+					{
+						_logger.error( "Can not merge the sub-graph: '" + subGraph.getUserDatum( FILE_KEY ) + "', from: '" + targetVertex.getUserDatum( FILE_KEY ) + "'" );
+						_logger.error( "There is no matching edge: '" + outEdgeLabel + "'" );
+						throw new RuntimeException( "Can not merge the sub-graph: '" + subGraph.getUserDatum( FILE_KEY ) + "', from: '" + targetVertex.getUserDatum( FILE_KEY ) + "'" );
+					}
+				}
+			}
+		}
+			
 		
 		// All edges going to the Stop vertex, needs to be merged to the destination vertex.
 		// The destination vertex, is pointed to by the vertex which is expanded by the sub graph.
@@ -1417,7 +1524,7 @@ public class ModelBasedTesting
 				if ( targetVertexOutEdges.length == 1 )
 				{
 					DirectedSparseEdge outEdge = (DirectedSparseEdge)targetVertexOutEdges[ 0 ];
-					DirectedSparseEdge new_edge = (DirectedSparseEdge)g.addEdge( new DirectedSparseEdge( srcVertex, outEdge.getDest() ) );
+					DirectedSparseEdge new_edge = (DirectedSparseEdge)mainGraph.addEdge( new DirectedSparseEdge( srcVertex, outEdge.getDest() ) );
 					new_edge.importUserData( inEdge );
 					new_edge.setUserDatum( INDEX_KEY, new Integer( getNewVertexAndEdgeIndex() ), UserData.SHARED );
 					_logger.debug( "Replacing the target vertex out-edge: " + getCompleteEdgeName( outEdge ) + " (old) with: " + getCompleteEdgeName( new_edge ) + "(new)" );
@@ -1435,7 +1542,7 @@ public class ModelBasedTesting
 						String outEdgeLabel = (String)outEdge.getUserDatum( LABEL_KEY );
 						if ( outEdgeLabel == null && inEdgeLabel == null )
 						{
-							DirectedSparseEdge new_edge = (DirectedSparseEdge)g.addEdge( new DirectedSparseEdge( srcVertex, outEdge.getDest() ) );
+							DirectedSparseEdge new_edge = (DirectedSparseEdge)mainGraph.addEdge( new DirectedSparseEdge( srcVertex, outEdge.getDest() ) );
 							new_edge.importUserData( inEdge );
 							new_edge.setUserDatum( INDEX_KEY, new Integer( getNewVertexAndEdgeIndex() ), UserData.SHARED );
 							_logger.debug( "Replacing the target vertex out-edge: " + getCompleteEdgeName( outEdge ) + " (old) with: " + getCompleteEdgeName( new_edge ) + "(new)" );
@@ -1443,9 +1550,9 @@ public class ModelBasedTesting
 							edgesToBeRemoved.add( outEdge );
 						}
 						else if ( outEdgeLabel != null && inEdgeLabel != null &&
-								  outEdgeLabel == inEdgeLabel )
+								  outEdgeLabel.equals( inEdgeLabel ) )
 						{
-							DirectedSparseEdge new_edge = (DirectedSparseEdge)g.addEdge( new DirectedSparseEdge( srcVertex, outEdge.getDest() ) );
+							DirectedSparseEdge new_edge = (DirectedSparseEdge)mainGraph.addEdge( new DirectedSparseEdge( srcVertex, outEdge.getDest() ) );
 							if ( inEdgeLabel.length() > outEdgeLabel.length() )
 							{
 								new_edge.importUserData( inEdge );
@@ -1469,15 +1576,15 @@ public class ModelBasedTesting
 			{
 				DirectedSparseEdge element = (DirectedSparseEdge) iter.next();
 				try {
-					g.removeEdge( element );
+					mainGraph.removeEdge( element );
 					_logger.debug( "Removing edge: " + getCompleteEdgeName( element ) );
-					_logger.debug( getCompleteEdgeName( element ) + ", was found and removed from graph,: '" + g.getUserDatum( FILE_KEY ) + "'");
+					_logger.debug( getCompleteEdgeName( element ) + ", was found and removed from graph,: '" + mainGraph.getUserDatum( FILE_KEY ) + "'");
 				} catch (java.lang.IllegalArgumentException e) {
-					_logger.debug( getCompleteEdgeName( element ) + ", was not found in graph: '" + g.getUserDatum( FILE_KEY ) + "', this is ok, since it probably been removed before. (I know, not ver good progamming practice here)");
+					_logger.debug( getCompleteEdgeName( element ) + ", was not found in graph: '" + mainGraph.getUserDatum( FILE_KEY ) + "', this is ok, since it probably been removed before. (I know, not ver good progamming practice here)");
 				}
 			}
 			_logger.debug( "Removing the Stop vertex: " + stopVertex.getUserDatum( INDEX_KEY )  );
-			g.removeVertex( stopVertex );
+			mainGraph.removeVertex( stopVertex );
 		}
 	}
 
