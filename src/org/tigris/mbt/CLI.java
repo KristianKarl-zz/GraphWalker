@@ -343,7 +343,7 @@ public class CLI
 			}
 			else if ( args[ 0 ].equals( "-v" ) || args[ 0 ].equals( "--version" ) )
 			{
-				System.out.println( "org.tigris.mbt version 1.0 (r146)\n" );
+				System.out.println( "org.tigris.mbt version 1.1 (r156)\n" );
 				System.out.println( "org.tigris.mbt is open source software licensed under GPL" );
 				System.out.println( "The software (and it's source) can be downloaded at http://mbt.tigris.org/\n" );
 				System.out.println( "This package contains following software packages:" );
