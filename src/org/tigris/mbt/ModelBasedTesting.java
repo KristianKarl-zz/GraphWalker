@@ -1405,30 +1405,7 @@ public class ModelBasedTesting
 		if ( stopVertex != null )
 		{
 			inEdges = stopVertex.getInEdges().toArray();
-			/*if ( inEdges.length == 1 )
-			{
-				DirectedSparseEdge inEdge = (DirectedSparseEdge)inEdges[ 0 ];
-				String label = (String)inEdge.getUserDatum( LABEL_KEY );
-				if ( label != null && label.length() != 0 )
-				{
-					_logger.error( "Can not merge the sub-graph: '" + subGraph.getUserDatum( FILE_KEY ) + "', from: '" + targetVertex.getUserDatum( FILE_KEY ) + "'" );
-					_logger.error( "There is only one in-edge to the Stop vertex, and it has a label: '" + label + "'");
-					_logger.error( "The target vertex: '" + targetVertex.getUserDatum( LABEL_KEY ) + "' has: " + targetVertexOutEdges.length + " out-edges" );
-					throw new RuntimeException( "Can not merge the sub-graph: '" + subGraph.getUserDatum( FILE_KEY ) + "', from: '" + targetVertex.getUserDatum( FILE_KEY ) + "'" );
-				}
-			}
-			else if ( targetVertexOutEdges.length == 1 )
-			{
-				DirectedSparseEdge outEdge = (DirectedSparseEdge)targetVertexOutEdges[ 0 ];
-				String label = (String)outEdge.getUserDatum( LABEL_KEY );
-				if ( label != null && label.length() != 0 )
-				{
-					_logger.error( "Can not merge the sub-graph: '" + subGraph.getUserDatum( FILE_KEY ) + "', from: '" + targetVertex.getUserDatum( FILE_KEY ) + "'" );
-					_logger.error( "There is only one out-edge from the target vertex: '" + targetVertex.getUserDatum( LABEL_KEY ) + "'" );
-					_logger.error( "The stop vertex has: " + inEdges.length + " in-edges" );
-					throw new RuntimeException( "Can not merge the sub-graph: '" + subGraph.getUserDatum( FILE_KEY ) + "', from: '" + targetVertex.getUserDatum( FILE_KEY ) + "'" );
-				}
-			}*/
+
 			// Check to see that there is an edge with the same name in both lists. 
 			if ( inEdges.length < targetVertexOutEdges.length )
 			{
@@ -1565,6 +1542,18 @@ public class ModelBasedTesting
 							_logger.debug( "Replacing the target vertex out-edge: " + getCompleteEdgeName( outEdge ) + " (old) with: " + getCompleteEdgeName( new_edge ) + "(new)" );
 							edgesToBeRemoved.add( inEdge );
 							edgesToBeRemoved.add( outEdge );
+						}
+						else if ( outEdgeLabel == null || outEdgeLabel.length() == 0 )
+						{
+							if ( !existStrInEdges( targetVertexOutEdges, inEdgeLabel ) )
+							{
+								DirectedSparseEdge new_edge = (DirectedSparseEdge)mainGraph.addEdge( new DirectedSparseEdge( srcVertex, outEdge.getDest() ) );
+								new_edge.importUserData( inEdge );
+								new_edge.setUserDatum( INDEX_KEY, new Integer( getNewVertexAndEdgeIndex() ), UserData.SHARED );
+								_logger.debug( "Replacing the target vertex out-edge: " + getCompleteEdgeName( outEdge ) + " (old) with: " + getCompleteEdgeName( new_edge ) + "(new)" );
+								edgesToBeRemoved.add( inEdge );
+								edgesToBeRemoved.add( outEdge );
+							}
 						}
 					}				
 				}
@@ -2451,5 +2440,31 @@ public class ModelBasedTesting
 		{
 			_logger.error( e.getMessage() );
 		}
+	}
+
+	
+	/**
+	 * This functions returns true if the label (str) exists in the array of edges
+	 * @param array
+	 * @return
+	 */
+	private boolean existStrInEdges( Object[] arrayOfEdges, String str )
+	{
+		for ( int i = 0; i < arrayOfEdges.length; i++ )
+		{
+			DirectedSparseEdge edge = (DirectedSparseEdge)arrayOfEdges[ i ];
+			if ( edge == null )
+			{
+				throw new RuntimeException( "Internal progamming error. Expected to find an edge, and not null." );
+			}
+				
+			String label = (String)edge.getUserDatum( LABEL_KEY );
+			
+			if ( str.equals( label ) )
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 }
