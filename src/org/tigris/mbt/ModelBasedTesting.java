@@ -85,6 +85,7 @@ public class ModelBasedTesting
 	private String  MOTHER_GRAPH_START_VERTEX   = "mother graph start vertex";
 	private String  SUBGRAPH_START_VERTEX       = "subgraph start vertex";
 	private String  BLOCKED	                    = "BLOCKED";
+	private String  BACKTRACK	                = "BACKTRACK";
 
 	private String   				_graphmlFileName;
 	private Object   			 	_object;
@@ -433,9 +434,9 @@ public class ModelBasedTesting
 
 
 	/**
-	 * Returns the 2 lables of the next edge and vertex to be tested. 
+	 * Returns the next edge to be tested. 
 	 */
-	public DirectedSparseEdge getEdgeAndVertex( boolean randomWalk, long executionTime )
+	public DirectedSparseEdge getEdge( boolean randomWalk, long executionTime )
 	{
 
 		if ( randomWalk )
@@ -843,6 +844,21 @@ public class ModelBasedTesting
 
 
 
+						// If BACKTRACK is defined, find it...
+						// If defined, it means that executing this edge may not lead to the desired
+						// vertex. So, if that happens, the model gives the user a chance to try an
+						// other edge from the previous vertex (the source vertex of the edge defined
+						// with BACKTRACK)
+						p = Pattern.compile( "\\n(BACKTRACK)", Pattern.MULTILINE );
+						m = p.matcher( str );
+						if ( m.find() )
+						{
+							_logger.debug( "Found BACKTRACK for edge: " + label );
+							e.addUserDatum( BACKTRACK, BACKTRACK, UserData.SHARED );
+						}
+
+
+
 						// If condition used defined, find it...
 						p = Pattern.compile( "\\n(if: (.*)=(.*))", Pattern.MULTILINE );
 						m = p.matcher( str );
@@ -1152,6 +1168,8 @@ public class ModelBasedTesting
 			_logger.debug( "Nope! Did not find any infinit recursive loops." );
 		}
 		
+		
+		
 		for ( int i = 0; i < _graphList.size(); i++ )
 		{
 			SparseGraph g = (SparseGraph)_graphList.elementAt( i );
@@ -1274,8 +1292,9 @@ public class ModelBasedTesting
 			}
 		}
 
-		_logger.info( "Done merging" );
+		_logger.info( "Done merging" );		
 	}
+
 
 	// Copies the graph src, into the graph dst
 	private void appendGraph( SparseGraph dst, SparseGraph src )
@@ -1404,6 +1423,12 @@ public class ModelBasedTesting
 		// has exactly the same corresonding edges in the graph using the sub-graph
 		if ( stopVertex != null )
 		{
+			if ( targetVertexOutEdges.length == 0 )
+			{
+				String msg = "The subgraph needs outedges!\nCan not merge the sub-graph: '" + subGraph.getUserDatum( FILE_KEY ) + "', from: '" + targetVertex.getUserDatum( FILE_KEY ) + "'";
+				_logger.error( msg );
+				throw new RuntimeException( msg );
+			}
 			inEdges = stopVertex.getInEdges().toArray();
 
 			// Check to see that there is an edge with the same name in both lists. 
@@ -1438,9 +1463,9 @@ public class ModelBasedTesting
 					}
 					if ( foundName == false )
 					{
-						_logger.error( "Can not merge the sub-graph: '" + subGraph.getUserDatum( FILE_KEY ) + "', from: '" + targetVertex.getUserDatum( FILE_KEY ) + "'" );
-						_logger.error( "There is no matching edge: '" + inEdgeLabel + "'" );
-						throw new RuntimeException( "Can not merge the sub-graph: '" + subGraph.getUserDatum( FILE_KEY ) + "', from: '" + targetVertex.getUserDatum( FILE_KEY ) + "'" );
+						String msg = "There is no matching edge: '" + inEdgeLabel + "'\nCan not merge the sub-graph: '" + subGraph.getUserDatum( FILE_KEY ) + "', from: '" + targetVertex.getUserDatum( FILE_KEY ) + "'";
+						_logger.error( msg );
+						throw new RuntimeException( msg );
 					}
 				}
 			}
@@ -1476,9 +1501,9 @@ public class ModelBasedTesting
 					}
 					if ( foundName == false )
 					{
-						_logger.error( "Can not merge the sub-graph: '" + subGraph.getUserDatum( FILE_KEY ) + "', from: '" + targetVertex.getUserDatum( FILE_KEY ) + "'" );
-						_logger.error( "There is no matching edge: '" + outEdgeLabel + "'" );
-						throw new RuntimeException( "Can not merge the sub-graph: '" + subGraph.getUserDatum( FILE_KEY ) + "', from: '" + targetVertex.getUserDatum( FILE_KEY ) + "'" );
+						String msg = "There is no matching edge: '" + outEdgeLabel + "'\nCan not merge the sub-graph: '" + subGraph.getUserDatum( FILE_KEY ) + "', from: '" + targetVertex.getUserDatum( FILE_KEY ) + "'";
+						_logger.error( msg );
+						throw new RuntimeException( msg );
 					}
 				}
 			}
@@ -1576,6 +1601,7 @@ public class ModelBasedTesting
 			mainGraph.removeVertex( stopVertex );
 		}
 	}
+
 
 	public String getStatistics()
 	{
