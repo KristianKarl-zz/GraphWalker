@@ -27,8 +27,11 @@ public class CLI
 	static private boolean random;
 	static private long seconds;
 	static private long length;
+	static private boolean statistics;
 	private String  LABEL_KEY = "label";
 	private String  INDEX_KEY = "index";
+	private String  BACKTRACK = "BACKTRACK";
+	private boolean backtrackingEngaged;
 
 	public static void main(String[] args)
 	{
@@ -64,6 +67,7 @@ public class CLI
 					opt.addOption( "r", "random", false, "Run the test with a random walk. Can not be combined with --optimize. " + 
 					 									 "This argument also needs the --time to be set." );
 					opt.addOption( "o", "optimize", false, "Run the test optimized. Can not be combined with --random." );
+					opt.addOption( "s", "statistics", false, "Prints the statistics of the test, at the end of the run." );
 					opt.addOption( OptionBuilder.withArgName( "file" )
 		                    .withDescription( "The file (or folder) containing graphml formatted files." )
 		                    .hasArg()
@@ -243,6 +247,7 @@ public class CLI
 				opt.addOption( "r", "random", false, "Run the test with a random walk. Can not be combined with --optimize. " + 
 				 "This argument also needs the --time to be set." );
 				opt.addOption( "o", "optimize", false, "Run the test optimized. Can not be combined with --random." );
+				opt.addOption( "s", "statistics", false, "Prints the statistics of the test, at the end of the run." );
 				opt.addOption( OptionBuilder.withArgName( "file" )
 					.withDescription( "The file (or folder) containing graphml formatted files." )
 					.hasArg()
@@ -343,7 +348,7 @@ public class CLI
 			}
 			else if ( args[ 0 ].equals( "-v" ) || args[ 0 ].equals( "--version" ) )
 			{
-				System.out.println( "org.tigris.mbt version 1.1 (r156)\n" );
+				System.out.println( "org.tigris.mbt version 1.11 (r158)\n" );
 				System.out.println( "org.tigris.mbt is open source software licensed under GPL" );
 				System.out.println( "The software (and it's source) can be downloaded at http://mbt.tigris.org/\n" );
 				System.out.println( "This package contains following software packages:" );
@@ -412,6 +417,15 @@ public class CLI
 	                return;	            	
 	            }
 
+	            if ( cl.hasOption( "s" ) ) 
+	            {
+	            	statistics = true;
+	            }
+	            else
+	            {
+	            	statistics = false;
+	            }
+	            
             	graphmlFile = cl.getOptionValue( "g" );
             	
             	CLI cli = new CLI();
@@ -676,7 +690,7 @@ public class CLI
 			Integer previousVertexIndex = null;
 			while ( true )
 			{
-				DirectedSparseEdge edge = mbt.getEdgeAndVertex( random, seconds );
+				DirectedSparseEdge edge = mbt.getEdge( random, seconds );
 	
 				// getEdgeAndVertex caught an exception, and returned null
 				if ( edge == null )
@@ -687,10 +701,21 @@ public class CLI
 				mbt.getLogger().info( "Edge: " + edge.getUserDatum( LABEL_KEY ) + ", index=" + edge.getUserDatum( INDEX_KEY ) );
 				if ( edge.containsUserDatumKey( LABEL_KEY ) )
 				{
-					System.out.println( edge.getUserDatum( LABEL_KEY ) );
+					System.out.print( edge.getUserDatum( LABEL_KEY ) );
 				}
 				else
 				{
+					System.out.print( "" );
+				}
+				
+				if ( edge.containsUserDatumKey( BACKTRACK ) )
+				{
+					backtrackingEngaged = true;
+					System.out.println( " BACKTRACK" );
+				}
+				else
+				{
+					backtrackingEngaged = false;
 					System.out.println( "" );
 				}
 				
@@ -700,12 +725,19 @@ public class CLI
 				}
 				catch ( GoBackToPreviousVertexException e )
 				{
+					if ( backtrackingEngaged == false )
+					{
+						throw new RuntimeException( "Test ended with a fault. Backtracking was asked for, where the model did not allow it.\n" +
+								"Please check the model at: '" + edge.getUserDatum( LABEL_KEY ) + "', INDEX=" + edge.getUserDatum( INDEX_KEY ) +
+								" coming from: '" + edge.getSource().getUserDatum( LABEL_KEY ) + "', INDEX=" + edge.getSource().getUserDatum( INDEX_KEY ) );					
+					}
+					
 					if ( previousVertexIndex != null )
 					{
 						mbt.getLogger().info("== BACKTRACKING ==" );
 						mbt.SetCurrentVertex( previousVertexIndex );						
 						continue;
-					}
+					}					
 				}
 					
 				mbt.getLogger().info( "Vertex: " + edge.getDest().getUserDatum( LABEL_KEY ) + ", index=" + edge.getDest().getUserDatum( INDEX_KEY ) );
@@ -716,6 +748,13 @@ public class CLI
 				}
 				catch ( GoBackToPreviousVertexException e )
 				{
+					if ( backtrackingEngaged == false )
+					{
+						throw new RuntimeException( "Test ended with a fault. Backtracking was asked for, where the model did not allow it.\n" +
+								"Please check the model at: '" + edge.getUserDatum( LABEL_KEY ) + "', INDEX=" + edge.getUserDatum( INDEX_KEY ) +
+								" coming from: '" + edge.getSource().getUserDatum( LABEL_KEY ) + "', INDEX=" + edge.getSource().getUserDatum( INDEX_KEY ) );					
+					}
+					
 					if ( previousVertexIndex != null )
 					{
 						mbt.getLogger().info("== BACKTRACKING ==" );
@@ -734,11 +773,16 @@ public class CLI
 		{
 			if ( e.getMessage() != "Test ended normally" )
 			{
-			  e.printStackTrace();
+				mbt.getLogger().error( e.getStackTrace() );
+				System.err.println( e.getMessage() );
 			}
 		}
-		mbt.getLogger().info( mbt.getStatistics() );
-		System.out.println( mbt.getStatistics() );
+		
+		if ( statistics )
+		{
+			mbt.getLogger().info( mbt.getStatistics() );
+			System.out.println( mbt.getStatistics() );
+		}
 	}
 
 	public void runPerlScript()
@@ -748,7 +792,7 @@ public class CLI
 		
 		while ( true )
 		{
-			DirectedSparseEdge edge = mbt.getEdgeAndVertex( random, seconds );
+			DirectedSparseEdge edge = mbt.getEdge( random, seconds );
 
 			// getEdgeAndVertex caught an exception, and returned null
 			if ( edge == null )
