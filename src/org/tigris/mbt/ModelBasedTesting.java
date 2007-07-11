@@ -302,7 +302,7 @@ public class ModelBasedTesting
 		{
 			throw new RuntimeException( "'" + _graphmlFileName + "' is not a file or a directory. Please specify a valid .graphml file or a directory containing .graphml files" );
 		}
-	    analyseSubGraphs();
+	    mergeAllGraphs();
 	}
 
 	/**
@@ -1018,158 +1018,22 @@ public class ModelBasedTesting
 		}
 	}
 
-	// When multiple graps are read from several files, chances are that there are vertices that has
-	// no out edges, which are continued in a different file. These has to be merged.
-	private void analyseSubGraphs()
+	
+	// Merge all file graphs into one graph.
+	private void mergeAllGraphs()
 	{
-		boolean foundMotherStartGraph = false;
-		boolean foundSubStartGraph = false;
-		_graph = null;
-		
-		for ( Iterator iter = _graphList.iterator(); iter.hasNext(); )
-		{
-			SparseGraph g = (SparseGraph) iter.next();
-			foundSubStartGraph = false;
+		findMotherAndSubgraphs();
+		checkForDuplicateVerticesInSubgraphs();
+		mergeSubgraphs();
+		mergeVerticesMarked_MERGE();
+		searchForCulDeSacs();
 
-			_logger.debug( "Analyzing graph: " + g.getUserDatum( FILE_KEY ) );
-
-			Object[] vertices = g.getVertices().toArray();
-			for ( int i = 0; i < vertices.length; i++ )
-			{
-				DirectedSparseVertex v = (DirectedSparseVertex)vertices[ i ];
-
-				// Find all vertices that are start nodes (START_NODE)
-				if ( v.getUserDatum( LABEL_KEY ).equals( START_NODE ) )
-				{
-					Object[] edges = v.getOutEdges().toArray();
-					if ( edges.length != 1 )
-					{
-						throw new RuntimeException( "A Start vertex can only have one out edge, look in file: " + g.getUserDatum( FILE_KEY ) );
-					}
-					DirectedSparseEdge edge = (DirectedSparseEdge)edges[ 0 ];
-					if ( edge.containsUserDatumKey( LABEL_KEY ) )
-					{
-						if ( foundMotherStartGraph )
-						{
-							if ( _graph.getUserDatum( FILE_KEY ).equals( g.getUserDatum( FILE_KEY ) ) )
-							{
-								throw new RuntimeException( "Only one Start vertex can exist in one file, see file '" +
-					                    _graph.getUserDatum( FILE_KEY )+ "'" );
-							}
-							else
-							{
-								throw new RuntimeException( "Only one Start vertex can exist in one file, see files " +
-					                    _graph.getUserDatum( FILE_KEY )+ ", and " + g.getUserDatum( FILE_KEY ) );								
-							}
-						}
-
-						foundMotherStartGraph = true;
-						_graph = g;
-						edge.getDest().addUserDatum( MOTHER_GRAPH_START_VERTEX, MOTHER_GRAPH_START_VERTEX, UserData.SHARED );
-						_logger.debug( "Found the mother graph in the file: " +  _graph.getUserDatum( FILE_KEY ) );
-					}
-					else
-					{
-						if ( foundSubStartGraph == true )
-						{
-							throw new RuntimeException( "Only one Start vertex can exist in one file, see file '" +
-				                    g.getUserDatum( FILE_KEY )+ "'" );		
-						}
-						
-						// Verify that current subgraph is not already defined
-						for ( Iterator iter_g = _graphList.iterator(); iter_g.hasNext(); )
-						{
-							if ( iter.hashCode() == iter_g.hashCode() )
-							{
-								continue;
-							}
-							
-							SparseGraph tmp_graph = (SparseGraph) iter_g.next();
-							if ( tmp_graph.containsUserDatumKey( LABEL_KEY ) )
-							{
-								String name = (String) tmp_graph.getUserDatum( LABEL_KEY );
-								if ( name.compareTo( (String)edge.getDest().getUserDatum( LABEL_KEY ) ) == 0 )
-								{
-									throw new RuntimeException( "Found 2 subgraphs using the same name: '" + 
-											                    edge.getDest().getUserDatum( LABEL_KEY ) + 
-											                    "', they are defined in files: '" + 
-											                    g.getUserDatum( FILE_KEY ) + "', and :'"+
-											                    tmp_graph.getUserDatum( FILE_KEY ) + "'" );
-								}
-							}
-						}
-						
-						if ( foundMotherStartGraph == true )
-						{
-							if ( _graph.getUserDatum( FILE_KEY ).equals( g.getUserDatum( FILE_KEY ) ) )
-							{
-								throw new RuntimeException( "Only one Start vertex can exist in one file, see file '" +
-					                    _graph.getUserDatum( FILE_KEY )+ "'" );
-							}
-						}
-
-						// Since the edge does not contain a label, this is a subgraph
-						// Mark the destination node of the edge to a subgraph starting node
-						foundSubStartGraph = true;
-						edge.getDest().addUserDatum( SUBGRAPH_START_VERTEX, SUBGRAPH_START_VERTEX, UserData.SHARED );
-						g.addUserDatum( LABEL_KEY, edge.getDest().getUserDatum( LABEL_KEY ), UserData.SHARED );
-						_logger.debug( "Found sub-graph: '" + g.getUserDatum( LABEL_KEY ) + "', in file '" + g.getUserDatum( FILE_KEY ) + "'" );
-						_logger.debug( "Added SUBGRAPH_START_VERTEX to vertex: " + edge.getDest().getUserDatum( INDEX_KEY ) );
-					}
-				}
-			}
-		}
-		
-		if ( _graph == null )
-		{
-			throw new RuntimeException( "Did not find a Start vertex with an out edge with a label." );		
-		}
-
-		// Look for duplicated vertices in each sub-graph. If a vertex is found, which represents
-		// the name of the sub-graph (the vertex which the Start vertex points to) is duplicated
-		// in the same sub-graph, this will lead to an infinit recursive loop.
-		for ( int i = 0; i < _graphList.size(); i++ )
-		{
-			SparseGraph g = (SparseGraph)_graphList.elementAt( i );
-
-			// Exclude the mother graph
-			if ( _graph.hashCode() == g.hashCode() )
-			{
-				continue;
-			}
-
-			_logger.debug( "Looking for infinit recursive loop in file: " + g.getUserDatum( FILE_KEY ) );
-
-			String subgraph_label = (String)g.getUserDatum( LABEL_KEY );
-			Object[] vertices = g.getVertices().toArray();
-			for ( int j = 0; j < vertices.length; j++ )
-			{
-				DirectedSparseVertex v = (DirectedSparseVertex)vertices[ j ];
-				String label = (String)v.getUserDatum( LABEL_KEY );
-				if ( label.equals( subgraph_label ) )
-				{
-					if ( v.containsUserDatumKey( SUBGRAPH_START_VERTEX ) )
-					{
-						continue;
-					}
-					if ( v.containsUserDatumKey( NO_MERGE ) )
-					{
-						continue;
-					}
-					
-					_logger.error( "Vertex: " + label + ", with id: " + v.getUserDatum( INDEX_KEY ) + ", is a duplicate in a subgraph" );
-					throw new RuntimeException( "Found a subgraph containing a duplicate vertex with name: '" + 
-		                    					v.getUserDatum( LABEL_KEY ) + 
-		                    					"', in file: '" + 
-		                    					g.getUserDatum( FILE_KEY ) + "'" );
-					
-				}
-			}
-			_logger.debug( "Nope! Did not find any infinit recursive loops." );
-		}
-		
-		
-		
+		_logger.info( "Done merging" );		
+	}
+	
+	
+	private void mergeSubgraphs()
+	{
 		for ( int i = 0; i < _graphList.size(); i++ )
 		{
 			SparseGraph g = (SparseGraph)_graphList.elementAt( i );
@@ -1218,8 +1082,26 @@ public class ModelBasedTesting
 				}
 			}
 		}
+	}
+	
+	
+	private void searchForCulDeSacs()
+	{
+		Object[] list = _graph.getVertices().toArray();
+		for ( int i = 0; i < list.length; i++ )
+		{
+			DirectedSparseVertex v = (DirectedSparseVertex)list[ i ];
+			if ( v.getOutEdges().size() <= 0 )
+			{
+				_logger.warn( "Found a cul-de-sac. Vertex has no out-edges: '" + (String)v.getUserDatum( LABEL_KEY ) + "'" );
+			}
+		}
+	}
 
-		// Merge all nodes marked MERGE
+	
+	// Merge all vertices marked MERGE
+	private void mergeVerticesMarked_MERGE()
+	{
 		Object[] list1 = _graph.getVertices().toArray();
 		for ( int i = 0; i < list1.length; i++ )
 		{
@@ -1280,21 +1162,163 @@ public class ModelBasedTesting
 				_logger.debug( "Remvoing merged vertex(" + v1.getUserDatum( INDEX_KEY ) + ")" );
 				_graph.removeVertex( v1 );
 			}
-		}
-
-		Object[] list = _graph.getVertices().toArray();
-		for ( int i = 0; i < list.length; i++ )
+		}		
+	}
+	
+	// Look for duplicated vertices in each sub-graph. If a vertex is found, which represents
+	// the name of the sub-graph (the vertex which the Start vertex points to) is duplicated
+	// in the same sub-graph, this will lead to an infinit recursive loop.
+	private void checkForDuplicateVerticesInSubgraphs()
+	{
+		for ( int i = 0; i < _graphList.size(); i++ )
 		{
-			DirectedSparseVertex v = (DirectedSparseVertex)list[ i ];
-			if ( v.getOutEdges().size() <= 0 )
+			SparseGraph g = (SparseGraph)_graphList.elementAt( i );
+
+			// Exclude the mother graph
+			if ( _graph.hashCode() == g.hashCode() )
 			{
-				_logger.warn( "Found a cul-de-sac. Vertex has no out-edges: '" + (String)v.getUserDatum( LABEL_KEY ) + "'" );
+				continue;
+			}
+
+			_logger.debug( "Looking for infinit recursive loop in file: " + g.getUserDatum( FILE_KEY ) );
+
+			String subgraph_label = (String)g.getUserDatum( LABEL_KEY );
+			Object[] vertices = g.getVertices().toArray();
+			for ( int j = 0; j < vertices.length; j++ )
+			{
+				DirectedSparseVertex v = (DirectedSparseVertex)vertices[ j ];
+				String label = (String)v.getUserDatum( LABEL_KEY );
+				if ( label.equals( subgraph_label ) )
+				{
+					if ( v.containsUserDatumKey( SUBGRAPH_START_VERTEX ) )
+					{
+						continue;
+					}
+					if ( v.containsUserDatumKey( NO_MERGE ) )
+					{
+						continue;
+					}
+					
+					_logger.error( "Vertex: " + label + ", with id: " + v.getUserDatum( INDEX_KEY ) + ", is a duplicate in a subgraph" );
+					throw new RuntimeException( "Found a subgraph containing a duplicate vertex with name: '" + 
+		                    					v.getUserDatum( LABEL_KEY ) + 
+		                    					"', in file: '" + 
+		                    					g.getUserDatum( FILE_KEY ) + "'" );
+					
+				}
+			}
+			_logger.debug( "Nope! Did not find any infinit recursive loops." );
+		}
+	}
+	
+	// Search for the mother graph, and all subgraphs
+	private void findMotherAndSubgraphs()
+	{	
+		boolean foundMotherStartGraph = false;
+		boolean foundSubStartGraph = false;
+		_graph = null;
+		
+		for ( Iterator iter = _graphList.iterator(); iter.hasNext(); )
+		{
+			SparseGraph g = (SparseGraph) iter.next();
+			foundSubStartGraph = false;
+	
+			_logger.debug( "Analyzing graph: " + g.getUserDatum( FILE_KEY ) );
+	
+			Object[] vertices = g.getVertices().toArray();
+			for ( int i = 0; i < vertices.length; i++ )
+			{
+				DirectedSparseVertex v = (DirectedSparseVertex)vertices[ i ];
+	
+				// Find all vertices that are start nodes (START_NODE)
+				if ( v.getUserDatum( LABEL_KEY ).equals( START_NODE ) )
+				{
+					Object[] edges = v.getOutEdges().toArray();
+					if ( edges.length != 1 )
+					{
+						throw new RuntimeException( "A Start vertex can only have one out edge, look in file: " + g.getUserDatum( FILE_KEY ) );
+					}
+					DirectedSparseEdge edge = (DirectedSparseEdge)edges[ 0 ];
+					if ( edge.containsUserDatumKey( LABEL_KEY ) )
+					{
+						if ( foundMotherStartGraph )
+						{
+							if ( _graph.getUserDatum( FILE_KEY ).equals( g.getUserDatum( FILE_KEY ) ) )
+							{
+								throw new RuntimeException( "Only one Start vertex can exist in one file, see file '" +
+					                    _graph.getUserDatum( FILE_KEY )+ "'" );
+							}
+							else
+							{
+								throw new RuntimeException( "Only one Start vertex can exist in one file, see files " +
+					                    _graph.getUserDatum( FILE_KEY )+ ", and " + g.getUserDatum( FILE_KEY ) );								
+							}
+						}
+	
+						foundMotherStartGraph = true;
+						_graph = g;
+						edge.getDest().addUserDatum( MOTHER_GRAPH_START_VERTEX, MOTHER_GRAPH_START_VERTEX, UserData.SHARED );
+						_logger.debug( "Found the mother graph in the file: " +  _graph.getUserDatum( FILE_KEY ) );
+					}
+					else
+					{
+						if ( foundSubStartGraph == true )
+						{
+							throw new RuntimeException( "Only one Start vertex can exist in one file, see file '" +
+				                    g.getUserDatum( FILE_KEY )+ "'" );		
+						}
+						
+						// Verify that current subgraph is not already defined
+						for ( Iterator iter_g = _graphList.iterator(); iter_g.hasNext(); )
+						{
+							if ( iter.hashCode() == iter_g.hashCode() )
+							{
+								continue;
+							}
+							
+							SparseGraph tmp_graph = (SparseGraph) iter_g.next();
+							if ( tmp_graph.containsUserDatumKey( LABEL_KEY ) )
+							{
+								String name = (String) tmp_graph.getUserDatum( LABEL_KEY );
+								if ( name.equals( (String)edge.getDest().getUserDatum( LABEL_KEY ) ) )
+								{
+									throw new RuntimeException( "Found 2 subgraphs using the same name: '" + 
+											                    edge.getDest().getUserDatum( LABEL_KEY ) + 
+											                    "', they are defined in files: '" + 
+											                    g.getUserDatum( FILE_KEY ) + "', and :'"+
+											                    tmp_graph.getUserDatum( FILE_KEY ) + "'" );
+								}
+							}
+						}
+						
+						if ( foundMotherStartGraph == true )
+						{
+							if ( _graph.getUserDatum( FILE_KEY ).equals( g.getUserDatum( FILE_KEY ) ) )
+							{
+								throw new RuntimeException( "Only one Start vertex can exist in one file, see file '" +
+					                    _graph.getUserDatum( FILE_KEY )+ "'" );
+							}
+						}
+	
+						// Since the edge does not contain a label, this is a subgraph
+						// Mark the destination node of the edge to a subgraph starting node
+						foundSubStartGraph = true;
+						edge.getDest().addUserDatum( SUBGRAPH_START_VERTEX, SUBGRAPH_START_VERTEX, UserData.SHARED );
+						g.addUserDatum( LABEL_KEY, edge.getDest().getUserDatum( LABEL_KEY ), UserData.SHARED );
+						_logger.debug( "Found sub-graph: '" + g.getUserDatum( LABEL_KEY ) + "', in file '" + g.getUserDatum( FILE_KEY ) + "'" );
+						_logger.debug( "Added SUBGRAPH_START_VERTEX to vertex: " + edge.getDest().getUserDatum( INDEX_KEY ) );
+					}
+				}
 			}
 		}
-
-		_logger.info( "Done merging" );		
+		
+		if ( _graph == null )
+		{
+			throw new RuntimeException( "Did not find a Start vertex with an out edge with a label." );		
+		}
 	}
-
+	
+	
 
 	// Copies the graph src, into the graph dst
 	private void appendGraph( SparseGraph dst, SparseGraph src )
@@ -1420,7 +1444,7 @@ public class ModelBasedTesting
 		
 		
 		// Verify that the edges in the subgraph (going to the Stop vertex)
-		// has exactly the same corresonding edges in the graph using the sub-graph
+		// has corresonding edges in the graph using the sub-graph
 		if ( stopVertex != null )
 		{
 			if ( targetVertexOutEdges.length == 0 )
