@@ -1254,6 +1254,11 @@ public class ModelBasedTesting
 					                    _graph.getUserDatum( FILE_KEY )+ ", and " + g.getUserDatum( FILE_KEY ) );								
 							}
 						}
+						if ( foundSubStartGraph == true )
+						{
+							throw new RuntimeException( "Only one Start vertex can exist in one file, see file '" +
+				                    g.getUserDatum( FILE_KEY )+ "'" );		
+						}
 	
 						foundMotherStartGraph = true;
 						_graph = g;
