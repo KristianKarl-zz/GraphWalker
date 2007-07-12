@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created by yFiles 2.4.2.1 -->
+<!-- Created by yFiles 2.4.2.2 -->
 <graphml xmlns="http://graphml.graphdrawing.org/xmlns/graphml" xmlns:y="http://www.yworks.com/xml/graphml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns/graphml http://www.yworks.com/xml/schema/graphml/1.0/ygraphml.xsd">
   <key id="d0" for="node" yfiles.type="nodegraphics"/>
   <key id="d1" for="node" attr.name="url" attr.type="string"/>
@@ -27,7 +27,7 @@
           <y:Geometry  x="-28.5" y="117.92626953125" width="57.0" height="30.0"/>
           <y:Fill color="#FFCC00"  transparent="false"/>
           <y:BorderStyle type="line" width="1.0" color="#000000" />
-          <y:NodeLabel x="5.0" y="5.036865234375" width="47.0" height="19.92626953125" visible="true" alignment="center" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" hasBackgroundColor="false" hasLineColor="false" modelName="internal" modelPosition="c" autoSizePolicy="content">v_AF01</y:NodeLabel>
+          <y:NodeLabel x="17.0" y="5.036865234375" width="23.0" height="19.92626953125" visible="true" alignment="center" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" hasBackgroundColor="false" hasLineColor="false" modelName="internal" modelPosition="c" autoSizePolicy="content">v_1</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>
@@ -40,7 +40,7 @@
           <y:Geometry  x="-114.5" y="245.43212890625" width="229.0" height="77.705078125"/>
           <y:Fill color="#FFCC00"  transparent="false"/>
           <y:BorderStyle type="line" width="1.0" color="#000000" />
-          <y:NodeLabel x="5.0" y="5.0" width="219.0" height="67.705078125" visible="true" alignment="left" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" hasBackgroundColor="false" hasLineColor="false" modelName="internal" modelPosition="c" autoSizePolicy="content">v_AF01_2_3&#xA;v_IngenATKKlientInstansExekverar&#xA;AF01 2.3 Resultat&#xA;ATK-anv&#xe4;ndaren inloggad i systemet.</y:NodeLabel>
+          <y:NodeLabel x="96.0" y="28.889404296875" width="37.0" height="19.92626953125" visible="true" alignment="left" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" hasBackgroundColor="false" hasLineColor="false" modelName="internal" modelPosition="c" autoSizePolicy="content">v_1_1</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>
@@ -53,7 +53,7 @@
           <y:Geometry  x="66.0" y="0.0" width="210.0" height="45.8525390625"/>
           <y:Fill color="#FFFF99"  transparent="false"/>
           <y:BorderStyle type="line" width="1.0" color="#000000" />
-          <y:NodeLabel x="5.0" y="5.0" width="200.0" height="35.8525390625" visible="true" alignment="left" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" hasBackgroundColor="false" hasLineColor="false" modelName="internal" modelPosition="c" autoSizePolicy="content">Noteringar&#xA;Denna graf normalf&#xf6;rloppet i AF01</y:NodeLabel>
+          <y:NodeLabel x="70.5" y="12.963134765625" width="69.0" height="19.92626953125" visible="true" alignment="left" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" hasBackgroundColor="false" hasLineColor="false" modelName="internal" modelPosition="c" autoSizePolicy="content">Nil admirari</y:NodeLabel>
         </y:UMLNoteNode>
       </data>
       <data key="d1" ></data>
@@ -78,7 +78,7 @@
           <y:Path sx="0.0" sy="15.0" tx="0.0" ty="-38.8525390625"/>
           <y:LineStyle type="line" width="1.0" color="#000000" />
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel x="-127.0" y="10.0" width="254.0" height="77.505859375" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" hasBackgroundColor="false" hasLineColor="false" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_StartaBeh&#xf6;rig&#xA;2.2 Normalf&#xf6;rlopp&#xA;1. Referenspunkt [Starta utredningsklient]&#xA;Anv&#xe4;ndningsfallet startar n&#xe4;r ATK-anv&#xe4;ndaren&#xA;startar ATK utredningsklient.</y:EdgeLabel>
+          <y:EdgeLabel x="-50.5" y="40.40234375" width="39.0" height="18.701171875" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" hasBackgroundColor="false" hasLineColor="false" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_1_1</y:EdgeLabel>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
