@@ -18,6 +18,7 @@ import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
 
 import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
+import edu.uci.ics.jung.graph.impl.DirectedSparseVertex;
 
 public class CLI 
 {
@@ -852,14 +853,30 @@ public class CLI
 		try
 		{
 			ModelBasedTesting mbt = new ModelBasedTesting( graphmlFile );	
-			Vector testSequence = mbt.generateTests( false, 0);
 			SortedSet set = new TreeSet();
-			Iterator iterTestSequence = testSequence.iterator();
-		    while ( iterTestSequence.hasNext() ) 
-		    {
-				String element = (String) iterTestSequence.next();
-				set.add( element );
-		    }
+
+			
+			Object[] vertices = mbt.getGraph().getVertices().toArray();
+			for (int i = 0; i < vertices.length; i++) 
+			{
+				DirectedSparseVertex vertex = (DirectedSparseVertex)vertices[ i ];
+				String element = (String) vertex.getUserDatum( LABEL_KEY );
+				if ( element != null )
+				{
+					set.add( element );
+				}
+			}
+			
+			Object[] edges    = mbt.getGraph().getEdges().toArray();
+			for (int i = 0; i < vertices.length; i++) 
+			{
+				DirectedSparseEdge edge = (DirectedSparseEdge)edges[ i ];
+				String element = (String) edge.getUserDatum( LABEL_KEY );
+				if ( element != null )
+				{
+					set.add( element );
+				}
+			}
 
 			StringBuffer strBuff = new StringBuffer();
 		    Iterator setIterator = set.iterator();
