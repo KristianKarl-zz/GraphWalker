@@ -1452,12 +1452,6 @@ public class ModelBasedTesting
 		// has corresonding edges in the graph using the sub-graph
 		if ( stopVertex != null )
 		{
-			if ( targetVertexOutEdges.length == 0 )
-			{
-				String msg = "The subgraph needs outedges!\nCan not merge the sub-graph: '" + subGraph.getUserDatum( FILE_KEY ) + "', from: '" + targetVertex.getUserDatum( FILE_KEY ) + "'";
-				_logger.error( msg );
-				throw new RuntimeException( msg );
-			}
 			inEdges = stopVertex.getInEdges().toArray();
 
 			// Check to see that there is an edge with the same name in both lists. 
@@ -1592,6 +1586,15 @@ public class ModelBasedTesting
 							{
 								new_edge.importUserData( outEdge );
 							}
+							new_edge.setUserDatum( INDEX_KEY, new Integer( getNewVertexAndEdgeIndex() ), UserData.SHARED );
+							_logger.debug( "Replacing the target vertex out-edge: " + getCompleteEdgeName( outEdge ) + " (old) with: " + getCompleteEdgeName( new_edge ) + "(new)" );
+							edgesToBeRemoved.add( inEdge );
+							edgesToBeRemoved.add( outEdge );
+						}
+						else if ( outEdgeLabel != null && inEdgeLabel == null )
+						{
+							DirectedSparseEdge new_edge = (DirectedSparseEdge)mainGraph.addEdge( new DirectedSparseEdge( srcVertex, outEdge.getDest() ) );
+							new_edge.importUserData( outEdge );
 							new_edge.setUserDatum( INDEX_KEY, new Integer( getNewVertexAndEdgeIndex() ), UserData.SHARED );
 							_logger.debug( "Replacing the target vertex out-edge: " + getCompleteEdgeName( outEdge ) + " (old) with: " + getCompleteEdgeName( new_edge ) + "(new)" );
 							edgesToBeRemoved.add( inEdge );
@@ -2470,7 +2473,7 @@ public class ModelBasedTesting
 
 	public String getCompleteEdgeName( DirectedSparseEdge edge )
 	{
-		String str = "'" + (String)edge.getUserDatum( LABEL_KEY ) + "' ('" + (String)edge.getSource().getUserDatum( LABEL_KEY ) + "' -> '" + (String)edge.getDest().getUserDatum( LABEL_KEY ) + "') " + edge.getUserDatum( INDEX_KEY ) + "(" + edge.getSource().getUserDatum( INDEX_KEY ) + " -> " + edge.getDest().getUserDatum( INDEX_KEY ) + ")";
+		String str = "'" + (String)edge.getUserDatum( LABEL_KEY ) + "', INDEX=" + edge.getUserDatum( INDEX_KEY ) + " ('" + (String)edge.getSource().getUserDatum( LABEL_KEY ) + "', INDEX=" + edge.getSource().getUserDatum( INDEX_KEY ) + " -> '" + (String)edge.getDest().getUserDatum( LABEL_KEY ) + "', INDEX=" + edge.getDest().getUserDatum( INDEX_KEY ) +  ")";
 		return str;
 	}
 
