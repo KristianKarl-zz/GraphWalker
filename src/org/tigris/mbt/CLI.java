@@ -885,7 +885,7 @@ public class CLI
 				String element = (String) setIterator.next();
 				strBuff.append( element + "\n" );
 		    }
-			System.out.println( strBuff.toString() );
+			System.out.print( strBuff.toString() );
 		}		
 		catch ( Exception e )
 		{
