@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created by yFiles 2.4.2.1 -->
+<!-- Created by yFiles 2.4.2.2 -->
 <graphml xmlns="http://graphml.graphdrawing.org/xmlns/graphml" xmlns:y="http://www.yworks.com/xml/graphml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns/graphml http://www.yworks.com/xml/schema/graphml/1.0/ygraphml.xsd">
   <key id="d0" for="node" yfiles.type="nodegraphics"/>
   <key id="d1" for="node" attr.name="url" attr.type="string"/>
@@ -27,7 +27,7 @@
           <y:Geometry  x="-28.5" y="84.5537109375" width="57.0" height="30.0"/>
           <y:Fill color="#FFCC00"  transparent="false"/>
           <y:BorderStyle type="line" width="1.0" color="#000000" />
-          <y:NodeLabel x="5.0" y="5.036865234375" width="47.0" height="19.92626953125" visible="true" alignment="center" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" hasBackgroundColor="false" hasLineColor="false" modelName="internal" modelPosition="c" autoSizePolicy="content">v_AF01</y:NodeLabel>
+          <y:NodeLabel x="17.0" y="5.036865234375" width="23.0" height="19.92626953125" visible="true" alignment="center" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" hasBackgroundColor="false" hasLineColor="false" modelName="internal" modelPosition="c" autoSizePolicy="content">v_1</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>
@@ -40,7 +40,7 @@
           <y:Geometry  x="66.0" y="-7.963134765625" width="154.0" height="61.77880859375"/>
           <y:Fill color="#FFFF99"  transparent="false"/>
           <y:BorderStyle type="line" width="1.0" color="#000000" />
-          <y:NodeLabel x="5.0" y="5.0" width="144.0" height="51.77880859375" visible="true" alignment="left" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" hasBackgroundColor="false" hasLineColor="false" modelName="internal" modelPosition="c" autoSizePolicy="content">Noteringar&#xA;Denna graf knyter ihop&#xA;samtliga anv&#xe4;ndningsfall</y:NodeLabel>
+          <y:NodeLabel x="15.5" y="20.92626953125" width="123.0" height="19.92626953125" visible="true" alignment="left" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" hasBackgroundColor="false" hasLineColor="false" modelName="internal" modelPosition="c" autoSizePolicy="content">O sancta simpl&#xed;citas</y:NodeLabel>
         </y:UMLNoteNode>
       </data>
       <data key="d1" ></data>
@@ -52,7 +52,7 @@
           <y:Geometry  x="-28.5" y="153.2548828125" width="57.0" height="30.0"/>
           <y:Fill color="#FFCC00"  transparent="false"/>
           <y:BorderStyle type="line" width="1.0" color="#000000" />
-          <y:NodeLabel x="5.0" y="5.036865234375" width="47.0" height="19.92626953125" visible="true" alignment="center" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" hasBackgroundColor="false" hasLineColor="false" modelName="internal" modelPosition="c" autoSizePolicy="content">v_AF18</y:NodeLabel>
+          <y:NodeLabel x="17.0" y="5.036865234375" width="23.0" height="19.92626953125" visible="true" alignment="center" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" hasBackgroundColor="false" hasLineColor="false" modelName="internal" modelPosition="c" autoSizePolicy="content">v_2</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>

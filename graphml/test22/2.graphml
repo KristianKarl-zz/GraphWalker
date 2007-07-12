@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created by yFiles 2.4.2.1 -->
+<!-- Created by yFiles 2.4.2.2 -->
 <graphml xmlns="http://graphml.graphdrawing.org/xmlns/graphml" xmlns:y="http://www.yworks.com/xml/graphml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns/graphml http://www.yworks.com/xml/schema/graphml/1.0/ygraphml.xsd">
   <key id="d0" for="node" yfiles.type="nodegraphics"/>
   <key id="d1" for="node" attr.name="url" attr.type="string"/>
@@ -27,7 +27,7 @@
           <y:Geometry  x="377.75" y="0.0" width="304.0" height="77.705078125"/>
           <y:Fill color="#FFFF99"  transparent="false"/>
           <y:BorderStyle type="line" width="1.0" color="#000000" />
-          <y:NodeLabel x="5.0" y="5.0" width="294.0" height="67.705078125" visible="true" alignment="left" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" hasBackgroundColor="false" hasLineColor="false" modelName="internal" modelPosition="c" autoSizePolicy="content">Noteringar&#xA;Denna graf  k&#xf6;r normalf&#xf6;rloppet i AF18.&#xA;Oranga noder &#xe4;r med f&#xf6;r att &#xe5;terst&#xe4;lla omf&#xf6;rdelade&#xA;&#xe4;renden</y:NodeLabel>
+          <y:NodeLabel x="79.5" y="20.92626953125" width="145.0" height="35.8525390625" visible="true" alignment="left" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" hasBackgroundColor="false" hasLineColor="false" modelName="internal" modelPosition="c" autoSizePolicy="content">Quidquid id est timeo&#xA;Danaos et dona ferentes</y:NodeLabel>
         </y:UMLNoteNode>
       </data>
       <data key="d1" ></data>
@@ -39,7 +39,7 @@
           <y:Geometry  x="132.5" y="214.509765625" width="330.0" height="77.705078125"/>
           <y:Fill color="#FFCC00"  transparent="false"/>
           <y:BorderStyle type="line" width="1.0" color="#000000" />
-          <y:NodeLabel x="5.0" y="5.0" width="320.0" height="67.705078125" visible="true" alignment="left" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" hasBackgroundColor="false" hasLineColor="false" modelName="internal" modelPosition="c" autoSizePolicy="content">v_AF18_2_2_2&#xA;2.2 F&#xf6;rlopp&#xA;2. Referenspunkt [Formul&#xe4;r med utredare och &#xe4;renden]&#xA;Systemet visar ett formul&#xe4;r </y:NodeLabel>
+          <y:NodeLabel x="146.5" y="28.889404296875" width="37.0" height="19.92626953125" visible="true" alignment="left" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" hasBackgroundColor="false" hasLineColor="false" modelName="internal" modelPosition="c" autoSizePolicy="content">v_2_1</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>
@@ -52,7 +52,7 @@
           <y:Geometry  x="98.5" y="375.01953125" width="398.0" height="93.63134765625"/>
           <y:Fill color="#FFCC00"  transparent="false"/>
           <y:BorderStyle type="line" width="1.0" color="#000000" />
-          <y:NodeLabel x="5.0" y="5.0" width="388.0" height="83.63134765625" visible="true" alignment="left" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" hasBackgroundColor="false" hasLineColor="false" modelName="internal" modelPosition="c" autoSizePolicy="content">v_AF18_2_2_4&#xA;4. Referenspunkt [Lista &#xe4;renden]&#xA;Systemet uppdaterar listan med &#xc4;renden f&#xf6;r handl&#xe4;ggare utredare.&#xA;Systemet visar &#xe4;ven antal &#xe4;renden. &#xA;Sortering: F&#xf6;rst &#xe4;rendestatus, sen h&#xe4;ndelsedatum. &#xA;</y:NodeLabel>
+          <y:NodeLabel x="180.5" y="36.8525390625" width="37.0" height="19.92626953125" visible="true" alignment="left" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" hasBackgroundColor="false" hasLineColor="false" modelName="internal" modelPosition="c" autoSizePolicy="content">v_2_2</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>
@@ -65,7 +65,7 @@
           <y:Geometry  x="136.5" y="536.75439453125" width="322.0" height="109.5576171875"/>
           <y:Fill color="#FF9900"  transparent="false"/>
           <y:BorderStyle type="line" width="1.0" color="#000000" />
-          <y:NodeLabel x="5.0" y="5.0" width="312.0" height="99.5576171875" visible="true" alignment="left" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" hasBackgroundColor="false" hasLineColor="false" modelName="internal" modelPosition="c" autoSizePolicy="content">v_AF18_2_3&#xA;2.3 Resultat&#xA;Handl&#xe4;ggande utredare bytt f&#xf6;r ett eller flera &#xc4;renden.&#xA;Aktuell handl&#xe4;ggare bytt om s&#xe5; till&#xe4;mpligt. &#xA;Dagb&#xf6;cker i aktuella &#xc4;renden uppdaterade.&#xA;T-RAR uppdaterat. </y:NodeLabel>
+          <y:NodeLabel x="142.5" y="44.815673828125" width="37.0" height="19.92626953125" visible="true" alignment="left" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" hasBackgroundColor="false" hasLineColor="false" modelName="internal" modelPosition="c" autoSizePolicy="content">v_2_3</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>
@@ -78,7 +78,7 @@
           <y:Geometry  x="132.5" y="729.11669921875" width="330.0" height="77.705078125"/>
           <y:Fill color="#FF9900"  transparent="false"/>
           <y:BorderStyle type="line" width="1.0" color="#000000" />
-          <y:NodeLabel x="5.0" y="5.0" width="320.0" height="67.705078125" visible="true" alignment="left" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" hasBackgroundColor="false" hasLineColor="false" modelName="internal" modelPosition="c" autoSizePolicy="content">v_AF18_2_2_2&#xA;2.2 F&#xf6;rlopp&#xA;2. Referenspunkt [Formul&#xe4;r med utredare och &#xe4;renden]&#xA;Systemet visar ett formul&#xe4;r </y:NodeLabel>
+          <y:NodeLabel x="146.5" y="28.889404296875" width="37.0" height="19.92626953125" visible="true" alignment="left" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" hasBackgroundColor="false" hasLineColor="false" modelName="internal" modelPosition="c" autoSizePolicy="content">v_2_4</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>
@@ -91,7 +91,7 @@
           <y:Geometry  x="269.0" y="101.705078125" width="57.0" height="30.0"/>
           <y:Fill color="#FFCC00"  transparent="false"/>
           <y:BorderStyle type="line" width="1.0" color="#000000" />
-          <y:NodeLabel x="5.0" y="5.036865234375" width="47.0" height="19.92626953125" visible="true" alignment="center" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" hasBackgroundColor="false" hasLineColor="false" modelName="internal" modelPosition="c" autoSizePolicy="content">v_AF18</y:NodeLabel>
+          <y:NodeLabel x="17.0" y="5.036865234375" width="23.0" height="19.92626953125" visible="true" alignment="center" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" hasBackgroundColor="false" hasLineColor="false" modelName="internal" modelPosition="c" autoSizePolicy="content">v_2</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>
@@ -104,7 +104,7 @@
           <y:Path sx="0.0" sy="38.8525390625" tx="0.0" ty="-46.815673828125"/>
           <y:LineStyle type="line" width="1.0" color="#000000" />
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel x="-121.0" y="10.0" width="242.0" height="62.8046875" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" hasBackgroundColor="false" hasLineColor="false" modelName="free" modelPosition="anywhere" preferredPlacement="center_on_edge" distance="2.0" ratio="0.5">e_V&#xe4;lj_Fr&#xe5;nUtredare&#xA;2.2 F&#xf6;rlopp&#xA;3. FU-ledaren v&#xe4;lja &#x2019;utredare&#x2019; fr&#xe5;n lista med&#xA;f&#xf6;rnamn, efternamn</y:EdgeLabel>
+          <y:EdgeLabel x="-19.5" y="32.0517578125" width="39.0" height="18.701171875" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" hasBackgroundColor="false" hasLineColor="false" modelName="free" modelPosition="anywhere" preferredPlacement="center_on_edge" distance="2.0" ratio="0.5">e_2_2</y:EdgeLabel>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
@@ -117,7 +117,7 @@
           <y:Path sx="0.0" sy="46.815673828125" tx="0.0" ty="-54.77880859375"/>
           <y:LineStyle type="line" width="1.0" color="#000000" />
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel x="-91.5" y="10.0" width="183.0" height="48.103515625" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" hasBackgroundColor="false" hasLineColor="false" modelName="free" modelPosition="anywhere" preferredPlacement="center_on_edge" distance="2.0" ratio="0.5">e_Omf&#xf6;rdela&#xA;2.2 F&#xf6;rlopp&#xA;5. Referenspunkt [V&#xe4;lja &#xe4;renden]</y:EdgeLabel>
+          <y:EdgeLabel x="-19.5" y="24.701171875" width="39.0" height="18.701171875" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" hasBackgroundColor="false" hasLineColor="false" modelName="free" modelPosition="anywhere" preferredPlacement="center_on_edge" distance="2.0" ratio="0.5">e_2_3</y:EdgeLabel>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
@@ -130,7 +130,7 @@
           <y:Path sx="0.0" sy="54.77880859375" tx="0.0" ty="-38.8525390625"/>
           <y:LineStyle type="line" width="1.0" color="#000000" />
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel x="-119.0" y="10.0" width="238.0" height="62.8046875" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" hasBackgroundColor="false" hasLineColor="false" modelName="free" modelPosition="anywhere" preferredPlacement="center_on_edge" distance="2.0" ratio="0.5">e_V&#xe4;ljAttOmf&#xf6;rdela&#xc4;renden&#xA;2.2 F&#xf6;rlopp&#xA;1. Anv&#xe4;ndningsfallet startar n&#xe4;r FU-ledaren&#xA;v&#xe4;ljer &#x201d;Omf&#xf6;rdela &#xe4;renden&#x201d;. </y:EdgeLabel>
+          <y:EdgeLabel x="-19.5" y="32.0517578125" width="39.0" height="18.701171875" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" hasBackgroundColor="false" hasLineColor="false" modelName="free" modelPosition="anywhere" preferredPlacement="center_on_edge" distance="2.0" ratio="0.5">e_2_4</y:EdgeLabel>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
@@ -148,7 +148,7 @@
           </y:Path>
           <y:LineStyle type="line" width="1.0" color="#000000" />
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel x="-365.9999999999999" y="-394.33715820312506" width="137.0" height="18.701171875" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" hasBackgroundColor="false" hasLineColor="false" modelName="free" modelPosition="anywhere" preferredPlacement="center_on_edge" distance="2.0" ratio="0.5">e_&#xc5;terst&#xe4;llOmf&#xf6;rdelning</y:EdgeLabel>
+          <y:EdgeLabel x="-309.9999999999999" y="-394.33715820312506" width="25.0" height="18.701171875" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" hasBackgroundColor="false" hasLineColor="false" modelName="free" modelPosition="anywhere" preferredPlacement="center_on_edge" distance="2.0" ratio="0.5">e_2</y:EdgeLabel>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
@@ -174,7 +174,7 @@
           <y:Path sx="0.0" sy="15.0" tx="0.0" ty="-38.8525390625"/>
           <y:LineStyle type="line" width="1.0" color="#000000" />
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel x="-119.0" y="10.0" width="238.0" height="62.8046875" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" hasBackgroundColor="false" hasLineColor="false" modelName="free" modelPosition="anywhere" preferredPlacement="center_on_edge" distance="2.0" ratio="0.5">e_V&#xe4;ljAttOmf&#xf6;rdela&#xc4;renden&#xA;2.2 F&#xf6;rlopp&#xA;1. Anv&#xe4;ndningsfallet startar n&#xe4;r FU-ledaren&#xA;v&#xe4;ljer &#x201d;Omf&#xf6;rdela &#xe4;renden&#x201d;. </y:EdgeLabel>
+          <y:EdgeLabel x="-19.5" y="32.0517578125" width="39.0" height="18.701171875" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" hasBackgroundColor="false" hasLineColor="false" modelName="free" modelPosition="anywhere" preferredPlacement="center_on_edge" distance="2.0" ratio="0.5">e_2_1</y:EdgeLabel>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>

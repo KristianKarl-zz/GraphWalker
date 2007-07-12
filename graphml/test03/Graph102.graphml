@@ -181,7 +181,7 @@ xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns/graphml http://www.ywo
           </y:Path>
           <y:LineStyle type="line" width="1.0" color="#000000" />
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel x="73.0" y="-34.02598402235242" width="153.0" height="18.701171875" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_Edge052ttprotokoll</y:EdgeLabel>
+          <y:EdgeLabel x="73.0" y="-34.02598402235242" width="153.0" height="18.701171875" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_Edge052</y:EdgeLabel>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
@@ -207,7 +207,7 @@ xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns/graphml http://www.ywo
           </y:Path>
           <y:LineStyle type="line" width="1.0" color="#000000" />
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel x="-98.9697265625" y="9.99999438089037" width="167.0" height="18.701171875" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_Edge050Protokoll</y:EdgeLabel>
+          <y:EdgeLabel x="-98.9697265625" y="9.99999438089037" width="167.0" height="18.701171875" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_Edge050</y:EdgeLabel>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
@@ -237,7 +237,7 @@ xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns/graphml http://www.ywo
           </y:Path>
           <y:LineStyle type="line" width="1.0" color="#000000" />
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel x="64.5" y="155.20298423161583" width="170.0" height="18.701171875" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_Edge049Protokoll</y:EdgeLabel>
+          <y:EdgeLabel x="64.5" y="155.20298423161583" width="170.0" height="18.701171875" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_Edge049</y:EdgeLabel>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
@@ -405,7 +405,7 @@ xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns/graphml http://www.ywo
           </y:Path>
           <y:LineStyle type="line" width="1.0" color="#000000" />
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel x="61.0" y="-174.02598402235242" width="177.0" height="18.701171875" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_Edge079Protokoll</y:EdgeLabel>
+          <y:EdgeLabel x="61.0" y="-174.02598402235242" width="177.0" height="18.701171875" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_Edge079</y:EdgeLabel>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>

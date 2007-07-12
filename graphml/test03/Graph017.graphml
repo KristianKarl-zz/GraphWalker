@@ -186,7 +186,7 @@ xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns/graphml http://www.ywo
           </y:Path>
           <y:LineStyle type="line" width="1.0" color="#000000" />
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel x="51.0" y="59.64941662985183" width="172.0" height="18.701171875" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_Edge158ttBrottsbeslut</y:EdgeLabel>
+          <y:EdgeLabel x="51.0" y="59.64941662985183" width="172.0" height="18.701171875" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_Edge158</y:EdgeLabel>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
@@ -200,7 +200,7 @@ xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns/graphml http://www.ywo
           </y:Path>
           <y:LineStyle type="line" width="1.0" color="#000000" />
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel x="30.0" y="128.6494166298518" width="214.0" height="18.701171875" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_Edge158ttErs&#xe4;ttningsanspr&#xe5;k</y:EdgeLabel>
+          <y:EdgeLabel x="30.0" y="128.6494166298518" width="214.0" height="18.701171875" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_Edge158</y:EdgeLabel>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
