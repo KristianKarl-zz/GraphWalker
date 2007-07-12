@@ -67,7 +67,7 @@ public class TestMerging extends TestCase
 	}					
 
     
-
+/*
     public void test_mergeSubgraphs_01()
     {
 		System.out.println( "TEST: test_mergeSubgraphs_01" );
@@ -317,7 +317,7 @@ public class TestMerging extends TestCase
 		System.out.println( "" );
     }
     
-    
+    */
     // Verify that mbt reports and exits when an edge containing a whitespace (tab) is found 
     public void test13()
     {
@@ -331,9 +331,8 @@ public class TestMerging extends TestCase
     	catch ( RuntimeException e)
     	{
     		String msg = e.getMessage();
-    		System.out.println(e.getMessage());
-    		//assertTrue( msg.matches( "Edge has a label '.*', ''null' \\(E -> G\\) [0-9]+\\([0-9]+ -> [0-9]+\\)', containing whitespaces in file: '.*test13.C\\.graphml'" ) );
-    		assertTrue( msg.matches( "Edge has a label '	',  ''null' \\('E' -> 'G'\\) [0-9]+\\([0-9]+ -> [0-9]+\\)', containing whitespaces in file: '.*test13.C\\.graphml'" ) );
+    		System.out.println(msg);
+    		assertTrue( msg.matches( "Edge has a label '	',  ''null', INDEX=[0-9]+ \\('E', INDEX=[0-9]+ -> 'G', INDEX=[0-9]+\\)', containing whitespaces in file: '.*test13.C\\.graphml'" ) );
     	}
 		System.out.println( "" );
     }
@@ -481,6 +480,27 @@ public class TestMerging extends TestCase
 	    	mbt.writeGraph( mbt.getGraph(), "graphml/merged/test22.graphml" );
 	    	assertTrue( mbt.getGraph().getEdges().size() == 8 );
 	    	assertTrue( mbt.getGraph().getVertices().size() == 8 );
+	    	verifyIds( mbt.getGraph() );
+    	}
+    	catch ( Exception e)
+    	{
+    		System.out.println(e.getMessage());
+	    	fail( e.getMessage() );
+    	}
+		System.out.println( "" );
+    }
+
+    // Meging with subgraphs containing Stop vertices 
+    public void test23()
+    {
+		System.out.println( "TEST: test23" );
+		System.out.println( "=======================================================================" );
+    	try
+    	{
+	    	ModelBasedTesting mbt = new ModelBasedTesting( "graphml/test23" );
+	    	mbt.writeGraph( mbt.getGraph(), "graphml/merged/test23.graphml" );
+	    	assertTrue( mbt.getGraph().getEdges().size() == 14 );
+	    	assertTrue( mbt.getGraph().getVertices().size() == 9 );
 	    	verifyIds( mbt.getGraph() );
     	}
     	catch ( Exception e)
