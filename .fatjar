@@ -1,0 +1,14 @@
+#Fat Jar Configuration File
+#Tue May 29 17:13:11 CEST 2007
+onejar.license.required=true
+manifest.classpath=
+manifest.removesigners=true
+onejar.checkbox=false
+jarname=mbt.jar
+manifest.mergeall=true
+manifest.mainclass=
+manifest.file=META-INF\\MANIFEST.MF
+jarname.isextern=true
+onejar.expand=
+excludes=<po|mbt>~.svn/;<po|mbt>~test/
+includes=
