@@ -97,7 +97,7 @@ public class ModelBasedTesting
 	private DirectedSparseEdge 	 	_rejectedEdge = null;
 	private DirectedSparseEdge 	 	_currentEdge  = null;
 	private Vector 			     	_pathHistory  = new Vector();
-	private Vector 			     	_testSequence = new Vector();
+	//private Vector 			     	_testSequence = new Vector();
 	private long				 	_start_time;
 	private long				 	_end_time     = 0;
 	private boolean				 	_runUntilAllEdgesVisited = false;
@@ -406,7 +406,7 @@ public class ModelBasedTesting
 	/**
 	 * Returns a list of names of vertices and edges to be executed.
 	 */
-	public Vector getTestSequence()
+	public void getTestSequence()
 	{
 		_runUntilAllEdgesVisited = true;
 		reset();
@@ -422,14 +422,14 @@ public class ModelBasedTesting
 				}
 			}
 			
-			return _testSequence;
+			return;
 		}
         catch ( Exception e )
 		{
 			e.printStackTrace();
         }
         
-        return null;
+        return;
 	}
 
 
@@ -1710,13 +1710,14 @@ public class ModelBasedTesting
 		return _logger;
 	}
 
-	public Vector generateTests( boolean random, long length ) throws RuntimeException, FoundNoEdgeException
+	public void generateTests( boolean random, long length ) throws RuntimeException, FoundNoEdgeException
 	{
 		findStartingVertex();
 		if ( random == true )
 		{
 			_runUntilAllEdgesVisited = false;
-			for ( long index = 0; index < length; index++  )
+			long calculatedLength = length /2;
+			for ( long index = 0; index < calculatedLength; index++  )
 			{
 				executeMethod( false, true );
 			}
@@ -1734,7 +1735,7 @@ public class ModelBasedTesting
 			}
 		}
 		
-		return _testSequence;
+		return;
 	}
 	
 	public void generateJavaCode( String fileName )
@@ -2324,7 +2325,7 @@ public class ModelBasedTesting
 			{
 				if ( dryRun )
 				{
-					_testSequence.add( method );
+					System.out.println( method );
 				}
 				else
 				{
