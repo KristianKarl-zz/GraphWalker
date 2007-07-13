@@ -67,7 +67,7 @@ public class TestMerging extends TestCase
 	}					
 
     
-/*
+    
     public void test_mergeSubgraphs_01()
     {
 		System.out.println( "TEST: test_mergeSubgraphs_01" );
@@ -317,7 +317,7 @@ public class TestMerging extends TestCase
 		System.out.println( "" );
     }
     
-    */
+    
     // Verify that mbt reports and exits when an edge containing a whitespace (tab) is found 
     public void test13()
     {
