@@ -106,7 +106,7 @@ public class CLI
 					opt.addOption( OptionBuilder.withLongOpt( "length" )
 							.withArgName( "=length" )
 		                    .withDescription( "The length of the test sequence. Supply an integer, which tells MBT how many " + 
-		                    		"vertices a test sequence shall contain." )
+		                    		"vertices and edges a test sequence shall contain." )
 		                    .hasArg()
 		                    .create( "n" ) );
 					
@@ -273,7 +273,7 @@ public class CLI
 				opt.addOption( OptionBuilder.withLongOpt( "length" )
 					.withArgName( "=length" )
 					.withDescription( "The length of the test sequence. Supply an integer, which tells MBT how many " + 
-					"vertices a test sequence shall contain." )
+					"vertices and edges a test sequence shall contain." )
 					.hasArg()
 					.create( "n" ) );
 			}
