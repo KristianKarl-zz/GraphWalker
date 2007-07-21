@@ -274,7 +274,7 @@ public class TestMerging extends TestCase
     	{
     		String msg = e.getMessage();
     		System.out.println(e.getMessage());
-    		assertTrue( msg.matches( "Found 2 subgraphs using the same name: 'B', they are defined in files: '.*\\\\graphml.test09.C.graphml', and :'.*graphml.test09.B\\.graphml'" ) );
+    		assertTrue( msg.matches( "Found 2 subgraphs using the same name: 'B', they are defined in files: '.*graphml.test09.C.graphml', and :'.*graphml.test09.B\\.graphml'" ) );
     	}
 		System.out.println( "" );
     }
