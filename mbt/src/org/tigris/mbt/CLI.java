@@ -180,7 +180,7 @@ public class CLI
 					
 					System.out.println( "Run a perl script, implementing the model.\n" +
 							"MBT will launch the designated perl script, and call the subroutines" +
-							" in that script accorning to the model.\n" );					
+							" in that script according to the model.\n" );					
 
 					HelpFormatter f = new HelpFormatter();
 	                f.printHelp( "'java -jar mbt.jar perl [OPTION] [ARGUMENT]'", opt );
