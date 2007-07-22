@@ -320,7 +320,7 @@ public class ModelBasedTesting
 		// Start the execution which is random.
 		while ( ( currentTime - startTime ) < runningTime )
 		{
-			executeMethod( false, false );
+			executeMethod( false, false, false );
 			currentTime = System.currentTimeMillis();
 			_end_time = currentTime;
 		}
@@ -373,7 +373,7 @@ public class ModelBasedTesting
 
 		while ( true )
 		{
-			executeMethod( true, false );
+			executeMethod( true, false, false );
 			_end_time = System.currentTimeMillis();
 			if ( isAllVerticesVisited() )
 			{
@@ -393,7 +393,7 @@ public class ModelBasedTesting
 
 		while ( true )
 		{
-			executeMethod( true, false );
+			executeMethod( true, false, false );
 			_end_time = System.currentTimeMillis();
 			if ( isAllEdgesVisited() )
 			{
@@ -415,7 +415,7 @@ public class ModelBasedTesting
 		{
 			while ( true )
 			{
-				executeMethod( true, true );
+				executeMethod( true, true, false );
 				if ( isAllEdgesVisited() )
 				{
 					break;
@@ -446,7 +446,7 @@ public class ModelBasedTesting
 			{
 				try
 				{
-					executeMethod( false, true );
+					executeMethod( false, true, true );
 				    _logger.debug( "Current edge =   " + getCompleteEdgeName( _currentEdge ) );
 					return _currentEdge;
 				}
@@ -461,7 +461,7 @@ public class ModelBasedTesting
 			_runUntilAllEdgesVisited = true;
 			try
 			{
-				executeMethod( true, true );
+				executeMethod( true, true, true );
 			    _logger.debug( "Current edge =   " + getCompleteEdgeName( _currentEdge ) );
 				if ( isAllEdgesVisited() )
 				{
@@ -490,7 +490,7 @@ public class ModelBasedTesting
 		_start_time = System.currentTimeMillis();
 		while ( true )
 		{
-			executeMethod( true, false );
+			executeMethod( true, false, false );
 			_end_time = System.currentTimeMillis();
 			if ( isAllVerticesVisited() && isAllEdgesVisited() )
 			{
@@ -1719,7 +1719,7 @@ public class ModelBasedTesting
 			long calculatedLength = length /2;
 			for ( long index = 0; index < calculatedLength; index++  )
 			{
-				executeMethod( false, true );
+				executeMethod( false, true, false );
 			}
 		}
 		else
@@ -1727,7 +1727,7 @@ public class ModelBasedTesting
 			_runUntilAllEdgesVisited = true;
 			while ( true )
 			{
-				executeMethod( true, true );
+				executeMethod( true, true, false );
 				if ( isAllEdgesVisited() )
 				{
 					break;
@@ -2120,7 +2120,8 @@ public class ModelBasedTesting
 		}
 	}
 
-	private void executeMethod( boolean optimize, boolean dryRun ) throws FoundNoEdgeException
+	
+	private void executeMethod( boolean optimize, boolean dryRun, boolean suppressPrintout ) throws FoundNoEdgeException
 	{
 		DirectedSparseEdge edge 	= null;
 		Object[] 		   outEdges = null;
@@ -2272,14 +2273,14 @@ public class ModelBasedTesting
 		{
 			String label = (String)edge.getUserDatum( LABEL_KEY );
 			_logger.debug( "Invoke method for edge: '" + label + "' and index: " + edge.getUserDatum( INDEX_KEY ) );
-			invokeMethod( label, dryRun );
+			invokeMethod( label, dryRun, suppressPrintout );
 			Integer vistited = (Integer)edge.getUserDatum( VISITED_KEY );
 			vistited = new Integer( vistited.intValue() + 1 );
 			edge.setUserDatum( VISITED_KEY, vistited, UserData.SHARED );
 
 			label = (String)edge.getDest().getUserDatum( LABEL_KEY );
 			_logger.debug( "Invoke method for vertex: '" + label + "' and index: " +  edge.getDest().getUserDatum( INDEX_KEY ) );
-			invokeMethod( label, dryRun );
+			invokeMethod( label, dryRun, suppressPrintout );
 			vistited = (Integer)edge.getDest().getUserDatum( VISITED_KEY );
 			vistited = new Integer( vistited.intValue() + 1 );
 			edge.getDest().setUserDatum( VISITED_KEY, vistited, UserData.SHARED );
@@ -2302,7 +2303,7 @@ public class ModelBasedTesting
 		}
 	}
 
-	private void invokeMethod( String method, boolean dryRun ) throws GoBackToPreviousVertexException
+	private void invokeMethod( String method, boolean dryRun, boolean suppressPrintout ) throws GoBackToPreviousVertexException
 	{
 		Class cls = null;
 		
@@ -2325,7 +2326,10 @@ public class ModelBasedTesting
 			{
 				if ( dryRun )
 				{
-					System.out.println( method );
+					if ( suppressPrintout == false )
+					{
+						System.out.println( method );
+					}
 				}
 				else
 				{
