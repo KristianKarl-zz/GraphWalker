@@ -110,8 +110,7 @@ public class CLI
 		                    .hasArg()
 		                    .create( "n" ) );
 					
-					System.out.println( "Generate a test sequence statically.\n" +			
-										"MBT will return the whole test sequence in one go.\n" );					
+					System.out.println( "Generate a test sequence statically.\n" );					
 
 					HelpFormatter f = new HelpFormatter();
 	                f.printHelp( "'java -jar mbt.jar static [OPTION] [ARGUMENT]'", opt );
@@ -712,6 +711,7 @@ public class CLI
 				{
 					backtrackingEngaged = true;
 					System.out.println( " BACKTRACK" );
+					mbt.getLogger().info( "BACKTRACK enabled" );
 				}
 				else
 				{
@@ -741,7 +741,20 @@ public class CLI
 				}
 					
 				mbt.getLogger().info( "Vertex: " + edge.getDest().getUserDatum( LABEL_KEY ) + ", index=" + edge.getDest().getUserDatum( INDEX_KEY ) );
-				System.out.println( edge.getDest().getUserDatum( LABEL_KEY ) );
+				System.out.print( edge.getDest().getUserDatum( LABEL_KEY ) );
+
+				if ( edge.containsUserDatumKey( BACKTRACK ) )
+				{
+					backtrackingEngaged = true;
+					System.out.println( " BACKTRACK" );
+					mbt.getLogger().info( "BACKTRACK enabled" );
+				}
+				else
+				{
+					backtrackingEngaged = false;
+					System.out.println( "" );
+				}
+
 				try
 				{
 					checkInput( new Integer( readFromStdin() ).intValue() );
