@@ -179,7 +179,7 @@ public class CLI
 						.create( "t" ) );
 					
 					System.out.println( "Run a perl script, implementing the model.\n" +
-							"MBT will launch the desgnated perl script, and call the subroutines" +
+							"MBT will launch the designated perl script, and call the subroutines" +
 							" in that script accorning to the model.\n" );					
 
 					HelpFormatter f = new HelpFormatter();
@@ -202,7 +202,7 @@ public class CLI
 					
 					System.out.println( "Generate java code.\n" +			
 										"MBT will generate java code of all methods, that are non-existing" +
-										" within a desgnated java source file. This utility helps the user" +
+										" within a designated java source file. This utility helps the user" +
 										" to automatically add all those methods existing in the graph(s)" +
 										" but not in the implementation.\n" );					
 
@@ -226,7 +226,7 @@ public class CLI
 					
 					System.out.println( "Generate perl code.\n" +			
 										"MBT will generate perl code of all methods, that are non-existing" +
-										" within a desgnated perl source file. This utility helps the user" +
+										" within a designated perl source file. This utility helps the user" +
 										" to automatically add all those methods existing in the graph(s)" +
 										" but not in the implementation.\n" );					
 
