@@ -1581,7 +1581,7 @@ public class ModelBasedTesting
 					DirectedSparseEdge new_edge = (DirectedSparseEdge)mainGraph.addEdge( new DirectedSparseEdge( srcVertex, outEdge.getDest() ) );
 					new_edge.importUserData( inEdge );
 					new_edge.setUserDatum( INDEX_KEY, new Integer( getNewVertexAndEdgeIndex() ), UserData.SHARED );
-					_logger.debug( "Replacing the target vertex out-edge: " + getCompleteEdgeName( outEdge ) + " (old) with: " + getCompleteEdgeName( new_edge ) + "(new)" );
+					_logger.debug( "Replacing the target vertex out-edge: " + getCompleteEdgeName( outEdge ) + " (old) with: " + getCompleteEdgeName( new_edge ) + "(new), using: " + getCompleteEdgeName( inEdge ) );
 					edgesToBeRemoved.add( inEdge );
 					edgesToBeRemoved.add( outEdge );
 				}
@@ -1599,7 +1599,7 @@ public class ModelBasedTesting
 							DirectedSparseEdge new_edge = (DirectedSparseEdge)mainGraph.addEdge( new DirectedSparseEdge( srcVertex, outEdge.getDest() ) );
 							new_edge.importUserData( inEdge );
 							new_edge.setUserDatum( INDEX_KEY, new Integer( getNewVertexAndEdgeIndex() ), UserData.SHARED );
-							_logger.debug( "Replacing the target vertex out-edge: " + getCompleteEdgeName( outEdge ) + " (old) with: " + getCompleteEdgeName( new_edge ) + "(new)" );
+							_logger.debug( "Replacing the target vertex out-edge: " + getCompleteEdgeName( outEdge ) + " (old) with: " + getCompleteEdgeName( new_edge ) + "(new), using: " + getCompleteEdgeName( inEdge ) );
 							edgesToBeRemoved.add( inEdge );
 							edgesToBeRemoved.add( outEdge );
 						}
@@ -1616,7 +1616,7 @@ public class ModelBasedTesting
 								new_edge.importUserData( outEdge );
 							}
 							new_edge.setUserDatum( INDEX_KEY, new Integer( getNewVertexAndEdgeIndex() ), UserData.SHARED );
-							_logger.debug( "Replacing the target vertex out-edge: " + getCompleteEdgeName( outEdge ) + " (old) with: " + getCompleteEdgeName( new_edge ) + "(new)" );
+							_logger.debug( "Replacing the target vertex out-edge: " + getCompleteEdgeName( outEdge ) + " (old) with: " + getCompleteEdgeName( new_edge ) + "(new), using: " + getCompleteEdgeName( inEdge ) );
 							edgesToBeRemoved.add( inEdge );
 							edgesToBeRemoved.add( outEdge );
 						}
@@ -1625,7 +1625,7 @@ public class ModelBasedTesting
 							DirectedSparseEdge new_edge = (DirectedSparseEdge)mainGraph.addEdge( new DirectedSparseEdge( srcVertex, outEdge.getDest() ) );
 							new_edge.importUserData( outEdge );
 							new_edge.setUserDatum( INDEX_KEY, new Integer( getNewVertexAndEdgeIndex() ), UserData.SHARED );
-							_logger.debug( "Replacing the target vertex out-edge: " + getCompleteEdgeName( outEdge ) + " (old) with: " + getCompleteEdgeName( new_edge ) + "(new)" );
+							_logger.debug( "Replacing the target vertex out-edge: " + getCompleteEdgeName( outEdge ) + " (old) with: " + getCompleteEdgeName( new_edge ) + "(new), using: " + getCompleteEdgeName( inEdge ) );
 							edgesToBeRemoved.add( inEdge );
 							edgesToBeRemoved.add( outEdge );
 						}
@@ -1636,7 +1636,7 @@ public class ModelBasedTesting
 								DirectedSparseEdge new_edge = (DirectedSparseEdge)mainGraph.addEdge( new DirectedSparseEdge( srcVertex, outEdge.getDest() ) );
 								new_edge.importUserData( inEdge );
 								new_edge.setUserDatum( INDEX_KEY, new Integer( getNewVertexAndEdgeIndex() ), UserData.SHARED );
-								_logger.debug( "Replacing the target vertex out-edge: " + getCompleteEdgeName( outEdge ) + " (old) with: " + getCompleteEdgeName( new_edge ) + "(new)" );
+								_logger.debug( "Replacing the target vertex out-edge: " + getCompleteEdgeName( outEdge ) + " (old) with: " + getCompleteEdgeName( new_edge ) + "(new), using: " + getCompleteEdgeName( inEdge ) );
 								edgesToBeRemoved.add( inEdge );
 								edgesToBeRemoved.add( outEdge );
 							}
