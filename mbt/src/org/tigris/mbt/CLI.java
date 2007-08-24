@@ -521,8 +521,7 @@ public class CLI
 	    		}
 	    		catch ( RuntimeException e )
 	    		{
-	    			e.printStackTrace();
-	    			System.out.println( e.getMessage() );
+	        		System.err.println( e.getMessage() );
 	    		}            	
 			}
 			else if ( args[ 0 ].equals( "perl" ) )
@@ -608,8 +607,7 @@ public class CLI
 	    		}
 	    		catch ( RuntimeException e )
 	    		{
-	    			e.printStackTrace();
-	    			System.out.println( e.getMessage() );
+	        		System.err.println( e.getMessage() );
 	    		}            	
 			}
 			else if ( args[ 0 ].equals( "perl_output" ) )
@@ -637,8 +635,7 @@ public class CLI
 	    		}
 	    		catch ( RuntimeException e )
 	    		{
-	    			e.printStackTrace();
-	    			System.out.println( e.getMessage() );
+	        		System.err.println( e.getMessage() );
 	    		}            	
 			}
         }
@@ -791,7 +788,7 @@ public class CLI
 		}
 		catch ( NumberFormatException e )
 		{
-			System.out.println( "Incorrect indata. Only 0, 1 or 2 is allowed." );
+			System.err.println( "Incorrect indata. Only 0, 1 or 2 is allowed." );
 		}
 		catch ( Exception e )
 		{
