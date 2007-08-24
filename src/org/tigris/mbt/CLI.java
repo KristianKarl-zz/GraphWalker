@@ -166,6 +166,7 @@ public class CLI
 					opt.addOption( "r", "random", false, "Run the test with a random walk. Can not be combined with --optimize. " + 
 						"This argument also needs the --time to be set." );
 					opt.addOption( "o", "optimize", false, "Run the test optimized. Can not be combined with --random." );			
+					opt.addOption( "s", "statistics", false, "Prints the statistics of the test, at the end of the run." );
 					opt.addOption( OptionBuilder.withArgName( "file" )
 						.withDescription( "The perl script implementing the model." )
 						.hasArg()
@@ -307,6 +308,7 @@ public class CLI
 				opt.addOption( "r", "random", false, "Run the test with a random walk. Can not be combined with --optimize. " + 
 					"This argument also needs the --time to be set." );
 				opt.addOption( "o", "optimize", false, "Run the test optimized. Can not be combined with --random." );			
+				opt.addOption( "s", "statistics", false, "Prints the statistics of the test, at the end of the run." );
 				opt.addOption( OptionBuilder.withArgName( "file" )
 					.withDescription( "The perl script implementing the model." )
 					.hasArg()
@@ -566,6 +568,15 @@ public class CLI
 	                return;	            	
 	            }
 
+	            if ( cl.hasOption( "s" ) ) 
+	            {
+	            	statistics = true;
+	            }
+	            else
+	            {
+	            	statistics = false;
+	            }
+	            
             	graphmlFile = cl.getOptionValue( "g" );
             	perlScript  = cl.getOptionValue( "p" );            	
             	
@@ -823,7 +834,11 @@ public class CLI
 			}
 		}
 		
-		System.out.println( mbt.getStatistics() );
+		if ( statistics )
+		{
+			mbt.getLogger().info( mbt.getStatistics() );
+			System.out.println( mbt.getStatistics() );
+		}
 	}
 
 	public int run_Perl_Subrotine( String command )
