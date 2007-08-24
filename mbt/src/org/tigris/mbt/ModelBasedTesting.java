@@ -1594,8 +1594,19 @@ public class ModelBasedTesting
 						// Compare labels. If equal they are to be merged, else not
 						String inEdgeLabel = (String)inEdge.getUserDatum( LABEL_KEY );
 						String outEdgeLabel = (String)outEdge.getUserDatum( LABEL_KEY );
+						
+						if ( inEdgeLabel != null && inEdgeLabel.length() == 0 )
+						{
+							inEdgeLabel = null;
+						}
+						if ( outEdgeLabel != null && outEdgeLabel.length() == 0 )
+						{
+							outEdgeLabel = null;
+						}
+						
 						if ( outEdgeLabel == null && inEdgeLabel == null )
 						{
+							_logger.debug( "outEdgeLabel and inEdgeLabel are both null" );
 							DirectedSparseEdge new_edge = (DirectedSparseEdge)mainGraph.addEdge( new DirectedSparseEdge( srcVertex, outEdge.getDest() ) );
 							new_edge.importUserData( inEdge );
 							new_edge.setUserDatum( INDEX_KEY, new Integer( getNewVertexAndEdgeIndex() ), UserData.SHARED );
@@ -1606,6 +1617,7 @@ public class ModelBasedTesting
 						else if ( outEdgeLabel != null && inEdgeLabel != null &&
 								  outEdgeLabel.equals( inEdgeLabel ) )
 						{
+							_logger.debug( "outEdgeLabel and inEdgeLabel are has equal labels (not null though)" );
 							DirectedSparseEdge new_edge = (DirectedSparseEdge)mainGraph.addEdge( new DirectedSparseEdge( srcVertex, outEdge.getDest() ) );
 							if ( inEdgeLabel.length() > outEdgeLabel.length() )
 							{
@@ -1622,6 +1634,7 @@ public class ModelBasedTesting
 						}
 						else if ( outEdgeLabel != null && inEdgeLabel == null )
 						{
+							_logger.debug( "outEdgeLabel has a label, and inEdgeLabel is null" );
 							DirectedSparseEdge new_edge = (DirectedSparseEdge)mainGraph.addEdge( new DirectedSparseEdge( srcVertex, outEdge.getDest() ) );
 							new_edge.importUserData( outEdge );
 							new_edge.setUserDatum( INDEX_KEY, new Integer( getNewVertexAndEdgeIndex() ), UserData.SHARED );
@@ -1629,10 +1642,12 @@ public class ModelBasedTesting
 							edgesToBeRemoved.add( inEdge );
 							edgesToBeRemoved.add( outEdge );
 						}
-						else if ( outEdgeLabel == null || outEdgeLabel.length() == 0 )
+						else if ( outEdgeLabel == null  )
 						{
+							_logger.debug( "outEdgeLabel is null" );
 							if ( !existStrInEdges( targetVertexOutEdges, inEdgeLabel ) )
 							{
+								_logger.debug( "The inEdgeLabel matches a label in the targetVertexOutEdges list" );
 								DirectedSparseEdge new_edge = (DirectedSparseEdge)mainGraph.addEdge( new DirectedSparseEdge( srcVertex, outEdge.getDest() ) );
 								new_edge.importUserData( inEdge );
 								new_edge.setUserDatum( INDEX_KEY, new Integer( getNewVertexAndEdgeIndex() ), UserData.SHARED );
