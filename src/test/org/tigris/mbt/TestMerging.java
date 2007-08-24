@@ -1,7 +1,12 @@
 package test.org.tigris.mbt;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
+
 import junit.framework.TestCase;
 
+import org.tigris.mbt.CLI;
 import org.tigris.mbt.ModelBasedTesting;
 
 import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
@@ -11,6 +16,7 @@ import edu.uci.ics.jung.graph.impl.SparseGraph;
 public class TestMerging extends TestCase
 {
 	private String  INDEX_KEY = "index";
+	StringBuffer stdOutput = new StringBuffer();
 
 	public TestMerging( String testName )
     {
@@ -508,6 +514,36 @@ public class TestMerging extends TestCase
     		System.out.println(e.getMessage());
 	    	fail( e.getMessage() );
     	}
+		System.out.println( "" );
+    }
+
+    // Check for reserved keywords 
+    public void test24()
+    {
+		System.out.println( "TEST: test24" );
+		System.out.println( "=======================================================================" );
+		String args[] = new String[ 3 ];
+		args[ 0 ] = "methods";
+		args[ 1 ] = "-g";
+		args[ 2 ] = "graphml/test24";
+    	CLI cli = new CLI();
+    	
+    	
+    	OutputStream out = new OutputStream() {
+    		public void write(int b) throws IOException {
+    			stdOutput.append( Character.toString((char) b) );
+    		}
+   		};
+    	PrintStream stream = new PrintStream( out );
+    	System.setErr( stream );
+    	cli.main( args );
+    	System.setErr( System.err );
+    	
+    	String msg = stdOutput.toString();
+    	msg = msg.substring( 0, msg.length() - 1 );
+    	
+		System.out.println( msg );
+		assertTrue( msg.matches( "Edge has a label 'BACKTRACK', which is a reserved keyword, in file: '/home/krikar/workspace/mbt/graphml/test24/Camera.graphml'" ) );
 		System.out.println( "" );
     }
 }

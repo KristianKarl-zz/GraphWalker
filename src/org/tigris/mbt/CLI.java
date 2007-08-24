@@ -644,12 +644,12 @@ public class CLI
         }
 		catch ( MissingArgumentException e )
         {
-			System.out.println( e.getMessage() );
-        	System.out.println( "Type 'java -jar mbt.jar help " + args[ 0 ] + "' for help." );
+			System.err.println( e.getMessage() );
+        	System.err.println( "Type 'java -jar mbt.jar help " + args[ 0 ] + "' for help." );
         }
         catch ( ParseException e ) 
         {
-            e.printStackTrace();
+    		System.err.println( e.getMessage() );
         }
 	}
 
@@ -868,8 +868,8 @@ public class CLI
 		}
 		catch (Exception e)
 		{
-			System.out.println("Error executing "+command);
-			e.printStackTrace();
+			System.err.println( "Error executing " + command );
+    		System.err.println( e.getMessage() );
 		}
 		return result;
 	}
@@ -916,7 +916,7 @@ public class CLI
 		}		
 		catch ( Exception e )
 		{
-			e.printStackTrace();
+    		System.err.println( e.getMessage() );
 		}
 	}
 	
@@ -930,7 +930,7 @@ public class CLI
 		}
 		catch ( Exception e )
 		{
-			e.printStackTrace();
+    		System.err.println( e.getMessage() );
 		}
 	}
 }

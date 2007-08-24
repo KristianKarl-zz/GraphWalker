@@ -105,7 +105,28 @@ public class ModelBasedTesting
 	private List				 	_shortestPathToVertex = null ;
 	private int						_latestNumberOfUnvisitedEdges;
 	private int				    	_vertexAndEdgeIndex = 0;
+	private Vector 					_reservedKeyWords = new Vector(); 
 	
+	{
+		_reservedKeyWords.add( "BLOCKED" );
+		_reservedKeyWords.add( "BACKTRACK" );
+		_reservedKeyWords.add( "MERGE" );
+		_reservedKeyWords.add( "NO_MERGE" );		
+	}
+	
+	private boolean isKeyWord( String wordToCheck )
+	{
+        for ( Iterator iter = _reservedKeyWords.iterator(); iter.hasNext(); )
+        {
+            String keyWord = (String) iter.next();
+            if ( keyWord.equals( wordToCheck ) )
+            {
+            	return true;
+            }
+        }
+        return false;
+	}
+ 	
 	public int getNewVertexAndEdgeIndex()
 	{
 		return ++_vertexAndEdgeIndex;
@@ -614,6 +635,10 @@ public class ModelBasedTesting
 								{
 									throw new RuntimeException( "Vertex has a label '" + label  + "', containing whitespaces in file: '" + fileName + "'" );
 								}
+								if ( isKeyWord( label ) )
+								{
+									throw new RuntimeException( "Vertex has a label '" + label  + "', which is a reserved keyword, in file: '" + fileName + "'" );
+								}
 								v.addUserDatum( LABEL_KEY, label, UserData.SHARED );
 							}
 							else
@@ -793,6 +818,10 @@ public class ModelBasedTesting
 								if ( label.matches( ".*[\\s].*" ) )
 								{
 									throw new RuntimeException( "Edge has a label '" + label + "',  '" + getCompleteEdgeName( e ) + "', containing whitespaces in file: '" + fileName + "'" );
+								}
+								if ( isKeyWord( label ) )
+								{
+									throw new RuntimeException( "Edge has a label '" + label  + "', which is a reserved keyword, in file: '" + fileName + "'" );
 								}
 								e.addUserDatum( LABEL_KEY, label, UserData.SHARED );
 								_logger.debug( "Found label = '" + label + "' for edge id: " + edgeLabel.getQualifiedName() );
