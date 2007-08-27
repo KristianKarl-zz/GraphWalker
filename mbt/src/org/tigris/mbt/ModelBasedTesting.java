@@ -1569,95 +1569,59 @@ public class ModelBasedTesting
 			Vector edgesToBeRemoved = new Vector();
 			inEdges = stopVertex.getInEdges().toArray();
 			_logger.debug( "The stop vertex has: " + inEdges.length + " in-edges" );
-			for ( int i = 0; i < inEdges.length; i++ )
+			
+			// Either the stop vertex, or the target vertex has only 1 in/out edge
+			if ( targetVertexOutEdges.length == 1 || inEdges.length == 1 )
 			{
-				DirectedSparseEdge inEdge = (DirectedSparseEdge)inEdges[ i ];
-				DirectedSparseVertex srcVertex = (DirectedSparseVertex)inEdge.getSource();
-				
-				_logger.debug( "The target vertex has: " + targetVertexOutEdges.length + " out-edges" );
-				if ( targetVertexOutEdges.length == 1 )
+				_logger.debug( "Either the stop vertex, or the target vertex has only 1 in/out edge" );
+				// Both stop vertex, and target vertex has only 1 in/out edge
+				if ( targetVertexOutEdges.length == 1 && inEdges.length == 1 )
 				{
+					_logger.debug( "Both stop vertex, and target vertex has only 1 in/out edge" );
 					DirectedSparseEdge outEdge = (DirectedSparseEdge)targetVertexOutEdges[ 0 ];
-					DirectedSparseEdge new_edge = (DirectedSparseEdge)mainGraph.addEdge( new DirectedSparseEdge( srcVertex, outEdge.getDest() ) );
-					new_edge.importUserData( inEdge );
-					new_edge.setUserDatum( INDEX_KEY, new Integer( getNewVertexAndEdgeIndex() ), UserData.SHARED );
-					_logger.debug( "Replacing the target vertex out-edge: " + getCompleteEdgeName( outEdge ) + " (old) with: " + getCompleteEdgeName( new_edge ) + "(new), using: " + getCompleteEdgeName( inEdge ) );
-					edgesToBeRemoved.add( inEdge );
-					edgesToBeRemoved.add( outEdge );
+					DirectedSparseEdge inEdge = (DirectedSparseEdge)inEdges[ 0 ];
+					MergeOutEdgeAndInEdge( outEdge, inEdge, edgesToBeRemoved, mainGraph, false );
+				}
+				else if ( targetVertexOutEdges.length == 1 )
+				{
+					_logger.debug( "The target vertex has only 1 out edge" );
+					DirectedSparseEdge outEdge = (DirectedSparseEdge)targetVertexOutEdges[ 0 ];
+					for ( int i = 0; i < inEdges.length; i++ )
+					{
+						DirectedSparseEdge inEdge = (DirectedSparseEdge)inEdges[ i ];
+						MergeOutEdgeAndInEdge( outEdge, inEdge, edgesToBeRemoved, mainGraph, false );
+					}					
 				}
 				else
 				{
+					_logger.debug( "The stop vertex has only 1 out edge" );
+					DirectedSparseEdge inEdge = (DirectedSparseEdge)inEdges[ 0 ];
+					for ( int i = 0; i < targetVertexOutEdges.length; i++ )
+					{
+						DirectedSparseEdge outEdge = (DirectedSparseEdge)targetVertexOutEdges[ i ];
+						MergeOutEdgeAndInEdge( outEdge, inEdge, edgesToBeRemoved, mainGraph, false );
+					}
+				}
+			}
+			else
+			{
+				_logger.debug( "Both the stop and target vertex has more than 1 set of out edges" );
+				for ( int i = 0; i < inEdges.length; i++ )
+				{
+					DirectedSparseEdge inEdge = (DirectedSparseEdge)inEdges[ i ];
+
+					boolean doNotMatchNulls = false;
+					if ( existLabelInEdges( targetVertexOutEdges, inEdge ) )
+					{
+						doNotMatchNulls = true;
+					}
+						
 					for ( int j = 0; j < targetVertexOutEdges.length; j++ )
 					{
 						DirectedSparseEdge outEdge = (DirectedSparseEdge)targetVertexOutEdges[ j ];
-						
-						// Compare labels. If equal they are to be merged, else not
-						String inEdgeLabel = (String)inEdge.getUserDatum( LABEL_KEY );
-						String outEdgeLabel = (String)outEdge.getUserDatum( LABEL_KEY );
-						
-						if ( inEdgeLabel != null && inEdgeLabel.length() == 0 )
-						{
-							inEdgeLabel = null;
-						}
-						if ( outEdgeLabel != null && outEdgeLabel.length() == 0 )
-						{
-							outEdgeLabel = null;
-						}
-						
-						if ( outEdgeLabel == null && inEdgeLabel == null )
-						{
-							_logger.debug( "outEdgeLabel and inEdgeLabel are both null" );
-							DirectedSparseEdge new_edge = (DirectedSparseEdge)mainGraph.addEdge( new DirectedSparseEdge( srcVertex, outEdge.getDest() ) );
-							new_edge.importUserData( inEdge );
-							new_edge.setUserDatum( INDEX_KEY, new Integer( getNewVertexAndEdgeIndex() ), UserData.SHARED );
-							_logger.debug( "Replacing the target vertex out-edge: " + getCompleteEdgeName( outEdge ) + " (old) with: " + getCompleteEdgeName( new_edge ) + "(new), using: " + getCompleteEdgeName( inEdge ) );
-							edgesToBeRemoved.add( inEdge );
-							edgesToBeRemoved.add( outEdge );
-						}
-						else if ( outEdgeLabel != null && inEdgeLabel != null &&
-								  outEdgeLabel.equals( inEdgeLabel ) )
-						{
-							_logger.debug( "outEdgeLabel and inEdgeLabel are has equal labels (not null though)" );
-							DirectedSparseEdge new_edge = (DirectedSparseEdge)mainGraph.addEdge( new DirectedSparseEdge( srcVertex, outEdge.getDest() ) );
-							if ( inEdgeLabel.length() > outEdgeLabel.length() )
-							{
-								new_edge.importUserData( inEdge );
-							}
-							else
-							{
-								new_edge.importUserData( outEdge );
-							}
-							new_edge.setUserDatum( INDEX_KEY, new Integer( getNewVertexAndEdgeIndex() ), UserData.SHARED );
-							_logger.debug( "Replacing the target vertex out-edge: " + getCompleteEdgeName( outEdge ) + " (old) with: " + getCompleteEdgeName( new_edge ) + "(new), using: " + getCompleteEdgeName( inEdge ) );
-							edgesToBeRemoved.add( inEdge );
-							edgesToBeRemoved.add( outEdge );
-						}
-						else if ( outEdgeLabel != null && inEdgeLabel == null )
-						{
-							_logger.debug( "outEdgeLabel has a label, and inEdgeLabel is null" );
-							DirectedSparseEdge new_edge = (DirectedSparseEdge)mainGraph.addEdge( new DirectedSparseEdge( srcVertex, outEdge.getDest() ) );
-							new_edge.importUserData( outEdge );
-							new_edge.setUserDatum( INDEX_KEY, new Integer( getNewVertexAndEdgeIndex() ), UserData.SHARED );
-							_logger.debug( "Replacing the target vertex out-edge: " + getCompleteEdgeName( outEdge ) + " (old) with: " + getCompleteEdgeName( new_edge ) + "(new), using: " + getCompleteEdgeName( inEdge ) );
-							edgesToBeRemoved.add( inEdge );
-							edgesToBeRemoved.add( outEdge );
-						}
-						else if ( outEdgeLabel == null  )
-						{
-							_logger.debug( "outEdgeLabel is null" );
-							if ( !existStrInEdges( targetVertexOutEdges, inEdgeLabel ) )
-							{
-								_logger.debug( "The inEdgeLabel matches a label in the targetVertexOutEdges list" );
-								DirectedSparseEdge new_edge = (DirectedSparseEdge)mainGraph.addEdge( new DirectedSparseEdge( srcVertex, outEdge.getDest() ) );
-								new_edge.importUserData( inEdge );
-								new_edge.setUserDatum( INDEX_KEY, new Integer( getNewVertexAndEdgeIndex() ), UserData.SHARED );
-								_logger.debug( "Replacing the target vertex out-edge: " + getCompleteEdgeName( outEdge ) + " (old) with: " + getCompleteEdgeName( new_edge ) + "(new), using: " + getCompleteEdgeName( inEdge ) );
-								edgesToBeRemoved.add( inEdge );
-								edgesToBeRemoved.add( outEdge );
-							}
-						}
-					}				
-				}
+						MergeOutEdgeAndInEdge( outEdge, inEdge, edgesToBeRemoved, mainGraph, doNotMatchNulls );
+					}
+				}									
 			}
 
 			
@@ -2551,27 +2515,130 @@ public class ModelBasedTesting
 
 	
 	/**
-	 * This functions returns true if the label (str) exists in the array of edges
+	 * This functions returns true if the label of the edge e exists in the array of edges
 	 * @param array
 	 * @return
 	 */
-	private boolean existStrInEdges( Object[] arrayOfEdges, String str )
+	private boolean existLabelInEdges( Object[] arrayOfEdges, DirectedSparseEdge e )
 	{
+		_logger.debug( "existLabelInEdges" );
+		_logger.debug( "  Edge e: " + getCompleteEdgeName( e ) );				
+		
 		for ( int i = 0; i < arrayOfEdges.length; i++ )
 		{
 			DirectedSparseEdge edge = (DirectedSparseEdge)arrayOfEdges[ i ];
+			_logger.debug( "  Edge edge: " + getCompleteEdgeName( edge ) );				
+
 			if ( edge == null )
 			{
 				throw new RuntimeException( "Internal progamming error. Expected to find an edge, and not null." );
 			}
 				
-			String label = (String)edge.getUserDatum( LABEL_KEY );
+			String label_A = (String)edge.getUserDatum( LABEL_KEY );
+			String label_B = (String)e.getUserDatum( LABEL_KEY );
 			
-			if ( str.equals( label ) )
+			if ( label_A == null && label_B == null )
 			{
+				_logger.debug( "  Both labels are null, so the label of the edge exists in the list of edges" );
 				return true;
+			}
+			if ( label_A != null && label_B != null )
+			{
+				if ( label_A.equals( label_B ) )
+				{
+					_logger.debug( "  Both labels are: '" + label_A + "', so the label of the edge exists in the list of edges" );
+					return true;
+				}
 			}
 		}
 		return false;
+	}
+	
+	
+	private void MergeOutEdgeAndInEdge( DirectedSparseEdge outEdge, DirectedSparseEdge inEdge, Vector edgesToBeRemoved, SparseGraph graph, boolean doNotMatchNulls )
+	{
+		_logger.debug( "MergeOutEdgeAndInEdge" );
+
+		boolean merge = false;
+		boolean usingOutEdge = true;
+		String outEdgeLabel = (String)outEdge.getUserDatum( LABEL_KEY );
+		String inEdgeLabel = (String)inEdge.getUserDatum( LABEL_KEY );
+		
+		_logger.debug( "  outEdgeLabel: " + outEdgeLabel );
+		_logger.debug( "  inEdgeLabel: " + inEdgeLabel );
+
+		if ( outEdgeLabel != null && outEdgeLabel.length() == 0 )
+		{
+			outEdgeLabel = null;
+		}
+		if ( inEdgeLabel != null && inEdgeLabel.length() == 0 )
+		{
+			inEdgeLabel = null;
+		}
+		
+		if ( outEdgeLabel == null && inEdgeLabel == null )
+		{
+			_logger.debug( "  outEdgeLabel and inEdgeLabel are null" );
+			merge = true;
+		}
+		else if ( outEdgeLabel == null || inEdgeLabel == null )
+		{
+			if ( doNotMatchNulls == false )
+			{
+				_logger.debug( "  outEdgeLabel or inEdgeLabel is null" );
+				merge = true;
+			}
+		}
+		else if ( outEdgeLabel != null && inEdgeLabel != null && outEdgeLabel.equals( inEdgeLabel ) )
+		{
+			_logger.debug( "  outEdgeLabel and inEdgeLabel are has equal labels: '" + outEdgeLabel + "'" );
+			merge = true;		
+		}
+
+		if ( merge )
+		{
+			DirectedSparseEdge new_edge = (DirectedSparseEdge)graph.addEdge( new DirectedSparseEdge( (DirectedSparseVertex)inEdge.getSource(), outEdge.getDest() ) );
+
+			if ( outEdgeLabel != null && inEdgeLabel == null )
+			{
+				usingOutEdge = true;
+				new_edge.importUserData( outEdge );				
+			}
+			else if ( outEdgeLabel == null && inEdgeLabel != null )
+			{
+				usingOutEdge = false;
+				new_edge.importUserData( inEdge );				
+			}
+			else if ( outEdgeLabel != null && inEdgeLabel != null )
+			{
+				if ( inEdgeLabel.length() > outEdgeLabel.length() )
+				{
+					usingOutEdge = false;
+					new_edge.importUserData( inEdge );
+				}
+				else
+				{
+					usingOutEdge = true;
+					new_edge.importUserData( outEdge );
+				}
+			}
+			else
+			{
+				usingOutEdge = true;
+				new_edge.importUserData( outEdge );				
+			}
+				
+			new_edge.setUserDatum( INDEX_KEY, new Integer( getNewVertexAndEdgeIndex() ), UserData.SHARED );
+			if ( usingOutEdge )
+			{
+				_logger.debug( "  Replacing the target vertex out-edge: " + getCompleteEdgeName( outEdge ) + " (old) with: " + getCompleteEdgeName( new_edge ) + "(new), using: " + getCompleteEdgeName( outEdge ) );				
+			}
+			else
+			{
+				_logger.debug( "  Replacing the target vertex out-edge: " + getCompleteEdgeName( outEdge ) + " (old) with: " + getCompleteEdgeName( new_edge ) + "(new), using: " + getCompleteEdgeName( inEdge ) );
+			}
+			edgesToBeRemoved.add( inEdge );
+			edgesToBeRemoved.add( outEdge );
+		}
 	}
 }
