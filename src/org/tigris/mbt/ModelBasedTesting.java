@@ -29,6 +29,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -587,16 +588,16 @@ public class ModelBasedTesting
 					org.jdom.Element element = (org.jdom.Element)o;
 					if ( element.getAttributeValue( "yfiles.foldertype" ) != null )
 					{
-						_logger.debug( "Excluded node: " + element.getAttributeValue( "yfiles.foldertype" ) );
+						_logger.debug( "  Excluded node: " + element.getAttributeValue( "yfiles.foldertype" ) );
 						continue;
 					}
 					Iterator iterUMLNoteIter = element.getDescendants( new org.jdom.filter.ElementFilter( "UMLNoteNode" ) );
 					if ( iterUMLNoteIter.hasNext() )
 					{
-						_logger.debug( "Excluded node: UMLNoteNode" );
+						_logger.debug( "  Excluded node: UMLNoteNode" );
 						continue;
 					}
-					_logger.debug( "id: " + element.getAttributeValue( "id" ) );
+					_logger.debug( "  id: " + element.getAttributeValue( "id" ) );
 
 					// Used to remember which vertext to store the image location.
 					DirectedSparseVertex currentVertex = null;
@@ -608,8 +609,8 @@ public class ModelBasedTesting
 						if ( o2 instanceof org.jdom.Element )
 						{
 							org.jdom.Element nodeLabel = (org.jdom.Element)o2;
-							_logger.debug( "Full name: '" + nodeLabel.getQualifiedName() + "'" );
-							_logger.debug( "Name: '" + nodeLabel.getTextTrim() + "'" );
+							_logger.debug( "  Full name: '" + nodeLabel.getQualifiedName() + "'" );
+							_logger.debug( "  Name: '" + nodeLabel.getTextTrim() + "'" );
 
 							DirectedSparseVertex v = (DirectedSparseVertex) graph.addVertex( new DirectedSparseVertex() );
 							currentVertex = v;
@@ -645,7 +646,7 @@ public class ModelBasedTesting
 							{
 								throw new RuntimeException( "Label must be defined in file: '" + fileName + "'" );
 							}
-							_logger.debug( "Added vertex: '" + v.getUserDatum( LABEL_KEY ) + "', with id: " + v.getUserDatum( INDEX_KEY ) );
+							_logger.debug( "  Added vertex: '" + v.getUserDatum( LABEL_KEY ) + "', with id: " + v.getUserDatum( INDEX_KEY ) );
 
 
 
@@ -659,7 +660,7 @@ public class ModelBasedTesting
 							if ( m.find() )
 							{
 								v.addUserDatum( MERGE, m.group( 1 ), UserData.SHARED );
-								_logger.debug( "Found MERGE for vertex: " + label );
+								_logger.debug( "  Found MERGE for vertex: " + label );
 							}
 
 
@@ -672,7 +673,7 @@ public class ModelBasedTesting
 							if ( m.find() )
 							{
 								v.addUserDatum( NO_MERGE, m.group( 1 ), UserData.SHARED );
-								_logger.debug( "Found NO_MERGE for vertex: " + label );
+								_logger.debug( "  Found NO_MERGE for vertex: " + label );
 							}
 
 
@@ -686,7 +687,7 @@ public class ModelBasedTesting
 							m = p.matcher( str );
 							if ( m.find() )
 							{
-								_logger.debug( "Found BLOCKED. This vetex will be removed from the graph: " + label );
+								_logger.debug( "  Found BLOCKED. This vetex will be removed from the graph: " + label );
 								v.addUserDatum( BLOCKED, BLOCKED, UserData.SHARED );
 							}
 
@@ -700,7 +701,7 @@ public class ModelBasedTesting
 							if ( m.find() )
 							{
 								String index_key = m.group( 2 );
-								_logger.debug( "Found INDEX. This vertex will use the INDEX key: " + index_key );
+								_logger.debug( "  Found INDEX. This vertex will use the INDEX key: " + index_key );
 								v.setUserDatum( INDEX_KEY, new Integer( index_key ), UserData.SHARED );
 							}
 						}
@@ -716,7 +717,7 @@ public class ModelBasedTesting
 						if ( o2 instanceof org.jdom.Element )
 						{
 							org.jdom.Element image = (org.jdom.Element)o2;
-							_logger.debug( "Image: '" + image.getAttributeValue( "href" ) + "'" );
+							_logger.debug( "  Image: '" + image.getAttributeValue( "href" ) + "'" );
 							currentVertex.addUserDatum( IMAGE_KEY, image.getAttributeValue( "href" ), UserData.SHARED );
 						}
 					}
@@ -727,8 +728,8 @@ public class ModelBasedTesting
 						if ( o2 instanceof org.jdom.Element )
 						{
 							org.jdom.Element geometry = (org.jdom.Element)o2;
-							_logger.debug( "width: '" + geometry.getAttributeValue( "width" ) + "'" );
-							_logger.debug( "height: '" + geometry.getAttributeValue( "height" ) + "'" );
+							_logger.debug( "  width: '" + geometry.getAttributeValue( "width" ) + "'" );
+							_logger.debug( "  height: '" + geometry.getAttributeValue( "height" ) + "'" );
 							currentVertex.addUserDatum( WIDTH_KEY, geometry.getAttributeValue( "width" ), UserData.SHARED );							
 							currentVertex.addUserDatum( HEIGHT_KEY, geometry.getAttributeValue( "height" ), UserData.SHARED );
 						}
@@ -746,7 +747,7 @@ public class ModelBasedTesting
 				if ( o instanceof org.jdom.Element )
 				{
 					org.jdom.Element element = (org.jdom.Element)o;
-					_logger.debug( "id: " + element.getAttributeValue( "id" ) );
+					_logger.debug( "  id: " + element.getAttributeValue( "id" ) );
 
 					Iterator iter2 = element.getDescendants( new org.jdom.filter.ElementFilter( "EdgeLabel" ) );
 					org.jdom.Element edgeLabel = null;
@@ -756,12 +757,12 @@ public class ModelBasedTesting
 						if ( o2 instanceof org.jdom.Element )
 						{
 							edgeLabel = (org.jdom.Element)o2;
-							_logger.debug( "Full name: '" + edgeLabel.getQualifiedName() + "'" );
-							_logger.debug( "Name: '" + edgeLabel.getTextTrim() + "'" );
+							_logger.debug( "  Full name: '" + edgeLabel.getQualifiedName() + "'" );
+							_logger.debug( "  Name: '" + edgeLabel.getTextTrim() + "'" );
 						}
 					}
-					_logger.debug( "source: " + element.getAttributeValue( "source" ) );
-					_logger.debug( "target: " + element.getAttributeValue( "target" ) );
+					_logger.debug( "  source: " + element.getAttributeValue( "source" ) );
+					_logger.debug( "  target: " + element.getAttributeValue( "target" ) );
 
 					DirectedSparseVertex source = null;
 					DirectedSparseVertex dest = null;
@@ -824,7 +825,7 @@ public class ModelBasedTesting
 									throw new RuntimeException( "Edge has a label '" + label  + "', which is a reserved keyword, in file: '" + fileName + "'" );
 								}
 								e.addUserDatum( LABEL_KEY, label, UserData.SHARED );
-								_logger.debug( "Found label = '" + label + "' for edge id: " + edgeLabel.getQualifiedName() );
+								_logger.debug( " Found label = '" + label + "' for edge id: " + edgeLabel.getQualifiedName() );
 							}
 						}
 						else
@@ -847,7 +848,7 @@ public class ModelBasedTesting
 							try
 							{
 								weight = Float.valueOf( value.trim() );
-								_logger.debug( "Found weight= " + weight + " for edge: " + label );
+								_logger.debug( "  Found weight= " + weight + " for edge: " + label );
 							}
 							catch ( NumberFormatException error )
 							{
@@ -867,7 +868,7 @@ public class ModelBasedTesting
 						m = p.matcher( str );
 						if ( m.find() )
 						{
-							_logger.debug( "Found BLOCKED. This edge will be removed from the graph: " + label );
+							_logger.debug( "  Found BLOCKED. This edge will be removed from the graph: " + label );
 							e.addUserDatum( BLOCKED, BLOCKED, UserData.SHARED );
 						}
 
@@ -882,7 +883,7 @@ public class ModelBasedTesting
 						m = p.matcher( str );
 						if ( m.find() )
 						{
-							_logger.debug( "Found BACKTRACK for edge: " + label );
+							_logger.debug( "  Found BACKTRACK for edge: " + label );
 							e.addUserDatum( BACKTRACK, BACKTRACK, UserData.SHARED );
 						}
 
@@ -901,7 +902,7 @@ public class ModelBasedTesting
 							String variable = m.group( 2 );
 							Boolean state   = Boolean.valueOf( m.group( 3 ) );
 							conditions.put( variable, state );
-							_logger.debug( "Condition: " + variable + " = " +  state );
+							_logger.debug( "  Condition: " + variable + " = " +  state );
 						}
 						if ( conditions != null )
 						{
@@ -923,7 +924,7 @@ public class ModelBasedTesting
 							String variable = m.group( 2 );
 							Boolean state   = Boolean.valueOf( m.group( 3 ) );
 							states.put( variable, state );
-							_logger.debug( "State: " + variable + " = " +  state );
+							_logger.debug( "  State: " + variable + " = " +  state );
 						}
 						if ( states != null )
 						{
@@ -940,7 +941,7 @@ public class ModelBasedTesting
 						if ( m.find() )
 						{
 							String index_key = m.group( 2 );
-							_logger.debug( "Found INDEX. This edge will use the INDEX key: " + index_key );
+							_logger.debug( "  Found INDEX. This edge will use the INDEX key: " + index_key );
 							e.setUserDatum( INDEX_KEY, new Integer( index_key ), UserData.SHARED );
 						}
 
@@ -959,7 +960,7 @@ public class ModelBasedTesting
 								String variableLabel = m.group( 2 );
 								String variable = m.group( 3 );
 								variables.put( variableLabel, variable );
-								_logger.debug( "String variable: " + variableLabel + " = " +  variable );
+								_logger.debug( "  String variable: " + variableLabel + " = " +  variable );
 							}
 
 
@@ -976,7 +977,7 @@ public class ModelBasedTesting
 								String variableLabel = m.group( 2 );
 								Integer variable   = Integer.valueOf( m.group( 3 ) );
 								variables.put( variableLabel, variable );
-								_logger.debug( "Integer variable: " + variableLabel + " = " +  variable );
+								_logger.debug( "  Integer variable: " + variableLabel + " = " +  variable );
 							}
 
 
@@ -993,7 +994,7 @@ public class ModelBasedTesting
 								String variableLabel = m.group( 2 );
 								Float variable   = Float.valueOf( m.group( 3 ) );
 								variables.put( variableLabel, variable );
-								_logger.debug( "Float variable: " + variableLabel + " = " +  variable );
+								_logger.debug( "  Float variable: " + variableLabel + " = " +  variable );
 							}
 							if ( variables != null )
 							{
@@ -1002,7 +1003,7 @@ public class ModelBasedTesting
 						}
 
 						e.addUserDatum( VISITED_KEY, new Integer( 0 ), UserData.SHARED );
-						_logger.debug( "Added edge: '" + e.getUserDatum( LABEL_KEY ) + "', with id: " + e.getUserDatum( INDEX_KEY ) );
+						_logger.debug( "  Added edge: '" + e.getUserDatum( LABEL_KEY ) + "', with id: " + e.getUserDatum( INDEX_KEY ) );
 					}
 				}
 		}
@@ -1395,7 +1396,16 @@ public class ModelBasedTesting
 	// other vertices with the same name.
 	private void copySubGraphs( SparseGraph mainGraph, SparseGraph subGraph, DirectedSparseVertex targetVertex )
 	{
-		Object[] targetVertexOutEdges = targetVertex.getOutEdges().toArray();
+		// Save the target vertex out-edge list
+		Vector targetVertexOutEdgeList = new Vector();
+		_logger.debug( "Target vertex (" + getCompleteVertexName( targetVertex ) + ") out-edge list" );
+		for (Iterator iter = targetVertex.getOutEdges().iterator(); iter.hasNext();)
+		{
+			DirectedSparseEdge element = (DirectedSparseEdge) iter.next();
+			_logger.debug( "  " + getCompleteEdgeName( element ) );
+			targetVertexOutEdgeList.add( element );
+		}
+
 		DirectedSparseVertex sourceVertex = null;
 		Object[] vertices = mainGraph.getVertices().toArray();
 		for ( int i = 0; i < vertices.length; i++ )
@@ -1434,8 +1444,7 @@ public class ModelBasedTesting
 			return;
 		}
 
-		_logger.debug( "Start merging target vertex(" + targetVertex.getUserDatum( INDEX_KEY ) + ") with source vertex(" +
-				      sourceVertex.getUserDatum( INDEX_KEY ) + "), '" + sourceVertex.getUserDatum( LABEL_KEY ) + "'" );
+		_logger.debug( "Start merging target vertex: " + getCompleteVertexName( targetVertex ) + " with source vertex: " + getCompleteVertexName( sourceVertex ) );
 
 		Object[] inEdges = sourceVertex.getInEdges().toArray();
 		for (int i = 0; i < inEdges.length; i++)
@@ -1453,7 +1462,7 @@ public class ModelBasedTesting
 			new_edge.importUserData( edge );
 			new_edge.setUserDatum( INDEX_KEY, new Integer( getNewVertexAndEdgeIndex() ), UserData.SHARED );
 		}
-		_logger.debug( "Remvoing source vertex(" + sourceVertex.getUserDatum( INDEX_KEY ) + ")" );
+		_logger.debug( "Remvoing source vertex: " + getCompleteVertexName( sourceVertex) );
 		mainGraph.removeVertex( sourceVertex );
 		targetVertex.addUserDatum( MERGED_BY_MBT, MERGED_BY_MBT, UserData.SHARED );
 
@@ -1477,152 +1486,34 @@ public class ModelBasedTesting
 		}
 		
 		
-		// Verify that the edges in the subgraph (going to the Stop vertex)
-		// has corresonding edges in the graph using the sub-graph
-		if ( stopVertex != null )
-		{
-			inEdges = stopVertex.getInEdges().toArray();
-
-			// Check to see that there is an edge with the same name in both lists. 
-			if ( inEdges.length < targetVertexOutEdges.length )
-			{
-				_logger.debug( "The number of in-edges to the Stop vertex is less than the out-edges from the target vertex." );
-				for ( int i = 0; i < inEdges.length; i++ )
-				{
-					DirectedSparseEdge inEdge = (DirectedSparseEdge)inEdges[ i ];
-					String inEdgeLabel = (String)inEdge.getUserDatum( LABEL_KEY );
-					
-					if ( inEdgeLabel == null || inEdgeLabel.length() != 0 )
-					{
-						_logger.debug( "inEdgeLabel is null or empty" );
-						break;
-					}
-						
-					boolean foundName = false;
-					for ( int j = 0; j < targetVertexOutEdges.length; j++ )
-					{
-						DirectedSparseEdge outEdge = (DirectedSparseEdge)targetVertexOutEdges[ j ];
-						String outEdgeLabel = (String)outEdge.getUserDatum( LABEL_KEY );
-						_logger.debug( "Checking inEdgeLabel: '" +  inEdgeLabel + "' against outEdgeLabel: '" + outEdgeLabel + "'" );
-						if ( ( inEdgeLabel == null && outEdgeLabel == null ) || 
-							 ( inEdgeLabel != null && outEdgeLabel != null &&
-							   inEdgeLabel.equals( outEdgeLabel ) ) ) 
-						{
-							_logger.debug( "Found a match for: '" + inEdgeLabel + "'" );
-							foundName = true;
-							break;
-						}
-					}
-					if ( foundName == false )
-					{
-						String msg = "There is no matching edge: '" + inEdgeLabel + "'\nCan not merge the sub-graph: '" + subGraph.getUserDatum( FILE_KEY ) + "', from: '" + targetVertex.getUserDatum( FILE_KEY ) + "'";
-						_logger.error( msg );
-						throw new RuntimeException( msg );
-					}
-				}
-			}
-			else
-			{
-				_logger.debug( "The number of in-edges to the Stop vertex is more or equal than the out-edges from the target vertex." );
-				for ( int i = 0; i < targetVertexOutEdges.length; i++ )
-				{
-					DirectedSparseEdge outEdge = (DirectedSparseEdge)targetVertexOutEdges[ i ];
-					String outEdgeLabel = (String)outEdge.getUserDatum( LABEL_KEY );
-					
-					if ( outEdgeLabel == null || outEdgeLabel.length() != 0 )
-					{
-						_logger.debug( "outEdgeLabel is null or empty" );
-						break;
-					}
-						
-					boolean foundName = false;
-					for ( int j = 0; j < inEdges.length; j++ )
-					{
-						DirectedSparseEdge inEdge = (DirectedSparseEdge)inEdges[ j ];
-						String inEdgeLabel = (String)inEdge.getUserDatum( LABEL_KEY );
-						_logger.debug( "Checking outEdgeLabel: '" +  outEdgeLabel + "' against inEdgeLabel: '" + inEdgeLabel + "'" );
-						
-						if ( ( outEdgeLabel == null && inEdgeLabel == null ) || 
-							 ( outEdgeLabel != null && inEdgeLabel != null &&
-							   outEdgeLabel.equals( inEdgeLabel ) ) ) 
-						{
-							_logger.debug( "Found a match for: '" + outEdgeLabel + "'" );
-							foundName = true;
-							break;
-						}
-					}
-					if ( foundName == false )
-					{
-						String msg = "There is no matching edge: '" + outEdgeLabel + "'\nCan not merge the sub-graph: '" + subGraph.getUserDatum( FILE_KEY ) + "', from: '" + targetVertex.getUserDatum( FILE_KEY ) + "'";
-						_logger.error( msg );
-						throw new RuntimeException( msg );
-					}
-				}
-			}
-		}
-			
-		
 		// All edges going to the Stop vertex, needs to be merged to the destination vertex.
 		// The destination vertex, is pointed to by the vertex which is expanded by the sub graph.
 		if ( stopVertex != null )
 		{
 			Vector edgesToBeRemoved = new Vector();
 			inEdges = stopVertex.getInEdges().toArray();
-			_logger.debug( "The stop vertex has: " + inEdges.length + " in-edges" );
 			
-			// Either the stop vertex, or the target vertex has only 1 in/out edge
-			if ( targetVertexOutEdges.length == 1 || inEdges.length == 1 )
+			_logger.debug( "Stop vertex in-edge list" );
+			for (Iterator iter = stopVertex.getInEdges().iterator(); iter.hasNext();)
 			{
-				_logger.debug( "Either the stop vertex, or the target vertex has only 1 in/out edge" );
-				// Both stop vertex, and target vertex has only 1 in/out edge
-				if ( targetVertexOutEdges.length == 1 && inEdges.length == 1 )
-				{
-					_logger.debug( "Both stop vertex, and target vertex has only 1 in/out edge" );
-					DirectedSparseEdge outEdge = (DirectedSparseEdge)targetVertexOutEdges[ 0 ];
-					DirectedSparseEdge inEdge = (DirectedSparseEdge)inEdges[ 0 ];
-					MergeOutEdgeAndInEdge( outEdge, inEdge, edgesToBeRemoved, mainGraph, false );
-				}
-				else if ( targetVertexOutEdges.length == 1 )
-				{
-					_logger.debug( "The target vertex has only 1 out edge" );
-					DirectedSparseEdge outEdge = (DirectedSparseEdge)targetVertexOutEdges[ 0 ];
-					for ( int i = 0; i < inEdges.length; i++ )
-					{
-						DirectedSparseEdge inEdge = (DirectedSparseEdge)inEdges[ i ];
-						MergeOutEdgeAndInEdge( outEdge, inEdge, edgesToBeRemoved, mainGraph, false );
-					}					
-				}
-				else
-				{
-					_logger.debug( "The stop vertex has only 1 out edge" );
-					DirectedSparseEdge inEdge = (DirectedSparseEdge)inEdges[ 0 ];
-					for ( int i = 0; i < targetVertexOutEdges.length; i++ )
-					{
-						DirectedSparseEdge outEdge = (DirectedSparseEdge)targetVertexOutEdges[ i ];
-						MergeOutEdgeAndInEdge( outEdge, inEdge, edgesToBeRemoved, mainGraph, false );
-					}
-				}
+				DirectedSparseEdge element = (DirectedSparseEdge) iter.next();
+				_logger.debug( "  " + getCompleteEdgeName( element ) );
 			}
-			else
+			_logger.debug( "Target vertex (" + getCompleteVertexName( targetVertex ) + ") out-edge list" );
+			for (Iterator iter = targetVertexOutEdgeList.iterator(); iter.hasNext();)
 			{
-				_logger.debug( "Both the stop and target vertex has more than 1 set of out edges" );
-				for ( int i = 0; i < inEdges.length; i++ )
-				{
-					DirectedSparseEdge inEdge = (DirectedSparseEdge)inEdges[ i ];
+				DirectedSparseEdge element = (DirectedSparseEdge) iter.next();
+				_logger.debug( "  " + getCompleteEdgeName( element ) );
+			}
 
-					boolean doNotMatchNulls = false;
-					if ( existLabelInEdges( targetVertexOutEdges, inEdge ) )
-					{
-						doNotMatchNulls = true;
-					}
-						
-					for ( int j = 0; j < targetVertexOutEdges.length; j++ )
-					{
-						DirectedSparseEdge outEdge = (DirectedSparseEdge)targetVertexOutEdges[ j ];
-						MergeOutEdgeAndInEdge( outEdge, inEdge, edgesToBeRemoved, mainGraph, doNotMatchNulls );
-					}
-				}									
-			}
+			Vector mergeList = MergeList( targetVertexOutEdgeList.toArray(), inEdges );
+			Object[] mergeListArray = mergeList.toArray();
+			
+			for ( int i = 0; i < mergeListArray.length; i++ )
+			{
+				Pair pair = (Pair)mergeListArray[ i ];
+				MergeOutEdgeAndInEdge( (DirectedSparseEdge)pair.getFirst(), (DirectedSparseEdge)pair.getSecond(), edgesToBeRemoved, mainGraph );
+			}									
 
 			
 			// Now remove the edges that has been copied.
@@ -2490,6 +2381,12 @@ public class ModelBasedTesting
 		return str;
 	}
 
+	public String getCompleteVertexName( DirectedSparseVertex vertex )
+	{
+		String str = "'" + (String)vertex.getUserDatum( LABEL_KEY ) + "', INDEX=" + vertex.getUserDatum( INDEX_KEY );
+		return str;
+	}
+
 	public void writeWalkedPath( String fileName )
 	{
 		try
@@ -2555,90 +2452,177 @@ public class ModelBasedTesting
 	}
 	
 	
-	private void MergeOutEdgeAndInEdge( DirectedSparseEdge outEdge, DirectedSparseEdge inEdge, Vector edgesToBeRemoved, SparseGraph graph, boolean doNotMatchNulls )
+	private void MergeOutEdgeAndInEdge( DirectedSparseEdge outEdge, DirectedSparseEdge inEdge, Vector edgesToBeRemoved, SparseGraph graph )
 	{
 		_logger.debug( "MergeOutEdgeAndInEdge" );
+		
+		if ( outEdge == null )
+		{
+			throw new RuntimeException( "Internal progamming error" );
+		}
+		if ( inEdge == null )
+		{
+			throw new RuntimeException( "Internal progamming error" );
+		}
 
-		boolean merge = false;
 		boolean usingOutEdge = true;
 		String outEdgeLabel = (String)outEdge.getUserDatum( LABEL_KEY );
 		String inEdgeLabel = (String)inEdge.getUserDatum( LABEL_KEY );
 		
-		_logger.debug( "  outEdgeLabel: " + outEdgeLabel );
-		_logger.debug( "  inEdgeLabel: " + inEdgeLabel );
+		_logger.debug( "  outEdge: " + getCompleteEdgeName( outEdge ) );
+		_logger.debug( "  inEdge: " + getCompleteEdgeName( inEdge ) );
 
-		if ( outEdgeLabel != null && outEdgeLabel.length() == 0 )
-		{
-			outEdgeLabel = null;
-		}
-		if ( inEdgeLabel != null && inEdgeLabel.length() == 0 )
-		{
-			inEdgeLabel = null;
-		}
-		
-		if ( outEdgeLabel == null && inEdgeLabel == null )
-		{
-			_logger.debug( "  outEdgeLabel and inEdgeLabel are null" );
-			merge = true;
-		}
-		else if ( outEdgeLabel == null || inEdgeLabel == null )
-		{
-			if ( doNotMatchNulls == false )
-			{
-				_logger.debug( "  outEdgeLabel or inEdgeLabel is null" );
-				merge = true;
-			}
-		}
-		else if ( outEdgeLabel != null && inEdgeLabel != null && outEdgeLabel.equals( inEdgeLabel ) )
-		{
-			_logger.debug( "  outEdgeLabel and inEdgeLabel are has equal labels: '" + outEdgeLabel + "'" );
-			merge = true;		
-		}
+		DirectedSparseEdge new_edge = (DirectedSparseEdge)graph.addEdge( new DirectedSparseEdge( (DirectedSparseVertex)inEdge.getSource(), outEdge.getDest() ) );
 
-		if ( merge )
+		if ( outEdgeLabel != null && inEdgeLabel == null )
 		{
-			DirectedSparseEdge new_edge = (DirectedSparseEdge)graph.addEdge( new DirectedSparseEdge( (DirectedSparseVertex)inEdge.getSource(), outEdge.getDest() ) );
-
-			if ( outEdgeLabel != null && inEdgeLabel == null )
-			{
-				usingOutEdge = true;
-				new_edge.importUserData( outEdge );				
-			}
-			else if ( outEdgeLabel == null && inEdgeLabel != null )
+			usingOutEdge = true;
+			new_edge.importUserData( outEdge );				
+		}
+		else if ( outEdgeLabel == null && inEdgeLabel != null )
+		{
+			usingOutEdge = false;
+			new_edge.importUserData( inEdge );				
+		}
+		else if ( outEdgeLabel != null && inEdgeLabel != null )
+		{
+			if ( inEdgeLabel.length() > outEdgeLabel.length() )
 			{
 				usingOutEdge = false;
-				new_edge.importUserData( inEdge );				
-			}
-			else if ( outEdgeLabel != null && inEdgeLabel != null )
-			{
-				if ( inEdgeLabel.length() > outEdgeLabel.length() )
-				{
-					usingOutEdge = false;
-					new_edge.importUserData( inEdge );
-				}
-				else
-				{
-					usingOutEdge = true;
-					new_edge.importUserData( outEdge );
-				}
+				new_edge.importUserData( inEdge );
 			}
 			else
 			{
 				usingOutEdge = true;
-				new_edge.importUserData( outEdge );				
+				new_edge.importUserData( outEdge );
 			}
-				
-			new_edge.setUserDatum( INDEX_KEY, new Integer( getNewVertexAndEdgeIndex() ), UserData.SHARED );
-			if ( usingOutEdge )
-			{
-				_logger.debug( "  Replacing the target vertex out-edge: " + getCompleteEdgeName( outEdge ) + " (old) with: " + getCompleteEdgeName( new_edge ) + "(new), using: " + getCompleteEdgeName( outEdge ) );				
-			}
-			else
-			{
-				_logger.debug( "  Replacing the target vertex out-edge: " + getCompleteEdgeName( outEdge ) + " (old) with: " + getCompleteEdgeName( new_edge ) + "(new), using: " + getCompleteEdgeName( inEdge ) );
-			}
-			edgesToBeRemoved.add( inEdge );
-			edgesToBeRemoved.add( outEdge );
 		}
+		else
+		{
+			usingOutEdge = true;
+			new_edge.importUserData( outEdge );				
+		}
+			
+		new_edge.setUserDatum( INDEX_KEY, new Integer( getNewVertexAndEdgeIndex() ), UserData.SHARED );
+		if ( usingOutEdge )
+		{
+			_logger.debug( "  Replacing the target vertex out-edge: " + getCompleteEdgeName( outEdge ) + " (old) with: " + getCompleteEdgeName( new_edge ) + "(new), using: " + getCompleteEdgeName( outEdge ) );				
+		}
+		else
+		{
+			_logger.debug( "  Replacing the target vertex out-edge: " + getCompleteEdgeName( outEdge ) + " (old) with: " + getCompleteEdgeName( new_edge ) + "(new), using: " + getCompleteEdgeName( inEdge ) );
+		}
+		edgesToBeRemoved.add( inEdge );
+		edgesToBeRemoved.add( outEdge );
+	}
+
+	
+	
+	private Vector MergeList( Object[] array_A, Object[] array_B )
+	{
+		_logger.debug( "Vector twoLists( Object[] array_A, Object[] array_B )" );
+		Vector matches = new Vector();
+		_logger.debug( "  Looking for exact matches" );
+		for ( int i = 0; i < array_A.length; i++ )
+		{
+			DirectedSparseEdge a = (DirectedSparseEdge)array_A[ i ];			
+			String aLabel = (String)a.getUserDatum( LABEL_KEY );
+			for ( int j = 0; j < array_B.length; j++ )
+			{
+				DirectedSparseEdge b = (DirectedSparseEdge)array_B[ j ];
+				String bLabel = (String)b.getUserDatum( LABEL_KEY );
+				if ( aLabel != null && aLabel.length() == 0 )
+				{
+					aLabel = null;
+				}
+				if ( bLabel != null && bLabel.length() == 0 )
+				{
+					bLabel = null;
+				}
+				if ( aLabel == null && bLabel == null )
+				{
+					_logger.debug( "    adding: " + getCompleteEdgeName( a ) + " and " + getCompleteEdgeName( b ) );
+					matches.add( new Pair( a, b ) );
+				}
+				else if ( aLabel != null && bLabel != null )
+				{
+					if ( aLabel.equals( bLabel ) )
+					{
+						_logger.debug( "    adding: " + getCompleteEdgeName( a ) + " and " + getCompleteEdgeName( b ) );
+						matches.add( new Pair( a, b ) );
+					}
+				}
+			}		
+		}
+		
+		_logger.debug( "  Matching nulls from the first list with non-matched items in the second list" );
+		for ( int i = 0; i < array_A.length; i++ )
+		{
+			DirectedSparseEdge a = (DirectedSparseEdge)array_A[ i ];			
+			String aLabel = (String)a.getUserDatum( LABEL_KEY );
+			if ( aLabel == null || aLabel.length() == 0 )
+			{
+				for ( int j = 0; j < array_B.length; j++ )
+				{
+					DirectedSparseEdge b = (DirectedSparseEdge)array_B[ j ];
+					String bLabel = (String)b.getUserDatum( LABEL_KEY );
+					if ( bLabel != null )
+					{
+						boolean alreadyMatched = false;
+						for (Iterator iter = matches.iterator(); iter.hasNext();)
+						{
+							Pair element = (Pair) iter.next();
+							if ( b.equals( element.getSecond() ) )
+							{
+								alreadyMatched = true;
+								break;
+							}
+						}
+			
+						if ( alreadyMatched == false )
+						{
+							_logger.debug( "    adding: " + getCompleteEdgeName( a ) + " and " + getCompleteEdgeName( b ) );
+							matches.add( new Pair( a, b ) );
+						}
+					}
+				}
+			}
+		}
+		
+		_logger.debug( "  Matching nulls from the second list with non-matched items in the first list" );
+		for ( int i = 0; i < array_B.length; i++ )
+		{
+			DirectedSparseEdge b = (DirectedSparseEdge)array_B[ i ];			
+			String bLabel = (String)b.getUserDatum( LABEL_KEY );
+			if ( bLabel == null || bLabel.length() == 0 )
+			{
+				for ( int j = 0; j < array_A.length; j++ )
+				{
+					DirectedSparseEdge a = (DirectedSparseEdge)array_A[ j ];
+					String aLabel = (String)a.getUserDatum( LABEL_KEY );
+					if ( aLabel != null )
+					{
+						boolean alreadyMatched = false;
+						for (Iterator iter = matches.iterator(); iter.hasNext();)
+						{
+							Pair element = (Pair) iter.next();
+							if ( a.equals( element.getFirst() ) )
+							{
+								alreadyMatched = true;
+								break;
+							}
+						}
+			
+						if ( alreadyMatched == false )
+						{
+							_logger.debug( "    adding: " + getCompleteEdgeName( a ) + " and " + getCompleteEdgeName( b ) );
+							matches.add( new Pair( a, b ) );
+						}
+					}
+				}
+			}
+		}
+
+		return matches;
 	}
 }
