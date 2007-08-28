@@ -164,9 +164,8 @@ public class ModelBasedTesting
 		readFiles();
 	}
 
-	public ModelBasedTesting( String graphmlFileName_ )
+	public ModelBasedTesting()
 	{
-		_graphmlFileName = graphmlFileName_;
 		_object          = null;
 		_logger          = org.apache.log4j.Logger.getLogger( ModelBasedTesting.class );
 		
@@ -191,10 +190,18 @@ public class ModelBasedTesting
 	 		_logger.addAppender( writerAppender );
 	 		_logger.setLevel( (Level)Level.ERROR );
 		}
-
-		readFiles();
 	}
 
+	
+	
+	public void readGraph( String graphmlFileName_ )
+	{
+		_graphmlFileName = graphmlFileName_;
+		readFiles();		
+	}
+	
+	
+	
 	public void writeGraph( SparseGraph g, String mergedGraphml_ )
 	{
 		StringBuffer sourceFile = new StringBuffer();
@@ -2423,53 +2430,16 @@ public class ModelBasedTesting
 			throw new RuntimeException( "Internal progamming error" );
 		}
 
-		boolean usingOutEdge = true;
-		String outEdgeLabel = (String)outEdge.getUserDatum( LABEL_KEY );
-		String inEdgeLabel = (String)inEdge.getUserDatum( LABEL_KEY );
-		
 		_logger.debug( "  outEdge: " + getCompleteEdgeName( outEdge ) );
 		_logger.debug( "  inEdge: " + getCompleteEdgeName( inEdge ) );
 
 		DirectedSparseEdge new_edge = (DirectedSparseEdge)graph.addEdge( new DirectedSparseEdge( (DirectedSparseVertex)inEdge.getSource(), outEdge.getDest() ) );
 
-		if ( outEdgeLabel != null && inEdgeLabel == null )
-		{
-			usingOutEdge = true;
-			new_edge.importUserData( outEdge );				
-		}
-		else if ( outEdgeLabel == null && inEdgeLabel != null )
-		{
-			usingOutEdge = false;
-			new_edge.importUserData( inEdge );				
-		}
-		else if ( outEdgeLabel != null && inEdgeLabel != null )
-		{
-			if ( inEdgeLabel.length() > outEdgeLabel.length() )
-			{
-				usingOutEdge = false;
-				new_edge.importUserData( inEdge );
-			}
-			else
-			{
-				usingOutEdge = true;
-				new_edge.importUserData( outEdge );
-			}
-		}
-		else
-		{
-			usingOutEdge = true;
-			new_edge.importUserData( outEdge );				
-		}
-			
+		copy_user_data( new_edge, outEdge, inEdge  );
+		
 		new_edge.setUserDatum( INDEX_KEY, new Integer( getNewVertexAndEdgeIndex() ), UserData.SHARED );
-		if ( usingOutEdge )
-		{
-			_logger.debug( "  Replacing the target vertex out-edge: " + getCompleteEdgeName( outEdge ) + " (old) with: " + getCompleteEdgeName( new_edge ) + "(new), using: " + getCompleteEdgeName( outEdge ) );				
-		}
-		else
-		{
-			_logger.debug( "  Replacing the target vertex out-edge: " + getCompleteEdgeName( outEdge ) + " (old) with: " + getCompleteEdgeName( new_edge ) + "(new), using: " + getCompleteEdgeName( inEdge ) );
-		}
+		_logger.debug( "  Replacing the target vertex out-edge: " + getCompleteEdgeName( outEdge ) + " (old) with: " + getCompleteEdgeName( new_edge ) + "(new), using: " + getCompleteEdgeName( inEdge ) );
+		
 		edgesToBeRemoved.add( inEdge );
 		edgesToBeRemoved.add( outEdge );
 	}
@@ -2580,7 +2550,49 @@ public class ModelBasedTesting
 				}
 			}
 		}
-
 		return matches;
+	}
+	
+	
+	private void copy_user_data( DirectedSparseEdge dst_edge, DirectedSparseEdge src_edge_A , DirectedSparseEdge src_edge_B )
+	{
+		for (Iterator iter = src_edge_A.getUserDatumKeyIterator(); iter.hasNext();)
+		{
+			String element = (String) iter.next();
+			if ( dst_edge.containsUserDatumKey( element ) == false )
+			{
+				dst_edge.addUserDatum( element, src_edge_A.getUserDatum( element ), UserData.SHARED );
+			}
+		}
+		for (Iterator iter = src_edge_B.getUserDatumKeyIterator(); iter.hasNext();)
+		{
+			String element = (String) iter.next();
+			if ( dst_edge.containsUserDatumKey( element ) == false )
+			{
+				dst_edge.addUserDatum( element, src_edge_B.getUserDatum( element ), UserData.SHARED );
+			}
+		}
+		String fullLabel_A = (String)src_edge_A.getUserDatum( FULL_LABEL_KEY ); 
+		String fullLabel_B = (String)src_edge_B.getUserDatum( FULL_LABEL_KEY );
+		
+		if ( fullLabel_A != null && fullLabel_B != null )
+		{
+			if ( fullLabel_A.length() > fullLabel_B.length() )
+			{
+				dst_edge.setUserDatum( FULL_LABEL_KEY, src_edge_A.getUserDatum( FULL_LABEL_KEY ), UserData.SHARED );
+			}
+			else
+			{
+				dst_edge.setUserDatum( FULL_LABEL_KEY, src_edge_B.getUserDatum( FULL_LABEL_KEY ), UserData.SHARED );
+			}
+		}
+		else if ( fullLabel_A != null  && fullLabel_B == null )
+		{
+			dst_edge.setUserDatum( FULL_LABEL_KEY, src_edge_A.getUserDatum( FULL_LABEL_KEY ), UserData.SHARED );
+		}
+		else if ( fullLabel_A == null  && fullLabel_B != null )
+		{
+			dst_edge.setUserDatum( FULL_LABEL_KEY, src_edge_B.getUserDatum( FULL_LABEL_KEY ), UserData.SHARED );
+		}
 	}
 }

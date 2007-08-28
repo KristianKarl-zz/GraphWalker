@@ -80,7 +80,8 @@ public class TestMerging extends TestCase
 		System.out.println( "=======================================================================" );
     	try
     	{
-	    	ModelBasedTesting mbt = new ModelBasedTesting( "graphml/mergeSubgraphs_01" );	
+	    	ModelBasedTesting mbt = new ModelBasedTesting();
+	    	mbt.readGraph( "graphml/mergeSubgraphs_01" );
 	    	mbt.writeGraph( mbt.getGraph(), "graphml/merged/mergeSubgraphs_01.graphml" );
 	    	assertTrue( mbt.getGraph().getVertices().size() == 6 );
 	    	assertTrue( mbt.getGraph().getEdges().size() == 16 );
@@ -102,7 +103,8 @@ public class TestMerging extends TestCase
 		System.out.println( "=======================================================================" );
     	try
     	{
-	    	ModelBasedTesting mbt = new ModelBasedTesting( "graphml/mergeSubgraphs_02" );	
+	    	ModelBasedTesting mbt = new ModelBasedTesting();
+	    	mbt.readGraph( "graphml/mergeSubgraphs_02" );
 	    	mbt.writeGraph( mbt.getGraph(), "graphml/merged/mergeSubgraphs_02.graphml" );
 	    	assertTrue( mbt.getGraph().getVertices().size() == 16 );
 	    	assertTrue( mbt.getGraph().getEdges().size() == 55 );
@@ -125,7 +127,8 @@ public class TestMerging extends TestCase
 		System.out.println( "=======================================================================" );
     	try
     	{
-	    	ModelBasedTesting mbt = new ModelBasedTesting( "graphml/test01" );
+	    	ModelBasedTesting mbt = new ModelBasedTesting();
+	    	mbt.readGraph( "graphml/test01" );
 	    	mbt.writeGraph( mbt.getGraph(), "graphml/merged/test01.graphml" );
 	    	assertTrue( mbt.getGraph().getEdges().size() == 9 );
 	    	assertTrue( mbt.getGraph().getVertices().size() == 7 );
@@ -146,7 +149,8 @@ public class TestMerging extends TestCase
 		System.out.println( "=======================================================================" );
     	try
     	{
-	    	ModelBasedTesting mbt = new ModelBasedTesting( "graphml/test02" );
+	    	ModelBasedTesting mbt = new ModelBasedTesting();
+	    	mbt.readGraph( "graphml/test02" );
 	    	mbt.writeGraph( mbt.getGraph(), "graphml/merged/test02.graphml" );
 	    	assertTrue( mbt.getGraph().getEdges().size() == 11 );
 	    	assertTrue( mbt.getGraph().getVertices().size() == 8 );
@@ -167,7 +171,8 @@ public class TestMerging extends TestCase
 		System.out.println( "=======================================================================" );
     	try
     	{
-	    	ModelBasedTesting mbt = new ModelBasedTesting( "graphml/test03" );
+	    	ModelBasedTesting mbt = new ModelBasedTesting();
+	    	mbt.readGraph( "graphml/test03" );
 	    	mbt.writeGraph( mbt.getGraph(), "graphml/merged/test03.graphml" );
 	    	assertTrue( mbt.getGraph().getEdges().size() == 1550 );
 	    	assertTrue( mbt.getGraph().getVertices().size() == 788 );
@@ -188,7 +193,8 @@ public class TestMerging extends TestCase
 		System.out.println( "=======================================================================" );
     	try
     	{
-        	ModelBasedTesting mbt = new ModelBasedTesting( "graphml/merged/test01.graphml" );
+	    	ModelBasedTesting mbt = new ModelBasedTesting();
+	    	mbt.readGraph( "graphml/merged/test01.graphml" );
     		mbt.generateTests( false, 0 );
 	    	verifyIds( mbt.getGraph() );
     	} catch (Exception e) {
@@ -206,7 +212,8 @@ public class TestMerging extends TestCase
 		System.out.println( "=======================================================================" );
     	try
     	{
-        	ModelBasedTesting mbt = new ModelBasedTesting( "graphml/merged/test03.graphml" );
+	    	ModelBasedTesting mbt = new ModelBasedTesting();
+	    	mbt.readGraph( "graphml/merged/test03.graphml" );
 	    	mbt.generateTests( false, 0 );
 	    	verifyIds( mbt.getGraph() );
 		}
@@ -229,7 +236,8 @@ public class TestMerging extends TestCase
     	
     	try
     	{
-	    	ModelBasedTesting mbt = new ModelBasedTesting( "graphml/test02" );
+	    	ModelBasedTesting mbt = new ModelBasedTesting();
+	    	mbt.readGraph( "graphml/test02" );
 	    	mbt.generateJavaCode( "graphml/java/test02.java" );	
 	    	mbt.generateJavaCode( "graphml/java/test02.java" );	
 	    	verifyIds( mbt.getGraph() );
@@ -253,7 +261,8 @@ public class TestMerging extends TestCase
     	
     	try
     	{
-	    	ModelBasedTesting mbt = new ModelBasedTesting( "graphml/test02" );
+	    	ModelBasedTesting mbt = new ModelBasedTesting();
+	    	mbt.readGraph( "graphml/test02" );
 	    	mbt.generatePerlCode( "graphml/perl/test02.pl" );	
 	    	mbt.generatePerlCode( "graphml/perl/test02.pl" );	
 	    	verifyIds( mbt.getGraph() );
@@ -273,7 +282,8 @@ public class TestMerging extends TestCase
 		System.out.println( "=======================================================================" );
     	try
     	{
-	    	new ModelBasedTesting( "graphml/test09" );
+	    	ModelBasedTesting mbt = new ModelBasedTesting();
+	    	mbt.readGraph( "graphml/test09" );
 	    	fail( "Missing error message" );
     	}
     	catch ( RuntimeException e)
@@ -292,7 +302,8 @@ public class TestMerging extends TestCase
 		System.out.println( "=======================================================================" );
     	try
     	{
-	    	new ModelBasedTesting( "graphml/test10" );
+	    	ModelBasedTesting mbt = new ModelBasedTesting();
+	    	mbt.readGraph( "graphml/test10" );
 	    	fail( "Missing error message" );
     	}
     	catch ( RuntimeException e)
@@ -311,7 +322,8 @@ public class TestMerging extends TestCase
 		System.out.println( "=======================================================================" );
     	try
     	{
-	    	new ModelBasedTesting( "graphml/test11" );
+	    	ModelBasedTesting mbt = new ModelBasedTesting();
+	    	mbt.readGraph( "graphml/test11" );
 	    	fail( "Missing error message" );
     	}
     	catch ( RuntimeException e)
@@ -331,7 +343,8 @@ public class TestMerging extends TestCase
 		System.out.println( "=======================================================================" );
     	try
     	{
-	    	new ModelBasedTesting( "graphml/test13" );
+	    	ModelBasedTesting mbt = new ModelBasedTesting();
+	    	mbt.readGraph( "graphml/test13" );
 	    	fail( "Missing error message" );
     	}
     	catch ( RuntimeException e)
@@ -350,7 +363,8 @@ public class TestMerging extends TestCase
 		System.out.println( "=======================================================================" );
     	try
     	{
-	    	new ModelBasedTesting( "graphml/test14" );
+	    	ModelBasedTesting mbt = new ModelBasedTesting();
+	    	mbt.readGraph( "graphml/test14" );
 	    	fail( "Missing error message" );
     	}
     	catch ( RuntimeException e)
@@ -369,7 +383,8 @@ public class TestMerging extends TestCase
 		System.out.println( "=======================================================================" );
     	try
     	{
-	    	new ModelBasedTesting( "graphml/test15/test15.graphml" );
+	    	ModelBasedTesting mbt = new ModelBasedTesting();
+	    	mbt.readGraph( "graphml/test15" );
 	    	fail( "Missing error message" );
     	}
     	catch ( Exception e)
@@ -388,7 +403,8 @@ public class TestMerging extends TestCase
 		System.out.println( "=======================================================================" );
     	try
     	{
-	    	new ModelBasedTesting( "graphml/test17/test17.graphml" );
+	    	ModelBasedTesting mbt = new ModelBasedTesting();
+	    	mbt.readGraph( "graphml/test17/test17.graphml" );
 	    	fail( "Missing error message" );
     	}
     	catch ( Exception e)
@@ -407,7 +423,8 @@ public class TestMerging extends TestCase
 		System.out.println( "=======================================================================" );
     	try
     	{
-	    	new ModelBasedTesting( "graphml/test18/test18.graphml" );
+	    	ModelBasedTesting mbt = new ModelBasedTesting();
+	    	mbt.readGraph( "graphml/test18/test18.graphml" );
 	    	fail( "Missing error message" );
     	}
     	catch ( Exception e)
@@ -426,7 +443,8 @@ public class TestMerging extends TestCase
 		System.out.println( "=======================================================================" );
     	try
     	{
-	    	new ModelBasedTesting( "graphml/test19/test19.graphml" );
+	    	ModelBasedTesting mbt = new ModelBasedTesting();
+	    	mbt.readGraph( "graphml/test19/test19.graphml" );
 	    	fail( "Missing error message" );
     	}
     	catch ( Exception e)
@@ -445,7 +463,8 @@ public class TestMerging extends TestCase
 		System.out.println( "=======================================================================" );
     	try
     	{
-	    	new ModelBasedTesting( "graphml/test20/test20.graphml" );
+	    	ModelBasedTesting mbt = new ModelBasedTesting();
+	    	mbt.readGraph( "graphml/test20/test20.graphml" );
 	    	fail( "Missing error message" );
     	}
     	catch ( Exception e)
@@ -464,8 +483,8 @@ public class TestMerging extends TestCase
 		System.out.println( "=======================================================================" );
     	try
     	{
-	    	ModelBasedTesting mbt = new ModelBasedTesting( "graphml/test21" );
-	    	mbt.generateJavaCode( "graphml/merged/test21.java" );	
+	    	ModelBasedTesting mbt = new ModelBasedTesting();
+	    	mbt.readGraph( "graphml/test21/test21.graphml" );
 	    	verifyIds( mbt.getGraph() );
     	}
     	catch ( Exception e)
@@ -482,8 +501,8 @@ public class TestMerging extends TestCase
 		System.out.println( "=======================================================================" );
     	try
     	{
-	    	ModelBasedTesting mbt = new ModelBasedTesting( "graphml/test22" );
-	    	mbt.writeGraph( mbt.getGraph(), "graphml/merged/test22.graphml" );
+	    	ModelBasedTesting mbt = new ModelBasedTesting();
+	    	mbt.readGraph( "graphml/test22/test22.graphml" );
 	    	assertTrue( mbt.getGraph().getEdges().size() == 8 );
 	    	assertTrue( mbt.getGraph().getVertices().size() == 8 );
 	    	verifyIds( mbt.getGraph() );
@@ -503,8 +522,8 @@ public class TestMerging extends TestCase
 		System.out.println( "=======================================================================" );
     	try
     	{
-	    	ModelBasedTesting mbt = new ModelBasedTesting( "graphml/test23" );
-	    	mbt.writeGraph( mbt.getGraph(), "graphml/merged/test23.graphml" );
+	    	ModelBasedTesting mbt = new ModelBasedTesting();
+	    	mbt.readGraph( "graphml/test23/test23.graphml" );
 	    	assertTrue( mbt.getGraph().getEdges().size() == 14 );
 	    	assertTrue( mbt.getGraph().getVertices().size() == 9 );
 	    	verifyIds( mbt.getGraph() );
