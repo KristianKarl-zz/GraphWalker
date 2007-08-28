@@ -29,7 +29,6 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -2410,47 +2409,6 @@ public class ModelBasedTesting
 		}
 	}
 
-	
-	/**
-	 * This functions returns true if the label of the edge e exists in the array of edges
-	 * @param array
-	 * @return
-	 */
-	private boolean existLabelInEdges( Object[] arrayOfEdges, DirectedSparseEdge e )
-	{
-		_logger.debug( "existLabelInEdges" );
-		_logger.debug( "  Edge e: " + getCompleteEdgeName( e ) );				
-		
-		for ( int i = 0; i < arrayOfEdges.length; i++ )
-		{
-			DirectedSparseEdge edge = (DirectedSparseEdge)arrayOfEdges[ i ];
-			_logger.debug( "  Edge edge: " + getCompleteEdgeName( edge ) );				
-
-			if ( edge == null )
-			{
-				throw new RuntimeException( "Internal progamming error. Expected to find an edge, and not null." );
-			}
-				
-			String label_A = (String)edge.getUserDatum( LABEL_KEY );
-			String label_B = (String)e.getUserDatum( LABEL_KEY );
-			
-			if ( label_A == null && label_B == null )
-			{
-				_logger.debug( "  Both labels are null, so the label of the edge exists in the list of edges" );
-				return true;
-			}
-			if ( label_A != null && label_B != null )
-			{
-				if ( label_A.equals( label_B ) )
-				{
-					_logger.debug( "  Both labels are: '" + label_A + "', so the label of the edge exists in the list of edges" );
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-	
 	
 	private void MergeOutEdgeAndInEdge( DirectedSparseEdge outEdge, DirectedSparseEdge inEdge, Vector edgesToBeRemoved, SparseGraph graph )
 	{
