@@ -3,6 +3,8 @@ package org.tigris.mbt;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Iterator;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -15,6 +17,7 @@ import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
+import org.apache.log4j.Logger;
 
 import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
 import edu.uci.ics.jung.graph.impl.DirectedSparseVertex;
@@ -349,7 +352,7 @@ public class CLI
 			}
 			else if ( args[ 0 ].equals( "-v" ) || args[ 0 ].equals( "--version" ) )
 			{
-				System.out.println( "org.tigris.mbt version 1.13 (r186)\n" );
+				System.out.println( "org.tigris.mbt version 1.13 (r187)\n" );
 				System.out.println( "org.tigris.mbt is open source software licensed under GPL" );
 				System.out.println( "The software (and it's source) can be downloaded at http://mbt.tigris.org/\n" );
 				System.out.println( "This package contains following software packages:" );
@@ -514,14 +517,21 @@ public class CLI
             	graphmlFile = cl.getOptionValue( "g" );
             	outputFile  = cl.getOptionValue( "l" );            	
 
+    			ModelBasedTesting mbt = new ModelBasedTesting();
+    			Logger logger = mbt.getLogger();
             	try
 	    		{
-	    			ModelBasedTesting mbt = new ModelBasedTesting( graphmlFile );
+	    			mbt.readGraph( graphmlFile );
 	    			mbt.writeGraph( mbt.getGraph(), outputFile );
 	    		}
-	    		catch ( RuntimeException e )
+	    		catch ( Exception e )
 	    		{
-	        		System.err.println( e.getMessage() );
+	    			StringWriter sw = new StringWriter();
+	    		    PrintWriter pw = new PrintWriter( sw );
+	    		    e.printStackTrace( pw );
+	    		    pw.close();	    		    
+	    			logger.error( sw.toString() );
+	    			System.err.println( e.getMessage() );
 	    		}            	
 			}
 			else if ( args[ 0 ].equals( "perl" ) )
@@ -600,13 +610,20 @@ public class CLI
             	graphmlFile = cl.getOptionValue( "g" );
             	outputFile  = cl.getOptionValue( "s" );            	
 
+    			ModelBasedTesting mbt = new ModelBasedTesting();
+    			Logger logger = mbt.getLogger();
             	try
 	    		{
-	    			ModelBasedTesting mtb = new ModelBasedTesting( graphmlFile );
-					mtb.generateJavaCode( outputFile );
+	    			mbt.readGraph( graphmlFile );
+					mbt.generateJavaCode( outputFile );
 	    		}
-	    		catch ( RuntimeException e )
+	    		catch ( Exception e )
 	    		{
+	    			StringWriter sw = new StringWriter();
+	    		    PrintWriter pw = new PrintWriter( sw );
+	    		    e.printStackTrace( pw );
+	    		    pw.close();	    		    
+	    			logger.error( sw.toString() );
 	        		System.err.println( e.getMessage() );
 	    		}            	
 			}
@@ -628,13 +645,16 @@ public class CLI
             	graphmlFile = cl.getOptionValue( "g" );
             	outputFile  = cl.getOptionValue( "s" );            	
 
+    			ModelBasedTesting mbt = new ModelBasedTesting();
+    			Logger logger = mbt.getLogger();
             	try
 	    		{
-	    			ModelBasedTesting mtb = new ModelBasedTesting( graphmlFile );
-					mtb.generatePerlCode( outputFile );
+	    			mbt.readGraph( graphmlFile );
+					mbt.generatePerlCode( outputFile );
 	    		}
-	    		catch ( RuntimeException e )
+	    		catch ( Exception e )
 	    		{
+	    			logger.error( e );
 	        		System.err.println( e.getMessage() );
 	    		}            	
 			}
@@ -688,9 +708,11 @@ public class CLI
 	
 	public void runInteractively()
 	{
-		ModelBasedTesting mbt = new ModelBasedTesting( graphmlFile );	
-		try
+		ModelBasedTesting mbt = new ModelBasedTesting();
+		Logger logger = mbt.getLogger();
+    	try
 		{
+			mbt.readGraph( graphmlFile );
 			mbt.reset();
 			
 			// The array will conatin the lebel an id of the edge, and the vertex
@@ -794,21 +816,27 @@ public class CLI
 		{
 			if ( e.getMessage() != "Test ended normally" )
 			{
-				mbt.getLogger().error( e.getStackTrace() );
+    			StringWriter sw = new StringWriter();
+    		    PrintWriter pw = new PrintWriter( sw );
+    		    e.printStackTrace( pw );
+    		    pw.close();	    		    
+    			logger.error( sw.toString() );
 				System.err.println( e.getMessage() );
 			}
 		}
 		
 		if ( statistics )
 		{
-			mbt.getLogger().info( mbt.getStatistics() );
+			logger.info( mbt.getStatistics() );
 			System.out.println( mbt.getStatistics() );
 		}
 	}
 
 	public void runPerlScript()
 	{
-		ModelBasedTesting mbt = new ModelBasedTesting( graphmlFile );	
+		ModelBasedTesting mbt = new ModelBasedTesting();
+		Logger logger = mbt.getLogger();
+		mbt.readGraph( graphmlFile );
 		mbt.reset();
 		
 		while ( true )
@@ -833,7 +861,7 @@ public class CLI
 		
 		if ( statistics )
 		{
-			mbt.getLogger().info( mbt.getStatistics() );
+			logger.info( mbt.getStatistics() );
 			System.out.println( mbt.getStatistics() );
 		}
 	}
@@ -874,9 +902,11 @@ public class CLI
 	
 	public void generateTestMethods()
 	{
-		try
+		ModelBasedTesting mbt = new ModelBasedTesting();
+		Logger logger = mbt.getLogger();
+    	try
 		{
-			ModelBasedTesting mbt = new ModelBasedTesting( graphmlFile );	
+			mbt.readGraph( graphmlFile );
 			SortedSet set = new TreeSet();
 
 			
@@ -913,6 +943,11 @@ public class CLI
 		}		
 		catch ( Exception e )
 		{
+			StringWriter sw = new StringWriter();
+		    PrintWriter pw = new PrintWriter( sw );
+		    e.printStackTrace( pw );
+		    pw.close();	    		    
+			logger.error( sw.toString() );
     		System.err.println( e.getMessage() );
 		}
 	}
@@ -920,13 +955,20 @@ public class CLI
 	
 	public void generateTests()
 	{
-		try
+		ModelBasedTesting mbt = new ModelBasedTesting();
+		Logger logger = mbt.getLogger();
+    	try
 		{
-			ModelBasedTesting mbt = new ModelBasedTesting( graphmlFile );	
+			mbt.readGraph( graphmlFile );
 			mbt.generateTests( random, length);
 		}
 		catch ( Exception e )
 		{
+			StringWriter sw = new StringWriter();
+		    PrintWriter pw = new PrintWriter( sw );
+		    e.printStackTrace( pw );
+		    pw.close();	    		    
+			logger.error( sw.toString() );
     		System.err.println( e.getMessage() );
 		}
 	}
