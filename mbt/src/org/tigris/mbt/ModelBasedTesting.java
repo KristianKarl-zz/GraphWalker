@@ -102,6 +102,7 @@ public class ModelBasedTesting
 	private long				 	_end_time     = 0;
 	private boolean				 	_runUntilAllEdgesVisited = false;
 	private boolean				 	_backtracking = false;
+	private boolean				 	_cul_de_sac = false;
 	private List				 	_shortestPathToVertex = null ;
 	private int						_latestNumberOfUnvisitedEdges;
 	private int				    	_vertexAndEdgeIndex = 0;
@@ -1062,7 +1063,11 @@ public class ModelBasedTesting
 		checkForDuplicateVerticesInSubgraphs();
 		mergeSubgraphs();
 		mergeVerticesMarked_MERGE();
-		searchForCulDeSacs();
+		
+		if ( is_cul_de_sac() )
+		{
+			searchForCulDeSacs();
+		}
 
 		_logger.info( "Done merging" );		
 	}
@@ -1129,7 +1134,7 @@ public class ModelBasedTesting
 			DirectedSparseVertex v = (DirectedSparseVertex)list[ i ];
 			if ( v.getOutEdges().size() <= 0 )
 			{
-				_logger.warn( "Found a cul-de-sac. Vertex has no out-edges: '" + (String)v.getUserDatum( LABEL_KEY ) + "'" );
+				throw new RuntimeException( "Found a cul-de-sac. Vertex has no out-edges: '" + (String)v.getUserDatum( LABEL_KEY ) + "', in file: '" + v.getUserDatum( FILE_KEY ) + "'" );
 			}
 		}
 	}
@@ -2594,5 +2599,13 @@ public class ModelBasedTesting
 		{
 			dst_edge.setUserDatum( FULL_LABEL_KEY, src_edge_B.getUserDatum( FULL_LABEL_KEY ), UserData.SHARED );
 		}
+	}
+
+	public boolean is_cul_de_sac() {
+		return _cul_de_sac;
+	}
+
+	public void set_cul_de_sac(boolean _cul_de_sac) {
+		this._cul_de_sac = _cul_de_sac;
 	}
 }

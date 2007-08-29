@@ -3,6 +3,8 @@ package test.org.tigris.mbt;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import junit.framework.TestCase;
 
@@ -71,6 +73,73 @@ public class TestMerging extends TestCase
 	    	assertTrue( hits == 1 );
 		}					
 	}					
+
+    
+    
+    public void testStopForCulDeSac()
+    {
+		System.out.println( "TEST: testStopForCulDeSac" );
+		System.out.println( "=======================================================================" );
+		String args[] = new String[ 5 ];
+		args[ 0 ] = "merge";
+		args[ 1 ] = "-g";
+		args[ 2 ] = "graphml/CulDeSac";
+		args[ 3 ] = "-l";
+		args[ 4 ] = "graphml/merged/testStopForCulDeSac.graphml";
+    	CLI cli = new CLI();
+    	
+    	
+    	OutputStream out = new OutputStream() {
+    		public void write(int b) throws IOException {
+    			stdOutput.append( Character.toString((char) b) );
+    		}
+   		};
+    	PrintStream stream = new PrintStream( out );
+    	System.setErr( stream );
+    	cli.main( args );
+    	System.setErr( System.err );
+    	
+    	String msg = stdOutput.toString();
+		System.out.println( msg );
+		Pattern p = Pattern.compile( "Found a cul-de-sac. Vertex has no out-edges: '.*', in file: '.*'", Pattern.MULTILINE );
+		Matcher m = p.matcher( msg );
+		assertTrue( m.find() );
+		System.out.println( "" );
+    }
+
+    
+    
+    public void testContinueForCulDeSac()
+    {
+		System.out.println( "TEST: testContinueForCulDeSac" );
+		System.out.println( "=======================================================================" );
+		String args[] = new String[ 6 ];
+		args[ 0 ] = "merge";
+		args[ 1 ] = "-c";
+		args[ 2 ] = "-g";
+		args[ 3 ] = "graphml/CulDeSac";
+		args[ 4 ] = "-l";
+		args[ 5 ] = "graphml/merged/testContinueForCulDeSac.graphml";
+    	CLI cli = new CLI();
+    	
+    	
+    	OutputStream out = new OutputStream() {
+    		public void write(int b) throws IOException {
+    			stdOutput.append( Character.toString((char) b) );
+    		}
+   		};
+    	PrintStream stream = new PrintStream( out );
+    	System.setErr( stream );
+    	cli.main( args );
+    	System.setErr( System.err );
+    	
+    	String msg = stdOutput.toString();
+		System.out.println( msg );
+		Pattern p = Pattern.compile( "Found a cul-de-sac. Vertex has no out-edges: '.*', in file: '.*'", Pattern.MULTILINE );
+		Matcher m = p.matcher( msg );
+		assertTrue( !m.find() );
+		System.out.println( "" );
+    }
 
     
     
@@ -484,7 +553,8 @@ public class TestMerging extends TestCase
     	try
     	{
 	    	ModelBasedTesting mbt = new ModelBasedTesting();
-	    	mbt.readGraph( "graphml/test21/test21.graphml" );
+	    	mbt.readGraph( "graphml/test21" );
+	    	mbt.generateJavaCode( "graphml/merged/test21.java" );
 	    	verifyIds( mbt.getGraph() );
     	}
     	catch ( Exception e)
@@ -502,7 +572,8 @@ public class TestMerging extends TestCase
     	try
     	{
 	    	ModelBasedTesting mbt = new ModelBasedTesting();
-	    	mbt.readGraph( "graphml/test22/test22.graphml" );
+	    	mbt.readGraph( "graphml/test22" );
+	    	mbt.writeGraph( mbt.getGraph(), "graphml/merged/test22.graphml" );
 	    	assertTrue( mbt.getGraph().getEdges().size() == 8 );
 	    	assertTrue( mbt.getGraph().getVertices().size() == 8 );
 	    	verifyIds( mbt.getGraph() );
@@ -523,7 +594,8 @@ public class TestMerging extends TestCase
     	try
     	{
 	    	ModelBasedTesting mbt = new ModelBasedTesting();
-	    	mbt.readGraph( "graphml/test23/test23.graphml" );
+	    	mbt.readGraph( "graphml/test23" );
+	    	mbt.writeGraph( mbt.getGraph(), "graphml/merged/test23.graphml" );
 	    	assertTrue( mbt.getGraph().getEdges().size() == 14 );
 	    	assertTrue( mbt.getGraph().getVertices().size() == 9 );
 	    	verifyIds( mbt.getGraph() );
@@ -559,10 +631,10 @@ public class TestMerging extends TestCase
     	System.setErr( System.err );
     	
     	String msg = stdOutput.toString();
-    	msg = msg.substring( 0, msg.length() - 1 );
-    	
 		System.out.println( msg );
-		assertTrue( msg.matches( "Edge has a label 'BACKTRACK', which is a reserved keyword, in file: '/home/krikar/workspace/mbt/graphml/test24/Camera.graphml'" ) );
+		Pattern p = Pattern.compile( "Edge has a label 'BACKTRACK', which is a reserved keyword, in file: '.*graphml.test24.Camera.graphml'", Pattern.MULTILINE );
+		Matcher m = p.matcher( msg );
+		assertTrue( m.find() );
 		System.out.println( "" );
     }
 }
