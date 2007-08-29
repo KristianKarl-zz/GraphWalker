@@ -27,6 +27,7 @@ public class CLI
 	static private String graphmlFile;
 	static private String outputFile;
 	static private String perlScript;
+	static private boolean cul_de_sac;
 	static private boolean random;
 	static private long seconds;
 	static private long length;
@@ -71,6 +72,8 @@ public class CLI
 					 									 "This argument also needs the --time to be set." );
 					opt.addOption( "o", "optimize", false, "Run the test optimized. Can not be combined with --random." );
 					opt.addOption( "s", "statistics", false, "Prints the statistics of the test, at the end of the run." );
+					opt.addOption( "c", "cul-de-sac", false, "Accepts graphs that has cu-de-sac and continue the test, without this flag, " +
+															  "the execution of the test will be stopped." );
 					opt.addOption( OptionBuilder.withArgName( "file" )
 		                    .withDescription( "The file (or folder) containing graphml formatted files." )
 		                    .hasArg()
@@ -101,6 +104,9 @@ public class CLI
 					opt.addOption( "r", "random", false, "Run the test with a random walk. Can not be combined with --optimize. " + 
 					 									 "This argument also needs the --time to be set." );
 					opt.addOption( "o", "optimize", false, "Run the test optimized. Can not be combined with --random." );
+					opt.addOption( "s", "statistics", false, "Prints the statistics of the test, at the end of the run." );
+					opt.addOption( "c", "cul-de-sac", false, "Accepts graphs that has cu-de-sac and continue the test, without this flag, " +
+					  "the execution of the test will be stopped." );
 					opt.addOption( OptionBuilder.withArgName( "file" )
 		                    .withDescription( "The file (or folder) containing graphml formatted files." )
 		                    .hasArg()
@@ -150,6 +156,8 @@ public class CLI
 						.hasArg()
 						.withLongOpt( "output_graphml" )
 						.create( "l" ) );
+					opt.addOption( "c", "cul-de-sac", false, "Accepts graphs that has cu-de-sac, without this flag, " +
+					  										 "an error message will be displayed." );
 					
 					System.out.println( "Merge several graphml files into one single graphml file.\n" +			
 										"The files to be merged, shall all exist in a single folder.\n" );					
@@ -170,6 +178,8 @@ public class CLI
 						"This argument also needs the --time to be set." );
 					opt.addOption( "o", "optimize", false, "Run the test optimized. Can not be combined with --random." );			
 					opt.addOption( "s", "statistics", false, "Prints the statistics of the test, at the end of the run." );
+					opt.addOption( "c", "cul-de-sac", false, "Accepts graphs that has cu-de-sac and continue the test, without this flag, " +
+					  										 "the execution of the test will be stopped." );
 					opt.addOption( OptionBuilder.withArgName( "file" )
 						.withDescription( "The perl script implementing the model." )
 						.hasArg()
@@ -251,6 +261,8 @@ public class CLI
 				 "This argument also needs the --time to be set." );
 				opt.addOption( "o", "optimize", false, "Run the test optimized. Can not be combined with --random." );
 				opt.addOption( "s", "statistics", false, "Prints the statistics of the test, at the end of the run." );
+				opt.addOption( "c", "cul-de-sac", false, "Accepts graphs that has cu-de-sac and continue the test, without this flag, " +
+				  "the execution of the test will be stopped." );
 				opt.addOption( OptionBuilder.withArgName( "file" )
 					.withDescription( "The file (or folder) containing graphml formatted files." )
 					.hasArg()
@@ -268,6 +280,9 @@ public class CLI
 				opt.addOption( "r", "random", false, "Run the test with a random walk. Can not be combined with --optimize. " + 
 					"This argument also needs the --time to be set." );
 				opt.addOption( "o", "optimize", false, "Run the test optimized. Can not be combined with --random." );
+				opt.addOption( "s", "statistics", false, "Prints the statistics of the test, at the end of the run." );
+				opt.addOption( "c", "cul-de-sac", false, "Accepts graphs that has cu-de-sac and continue the test, without this flag, " +
+				  "the execution of the test will be stopped." );
 				opt.addOption( OptionBuilder.withArgName( "file" )
 					.withDescription( "The file (or folder) containing graphml formatted files." )
 					.hasArg()
@@ -300,6 +315,8 @@ public class CLI
 					.hasArg()
 					.withLongOpt( "output_graphml" )
 					.create( "l" ) );
+				opt.addOption( "c", "cul-de-sac", false, "Accepts graphs that has cu-de-sac, without this flag, " +
+				  									     "an error message will be displayed." );
 			}
 			else if ( args[ 0 ].equals( "perl" ) )
 			{
@@ -312,6 +329,8 @@ public class CLI
 					"This argument also needs the --time to be set." );
 				opt.addOption( "o", "optimize", false, "Run the test optimized. Can not be combined with --random." );			
 				opt.addOption( "s", "statistics", false, "Prints the statistics of the test, at the end of the run." );
+				opt.addOption( "c", "cul-de-sac", false, "Accepts graphs that has cu-de-sac and continue the test, without this flag, " +
+				  "the execution of the test will be stopped." );
 				opt.addOption( OptionBuilder.withArgName( "file" )
 					.withDescription( "The perl script implementing the model." )
 					.hasArg()
@@ -414,6 +433,15 @@ public class CLI
 	            	random = false;
 	            }
 
+	            if ( cl.hasOption( "c" ) ) 
+	            {
+	            	cul_de_sac = false;
+	            }
+	            else
+	            {
+	            	cul_de_sac = true;
+	            }
+
 	            if ( !cl.hasOption( "g" ) )
 	            {
 	            	System.out.println( "Missing the input graphml file (folder), See -g (--intput_graphml)" );
@@ -475,6 +503,24 @@ public class CLI
 	                return;	            	
 	            }
 
+	            if ( cl.hasOption( "c" ) ) 
+	            {
+	            	cul_de_sac = false;
+	            }
+	            else
+	            {
+	            	cul_de_sac = true;
+	            }
+
+	            if ( cl.hasOption( "s" ) ) 
+	            {
+	            	statistics = true;
+	            }
+	            else
+	            {
+	            	statistics = false;
+	            }
+
 	            if ( !cl.hasOption( "g" ) )
 	            {
 	            	System.out.println( "Missing the input graphml file (folder), See -g (--intput_graphml)" );
@@ -513,12 +559,22 @@ public class CLI
 	            	System.out.println( "Type 'java -jar mbt.jar help merge' for help." );
 	                return;	            	
 	            }
+
+	            if ( cl.hasOption( "c" ) ) 
+	            {
+	            	cul_de_sac = false;
+	            }
+	            else
+	            {
+	            	cul_de_sac = true;
+	            }
 	            
             	graphmlFile = cl.getOptionValue( "g" );
             	outputFile  = cl.getOptionValue( "l" );            	
 
     			ModelBasedTesting mbt = new ModelBasedTesting();
     			Logger logger = mbt.getLogger();
+    			mbt.set_cul_de_sac( cul_de_sac );
             	try
 	    		{
 	    			mbt.readGraph( graphmlFile );
@@ -561,6 +617,15 @@ public class CLI
 	            if ( cl.hasOption( "o" ) ) 
 	            {
 	            	random = false;
+	            }
+
+	            if ( cl.hasOption( "c" ) ) 
+	            {
+	            	cul_de_sac = false;
+	            }
+	            else
+	            {
+	            	cul_de_sac = true;
 	            }
 
 	            if ( !cl.hasOption( "g" ) )
@@ -710,6 +775,7 @@ public class CLI
 	{
 		ModelBasedTesting mbt = new ModelBasedTesting();
 		Logger logger = mbt.getLogger();
+		mbt.set_cul_de_sac( cul_de_sac );
     	try
 		{
 			mbt.readGraph( graphmlFile );
@@ -836,6 +902,7 @@ public class CLI
 	{
 		ModelBasedTesting mbt = new ModelBasedTesting();
 		Logger logger = mbt.getLogger();
+		mbt.set_cul_de_sac( cul_de_sac );
 		mbt.readGraph( graphmlFile );
 		mbt.reset();
 		
@@ -957,6 +1024,7 @@ public class CLI
 	{
 		ModelBasedTesting mbt = new ModelBasedTesting();
 		Logger logger = mbt.getLogger();
+		mbt.set_cul_de_sac( cul_de_sac );
     	try
 		{
 			mbt.readGraph( graphmlFile );
