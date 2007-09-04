@@ -97,7 +97,6 @@ public class ModelBasedTesting
 	private DirectedSparseEdge 	 	_rejectedEdge = null;
 	private DirectedSparseEdge 	 	_currentEdge  = null;
 	private Vector 			     	_pathHistory  = new Vector();
-	//private Vector 			     	_testSequence = new Vector();
 	private long				 	_start_time;
 	private long				 	_end_time     = 0;
 	private boolean				 	_runUntilAllEdgesVisited = false;
@@ -128,7 +127,7 @@ public class ModelBasedTesting
         return false;
 	}
  	
-	public int getNewVertexAndEdgeIndex()
+	private int getNewVertexAndEdgeIndex()
 	{
 		return ++_vertexAndEdgeIndex;
 	}
@@ -462,12 +461,16 @@ public class ModelBasedTesting
 	}
 
 
+	public DirectedSparseVertex getCurrentVertex()
+	{
+		return _nextVertex;
+	}
+	
 	/**
 	 * Returns the next edge to be tested. 
 	 */
 	public DirectedSparseEdge getEdge( boolean randomWalk, long executionTime )
 	{
-
 		if ( randomWalk )
 		{
 			_runUntilAllEdgesVisited = false;
@@ -2440,7 +2443,7 @@ public class ModelBasedTesting
 
 		DirectedSparseEdge new_edge = (DirectedSparseEdge)graph.addEdge( new DirectedSparseEdge( (DirectedSparseVertex)inEdge.getSource(), outEdge.getDest() ) );
 
-		copy_user_data( new_edge, outEdge, inEdge  );
+		merge_user_data( new_edge, outEdge, inEdge  );
 		
 		new_edge.setUserDatum( INDEX_KEY, new Integer( getNewVertexAndEdgeIndex() ), UserData.SHARED );
 		_logger.debug( "  Replacing the target vertex out-edge: " + getCompleteEdgeName( outEdge ) + " (old) with: " + getCompleteEdgeName( new_edge ) + "(new), using: " + getCompleteEdgeName( inEdge ) );
@@ -2559,13 +2562,15 @@ public class ModelBasedTesting
 	}
 	
 	
-	private void copy_user_data( DirectedSparseEdge dst_edge, DirectedSparseEdge src_edge_A , DirectedSparseEdge src_edge_B )
+	private void merge_user_data( DirectedSparseEdge dst_edge, DirectedSparseEdge src_edge_A , DirectedSparseEdge src_edge_B )
 	{
+		_logger.debug( "    merge_user_data" );
 		for (Iterator iter = src_edge_A.getUserDatumKeyIterator(); iter.hasNext();)
 		{
 			String element = (String) iter.next();
 			if ( dst_edge.containsUserDatumKey( element ) == false )
 			{
+				_logger.debug( "      addUserDatum: " + element + " = " + src_edge_A.getUserDatum( element ) );
 				dst_edge.addUserDatum( element, src_edge_A.getUserDatum( element ), UserData.SHARED );
 			}
 		}
@@ -2574,6 +2579,7 @@ public class ModelBasedTesting
 			String element = (String) iter.next();
 			if ( dst_edge.containsUserDatumKey( element ) == false )
 			{
+				_logger.debug( "      addUserDatum: " + element + " = " + src_edge_B.getUserDatum( element ) );
 				dst_edge.addUserDatum( element, src_edge_B.getUserDatum( element ), UserData.SHARED );
 			}
 		}
@@ -2584,19 +2590,23 @@ public class ModelBasedTesting
 		{
 			if ( fullLabel_A.length() > fullLabel_B.length() )
 			{
+				_logger.debug( "      full label: " +  src_edge_A.getUserDatum( FULL_LABEL_KEY ) );
 				dst_edge.setUserDatum( FULL_LABEL_KEY, src_edge_A.getUserDatum( FULL_LABEL_KEY ), UserData.SHARED );
 			}
 			else
 			{
+				_logger.debug( "      full label: " +  src_edge_B.getUserDatum( FULL_LABEL_KEY ) );
 				dst_edge.setUserDatum( FULL_LABEL_KEY, src_edge_B.getUserDatum( FULL_LABEL_KEY ), UserData.SHARED );
 			}
 		}
 		else if ( fullLabel_A != null  && fullLabel_B == null )
 		{
+			_logger.debug( "      full label: " +  src_edge_A.getUserDatum( FULL_LABEL_KEY ) );
 			dst_edge.setUserDatum( FULL_LABEL_KEY, src_edge_A.getUserDatum( FULL_LABEL_KEY ), UserData.SHARED );
 		}
 		else if ( fullLabel_A == null  && fullLabel_B != null )
 		{
+			_logger.debug( "      full label: " +  src_edge_B.getUserDatum( FULL_LABEL_KEY ) );
 			dst_edge.setUserDatum( FULL_LABEL_KEY, src_edge_B.getUserDatum( FULL_LABEL_KEY ), UserData.SHARED );
 		}
 	}

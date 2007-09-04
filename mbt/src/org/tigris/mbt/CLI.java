@@ -35,7 +35,6 @@ public class CLI
 	private String  LABEL_KEY = "label";
 	private String  INDEX_KEY = "index";
 	private String  BACKTRACK = "BACKTRACK";
-	private boolean backtrackingEngaged;
 
 	public static void main(String[] args)
 	{
@@ -371,7 +370,7 @@ public class CLI
 			}
 			else if ( args[ 0 ].equals( "-v" ) || args[ 0 ].equals( "--version" ) )
 			{
-				System.out.println( "org.tigris.mbt version 1.14 (r189)\n" );
+				System.out.println( "org.tigris.mbt version 1.15 (r191)\n" );
 				System.out.println( "org.tigris.mbt is open source software licensed under GPL" );
 				System.out.println( "The software (and it's source) can be downloaded at http://mbt.tigris.org/\n" );
 				System.out.println( "This package contains following software packages:" );
@@ -781,11 +780,44 @@ public class CLI
 			mbt.readGraph( graphmlFile );
 			mbt.reset();
 			
-			// The array will conatin the lebel an id of the edge, and the vertex
+			// The unique index of the previous vertex.
 			Integer previousVertexIndex = null;
+
+			// If an edge contains the keyword BACKTARCK
+			boolean backtrackingEngaged = false;
+			
+			// Only accept edges that contains the keyword BACKTARCK
+			boolean acceptOnlyBacktracking = false;
+			
 			while ( true )
 			{
-				DirectedSparseEdge edge = mbt.getEdge( random, seconds );
+				DirectedSparseEdge edge = null;
+				
+				if ( acceptOnlyBacktracking )
+				{
+					if ( backtrackingEngaged == false )
+					{
+						throw new RuntimeException( "Internal program problem: If acceptOnlyBacktracking is true also backtrackingEngaged mut be true." );						
+					}
+					
+					while ( true )
+					{
+						edge = mbt.getEdge( random, seconds );
+						if ( edge.containsUserDatumKey( BACKTRACK ) == false )
+						{
+							mbt.SetCurrentVertex( previousVertexIndex );
+						}
+						else
+						{
+							acceptOnlyBacktracking = false;
+							break;
+						}
+					}
+				}
+				else
+				{
+					edge = mbt.getEdge( random, seconds );
+				}
 	
 				// getEdgeAndVertex caught an exception, and returned null
 				if ( edge == null )
@@ -793,7 +825,7 @@ public class CLI
 					break;
 				}
 	
-				mbt.getLogger().info( "Edge: " + edge.getUserDatum( LABEL_KEY ) + ", index=" + edge.getUserDatum( INDEX_KEY ) );
+				mbt.getLogger().info( "Edge: " + edge.getUserDatum( LABEL_KEY ) + ", index=" + edge.getUserDatum( INDEX_KEY ) );				
 				if ( edge.containsUserDatumKey( LABEL_KEY ) )
 				{
 					System.out.print( edge.getUserDatum( LABEL_KEY ) );
@@ -830,7 +862,7 @@ public class CLI
 					
 					if ( previousVertexIndex != null )
 					{
-						mbt.getLogger().info("== BACKTRACKING ==" );
+						mbt.getLogger().info("== BACKTRACKING FRPM EDGE ==" );
 						mbt.SetCurrentVertex( previousVertexIndex );						
 						continue;
 					}					
@@ -866,7 +898,8 @@ public class CLI
 					
 					if ( previousVertexIndex != null )
 					{
-						mbt.getLogger().info("== BACKTRACKING ==" );
+						acceptOnlyBacktracking = true;
+						mbt.getLogger().info("== BACKTRACKING FROM VERTEX ==" );
 						mbt.SetCurrentVertex( previousVertexIndex );
 						continue;
 					}
