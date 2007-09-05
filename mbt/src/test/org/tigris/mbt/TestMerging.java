@@ -32,47 +32,35 @@ public class TestMerging extends TestCase
     }
 
     
-    // Verify that all vertices and edges has indexes, and that no duplicates exists.
-    private void verifyIds( SparseGraph g )
-	{
-		Object[] vertices1 = g.getVertices().toArray();
-		for ( int i = 0; i < vertices1.length; i++ )
-		{
-			DirectedSparseVertex v1 = (DirectedSparseVertex)vertices1[ i ];
-			int hits = 0;
-			Integer index1 = (Integer)v1.getUserDatum( INDEX_KEY );
-	    	Object[] vertices2 = g.getVertices().toArray();
-			for ( int j = 0; j < vertices1.length; j++ )
-			{
-				DirectedSparseVertex v2 = (DirectedSparseVertex)vertices2[ j ];
-				Integer index2 = (Integer)v2.getUserDatum( INDEX_KEY );
-				if ( index1.intValue() == index2.intValue() )
-				{
-					hits++;
-		    	}
-	    	}
-	    	assertTrue( hits == 1 );
-		}					
-
-		Object[] edges1 = g.getEdges().toArray();
-		for ( int i = 0; i < vertices1.length; i++ )
-		{
-			DirectedSparseEdge e1 = (DirectedSparseEdge)edges1[ i ];
-			int hits = 0;
-			Integer index1 = (Integer)e1.getUserDatum( INDEX_KEY );
-	    	Object[] edges2 = g.getEdges().toArray();
-			for ( int j = 0; j < vertices1.length; j++ )
-			{
-				DirectedSparseEdge e2 = (DirectedSparseEdge)edges2[ j ];
-				Integer index2 = (Integer)e2.getUserDatum( INDEX_KEY );
-				if ( index1.intValue() == index2.intValue() )
-				{
-					hits++;
-		    	}
-	    	}
-	    	assertTrue( hits == 1 );
-		}					
-	}					
+    
+    public void testCountMethods()
+    {
+		System.out.println( "TEST: testCountMethods" );
+		System.out.println( "=======================================================================" );
+		String args[] = new String[ 3 ];
+		args[ 0 ] = "methods";
+		args[ 1 ] = "-g";
+		args[ 2 ] = "graphml/methods/Main.graphml";
+    	CLI cli = new CLI();
+    	
+    	
+    	OutputStream out = new OutputStream() {
+    		public void write(int b) throws IOException {
+    			stdOutput.append( Character.toString((char) b) );
+    		}
+   		};
+    	PrintStream stream = new PrintStream( out );
+    	System.setErr( stream );
+    	cli.main( args );
+    	System.setErr( System.err );
+    	
+    	String msg = stdOutput.toString();
+		System.out.println( msg );
+		/*Pattern p = Pattern.compile( "e_Cancel\ne_CloseApp\ne_CloseDB\ne_CloseDialog\ne_EnterCorrectKey\ne_EnterInvalidKey\ne_Initialize\ne_No\ne_Start\ne_StartWithDatabase\ne_Yes\nv_EnterMasterCompositeMasterKey\nv_InvalidKey\nv_KeePassNotRunning\nv_MainWindowEmpty\nv_MainWindow_DB_Loaded\nv_SaveBeforeCloseLock", Pattern.MULTILINE );
+		Matcher m = p.matcher( msg );
+		assertTrue( m.find() );*/
+		System.out.println( "" );
+    }
 
     
     
@@ -637,4 +625,47 @@ public class TestMerging extends TestCase
 		assertTrue( m.find() );
 		System.out.println( "" );
     }
+
+    
+    // Verify that all vertices and edges has indexes, and that no duplicates exists.
+    private void verifyIds( SparseGraph g )
+	{
+		Object[] vertices1 = g.getVertices().toArray();
+		for ( int i = 0; i < vertices1.length; i++ )
+		{
+			DirectedSparseVertex v1 = (DirectedSparseVertex)vertices1[ i ];
+			int hits = 0;
+			Integer index1 = (Integer)v1.getUserDatum( INDEX_KEY );
+	    	Object[] vertices2 = g.getVertices().toArray();
+			for ( int j = 0; j < vertices1.length; j++ )
+			{
+				DirectedSparseVertex v2 = (DirectedSparseVertex)vertices2[ j ];
+				Integer index2 = (Integer)v2.getUserDatum( INDEX_KEY );
+				if ( index1.intValue() == index2.intValue() )
+				{
+					hits++;
+		    	}
+	    	}
+	    	assertTrue( hits == 1 );
+		}					
+
+		Object[] edges1 = g.getEdges().toArray();
+		for ( int i = 0; i < vertices1.length; i++ )
+		{
+			DirectedSparseEdge e1 = (DirectedSparseEdge)edges1[ i ];
+			int hits = 0;
+			Integer index1 = (Integer)e1.getUserDatum( INDEX_KEY );
+	    	Object[] edges2 = g.getEdges().toArray();
+			for ( int j = 0; j < vertices1.length; j++ )
+			{
+				DirectedSparseEdge e2 = (DirectedSparseEdge)edges2[ j ];
+				Integer index2 = (Integer)e2.getUserDatum( INDEX_KEY );
+				if ( index1.intValue() == index2.intValue() )
+				{
+					hits++;
+		    	}
+	    	}
+	    	assertTrue( hits == 1 );
+		}					
+	}
 }
