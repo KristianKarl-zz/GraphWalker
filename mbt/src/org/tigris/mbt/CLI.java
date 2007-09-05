@@ -1017,12 +1017,13 @@ public class CLI
 				String element = (String) vertex.getUserDatum( LABEL_KEY );
 				if ( element != null )
 				{
-					set.add( element );
+					if ( !element.equals( "Start" ) )
+						set.add( element );
 				}
 			}
 			
 			Object[] edges    = mbt.getGraph().getEdges().toArray();
-			for (int i = 0; i < vertices.length; i++) 
+			for (int i = 0; i < edges.length; i++) 
 			{
 				DirectedSparseEdge edge = (DirectedSparseEdge)edges[ i ];
 				String element = (String) edge.getUserDatum( LABEL_KEY );
