@@ -104,8 +104,8 @@ public class CLI
 					 									 "This argument also needs the --time to be set." );
 					opt.addOption( "o", "optimize", false, "Run the test optimized. Can not be combined with --random." );
 					opt.addOption( "s", "statistics", false, "Prints the statistics of the test, at the end of the run." );
-					opt.addOption( "c", "cul-de-sac", false, "Accepts graphs that has cu-de-sac and continue the test, without this flag, " +
-					  "the execution of the test will be stopped." );
+					opt.addOption( "c", "cul-de-sac", false, "Accepts graphs that has a cul-de-sac. Without the flag, " +
+					  "the generation of the test sequence will be stopped." );
 					opt.addOption( OptionBuilder.withArgName( "file" )
 		                    .withDescription( "The file (or folder) containing graphml formatted files." )
 		                    .hasArg()
@@ -280,8 +280,8 @@ public class CLI
 					"This argument also needs the --time to be set." );
 				opt.addOption( "o", "optimize", false, "Run the test optimized. Can not be combined with --random." );
 				opt.addOption( "s", "statistics", false, "Prints the statistics of the test, at the end of the run." );
-				opt.addOption( "c", "cul-de-sac", false, "Accepts graphs that has cu-de-sac and continue the test, without this flag, " +
-				  "the execution of the test will be stopped." );
+				opt.addOption( "c", "cul-de-sac", false, "Accepts graphs that has a cul-de-sac. Without the flag, " +
+				  "the generation of the test sequence will be stopped." );
 				opt.addOption( OptionBuilder.withArgName( "file" )
 					.withDescription( "The file (or folder) containing graphml formatted files." )
 					.hasArg()
@@ -290,7 +290,7 @@ public class CLI
 				opt.addOption( OptionBuilder.withLongOpt( "length" )
 					.withArgName( "=length" )
 					.withDescription( "The length of the test sequence. Supply an integer, which tells MBT how many " + 
-					"vertices and edges a test sequence shall contain." )
+					"vertices and edges a test sequence shall contain. Can not be combined with --optimze" )
 					.hasArg()
 					.create( "n" ) );
 			}
@@ -370,7 +370,7 @@ public class CLI
 			}
 			else if ( args[ 0 ].equals( "-v" ) || args[ 0 ].equals( "--version" ) )
 			{
-				System.out.println( "org.tigris.mbt version 1.15 (r191)\n" );
+				System.out.println( "org.tigris.mbt version 1.15 (r193)\n" );
 				System.out.println( "org.tigris.mbt is open source software licensed under GPL" );
 				System.out.println( "The software (and it's source) can be downloaded at http://mbt.tigris.org/\n" );
 				System.out.println( "This package contains following software packages:" );
