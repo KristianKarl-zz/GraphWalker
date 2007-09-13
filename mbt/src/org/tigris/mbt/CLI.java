@@ -813,8 +813,18 @@ public class CLI
 							continue;
 						}
 
-						mbt.getLogger().info( "Label to match: '" + label + "', label to compare: '" + edge.getUserDatum( LABEL_KEY ) + "'" );				
-						if ( label.equals( (String)edge.getUserDatum( LABEL_KEY ) ) == false )
+						if ( label == null )
+						{
+							label = "";
+						}
+						String label2Comp = (String)edge.getUserDatum( LABEL_KEY );
+						if ( label2Comp == null )
+						{
+							label2Comp = "";
+						}
+
+						mbt.getLogger().info( "Label to match: '" + label + "', label to compare: '" + label2Comp + "'" );
+						if ( label.equals( label2Comp ) == false )
 						{
 							mbt.SetCurrentVertex( previousVertexIndex );
 							continue;
