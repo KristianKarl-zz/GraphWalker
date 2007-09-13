@@ -786,8 +786,12 @@ public class CLI
 			// If an edge contains the keyword BACKTARCK
 			boolean backtrackingEngaged = false;
 			
-			// Only accept edges that contains the keyword BACKTARCK
+			// Only accept edges that has the same label AND contains the keyword BACKTARCK
 			boolean acceptOnlyBacktracking = false;
+			String  label = "";
+			
+			// Skip printing the label of the edge to stdout
+			boolean skipEdgeLabel = false;
 			
 			while ( true )
 			{
@@ -806,12 +810,19 @@ public class CLI
 						if ( edge.containsUserDatumKey( BACKTRACK ) == false )
 						{
 							mbt.SetCurrentVertex( previousVertexIndex );
+							continue;
 						}
-						else
+
+						mbt.getLogger().info( "Label to match: '" + label + "', label to compare: '" + edge.getUserDatum( LABEL_KEY ) + "'" );				
+						if ( label.equals( (String)edge.getUserDatum( LABEL_KEY ) ) == false )
 						{
-							acceptOnlyBacktracking = false;
-							break;
+							mbt.SetCurrentVertex( previousVertexIndex );
+							continue;
 						}
+
+						acceptOnlyBacktracking = false;
+						skipEdgeLabel = true;
+						break;
 					}
 				}
 				else
@@ -824,49 +835,53 @@ public class CLI
 				{
 					break;
 				}
-	
-				mbt.getLogger().info( "Edge: " + edge.getUserDatum( LABEL_KEY ) + ", index=" + edge.getUserDatum( INDEX_KEY ) );				
-				if ( edge.containsUserDatumKey( LABEL_KEY ) )
-				{
-					System.out.print( edge.getUserDatum( LABEL_KEY ) );
-				}
-				else
-				{
-					System.out.print( "" );
-				}
 				
-				if ( edge.containsUserDatumKey( BACKTRACK ) )
+				if ( skipEdgeLabel == false )
 				{
-					backtrackingEngaged = true;
-					System.out.println( " BACKTRACK" );
-					mbt.getLogger().info( "BACKTRACK enabled" );
-				}
-				else
-				{
-					backtrackingEngaged = false;
-					System.out.println( "" );
-				}
-				
-				try
-				{
-					checkInput( new Integer( readFromStdin() ).intValue() );
-				}
-				catch ( GoBackToPreviousVertexException e )
-				{
-					if ( backtrackingEngaged == false )
+					mbt.getLogger().info( "Edge: " + edge.getUserDatum( LABEL_KEY ) + ", index=" + edge.getUserDatum( INDEX_KEY ) );				
+					if ( edge.containsUserDatumKey( LABEL_KEY ) )
 					{
-						throw new RuntimeException( "Test ended with a fault. Backtracking was asked for, where the model did not allow it.\n" +
-								"Please check the model at: '" + edge.getUserDatum( LABEL_KEY ) + "', INDEX=" + edge.getUserDatum( INDEX_KEY ) +
-								" coming from: '" + edge.getSource().getUserDatum( LABEL_KEY ) + "', INDEX=" + edge.getSource().getUserDatum( INDEX_KEY ) );					
+						System.out.print( edge.getUserDatum( LABEL_KEY ) );
+					}
+					else
+					{
+						System.out.print( "" );
 					}
 					
-					if ( previousVertexIndex != null )
+					if ( edge.containsUserDatumKey( BACKTRACK ) )
 					{
-						mbt.getLogger().info("== BACKTRACKING FROM EDGE ==" );
-						mbt.SetCurrentVertex( previousVertexIndex );						
-						continue;
-					}					
+						backtrackingEngaged = true;
+						System.out.println( " BACKTRACK" );
+						mbt.getLogger().info( "BACKTRACK enabled" );
+					}
+					else
+					{
+						backtrackingEngaged = false;
+						System.out.println( "" );
+					}
+					
+					try
+					{
+						checkInput( new Integer( readFromStdin() ).intValue() );
+					}
+					catch ( GoBackToPreviousVertexException e )
+					{
+						if ( backtrackingEngaged == false )
+						{
+							throw new RuntimeException( "Test ended with a fault. Backtracking was asked for, where the model did not allow it.\n" +
+									"Please check the model at: '" + edge.getUserDatum( LABEL_KEY ) + "', INDEX=" + edge.getUserDatum( INDEX_KEY ) +
+									" coming from: '" + edge.getSource().getUserDatum( LABEL_KEY ) + "', INDEX=" + edge.getSource().getUserDatum( INDEX_KEY ) );					
+						}
+						
+						if ( previousVertexIndex != null )
+						{
+							mbt.getLogger().info("== BACKTRACKING FROM EDGE ==" );
+							mbt.SetCurrentVertex( previousVertexIndex );						
+							continue;
+						}					
+					}
 				}
+				skipEdgeLabel = false;
 					
 				mbt.getLogger().info( "Vertex: " + edge.getDest().getUserDatum( LABEL_KEY ) + ", index=" + edge.getDest().getUserDatum( INDEX_KEY ) );
 				System.out.print( edge.getDest().getUserDatum( LABEL_KEY ) );
@@ -899,6 +914,7 @@ public class CLI
 					if ( previousVertexIndex != null )
 					{
 						acceptOnlyBacktracking = true;
+						label = (String)edge.getUserDatum( LABEL_KEY );
 						mbt.getLogger().info("== BACKTRACKING FROM VERTEX ==" );
 						mbt.SetCurrentVertex( previousVertexIndex );
 						continue;
