@@ -862,7 +862,7 @@ public class CLI
 					
 					if ( previousVertexIndex != null )
 					{
-						mbt.getLogger().info("== BACKTRACKING FRPM EDGE ==" );
+						mbt.getLogger().info("== BACKTRACKING FROM EDGE ==" );
 						mbt.SetCurrentVertex( previousVertexIndex );						
 						continue;
 					}					
