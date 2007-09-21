@@ -97,6 +97,8 @@ public class ModelBasedTesting
 	private DirectedSparseEdge 	 	_rejectedEdge = null;
 	private DirectedSparseEdge 	 	_currentEdge  = null;
 	private Vector 			     	_pathHistory  = new Vector();
+	private boolean 				_randomWalk;
+	private long 					_executionTime = 0;
 	private long				 	_start_time;
 	private long				 	_end_time     = 0;
 	private boolean				 	_runUntilAllEdgesVisited = false;
@@ -198,6 +200,26 @@ public class ModelBasedTesting
 	{
 		_graphmlFileName = graphmlFileName_;
 		readFiles();		
+	}
+	
+	
+	
+	public void initialize( String graphmlFileName, boolean randomWalk, long executionTime )
+	{
+		_graphmlFileName = graphmlFileName;
+		_randomWalk      = randomWalk;
+		_executionTime   = executionTime;
+		
+		if ( _randomWalk )
+		{
+			_runUntilAllEdgesVisited = false;
+		}
+		else
+		{
+			_runUntilAllEdgesVisited = true;
+		}
+
+		readFiles();
 	}
 	
 	
@@ -469,12 +491,32 @@ public class ModelBasedTesting
 	/**
 	 * Returns the next edge to be tested. 
 	 */
-	public DirectedSparseEdge getEdge( boolean randomWalk, long executionTime )
+	public DirectedSparseEdge getEdge() throws ExecutionTimeException
 	{
-		if ( randomWalk )
+		if ( _randomWalk )
 		{
-			_runUntilAllEdgesVisited = false;
-			if ( ( System.currentTimeMillis() - _start_time ) < executionTime * 1000 )
+			if ( _executionTime > 0 )
+			{
+				if ( ( System.currentTimeMillis() - _start_time ) < _executionTime * 1000 )
+				{
+					try
+					{
+						executeMethod( false, true, true );
+					    _logger.debug( "Current edge =   " + getCompleteEdgeName( _currentEdge ) );
+						return _currentEdge;
+					}
+			        catch ( Exception e )
+					{
+						e.printStackTrace();
+			        }
+				}
+				else
+				{
+				    _logger.info( "Test has now run for the duration of: " + _executionTime + " seconds, and will now stop" );
+				    throw new ExecutionTimeException();
+				}
+			}
+			else
 			{
 				try
 				{
@@ -486,7 +528,7 @@ public class ModelBasedTesting
 				{
 					e.printStackTrace();
 		        }
-			}			
+			}
 		}
 		else
 		{
