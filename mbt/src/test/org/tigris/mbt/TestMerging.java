@@ -35,6 +35,70 @@ public class TestMerging extends TestCase
 
     
     
+    public void testNoVerticesWithNoInEdges()
+    {
+		System.out.println( "TEST: testVertexWithNoInEdges" );
+		System.out.println( "=======================================================================" );
+		String args[] = new String[ 4 ];
+		args[ 0 ] = "static";
+		args[ 1 ] = "-o";
+		args[ 2 ] = "-g";
+		args[ 3 ] = "graphml/misc/no_missing_inedges.graphml";
+    	CLI cli = new CLI();
+    	
+    	OutputStream out = new OutputStream() {
+    		public void write(int b) throws IOException {
+    			stdOutput.append( Character.toString((char) b) );
+    		}
+   		};
+    	PrintStream stream = new PrintStream( out );
+    	PrintStream oldErrStream = System.err; //backup
+    	System.setErr( stream );
+    	cli.main( args );
+    	System.setErr( oldErrStream );
+    	
+    	String msg = stdOutput.toString();
+		System.out.println( msg );
+		Pattern p = Pattern.compile( "^No in-edges! The vertex: .* is not reachable.$", Pattern.MULTILINE );
+		Matcher m = p.matcher( msg );
+		assertTrue( !m.find() );
+		System.out.println( "" );
+    }
+
+    
+    
+    public void testVertexWithNoInEdges()
+    {
+		System.out.println( "TEST: testVertexWithNoInEdges" );
+		System.out.println( "=======================================================================" );
+		String args[] = new String[ 4 ];
+		args[ 0 ] = "static";
+		args[ 1 ] = "-o";
+		args[ 2 ] = "-g";
+		args[ 3 ] = "graphml/misc/missing_inedges.graphml";
+    	CLI cli = new CLI();
+    	
+    	OutputStream out = new OutputStream() {
+    		public void write(int b) throws IOException {
+    			stdOutput.append( Character.toString((char) b) );
+    		}
+   		};
+    	PrintStream stream = new PrintStream( out );
+    	PrintStream oldErrStream = System.err; //backup
+    	System.setErr( stream );
+    	cli.main( args );
+    	System.setErr( oldErrStream );
+    	
+    	String msg = stdOutput.toString();
+		System.out.println( msg );
+		Pattern p = Pattern.compile( "No in-edges! The vertex: 'v_InvalidKey', INDEX=9 is not reachable.", Pattern.MULTILINE );
+		Matcher m = p.matcher( msg );
+		assertTrue( m.find() );
+		System.out.println( "" );
+    }
+
+    
+        
     public void testRandom10seconds()
     {
 		System.out.println( "TEST: testRandom10seconds" );
