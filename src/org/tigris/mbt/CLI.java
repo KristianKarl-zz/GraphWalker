@@ -1,8 +1,5 @@
 package org.tigris.mbt;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Iterator;
@@ -67,8 +64,7 @@ public class CLI
 				}
 				else if ( args[ 1 ].equals( "dynamic" ) )
 				{
-					opt.addOption( "r", "random", false, "Run the test with a random walk. Can not be combined with --optimize. " + 
-					 									 "This argument also needs the --time to be set." );
+					opt.addOption( "r", "random", false, "Run the test with a random walk. Can not be combined with --optimize." );
 					opt.addOption( "o", "optimize", false, "Run the test optimized. Can not be combined with --random." );
 					opt.addOption( "s", "statistics", false, "Prints the statistics of the test, at the end of the run." );
 					opt.addOption( "c", "cul-de-sac", false, "Accepts graphs that has cu-de-sac and continue the test, without this flag, " +
@@ -80,7 +76,7 @@ public class CLI
 		                    .create( "g" ) );
 					opt.addOption( OptionBuilder.withLongOpt( "time" )
 							.withArgName( "=seconds" )
-		                    .withDescription( "The time in seconds for the random walk to run." )
+		                    .withDescription( "The time in seconds for the random walk to run. If 0, the test runs forever." )
 		                    .withValueSeparator( '=' )
 		                    .hasArg()
 		                    .create( "t" ) );
@@ -173,8 +169,7 @@ public class CLI
 						.hasArg()
 						.withLongOpt( "input_graphml" )
 						.create( "g" ) );
-					opt.addOption( "r", "random", false, "Run the test with a random walk. Can not be combined with --optimize. " + 
-						"This argument also needs the --time to be set." );
+					opt.addOption( "r", "random", false, "Run the test with a random walk. Can not be combined with --optimize." );
 					opt.addOption( "o", "optimize", false, "Run the test optimized. Can not be combined with --random." );			
 					opt.addOption( "s", "statistics", false, "Prints the statistics of the test, at the end of the run." );
 					opt.addOption( "c", "cul-de-sac", false, "Accepts graphs that has cu-de-sac and continue the test, without this flag, " +
@@ -186,7 +181,7 @@ public class CLI
 						.create( "p" ) );
 					opt.addOption( OptionBuilder.withLongOpt( "time" )
 						.withArgName( "=seconds" )
-						.withDescription( "The time in seconds for the random walk to run." )
+						.withDescription( "The time in seconds for the random walk to run. If 0, the test runs forever." )
 						.withValueSeparator( '=' )
 						.hasArg()
 						.create( "t" ) );
@@ -256,8 +251,7 @@ public class CLI
 			}
 			else if ( args[ 0 ].equals( "dynamic" ) )
 			{
-				opt.addOption( "r", "random", false, "Run the test with a random walk. Can not be combined with --optimize. " + 
-				 "This argument also needs the --time to be set." );
+				opt.addOption( "r", "random", false, "Run the test with a random walk. Can not be combined with --optimize." );
 				opt.addOption( "o", "optimize", false, "Run the test optimized. Can not be combined with --random." );
 				opt.addOption( "s", "statistics", false, "Prints the statistics of the test, at the end of the run." );
 				opt.addOption( "c", "cul-de-sac", false, "Accepts graphs that has cu-de-sac and continue the test, without this flag, " +
@@ -269,7 +263,7 @@ public class CLI
 					.create( "g" ) );
 				opt.addOption( OptionBuilder.withLongOpt( "time" )
 					.withArgName( "=seconds" )
-					.withDescription( "The time in seconds for the random walk to run." )
+					.withDescription( "The time in seconds for the random walk to run. If 0, the test runs forever." )
 					.withValueSeparator( '=' )
 					.hasArg()
 					.create( "t" ) );
@@ -324,8 +318,7 @@ public class CLI
 					.hasArg()
 					.withLongOpt( "input_graphml" )
 					.create( "g" ) );
-				opt.addOption( "r", "random", false, "Run the test with a random walk. Can not be combined with --optimize. " + 
-					"This argument also needs the --time to be set." );
+				opt.addOption( "r", "random", false, "Run the test with a random walk. Can not be combined with --optimize." );
 				opt.addOption( "o", "optimize", false, "Run the test optimized. Can not be combined with --random." );			
 				opt.addOption( "s", "statistics", false, "Prints the statistics of the test, at the end of the run." );
 				opt.addOption( "c", "cul-de-sac", false, "Accepts graphs that has cu-de-sac and continue the test, without this flag, " +
@@ -337,7 +330,7 @@ public class CLI
 					.create( "p" ) );
 				opt.addOption( OptionBuilder.withLongOpt( "time" )
 					.withArgName( "=seconds" )
-					.withDescription( "The time in seconds for the random walk to run." )
+					.withDescription( "The time in seconds for the random walk to run. If 0, the test runs forever." )
 					.withValueSeparator( '=' )
 					.hasArg()
 					.create( "t" ) );
@@ -421,9 +414,7 @@ public class CLI
 	            	}
 	            	else
 	            	{
-		            	System.out.println( "When running in -r (--random) mode, the -t (--time) must also be set." );
-		            	System.out.println( "Type 'java -jar mbt.jar help dynamic' for help." );
-		                return;
+	            		seconds = 0;
 	            	}
 	            }
 	            
@@ -607,9 +598,7 @@ public class CLI
 	            	}
 	            	else
 	            	{
-		            	System.out.println( "When running in -r (--random) mode, the -t (--time) must also be set." );
-		            	System.out.println( "Type 'java -jar mbt.jar help perl' for help." );
-		                return;
+	            		seconds = 0;
 	            	}
 	            }
 	            
@@ -757,16 +746,33 @@ public class CLI
 	
 	String readFromStdin()
 	{
-		InputStreamReader reader = new InputStreamReader (System.in);
-		BufferedReader buf_in = new BufferedReader (reader);
+		//InputStreamReader reader = new InputStreamReader (System.in);
+		//BufferedReader buf_in = new BufferedReader (reader);
 		
 		String str = "";
-	    try {
-	        str = buf_in.readLine ();	        
-	    }
-	    catch  (IOException e) {
-	    	e.printStackTrace();
-	    }
+    	int	inChar	= 0;
+    	boolean toggle = false;
+    	while ( inChar != -1 )
+	    {
+    	    try
+    		{
+    	    	inChar = System.in.read();
+    		}
+    	    catch (Exception e)
+    		{
+    	    	break;
+    		}
+    	    if ( !Character.isWhitespace( (char)inChar ) )
+    		{
+        	    str += Character.toString((char) inChar);
+        	    // Ok, so we got our single non-white space char from stdin, so we're done here. 
+        	    toggle = true;
+    		}
+    	    if ( toggle )
+    		{
+    	    	break;
+    		}
+    	}
 	    return str;
 	}
 	
@@ -777,7 +783,7 @@ public class CLI
 		mbt.set_cul_de_sac( cul_de_sac );
     	try
 		{
-			mbt.readGraph( graphmlFile );
+			mbt.initialize( graphmlFile, random, seconds );
 			mbt.reset();
 			
 			// The unique index of the previous vertex.
@@ -806,7 +812,7 @@ public class CLI
 					
 					while ( true )
 					{
-						edge = mbt.getEdge( random, seconds );
+						edge = mbt.getEdge();
 						if ( edge.containsUserDatumKey( BACKTRACK ) == false )
 						{
 							mbt.SetCurrentVertex( previousVertexIndex );
@@ -837,7 +843,7 @@ public class CLI
 				}
 				else
 				{
-					edge = mbt.getEdge( random, seconds );
+					edge = mbt.getEdge();
 				}
 	
 				// getEdgeAndVertex caught an exception, and returned null
@@ -937,6 +943,10 @@ public class CLI
 		{
 			System.err.println( "Incorrect indata. Only 0, 1 or 2 is allowed." );
 		}
+		catch ( ExecutionTimeException e )
+		{
+			System.out.println( "End of test. Execution time has ended." );
+		}
 		catch ( Exception e )
 		{
 			if ( e.getMessage() != "Test ended normally" )
@@ -962,27 +972,34 @@ public class CLI
 		ModelBasedTesting mbt = new ModelBasedTesting();
 		Logger logger = mbt.getLogger();
 		mbt.set_cul_de_sac( cul_de_sac );
-		mbt.readGraph( graphmlFile );
+		mbt.initialize( graphmlFile, random, seconds );
 		mbt.reset();
-		
-		while ( true )
+
+		try
 		{
-			DirectedSparseEdge edge = mbt.getEdge( random, seconds );
-
-			// getEdgeAndVertex caught an exception, and returned null
-			if ( edge == null )
+			while ( true )
 			{
-				break;
+				DirectedSparseEdge edge = mbt.getEdge();
+	
+				// getEdgeAndVertex caught an exception, and returned null
+				if ( edge == null )
+				{
+					break;
+				}
+	
+				if ( run_Perl_Subrotine( "perl " + perlScript + " " + edge.getUserDatum( LABEL_KEY ) ) != 0 )
+				{
+					break;
+				}
+				if ( run_Perl_Subrotine( "perl " + perlScript + " " + edge.getDest().getUserDatum( LABEL_KEY ) ) != 0 )
+				{
+					break;
+				}
 			}
-
-			if ( run_Perl_Subrotine( "perl " + perlScript + " " + edge.getUserDatum( LABEL_KEY ) ) != 0 )
-			{
-				break;
-			}
-			if ( run_Perl_Subrotine( "perl " + perlScript + " " + edge.getDest().getUserDatum( LABEL_KEY ) ) != 0 )
-			{
-				break;
-			}
+		}
+		catch ( ExecutionTimeException e )
+		{
+			System.out.println( "End of test. Execution time has ended." );
 		}
 		
 		if ( statistics )
