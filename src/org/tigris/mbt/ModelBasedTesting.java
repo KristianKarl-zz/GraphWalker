@@ -1113,6 +1113,8 @@ public class ModelBasedTesting
 		{
 			searchForCulDeSacs();
 		}
+		
+		checkForVerticesWithZeroInEdges();
 
 		_logger.info( "Done merging" );		
 	}
@@ -2659,5 +2661,23 @@ public class ModelBasedTesting
 
 	public void set_cul_de_sac(boolean _cul_de_sac) {
 		this._cul_de_sac = _cul_de_sac;
+	}
+	
+	private void checkForVerticesWithZeroInEdges()
+	{
+		Object[] vs = _graph.getVertices().toArray();
+		for ( int i = 0; i < vs.length; i++ )
+		{
+			DirectedSparseVertex v = (DirectedSparseVertex)vs[ i ];
+			if ( !v.getUserDatum( LABEL_KEY ).equals( START_NODE ) )
+			{
+				if ( v.getInEdges().toArray().length == 0 )
+				{
+					String msg = "No in-edges! The vertex: " + getCompleteVertexName( v ) + " is not reachable.";
+					_logger.error( msg );
+					throw new RuntimeException( msg );
+				}
+			}
+		}
 	}
 }
