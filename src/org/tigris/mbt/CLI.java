@@ -27,6 +27,7 @@ public class CLI
 	static private boolean cul_de_sac;
 	static private boolean random;
 	static private long seconds;
+	static private long print_coverage;
 	static private long length;
 	static private boolean statistics;
 	private String  LABEL_KEY = "label";
@@ -80,6 +81,14 @@ public class CLI
 		                    .withValueSeparator( '=' )
 		                    .hasArg()
 		                    .create( "t" ) );
+					opt.addOption( OptionBuilder.withLongOpt( "print-coverage" )
+							.withArgName( "=seconds" )
+		                    .withDescription( "Prints the test coverage of the graph during execution every <=seconds>. " +
+									 "The printout goes to the log file defined in mbt.properties, " + 
+									 "and only, if at least INFO level is set in that same file." )
+		                    .withValueSeparator( '=' )
+		                    .hasArg()
+		                    .create( "p" ) );
 					
 					System.out.println( "Run the test dynamically.\n" +			
 										"MBT will return a test sequence, one line at a time to standard output, " +
@@ -267,6 +276,14 @@ public class CLI
 					.withValueSeparator( '=' )
 					.hasArg()
 					.create( "t" ) );
+				opt.addOption( OptionBuilder.withLongOpt( "print-coverage" )
+						.withArgName( "=seconds" )
+	                    .withDescription( "Prints the test coverage of the graph during execution every <=seconds>. " +
+								 "The printout goes to the log file defined in mbt.properties, " + 
+								 "and only, if at least INFO level is set in that same file." )
+	                    .withValueSeparator( '=' )
+	                    .hasArg()
+	                    .create( "p" ) );
 			}
 			else if ( args[ 0 ].equals( "static" ) )
 			{
@@ -418,6 +435,15 @@ public class CLI
 	            	}
 	            }
 	            
+            	if ( cl.hasOption( "p" ) )
+            	{
+            		print_coverage = Integer.valueOf( cl.getOptionValue( "p" ) ).longValue();
+            	}
+            	else
+            	{
+            		print_coverage = 0;
+            	}
+	            	            
 	            if ( cl.hasOption( "o" ) ) 
 	            {
 	            	random = false;
@@ -781,6 +807,9 @@ public class CLI
 		ModelBasedTesting mbt = new ModelBasedTesting();
 		Logger logger = mbt.getLogger();
 		mbt.set_cul_de_sac( cul_de_sac );
+		
+		long startTime = System.currentTimeMillis();
+
     	try
 		{
 			mbt.initialize( graphmlFile, random, seconds );
@@ -799,8 +828,19 @@ public class CLI
 			// Skip printing the label of the edge to stdout
 			boolean skipEdgeLabel = false;
 			
+			 
+			
 			while ( true )
 			{
+				if ( print_coverage > 0 )
+				{
+					if ( System.currentTimeMillis() - startTime > print_coverage )
+					{						
+						logger.info( "Test coverage: " + mbt.getTestCoverage4Vertices() + "% for vertices, and: " + mbt.getTestCoverage4Edges() + "% for edges." );
+						startTime = System.currentTimeMillis(); 
+					}
+				}
+				
 				DirectedSparseEdge edge = null;
 				
 				if ( acceptOnlyBacktracking )
