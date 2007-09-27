@@ -2680,4 +2680,53 @@ public class ModelBasedTesting
 			}
 		}
 	}
+
+	// Returns, in percent, how many edges has been visited.
+	public float getTestCoverage4Edges()
+	{
+		Object[] edges    = _graph.getEdges().toArray();
+		if ( edges.length == 0 )
+		{
+			return 0;
+		}
+
+		int numOfVisitedEdges         = 0;
+
+		for ( int i = 0; i < edges.length; i++ )
+		{
+			DirectedSparseEdge edge = (DirectedSparseEdge)edges[ i ];
+
+			Integer vistited = (Integer)edge.getUserDatum( VISITED_KEY );
+			if ( vistited.intValue() != 0 )
+			{
+				numOfVisitedEdges++;
+			}
+		}
+
+		return ( numOfVisitedEdges / (float)edges.length * 100 );
+	}
+
+	// Returns, in percent, how many vertices has been visited.
+	public float getTestCoverage4Vertices()
+	{
+		Object[] vertices = _graph.getVertices().toArray();
+		if ( vertices.length == 0 )
+		{
+			return 0;
+		}
+
+		int numOfVisitedVertices      = 0;
+
+		for ( int i = 0; i < vertices.length; i++ )
+		{
+			DirectedSparseVertex vertex = (DirectedSparseVertex)vertices[ i ];
+
+			Integer vistited = (Integer)vertex.getUserDatum( VISITED_KEY );
+			if ( vistited.intValue() != 0 )
+			{
+				numOfVisitedVertices++;
+			}
+		}
+		return (numOfVisitedVertices / (float)vertices.length * 100);
+	}
 }

@@ -33,6 +33,37 @@ public class TestMerging extends TestCase
         junit.textui.TestRunner.main(testCaseName);
     }
 
+    public void testCoverageMethods()
+    {
+		System.out.println( "TEST: testCoverageMethods" );
+		System.out.println( "=======================================================================" );
+    	try
+    	{
+	    	ModelBasedTesting mbt = new ModelBasedTesting();
+			mbt.initialize( "graphml/test03", true, 0 );
+			mbt.reset();
+			
+			float edgesCov = 0;
+			float verticesCov = 0;
+			
+			for ( int i = 0; i < 10000; i++ )
+			{
+				mbt.getEdge();
+				float currEdgesCov = mbt.getTestCoverage4Edges();
+				float currVerticesCov = mbt.getTestCoverage4Vertices();
+				assertTrue( currEdgesCov >= edgesCov );
+				assertTrue( currVerticesCov >= verticesCov );
+				edgesCov = currEdgesCov;
+				verticesCov = currVerticesCov;
+			}
+    	}
+    	catch ( Exception e)
+    	{
+    		System.out.println(e.getMessage());
+    		fail( e.getMessage() );
+    	}
+		System.out.println( "" );
+    }
     
     
     public void testNoVerticesWithNoInEdges()
