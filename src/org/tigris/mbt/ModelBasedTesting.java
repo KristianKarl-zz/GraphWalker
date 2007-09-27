@@ -2327,7 +2327,7 @@ public class ModelBasedTesting
 	 * @param DirectedSparseVertex
 	 * @return DirectedSparseEdge
 	 */
-	DirectedSparseEdge getWeightedEdge( DirectedSparseVertex vertex ) throws FoundNoEdgeException
+	private DirectedSparseEdge getWeightedEdge( DirectedSparseVertex vertex ) throws FoundNoEdgeException
 	{
 		Object[] edges = vertex.getOutEdges().toArray();
 		DirectedSparseEdge edge = null;
@@ -2433,13 +2433,13 @@ public class ModelBasedTesting
 		return edgesNotVisited;
 	}
 
-	public String getCompleteEdgeName( DirectedSparseEdge edge )
+	private String getCompleteEdgeName( DirectedSparseEdge edge )
 	{
 		String str = "'" + (String)edge.getUserDatum( LABEL_KEY ) + "', INDEX=" + edge.getUserDatum( INDEX_KEY ) + " ('" + (String)edge.getSource().getUserDatum( LABEL_KEY ) + "', INDEX=" + edge.getSource().getUserDatum( INDEX_KEY ) + " -> '" + (String)edge.getDest().getUserDatum( LABEL_KEY ) + "', INDEX=" + edge.getDest().getUserDatum( INDEX_KEY ) +  ")";
 		return str;
 	}
 
-	public String getCompleteVertexName( DirectedSparseVertex vertex )
+	private String getCompleteVertexName( DirectedSparseVertex vertex )
 	{
 		String str = "'" + (String)vertex.getUserDatum( LABEL_KEY ) + "', INDEX=" + vertex.getUserDatum( INDEX_KEY );
 		return str;
@@ -2655,7 +2655,7 @@ public class ModelBasedTesting
 		}
 	}
 
-	public boolean is_cul_de_sac() {
+	private boolean is_cul_de_sac() {
 		return _cul_de_sac;
 	}
 
