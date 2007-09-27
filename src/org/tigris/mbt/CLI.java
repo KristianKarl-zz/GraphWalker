@@ -438,6 +438,7 @@ public class CLI
             	if ( cl.hasOption( "p" ) )
             	{
             		print_coverage = Integer.valueOf( cl.getOptionValue( "p" ) ).longValue();
+            		print_coverage *= 1000;
             	}
             	else
             	{
