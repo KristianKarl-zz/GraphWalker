@@ -2109,7 +2109,7 @@ public class ModelBasedTesting
 				_logger.debug( "All edges has been visited!" );
 				return;
 			}
-			_logger.info( "Found " + unvisitedEdges.size() + " unvisited edges (" + _graph.getEdges().size() + ")" );
+			_logger.debug( "Found " + unvisitedEdges.size() + " unvisited edges (" + _graph.getEdges().size() + ")" );
 
 			DirectedSparseEdge e = null;
 			do
