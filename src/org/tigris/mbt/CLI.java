@@ -870,7 +870,7 @@ public class CLI
 							label2Comp = "";
 						}
 
-						mbt.getLogger().info( "Label to match: '" + label + "', label to compare: '" + label2Comp + "'" );
+						logger.debug( "Label to match: '" + label + "', label to compare: '" + label2Comp + "'" );
 						if ( label.equals( label2Comp ) == false )
 						{
 							mbt.SetCurrentVertex( previousVertexIndex );
@@ -895,7 +895,7 @@ public class CLI
 				
 				if ( skipEdgeLabel == false )
 				{
-					mbt.getLogger().info( "Edge: " + edge.getUserDatum( LABEL_KEY ) + ", index=" + edge.getUserDatum( INDEX_KEY ) );				
+					logger.info( "Edge: " + edge.getUserDatum( LABEL_KEY ) + ", index=" + edge.getUserDatum( INDEX_KEY ) );				
 					if ( edge.containsUserDatumKey( LABEL_KEY ) )
 					{
 						System.out.print( edge.getUserDatum( LABEL_KEY ) );
@@ -909,7 +909,7 @@ public class CLI
 					{
 						backtrackingEngaged = true;
 						System.out.println( " BACKTRACK" );
-						mbt.getLogger().info( "BACKTRACK enabled" );
+						logger.info( "BACKTRACK enabled" );
 					}
 					else
 					{
@@ -932,7 +932,7 @@ public class CLI
 						
 						if ( previousVertexIndex != null )
 						{
-							mbt.getLogger().info("== BACKTRACKING FROM EDGE ==" );
+							logger.info("== BACKTRACKING FROM EDGE ==" );
 							mbt.SetCurrentVertex( previousVertexIndex );						
 							continue;
 						}					
@@ -940,14 +940,14 @@ public class CLI
 				}
 				skipEdgeLabel = false;
 					
-				mbt.getLogger().info( "Vertex: " + edge.getDest().getUserDatum( LABEL_KEY ) + ", index=" + edge.getDest().getUserDatum( INDEX_KEY ) );
+				logger.info( "Vertex: " + edge.getDest().getUserDatum( LABEL_KEY ) + ", index=" + edge.getDest().getUserDatum( INDEX_KEY ) );
 				System.out.print( edge.getDest().getUserDatum( LABEL_KEY ) );
 
 				if ( edge.containsUserDatumKey( BACKTRACK ) )
 				{
 					backtrackingEngaged = true;
 					System.out.println( " BACKTRACK" );
-					mbt.getLogger().info( "BACKTRACK enabled" );
+					logger.info( "BACKTRACK enabled" );
 				}
 				else
 				{
@@ -972,7 +972,7 @@ public class CLI
 					{
 						acceptOnlyBacktracking = true;
 						label = (String)edge.getUserDatum( LABEL_KEY );
-						mbt.getLogger().info("== BACKTRACKING FROM VERTEX ==" );
+						logger.info("== BACKTRACKING FROM VERTEX ==" );
 						mbt.SetCurrentVertex( previousVertexIndex );
 						continue;
 					}
