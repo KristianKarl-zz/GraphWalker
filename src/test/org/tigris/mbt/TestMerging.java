@@ -500,7 +500,7 @@ public class TestMerging extends TestCase
     	{
     		String msg = e.getMessage();
     		System.out.println(e.getMessage());
-    		assertTrue( msg.matches( "Found 2 subgraphs using the same name: 'B', they are defined in files: '.*graphml.test09.C.graphml', and :'.*graphml.test09.B\\.graphml'" ) );
+    		assertTrue( msg.matches( "Found 2 subgraphs using the same name: 'B', they are defined in files: '.*graphml.test09.(C|B).graphml', and :'.*graphml.test09.(B|C).graphml'" ) );
     	}
 		System.out.println( "" );
     }
@@ -774,7 +774,7 @@ public class TestMerging extends TestCase
     	
     	String msg = stdOutput.toString();
 		System.out.println( msg );
-		Pattern p = Pattern.compile( "Edge has a label 'BACKTRACK', which is a reserved keyword, in file: '.*graphml.test24.Camera.graphml'", Pattern.MULTILINE );
+		Pattern p = Pattern.compile( "Edge has a label 'BACKTRACK', .* which is a reserved keyword, in file: '.*graphml.test24.(Camera|Time).graphml'", Pattern.MULTILINE );
 		Matcher m = p.matcher( msg );
 		assertTrue( m.find() );
 		System.out.println( "" );
