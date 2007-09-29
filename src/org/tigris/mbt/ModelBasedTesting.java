@@ -874,7 +874,7 @@ public class ModelBasedTesting
 								}
 								if ( isKeyWord( label ) )
 								{
-									throw new RuntimeException( "Edge has a label '" + label  + "', which is a reserved keyword, in file: '" + fileName + "'" );
+									throw new RuntimeException( "Edge has a label '" + label  + "', '" + getCompleteEdgeName( e ) + "', which is a reserved keyword, in file: '" + fileName + "'" );
 								}
 								e.addUserDatum( LABEL_KEY, label, UserData.SHARED );
 								_logger.debug( " Found label = '" + label + "' for edge id: " + edgeLabel.getQualifiedName() );
