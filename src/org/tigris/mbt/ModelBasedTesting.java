@@ -87,7 +87,7 @@ public class ModelBasedTesting
 	private String  BLOCKED	                    = "BLOCKED";
 	private String  BACKTRACK	                = "BACKTRACK";
 
-	private String   				_graphmlFileName;
+	private String   				_graphmlFileName = "";
 	private Object   			 	_object;
 	private org.apache.log4j.Logger _logger;
 	private Object[] 			 	_vertices     = null;
@@ -137,7 +137,6 @@ public class ModelBasedTesting
 	public ModelBasedTesting( String graphmlFileName_,
 			  				  Object object_ )
 	{
-		_graphmlFileName = graphmlFileName_;
 		_object          = object_;
 		_logger          = org.apache.log4j.Logger.getLogger( ModelBasedTesting.class );
 
@@ -162,39 +161,13 @@ public class ModelBasedTesting
 	 		_logger.addAppender( writerAppender );
 	 		_logger.setLevel( (Level)Level.ERROR );
 		}
-
-		readFiles();
+		readGraph(graphmlFileName_);
 	}
 
 	public ModelBasedTesting()
 	{
-		_object          = null;
-		_logger          = org.apache.log4j.Logger.getLogger( ModelBasedTesting.class );
-		
-		if ( new File( "mbt.properties" ).exists() )
-		{
-			PropertyConfigurator.configure("mbt.properties");
-		}
-		else
-		{
-			SimpleLayout layout = new SimpleLayout();
-			WriterAppender writerAppender = null;
-	 		try
-	 		{
-	 			FileOutputStream fileOutputStream = new FileOutputStream( "mbt.log" );
-	 			writerAppender = new WriterAppender( layout, fileOutputStream );
-	 		}
-	 		catch ( Exception e )
-	 		{
-				e.printStackTrace();
-	 		}
-	 
-	 		_logger.addAppender( writerAppender );
-	 		_logger.setLevel( (Level)Level.ERROR );
-		}
+		this("",null);
 	}
-
-	
 	
 	public void readGraph( String graphmlFileName_ )
 	{
@@ -202,27 +175,13 @@ public class ModelBasedTesting
 		readFiles();		
 	}
 	
-	
-	
 	public void initialize( String graphmlFileName, boolean randomWalk, long executionTime )
 	{
-		_graphmlFileName = graphmlFileName;
 		_randomWalk      = randomWalk;
 		_executionTime   = executionTime;
-		
-		if ( _randomWalk )
-		{
-			_runUntilAllEdgesVisited = false;
-		}
-		else
-		{
-			_runUntilAllEdgesVisited = true;
-		}
-
-		readFiles();
+		_runUntilAllEdgesVisited = !_randomWalk;
+		readGraph(graphmlFileName);
 	}
-	
-	
 	
 	public void writeGraph( SparseGraph g, String mergedGraphml_ )
 	{
@@ -326,35 +285,38 @@ public class ModelBasedTesting
 
 	private void readFiles()
 	{
-		File file = new File( _graphmlFileName );
-		if ( file.isFile() )
+		if(_graphmlFileName != "")
 		{
-	    	_graphList.add( parseFile( _graphmlFileName ) );
+			File file = new File( _graphmlFileName );
+			if ( file.isFile() )
+			{
+		    	_graphList.add( parseFile( _graphmlFileName ) );
+			}
+			else if ( file.isDirectory() )
+			{
+			    // Only accepts files which suffix is .graphml
+			    FilenameFilter filter = new FilenameFilter()
+			    {
+			        public boolean accept( File dir, String name )
+			        {
+			            return name.endsWith( ".graphml" );
+			        }
+			    };
+	
+			    File [] allChildren = file.listFiles( filter );
+			    for ( int i = 0; i < allChildren.length; ++i )
+			    {
+			    	_graphList.add( parseFile( allChildren[ i ].getAbsolutePath() ) );
+			    }
+			}
+			else
+			{
+				throw new RuntimeException( "'" + _graphmlFileName + "' is not a file or a directory. Please specify a valid .graphml file or a directory containing .graphml files" );
+			}
+		    mergeAllGraphs();
 		}
-		else if ( file.isDirectory() )
-		{
-		    // Only accpets files which suffix is .graphml
-		    FilenameFilter filter = new FilenameFilter()
-		    {
-		        public boolean accept( File dir, String name )
-		        {
-		            return name.endsWith( ".graphml" );
-		        }
-		    };
-
-		    File [] allChildren = file.listFiles( filter );
-		    for ( int i = 0; i < allChildren.length; ++i )
-		    {
-		    	_graphList.add( parseFile( allChildren[ i ].getAbsolutePath() ) );
-		    }
-		}
-		else
-		{
-			throw new RuntimeException( "'" + _graphmlFileName + "' is not a file or a directory. Please specify a valid .graphml file or a directory containing .graphml files" );
-		}
-	    mergeAllGraphs();
 	}
-
+	
 	/**
 	 * @param runningTime
 	 * The time, in seconds, to run this test.
@@ -404,7 +366,7 @@ public class ModelBasedTesting
 
 
 	/**
-	 * Put mbt back in inital state, which means that test will begin
+	 * Put mbt back in initial state, which means that test will begin
 	 * at the Start vertex. 
 	 */
 	public void reset()
@@ -415,7 +377,7 @@ public class ModelBasedTesting
 
 
 	/**
-	 * Run the test untill all vertices (nodes) are visited.
+	 * Run the test until all vertices (nodes) are visited.
 	 */
 	public void runUntilAllVerticesVisited() throws FoundNoEdgeException
 	{
@@ -434,7 +396,7 @@ public class ModelBasedTesting
 
 
 	/**
-	 * Run the test untill all edges (arrows, or transistions) are visited.
+	 * Run the test until all edges (arrows, or transitions) are visited.
 	 */
 	public void runUntilAllEdgesVisited() throws FoundNoEdgeException
 	{
@@ -554,7 +516,7 @@ public class ModelBasedTesting
 
 
 	/**
-	 * Run the test untill all edges (arrows, or transistions), and
+	 * Run the test until all edges (arrows, or transitions), and
 	 * all vertices (nodes) are visited
 	 */
 	public void runUntilAllVerticesAndEdgesVisited() throws FoundNoEdgeException
@@ -651,7 +613,7 @@ public class ModelBasedTesting
 					}
 					_logger.debug( "  id: " + element.getAttributeValue( "id" ) );
 
-					// Used to remember which vertext to store the image location.
+					// Used to remember which vertex to store the image location.
 					DirectedSparseVertex currentVertex = null;
 					
 					Iterator iterNodeLabel = element.getDescendants( new org.jdom.filter.ElementFilter( "NodeLabel" ) );
@@ -791,7 +753,7 @@ public class ModelBasedTesting
 
 			Object[] vertices = graph.getVertices().toArray();
 
-			// Parse all edges (arrows or transtitions)
+			// Parse all edges (arrows or transitions)
 			Iterator iter_edge = doc.getDescendants( new org.jdom.filter.ElementFilter( "edge" ) );
 			while ( iter_edge.hasNext() )
 			{
@@ -2085,7 +2047,7 @@ public class ModelBasedTesting
 
 		if ( _nextVertex.containsUserDatumKey( MOTHER_GRAPH_START_VERTEX ) && dryRun == false )
 		{
-			_pathHistory.clear();
+			_pathHistory.clear();   
 		}
 
 		_logger.debug( "Vertex = '" + (String)_nextVertex.getUserDatum( LABEL_KEY ) + "'" );
