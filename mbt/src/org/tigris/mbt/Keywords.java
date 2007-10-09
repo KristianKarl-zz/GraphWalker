@@ -4,7 +4,9 @@ import java.util.Iterator;
 import java.util.Vector;
 
 /**
- * Handles the common constants for the org.tigris.mbt package
+ * Handles the common constants for the org.tigris.mbt package. This includes
+ * reserved key words, and text strings used for storing custom data as
+ * UserDatum in graphs, vertices and edges.
  *
  */
 public class Keywords {
