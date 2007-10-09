@@ -17,6 +17,12 @@
 
 package org.tigris.mbt;
 
+/**
+ * This exception is thrown during test sequence generation, when no out edge
+ * is found from a given vertex. This could be due to a cul-de-sac, which may
+ * or may not be perfectly all right.
+ *
+ */
 public class FoundNoEdgeException extends Exception
 {
 	private static final long serialVersionUID = -2597269122921601356L;

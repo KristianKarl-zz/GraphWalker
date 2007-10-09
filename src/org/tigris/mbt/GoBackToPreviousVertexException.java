@@ -18,7 +18,8 @@
 package org.tigris.mbt;
 
 /**
- * @author Kristian Karl
+ * This exception can be thrown in order to backtrack the current point of execution
+ * to the previous vertex. 
  */
 public class GoBackToPreviousVertexException extends Exception
 {

@@ -3,6 +3,11 @@ package org.tigris.mbt;
 import java.io.InputStream;
 import java.io.InputStreamReader;
  
+/**
+ * This object handles redirected standard input and output. Used when
+ * to run a perl script from with a java process.
+ *
+ */
 public class StreamReaderThread extends Thread
 {
     StringBuffer mOut;

@@ -19,7 +19,11 @@ import edu.uci.ics.jung.utils.Pair;
 
 /**
  * This class has some utility functionality used by org.tigris.mbt
- *
+ * The functionality is:<br>
+ * * Generating Java code<br>
+ * * Generating Perl code<br>
+ * * Getting names with extra info for vertices and edges<br>
+ * * Writing a graph back to a file using the GraphML format<br>
  */
 public class Util {
 
@@ -49,7 +53,7 @@ public class Util {
 	}
 	
 	/**
-	 * Writes the graph to file, using GraphML format
+	 * Writes the graph to file, using GraphML format.
 	 */
 	public static void writeGraphML( SparseGraph g, String mergedGraphml )
 	{
@@ -163,7 +167,14 @@ public class Util {
 			e.printStackTrace();
 		}
 	}
-	
+
+	/**
+	 * Will generate java code in the file fileName. The code generated will be all lables/names
+	 * defined by the vertices and edges, implemented as methods.<br>
+	 * If a method is already defined in the file, it will not be touched.
+	 * @param g
+	 * @param fileName
+	 */
 	public static void generateJavaCode( SparseGraph g, String fileName )
 	{
 		Object[] vertices = g.getVertices().toArray();
@@ -308,6 +319,13 @@ public class Util {
 		}
 	}
 
+	/**
+	 * Will generate perl code in the file fileName. The code generated will be all lables/names
+	 * defined by the vertices and edges, implemented as sub routines.<br>
+	 * If a sub routine is already defined in the file, it will not be touched.
+	 * @param g
+	 * @param fileName
+	 */
 	public static void generatePerlCode( SparseGraph g, String fileName )
 	{
 		Object[] vertices = g.getVertices().toArray();
