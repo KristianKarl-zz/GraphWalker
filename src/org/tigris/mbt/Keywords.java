@@ -154,10 +154,10 @@ public class Keywords {
 	*/
 	static
 	{
-		reservedKeyWords.add( BLOCKED );
-		reservedKeyWords.add( BACKTRACK );
-		reservedKeyWords.add( MERGE );
-		reservedKeyWords.add( NO_MERGE );		
+		reservedKeyWords.add( "BLOCKED" );
+		reservedKeyWords.add( "BACKTRACK" );
+		reservedKeyWords.add( "MERGE" );
+		reservedKeyWords.add( "NO_MERGE" );		
 	}
 	
 	/**
