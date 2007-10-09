@@ -10,7 +10,7 @@
           <y:Geometry  x="0.0" y="-794.5813492063492" width="42.0" height="30.0"/>
           <y:Fill color="#00FF00"  transparent="false"/>
           <y:BorderStyle type="line" width="1.0" color="#000000" />
-          <y:NodeLabel x="5.0" y="5.036865234375" width="32.0" height="19.92626953125" visible="true" alignment="center" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" hasBackgroundColor="false" hasLineColor="false" modelName="internal" modelPosition="c" autoSizePolicy="content">Start</y:NodeLabel>
+          <y:NodeLabel x="4.5" y="5.436767578125" width="33.0" height="19.12646484375" visible="true" alignment="center" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" hasBackgroundColor="false" hasLineColor="false" modelName="internal" modelPosition="c" autoSizePolicy="content">Start</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>
@@ -21,7 +21,7 @@
           <y:Geometry  x="1106.0" y="-3054.163492063492" width="176.0" height="220.0"/>
           <y:Fill color="#FFCC00"  transparent="false"/>
           <y:BorderStyle type="line" width="1.0" color="#000000" />
-          <y:NodeLabel x="49.5" y="224.0" width="77.0" height="35.8525390625" visible="true" alignment="center" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" backgroundColor="#FFFFFF" lineColor="#FF0000" modelName="sides" modelPosition="s" autoSizePolicy="content">v_Contacts&#xA;SUBGRAPH</y:NodeLabel>
+          <y:NodeLabel x="51.0" y="224.0" width="74.0" height="34.2529296875" visible="true" alignment="center" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" backgroundColor="#FFFFFF" lineColor="#FF0000" modelName="sides" modelPosition="s" autoSizePolicy="content">v_Contacts&#xA;SUBGRAPH</y:NodeLabel>
           <y:Image href="file:/C:/neocode/n2/test/graphs/img/v_Contacts.png"/>
         </y:ImageNode>
       </data>
@@ -32,7 +32,7 @@
           <y:Geometry  x="281.0" y="-880.0162698412698" width="176.0" height="220.0"/>
           <y:Fill color="#99CCFF"  transparent="false"/>
           <y:BorderStyle type="line" width="1.0" color="#000000" />
-          <y:NodeLabel x="40.5" y="224.0" width="95.0" height="19.92626953125" visible="true" alignment="center" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" backgroundColor="#FFFFFF" lineColor="#FF0000" modelName="sides" modelPosition="s" autoSizePolicy="content">v_StatusScreen</y:NodeLabel>
+          <y:NodeLabel x="39.0" y="224.0" width="98.0" height="19.12646484375" visible="true" alignment="center" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" backgroundColor="#FFFFFF" lineColor="#FF0000" modelName="sides" modelPosition="s" autoSizePolicy="content">v_StatusScreen</y:NodeLabel>
           <y:Image href="file:/C:/neocode/n2/test/graphs/img/v_StatusScreen.png"/>
         </y:ImageNode>
       </data>
@@ -43,7 +43,7 @@
           <y:Geometry  x="689.0" y="-2974.0599206349207" width="176.0" height="220.0"/>
           <y:Fill color="#99CCFF"  transparent="false"/>
           <y:BorderStyle type="line" width="1.0" color="#000000" />
-          <y:NodeLabel x="50.0" y="224.0" width="76.0" height="19.92626953125" visible="true" alignment="center" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" backgroundColor="#FFFFFF" lineColor="#FF0000" modelName="sides" modelPosition="s" autoSizePolicy="content">v_StartMenu</y:NodeLabel>
+          <y:NodeLabel x="47.5" y="224.0" width="81.0" height="19.12646484375" visible="true" alignment="center" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" backgroundColor="#FFFFFF" lineColor="#FF0000" modelName="sides" modelPosition="s" autoSizePolicy="content">v_StartMenu</y:NodeLabel>
           <y:Image href="file:/C:/neocode/n2/test/graphs/img/v_StartMenu.png"/>
         </y:ImageNode>
       </data>
@@ -54,7 +54,7 @@
           <y:Geometry  x="1106.0" y="-3648.8690476190477" width="176.0" height="220.0"/>
           <y:Fill color="#FFCC00"  transparent="false"/>
           <y:BorderStyle type="line" width="1.0" color="#000000" />
-          <y:NodeLabel x="49.5" y="224.0" width="77.0" height="35.8525390625" visible="true" alignment="center" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" backgroundColor="#FFFFFF" lineColor="#FF0000" modelName="sides" modelPosition="s" autoSizePolicy="content">v_Camera&#xA;SUBGRAPH</y:NodeLabel>
+          <y:NodeLabel x="53.0" y="224.0" width="70.0" height="34.2529296875" visible="true" alignment="center" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" backgroundColor="#FFFFFF" lineColor="#FF0000" modelName="sides" modelPosition="s" autoSizePolicy="content">v_Camera&#xA;SUBGRAPH</y:NodeLabel>
           <y:Image href="file:/C:/neocode/n2/test/graphs/img/v_Camera.png"/>
         </y:ImageNode>
       </data>
@@ -65,7 +65,7 @@
           <y:Geometry  x="1106.0" y="-3359.01626984127" width="176.0" height="220.0"/>
           <y:Fill color="#FFCC00"  transparent="false"/>
           <y:BorderStyle type="line" width="1.0" color="#000000" />
-          <y:NodeLabel x="33.0" y="224.0" width="110.0" height="35.8525390625" visible="true" alignment="center" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" backgroundColor="#FFFFFF" lineColor="#FF0000" modelName="sides" modelPosition="s" autoSizePolicy="content">v_MessagingInbox&#xA;SUBGRAPH</y:NodeLabel>
+          <y:NodeLabel x="27.5" y="224.0" width="121.0" height="34.2529296875" visible="true" alignment="center" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" backgroundColor="#FFFFFF" lineColor="#FF0000" modelName="sides" modelPosition="s" autoSizePolicy="content">v_MessagingInbox&#xA;SUBGRAPH</y:NodeLabel>
           <y:Image href="file:/C:/neocode/n2/test/graphs/img/v_MessagingInbox.png"/>
         </y:ImageNode>
       </data>
@@ -76,7 +76,7 @@
           <y:Geometry  x="1568.0" y="-2378.2801587301587" width="176.0" height="220.0"/>
           <y:Fill color="#FFCC00"  transparent="false"/>
           <y:BorderStyle type="line" width="1.0" color="#000000" />
-          <y:NodeLabel x="44.0" y="224.0" width="88.0" height="35.8525390625" visible="true" alignment="center" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" backgroundColor="#FFFFFF" lineColor="#FF0000" modelName="sides" modelPosition="s" autoSizePolicy="content">v_MediaPlayer&#xA;SUBGRAPH</y:NodeLabel>
+          <y:NodeLabel x="42.0" y="224.0" width="92.0" height="34.2529296875" visible="true" alignment="center" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" backgroundColor="#FFFFFF" lineColor="#FF0000" modelName="sides" modelPosition="s" autoSizePolicy="content">v_MediaPlayer&#xA;SUBGRAPH</y:NodeLabel>
           <y:Image href="file:/C:/neocode/n2/test/graphs/img/v_MediaPlayer.png"/>
         </y:ImageNode>
       </data>
@@ -87,7 +87,7 @@
           <y:Geometry  x="1106.0" y="-2520.206746031746" width="176.0" height="220.0"/>
           <y:Fill color="#99CCFF"  transparent="false"/>
           <y:BorderStyle type="line" width="1.0" color="#000000" />
-          <y:NodeLabel x="43.0" y="224.0" width="90.0" height="19.92626953125" visible="true" alignment="center" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" backgroundColor="#FFFFFF" lineColor="#FF0000" modelName="sides" modelPosition="s" autoSizePolicy="content">v_StartMenu_2</y:NodeLabel>
+          <y:NodeLabel x="40.0" y="224.0" width="96.0" height="19.12646484375" visible="true" alignment="center" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" backgroundColor="#FFFFFF" lineColor="#FF0000" modelName="sides" modelPosition="s" autoSizePolicy="content">v_StartMenu_2</y:NodeLabel>
           <y:Image href="file:/C:/neocode/n2/test/graphs/img/v_StartMenu_2.png"/>
         </y:ImageNode>
       </data>
@@ -98,7 +98,7 @@
           <y:Geometry  x="1568.0" y="-2652.206746031746" width="176.0" height="220.0"/>
           <y:Fill color="#99CCFF"  transparent="false"/>
           <y:BorderStyle type="line" width="1.0" color="#000000" />
-          <y:NodeLabel x="43.0" y="224.0" width="90.0" height="19.92626953125" visible="true" alignment="center" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" backgroundColor="#FFFFFF" lineColor="#FF0000" modelName="sides" modelPosition="s" autoSizePolicy="content">v_StartMenu_3</y:NodeLabel>
+          <y:NodeLabel x="40.0" y="224.0" width="96.0" height="19.12646484375" visible="true" alignment="center" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" backgroundColor="#FFFFFF" lineColor="#FF0000" modelName="sides" modelPosition="s" autoSizePolicy="content">v_StartMenu_3</y:NodeLabel>
           <y:Image href="file:/C:/neocode/n2/test/graphs/img/v_StartMenu_3.png"/>
         </y:ImageNode>
       </data>
@@ -109,7 +109,7 @@
           <y:Geometry  x="2040.5" y="-2770.063888888889" width="176.0" height="220.0"/>
           <y:Fill color="#99CCFF"  transparent="false"/>
           <y:BorderStyle type="line" width="1.0" color="#000000" />
-          <y:NodeLabel x="51.0" y="224.0" width="74.0" height="19.92626953125" visible="true" alignment="center" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" backgroundColor="#FFFFFF" lineColor="#FF0000" modelName="sides" modelPosition="s" autoSizePolicy="content">v_ShortCuts</y:NodeLabel>
+          <y:NodeLabel x="48.0" y="224.0" width="80.0" height="19.12646484375" visible="true" alignment="center" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" backgroundColor="#FFFFFF" lineColor="#FF0000" modelName="sides" modelPosition="s" autoSizePolicy="content">v_ShortCuts</y:NodeLabel>
           <y:Image href="file:/C:/neocode/n2/test/graphs/img/v_ShortCuts.png"/>
         </y:ImageNode>
       </data>
@@ -120,7 +120,7 @@
           <y:Geometry  x="1568.0" y="-3054.163492063492" width="176.0" height="220.0"/>
           <y:Fill color="#FFCC00"  transparent="false"/>
           <y:BorderStyle type="line" width="1.0" color="#000000" />
-          <y:NodeLabel x="49.5" y="224.0" width="77.0" height="35.8525390625" visible="true" alignment="center" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" backgroundColor="#FFFFFF" lineColor="#FF0000" modelName="sides" modelPosition="s" autoSizePolicy="content">v_SysFiles&#xA;SUBGRAPH</y:NodeLabel>
+          <y:NodeLabel x="53.0" y="224.0" width="70.0" height="34.2529296875" visible="true" alignment="center" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" backgroundColor="#FFFFFF" lineColor="#FF0000" modelName="sides" modelPosition="s" autoSizePolicy="content">v_SysFiles&#xA;SUBGRAPH</y:NodeLabel>
           <y:Image href="file:/C:/neocode/n2/test/graphs/img/v_SysFiles.png"/>
         </y:ImageNode>
       </data>
@@ -131,7 +131,7 @@
           <y:Geometry  x="1568.0" y="-1508.7218253968254" width="176.0" height="220.0"/>
           <y:Fill color="#FFCC00"  transparent="false"/>
           <y:BorderStyle type="line" width="1.0" color="#000000" />
-          <y:NodeLabel x="21.0" y="224.0" width="134.0" height="35.8525390625" visible="true" alignment="center" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" backgroundColor="#FFFFFF" lineColor="#FF0000" modelName="sides" modelPosition="s" autoSizePolicy="content">v_RunningApplications&#xA;SUBGRAPH</y:NodeLabel>
+          <y:NodeLabel x="13.5" y="224.0" width="149.0" height="34.2529296875" visible="true" alignment="center" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" backgroundColor="#FFFFFF" lineColor="#FF0000" modelName="sides" modelPosition="s" autoSizePolicy="content">v_RunningApplications&#xA;SUBGRAPH</y:NodeLabel>
           <y:Image href="file:/C:/neocode/n2/test/graphs/img/v_RunningApplications.png"/>
         </y:ImageNode>
       </data>
@@ -142,7 +142,7 @@
           <y:Geometry  x="1568.0" y="-2088.427380952381" width="176.0" height="220.0"/>
           <y:Fill color="#FFCC00"  transparent="false"/>
           <y:BorderStyle type="line" width="1.0" color="#000000" />
-          <y:NodeLabel x="49.5" y="224.0" width="77.0" height="35.8525390625" visible="true" alignment="center" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" backgroundColor="#FFFFFF" lineColor="#FF0000" modelName="sides" modelPosition="s" autoSizePolicy="content">v_Calendar&#xA;SUBGRAPH</y:NodeLabel>
+          <y:NodeLabel x="51.5" y="224.0" width="73.0" height="34.2529296875" visible="true" alignment="center" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" backgroundColor="#FFFFFF" lineColor="#FF0000" modelName="sides" modelPosition="s" autoSizePolicy="content">v_Calendar&#xA;SUBGRAPH</y:NodeLabel>
           <y:Image href="file:/C:/neocode/n2/test/graphs/img/v_Calendar.png"/>
         </y:ImageNode>
       </data>
@@ -153,7 +153,7 @@
           <y:Geometry  x="1568.0" y="-1218.8690476190477" width="176.0" height="220.0"/>
           <y:Fill color="#FFCC00"  transparent="false"/>
           <y:BorderStyle type="line" width="1.0" color="#000000" />
-          <y:NodeLabel x="49.5" y="224.0" width="77.0" height="35.8525390625" visible="true" alignment="center" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" backgroundColor="#FFFFFF" lineColor="#FF0000" modelName="sides" modelPosition="s" autoSizePolicy="content">v_Notes&#xA;SUBGRAPH</y:NodeLabel>
+          <y:NodeLabel x="53.0" y="224.0" width="70.0" height="34.2529296875" visible="true" alignment="center" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" backgroundColor="#FFFFFF" lineColor="#FF0000" modelName="sides" modelPosition="s" autoSizePolicy="content">v_Notes&#xA;SUBGRAPH</y:NodeLabel>
           <y:Image href="file:/C:/neocode/n2/test/graphs/img/v_Notes.png"/>
         </y:ImageNode>
       </data>
@@ -164,7 +164,7 @@
           <y:Geometry  x="1568.0" y="-1798.5746031746032" width="176.0" height="220.0"/>
           <y:Fill color="#FFCC00"  transparent="false"/>
           <y:BorderStyle type="line" width="1.0" color="#000000" />
-          <y:NodeLabel x="49.5" y="224.0" width="77.0" height="35.8525390625" visible="true" alignment="center" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" backgroundColor="#FFFFFF" lineColor="#FF0000" modelName="sides" modelPosition="s" autoSizePolicy="content">v_Tetris&#xA;SUBGRAPH</y:NodeLabel>
+          <y:NodeLabel x="53.0" y="224.0" width="70.0" height="34.2529296875" visible="true" alignment="center" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" backgroundColor="#FFFFFF" lineColor="#FF0000" modelName="sides" modelPosition="s" autoSizePolicy="content">v_Tetris&#xA;SUBGRAPH</y:NodeLabel>
           <y:Image href="file:/C:/neocode/n2/test/graphs/img/v_Tetris.png"/>
         </y:ImageNode>
       </data>
@@ -175,7 +175,7 @@
           <y:Geometry  x="2040.5" y="-2496.1373015873014" width="176.0" height="220.0"/>
           <y:Fill color="#FFCC00"  transparent="false"/>
           <y:BorderStyle type="line" width="1.0" color="#000000" />
-          <y:NodeLabel x="49.5" y="224.0" width="77.0" height="35.8525390625" visible="true" alignment="center" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" backgroundColor="#FFFFFF" lineColor="#FF0000" modelName="sides" modelPosition="s" autoSizePolicy="content">v_Alarm&#xA;SUBGRAPH</y:NodeLabel>
+          <y:NodeLabel x="53.0" y="224.0" width="70.0" height="34.2529296875" visible="true" alignment="center" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" backgroundColor="#FFFFFF" lineColor="#FF0000" modelName="sides" modelPosition="s" autoSizePolicy="content">v_Alarm&#xA;SUBGRAPH</y:NodeLabel>
           <y:Image href="file:/C:/neocode/n2/test/graphs/img/v_Alarm.png"/>
         </y:ImageNode>
       </data>
@@ -186,7 +186,7 @@
           <y:Geometry  x="2040.5" y="-1916.4317460317461" width="176.0" height="220.0"/>
           <y:Fill color="#FFCC00"  transparent="false"/>
           <y:BorderStyle type="line" width="1.0" color="#000000" />
-          <y:NodeLabel x="45.0" y="224.0" width="86.0" height="35.8525390625" visible="true" alignment="center" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" backgroundColor="#FFFFFF" lineColor="#FF0000" modelName="sides" modelPosition="s" autoSizePolicy="content">v_NeoBrowser&#xA;SUBGRAPH</y:NodeLabel>
+          <y:NodeLabel x="42.0" y="224.0" width="92.0" height="34.2529296875" visible="true" alignment="center" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" backgroundColor="#FFFFFF" lineColor="#FF0000" modelName="sides" modelPosition="s" autoSizePolicy="content">v_NeoBrowser&#xA;SUBGRAPH</y:NodeLabel>
           <y:Image href="file:/C:/neocode/n2/test/graphs/img/v_NeoBrowser.png"/>
         </y:ImageNode>
       </data>
@@ -197,7 +197,7 @@
           <y:Geometry  x="2040.5" y="-2206.2845238095238" width="176.0" height="220.0"/>
           <y:Fill color="#FFCC00"  transparent="false"/>
           <y:BorderStyle type="line" width="1.0" color="#000000" />
-          <y:NodeLabel x="49.5" y="224.0" width="77.0" height="35.8525390625" visible="true" alignment="center" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" backgroundColor="#FFFFFF" lineColor="#FF0000" modelName="sides" modelPosition="s" autoSizePolicy="content">v_Calculator&#xA;SUBGRAPH</y:NodeLabel>
+          <y:NodeLabel x="47.0" y="224.0" width="82.0" height="34.2529296875" visible="true" alignment="center" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" backgroundColor="#FFFFFF" lineColor="#FF0000" modelName="sides" modelPosition="s" autoSizePolicy="content">v_Calculator&#xA;SUBGRAPH</y:NodeLabel>
           <y:Image href="file:/C:/neocode/n2/test/graphs/img/v_Calculator.png"/>
         </y:ImageNode>
       </data>
@@ -208,7 +208,7 @@
           <y:Geometry  x="689.0" y="-590.1634920634921" width="176.0" height="220.0"/>
           <y:Fill color="#FFCC00"  transparent="false"/>
           <y:BorderStyle type="line" width="1.0" color="#000000" />
-          <y:NodeLabel x="39.5" y="224.0" width="97.0" height="35.8525390625" visible="true" alignment="center" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" backgroundColor="#FFFFFF" lineColor="#FF0000" modelName="sides" modelPosition="s" autoSizePolicy="content">v_NumberToDial&#xA;SUBGRAPH</y:NodeLabel>
+          <y:NodeLabel x="33.5" y="224.0" width="109.0" height="34.2529296875" visible="true" alignment="center" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" backgroundColor="#FFFFFF" lineColor="#FF0000" modelName="sides" modelPosition="s" autoSizePolicy="content">v_NumberToDial&#xA;SUBGRAPH</y:NodeLabel>
           <y:Image href="file:/C:/neocode/n2/test/graphs/img/v_NumberToDial.png"/>
         </y:ImageNode>
       </data>
@@ -219,7 +219,7 @@
           <y:Geometry  x="689.0" y="-880.0162698412698" width="176.0" height="220.0"/>
           <y:Fill color="#FFCC00"  transparent="false"/>
           <y:BorderStyle type="line" width="1.0" color="#000000" />
-          <y:NodeLabel x="37.5" y="224.0" width="101.0" height="35.8525390625" visible="true" alignment="center" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" backgroundColor="#FFFFFF" lineColor="#FF0000" modelName="sides" modelPosition="s" autoSizePolicy="content">v_GlobalSettings&#xA;SUBGRAPH</y:NodeLabel>
+          <y:NodeLabel x="33.5" y="224.0" width="109.0" height="34.2529296875" visible="true" alignment="center" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" backgroundColor="#FFFFFF" lineColor="#FF0000" modelName="sides" modelPosition="s" autoSizePolicy="content">v_GlobalSettings&#xA;SUBGRAPH</y:NodeLabel>
           <y:Image href="file:/C:/neocode/n2/test/graphs/img/v_GlobalSettings.png"/>
         </y:ImageNode>
       </data>
@@ -230,7 +230,7 @@
           <y:Path sx="21.0" sy="-0.0" tx="-88.0" ty="-9.565217391304259"/>
           <y:LineStyle type="line" width="1.0" color="#000000" />
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel x="10.0" y="-9.35057528056791" width="34.0" height="18.701171875" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" hasBackgroundColor="false" hasLineColor="false" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_Init</y:EdgeLabel>
+          <y:EdgeLabel x="10.0" y="-9.35057528056791" width="34.0" height="17.962890625" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" hasBackgroundColor="false" hasLineColor="false" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_Init</y:EdgeLabel>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
@@ -244,7 +244,7 @@
           </y:Path>
           <y:LineStyle type="line" width="1.0" color="#000000" />
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel x="89.96337890625" y="-128.23331628224196" width="76.0" height="33.40234375" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" backgroundColor="#FFFF99" lineColor="#FF6600" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_TapIcon_2&#xA;BLOCKED</y:EdgeLabel>
+          <y:EdgeLabel x="89.96337890625" y="-121.25187096974196" width="77.0" height="17.962890625" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" backgroundColor="#FFFF99" lineColor="#FF6600" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_TapIcon_2</y:EdgeLabel>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
@@ -260,7 +260,7 @@
           </y:Path>
           <y:LineStyle type="line" width="1.0" color="#000000" />
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel x="29.970703125" y="-51.66645275297617" width="142.0" height="18.701171875" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" backgroundColor="#FFFF99" lineColor="#FF6600" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_SweepShowStartMenu</y:EdgeLabel>
+          <y:EdgeLabel x="29.970703125" y="-51.66645275297617" width="140.0" height="17.962890625" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" backgroundColor="#FFFF99" lineColor="#FF6600" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_SweepShowStartMenu</y:EdgeLabel>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
@@ -276,7 +276,7 @@
           </y:Path>
           <y:LineStyle type="line" width="1.0" color="#000000" />
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel x="89.9560546875" y="-173.6747589595734" width="76.0" height="18.701171875" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" backgroundColor="#FFFF99" lineColor="#FF6600" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_TapIcon_5</y:EdgeLabel>
+          <y:EdgeLabel x="89.9560546875" y="-173.6747589595734" width="77.0" height="17.962890625" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" backgroundColor="#FFFF99" lineColor="#FF6600" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_TapIcon_5</y:EdgeLabel>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
@@ -292,7 +292,7 @@
           </y:Path>
           <y:LineStyle type="line" width="1.0" color="#000000" />
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel x="89.970703125" y="-154.97370799231157" width="76.0" height="18.701171875" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" backgroundColor="#FFFF99" lineColor="#FF6600" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_TapIcon_6</y:EdgeLabel>
+          <y:EdgeLabel x="89.970703125" y="-154.97370799231157" width="77.0" height="17.962890625" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" backgroundColor="#FFFF99" lineColor="#FF6600" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_TapIcon_6</y:EdgeLabel>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
@@ -306,7 +306,7 @@
           </y:Path>
           <y:LineStyle type="line" width="1.0" color="#000000" />
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel x="134.970703125" y="187.57604244171625" width="76.0" height="18.701171875" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" backgroundColor="#FFFF99" lineColor="#FF6600" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_TapIcon_1</y:EdgeLabel>
+          <y:EdgeLabel x="134.970703125" y="187.57604244171625" width="77.0" height="17.962890625" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" backgroundColor="#FFFF99" lineColor="#FF6600" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_TapIcon_1</y:EdgeLabel>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
@@ -322,7 +322,7 @@
           </y:Path>
           <y:LineStyle type="line" width="1.0" color="#000000" />
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel x="74.970703125" y="36.892234778025795" width="106.0" height="18.701171875" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" backgroundColor="#FFFF99" lineColor="#FF6600" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_SweepTabRight</y:EdgeLabel>
+          <y:EdgeLabel x="74.970703125" y="36.892234778025795" width="106.0" height="17.962890625" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" backgroundColor="#FFFF99" lineColor="#FF6600" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_SweepTabRight</y:EdgeLabel>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
@@ -333,7 +333,7 @@
           <y:Path sx="88.0" sy="-77.0" tx="-88.0" ty="55.0"/>
           <y:LineStyle type="line" width="1.0" color="#000000" />
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel x="119.965087890625" y="-9.350544859871206" width="106.0" height="18.701171875" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" backgroundColor="#FFFF99" lineColor="#FF6600" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_SweepTabRight</y:EdgeLabel>
+          <y:EdgeLabel x="119.965087890625" y="-9.350544859871206" width="106.0" height="17.962890625" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" backgroundColor="#FFFF99" lineColor="#FF6600" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_SweepTabRight</y:EdgeLabel>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
@@ -344,7 +344,7 @@
           <y:Path sx="88.0" sy="-62.85714285714266" tx="-88.0" ty="55.0"/>
           <y:LineStyle type="line" width="1.0" color="#000000" />
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel x="149.9638671875" y="-9.350509982638869" width="106.0" height="18.701171875" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" backgroundColor="#FFFF99" lineColor="#FF6600" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_SweepTabRight</y:EdgeLabel>
+          <y:EdgeLabel x="149.9638671875" y="-9.350509982638869" width="106.0" height="17.962890625" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" backgroundColor="#FFFF99" lineColor="#FF6600" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_SweepTabRight</y:EdgeLabel>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
@@ -366,7 +366,7 @@
           </y:Path>
           <y:LineStyle type="line" width="1.0" color="#000000" />
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel x="-814.529296875" y="-45.04535125248003" width="106.0" height="18.701171875" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" backgroundColor="#FFFF99" lineColor="#FF6600" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_SweepTabRight</y:EdgeLabel>
+          <y:EdgeLabel x="-814.529296875" y="-45.04535125248003" width="106.0" height="17.962890625" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" backgroundColor="#FFFF99" lineColor="#FF6600" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_SweepTabRight</y:EdgeLabel>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
@@ -382,7 +382,7 @@
           </y:Path>
           <y:LineStyle type="line" width="1.0" color="#000000" />
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel x="541.470703125" y="20.19099469866069" width="97.0" height="33.40234375" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" backgroundColor="#FFFF99" lineColor="#FF6600" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_SweepTabLeft&#xA;weight=0.05</y:EdgeLabel>
+          <y:EdgeLabel x="541.470703125" y="20.19099469866069" width="98.0" height="31.92578125" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" backgroundColor="#FFFF99" lineColor="#FF6600" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_SweepTabLeft&#xA;weight=0.05</y:EdgeLabel>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
@@ -400,7 +400,7 @@
           </y:Path>
           <y:LineStyle type="line" width="1.0" color="#000000" />
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel x="-318.029296875" y="-6.74673084077358" width="97.0" height="33.40234375" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" backgroundColor="#FFFF99" lineColor="#FF6600" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_SweepTabLeft&#xA;weight=0.05</y:EdgeLabel>
+          <y:EdgeLabel x="-318.029296875" y="-6.74673084077358" width="98.0" height="31.92578125" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" backgroundColor="#FFFF99" lineColor="#FF6600" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_SweepTabLeft&#xA;weight=0.05</y:EdgeLabel>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
@@ -416,7 +416,7 @@
           </y:Path>
           <y:LineStyle type="line" width="1.0" color="#000000" />
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel x="-337.529296875" y="-62.415486266121206" width="97.0" height="33.40234375" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" backgroundColor="#FFFF99" lineColor="#FF6600" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_SweepTabLeft&#xA;weight=0.05</y:EdgeLabel>
+          <y:EdgeLabel x="-337.529296875" y="-62.415486266121206" width="98.0" height="31.92578125" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" backgroundColor="#FFFF99" lineColor="#FF6600" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_SweepTabLeft&#xA;weight=0.05</y:EdgeLabel>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
@@ -432,7 +432,7 @@
           </y:Path>
           <y:LineStyle type="line" width="1.0" color="#000000" />
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel x="-337.529296875" y="33.225456504216254" width="97.0" height="33.40234375" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" backgroundColor="#FFFF99" lineColor="#FF6600" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_SweepTabLeft&#xA;weight=0.05</y:EdgeLabel>
+          <y:EdgeLabel x="-337.529296875" y="33.225456504216254" width="98.0" height="31.92578125" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" backgroundColor="#FFFF99" lineColor="#FF6600" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_SweepTabLeft&#xA;weight=0.05</y:EdgeLabel>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
@@ -448,7 +448,7 @@
           </y:Path>
           <y:LineStyle type="line" width="1.0" color="#000000" />
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel x="-364.529296875" y="-62.41538938492067" width="115.0" height="33.40234375" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" backgroundColor="#FFFF99" lineColor="#FF6600" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_SweepCloseView&#xA;weight=0.05</y:EdgeLabel>
+          <y:EdgeLabel x="-364.529296875" y="-62.41538938492067" width="112.0" height="31.92578125" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" backgroundColor="#FFFF99" lineColor="#FF6600" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_SweepCloseView&#xA;weight=0.05</y:EdgeLabel>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
@@ -466,7 +466,7 @@
           </y:Path>
           <y:LineStyle type="line" width="1.0" color="#000000" />
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel x="-562.5439453125002" y="2103.2984723772315" width="115.0" height="33.40234375" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" backgroundColor="#FFFF99" lineColor="#FF6600" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_SweepCloseView&#xA;weight=0.05</y:EdgeLabel>
+          <y:EdgeLabel x="-562.5439453125003" y="2103.2984723772315" width="112.0" height="31.92578125" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" backgroundColor="#FFFF99" lineColor="#FF6600" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_SweepCloseView&#xA;weight=0.05</y:EdgeLabel>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
@@ -482,7 +482,7 @@
           </y:Path>
           <y:LineStyle type="line" width="1.0" color="#000000" />
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel x="-808.5439453125005" y="2259.1424851190477" width="115.0" height="33.40234375" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" backgroundColor="#FFFF99" lineColor="#FF6600" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_SweepCloseView&#xA;weight=0.05</y:EdgeLabel>
+          <y:EdgeLabel x="-808.5439453125008" y="2259.1424851190473" width="112.0" height="31.92578125" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" backgroundColor="#FFFF99" lineColor="#FF6600" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_SweepCloseView&#xA;weight=0.05</y:EdgeLabel>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
@@ -498,7 +498,7 @@
           </y:Path>
           <y:LineStyle type="line" width="1.0" color="#000000" />
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel x="-1080.0292968750005" y="2480.7592215401783" width="115.0" height="33.40234375" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" backgroundColor="#FFFF99" lineColor="#FF6600" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_SweepCloseView&#xA;weight=0.05</y:EdgeLabel>
+          <y:EdgeLabel x="-1080.0292968750007" y="2480.7592215401783" width="112.0" height="31.92578125" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" backgroundColor="#FFFF99" lineColor="#FF6600" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_SweepCloseView&#xA;weight=0.05</y:EdgeLabel>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
@@ -514,7 +514,7 @@
           </y:Path>
           <y:LineStyle type="line" width="1.0" color="#000000" />
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel x="134.970703125" y="-141.29856073288693" width="76.0" height="18.701171875" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" backgroundColor="#FFFF99" lineColor="#FF6600" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_TapIcon_2</y:EdgeLabel>
+          <y:EdgeLabel x="134.970703125" y="-141.29856073288693" width="77.0" height="17.962890625" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" backgroundColor="#FFFF99" lineColor="#FF6600" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_TapIcon_2</y:EdgeLabel>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
@@ -528,7 +528,7 @@
           </y:Path>
           <y:LineStyle type="line" width="1.0" color="#000000" />
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel x="134.96337890625" y="991.1343757750496" width="76.0" height="18.701171875" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" backgroundColor="#FFFF99" lineColor="#FF6600" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_TapIcon_3</y:EdgeLabel>
+          <y:EdgeLabel x="134.96337890625" y="991.1343757750496" width="77.0" height="17.962890625" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" backgroundColor="#FFFF99" lineColor="#FF6600" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_TapIcon_3</y:EdgeLabel>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
@@ -542,7 +542,7 @@
           </y:Path>
           <y:LineStyle type="line" width="1.0" color="#000000" />
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel x="134.974365234375" y="455.4288202194941" width="76.0" height="18.701171875" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" backgroundColor="#FFFF99" lineColor="#FF6600" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_TapIcon_4</y:EdgeLabel>
+          <y:EdgeLabel x="134.974365234375" y="455.4288202194941" width="77.0" height="17.962890625" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" backgroundColor="#FFFF99" lineColor="#FF6600" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_TapIcon_4</y:EdgeLabel>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
@@ -556,7 +556,7 @@
           </y:Path>
           <y:LineStyle type="line" width="1.0" color="#000000" />
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel x="134.970703125" y="1258.9871535528273" width="76.0" height="18.701171875" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" backgroundColor="#FFFF99" lineColor="#FF6600" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_TapIcon_5</y:EdgeLabel>
+          <y:EdgeLabel x="134.970703125" y="1258.9871535528273" width="77.0" height="17.962890625" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" backgroundColor="#FFFF99" lineColor="#FF6600" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_TapIcon_5</y:EdgeLabel>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
@@ -570,7 +570,7 @@
           </y:Path>
           <y:LineStyle type="line" width="1.0" color="#000000" />
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel x="134.9560546875" y="723.2815979972718" width="76.0" height="18.701171875" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" backgroundColor="#FFFF99" lineColor="#FF6600" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_TapIcon_6</y:EdgeLabel>
+          <y:EdgeLabel x="134.9560546875" y="723.2815979972718" width="77.0" height="17.962890625" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" backgroundColor="#FFFF99" lineColor="#FF6600" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_TapIcon_6</y:EdgeLabel>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
@@ -584,7 +584,7 @@
           </y:Path>
           <y:LineStyle type="line" width="1.0" color="#000000" />
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel x="164.96337890625" y="178.1473663814486" width="76.0" height="18.701171875" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" backgroundColor="#FFFF99" lineColor="#FF6600" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_TapIcon_1</y:EdgeLabel>
+          <y:EdgeLabel x="164.96337890625" y="178.1473663814486" width="77.0" height="17.962890625" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" backgroundColor="#FFFF99" lineColor="#FF6600" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_TapIcon_1</y:EdgeLabel>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
@@ -598,7 +598,7 @@
           </y:Path>
           <y:LineStyle type="line" width="1.0" color="#000000" />
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel x="164.970703125" y="694.9957442026289" width="76.0" height="18.701171875" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" backgroundColor="#FFFF99" lineColor="#FF6600" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_TapIcon_2</y:EdgeLabel>
+          <y:EdgeLabel x="164.97070312500023" y="694.9957442026289" width="77.0" height="17.962890625" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" backgroundColor="#FFFF99" lineColor="#FF6600" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_TapIcon_2</y:EdgeLabel>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
@@ -612,7 +612,7 @@
           </y:Path>
           <y:LineStyle type="line" width="1.0" color="#000000" />
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel x="164.967041015625" y="436.57167736235124" width="76.0" height="18.701171875" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" backgroundColor="#FFFF99" lineColor="#FF6600" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_TapIcon_3</y:EdgeLabel>
+          <y:EdgeLabel x="164.967041015625" y="436.57167736235124" width="77.0" height="17.962890625" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" backgroundColor="#FFFF99" lineColor="#FF6600" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_TapIcon_3</y:EdgeLabel>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
@@ -626,7 +626,7 @@
           </y:Path>
           <y:LineStyle type="line" width="1.0" color="#000000" />
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel x="31.470703125" y="207.16884436228918" width="139.0" height="18.701171875" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" backgroundColor="#FFFF99" lineColor="#FF6600" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_SweepShowKeyboard</y:EdgeLabel>
+          <y:EdgeLabel x="31.470703125" y="207.16884436228918" width="139.0" height="17.962890625" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" backgroundColor="#FFFF99" lineColor="#FF6600" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_SweepShowKeyboard</y:EdgeLabel>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
@@ -642,7 +642,7 @@
           </y:Path>
           <y:LineStyle type="line" width="1.0" color="#000000" />
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel x="-362.029296875" y="-142.24648127480168" width="110.0" height="33.40234375" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" backgroundColor="#FFFF99" lineColor="#FF6600" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_SweepCloseApp&#xA;weight=0.05</y:EdgeLabel>
+          <y:EdgeLabel x="-362.029296875" y="-142.24648127480168" width="109.0" height="31.92578125" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" backgroundColor="#FFFF99" lineColor="#FF6600" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_SweepCloseApp&#xA;weight=0.05</y:EdgeLabel>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
@@ -658,7 +658,7 @@
           </y:Path>
           <y:LineStyle type="line" width="1.0" color="#000000" />
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel x="-1077.5439453125" y="2584.1616024925597" width="110.0" height="33.40234375" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" backgroundColor="#FFFF99" lineColor="#FF6600" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_SweepCloseApp&#xA;weight=0.05</y:EdgeLabel>
+          <y:EdgeLabel x="-1077.5439453125002" y="2584.1616024925597" width="109.0" height="31.92578125" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" backgroundColor="#FFFF99" lineColor="#FF6600" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_SweepCloseApp&#xA;weight=0.05</y:EdgeLabel>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
@@ -676,7 +676,7 @@
           </y:Path>
           <y:LineStyle type="line" width="1.0" color="#000000" />
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel x="-560.029296875" y="2017.8960914248512" width="110.0" height="33.40234375" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" backgroundColor="#FFFF99" lineColor="#FF6600" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_SweepCloseApp&#xA;weight=0.05</y:EdgeLabel>
+          <y:EdgeLabel x="-560.029296875" y="2017.896091424851" width="109.0" height="31.92578125" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" backgroundColor="#FFFF99" lineColor="#FF6600" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_SweepCloseApp&#xA;weight=0.05</y:EdgeLabel>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
@@ -692,7 +692,7 @@
           </y:Path>
           <y:LineStyle type="line" width="1.0" color="#000000" />
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel x="-806.0292968750002" y="2164.3116373697917" width="110.0" height="33.40234375" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" backgroundColor="#FFFF99" lineColor="#FF6600" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_SweepCloseApp&#xA;weight=0.05</y:EdgeLabel>
+          <y:EdgeLabel x="-806.0292968750007" y="2164.3116373697912" width="109.0" height="31.92578125" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" backgroundColor="#FFFF99" lineColor="#FF6600" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_SweepCloseApp&#xA;weight=0.05</y:EdgeLabel>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
@@ -901,7 +901,7 @@
           <y:Path sx="88.0" sy="-0.0" tx="-88.0" ty="-0.0"/>
           <y:LineStyle type="line" width="1.0" color="#000000" />
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel x="41.9716796875" y="-9.350559392051082" width="118.0" height="18.701171875" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" hasBackgroundColor="false" hasLineColor="false" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_SweepShowTools</y:EdgeLabel>
+          <y:EdgeLabel x="41.9716796875" y="-9.350559392051082" width="114.0" height="17.962890625" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" hasBackgroundColor="false" hasLineColor="false" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_SweepShowTools</y:EdgeLabel>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
