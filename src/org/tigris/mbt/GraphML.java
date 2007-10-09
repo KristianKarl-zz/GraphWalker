@@ -24,6 +24,19 @@ import edu.uci.ics.jung.graph.impl.SparseGraph;
 import edu.uci.ics.jung.utils.Pair;
 import edu.uci.ics.jung.utils.UserData;
 
+/**
+ * A file reader for GraphML files. The reader can read one single graphml file
+ * or several in a single folder. When several files are read, they will be
+ * merged. Regardless if one or several files are read, they all end up into
+ * one single SparseGraph object.<br><br>
+ * <strong>Example: Single graphml file</strong><br>
+ * GraphML graphML = new GraphML();<br>
+ * SparseGraph graph = graphML.load( "graph.graphml" );<br><br>
+ * <strong>Example: Folder containing several graphml files</strong><br>
+ * GraphML graphML = new GraphML();<br>
+ * SparseGraph graph = graphML.load( "/home/user/graphml_folder/" );<br>
+ *
+ */
 public class GraphML
 {
 	/**
@@ -86,8 +99,8 @@ public class GraphML
 	}
 	
 	/**
-	* Reads one single graph, or a folder containing several graphs to be merged into one.
-	* graph, which is returned.
+	* Reads one single graph, or a folder containing several graphs to be merged into one
+	* graph. The resulting SparseGraph object is returned.
 	*/
 	public SparseGraph load( String fileOrfolder )
 	{
