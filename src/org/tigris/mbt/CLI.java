@@ -30,9 +30,6 @@ public class CLI
 	static private long print_coverage;
 	static private long length;
 	static private boolean statistics;
-	private String  LABEL_KEY = "label";
-	private String  INDEX_KEY = "index";
-	private String  BACKTRACK = "BACKTRACK";
 
 	public static void main(String[] args)
 	{
@@ -595,7 +592,7 @@ public class CLI
             	try
 	    		{
 	    			mbt.readGraph( graphmlFile );
-	    			mbt.writeGraph( mbt.getGraph(), outputFile );
+	    			Util.writeGraphML( mbt.getGraph(), outputFile );
 	    		}
 	    		catch ( Exception e )
 	    		{
@@ -695,7 +692,7 @@ public class CLI
             	try
 	    		{
 	    			mbt.readGraph( graphmlFile );
-					mbt.generateJavaCode( outputFile );
+					Util.generateJavaCode( mbt.getGraph(), outputFile );
 	    		}
 	    		catch ( Exception e )
 	    		{
@@ -730,7 +727,7 @@ public class CLI
             	try
 	    		{
 	    			mbt.readGraph( graphmlFile );
-					mbt.generatePerlCode( outputFile );
+					Util.generatePerlCode( mbt.getGraph(), outputFile );
 	    		}
 	    		catch ( Exception e )
 	    		{
@@ -854,7 +851,7 @@ public class CLI
 					while ( true )
 					{
 						edge = mbt.getEdge();
-						if ( edge.containsUserDatumKey( BACKTRACK ) == false )
+						if ( edge.containsUserDatumKey( Keywords.BACKTRACK ) == false )
 						{
 							mbt.SetCurrentVertex( previousVertexIndex );
 							continue;
@@ -864,7 +861,7 @@ public class CLI
 						{
 							label = "";
 						}
-						String label2Comp = (String)edge.getUserDatum( LABEL_KEY );
+						String label2Comp = (String)edge.getUserDatum( Keywords.LABEL_KEY );
 						if ( label2Comp == null )
 						{
 							label2Comp = "";
@@ -895,17 +892,18 @@ public class CLI
 				
 				if ( skipEdgeLabel == false )
 				{
-					logger.info( "Edge: " + edge.getUserDatum( LABEL_KEY ) + ", index=" + edge.getUserDatum( INDEX_KEY ) );				
-					if ( edge.containsUserDatumKey( LABEL_KEY ) )
+					logger.info( "Edge: " + edge.getUserDatum( Keywords.LABEL_KEY ) + ", index=" + 
+							     edge.getUserDatum( Keywords.INDEX_KEY ) );				
+					if ( edge.containsUserDatumKey( Keywords.LABEL_KEY ) )
 					{
-						System.out.print( edge.getUserDatum( LABEL_KEY ) );
+						System.out.print( edge.getUserDatum( Keywords.LABEL_KEY ) );
 					}
 					else
 					{
 						System.out.print( "" );
 					}
 					
-					if ( edge.containsUserDatumKey( BACKTRACK ) )
+					if ( edge.containsUserDatumKey( Keywords.BACKTRACK ) )
 					{
 						backtrackingEngaged = true;
 						System.out.println( " BACKTRACK" );
@@ -926,8 +924,8 @@ public class CLI
 						if ( backtrackingEngaged == false )
 						{
 							throw new RuntimeException( "Test ended with a fault. Backtracking was asked for, where the model did not allow it.\n" +
-									"Please check the model at: '" + edge.getUserDatum( LABEL_KEY ) + "', INDEX=" + edge.getUserDatum( INDEX_KEY ) +
-									" coming from: '" + edge.getSource().getUserDatum( LABEL_KEY ) + "', INDEX=" + edge.getSource().getUserDatum( INDEX_KEY ) );					
+									"Please check the model at: '" + edge.getUserDatum( Keywords.LABEL_KEY ) + "', INDEX=" + edge.getUserDatum( Keywords.INDEX_KEY ) +
+									" coming from: '" + edge.getSource().getUserDatum( Keywords.LABEL_KEY ) + "', INDEX=" + edge.getSource().getUserDatum( Keywords.INDEX_KEY ) );					
 						}
 						
 						if ( previousVertexIndex != null )
@@ -940,10 +938,10 @@ public class CLI
 				}
 				skipEdgeLabel = false;
 					
-				logger.info( "Vertex: " + edge.getDest().getUserDatum( LABEL_KEY ) + ", index=" + edge.getDest().getUserDatum( INDEX_KEY ) );
-				System.out.print( edge.getDest().getUserDatum( LABEL_KEY ) );
+				logger.info( "Vertex: " + edge.getDest().getUserDatum( Keywords.LABEL_KEY ) + ", index=" + edge.getDest().getUserDatum( Keywords.INDEX_KEY ) );
+				System.out.print( edge.getDest().getUserDatum( Keywords.LABEL_KEY ) );
 
-				if ( edge.containsUserDatumKey( BACKTRACK ) )
+				if ( edge.containsUserDatumKey( Keywords.BACKTRACK ) )
 				{
 					backtrackingEngaged = true;
 					System.out.println( " BACKTRACK" );
@@ -964,20 +962,20 @@ public class CLI
 					if ( backtrackingEngaged == false )
 					{
 						throw new RuntimeException( "Test ended with a fault. Backtracking was asked for, where the model did not allow it.\n" +
-								"Please check the model at: '" + edge.getUserDatum( LABEL_KEY ) + "', INDEX=" + edge.getUserDatum( INDEX_KEY ) +
-								" coming from: '" + edge.getSource().getUserDatum( LABEL_KEY ) + "', INDEX=" + edge.getSource().getUserDatum( INDEX_KEY ) );					
+								"Please check the model at: '" + edge.getUserDatum( Keywords.LABEL_KEY ) + "', INDEX=" + edge.getUserDatum( Keywords.INDEX_KEY ) +
+								" coming from: '" + edge.getSource().getUserDatum( Keywords.LABEL_KEY ) + "', INDEX=" + edge.getSource().getUserDatum( Keywords.INDEX_KEY ) );					
 					}
 					
 					if ( previousVertexIndex != null )
 					{
 						acceptOnlyBacktracking = true;
-						label = (String)edge.getUserDatum( LABEL_KEY );
+						label = (String)edge.getUserDatum( Keywords.LABEL_KEY );
 						logger.info("== BACKTRACKING FROM VERTEX ==" );
 						mbt.SetCurrentVertex( previousVertexIndex );
 						continue;
 					}
 				}
-				previousVertexIndex = (Integer)edge.getDest().getUserDatum( INDEX_KEY );
+				previousVertexIndex = (Integer)edge.getDest().getUserDatum( Keywords.INDEX_KEY );
 			}
 		}
 		catch ( NumberFormatException e )
@@ -1028,11 +1026,11 @@ public class CLI
 					break;
 				}
 	
-				if ( run_Perl_Subrotine( "perl " + perlScript + " " + edge.getUserDatum( LABEL_KEY ) ) != 0 )
+				if ( run_Perl_Subrotine( "perl " + perlScript + " " + edge.getUserDatum( Keywords.LABEL_KEY ) ) != 0 )
 				{
 					break;
 				}
-				if ( run_Perl_Subrotine( "perl " + perlScript + " " + edge.getDest().getUserDatum( LABEL_KEY ) ) != 0 )
+				if ( run_Perl_Subrotine( "perl " + perlScript + " " + edge.getDest().getUserDatum( Keywords.LABEL_KEY ) ) != 0 )
 				{
 					break;
 				}
@@ -1098,7 +1096,7 @@ public class CLI
 			for (int i = 0; i < vertices.length; i++) 
 			{
 				DirectedSparseVertex vertex = (DirectedSparseVertex)vertices[ i ];
-				String element = (String) vertex.getUserDatum( LABEL_KEY );
+				String element = (String) vertex.getUserDatum( Keywords.LABEL_KEY );
 				if ( element != null )
 				{
 					if ( !element.equals( "Start" ) )
@@ -1110,7 +1108,7 @@ public class CLI
 			for (int i = 0; i < edges.length; i++) 
 			{
 				DirectedSparseEdge edge = (DirectedSparseEdge)edges[ i ];
-				String element = (String) edge.getUserDatum( LABEL_KEY );
+				String element = (String) edge.getUserDatum( Keywords.LABEL_KEY );
 				if ( element != null )
 				{
 					set.add( element );
