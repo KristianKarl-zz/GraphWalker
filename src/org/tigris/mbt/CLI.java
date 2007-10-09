@@ -19,6 +19,25 @@ import org.apache.log4j.Logger;
 import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
 import edu.uci.ics.jung.graph.impl.DirectedSparseVertex;
 
+/**
+ * Command Line Interface object, to the org.tigris.mbt package.
+ * The object provides a way of working with MBT using a Windows DOS,
+ * or a console window in *nix system. The CLI works like the cvs or the subversion
+ * command svn. The syntax is:<br><strong>java -jar mbt.jar COMMAND <options></strong><br>
+ * Where mbt.jar is the whole package org.tigris.mbt built using the tool Fat Jar
+ * from http://fjep.sourceforge.net/ using org.tigris.mbt.CLI as the main class<br><br>
+ * <strong>Example: Print help for mbt.jar</strong><br>
+ * java -jar mbt.jar help<br><br>
+ * <strong>Example: Merge graphml files and save the merged result.</strong><br>
+ * java -jar mbt.jar merge -g folder -l result.graphml<br><br>
+ * <strong>Example: Generate static test sequence, using random walk</strong><br>
+ * java -jar mbt.jar static -r -g folder<br><br>
+ * <strong>Example: Generate dynamic test sequence, using random walk</strong><br>
+ * java -jar mbt.jar dynamic -r -g folder<br><br>
+ * <strong>Example: Print all names of edges and vertices (Sorted, and unique)</strong><br>
+ * java -jar mbt.jar methods -g folder<br><br>
+ *
+ */
 public class CLI 
 {
 	static private String graphmlFile;
