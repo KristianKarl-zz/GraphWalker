@@ -190,8 +190,7 @@ public class Util {
 			}
 		}
 		catch ( FileNotFoundException e )
-		{
-			e.printStackTrace();
+		{			
 		}
 		catch ( IOException e )
 		{
@@ -336,7 +335,6 @@ public class Util {
 		}
 		catch ( FileNotFoundException e )
 		{
-			e.printStackTrace();
 		}
 		catch ( IOException e )
 		{

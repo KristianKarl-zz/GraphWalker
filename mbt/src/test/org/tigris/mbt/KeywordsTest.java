@@ -25,4 +25,14 @@ public class KeywordsTest extends TestCase {
 		assertEquals( false, Keywords.isKeyWord( "merge" ) );
 		assertEquals( false, Keywords.isKeyWord( "no_merge" ) );		
 	}
+
+	public void testEmpty() 
+	{
+		assertEquals( false, Keywords.isKeyWord( "" ) );		
+	}
+
+	public void testNull() 
+	{
+		assertEquals( false, Keywords.isKeyWord( null ) );		
+	}
 }
