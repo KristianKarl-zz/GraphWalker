@@ -174,7 +174,7 @@ public class Util {
 	 * multitude of scripting or programming languages.<br><br>
 	 * The result will be printed to stdout.<br><br>
 	 * There is 1 variable in the template, that will be replaced:<br>
-	 * <strong>{LABEL}</strong> Will be replace by the actual name of the edge or vertex.<br><
+	 * <strong>{LABEL}</strong> Will be replace by the actual name of the edge or vertex.<br>
 	 * <strong>{EDGE_VERTEX}</strong> Will be replace by the word 'Edge' or 'Vertex'.<br><br>
 	 * <strong>Below is an example of a template.</strong>
 	 * <pre>
