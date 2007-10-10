@@ -1,0 +1,8 @@
+#
+# This sub routine implements the {EDGE_VERTEX} '{LABEL}'
+#
+sub {LABEL}()
+{
+  print "{EDGE_VERTEX}: {LABEL}\n";
+  die "The {EDGE_VERTEX}: {LABEL} is not implemented yet!";
+}
