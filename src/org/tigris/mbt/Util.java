@@ -1,7 +1,6 @@
 package org.tigris.mbt;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -188,8 +187,9 @@ public class Util {
 	 *    throw new RuntimeException( "Not implemented" );
 	 * }
 	 * </pre>
+	 * @throws IOException 
 	 */
-	public static void generateCodeByTemplate( SparseGraph g, String templateFile )
+	public static void generateCodeByTemplate( SparseGraph g, String templateFile ) throws IOException
 	{
 		Object[] vertices = g.getVertices().toArray();
 		Object[] edges    = g.getEdges().toArray();
@@ -201,38 +201,14 @@ public class Util {
 		 * leave those methods alone.
 		 */
 		BufferedReader input = null;
-		try
+		input = new BufferedReader( new FileReader( templateFile ) );
+		String line = null;
+		while ( ( line = input.readLine() ) != null )
 		{
-			input = new BufferedReader( new FileReader( templateFile ) );
-			String line = null;
-			while ( ( line = input.readLine() ) != null )
-			{
-				templateBuffer.append( line );
-				templateBuffer.append( System.getProperty( "line.separator" ) );
-			}
+			templateBuffer.append( line );
+			templateBuffer.append( System.getProperty( "line.separator" ) );
 		}
-		catch ( FileNotFoundException e )
-		{
-			e.printStackTrace();
-		}
-		catch ( IOException e )
-		{
-			e.printStackTrace();
-		}
-		finally
-		{
-			try
-			{
-				if ( input != null )
-				{
-					input.close();
-				}
-			}
-			catch ( IOException e )
-			{
-				e.printStackTrace();
-			}
-		}
+		input.close();
 		
 		SortedSet set  = new TreeSet();
 		Hashtable hash = new Hashtable();
