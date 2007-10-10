@@ -50,10 +50,10 @@ public class CLI
 	static private long length;
 	static private boolean statistics;
 
+	static Options opt = new Options();
+
 	public static void main(String[] args)
 	{
-		Options opt = new Options();
-
 		if ( args.length < 1 )
 		{
 			System.out.println( "Type 'java -jar mbt.jar help' for usage." );
@@ -65,54 +65,20 @@ public class CLI
 			{
 				if ( args.length == 1 )
 				{
-					System.out.println( "usage: 'java -jar mbt.jar <COMMAND> [OPTION] [ARGUMENT]'\n" );
-					System.out.println( "Type 'java -jar mbt.jar help <COMMAND>' to get specific help about a command." );
-					System.out.println( "Valid commands are:" );
-					System.out.println( "    help" );
-					System.out.println( "    dynamic" );
-					System.out.println( "    static" );
-					System.out.println( "    methods" );
-					System.out.println( "    merge" );
-					System.out.println( "    perl" );
-					System.out.println( "    java_output" );
-					System.out.println( "    perl_output\n" );
-					System.out.println( "Type 'java -jar mbt.jar -v (--version)' to version information." );
+					printGeneralHelpText();
 					return;
 				}
 				else if ( args[ 1 ].equals( "dynamic" ) )
 				{
-					opt.addOption( "r", "random", false, "Run the test with a random walk. Can not be combined with --optimize." );
-					opt.addOption( "o", "optimize", false, "Run the test optimized. Can not be combined with --random." );
-					opt.addOption( "s", "statistics", false, "Prints the statistics of the test, at the end of the run." );
-					opt.addOption( "c", "cul-de-sac", false, "Accepts graphs that has cu-de-sac and continue the test, without this flag, " +
-															  "the execution of the test will be stopped." );
-					opt.addOption( OptionBuilder.withArgName( "file" )
-		                    .withDescription( "The file (or folder) containing graphml formatted files." )
-		                    .hasArg()
-		                    .withLongOpt( "input_graphml" )
-		                    .create( "g" ) );
-					opt.addOption( OptionBuilder.withLongOpt( "time" )
-							.withArgName( "=seconds" )
-		                    .withDescription( "The time in seconds for the random walk to run. If 0, the test runs forever." )
-		                    .withValueSeparator( '=' )
-		                    .hasArg()
-		                    .create( "t" ) );
-					opt.addOption( OptionBuilder.withLongOpt( "print-coverage" )
-							.withArgName( "=seconds" )
-		                    .withDescription( "Prints the test coverage of the graph during execution every <=seconds>. " +
-									 "The printout goes to the log file defined in mbt.properties, " + 
-									 "and only, if at least INFO level is set in that same file." )
-		                    .withValueSeparator( '=' )
-		                    .hasArg()
-		                    .create( "p" ) );
+					buildDynamicCLI();
 					
 					System.out.println( "Run the test dynamically.\n" +			
-										"MBT will return a test sequence, one line at a time to standard output, " +
-										"it will wait until a line is fed back via standard input. The data fed back can be:\n" +
-										"  '0' which means, continue the test as normal\n" +
-										"  '1' which means go back to previous vertex (backtracking)\n" +
-										"  '2' will end the test normally\n" +
-										"anything else will abort the execution.\n" );					
+							"MBT will return a test sequence, one line at a time to standard output, " +
+							"it will wait until a line is fed back via standard input. The data fed back can be:\n" +
+							"  '0' which means, continue the test as normal\n" +
+							"  '1' which means go back to previous vertex (backtracking)\n" +
+							"  '2' will end the test normally\n" +
+							"anything else will abort the execution.\n" );					
 
 					HelpFormatter f = new HelpFormatter();
 	                f.printHelp( "'java -jar mbt.jar dynamic [OPTION] [ARGUMENT]'", opt );
@@ -121,23 +87,7 @@ public class CLI
 				}
 				else if ( args[ 1 ].equals( "static" ) )
 				{
-					opt.addOption( "r", "random", false, "Run the test with a random walk. Can not be combined with --optimize. " + 
-					 									 "This argument also needs the --time to be set." );
-					opt.addOption( "o", "optimize", false, "Run the test optimized. Can not be combined with --random." );
-					opt.addOption( "s", "statistics", false, "Prints the statistics of the test, at the end of the run." );
-					opt.addOption( "c", "cul-de-sac", false, "Accepts graphs that has a cul-de-sac. Without the flag, " +
-					  "the generation of the test sequence will be stopped." );
-					opt.addOption( OptionBuilder.withArgName( "file" )
-		                    .withDescription( "The file (or folder) containing graphml formatted files." )
-		                    .hasArg()
-		                    .withLongOpt( "input_graphml" )
-		                    .create( "g" ) );
-					opt.addOption( OptionBuilder.withLongOpt( "length" )
-							.withArgName( "=length" )
-		                    .withDescription( "The length of the test sequence. Supply an integer, which tells MBT how many " + 
-		                    		"vertices and edges a test sequence shall contain." )
-		                    .hasArg()
-		                    .create( "n" ) );
+					buildStaticCLI();
 					
 					System.out.println( "Generate a test sequence statically.\n" );					
 
@@ -148,11 +98,7 @@ public class CLI
 				}
 				else if ( args[ 1 ].equals( "methods" ) )
 				{
-					opt.addOption( OptionBuilder.withArgName( "file" )
-		                    .withDescription( "The file (or folder) containing graphml formatted files." )
-		                    .hasArg()
-		                    .withLongOpt( "input_graphml" )
-		                    .create( "g" ) );
+					buildMethodsCLI();
 					
 					System.out.println( "Generate all methods, or tests existing in the model.\n" +			
 										"MBT will parse the graph(s), and return all methods (or tests) that" +
@@ -166,18 +112,7 @@ public class CLI
 				}
 				else if ( args[ 1 ].equals( "merge" ) )
 				{
-					opt.addOption( OptionBuilder.withArgName( "file" )
-						.withDescription( "The folder containing graphml formatted files." )
-						.hasArg()
-						.withLongOpt( "input_graphml" )
-						.create( "g" ) );
-					opt.addOption( OptionBuilder.withArgName( "file" )
-						.withDescription( "The ouput file is where the merged graphml file is written to." )
-						.hasArg()
-						.withLongOpt( "output_graphml" )
-						.create( "l" ) );
-					opt.addOption( "c", "cul-de-sac", false, "Accepts graphs that has cu-de-sac, without this flag, " +
-					  										 "an error message will be displayed." );
+					buildMergeCLI();
 					
 					System.out.println( "Merge several graphml files into one single graphml file.\n" +			
 										"The files to be merged, shall all exist in a single folder.\n" );					
@@ -189,28 +124,8 @@ public class CLI
 				}
 				else if ( args[ 1 ].equals( "perl" ) )
 				{
-					opt.addOption( OptionBuilder.withArgName( "file" )
-						.withDescription( "The folder containing graphml formatted files." )
-						.hasArg()
-						.withLongOpt( "input_graphml" )
-						.create( "g" ) );
-					opt.addOption( "r", "random", false, "Run the test with a random walk. Can not be combined with --optimize." );
-					opt.addOption( "o", "optimize", false, "Run the test optimized. Can not be combined with --random." );			
-					opt.addOption( "s", "statistics", false, "Prints the statistics of the test, at the end of the run." );
-					opt.addOption( "c", "cul-de-sac", false, "Accepts graphs that has cu-de-sac and continue the test, without this flag, " +
-					  										 "the execution of the test will be stopped." );
-					opt.addOption( OptionBuilder.withArgName( "file" )
-						.withDescription( "The perl script implementing the model." )
-						.hasArg()
-						.withLongOpt( "perl" )
-						.create( "p" ) );
-					opt.addOption( OptionBuilder.withLongOpt( "time" )
-						.withArgName( "=seconds" )
-						.withDescription( "The time in seconds for the random walk to run. If 0, the test runs forever." )
-						.withValueSeparator( '=' )
-						.hasArg()
-						.create( "t" ) );
-					
+					buildPerlCLI();
+										
 					System.out.println( "Run a perl script, implementing the model.\n" +
 							"MBT will launch the designated perl script, and call the subroutines" +
 							" in that script according to the model.\n" );					
@@ -222,16 +137,7 @@ public class CLI
 				}
 				else if ( args[ 1 ].equals( "java_output" ) )
 				{
-					opt.addOption( OptionBuilder.withArgName( "file" )
-						.withDescription( "The folder containing graphml formatted files." )
-						.hasArg()
-						.withLongOpt( "input_graphml" )
-						.create( "g" ) );
-					opt.addOption( OptionBuilder.withArgName( "file" )
-	                    .withDescription( "The ouput java source file." )
-	                    .hasArg()
-	                    .withLongOpt( "source_file" )
-	                    .create( "s" ) );
+					buildJavaOutputCLI();
 					
 					System.out.println( "Generate java code.\n" +			
 										"MBT will generate java code of all methods, that are non-existing" +
@@ -246,16 +152,7 @@ public class CLI
 				}
 				else if ( args[ 1 ].equals( "perl_output" ) )
 				{
-					opt.addOption( OptionBuilder.withArgName( "file" )
-						.withDescription( "The folder containing graphml formatted files." )
-						.hasArg()
-						.withLongOpt( "input_graphml" )
-						.create( "g" ) );
-					opt.addOption( OptionBuilder.withArgName( "file" )
-	                    .withDescription( "The ouput perl source file." )
-	                    .hasArg()
-	                    .withLongOpt( "source_file" )
-	                    .create( "s" ) );
+					buildPerlOutputCLI();
 					
 					System.out.println( "Generate perl code.\n" +			
 										"MBT will generate perl code of all methods, that are non-existing" +
@@ -276,137 +173,35 @@ public class CLI
 			}
 			else if ( args[ 0 ].equals( "dynamic" ) )
 			{
-				opt.addOption( "r", "random", false, "Run the test with a random walk. Can not be combined with --optimize." );
-				opt.addOption( "o", "optimize", false, "Run the test optimized. Can not be combined with --random." );
-				opt.addOption( "s", "statistics", false, "Prints the statistics of the test, at the end of the run." );
-				opt.addOption( "c", "cul-de-sac", false, "Accepts graphs that has cu-de-sac and continue the test, without this flag, " +
-				  "the execution of the test will be stopped." );
-				opt.addOption( OptionBuilder.withArgName( "file" )
-					.withDescription( "The file (or folder) containing graphml formatted files." )
-					.hasArg()
-					.withLongOpt( "input_graphml" )
-					.create( "g" ) );
-				opt.addOption( OptionBuilder.withLongOpt( "time" )
-					.withArgName( "=seconds" )
-					.withDescription( "The time in seconds for the random walk to run. If 0, the test runs forever." )
-					.withValueSeparator( '=' )
-					.hasArg()
-					.create( "t" ) );
-				opt.addOption( OptionBuilder.withLongOpt( "print-coverage" )
-						.withArgName( "=seconds" )
-	                    .withDescription( "Prints the test coverage of the graph during execution every <=seconds>. " +
-								 "The printout goes to the log file defined in mbt.properties, " + 
-								 "and only, if at least INFO level is set in that same file." )
-	                    .withValueSeparator( '=' )
-	                    .hasArg()
-	                    .create( "p" ) );
+				buildDynamicCLI();
 			}
 			else if ( args[ 0 ].equals( "static" ) )
 			{
-				opt.addOption( "r", "random", false, "Run the test with a random walk. Can not be combined with --optimize. " + 
-					"This argument also needs the --time to be set." );
-				opt.addOption( "o", "optimize", false, "Run the test optimized. Can not be combined with --random." );
-				opt.addOption( "s", "statistics", false, "Prints the statistics of the test, at the end of the run." );
-				opt.addOption( "c", "cul-de-sac", false, "Accepts graphs that has a cul-de-sac. Without the flag, " +
-				  "the generation of the test sequence will be stopped." );
-				opt.addOption( OptionBuilder.withArgName( "file" )
-					.withDescription( "The file (or folder) containing graphml formatted files." )
-					.hasArg()
-					.withLongOpt( "input_graphml" )
-					.create( "g" ) );
-				opt.addOption( OptionBuilder.withLongOpt( "length" )
-					.withArgName( "=length" )
-					.withDescription( "The length of the test sequence. Supply an integer, which tells MBT how many " + 
-					"vertices and edges a test sequence shall contain. Can not be combined with --optimze" )
-					.hasArg()
-					.create( "n" ) );
+				buildStaticCLI();
 			}
 			else if ( args[ 0 ].equals( "methods" ) )
 			{
-				opt.addOption( OptionBuilder.withArgName( "file" )
-					.withDescription( "The file (or folder) containing graphml formatted files." )
-					.hasArg()
-					.withLongOpt( "input_graphml" )
-					.create( "g" ) );
+				buildMethodsCLI();
 			}
 			else if ( args[ 0 ].equals( "merge" ) )
 			{
-				opt.addOption( OptionBuilder.withArgName( "file" )
-					.withDescription( "The folder containing graphml formatted files." )
-					.hasArg()
-					.withLongOpt( "input_graphml" )
-					.create( "g" ) );
-				opt.addOption( OptionBuilder.withArgName( "file" )
-					.withDescription( "The ouput file is where the merged graphml file is written to." )
-					.hasArg()
-					.withLongOpt( "output_graphml" )
-					.create( "l" ) );
-				opt.addOption( "c", "cul-de-sac", false, "Accepts graphs that has cu-de-sac, without this flag, " +
-				  									     "an error message will be displayed." );
+				buildMergeCLI();
 			}
 			else if ( args[ 0 ].equals( "perl" ) )
 			{
-				opt.addOption( OptionBuilder.withArgName( "file" )
-					.withDescription( "The folder containing graphml formatted files." )
-					.hasArg()
-					.withLongOpt( "input_graphml" )
-					.create( "g" ) );
-				opt.addOption( "r", "random", false, "Run the test with a random walk. Can not be combined with --optimize." );
-				opt.addOption( "o", "optimize", false, "Run the test optimized. Can not be combined with --random." );			
-				opt.addOption( "s", "statistics", false, "Prints the statistics of the test, at the end of the run." );
-				opt.addOption( "c", "cul-de-sac", false, "Accepts graphs that has cu-de-sac and continue the test, without this flag, " +
-				  "the execution of the test will be stopped." );
-				opt.addOption( OptionBuilder.withArgName( "file" )
-					.withDescription( "The perl script implementing the model." )
-					.hasArg()
-					.withLongOpt( "perl" )
-					.create( "p" ) );
-				opt.addOption( OptionBuilder.withLongOpt( "time" )
-					.withArgName( "=seconds" )
-					.withDescription( "The time in seconds for the random walk to run. If 0, the test runs forever." )
-					.withValueSeparator( '=' )
-					.hasArg()
-					.create( "t" ) );
+				buildPerlCLI();
 			}
 			else if ( args[ 0 ].equals( "java_output" ) )
 			{
-				opt.addOption( OptionBuilder.withArgName( "file" )
-					.withDescription( "The folder containing graphml formatted files." )
-					.hasArg()
-					.withLongOpt( "input_graphml" )
-					.create( "g" ) );
-				opt.addOption( OptionBuilder.withArgName( "file" )
-                    .withDescription( "The ouput java source file." )
-                    .hasArg()
-                    .withLongOpt( "source_file" )
-                    .create( "s" ) );
+				buildJavaOutputCLI();
 			}
 			else if ( args[ 0 ].equals( "perl_output" ) )
 			{
-				opt.addOption( OptionBuilder.withArgName( "file" )
-					.withDescription( "The folder containing graphml formatted files." )
-					.hasArg()
-					.withLongOpt( "input_graphml" )
-					.create( "g" ) );
-				opt.addOption( OptionBuilder.withArgName( "file" )
-                    .withDescription( "The ouput perl source file." )
-                    .hasArg()
-                    .withLongOpt( "source_file" )
-                    .create( "s" ) );
+				buildPerlOutputCLI();
 			}
 			else if ( args[ 0 ].equals( "-v" ) || args[ 0 ].equals( "--version" ) )
 			{
-				System.out.println( "org.tigris.mbt version 1.15 (r217)\n" );
-				System.out.println( "org.tigris.mbt is open source software licensed under GPL" );
-				System.out.println( "The software (and it's source) can be downloaded at http://mbt.tigris.org/\n" );
-				System.out.println( "This package contains following software packages:" );
-				System.out.println( "  crimson-1.1.3.jar            http://xml.apache.org/crimson/" );
-				System.out.println( "  commons-collections-3.1.jar  http://jakarta.apache.org/commons/collections/" );
-				System.out.println( "  jdom-1.0.jar                 http://www.jdom.org/" );
-				System.out.println( "  log4j-1.2.8.jar              http://logging.apache.org/log4j/" );
-				System.out.println( "  commons-cli-1.0.jar          http://jakarta.apache.org/commons/cli/" );
-				System.out.println( "  colt-1.2.jar                 http://dsd.lbl.gov/~hoschek/colt/" );
-				System.out.println( "  jung-1.7.6.jar               http://jung.sourceforge.net/" );
+				printVersionInformation();
 				return;
 			}
 			else
@@ -1174,5 +969,164 @@ public class CLI
 			logger.error( sw.toString() );
     		System.err.println( e.getMessage() );
 		}
+	}
+	
+	static private void printGeneralHelpText()
+	{
+		System.out.println( "usage: 'java -jar mbt.jar <COMMAND> [OPTION] [ARGUMENT]'\n" );
+		System.out.println( "Type 'java -jar mbt.jar help <COMMAND>' to get specific help about a command." );
+		System.out.println( "Valid commands are:" );
+		System.out.println( "    help" );
+		System.out.println( "    dynamic" );
+		System.out.println( "    static" );
+		System.out.println( "    methods" );
+		System.out.println( "    merge" );
+		System.out.println( "    perl" );
+		System.out.println( "    java_output" );
+		System.out.println( "    perl_output\n" );
+		System.out.println( "Type 'java -jar mbt.jar -v (--version)' for version information." );
+	}
+	
+	static private void buildDynamicCLI()
+	{
+		opt.addOption( "r", "random", false, "Run the test with a random walk. Can not be combined with --optimize." );
+		opt.addOption( "o", "optimize", false, "Run the test optimized. Can not be combined with --random." );
+		opt.addOption( "s", "statistics", false, "Prints the statistics of the test, at the end of the run." );
+		opt.addOption( "c", "cul-de-sac", false, "Accepts graphs that has cu-de-sac and continue the test, without this flag, " +
+												  "the execution of the test will be stopped." );
+		opt.addOption( OptionBuilder.withArgName( "file" )
+                .withDescription( "The file (or folder) containing graphml formatted files." )
+                .hasArg()
+                .withLongOpt( "input_graphml" )
+                .create( "g" ) );
+		opt.addOption( OptionBuilder.withLongOpt( "time" )
+				.withArgName( "=seconds" )
+                .withDescription( "The time in seconds for the random walk to run. If 0, the test runs forever." )
+                .withValueSeparator( '=' )
+                .hasArg()
+                .create( "t" ) );
+		opt.addOption( OptionBuilder.withLongOpt( "print-coverage" )
+				.withArgName( "=seconds" )
+                .withDescription( "Prints the test coverage of the graph during execution every <=seconds>. " +
+						 "The printout goes to the log file defined in mbt.properties, " + 
+						 "and only, if at least INFO level is set in that same file." )
+                .withValueSeparator( '=' )
+                .hasArg()
+                .create( "p" ) );
+	}
+
+	static private void buildStaticCLI()
+	{
+		opt.addOption( "r", "random", false,     "Run the test with a random walk. Can not be combined with --optimize. " + 
+											     "This argument also needs the --time to be set." );
+		opt.addOption( "o", "optimize", false,   "Run the test optimized. Can not be combined with --random." );
+		opt.addOption( "s", "statistics", false, "Prints the statistics of the test, at the end of the run." );
+		opt.addOption( "c", "cul-de-sac", false, "Accepts graphs that has a cul-de-sac. Without the flag, " +
+												  "the generation of the test sequence will be stopped." );
+		opt.addOption( OptionBuilder.withArgName( "file" )
+				.withDescription( "The file (or folder) containing graphml formatted files." )
+				.hasArg()
+				.withLongOpt( "input_graphml" )
+				.create( "g" ) );
+		opt.addOption( OptionBuilder.withLongOpt( "length" )
+				.withArgName( "=length" )
+				.withDescription( "The length of the test sequence. Supply an integer, which tells MBT how many " + 
+								  "vertices and edges a test sequence shall contain." )
+				.hasArg()
+				.create( "n" ) );
+	}
+	
+	static private void buildMethodsCLI()
+	{
+		opt.addOption( OptionBuilder.withArgName( "file" )
+                .withDescription( "The file (or folder) containing graphml formatted files." )
+                .hasArg()
+                .withLongOpt( "input_graphml" )
+                .create( "g" ) );
+	}
+	
+	static private void buildMergeCLI()
+	{
+		opt.addOption( OptionBuilder.withArgName( "file" )
+				.withDescription( "The folder containing graphml formatted files." )
+				.hasArg()
+				.withLongOpt( "input_graphml" )
+				.create( "g" ) );
+			opt.addOption( OptionBuilder.withArgName( "file" )
+				.withDescription( "The ouput file is where the merged graphml file is written to." )
+				.hasArg()
+				.withLongOpt( "output_graphml" )
+				.create( "l" ) );
+			opt.addOption( "c", "cul-de-sac", false, "Accepts graphs that has cu-de-sac, without this flag, " +
+			  										 "an error message will be displayed." );
+		
+	}
+	
+	static private void buildPerlCLI()
+	{		
+		opt.addOption( OptionBuilder.withArgName( "file" )
+				.withDescription( "The folder containing graphml formatted files." )
+				.hasArg()
+				.withLongOpt( "input_graphml" )
+				.create( "g" ) );
+			opt.addOption( "r", "random", false, "Run the test with a random walk. Can not be combined with --optimize." );
+			opt.addOption( "o", "optimize", false, "Run the test optimized. Can not be combined with --random." );			
+			opt.addOption( "s", "statistics", false, "Prints the statistics of the test, at the end of the run." );
+			opt.addOption( "c", "cul-de-sac", false, "Accepts graphs that has cu-de-sac and continue the test, without this flag, " +
+			  										 "the execution of the test will be stopped." );
+			opt.addOption( OptionBuilder.withArgName( "file" )
+				.withDescription( "The perl script implementing the model." )
+				.hasArg()
+				.withLongOpt( "perl" )
+				.create( "p" ) );
+			opt.addOption( OptionBuilder.withLongOpt( "time" )
+				.withArgName( "=seconds" )
+				.withDescription( "The time in seconds for the random walk to run. If 0, the test runs forever." )
+				.withValueSeparator( '=' )
+				.hasArg()
+				.create( "t" ) );
+	}
+	
+	static private void buildJavaOutputCLI()
+	{
+		opt.addOption( OptionBuilder.withArgName( "file" )
+			.withDescription( "The folder containing graphml formatted files." )
+			.hasArg()
+			.withLongOpt( "input_graphml" )
+			.create( "g" ) );
+		opt.addOption( OptionBuilder.withArgName( "file" )
+            .withDescription( "The ouput java source file." )
+            .hasArg()
+            .withLongOpt( "source_file" )
+            .create( "s" ) );
+	}
+	
+	static private void buildPerlOutputCLI()
+	{
+		opt.addOption( OptionBuilder.withArgName( "file" )
+			.withDescription( "The folder containing graphml formatted files." )
+			.hasArg()
+			.withLongOpt( "input_graphml" )
+			.create( "g" ) );
+		opt.addOption( OptionBuilder.withArgName( "file" )
+            .withDescription( "The ouput perl source file." )
+            .hasArg()
+            .withLongOpt( "source_file" )
+            .create( "s" ) );
+	}
+	
+	static private void printVersionInformation()
+	{
+		System.out.println( "org.tigris.mbt version 2.0 (r253)\n" );
+		System.out.println( "org.tigris.mbt is open source software licensed under GPL" );
+		System.out.println( "The software (and it's source) can be downloaded at http://mbt.tigris.org/\n" );
+		System.out.println( "This package contains following software packages:" );
+		System.out.println( "  crimson-1.1.3.jar            http://xml.apache.org/crimson/" );
+		System.out.println( "  commons-collections-3.1.jar  http://jakarta.apache.org/commons/collections/" );
+		System.out.println( "  jdom-1.0.jar                 http://www.jdom.org/" );
+		System.out.println( "  log4j-1.2.8.jar              http://logging.apache.org/log4j/" );
+		System.out.println( "  commons-cli-1.0.jar          http://jakarta.apache.org/commons/cli/" );
+		System.out.println( "  colt-1.2.jar                 http://dsd.lbl.gov/~hoschek/colt/" );
+		System.out.println( "  jung-1.7.6.jar               http://jung.sourceforge.net/" );
 	}
 }
