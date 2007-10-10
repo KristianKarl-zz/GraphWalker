@@ -17,6 +17,39 @@ public class CLITest extends TestCase {
 	StringBuffer stdOutput = new StringBuffer();
     
     
+    public void testGenerateCodeFromTemplate()
+    {
+		System.out.println( "TEST: testGenerateCodeFromTemplate" );
+		System.out.println( "=======================================================================" );
+		String args[] = new String[ 5 ];
+		args[ 0 ] = "source";
+		args[ 1 ] = "-g";
+		args[ 2 ] = "graphml/misc/no_missing_inedges.graphml";
+		args[ 3 ] = "-t";
+		args[ 4 ] = "templates/perl.template";
+    	CLI cli = new CLI();
+    	
+    	OutputStream out = new OutputStream() {
+    		public void write(int b) throws IOException {
+    			stdOutput.append( Character.toString((char) b) );
+    		}
+   		};
+    	PrintStream stream = new PrintStream( out );
+    	PrintStream oldOutStream = System.out; //backup
+    	System.setOut( stream );
+    	cli.main( args );
+    	System.setOut( oldOutStream );
+    	
+    	String msg = stdOutput.toString();
+		System.out.println( msg );
+		Pattern p = Pattern.compile( "^No in-edges! The vertex: .* is not reachable.$", Pattern.MULTILINE );
+		Matcher m = p.matcher( msg );
+		assertTrue( !m.find() );
+		System.out.println( "" );
+    }
+
+    
+    
     public void testNoVerticesWithNoInEdges()
     {
 		System.out.println( "TEST: testVertexWithNoInEdges" );

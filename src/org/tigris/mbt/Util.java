@@ -5,10 +5,10 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import edu.uci.ics.jung.graph.Edge;
 import edu.uci.ics.jung.graph.Vertex;
@@ -168,22 +168,33 @@ public class Util {
 		}
 	}
 
+
 	/**
-	 * Will generate java code in the file fileName. The code generated will be all lables/names
-	 * defined by the vertices and edges, implemented as methods.<br>
-	 * If a method is already defined in the file, it will not be touched.
-	 * @param g
-	 * @param fileName
+	 * Will generate code using a template. The code generated will contain all lables/names
+	 * defined by the vertices and edges. This enables the user to write templates for a 
+	 * multitude of scripting or programming languages.<br><br>
+	 * The result will be printed to stdout.<br><br>
+	 * There is 1 variable in the template, that will be replaced:<br>
+	 * <strong>{LABEL}</strong> Will be replace by the actual name of the edge or vertex.<br><
+	 * <strong>{EDGE_VERTEX}</strong> Will be replace by the word 'Edge' or 'Vertex'.<br><br>
+	 * <strong>Below is an example of a template.</strong>
+	 * <pre>
+	 * /**
+	 * * This method implements the {EDGE_VERTEX} '{LABEL}'
+	 * * /
+	 * public void {LABEL}()
+	 * {
+	 *    log.info( "{EDGE_VERTEX}: {LABEL}" );
+	 *    throw new RuntimeException( "Not implemented" );
+	 * }
+	 * </pre>
 	 */
-	public static void generateJavaCode( SparseGraph g, String fileName )
+	public static void generateCodeByTemplate( SparseGraph g, String templateFile )
 	{
 		Object[] vertices = g.getVertices().toArray();
 		Object[] edges    = g.getEdges().toArray();
 
-		ArrayList writtenVertices = new ArrayList();
-		ArrayList writtenEdges    = new ArrayList();
-
-		StringBuffer sourceFile = new StringBuffer();
+		StringBuffer templateBuffer = new StringBuffer();
 
 		/**
 		 * Read the original file first. If the methods already are defined in the file,
@@ -192,16 +203,17 @@ public class Util {
 		BufferedReader input = null;
 		try
 		{
-			input = new BufferedReader( new FileReader( fileName ) );
+			input = new BufferedReader( new FileReader( templateFile ) );
 			String line = null;
 			while ( ( line = input.readLine() ) != null )
 			{
-				sourceFile.append( line );
-				sourceFile.append( System.getProperty( "line.separator" ) );
+				templateBuffer.append( line );
+				templateBuffer.append( System.getProperty( "line.separator" ) );
 			}
 		}
 		catch ( FileNotFoundException e )
-		{			
+		{
+			e.printStackTrace();
 		}
 		catch ( IOException e )
 		{
@@ -221,248 +233,44 @@ public class Util {
 				e.printStackTrace();
 			}
 		}
+		
+		SortedSet set  = new TreeSet();
+		Hashtable hash = new Hashtable();
 
-		for ( int i = 0; i < vertices.length; i++ )
+		for (int i = 0; i < vertices.length; i++) 
 		{
 			DirectedSparseVertex vertex = (DirectedSparseVertex)vertices[ i ];
-
-			// Do not write the Start vertex to file, it's only used as
-			// an entry point.
-			if ( vertex.getUserDatum( Keywords.LABEL_KEY ).equals( Keywords.START_NODE ) )
+			String element = (String) vertex.getUserDatum( Keywords.LABEL_KEY );
+			if ( element != null )
 			{
-				continue;
-			}
-
-			boolean duplicated = false;
-			for ( Iterator iter = writtenVertices.iterator(); iter.hasNext(); )
-			{
-				String str = (String) iter.next();
-				if ( str.equals( (String)vertex.getUserDatum( Keywords.LABEL_KEY ) ) == true )
+				if ( !element.equals( "Start" ) )
 				{
-					duplicated = true;
-					break;
+					set.add( element );
+					hash.put( element, "Vertex" );
 				}
 			}
-
-			if ( duplicated == false )
-			{
-				Pattern p = Pattern.compile( "public void " + (String)vertex.getUserDatum( Keywords.LABEL_KEY ) + "\\(\\)(.|[\\n\\r])*?\\{(.|[\\n\\r])*?\\}", Pattern.MULTILINE );
-				Matcher m = p.matcher( sourceFile );
-
-				if ( m.find() == false )
-				{
-					sourceFile.append( "/**\n" );
-					sourceFile.append( " * This method implements the verification of the vertex: '" + 
-							            (String)vertex.getUserDatum( Keywords.LABEL_KEY ) + "'\n" );
-					sourceFile.append( " */\n" );
-					sourceFile.append( "public void " + (String)vertex.getUserDatum( Keywords.LABEL_KEY ) + "()\n" );
-					sourceFile.append( "{\n" );
-					sourceFile.append( "	_logger.info( \"Vertex: " + (String)vertex.getUserDatum( Keywords.LABEL_KEY ) + "\" );\n" );
-					sourceFile.append( "	throw new RuntimeException( \"Not implemented. This line can be removed.\" );\n" );
-					sourceFile.append( "}\n\n" );
-				}
-			}
-
-			writtenVertices.add( (String)vertex.getUserDatum( Keywords.LABEL_KEY ) );
 		}
-
-		for ( int i = 0; i < edges.length; i++ )
+		
+		for (int i = 0; i < edges.length; i++) 
 		{
 			DirectedSparseEdge edge = (DirectedSparseEdge)edges[ i ];
-			if ( edge.getUserDatum( Keywords.LABEL_KEY ) == null )
+			String element = (String) edge.getUserDatum( Keywords.LABEL_KEY );
+			if ( element != null )
 			{
-				continue;
-			}
-
-			boolean duplicated = false;
-			for ( Iterator iter = writtenEdges.iterator(); iter.hasNext(); )
-			{
-				String str = (String) iter.next();
-				if ( str.equals( edge.getUserDatum( Keywords.LABEL_KEY ) ) == true )
-				{
-					duplicated = true;
-					break;
-				}
-			}
-
-			if ( duplicated == false )
-			{
-				Pattern p = Pattern.compile( "public void " + (String)edge.getUserDatum( Keywords.LABEL_KEY ) + 
-						            "\\(\\)(.|[\\n\\r])*?\\{(.|[\\n\\r])*?\\}", Pattern.MULTILINE );
-				Matcher m = p.matcher( sourceFile );
-
-				if ( m.find() == false )
-				{
-					sourceFile.append( "/**\n" );
-					sourceFile.append( " * This method implemets the edge: '" + (String)edge.getUserDatum( Keywords.LABEL_KEY ) + "'\n" );
-					sourceFile.append( " */\n" );
-					sourceFile.append( "public void " + (String)edge.getUserDatum( Keywords.LABEL_KEY ) + "()\n" );
-					sourceFile.append( "{\n" );
-					sourceFile.append( "	_logger.info( \"Edge: " + (String)edge.getUserDatum( Keywords.LABEL_KEY ) + "\" );\n" );
-					sourceFile.append( "	throw new RuntimeException( \"Not implemented\" );\n" );
-					sourceFile.append( "}\n\n" );
-				}
-			}
-
-			writtenEdges.add( (String)edge.getUserDatum( Keywords.LABEL_KEY ) );
-		}
-
-		try
-		{
-			FileWriter file = new FileWriter( fileName );
-			file.write( sourceFile.toString() );
-			file.flush();
-		}
-		catch ( IOException e )
-		{
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Will generate perl code in the file fileName. The code generated will be all lables/names
-	 * defined by the vertices and edges, implemented as sub routines.<br>
-	 * If a sub routine is already defined in the file, it will not be touched.
-	 * @param g
-	 * @param fileName
-	 */
-	public static void generatePerlCode( SparseGraph g, String fileName )
-	{
-		Object[] vertices = g.getVertices().toArray();
-		Object[] edges    = g.getEdges().toArray();
-
-		ArrayList writtenVertices = new ArrayList();
-		ArrayList writtenEdges    = new ArrayList();
-
-		StringBuffer sourceFile = new StringBuffer();
-
-		/**
-		 * Read the original file first. If the methods already are defined in the file,
-		 * leave those methods alone.
-		 */
-		BufferedReader input = null;
-		try
-		{
-			input = new BufferedReader( new FileReader( fileName ) );
-			String line = null;
-			while ( ( line = input.readLine() ) != null )
-			{
-				sourceFile.append( line );
-				sourceFile.append( System.getProperty( "line.separator" ) );
-			}
-		}
-		catch ( FileNotFoundException e )
-		{
-		}
-		catch ( IOException e )
-		{
-			e.printStackTrace();
-		}
-		finally
-		{
-			try
-			{
-				if ( input != null )
-				{
-					input.close();
-				}
-			}
-			catch ( IOException e )
-			{
-				e.printStackTrace();
+				set.add( element );
+				hash.put( element, "Edge" );
 			}
 		}
 
-		for ( int i = 0; i < vertices.length; i++ )
-		{
-			DirectedSparseVertex vertex = (DirectedSparseVertex)vertices[ i ];
-
-			// Do not write the Start vertex to file, it's only used as
-			// an entry point.
-			if ( vertex.getUserDatum( Keywords.LABEL_KEY ).equals( Keywords.START_NODE ) )
-			{
-				continue;
-			}
-
-			boolean duplicated = false;
-			for ( Iterator iter = writtenVertices.iterator(); iter.hasNext(); )
-			{
-				String str = (String) iter.next();
-				if ( str.equals( (String)vertex.getUserDatum( Keywords.LABEL_KEY ) ) == true )
-				{
-					duplicated = true;
-					break;
-				}
-			}
-
-			if ( duplicated == false )
-			{
-				Pattern p = Pattern.compile( "sub " + (String)vertex.getUserDatum( Keywords.LABEL_KEY ) + "\\(\\)(.|[\\n\\r])*?\\{(.|[\\n\\r])*?\\}", Pattern.MULTILINE );
-				Matcher m = p.matcher( sourceFile );
-
-				if ( m.find() == false )
-				{
-					sourceFile.append( "#\n" );
-					sourceFile.append( "# This method implements the verification of the vertex: '" + (String)vertex.getUserDatum( Keywords.LABEL_KEY ) + "'\n" );
-					sourceFile.append( "#\n" );
-					sourceFile.append( "sub " + (String)vertex.getUserDatum( Keywords.LABEL_KEY ) + "()\n" );
-					sourceFile.append( "{\n" );
-					sourceFile.append( "	print \"Vertex: " + (String)vertex.getUserDatum( Keywords.LABEL_KEY ) + "\\n\";\n" );
-					sourceFile.append( "	print \"Not implemented.\\n\";\n" );
-					sourceFile.append( "	exit 1;\n" );
-					sourceFile.append( "}\n\n" );
-				}
-			}
-
-			writtenVertices.add( (String)vertex.getUserDatum( Keywords.LABEL_KEY ) );
-		}
-
-		for ( int i = 0; i < edges.length; i++ )
-		{
-			DirectedSparseEdge edge = (DirectedSparseEdge)edges[ i ];
-
-			boolean duplicated = false;
-			for ( Iterator iter = writtenEdges.iterator(); iter.hasNext(); )
-			{
-				String str = (String) iter.next();
-				if ( str.equals( (String)edge.getUserDatum( Keywords.LABEL_KEY ) ) == true )
-				{
-					duplicated = true;
-					break;
-				}
-			}
-
-			if ( duplicated == false )
-			{
-				Pattern p = Pattern.compile( "sub " + (String)edge.getUserDatum( Keywords.LABEL_KEY ) + "\\(\\)(.|[\\n\\r])*?\\{(.|[\\n\\r])*?\\}", Pattern.MULTILINE );
-				Matcher m = p.matcher( sourceFile );
-
-				if ( m.find() == false )
-				{
-					sourceFile.append( "#\n" );
-					sourceFile.append( "# This method implemets the edge: '" + (String)edge.getUserDatum( Keywords.LABEL_KEY ) + "'\n" );
-					sourceFile.append( "#\n" );
-					sourceFile.append( "sub " + (String)edge.getUserDatum( Keywords.LABEL_KEY ) + "()\n" );
-					sourceFile.append( "{\n" );
-					sourceFile.append( "	print \"Edge: " + (String)edge.getUserDatum( Keywords.LABEL_KEY ) + "\\n\";\n" );
-					sourceFile.append( "	print \"Not implemented.\\n\";\n" );
-					sourceFile.append( "	exit 1;\n" );
-					sourceFile.append( "}\n\n" );
-				}
-			}
-
-			writtenEdges.add( (String)edge.getUserDatum( Keywords.LABEL_KEY ) );
-		}
-
-		try
-		{
-			FileWriter file = new FileWriter( fileName );
-			file.write( sourceFile.toString() );
-			file.flush();
-		}
-		catch ( IOException e )
-		{
-			e.printStackTrace();
-		}
+		String template = templateBuffer.toString();
+	    Iterator setIterator = set.iterator();
+	    while ( setIterator.hasNext() ) 
+	    {
+			String element = (String)setIterator.next();
+			String type = (String)hash.get( element );
+			String tmpStr = template.replaceAll( "\\{LABEL\\}", element );
+			System.out.print( tmpStr.replaceAll( "\\{EDGE_VERTEX\\}", type ) );			
+			System.out.println();
+	    }
 	}
 }

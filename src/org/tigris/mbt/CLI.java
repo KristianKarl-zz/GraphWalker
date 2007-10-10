@@ -42,7 +42,7 @@ public class CLI
 {
 	static private String graphmlFile;
 	static private String outputFile;
-	static private String perlScript;
+	static private String templateFile;
 	static private boolean cul_de_sac;
 	static private boolean random;
 	static private long seconds;
@@ -122,46 +122,19 @@ public class CLI
 	                
 					return;
 				}
-				else if ( args[ 1 ].equals( "perl" ) )
+				else if ( args[ 1 ].equals( "source" ) )
 				{
-					buildPerlCLI();
-										
-					System.out.println( "Run a perl script, implementing the model.\n" +
-							"MBT will launch the designated perl script, and call the subroutines" +
-							" in that script according to the model.\n" );					
-
-					HelpFormatter f = new HelpFormatter();
-	                f.printHelp( "'java -jar mbt.jar perl [OPTION] [ARGUMENT]'", opt );
-	                
-					return;
-				}
-				else if ( args[ 1 ].equals( "java_output" ) )
-				{
-					buildJavaOutputCLI();
+					buildSourceCLI();
 					
-					System.out.println( "Generate java code.\n" +			
-										"MBT will generate java code of all methods, that are non-existing" +
-										" within a designated java source file. This utility helps the user" +
-										" to automatically add all those methods existing in the graph(s)" +
-										" but not in the implementation.\n" );					
-
+					System.out.println( "Generate code from a template.\n" +			
+										"Will generate code using a template. The code generated will contain all lables/names " +
+										"defined by the vertices and edges. This enables the user to write templates for a " +
+										"multitude of scripting or programming languages. " +
+										"The result will be printed to stdout. " +
+										"There is 1 variable in the template, that will be replaced: {LABEL} ->Will be replace " +
+										"by the actual name of the edge or vertex." );
 					HelpFormatter f = new HelpFormatter();
-	                f.printHelp( "'java -jar mbt.jar java_output [OPTION] [ARGUMENT]'", opt );
-	                
-					return;
-				}
-				else if ( args[ 1 ].equals( "perl_output" ) )
-				{
-					buildPerlOutputCLI();
-					
-					System.out.println( "Generate perl code.\n" +			
-										"MBT will generate perl code of all methods, that are non-existing" +
-										" within a designated perl source file. This utility helps the user" +
-										" to automatically add all those methods existing in the graph(s)" +
-										" but not in the implementation.\n" );					
-
-					HelpFormatter f = new HelpFormatter();
-	                f.printHelp( "'java -jar mbt.jar perl_output [OPTION] [ARGUMENT]'", opt );
+	                f.printHelp( "'java -jar mbt.jar source [OPTION] [ARGUMENT]'", opt );
 	                
 					return;
 				}
@@ -187,17 +160,9 @@ public class CLI
 			{
 				buildMergeCLI();
 			}
-			else if ( args[ 0 ].equals( "perl" ) )
+			else if ( args[ 0 ].equals( "source" ) )
 			{
-				buildPerlCLI();
-			}
-			else if ( args[ 0 ].equals( "java_output" ) )
-			{
-				buildJavaOutputCLI();
-			}
-			else if ( args[ 0 ].equals( "perl_output" ) )
-			{
-				buildPerlOutputCLI();
+				buildSourceCLI();
 			}
 			else if ( args[ 0 ].equals( "-v" ) || args[ 0 ].equals( "--version" ) )
 			{
@@ -418,95 +383,30 @@ public class CLI
 	    			System.err.println( e.getMessage() );
 	    		}            	
 			}
-			else if ( args[ 0 ].equals( "perl" ) )
-			{
-	            if ( cl.hasOption( "r" ) && cl.hasOption( "o" ) )
-	            {
-	            	System.out.println( "Can not set -r (--random) and -o (--optimize) at the same time." );
-	            	System.out.println( "Type 'java -jar mbt.jar help perl' for help." );
-	            	return;
-	            }
-
-	            if ( cl.hasOption( "r" ) ) 
-	            {
-	            	random = true;
-	            	if ( cl.hasOption( "t" ) )
-	            	{
-	            		seconds = Integer.valueOf( cl.getOptionValue( "t" ) ).longValue();
-	            	}
-	            	else
-	            	{
-	            		seconds = 0;
-	            	}
-	            }
-	            
-	            if ( cl.hasOption( "o" ) ) 
-	            {
-	            	random = false;
-	            }
-
-	            if ( cl.hasOption( "c" ) ) 
-	            {
-	            	cul_de_sac = false;
-	            }
-	            else
-	            {
-	            	cul_de_sac = true;
-	            }
-
-	            if ( !cl.hasOption( "g" ) )
-	            {
-	            	System.out.println( "Missing the input graphml file (folder), See -g (--intput_graphml)" );
-	            	System.out.println( "Type 'java -jar mbt.jar help perl' for help." );
-	                return;	            	
-	            }
-
-	            if ( !cl.hasOption( "p" ) )
-	            {
-	            	System.out.println( "Missing the perl script, See -p (--perl)" );
-	            	System.out.println( "Type 'java -jar mbt.jar help perl' for help." );
-	                return;	            	
-	            }
-
-	            if ( cl.hasOption( "s" ) ) 
-	            {
-	            	statistics = true;
-	            }
-	            else
-	            {
-	            	statistics = false;
-	            }
-	            
-            	graphmlFile = cl.getOptionValue( "g" );
-            	perlScript  = cl.getOptionValue( "p" );            	
-            	
-            	CLI cli = new CLI();
-    			cli.runPerlScript();
-			}
-			else if ( args[ 0 ].equals( "java_output" ) )
+			else if ( args[ 0 ].equals( "source" ) )
 			{
 	            if ( !cl.hasOption( "g" ) )
 	            {
 	            	System.out.println( "Missing the input graphml file (folder), See -g (--intput_graphml)" );
-	            	System.out.println( "Type 'java -jar mbt.jar help java_output' for help." );
+	            	System.out.println( "Type 'java -jar mbt.jar help source' for help." );
 	                return;	            	
 	            }
-	            if ( !cl.hasOption( "s" ) )
+	            if ( !cl.hasOption( "t" ) )
 	            {
-	            	System.out.println( "Missing the ouput perl source file, See -s (--source_file)" );
-	            	System.out.println( "Type 'java -jar mbt.jar help java_output' for help." );
+	            	System.out.println( "Missing the template file, See -t (--template)" );
+	            	System.out.println( "Type 'java -jar mbt.jar help source' for help." );
 	                return;	            	
 	            }
 	            
             	graphmlFile = cl.getOptionValue( "g" );
-            	outputFile  = cl.getOptionValue( "s" );            	
+            	templateFile = cl.getOptionValue( "t" );            	
 
     			ModelBasedTesting mbt = new ModelBasedTesting();
     			Logger logger = mbt.getLogger();
             	try
 	    		{
 	    			mbt.readGraph( graphmlFile );
-					Util.generateJavaCode( mbt.getGraph(), outputFile );
+					Util.generateCodeByTemplate( mbt.getGraph(), templateFile );
 	    		}
 	    		catch ( Exception e )
 	    		{
@@ -515,37 +415,6 @@ public class CLI
 	    		    e.printStackTrace( pw );
 	    		    pw.close();	    		    
 	    			logger.error( sw.toString() );
-	        		System.err.println( e.getMessage() );
-	    		}            	
-			}
-			else if ( args[ 0 ].equals( "perl_output" ) )
-			{
-	            if ( !cl.hasOption( "g" ) )
-	            {
-	            	System.out.println( "Missing the input graphml file (folder), See -g (--intput_graphml)" );
-	            	System.out.println( "Type 'java -jar mbt.jar help perl_output' for help." );
-	                return;	            	
-	            }
-	            if ( !cl.hasOption( "s" ) )
-	            {
-	            	System.out.println( "Missing the ouput perl source file, See -s (--source_file)" );
-	            	System.out.println( "Type 'java -jar mbt.jar help perl_output' for help." );
-	                return;	            	
-	            }
-	            
-            	graphmlFile = cl.getOptionValue( "g" );
-            	outputFile  = cl.getOptionValue( "s" );            	
-
-    			ModelBasedTesting mbt = new ModelBasedTesting();
-    			Logger logger = mbt.getLogger();
-            	try
-	    		{
-	    			mbt.readGraph( graphmlFile );
-					Util.generatePerlCode( mbt.getGraph(), outputFile );
-	    		}
-	    		catch ( Exception e )
-	    		{
-	    			logger.error( e );
 	        		System.err.println( e.getMessage() );
 	    		}            	
 			}
@@ -820,48 +689,6 @@ public class CLI
 		}
 	}
 
-	public void runPerlScript()
-	{
-		ModelBasedTesting mbt = new ModelBasedTesting();
-		Logger logger = mbt.getLogger();
-		mbt.set_cul_de_sac( cul_de_sac );
-		mbt.initialize( graphmlFile, random, seconds );
-		mbt.reset();
-
-		try
-		{
-			while ( true )
-			{
-				DirectedSparseEdge edge = mbt.getEdge();
-	
-				// getEdgeAndVertex caught an exception, and returned null
-				if ( edge == null )
-				{
-					break;
-				}
-	
-				if ( run_Perl_Subrotine( "perl " + perlScript + " " + edge.getUserDatum( Keywords.LABEL_KEY ) ) != 0 )
-				{
-					break;
-				}
-				if ( run_Perl_Subrotine( "perl " + perlScript + " " + edge.getDest().getUserDatum( Keywords.LABEL_KEY ) ) != 0 )
-				{
-					break;
-				}
-			}
-		}
-		catch ( ExecutionTimeException e )
-		{
-			System.out.println( "End of test. Execution time has ended." );
-		}
-		
-		if ( statistics )
-		{
-			logger.info( mbt.getStatistics() );
-			System.out.println( mbt.getStatistics() );
-		}
-	}
-
 	public int run_Perl_Subrotine( String command )
 	{
 		int result = 1;
@@ -981,9 +808,7 @@ public class CLI
 		System.out.println( "    static" );
 		System.out.println( "    methods" );
 		System.out.println( "    merge" );
-		System.out.println( "    perl" );
-		System.out.println( "    java_output" );
-		System.out.println( "    perl_output\n" );
+		System.out.println( "    source\n" );
 		System.out.println( "Type 'java -jar mbt.jar -v (--version)' for version information." );
 	}
 	
@@ -1062,32 +887,7 @@ public class CLI
 		
 	}
 	
-	static private void buildPerlCLI()
-	{		
-		opt.addOption( OptionBuilder.withArgName( "file" )
-				.withDescription( "The folder containing graphml formatted files." )
-				.hasArg()
-				.withLongOpt( "input_graphml" )
-				.create( "g" ) );
-			opt.addOption( "r", "random", false, "Run the test with a random walk. Can not be combined with --optimize." );
-			opt.addOption( "o", "optimize", false, "Run the test optimized. Can not be combined with --random." );			
-			opt.addOption( "s", "statistics", false, "Prints the statistics of the test, at the end of the run." );
-			opt.addOption( "c", "cul-de-sac", false, "Accepts graphs that has cu-de-sac and continue the test, without this flag, " +
-			  										 "the execution of the test will be stopped." );
-			opt.addOption( OptionBuilder.withArgName( "file" )
-				.withDescription( "The perl script implementing the model." )
-				.hasArg()
-				.withLongOpt( "perl" )
-				.create( "p" ) );
-			opt.addOption( OptionBuilder.withLongOpt( "time" )
-				.withArgName( "=seconds" )
-				.withDescription( "The time in seconds for the random walk to run. If 0, the test runs forever." )
-				.withValueSeparator( '=' )
-				.hasArg()
-				.create( "t" ) );
-	}
-	
-	static private void buildJavaOutputCLI()
+	static private void buildSourceCLI()
 	{
 		opt.addOption( OptionBuilder.withArgName( "file" )
 			.withDescription( "The folder containing graphml formatted files." )
@@ -1095,24 +895,10 @@ public class CLI
 			.withLongOpt( "input_graphml" )
 			.create( "g" ) );
 		opt.addOption( OptionBuilder.withArgName( "file" )
-            .withDescription( "The ouput java source file." )
+            .withDescription( "The template file" )
             .hasArg()
-            .withLongOpt( "source_file" )
-            .create( "s" ) );
-	}
-	
-	static private void buildPerlOutputCLI()
-	{
-		opt.addOption( OptionBuilder.withArgName( "file" )
-			.withDescription( "The folder containing graphml formatted files." )
-			.hasArg()
-			.withLongOpt( "input_graphml" )
-			.create( "g" ) );
-		opt.addOption( OptionBuilder.withArgName( "file" )
-            .withDescription( "The ouput perl source file." )
-            .hasArg()
-            .withLongOpt( "source_file" )
-            .create( "s" ) );
+            .withLongOpt( "template" )
+            .create( "t" ) );
 	}
 	
 	static private void printVersionInformation()
