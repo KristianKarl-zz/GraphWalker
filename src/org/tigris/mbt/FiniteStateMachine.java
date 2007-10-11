@@ -36,8 +36,6 @@ public class FiniteStateMachine{
 	public static final int METHOD_RANDOMIZED = 1;
 	public static final int METHOD_ALL_PATHS = 2;
 	
-	protected static String  KEY_LABEL	= "label";
-	
 	protected DirectedSparseGraph model = null;
 	protected DirectedSparseVertex currentState = null;
 	
@@ -47,7 +45,7 @@ public class FiniteStateMachine{
 		while(i.hasNext())
 		{
 			DirectedSparseVertex v = (DirectedSparseVertex)i.next();
-			if( ((String)v.getUserDatum(KEY_LABEL)).equals(stateName))
+			if( ((String)v.getUserDatum(Keywords.LABEL_KEY)).equals(stateName))
 			{
 				currentState = v;
 				return;			
@@ -58,13 +56,15 @@ public class FiniteStateMachine{
 	public FiniteStateMachine(DirectedSparseGraph newModel)
 	{
 		model = newModel;
-		model.getEdgeConstraints().add(new BlockedEdgeFilter());
-		model.getVertexConstraints().add(new BlockedVertexFilter());
+		
+// Following two lines could be used to hide/remove blocked edges and vertexes in the graph
+//		model.getEdgeConstraints().add(new BlockedEdgeFilter());
+//		model.getVertexConstraints().add(new BlockedVertexFilter());
 	}
 	
 	public String getCurrentStateName()
 	{
-		return (String) currentState.getUserDatum(KEY_LABEL);
+		return (String) currentState.getUserDatum(Keywords.LABEL_KEY);
 	}
 	
 	public Set getCurrentAvailableEdges()
@@ -124,7 +124,7 @@ public class FiniteStateMachine{
 				throw new RuntimeException( "Found a dead end: '" + getCurrentStateName() + "'" );
 			}
 			nextEdge = (DirectedSparseEdge) availableEdges.toArray()[random.nextInt(availableEdges.size())];
-			path.append(nextEdge.getUserDatum(KEY_LABEL)+"\n");
+			path.append(nextEdge.getUserDatum(Keywords.LABEL_KEY)+"\n");
 			walkEdge(nextEdge);
 			path.append(getCurrentStateName()+"\n");
 			length -= 1;
