@@ -689,40 +689,6 @@ public class CLI
 		}
 	}
 
-	public int run_Perl_Subrotine( String command )
-	{
-		int result = 1;
-		// prepare buffers for process output and error streams
-		StringBuffer err=new StringBuffer();
-		StringBuffer out=new StringBuffer();    
-		try
-		{
-			Process proc=Runtime.getRuntime().exec(command);
-			//create thread for reading inputStream (process' stdout)
-			StreamReaderThread outThread=new StreamReaderThread(proc.getInputStream(),out);
-			//create thread for reading errorStream (process' stderr)
-			StreamReaderThread errThread=new StreamReaderThread(proc.getErrorStream(),err);
-			//start both threads
-			outThread.start();
-			errThread.start();
-			//wait for process to end
-			result=proc.waitFor();
-			//finish reading whatever's left in the buffers
-			outThread.join();
-			errThread.join();
-			
-			System.out.print(out.toString());
-			
-		}
-		catch (Exception e)
-		{
-			System.err.println( "Error executing " + command );
-    		System.err.println( e.getMessage() );
-		}
-		return result;
-	}
-	
-	
 	public void generateTestMethods()
 	{
 		ModelBasedTesting mbt = new ModelBasedTesting();
