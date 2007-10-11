@@ -4,7 +4,7 @@ import edu.uci.ics.jung.graph.impl.DirectedSparseGraph;
 
 public abstract class AbstractModelHandler {
 
-	private DirectedSparseGraph _graph;
+	protected DirectedSparseGraph graph;
 	
 	public abstract void load(String fileName);
 	
@@ -12,11 +12,11 @@ public abstract class AbstractModelHandler {
 	
 	public DirectedSparseGraph getModel()
 	{
-		return _graph;
+		return graph;
 	}
 	
 	public void setModel(DirectedSparseGraph graph)
 	{
-		_graph=graph;
+		this.graph=graph;
 	}
 }

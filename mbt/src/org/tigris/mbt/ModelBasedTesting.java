@@ -105,7 +105,8 @@ public class ModelBasedTesting
 	public void readGraph( String graphmlFileName_ )
 	{
 		GraphML graphML = new GraphML();
-		_graph = graphML.load( graphmlFileName_ );
+		graphML.load( graphmlFileName_ );
+		_graph = graphML.getModel();
 		if ( is_cul_de_sac() )
 		{
 			searchForCulDeSacs();
