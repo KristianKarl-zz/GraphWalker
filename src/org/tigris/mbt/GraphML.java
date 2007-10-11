@@ -19,7 +19,6 @@ import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 
 import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
-import edu.uci.ics.jung.graph.impl.DirectedSparseGraph;
 import edu.uci.ics.jung.graph.impl.DirectedSparseVertex;
 import edu.uci.ics.jung.graph.impl.SparseGraph;
 import edu.uci.ics.jung.utils.Pair;
@@ -561,7 +560,7 @@ public class GraphML extends AbstractModelHandler
 		
 		for ( Iterator iter = parsedGraphList.iterator(); iter.hasNext(); )
 		{
-			DirectedSparseGraph g = (DirectedSparseGraph) iter.next();
+			SparseGraph g = (SparseGraph) iter.next();
 			foundSubStartGraph = false;
 	
 			log.debug( "Analyzing graph: " + g.getUserDatum( Keywords.FILE_KEY ) );
