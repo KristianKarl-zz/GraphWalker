@@ -19,6 +19,8 @@ package org.tigris.mbt;
 
 import edu.uci.ics.jung.graph.Edge;
 import edu.uci.ics.jung.graph.filters.GeneralEdgeAcceptFilter;
+
+import java.util.Hashtable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -27,6 +29,12 @@ import java.util.regex.Pattern;
  *
  */
 public class AccessableEdgeFilter extends GeneralEdgeAcceptFilter {
+
+	private Hashtable datastore;
+	public AccessableEdgeFilter(Hashtable modelDatastore) {
+		super();
+		datastore = modelDatastore;
+	}
 
 	public boolean acceptEdge(Edge e) {
 		String label = (String)e.getUserDatum( "label" );
@@ -57,20 +65,20 @@ public class AccessableEdgeFilter extends GeneralEdgeAcceptFilter {
 			String[] array = guard.split("<");
 			return evaluate(array[0],"<",array[1]);
 		}
-		if(AbstractModel.hasDataStore(guard))
-			return evaluate(AbstractModel.getDataStore(guard));
+		if(datastore.containsKey(guard))
+			return evaluate((String) datastore.get(guard));
 		return false;
 	}
 
 	private boolean evaluate(String leftSide, String comparrisson, String rightSide) 
 	{
-		if(AbstractModel.hasDataStore(leftSide)) 
+		if(datastore.containsKey(leftSide)) 
 		{
-			leftSide = AbstractModel.getDataStore(leftSide);
+			leftSide = (String) datastore.get(leftSide);
 		}
-		if(AbstractModel.hasDataStore(rightSide))
+		if(datastore.containsKey(rightSide))
 		{
-			rightSide = AbstractModel.getDataStore(rightSide);
+			rightSide = (String) datastore.get(rightSide);
 		}
 		if(comparrisson.equals("="))
 		{
