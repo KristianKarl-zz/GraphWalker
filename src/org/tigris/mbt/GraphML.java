@@ -19,6 +19,7 @@ import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 
 import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
+import edu.uci.ics.jung.graph.impl.DirectedSparseGraph;
 import edu.uci.ics.jung.graph.impl.DirectedSparseVertex;
 import edu.uci.ics.jung.graph.impl.SparseGraph;
 import edu.uci.ics.jung.utils.Pair;
@@ -37,13 +38,8 @@ import edu.uci.ics.jung.utils.UserData;
  * SparseGraph graph = graphML.load( "/home/user/graphml_folder/" );<br>
  *
  */
-public class GraphML
+public class GraphML extends AbstractModelHandler
 {
-	/**
-	* The graph containing a single file, or a folder of merged files.
-	*/
-	private SparseGraph graph;
-	
 	/**
 	* The name of the single file to be loaded, or the folder containing
 	* the files to be loaded
@@ -102,11 +98,10 @@ public class GraphML
 	* Reads one single graph, or a folder containing several graphs to be merged into one
 	* graph. The resulting SparseGraph object is returned.
 	*/
-	public SparseGraph load( String fileOrfolder )
+	public void load( String fileOrfolder )
 	{
 		graphFileNameOrFolder = fileOrfolder;
 		readFiles();
-		return graph;
 	}
 	
 	/**
@@ -566,7 +561,7 @@ public class GraphML
 		
 		for ( Iterator iter = parsedGraphList.iterator(); iter.hasNext(); )
 		{
-			SparseGraph g = (SparseGraph) iter.next();
+			DirectedSparseGraph g = (DirectedSparseGraph) iter.next();
 			foundSubStartGraph = false;
 	
 			log.debug( "Analyzing graph: " + g.getUserDatum( Keywords.FILE_KEY ) );
@@ -1231,5 +1226,9 @@ public class GraphML
 
 		edgesToBeRemoved.add(inEdge);
 		edgesToBeRemoved.add(outEdge);
+	}
+
+	public void save(String fileName) {
+		Util.writeGraphML(graph, fileName);		
 	}
 }
