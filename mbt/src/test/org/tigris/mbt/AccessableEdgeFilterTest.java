@@ -2,7 +2,7 @@ package test.org.tigris.mbt;
 
 import java.util.Hashtable;
 
-import org.tigris.mbt.AccessableEdgeFilter;
+import org.tigris.mbt.filters.AccessableEdgeFilter;
 import org.tigris.mbt.Keywords;
 
 import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;

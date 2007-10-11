@@ -3,6 +3,8 @@ package org.tigris.mbt;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
+import org.tigris.mbt.filters.AccessableEdgeFilter;
+
 import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
 import edu.uci.ics.jung.graph.impl.DirectedSparseGraph;
 import edu.uci.ics.jung.graph.impl.DirectedSparseVertex;
