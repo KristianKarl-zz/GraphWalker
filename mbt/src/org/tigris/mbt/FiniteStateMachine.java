@@ -24,7 +24,7 @@ import java.util.Stack;
 import java.util.Vector;
 
 import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
-import edu.uci.ics.jung.graph.impl.DirectedSparseGraph;
+import edu.uci.ics.jung.graph.impl.SparseGraph;
 import edu.uci.ics.jung.graph.impl.DirectedSparseVertex;
 
 /**
@@ -36,7 +36,7 @@ public class FiniteStateMachine{
 	public static final int METHOD_RANDOMIZED = 1;
 	public static final int METHOD_ALL_PATHS = 2;
 	
-	protected DirectedSparseGraph model = null;
+	protected SparseGraph model = null;
 	protected DirectedSparseVertex currentState = null;
 	
 	public void setState(String stateName)
@@ -53,7 +53,7 @@ public class FiniteStateMachine{
 		}
 	}
 	
-	public FiniteStateMachine(DirectedSparseGraph newModel)
+	public FiniteStateMachine(SparseGraph newModel)
 	{
 		model = newModel;
 		

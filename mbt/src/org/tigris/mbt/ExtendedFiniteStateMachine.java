@@ -6,7 +6,7 @@ import java.util.Hashtable;
 import org.tigris.mbt.filters.AccessableEdgeFilter;
 
 import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
-import edu.uci.ics.jung.graph.impl.DirectedSparseGraph;
+import edu.uci.ics.jung.graph.impl.SparseGraph;
 import edu.uci.ics.jung.graph.impl.DirectedSparseVertex;
 
 public class ExtendedFiniteStateMachine extends FiniteStateMachine {
@@ -17,7 +17,7 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 		return super.getCurrentStateName() + "/" + getCurrentData();
 	}
 
-	public ExtendedFiniteStateMachine(DirectedSparseGraph newModel)
+	public ExtendedFiniteStateMachine(SparseGraph newModel)
 	{
 		super(newModel);
 		model.getEdgeConstraints().add(new AccessableEdgeFilter(dataStore));
