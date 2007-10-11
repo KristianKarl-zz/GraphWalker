@@ -18,6 +18,7 @@
 package org.tigris.mbt.filters;
 
 import edu.uci.ics.jung.graph.Edge;
+import edu.uci.ics.jung.graph.filters.EfficientFilter;
 import edu.uci.ics.jung.graph.filters.GeneralEdgeAcceptFilter;
 
 import java.util.Hashtable;
@@ -28,8 +29,8 @@ import java.util.regex.Pattern;
  * @author Johan Tejle
  *
  */
-public class AccessableEdgeFilter extends GeneralEdgeAcceptFilter {
-
+public class AccessableEdgeFilter extends GeneralEdgeAcceptFilter implements EfficientFilter
+{
 	private Hashtable datastore;
 	public AccessableEdgeFilter(Hashtable modelDatastore) {
 		super();

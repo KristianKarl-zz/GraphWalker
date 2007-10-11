@@ -6,7 +6,7 @@ import org.tigris.mbt.filters.AccessableEdgeFilter;
 import org.tigris.mbt.Keywords;
 
 import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
-import edu.uci.ics.jung.graph.impl.DirectedSparseGraph;
+import edu.uci.ics.jung.graph.impl.SparseGraph;
 import edu.uci.ics.jung.graph.impl.DirectedSparseVertex;
 import edu.uci.ics.jung.utils.UserData;
 import junit.framework.TestCase;
@@ -22,7 +22,7 @@ public class AccessableEdgeFilterTest extends TestCase {
 		
 		DirectedSparseVertex v1 = new DirectedSparseVertex();
 		DirectedSparseVertex v2 = new DirectedSparseVertex();
-		DirectedSparseGraph g = new DirectedSparseGraph();
+		SparseGraph g = new SparseGraph();
 		g.addVertex(v1);
 		g.addVertex(v2);
 		
