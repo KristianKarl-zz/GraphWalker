@@ -187,14 +187,10 @@ public class ModelBasedTesting
 	{
 		reset();
 
-		while ( true )
+		while ( !isAllVerticesVisited() )
 		{
 			executeMethod( true, false, false );
 			_end_time = System.currentTimeMillis();
-			if ( isAllVerticesVisited() )
-			{
-				break;
-			}
 		}
 	}
 
@@ -207,14 +203,10 @@ public class ModelBasedTesting
 		_runUntilAllEdgesVisited = true;
 		reset();
 
-		while ( true )
+		while ( !isAllEdgesVisited() )
 		{
 			executeMethod( true, false, false );
 			_end_time = System.currentTimeMillis();
-			if ( isAllEdgesVisited() )
-			{
-				break;
-			}
 		}
 	}
 
@@ -229,23 +221,15 @@ public class ModelBasedTesting
 
 		try
 		{
-			while ( true )
+			while ( !isAllEdgesVisited() )
 			{
 				executeMethod( true, true, false );
-				if ( isAllEdgesVisited() )
-				{
-					break;
-				}
 			}
-			
-			return;
 		}
         catch ( Exception e )
 		{
 			e.printStackTrace();
         }
-        
-        return;
 	}
 
 
@@ -328,14 +312,10 @@ public class ModelBasedTesting
 		findStartingVertex();
 		_runUntilAllEdgesVisited = true;
 		_start_time = System.currentTimeMillis();
-		while ( true )
+		while ( !(isAllVerticesVisited() && isAllEdgesVisited()) )
 		{
 			executeMethod( true, false, false );
 			_end_time = System.currentTimeMillis();
-			if ( isAllVerticesVisited() && isAllEdgesVisited() )
-			{
-				break;
-			}
 		}
 	}
 
@@ -476,31 +456,22 @@ public class ModelBasedTesting
 	public void generateTests( boolean random, long length ) throws RuntimeException, FoundNoEdgeException
 	{
 		findStartingVertex();
-		if ( random == true )
+		_runUntilAllEdgesVisited = !random;
+		if ( random )
 		{
-			_runUntilAllEdgesVisited = false;
-			long calculatedLength = length /2;
-			for ( long index = 0; index < calculatedLength; index++  )
+			for ( long index = 0; index < length /2; index++  )
 			{
 				executeMethod( false, true, false );
 			}
 		}
 		else
 		{
-			_runUntilAllEdgesVisited = true;
-			while ( true )
+			while ( !isAllEdgesVisited() )
 			{
 				executeMethod( true, true, false );
-				if ( isAllEdgesVisited() )
-				{
-					break;
-				}
 			}
 		}
-		
-		return;
 	}
-	
 
 	private void findStartingVertex()
 	{
