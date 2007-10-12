@@ -98,7 +98,7 @@ public class Keywords {
 	* better info during logging at:<br>
 	* * Parsing graphml files<br>
     * * Merging<br>
-	* * Generating offline and online test sequencs
+	* * Generating offline and online test sequences
 	*/
 	public static final String  INDEX_KEY = "index";
 	
@@ -145,6 +145,21 @@ public class Keywords {
 	* This is used only during a online run.
 	*/
 	public static final String  BACKTRACK = "BACKTRACK";
+
+	/**
+	* This datum contains a the label parameter used by an edge in EFSM models.
+	*/
+	public static final String PARAMETER_KEY = "parameter";
+
+	/**
+	* This datum contains a the label guard used by an edge in EFSM models.
+	*/
+	public static final String GUARD_KEY = "guard";
+
+	/**
+	* This datum contains a the label action used by an edge in EFSM models.
+	*/
+	public static final String ACTION_KEY = "action";
 
 	/**
 	* Holds the pre-defined key words

@@ -29,10 +29,11 @@
 			<attribute name="javadoc_location" value="http://dsd.lbl.gov/~hoschek/colt/api"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/jung-1.7.6.jar">
+	<classpathentry kind="lib" path="lib/jung-1.7.6.jar" sourcepath="C:/Documents and Settings/Johan Tejle/Mina dokument/Azureus Downloads/jung-1.7.6/src">
 		<attributes>
 			<attribute name="javadoc_location" value="http://jung.sourceforge.net/doc/api/index.html"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="lib/bsh-core-2.0b4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
