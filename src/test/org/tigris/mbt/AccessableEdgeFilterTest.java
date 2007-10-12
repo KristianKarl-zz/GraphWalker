@@ -1,9 +1,10 @@
 package test.org.tigris.mbt;
 
-import java.util.Hashtable;
-
 import org.tigris.mbt.filters.AccessableEdgeFilter;
 import org.tigris.mbt.Keywords;
+
+import bsh.EvalError;
+import bsh.Interpreter;
 
 import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
 import edu.uci.ics.jung.graph.impl.SparseGraph;
@@ -14,11 +15,11 @@ import junit.framework.TestCase;
 public class AccessableEdgeFilterTest extends TestCase {
 	private AccessableEdgeFilter f;
 	private DirectedSparseEdge e;
-	private Hashtable dataStore;
+	private Interpreter dataStore;
 	
 	protected void setUp() throws Exception {
 		super.setUp();
-		dataStore = new Hashtable();
+		dataStore = new Interpreter();
 		
 		DirectedSparseVertex v1 = new DirectedSparseVertex();
 		DirectedSparseVertex v2 = new DirectedSparseVertex();
@@ -70,74 +71,74 @@ public class AccessableEdgeFilterTest extends TestCase {
 		assertEquals(false, f.acceptEdge(e));
 	}
 	
-	public void testAcceptEdgeEdge7() 
+	public void testAcceptEdgeEdge7() throws EvalError 
 	{
-		dataStore.put("X", "false");
+		dataStore.eval("X=false");
 		e.setUserDatum(Keywords.LABEL_KEY, "[X]", UserData.SHARED);
 		assertEquals(false, f.acceptEdge(e));
 	}
 
-	public void testAcceptEdgeEdge8() 
+	public void testAcceptEdgeEdge8() throws EvalError 
 	{
-		dataStore.put("X", "true");
+		dataStore.eval("X=true");
 		e.setUserDatum(Keywords.LABEL_KEY, "[X]", UserData.SHARED);
 		assertEquals(true, f.acceptEdge(e));
 	}
 
-	public void testAcceptEdgeEdge9() 
+	public void testAcceptEdgeEdge9()  throws EvalError
 	{
-		dataStore.put("X", "true");
-		e.setUserDatum(Keywords.LABEL_KEY, "[X=true]", UserData.SHARED);
+		dataStore.eval("X=true");
+		e.setUserDatum(Keywords.LABEL_KEY, "[X==true]", UserData.SHARED);
 		assertEquals(true, f.acceptEdge(e));
 	}
 
-	public void testAcceptEdgeEdge10() 
+	public void testAcceptEdgeEdge10()  throws EvalError
 	{
-		dataStore.put("X", "true");
-		e.setUserDatum(Keywords.LABEL_KEY, "[X=false]", UserData.SHARED);
+		dataStore.eval("X=true");
+		e.setUserDatum(Keywords.LABEL_KEY, "[X==false]", UserData.SHARED);
 		assertEquals(false, f.acceptEdge(e));
 	}
 
-	public void testAcceptEdgeEdge11() 
+	public void testAcceptEdgeEdge11()  throws EvalError
 	{
-		dataStore.put("X", "true");
-		dataStore.put("Y", "true");
-		e.setUserDatum(Keywords.LABEL_KEY, "[X=Y]", UserData.SHARED);
+		dataStore.eval("X=true");
+		dataStore.eval("Y=true");
+		e.setUserDatum(Keywords.LABEL_KEY, "[X==Y]", UserData.SHARED);
 		assertEquals(true, f.acceptEdge(e));
 	}
 
-	public void testAcceptEdgeEdge12() 
+	public void testAcceptEdgeEdge12()  throws EvalError
 	{
-		dataStore.put("X", "true");
-		dataStore.put("Y", "false");
-		e.setUserDatum(Keywords.LABEL_KEY, "[X=Y]", UserData.SHARED);
+		dataStore.eval("X=true");
+		dataStore.eval("Y=false");
+		e.setUserDatum(Keywords.LABEL_KEY, "[X==Y]", UserData.SHARED);
 		assertEquals(false, f.acceptEdge(e));
 	}
 
-	public void testAcceptEdgeEdge13() 
+	public void testAcceptEdgeEdge13() throws EvalError 
 	{
-		dataStore.put("X", "5");
-		e.setUserDatum(Keywords.LABEL_KEY, "[X=5]", UserData.SHARED);
+		dataStore.eval("X=5");
+		e.setUserDatum(Keywords.LABEL_KEY, "[X==5]", UserData.SHARED);
 		assertEquals(true, f.acceptEdge(e));
 	}
 
-	public void testAcceptEdgeEdge14() 
+	public void testAcceptEdgeEdge14()  throws EvalError
 	{
-		dataStore.put("X", "6");
-		e.setUserDatum(Keywords.LABEL_KEY, "[X=5]", UserData.SHARED);
+		dataStore.eval("X=6");
+		e.setUserDatum(Keywords.LABEL_KEY, "[X==5]", UserData.SHARED);
 		assertEquals(false, f.acceptEdge(e));
 	}
 
-	public void testAcceptEdgeEdge15() 
+	public void testAcceptEdgeEdge15()  throws EvalError
 	{
-		dataStore.put("X", "6");
+		dataStore.eval("X=6");
 		e.setUserDatum(Keywords.LABEL_KEY, "[X>5]", UserData.SHARED);
 		assertEquals(true, f.acceptEdge(e));
 	}
 
-	public void testAcceptEdgeEdge16() 
+	public void testAcceptEdgeEdge16()  throws EvalError
 	{
-		dataStore.put("X", "4");
+		dataStore.eval("X=4");
 		e.setUserDatum(Keywords.LABEL_KEY, "[X<5]", UserData.SHARED);
 		assertEquals(true, f.acceptEdge(e));
 	}

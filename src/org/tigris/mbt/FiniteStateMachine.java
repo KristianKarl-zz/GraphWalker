@@ -17,11 +17,12 @@
 
 package org.tigris.mbt;
 
+import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Random;
 import java.util.Set;
 import java.util.Stack;
-import java.util.Vector;
 
 import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
 import edu.uci.ics.jung.graph.impl.SparseGraph;
@@ -56,10 +57,6 @@ public class FiniteStateMachine{
 	public FiniteStateMachine(SparseGraph newModel)
 	{
 		model = newModel;
-		
-// Following two lines could be used to hide/remove blocked edges and vertexes in the graph
-//		model.getEdgeConstraints().add(new BlockedEdgeFilter());
-//		model.getVertexConstraints().add(new BlockedVertexFilter());
 	}
 	
 	public String getCurrentStateName()
@@ -70,6 +67,20 @@ public class FiniteStateMachine{
 	public Set getCurrentAvailableEdges()
 	{
 		return currentState.getOutEdges();
+	}
+	
+	protected Hashtable splitEdge(DirectedSparseEdge edge)
+	{
+		Hashtable retur = new Hashtable();
+		String label = (String) edge.getUserDatum(Keywords.LABEL_KEY);
+		int splitPosition = label.indexOf(" ");
+		if(splitPosition > 0)
+		{
+			retur.put(Keywords.PARAMETER_KEY, label.substring(splitPosition+1).trim());
+			label = label.substring(0, splitPosition).trim();
+		}
+		retur.put(Keywords.LABEL_KEY, label);
+		return retur;
 	}
 	
 	public void walkEdge(DirectedSparseEdge edge)
@@ -100,7 +111,7 @@ public class FiniteStateMachine{
 	
 	private Set getAllPath(DirectedSparseVertex fromState, String toState) 
 	{
-		Vector testSuit = new Vector();
+		HashSet testSuit = new HashSet();
 		Stack currentPath = new Stack();
 		
 		//TODO: add allpath functionality		
@@ -112,10 +123,11 @@ public class FiniteStateMachine{
 
 	private Set getRandomPath(int length) 
 	{
-		Vector testSuit = new Vector();
+		HashSet testSuit = new HashSet();
 		StringBuffer path = new StringBuffer();
 		DirectedSparseEdge nextEdge;
 		Random random = new Random();
+		Hashtable labelParts;
 		while(length>0)
 		{
 			Set availableEdges = getCurrentAvailableEdges();
@@ -124,10 +136,13 @@ public class FiniteStateMachine{
 				throw new RuntimeException( "Found a dead end: '" + getCurrentStateName() + "'" );
 			}
 			nextEdge = (DirectedSparseEdge) availableEdges.toArray()[random.nextInt(availableEdges.size())];
-			path.append(nextEdge.getUserDatum(Keywords.LABEL_KEY)+"\n");
+			labelParts = splitEdge(nextEdge);
+			String nextEdgeName = labelParts.get(Keywords.LABEL_KEY) + 
+				(labelParts.contains(Keywords.PARAMETER_KEY)?" "+labelParts.get(Keywords.PARAMETER_KEY):"")+"\n";
+			path.append(nextEdgeName);
 			walkEdge(nextEdge);
 			path.append(getCurrentStateName()+"\n");
-			length -= 1;
+			length--;
 		}
 		testSuit.add(path.toString());
 		return (Set) testSuit;
