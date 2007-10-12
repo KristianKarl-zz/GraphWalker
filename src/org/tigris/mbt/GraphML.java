@@ -293,9 +293,12 @@ public class GraphML extends AbstractModelHandler
 						Object o2 = iterImage.next();
 						if ( o2 instanceof org.jdom.Element )
 						{
-							org.jdom.Element image = (org.jdom.Element)o2;
-							log.debug( "  Image: '" + image.getAttributeValue( "href" ) + "'" );
-							currentVertex.addUserDatum( Keywords.IMAGE_KEY, image.getAttributeValue( "href" ), UserData.SHARED );
+							org.jdom.Element image = (org.jdom.Element)o2;				
+							if ( image.getAttributeValue( "href" ) != null )
+							{
+								log.debug( "  Image: '" + image.getAttributeValue( "href" ) + "'" );
+								currentVertex.addUserDatum( Keywords.IMAGE_KEY, image.getAttributeValue( "href" ), UserData.SHARED );
+							}
 						}
 					}
 					Iterator iterGeometry = element.getDescendants( new org.jdom.filter.ElementFilter( "Geometry" ) );
