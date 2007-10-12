@@ -171,7 +171,7 @@ public class CLI
 			}
 			else
 			{
-				System.out.println( "Unkown cammand: " + args[ 0 ] );
+				System.out.println( "Unkown command: " + args[ 0 ] );
 				System.out.println( "Type 'java -jar mbt.jar help' for usage." );
 				return;				
 			}
