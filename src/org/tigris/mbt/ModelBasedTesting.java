@@ -40,7 +40,7 @@ import edu.uci.ics.jung.graph.impl.SparseGraph;
 import edu.uci.ics.jung.utils.UserData;
 
 /**
- * The object handles the test case generation, both dynamic and static.
+ * The object handles the test case generation, both online and offline.
  */
 public class ModelBasedTesting
 {
