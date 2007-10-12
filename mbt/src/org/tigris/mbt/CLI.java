@@ -30,10 +30,10 @@ import edu.uci.ics.jung.graph.impl.DirectedSparseVertex;
  * java -jar mbt.jar help<br><br>
  * <strong>Example: Merge graphml files and save the merged result.</strong><br>
  * java -jar mbt.jar merge -g folder -l result.graphml<br><br>
- * <strong>Example: Generate static test sequence, using random walk</strong><br>
- * java -jar mbt.jar static -r -g folder<br><br>
- * <strong>Example: Generate dynamic test sequence, using random walk</strong><br>
- * java -jar mbt.jar dynamic -r -g folder<br><br>
+ * <strong>Example: Generate offline test sequence, using random walk</strong><br>
+ * java -jar mbt.jar offline -r -g folder<br><br>
+ * <strong>Example: Generate online test sequence, using random walk</strong><br>
+ * java -jar mbt.jar online -r -g folder<br><br>
  * <strong>Example: Print all names of edges and vertices (Sorted, and unique)</strong><br>
  * java -jar mbt.jar methods -g folder<br><br>
  *
@@ -68,11 +68,11 @@ public class CLI
 					printGeneralHelpText();
 					return;
 				}
-				else if ( args[ 1 ].equals( "dynamic" ) )
+				else if ( args[ 1 ].equals( "online" ) )
 				{
-					buildDynamicCLI();
+					buildOnlineCLI();
 					
-					System.out.println( "Run the test dynamically.\n" +			
+					System.out.println( "Run the test online.\n" +			
 							"MBT will return a test sequence, one line at a time to standard output, " +
 							"it will wait until a line is fed back via standard input. The data fed back can be:\n" +
 							"  '0' which means, continue the test as normal\n" +
@@ -81,18 +81,18 @@ public class CLI
 							"anything else will abort the execution.\n" );					
 
 					HelpFormatter f = new HelpFormatter();
-	                f.printHelp( "'java -jar mbt.jar dynamic [OPTION] [ARGUMENT]'", opt );
+	                f.printHelp( "'java -jar mbt.jar online [OPTION] [ARGUMENT]'", opt );
 	                
 					return;
 				}
-				else if ( args[ 1 ].equals( "static" ) )
+				else if ( args[ 1 ].equals( "offline" ) )
 				{
-					buildStaticCLI();
+					buildOfflineCLI();
 					
-					System.out.println( "Generate a test sequence statically.\n" );					
+					System.out.println( "Generate a test sequence offline.\n" );					
 
 					HelpFormatter f = new HelpFormatter();
-	                f.printHelp( "'java -jar mbt.jar static [OPTION] [ARGUMENT]'", opt );
+	                f.printHelp( "'java -jar mbt.jar offline [OPTION] [ARGUMENT]'", opt );
 	                
 					return;
 				}
@@ -144,13 +144,13 @@ public class CLI
 					return;
 				}
 			}
-			else if ( args[ 0 ].equals( "dynamic" ) )
+			else if ( args[ 0 ].equals( "online" ) )
 			{
-				buildDynamicCLI();
+				buildOnlineCLI();
 			}
-			else if ( args[ 0 ].equals( "static" ) )
+			else if ( args[ 0 ].equals( "offline" ) )
 			{
-				buildStaticCLI();
+				buildOfflineCLI();
 			}
 			else if ( args[ 0 ].equals( "methods" ) )
 			{
@@ -182,19 +182,19 @@ public class CLI
 			CommandLineParser parser = new PosixParser();
 	        CommandLine cl = parser.parse( opt, args );
 	        
-			if ( args[ 0 ].equals( "dynamic" ) )
+			if ( args[ 0 ].equals( "online" ) )
 			{
 	            if ( cl.hasOption( "r" ) && cl.hasOption( "o" ) )
 	            {
 	            	System.out.println( "Can not set -r (--random) and -o (--optimize) at the same time." );
-	            	System.out.println( "Type 'java -jar mbt.jar help dynamic' for help." );
+	            	System.out.println( "Type 'java -jar mbt.jar help online' for help." );
 	                return;
 	            }
 
 	            if ( !cl.hasOption( "r" ) && !cl.hasOption( "o" ) )
 	            {
 	            	System.out.println( "Either -r (--random) or -o (--optimize) must bet set." );
-	            	System.out.println( "Type 'java -jar mbt.jar help dynamic' for help." );
+	            	System.out.println( "Type 'java -jar mbt.jar help online' for help." );
 	                return;
 	            }
 
@@ -238,7 +238,7 @@ public class CLI
 	            if ( !cl.hasOption( "g" ) )
 	            {
 	            	System.out.println( "Missing the input graphml file (folder), See -g (--intput_graphml)" );
-	            	System.out.println( "Type 'java -jar mbt.jar help dynamic' for help." );
+	            	System.out.println( "Type 'java -jar mbt.jar help online' for help." );
 	                return;	            	
 	            }
 
@@ -256,12 +256,12 @@ public class CLI
             	CLI cli = new CLI();
     			cli.runInteractively();
 			}
-			else if ( args[ 0 ].equals( "static" ) )
+			else if ( args[ 0 ].equals( "offline" ) )
 			{
 	            if ( cl.hasOption( "r" ) && cl.hasOption( "o" ) )
 	            {
 	            	System.out.println( "Can not set -r (--random) and -o (--optimize) at the same time." );
-	            	System.out.println( "Type 'java -jar mbt.jar help static' for help." );
+	            	System.out.println( "Type 'java -jar mbt.jar help offline' for help." );
 	                return;
 	            }
 
@@ -275,7 +275,7 @@ public class CLI
 	            	else
 	            	{
 		            	System.out.println( "When running in -r (--random) mode, the -n (--length) must also be set." );
-		            	System.out.println( "Type 'java -jar mbt.jar help static' for help." );
+		            	System.out.println( "Type 'java -jar mbt.jar help offline' for help." );
 		                return;
 	            	}
 	            }
@@ -284,7 +284,7 @@ public class CLI
 	            	if ( cl.hasOption( "n" ) )
 	            	{
 		            	System.out.println( "When running in -o (--optimize) mode, the -n (--length) option can not be used." );
-		            	System.out.println( "Type 'java -jar mbt.jar help static' for help." );
+		            	System.out.println( "Type 'java -jar mbt.jar help offline' for help." );
 		                return;
 	            	}
 	            	random = false;
@@ -292,7 +292,7 @@ public class CLI
 	            else
 	            {
 	            	System.out.println( "When generating a test sequence, either -o( --optimize) or -r (--random) must be defined." );
-	            	System.out.println( "Type 'java -jar mbt.jar help static' for help." );
+	            	System.out.println( "Type 'java -jar mbt.jar help offline' for help." );
 	                return;	            	
 	            }
 
@@ -317,7 +317,7 @@ public class CLI
 	            if ( !cl.hasOption( "g" ) )
 	            {
 	            	System.out.println( "Missing the input graphml file (folder), See -g (--intput_graphml)" );
-	            	System.out.println( "Type 'java -jar mbt.jar help static' for help." );
+	            	System.out.println( "Type 'java -jar mbt.jar help offline' for help." );
 	                return;	            	
 	            }
 
@@ -770,15 +770,15 @@ public class CLI
 		System.out.println( "Type 'java -jar mbt.jar help <COMMAND>' to get specific help about a command." );
 		System.out.println( "Valid commands are:" );
 		System.out.println( "    help" );
-		System.out.println( "    dynamic" );
-		System.out.println( "    static" );
+		System.out.println( "    online" );
+		System.out.println( "    offline" );
 		System.out.println( "    methods" );
 		System.out.println( "    merge" );
 		System.out.println( "    source\n" );
 		System.out.println( "Type 'java -jar mbt.jar -v (--version)' for version information." );
 	}
 	
-	static private void buildDynamicCLI()
+	static private void buildOnlineCLI()
 	{
 		opt.addOption( "r", "random", false, "Run the test with a random walk. Can not be combined with --optimize." );
 		opt.addOption( "o", "optimize", false, "Run the test optimized. Can not be combined with --random." );
@@ -806,7 +806,7 @@ public class CLI
                 .create( "p" ) );
 	}
 
-	static private void buildStaticCLI()
+	static private void buildOfflineCLI()
 	{
 		opt.addOption( "r", "random", false,     "Run the test with a random walk. Can not be combined with --optimize. " + 
 											     "This argument also needs the --time to be set." );

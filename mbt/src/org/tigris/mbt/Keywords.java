@@ -77,7 +77,7 @@ public class Keywords {
 	
 	/**
 	* This datum contains a counter for each vertex and edge.
-	* Used by MBT during a dynamic test. Every time a vertex or an edge is traversed
+	* Used by MBT during a online test. Every time a vertex or an edge is traversed
 	* it is visited, thus incremented once.
 	*/
 	public static final String  VISITED_KEY = "visited";
@@ -98,7 +98,7 @@ public class Keywords {
 	* better info during logging at:<br>
 	* * Parsing graphml files<br>
     * * Merging<br>
-	* * Generating static and dynamic test sequencs
+	* * Generating offline and online test sequencs
 	*/
 	public static final String  INDEX_KEY = "index";
 	
@@ -142,7 +142,7 @@ public class Keywords {
 	/**
 	* An edge with the key word BACKTRACK is used to enable a simple logic that enables
 	* a end user to backtrack in the graph to the previous vertex.<br>
-	* This is used only during a dynamic run.
+	* This is used only during a online run.
 	*/
 	public static final String  BACKTRACK = "BACKTRACK";
 

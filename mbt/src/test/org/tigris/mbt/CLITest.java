@@ -55,7 +55,7 @@ public class CLITest extends TestCase {
 		System.out.println( "TEST: testVertexWithNoInEdges" );
 		System.out.println( "=======================================================================" );
 		String args[] = new String[ 4 ];
-		args[ 0 ] = "static";
+		args[ 0 ] = "offline";
 		args[ 1 ] = "-o";
 		args[ 2 ] = "-g";
 		args[ 3 ] = "graphml/misc/no_missing_inedges.graphml";
@@ -87,7 +87,7 @@ public class CLITest extends TestCase {
 		System.out.println( "TEST: testVertexWithNoInEdges" );
 		System.out.println( "=======================================================================" );
 		String args[] = new String[ 4 ];
-		args[ 0 ] = "static";
+		args[ 0 ] = "offline";
 		args[ 1 ] = "-o";
 		args[ 2 ] = "-g";
 		args[ 3 ] = "graphml/misc/missing_inedges.graphml";
@@ -120,7 +120,7 @@ public class CLITest extends TestCase {
 		System.out.println( "=======================================================================" );
 		System.out.println( "Please wait for 10 seconds..." );
 		String args[] = new String[ 6 ];
-		args[ 0 ] = "dynamic";
+		args[ 0 ] = "online";
 		args[ 1 ] = "-r";
 		args[ 2 ] = "-t";
 		args[ 3 ] = "10";
