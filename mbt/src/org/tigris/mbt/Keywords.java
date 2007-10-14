@@ -28,8 +28,7 @@ public class Keywords {
 	
 	/**
 	* The id taken from the graphml file.
-	* TODO
-	* Investigate if this datum is deprecated
+	* TODO Investigate if this datum is deprecated
 	*/
 	public static final String  ID_KEY = "id";
 	
@@ -147,19 +146,24 @@ public class Keywords {
 	public static final String  BACKTRACK = "BACKTRACK";
 
 	/**
-	* This datum contains a the label parameter used by an edge in EFSM models.
+	* This datum contains the label parameter used by an edge in EFSM models.
 	*/
 	public static final String PARAMETER_KEY = "parameter";
 
 	/**
-	* This datum contains a the label guard used by an edge in EFSM models.
+	* This datum contains the label guard used by an edge in EFSM models.
 	*/
 	public static final String GUARD_KEY = "guard";
 
 	/**
-	* This datum contains a the label action used by an edge in EFSM models.
+	* This datum contains the label action used by an edge in EFSM models.
 	*/
 	public static final String ACTION_KEY = "action";
+
+	/**
+	* This datum contains the dijkstra object used to find the shortest path in models.
+	*/
+	public static final String DIJKSTRA = "dijkstra";
 
 	/**
 	* Holds the pre-defined key words

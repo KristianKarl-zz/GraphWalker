@@ -34,4 +34,29 @@ public class ExtendedFiniteStateMachineTest extends TestCase {
 		System.out.println( path.toArray()[0] );
 		assertEquals(1, path.size());
     }
+
+    public void test_FSM_ShortestPath()
+    {
+		System.out.println( "TEST: test_FSM_ShortestPath" );
+		System.out.println( "=======================================================================" );
+		GraphML gml = new GraphML();
+		gml.load("graphml/methods/Main.graphml");
+		FiniteStateMachine FSM = new FiniteStateMachine(gml.getModel());
+    	Set path = FSM.getPath(FSM.METHOD_SHORTEST_PATH, Keywords.START_NODE, "v_SaveBeforeCloseLock");
+		System.out.println( path.toArray()[0] );
+		assertEquals(1, path.size());
+    }
+
+    public void test_EFSM_ShortestPath()
+    {
+		System.out.println( "TEST: test_EFSM_ShortestPath" );
+		System.out.println( "=======================================================================" );
+		GraphML gml = new GraphML();
+		gml.load("graphml/methods/ExtendedMain.graphml");
+		ExtendedFiniteStateMachine EFSM = new ExtendedFiniteStateMachine(gml.getModel());
+    	Set path = EFSM.getPath(EFSM.METHOD_SHORTEST_PATH, Keywords.START_NODE, "v_SaveBeforeCloseLock");
+		System.out.println( path.toArray()[0] );
+		assertEquals(1, path.size());
+    }
+
 }

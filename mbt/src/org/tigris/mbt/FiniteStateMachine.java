@@ -20,13 +20,17 @@ package org.tigris.mbt;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 import java.util.Set;
 import java.util.Stack;
 
+import edu.uci.ics.jung.graph.impl.AbstractElement;
 import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
 import edu.uci.ics.jung.graph.impl.SparseGraph;
 import edu.uci.ics.jung.graph.impl.DirectedSparseVertex;
+import edu.uci.ics.jung.utils.UserData;
 
 /**
  * @author Johan Tejle
@@ -36,11 +40,14 @@ public class FiniteStateMachine{
 
 	public static final int METHOD_RANDOMIZED = 1;
 	public static final int METHOD_ALL_PATHS = 2;
+	public static final int METHOD_SHORTEST_PATH = 3;
 	
 	protected SparseGraph model = null;
 	protected DirectedSparseVertex currentState = null;
+	private long startTimeStamp;
+	private Stack stateStack;
 	
-	public void setState(String stateName)
+	protected void setState(String stateName)
 	{
 		Iterator i = model.getVertices().iterator();
 		while(i.hasNext())
@@ -49,14 +56,21 @@ public class FiniteStateMachine{
 			if( ((String)v.getUserDatum(Keywords.LABEL_KEY)).equals(stateName))
 			{
 				currentState = v;
+				setAsVisited(currentState);
 				return;			
 			}
 		}
+		throw new RuntimeException( "Vertex not Found: '" + stateName + "'" );
+	}
+	public void reset()
+	{
+		setState(Keywords.START_NODE);
 	}
 	
 	public FiniteStateMachine(SparseGraph newModel)
 	{
 		model = newModel;
+		stateStack = new Stack();
 	}
 	
 	public String getCurrentStateName()
@@ -64,7 +78,7 @@ public class FiniteStateMachine{
 		return (String) currentState.getUserDatum(Keywords.LABEL_KEY);
 	}
 	
-	public Set getCurrentAvailableEdges()
+	public Set getCurrentOutEdges()
 	{
 		return currentState.getOutEdges();
 	}
@@ -83,14 +97,91 @@ public class FiniteStateMachine{
 		return retur;
 	}
 	
+	protected void setAsVisited(AbstractElement e)
+	{
+		Integer visited;
+		if(e.containsUserDatumKey(Keywords.VISITED_KEY))
+		{
+			visited = (Integer) e.getUserDatum( Keywords.VISITED_KEY );
+			visited = new Integer( visited.intValue() + 1 );
+		}
+		else
+		{
+			visited = new Integer( 1 );
+		}
+		e.setUserDatum( Keywords.VISITED_KEY, visited, UserData.SHARED );
+	}
+	
+	public void walkEdge(List edges)
+	{
+		for(Iterator i = edges.iterator();i.hasNext();)
+		{
+			walkEdge( (DirectedSparseEdge) i.next());
+		}
+	}
+	
 	public void walkEdge(DirectedSparseEdge edge)
 	{
 		if(currentState.isSource(edge))
 		{
 			currentState = (DirectedSparseVertex) edge.getDest();
+			setAsVisited(edge);
+			setAsVisited(currentState);
 		}
 	}
 
+	public String getStatisticsStringHeader()
+	{
+		return "Timestamp,Edges available,Edges covered,Vertices available,Vertices covered\n";
+	}
+
+	public String getStatisticsString()
+	{
+		Hashtable stats = getStatistics();
+		String retur = ( System.currentTimeMillis() - startTimeStamp ) + 
+			"," + stats.get("Edges") + 
+			"," + stats.get("Edges covered") +
+			"," + stats.get("Vertices") + 
+			"," + stats.get("Vertices covered") + "\n";
+		
+		return retur;
+	}
+	
+	public Hashtable getStatistics()
+	{
+		Hashtable retur = new Hashtable();
+		
+		Set e = model.getEdges();
+		Set v = model.getVertices();
+
+		retur.put("Edges", new Integer(e.size()) );
+		retur.put("Edges covered", new Integer(getCoverage(e)) );
+
+		retur.put("Vertices", new Integer(v.size()) );
+		retur.put("Vertices covered", new Integer(getCoverage(v)) );
+
+		return retur;
+	}
+	
+	protected int getCoverage(Set modelItems)
+	{
+		int unique = 0;
+		
+		for(Iterator i=modelItems.iterator(); i.hasNext();)
+		{
+			AbstractElement ae = (AbstractElement) i.next();
+			if(ae.containsUserDatumKey(Keywords.VISITED_KEY))
+			{
+				if(((Integer) ae.getUserDatum( Keywords.VISITED_KEY )).intValue()>0)
+				{
+					unique++;
+				}
+			}
+		}
+		
+		return unique;
+	}
+	
 	public Set getPath(int method, String fromState, String toState)
 	{
 		setState(fromState);
@@ -99,12 +190,15 @@ public class FiniteStateMachine{
 
 	public Set getPath(int method, String toState)
 	{
+		startTimeStamp = System.currentTimeMillis();
 		switch(method)
 		{
 		case METHOD_RANDOMIZED:
 			return getRandomPath( Integer.parseInt(toState) );
 		case METHOD_ALL_PATHS:
 			return getAllPath( currentState, toState );			
+		case METHOD_SHORTEST_PATH:
+			return getShortestPath(toState);			
 		}
 		return null;
 	}
@@ -124,27 +218,172 @@ public class FiniteStateMachine{
 	private Set getRandomPath(int length) 
 	{
 		HashSet testSuit = new HashSet();
-		StringBuffer path = new StringBuffer();
-		DirectedSparseEdge nextEdge;
+		LinkedList edgePath = new LinkedList();
+
 		Random random = new Random();
-		Hashtable labelParts;
+		
+		pushState();
+		
 		while(length>0)
 		{
-			Set availableEdges = getCurrentAvailableEdges();
+			Set availableEdges = getCurrentOutEdges();
 			if(availableEdges.size() == 0) 
 			{
 				throw new RuntimeException( "Found a dead end: '" + getCurrentStateName() + "'" );
 			}
-			nextEdge = (DirectedSparseEdge) availableEdges.toArray()[random.nextInt(availableEdges.size())];
-			labelParts = splitEdge(nextEdge);
-			String nextEdgeName = labelParts.get(Keywords.LABEL_KEY) + 
-				(labelParts.contains(Keywords.PARAMETER_KEY)?" "+labelParts.get(Keywords.PARAMETER_KEY):"")+"\n";
-			path.append(nextEdgeName);
-			walkEdge(nextEdge);
-			path.append(getCurrentStateName()+"\n");
+			edgePath.add(availableEdges.toArray()[random.nextInt(availableEdges.size())]);
+			walkEdge((DirectedSparseEdge) edgePath.getLast());
 			length--;
 		}
-		testSuit.add(path.toString());
+		
+		peekState();
+		
+		testSuit.add(getScriptFromPath(edgePath).toString());
+		
+		popState();
+		
 		return (Set) testSuit;
 	}
+
+	protected Set getShortestPath( String toState )
+	{
+		HashSet testSuit = new HashSet();
+		// Clear up model..
+		restoreModel();
+		
+		DirectedSparseVertex targetState = null;
+		for(Iterator i = model.getVertices().iterator();i.hasNext();)
+		{
+			DirectedSparseVertex dsv = (DirectedSparseVertex)i.next();
+			if(((String)dsv.getUserDatum(Keywords.LABEL_KEY)).equals(toState))
+			{
+				targetState = dsv;
+			}
+		}
+		
+		if(targetState == null)
+		{
+			throw new RuntimeException( "Destination not Found: '" + toState + "'" );
+		}
+		
+		pushState();
+		
+		calculateShortestPath( targetState );
+		
+		peekState();
+
+		DijkstraPoint dp = ((DijkstraPoint)targetState.getUserDatum(Keywords.DIJKSTRA));
+		testSuit.add(getScriptFromPath(dp.getShortestPath()).toString());
+		
+		popState();
+
+		return (Set) testSuit;
+	}
+	
+	protected StringBuffer getScriptFromPath(LinkedList edgePath) {
+		StringBuffer path = new StringBuffer();
+		for(Iterator i = edgePath.iterator();i.hasNext();)
+		{
+			DirectedSparseEdge nextEdge = (DirectedSparseEdge) i.next();
+			Hashtable labelParts = splitEdge(nextEdge);
+			String l = (String) labelParts.get(Keywords.LABEL_KEY);
+			String p = (String) labelParts.get(Keywords.PARAMETER_KEY);
+			
+			path.append(l + (p==null ? "" : " " + p) + "\n");
+			walkEdge(nextEdge);
+			path.append(getCurrentStateName()+"\n");
+		}
+		return path;
+	}
+	protected void restoreModel()
+	{
+		for(Iterator i = model.getVertices().iterator();i.hasNext();)
+		{
+			DirectedSparseVertex dsv = (DirectedSparseVertex)i.next();
+			dsv.setUserDatum(Keywords.DIJKSTRA, new DijkstraPoint(), UserData.SHARED );
+		}
+	}
+	
+	private void calculateShortestPath( DirectedSparseVertex toState )
+	{
+		DijkstraPoint dp = ((DijkstraPoint)currentState.getUserDatum(Keywords.DIJKSTRA));
+		LinkedList edgePath = (LinkedList) dp.getPath().clone();
+		Set oe = getCurrentOutEdges();
+		for(Iterator i = oe.iterator();i.hasNext();)
+		{
+			DirectedSparseEdge e = (DirectedSparseEdge)i.next();
+			edgePath.add(e);
+			pushState();
+			walkEdge(e);
+			DijkstraPoint nextDp = ((DijkstraPoint)currentState.getUserDatum(Keywords.DIJKSTRA));
+			if(nextDp.compareTo(edgePath)>0)
+			{
+				nextDp.setPath(edgePath);
+				if(!currentState.equals(toState))
+				{
+					calculateShortestPath( toState );
+				}
+			}
+			popState();
+			edgePath.removeLast();
+		}
+	}
+	
+	protected void pushState()
+	{
+		stateStack.push(currentState);
+	}
+	
+	protected void peekState()
+	{
+		currentState = (DirectedSparseVertex) stateStack.peek();
+	}
+
+	protected void popState()
+	{
+		currentState = (DirectedSparseVertex) stateStack.pop();
+	}
+	
+	protected class DijkstraPoint implements Comparable
+	{
+		protected LinkedList edgePath = null;
+		
+		public DijkstraPoint()
+		{
+		}
+		
+		public void setPath( LinkedList edgePath )
+		{
+			this.edgePath = (LinkedList) edgePath.clone();
+		}
+
+		public LinkedList getPath()
+		{
+			if(edgePath==null)edgePath = new LinkedList();
+			return edgePath;
+		}
+
+		public LinkedList getShortestPath()
+		{
+			if(edgePath==null)edgePath = new LinkedList();
+			return edgePath;
+		}
+
+		public int compareTo(Object o) {
+			int a = getPath().size();
+			if(a==0) return 1;
+			int b = 0;
+			if(o instanceof LinkedList)
+			{
+				b = ((LinkedList)o).size();
+			} else {
+				b = ((DijkstraPoint)o).getPath().size();
+			}
+		
+			return a-b;
+		}
+		
+		
+	}
 }
+
