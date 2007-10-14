@@ -22,9 +22,11 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 import java.util.Vector;
 
 import org.apache.log4j.Level;
@@ -34,6 +36,7 @@ import org.apache.log4j.SimpleLayout;
 import org.apache.log4j.WriterAppender;
 
 import edu.uci.ics.jung.algorithms.shortestpath.DijkstraShortestPath;
+import edu.uci.ics.jung.graph.impl.AbstractElement;
 import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
 import edu.uci.ics.jung.graph.impl.DirectedSparseVertex;
 import edu.uci.ics.jung.graph.impl.SparseGraph;
@@ -509,7 +512,7 @@ public class ModelBasedTesting
 	private void executeMethod( boolean optimize, boolean dryRun, boolean suppressPrintout ) throws FoundNoEdgeException
 	{
 		DirectedSparseEdge edge 	= null;
-		Object[] 		   outEdges = null;
+		Set 		   outEdges = null;
 
 		if ( _nextVertex.containsUserDatumKey( Keywords.MOTHER_GRAPH_START_VERTEX ) && dryRun == false )
 		{
@@ -518,20 +521,20 @@ public class ModelBasedTesting
 
 		_logger.debug( "Vertex = '" + (String)_nextVertex.getUserDatum( Keywords.LABEL_KEY ) + "'" );
 
-		outEdges = _nextVertex.getOutEdges().toArray();
-		_logger.debug( "Number of outgoing edges = " + outEdges.length );
+		outEdges = _nextVertex.getOutEdges();
+		_logger.debug( "Number of outgoing edges = " + outEdges.size() );
 
-		if ( outEdges.length == 0 )
+		if ( outEdges.size() == 0 )
 		{
 			_logger.error( "Vertex has no out-edges: '" + (String)_nextVertex.getUserDatum( Keywords.LABEL_KEY ) + "'" );
 			throw new RuntimeException( "Found a cul-de-sac: '" + (String)_nextVertex.getUserDatum( Keywords.LABEL_KEY ) + "' I have to stop now..." );
 		}
 
-		outEdges = shuffle( outEdges );
+//		outEdges = shuffle( outEdges );
 
 		if ( _shortestPathToVertex == null && _runUntilAllEdgesVisited == true )
 		{
-			Vector unvisitedEdges = returnUnvisitedEdge();
+			Set unvisitedEdges = returnUnvisitedEdge();
 			if ( unvisitedEdges.size() == 0)
 			{
 				_logger.debug( "All edges has been visited!" );
@@ -547,21 +550,18 @@ public class ModelBasedTesting
 				if ( e == null && _backtracking == false )
 				{
 					_logger.info( "Strategy: Optimized - Get an unvisited edge, selected randomly from the graph." );
-					Object[] shuffledList = shuffle( unvisitedEdges.toArray() );
-					e = (DirectedSparseEdge)shuffledList[ 0 ];
+					e = (DirectedSparseEdge) getRandomElement( unvisitedEdges );
 				}
 				else if ( unvisitedEdges.size() == _latestNumberOfUnvisitedEdges || _backtracking == true )
 				{
 					_logger.info( "Strategy: Random from vertex - Get a random out edge from the currrent vertex: '" + _prevVertex.getUserDatum( Keywords.LABEL_KEY ) + "'" );
-					Object[] shuffledList = shuffle( _prevVertex.getOutEdges().toArray() );
-					e = (DirectedSparseEdge)shuffledList[ 0 ];					
+					e = (DirectedSparseEdge) getRandomElement( _prevVertex.getOutEdges() );
 				}
 				// We have tried the unvisited edges, but did not get a reachable path. So we try anything now.
 				else
 				{
 					_logger.info( "Strategy: Truly random - Get any edge, selected randomly from the graph." );
-					Object[] shuffledList = shuffle( _graph.getEdges().toArray() );
-					e = (DirectedSparseEdge)shuffledList[ 0 ];
+					e = (DirectedSparseEdge) getRandomElement( _graph.getEdges() );
 				}
 				
 				if ( e == null )
@@ -612,16 +612,16 @@ public class ModelBasedTesting
 		else if ( optimize )
 		{
 			// Look for an edge that has not been visited yet.
-			for ( int i = 0; i < outEdges.length; i++ )
+			for ( int i = 0; i < outEdges.size(); i++ )
 			{
-				edge = (DirectedSparseEdge)outEdges[ i ];
+				edge = (DirectedSparseEdge)outEdges.toArray()[ i ];
 
 				Integer vistited = (Integer)edge.getUserDatum( Keywords.VISITED_KEY );
 				if ( vistited.intValue() == 0 )
 				{
 					if ( _rejectedEdge == edge )
 					{
-						// This edge has been rejected, because some condition was not fullfilled.
+						// This edge has been rejected, because some condition was not fulfilled.
 						// Try with the next edge in the for-loop.
 						// _rejectedEdge has to be set to null, because it can be valid next time.
 						_rejectedEdge = null;
@@ -636,7 +636,7 @@ public class ModelBasedTesting
 			}
 			if ( edge == null )
 			{
-				_logger.debug( "All edges has been visited (" + outEdges.length + ")" );
+				_logger.debug( "All edges has been visited (" + outEdges.size() + ")" );
 				edge = getWeightedEdge( _nextVertex );
 			}
 		}
@@ -817,34 +817,42 @@ public class ModelBasedTesting
 		return edge;
 	}
 
+//	/**
+//	 * This functions shuffle the array, and returns the shuffled array
+//	 * @param array
+//	 * @return
+//	 */
+//	private Object[] shuffle( Object[] array )
+//	{
+//		for ( int i = 0; i < array.length; i++ )
+//		{
+//			Object leftObject = array[ i ];
+//			int index = _radomGenerator.nextInt( array.length );
+//			Object rightObject = array[ index ];
+//
+//			array[ i ]     = rightObject;
+//			array[ index ] = leftObject;
+//		}
+//		return array;
+//	}
+
 	/**
-	 * This functions shuffle the array, and returns the shuffled array
-	 * @param array
-	 * @return
+	 * This functions returns a random element from the Set
+	 * @param Set of either edges or vertices
+	 * @return one element
 	 */
-	private Object[] shuffle( Object[] array )
+	private AbstractElement getRandomElement( Set elements )
 	{
-		for ( int i = 0; i < array.length; i++ )
-		{
-			Object leftObject = array[ i ];
-			int index = _radomGenerator.nextInt( array.length );
-			Object rightObject = array[ index ];
-
-			array[ i ]     = rightObject;
-			array[ index ] = leftObject;
-		}
-		return array;
+		return (AbstractElement) elements.toArray()[ _radomGenerator.nextInt(elements.size()) ];
 	}
-
-
 
 	/**
 	 * This functions returns a list of edges, which has not yet been visited
 	 * @return DirectedSparseEdge
 	 */
-	private Vector returnUnvisitedEdge()
+	private Set returnUnvisitedEdge()
 	{
-		Vector edgesNotVisited = new Vector();
+		HashSet edgesNotVisited = new HashSet();
 
 		for ( int i = 0; i < _edges.length; i++ )
 		{
