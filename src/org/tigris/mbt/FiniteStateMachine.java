@@ -46,6 +46,8 @@ public class FiniteStateMachine{
 	protected DirectedSparseVertex currentState = null;
 	private long startTimeStamp;
 	private Stack stateStack;
+	private Random random = new Random();
+	
 	
 	protected void setState(String stateName)
 	{
@@ -220,8 +222,6 @@ public class FiniteStateMachine{
 		HashSet testSuit = new HashSet();
 		LinkedList edgePath = new LinkedList();
 
-		Random random = new Random();
-		
 		pushState();
 		
 		while(length>0)
