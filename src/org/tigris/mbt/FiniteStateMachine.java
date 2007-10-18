@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 import java.util.Stack;
+import java.util.Vector;
 
 import edu.uci.ics.jung.graph.impl.AbstractElement;
 import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
@@ -41,32 +42,35 @@ public class FiniteStateMachine{
 	public static final int METHOD_RANDOMIZED = 1;
 	public static final int METHOD_ALL_PATHS = 2;
 	public static final int METHOD_SHORTEST_PATH = 3;
+	public static final int METHOD_RANDOMIZED_WEIGHTED = 4;
 	
 	protected SparseGraph model = null;
 	protected DirectedSparseVertex currentState = null;
 	private long startTimeStamp;
 	private Stack stateStack;
 	private Random random = new Random();
-	
+	private boolean weighted = false;
 	
 	protected void setState(String stateName)
 	{
-		Iterator i = model.getVertices().iterator();
-		while(i.hasNext())
+		DirectedSparseVertex e = findState(stateName);
+		checkIf(e == null, "Vertex not Found: '" + stateName + "'");
+		
+		currentState = e;
+		setAsVisited(e);
+	}
+
+	private DirectedSparseVertex findState(String stateName)
+	{
+		for(Iterator i = model.getVertices().iterator(); i.hasNext();)
 		{
-			DirectedSparseVertex v = (DirectedSparseVertex)i.next();
-			if( ((String)v.getUserDatum(Keywords.LABEL_KEY)).equals(stateName))
+			DirectedSparseVertex e = (DirectedSparseVertex) i.next();
+			if( ((String)e.getUserDatum(Keywords.LABEL_KEY)).equals(stateName))
 			{
-				currentState = v;
-				setAsVisited(currentState);
-				return;			
+				return e;
 			}
 		}
-		throw new RuntimeException( "Vertex not Found: '" + stateName + "'" );
-	}
-	public void reset()
-	{
-		setState(Keywords.START_NODE);
+		return null;
 	}
 	
 	public FiniteStateMachine(SparseGraph newModel)
@@ -184,14 +188,14 @@ public class FiniteStateMachine{
 		case METHOD_RANDOMIZED:
 			return getRandomPath( Integer.parseInt(toState) );
 		case METHOD_ALL_PATHS:
-			return getAllPath( currentState, toState );			
+			return getAllPath( toState );			
 		case METHOD_SHORTEST_PATH:
-			return getShortestPath(toState);			
+			return getShortestPath( toState );
 		}
 		return null;
 	}
 	
-	private Set getAllPath(DirectedSparseVertex fromState, String toState) 
+	private Set getAllPath( String toState ) 
 	{
 		HashSet testSuit = new HashSet();
 		Stack currentPath = new Stack();
@@ -203,6 +207,14 @@ public class FiniteStateMachine{
 		return (Set) testSuit;
 	}
 
+	protected void checkIf(boolean bool, String message)
+	{
+		if(bool)
+		{
+			throw new RuntimeException( message );
+		}
+	}
+	
 	private Set getRandomPath(int length) 
 	{
 		HashSet testSuit = new HashSet();
@@ -213,21 +225,42 @@ public class FiniteStateMachine{
 		while(length>0)
 		{
 			Set availableEdges = getCurrentOutEdges();
-			if(availableEdges.size() == 0) 
+			DirectedSparseEdge edge = null;
+			checkIf(availableEdges.size() == 0, "Found a dead end: '" + getCurrentStateName() + "'"); 
+			if( isWeighted() )
 			{
-				throw new RuntimeException( "Found a dead end: '" + getCurrentStateName() + "'" );
+				Vector zeroes = new Vector();
+				float sum = 0;
+				float limit = random.nextFloat();
+
+				for ( Iterator i = availableEdges.iterator(); i.hasNext();)
+				{
+					DirectedSparseEdge e = (DirectedSparseEdge)i.next();
+					Float weight = (Float) e.getUserDatum( Keywords.WEIGHT_KEY );
+					if(weight == null)
+					{
+						zeroes.add(e);
+					} else {
+						sum += weight.floatValue();
+						if(sum >= limit && edge == null) edge = e;
+					}
+				}
+				checkIf( sum > 1 ,"The weight of out edges excceds 1 for " + getCurrentStateName() );	
+				if( edge == null )
+				{
+					edge = (DirectedSparseEdge) zeroes.get(random.nextInt(zeroes.size()));
+				}
+			}else{
+				edge = (DirectedSparseEdge) availableEdges.toArray()[random.nextInt(availableEdges.size())];
 			}
-			edgePath.add(availableEdges.toArray()[random.nextInt(availableEdges.size())]);
-			walkEdge((DirectedSparseEdge) edgePath.getLast());
+			edgePath.add(edge);
+			walkEdge((DirectedSparseEdge) edge);
 			length--;
 		}
-		
-		peekState();
-		
-		testSuit.add(getScriptFromPath(edgePath).toString());
-		
+
 		popState();
 		
+		testSuit.add(getScriptFromPath(edgePath).toString());
 		return (Set) testSuit;
 	}
 
@@ -246,27 +279,21 @@ public class FiniteStateMachine{
 				targetState = dsv;
 			}
 		}
-		
-		if(targetState == null)
-		{
-			throw new RuntimeException( "Destination not Found: '" + toState + "'" );
-		}
+		checkIf(targetState == null, "Destination not Found: '" + toState + "'" );
 		
 		pushState();
-		
 		calculateShortestPath( targetState );
-		
-		peekState();
+		popState();
 
 		DijkstraPoint dp = ((DijkstraPoint)targetState.getUserDatum(Keywords.DIJKSTRA));
 		testSuit.add(getScriptFromPath(dp.getShortestPath()).toString());
 		
-		popState();
 
 		return (Set) testSuit;
 	}
 	
 	protected StringBuffer getScriptFromPath(LinkedList edgePath) {
+		pushState();
 		StringBuffer path = new StringBuffer();
 		for(Iterator i = edgePath.iterator();i.hasNext();)
 		{
@@ -278,6 +305,7 @@ public class FiniteStateMachine{
 			walkEdge(nextEdge);
 			path.append(getCurrentStateName()+"\n");
 		}
+		popState();
 		return path;
 	}
 	protected void restoreModel()
@@ -329,6 +357,19 @@ public class FiniteStateMachine{
 		currentState = (DirectedSparseVertex) stateStack.pop();
 	}
 	
+	/**
+	 * @param weighted if edge weights are to be considered
+	 */
+	public void setWeighted(boolean weighted) {
+		this.weighted = weighted;
+	}
+	/**
+	 * @return true if the edge weights is considered
+	 */
+	public boolean isWeighted() {
+		return weighted;
+	}
+
 	protected class DijkstraPoint implements Comparable
 	{
 		protected LinkedList edgePath = null;
