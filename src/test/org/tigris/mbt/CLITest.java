@@ -291,7 +291,7 @@ public class CLITest extends TestCase {
     	
     	String msg = stdOutput.toString();
 		System.out.println( msg );
-		Pattern p = Pattern.compile( "Edge has a label 'BACKTRACK', .* which is a reserved keyword, in file: '.*graphml.test24.(Camera|Time).graphml'", Pattern.MULTILINE );
+		Pattern p = Pattern.compile( "Edge has a label 'BACKTRACK', which is a reserved keyword, in file: '.*graphml.test24.(Camera|Time).graphml'", Pattern.MULTILINE );
 		Matcher m = p.matcher( msg );
 		assertTrue( m.find() );
 		System.out.println( "" );

@@ -21,9 +21,6 @@ import edu.uci.ics.jung.graph.Edge;
 import edu.uci.ics.jung.graph.filters.EfficientFilter;
 import edu.uci.ics.jung.graph.filters.GeneralEdgeAcceptFilter;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.tigris.mbt.Keywords;
 
 import bsh.EvalError;
@@ -41,14 +38,19 @@ public class AccessableEdgeFilter extends GeneralEdgeAcceptFilter implements Eff
 		i = intepreter;
 	}
 
-	public boolean acceptEdge(Edge e) {
-		String label = (String)e.getUserDatum( Keywords.LABEL_KEY );
-		Pattern p = Pattern.compile("\\[(.*)\\]");
-		Matcher m = p.matcher(label);
-		if(!m.find()) return true;
-		try {
-			return ((Boolean)i.eval(m.group(1))).booleanValue();
-		} catch (EvalError e1) {
+	public boolean acceptEdge(Edge e) 
+	{
+		if ( !e.containsUserDatumKey(Keywords.GUARD_KEY) )
+		{
+			return true;
+		}
+
+		try 
+		{
+			return ((Boolean)i.eval((String)e.getUserDatum( Keywords.GUARD_KEY ))).booleanValue();
+		} 
+		catch (EvalError e1) 
+		{
 			e1.printStackTrace();
 		}
 		return false;

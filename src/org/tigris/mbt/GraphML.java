@@ -142,7 +142,7 @@ public class GraphML extends AbstractModelHandler
 	}
 	
 	/**
-	 * Parses the graphml file, and load into the internal graph structure graph
+	 * Parses the graphml file, and returns the model as a edu.uci.ics.jung.graph.impl.SparseGraph  
 	 */
 	private SparseGraph parseFile( String fileName )
 	{
@@ -386,6 +386,11 @@ public class GraphML extends AbstractModelHandler
 
 					if ( edgeLabel != null )
 					{
+						// The label of an edge has the following format:
+						//   Label Parameter [Guard] / Action1;Action2;ActionN;
+						//   Keyword
+						// Where the Label, Parameter. Guard, Actions and Keyword are optional.
+						
 						String str = edgeLabel.getText();
 						e.addUserDatum( Keywords.FULL_LABEL_KEY, str, UserData.SHARED );
 						Pattern p = Pattern.compile( "(.*)", Pattern.MULTILINE );
@@ -394,19 +399,51 @@ public class GraphML extends AbstractModelHandler
 						if ( m.find() )
 						{
 							label = m.group( 1 );
-							if ( label.length() > 0 )
+							
+							// Look for a Guard
+							Pattern firstLinePattern = Pattern.compile( "\\[(.*)\\]", Pattern.MULTILINE );
+							Matcher firstLineMatcher = firstLinePattern.matcher( label );
+							if ( firstLineMatcher.find() )
 							{
-								if ( label.matches( ".*[\\s].*" ) )
-								{
-									throw new RuntimeException( "Edge has a label '" + label + "',  '" + Util.getCompleteEdgeName( e ) + "', containing whitespaces in file: '" + fileName + "'" );
-								}
-								if ( Keywords.isKeyWord( label ) )
-								{
-									throw new RuntimeException( "Edge has a label '" + label  + "', '" + Util.getCompleteEdgeName( e ) + "', which is a reserved keyword, in file: '" + fileName + "'" );
-								}
-								e.addUserDatum( Keywords.LABEL_KEY, label, UserData.SHARED );
-								log.debug( " Found label = '" + label + "' for edge id: " + edgeLabel.getQualifiedName() );
+								String guard = firstLineMatcher.group( 1 );
+								e.addUserDatum( Keywords.GUARD_KEY, guard, UserData.SHARED );
+								log.debug( " Found guard = '" + guard + "' for edge id: " + edgeLabel.getQualifiedName() );
+							}							
+
+							// Look for Actions
+							firstLinePattern = Pattern.compile( "/\\s?([^;]+)|;([^;]+)", Pattern.MULTILINE );
+							firstLineMatcher = firstLinePattern.matcher( label );
+							Vector actions = new Vector(); 
+							while ( firstLineMatcher.find() )
+							{
+								actions.add( firstLineMatcher.group( 1 ) );
 							}
+							if ( actions.size() > 0 )
+							{
+								e.addUserDatum( Keywords.ACTIONS_KEY, actions, UserData.SHARED );
+								log.debug( " Found actions: '" + actions + "' for edge id: " + edgeLabel.getQualifiedName() );
+							}
+							
+							// Look for the Label and Parameter
+							firstLinePattern = Pattern.compile( "^(\\w+)\\s?([^\\s^/^\\[]+)?", Pattern.MULTILINE );
+							firstLineMatcher = firstLinePattern.matcher( label );
+							if ( firstLineMatcher.find() )
+							{
+								String label_key = firstLineMatcher.group( 1 );
+								if ( Keywords.isKeyWord( label_key ) )
+								{
+									throw new RuntimeException( "Edge has a label '" + label  + "', which is a reserved keyword, in file: '" + fileName + "'" );
+								}
+								e.addUserDatum( Keywords.LABEL_KEY, label_key, UserData.SHARED );
+								log.debug( " Found label = '" + label_key + "' for edge id: " + edgeLabel.getQualifiedName() );
+								
+								String parameter = firstLineMatcher.group( 2 );
+								if ( parameter != null )
+								{
+									e.addUserDatum( Keywords.PARAMETER_KEY, parameter, UserData.SHARED );
+									log.debug( " Found parameter = '" + parameter + "' for edge id: " + edgeLabel.getQualifiedName() );
+								}
+							}							
 						}
 						else
 						{

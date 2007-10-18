@@ -85,20 +85,6 @@ public class FiniteStateMachine{
 		return currentState.getOutEdges();
 	}
 	
-	protected Hashtable splitEdge(DirectedSparseEdge edge)
-	{
-		Hashtable retur = new Hashtable();
-		String label = (String) edge.getUserDatum(Keywords.LABEL_KEY);
-		int splitPosition = label.indexOf(" ");
-		if(splitPosition > 0)
-		{
-			retur.put(Keywords.PARAMETER_KEY, label.substring(splitPosition+1).trim());
-			label = label.substring(0, splitPosition).trim();
-		}
-		retur.put(Keywords.LABEL_KEY, label);
-		return retur;
-	}
-	
 	protected void setAsVisited(AbstractElement e)
 	{
 		Integer visited;
@@ -285,11 +271,10 @@ public class FiniteStateMachine{
 		for(Iterator i = edgePath.iterator();i.hasNext();)
 		{
 			DirectedSparseEdge nextEdge = (DirectedSparseEdge) i.next();
-			Hashtable labelParts = splitEdge(nextEdge);
-			String l = (String) labelParts.get(Keywords.LABEL_KEY);
-			String p = (String) labelParts.get(Keywords.PARAMETER_KEY);
+			String l = (String)nextEdge.getUserDatum( Keywords.LABEL_KEY );
+			String p = (String)nextEdge.getUserDatum( Keywords.PARAMETER_KEY );
 			
-			path.append(l + (p==null ? "" : " " + p) + "\n");
+			path.append((l==null ? "" : l) + (p==null ? "" : " " + p) + "\n");
 			walkEdge(nextEdge);
 			path.append(getCurrentStateName()+"\n");
 		}

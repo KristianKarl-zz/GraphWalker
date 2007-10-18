@@ -11,6 +11,21 @@ import junit.framework.TestCase;
 
 public class GraphMLTest extends TestCase {
 
+    // Test various types of efsm labels
+    public void testMergeEFSM_Lables()
+    {
+		System.out.println( "TEST: testMergeEFSM_Lables" );
+		System.out.println( "=======================================================================" );
+    	try
+    	{
+	    	ModelBasedTesting mbt = new ModelBasedTesting();
+	    	mbt.readGraph( "graphml/efsm_lables/testMergeEFSM_Lables.graphml" );
+    	} catch (Exception e) {
+    		System.out.println(e.getMessage());
+			fail( e.getMessage() );
+		}
+		System.out.println( "" );
+    }
     
     // Test Generating Tests
     public void test04()
@@ -112,7 +127,7 @@ public class GraphMLTest extends TestCase {
 		System.out.println( "" );
     }
     
-    
+
     // Verify that mbt reports and exits when an edge containing a whitespace (tab) is found 
     public void test13()
     {
@@ -122,13 +137,11 @@ public class GraphMLTest extends TestCase {
     	{
 	    	ModelBasedTesting mbt = new ModelBasedTesting();
 	    	mbt.readGraph( "graphml/test13" );
-	    	fail( "Missing error message" );
     	}
     	catch ( RuntimeException e)
     	{
-    		String msg = e.getMessage();
-    		System.out.println(msg);
-    		assertTrue( msg.matches( "Edge has a label '	',  ''null', INDEX=[0-9]+ \\('E', INDEX=[0-9]+ -> 'G', INDEX=[0-9]+\\)', containing whitespaces in file: '.*test13.C\\.graphml'" ) );
+    		System.out.println(e.getMessage());
+			fail( e.getMessage() );
     	}
 		System.out.println( "" );
     }
