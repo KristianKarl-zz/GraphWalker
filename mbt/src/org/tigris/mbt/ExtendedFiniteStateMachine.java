@@ -9,6 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.Stack;
+import java.util.Vector;
 
 import bsh.EvalError;
 import bsh.Interpreter;
@@ -45,10 +46,10 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 		while(i.hasNext())
 		{
 			DirectedSparseEdge edge = (DirectedSparseEdge) i.next();
-			Hashtable label = splitEdge(edge);
+
 			try {
-				if(	!label.containsKey(Keywords.GUARD_KEY) || 
-					((Boolean) interpreter.eval((String) label.get(Keywords.GUARD_KEY))).booleanValue())
+				if(	!edge.containsUserDatumKey(Keywords.GUARD_KEY) || 
+					((Boolean) interpreter.eval((String) edge.getUserDatum(Keywords.GUARD_KEY))).booleanValue())
 				{
 					retur.add(edge);
 				}
@@ -59,39 +60,6 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 		return retur;
 	}
 
-	protected Hashtable splitEdge(DirectedSparseEdge edge)
-	{
-		Hashtable retur = new Hashtable();
-		String label = ((String) edge.getUserDatum(Keywords.LABEL_KEY)).trim();
-		// Label Parameter [Guard] / Action
-		int splitPosition = label.indexOf("/");
-		if(splitPosition > 0)
-		{
-			retur.put(Keywords.ACTION_KEY, label.substring(splitPosition+1).trim());
-			label = label.substring(0, splitPosition).trim();
-		}
-		splitPosition = label.indexOf("[");
-		if(splitPosition > 0)
-		{
-			int endIndex = label.lastIndexOf("]");
-			if(endIndex > 0)
-			{
-				retur.put(Keywords.GUARD_KEY, label.substring(splitPosition+1, endIndex).trim());
-			} else {
-				throw new RuntimeException( "Malformed Edge guard: " + edge.getUserDatum(Keywords.LABEL_KEY) );
-			}
-			label = label.substring(0, splitPosition).trim();
-		}
-		splitPosition = label.indexOf(" ");
-		if(splitPosition > 0)
-		{
-			retur.put(Keywords.PARAMETER_KEY, label.substring(splitPosition+1).trim());
-			label = label.substring(0, splitPosition).trim();
-		}
-		retur.put(Keywords.LABEL_KEY, label);
-		return retur;
-	}
-	
 	private boolean hasData()
 	{
 		return interpreter.getNameSpace().getVariableNames().length > 1;
@@ -134,14 +102,21 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 	{
 		if(currentState.isSource(edge))
 		{
-			Hashtable label = splitEdge(edge);
-			if(label.containsKey(Keywords.ACTION_KEY))
+			if(edge.containsUserDatumKey(Keywords.ACTIONS_KEY))
 			{
-				try {
-					interpreter.eval((String) label.get(Keywords.ACTION_KEY));
-				} catch (EvalError e) {
-					throw new RuntimeException( "Malformed action sequence: " + e.getErrorText() );
-				}
+				Vector actions = (Vector)edge.getUserDatum(Keywords.ACTIONS_KEY);
+				for (Iterator iter = actions.iterator(); iter.hasNext();) 
+				{
+					String action = (String) iter.next();
+					if ( action != null )
+					{
+						try {
+							interpreter.eval(action);
+						} catch (EvalError e) {
+							throw new RuntimeException( "Malformed action sequence: " + e.getErrorText() );
+						}
+					}
+				}				
 			}
 			super.walkEdge(edge);
 		}

@@ -158,12 +158,13 @@ public class Keywords {
 	/**
 	* This datum contains the label action used by an edge in EFSM models.
 	*/
-	public static final String ACTION_KEY = "action";
+	public static final String ACTIONS_KEY = "action";
 
 	/**
 	* This datum contains the dijkstra object used to find the shortest path in models.
 	*/
 	public static final String DIJKSTRA = "dijkstra";
+
 
 	/**
 	* Holds the pre-defined key words

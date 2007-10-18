@@ -1,5 +1,7 @@
 package test.org.tigris.mbt;
 
+import java.util.Vector;
+
 import org.tigris.mbt.filters.AccessableEdgeFilter;
 import org.tigris.mbt.Keywords;
 
@@ -49,53 +51,57 @@ public class AccessableEdgeFilterTest extends TestCase {
 	
 	public void testAcceptEdgeEdge3() 
 	{
-		e.setUserDatum(Keywords.LABEL_KEY, "test [true]", UserData.SHARED);
+		e.setUserDatum(Keywords.LABEL_KEY, "test", UserData.SHARED);
+		e.setUserDatum(Keywords.GUARD_KEY, "true", UserData.SHARED);
 		assertEquals(true, f.acceptEdge(e));
 	}
 	
 	public void testAcceptEdgeEdge4() 
 	{
-		e.setUserDatum(Keywords.LABEL_KEY, "[true]", UserData.SHARED);
+		e.setUserDatum(Keywords.GUARD_KEY, "true", UserData.SHARED);
 		assertEquals(true, f.acceptEdge(e));
 	}
 
 	public void testAcceptEdgeEdge5() 
 	{
-		e.setUserDatum(Keywords.LABEL_KEY, "[true] / test", UserData.SHARED);
+		e.setUserDatum(Keywords.GUARD_KEY, "true", UserData.SHARED);
+		Vector actions = new Vector();
+		actions.add("test");
+		e.setUserDatum(Keywords.ACTIONS_KEY, actions, UserData.SHARED);
 		assertEquals(true, f.acceptEdge(e));
 	}
 
 	public void testAcceptEdgeEdge6() 
 	{
-		e.setUserDatum(Keywords.LABEL_KEY, "[false]", UserData.SHARED);
+		e.setUserDatum(Keywords.GUARD_KEY, "false", UserData.SHARED);
 		assertEquals(false, f.acceptEdge(e));
 	}
 	
 	public void testAcceptEdgeEdge7() throws EvalError 
 	{
 		dataStore.eval("X=false");
-		e.setUserDatum(Keywords.LABEL_KEY, "[X]", UserData.SHARED);
+		e.setUserDatum(Keywords.GUARD_KEY, "X", UserData.SHARED);
 		assertEquals(false, f.acceptEdge(e));
 	}
 
 	public void testAcceptEdgeEdge8() throws EvalError 
 	{
 		dataStore.eval("X=true");
-		e.setUserDatum(Keywords.LABEL_KEY, "[X]", UserData.SHARED);
+		e.setUserDatum(Keywords.GUARD_KEY, "X", UserData.SHARED);
 		assertEquals(true, f.acceptEdge(e));
 	}
 
 	public void testAcceptEdgeEdge9()  throws EvalError
 	{
 		dataStore.eval("X=true");
-		e.setUserDatum(Keywords.LABEL_KEY, "[X==true]", UserData.SHARED);
+		e.setUserDatum(Keywords.GUARD_KEY, "X==true", UserData.SHARED);
 		assertEquals(true, f.acceptEdge(e));
 	}
 
 	public void testAcceptEdgeEdge10()  throws EvalError
 	{
 		dataStore.eval("X=true");
-		e.setUserDatum(Keywords.LABEL_KEY, "[X==false]", UserData.SHARED);
+		e.setUserDatum(Keywords.GUARD_KEY, "X==false", UserData.SHARED);
 		assertEquals(false, f.acceptEdge(e));
 	}
 
@@ -103,7 +109,7 @@ public class AccessableEdgeFilterTest extends TestCase {
 	{
 		dataStore.eval("X=true");
 		dataStore.eval("Y=true");
-		e.setUserDatum(Keywords.LABEL_KEY, "[X==Y]", UserData.SHARED);
+		e.setUserDatum(Keywords.GUARD_KEY, "X==Y", UserData.SHARED);
 		assertEquals(true, f.acceptEdge(e));
 	}
 
@@ -111,35 +117,35 @@ public class AccessableEdgeFilterTest extends TestCase {
 	{
 		dataStore.eval("X=true");
 		dataStore.eval("Y=false");
-		e.setUserDatum(Keywords.LABEL_KEY, "[X==Y]", UserData.SHARED);
+		e.setUserDatum(Keywords.GUARD_KEY, "X==Y", UserData.SHARED);
 		assertEquals(false, f.acceptEdge(e));
 	}
 
 	public void testAcceptEdgeEdge13() throws EvalError 
 	{
 		dataStore.eval("X=5");
-		e.setUserDatum(Keywords.LABEL_KEY, "[X==5]", UserData.SHARED);
+		e.setUserDatum(Keywords.GUARD_KEY, "X==5", UserData.SHARED);
 		assertEquals(true, f.acceptEdge(e));
 	}
 
 	public void testAcceptEdgeEdge14()  throws EvalError
 	{
 		dataStore.eval("X=6");
-		e.setUserDatum(Keywords.LABEL_KEY, "[X==5]", UserData.SHARED);
+		e.setUserDatum(Keywords.GUARD_KEY, "X==5", UserData.SHARED);
 		assertEquals(false, f.acceptEdge(e));
 	}
 
 	public void testAcceptEdgeEdge15()  throws EvalError
 	{
 		dataStore.eval("X=6");
-		e.setUserDatum(Keywords.LABEL_KEY, "[X>5]", UserData.SHARED);
+		e.setUserDatum(Keywords.GUARD_KEY, "X>5", UserData.SHARED);
 		assertEquals(true, f.acceptEdge(e));
 	}
 
 	public void testAcceptEdgeEdge16()  throws EvalError
 	{
 		dataStore.eval("X=4");
-		e.setUserDatum(Keywords.LABEL_KEY, "[X<5]", UserData.SHARED);
+		e.setUserDatum(Keywords.GUARD_KEY, "X<5", UserData.SHARED);
 		assertEquals(true, f.acceptEdge(e));
 	}
 }
