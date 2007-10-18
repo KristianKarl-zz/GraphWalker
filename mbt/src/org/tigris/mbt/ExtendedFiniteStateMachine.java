@@ -1,15 +1,15 @@
 package org.tigris.mbt;
 
-import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
 import java.util.Stack;
 import java.util.Vector;
+
+import org.tigris.mbt.filters.AccessableEdgeFilter;
 
 import bsh.EvalError;
 import bsh.Interpreter;
@@ -22,58 +22,48 @@ import edu.uci.ics.jung.utils.UserData;
 public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 
 	private Interpreter interpreter = new Interpreter();
+	private AccessableEdgeFilter accessableFilter;
 	private Stack dataStack;
 	
 	public ExtendedFiniteStateMachine(SparseGraph newModel) {
 		super(newModel);
 		dataStack = new Stack();
+		accessableFilter = new AccessableEdgeFilter(interpreter);
 	}
 
 	public String getCurrentStateName()
 	{
-		String stateName = super.getCurrentStateName(); 
-		if( hasData() )
-		{
-			stateName += "/" + getCurrentDataString();
-		}
-		return stateName;
+		return super.getCurrentStateName() + (hasInternalVariables()?"/" + getCurrentDataString():"");
 	}
 
 	public Set getCurrentOutEdges()
 	{
 		HashSet retur = new HashSet();
-		Iterator i = currentState.getOutEdges().iterator();
-		while(i.hasNext())
+		for(Iterator i = currentState.getOutEdges().iterator();i.hasNext();)
 		{
 			DirectedSparseEdge edge = (DirectedSparseEdge) i.next();
-
-			try {
-				if(	!edge.containsUserDatumKey(Keywords.GUARD_KEY) || 
-					((Boolean) interpreter.eval((String) edge.getUserDatum(Keywords.GUARD_KEY))).booleanValue())
-				{
-					retur.add(edge);
-				}
-			} catch (EvalError e) {
-				throw new RuntimeException( "Malformed Edge guard: " + e.getErrorText() );
+			if(accessableFilter.acceptEdge(edge))
+			{
+				retur.add(edge);
 			}
 		}
 		return retur;
 	}
 
-	private boolean hasData()
+	private boolean hasInternalVariables()
 	{
 		return interpreter.getNameSpace().getVariableNames().length > 1;
 	}
 	
 	public Hashtable getCurrentData() {
 		Hashtable retur = new Hashtable();
-		if(!hasData()) return retur;
+		if(!hasInternalVariables()) return retur;
 
 		try {
-			List variables = Arrays.asList(interpreter.getNameSpace().getVariableNames());
-			for(int  i=0; i<variables.size(); i++)
+			String[] variables = interpreter.getNameSpace().getVariableNames();
+			for(int  i=0; i<variables.length; i++)
 			{
-				String key = (String) variables.get(i);
+				String key = variables[i];
 				if(!key.equals("bsh"))
 				{
 					retur.put(key, interpreter.get(key));
@@ -88,6 +78,7 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 	public String getCurrentDataString() 
 	{
 		String retur = "";
+		
 		Hashtable data = getCurrentData();
 		Enumeration e = data.keys();
 		while(e.hasMoreElements())

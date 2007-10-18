@@ -38,22 +38,21 @@ public class AccessableEdgeFilter extends GeneralEdgeAcceptFilter implements Eff
 		i = intepreter;
 	}
 
-	public boolean acceptEdge(Edge e) 
+	public boolean acceptEdge(Edge edge) 
 	{
-		if ( !e.containsUserDatumKey(Keywords.GUARD_KEY) )
+		if ( !edge.containsUserDatumKey(Keywords.GUARD_KEY) )
 		{
 			return true;
 		}
 
 		try 
 		{
-			return ((Boolean)i.eval((String)e.getUserDatum( Keywords.GUARD_KEY ))).booleanValue();
+			return ((Boolean)i.eval((String)edge.getUserDatum( Keywords.GUARD_KEY ))).booleanValue();
 		} 
-		catch (EvalError e1) 
+		catch (EvalError e) 
 		{
-			e1.printStackTrace();
+			throw new RuntimeException( "Malformed Edge guard: " + e.getErrorText() );
 		}
-		return false;
 	}
 
 	public String getName() {
