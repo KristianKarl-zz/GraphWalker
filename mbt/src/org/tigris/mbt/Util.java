@@ -139,12 +139,19 @@ public class Util {
 	            sourceFile.append( "          <y:LineStyle type=\"line\" width=\"1.0\" color=\"#000000\" />\n" );
 	            sourceFile.append( "          <y:Arrows source=\"none\" target=\"standard\"/>\n" );
 	            
-	            if ( e.getUserDatum( Keywords.FULL_LABEL_KEY ) != null )
+	            if ( e.containsUserDatumKey( Keywords.FULL_LABEL_KEY ) )
 	            {
+	            	String label = (String)e.getUserDatum( Keywords.FULL_LABEL_KEY );
+	            	label = label.replaceAll( "&", "&amp;" );
+	            	label = label.replaceAll( "<", "&lt;" );
+	            	label = label.replaceAll( ">", "&gt;" );
+	            	label = label.replaceAll( "'", "&apos;" );
+	            	label = label.replaceAll( "\"", "&quot;" );
+	            	
 	            	sourceFile.append( "          <y:EdgeLabel x=\"-148.25\" y=\"30.000000000000014\" width=\"169.0\" height=\"18.701171875\" " +
 	            			                         "visible=\"true\" alignment=\"center\" fontFamily=\"Dialog\" fontSize=\"12\" " +
 	            			                         "fontStyle=\"plain\" textColor=\"#000000\" modelName=\"free\" modelPosition=\"anywhere\" " +
-	            			                         "preferredPlacement=\"on_edge\" distance=\"2.0\" ratio=\"0.5\">" + e.getUserDatum( Keywords.FULL_LABEL_KEY ) + 
+	            			                         "preferredPlacement=\"on_edge\" distance=\"2.0\" ratio=\"0.5\">" + label + 
 	            			                         "&#xA;INDEX=" + e.getUserDatum( Keywords.INDEX_KEY ) + "</y:EdgeLabel>\n" );
 	            }
 	            
