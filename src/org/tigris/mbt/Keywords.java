@@ -156,7 +156,9 @@ public class Keywords {
 	public static final String GUARD_KEY = "guard";
 
 	/**
-	* This datum contains the label action used by an edge in EFSM models.
+	* This datum contains the actions used by an edge in EFSM models.
+	* The datum is the java.Util.Vector object, and each action is stored as seperate string
+	* in the vector.
 	*/
 	public static final String ACTIONS_KEY = "action";
 
