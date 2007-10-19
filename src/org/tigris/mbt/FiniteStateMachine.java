@@ -54,7 +54,7 @@ public class FiniteStateMachine{
 	protected void setState(String stateName)
 	{
 		DirectedSparseVertex e = findState(stateName);
-		checkIf(e == null, "Vertex not Found: '" + stateName + "'");
+		Util.AbortIf(e == null, "Vertex not Found: '" + stateName + "'");
 		
 		currentState = e;
 		setAsVisited(e);
@@ -77,6 +77,7 @@ public class FiniteStateMachine{
 	{
 		model = newModel;
 		stateStack = new Stack();
+		setState(Keywords.START_NODE);
 	}
 	
 	public String getCurrentStateName()
@@ -207,14 +208,6 @@ public class FiniteStateMachine{
 		return (Set) testSuit;
 	}
 
-	protected void checkIf(boolean bool, String message)
-	{
-		if(bool)
-		{
-			throw new RuntimeException( message );
-		}
-	}
-	
 	private Set getRandomPath(int length) 
 	{
 		HashSet testSuit = new HashSet();
@@ -226,7 +219,7 @@ public class FiniteStateMachine{
 		{
 			Set availableEdges = getCurrentOutEdges();
 			DirectedSparseEdge edge = null;
-			checkIf(availableEdges.size() == 0, "Found a dead end: '" + getCurrentStateName() + "'"); 
+			Util.AbortIf(availableEdges.size() == 0, "Found a dead end: '" + getCurrentStateName() + "'"); 
 			if( isWeighted() )
 			{
 				Vector zeroes = new Vector();
@@ -245,7 +238,7 @@ public class FiniteStateMachine{
 						if(sum >= limit && edge == null) edge = e;
 					}
 				}
-				checkIf( sum > 1 ,"The weight of out edges excceds 1 for " + getCurrentStateName() );	
+				Util.AbortIf( sum > 1 ,"The weight of out edges excceds 1 for " + getCurrentStateName() );	
 				if( edge == null )
 				{
 					edge = (DirectedSparseEdge) zeroes.get(random.nextInt(zeroes.size()));
@@ -279,7 +272,7 @@ public class FiniteStateMachine{
 				targetState = dsv;
 			}
 		}
-		checkIf(targetState == null, "Destination not Found: '" + toState + "'" );
+		Util.AbortIf(targetState == null, "Destination not Found: '" + toState + "'" );
 		
 		pushState();
 		calculateShortestPath( targetState );
@@ -292,16 +285,21 @@ public class FiniteStateMachine{
 		return (Set) testSuit;
 	}
 	
+	public String getEdgeName(DirectedSparseEdge edge)
+	{
+		String l = (String)edge.getUserDatum( Keywords.LABEL_KEY );
+		String p = (String)edge.getUserDatum( Keywords.PARAMETER_KEY );
+		
+		return (l==null ? "" : l) + (p==null ? "" : " " + p);
+	}
+	
 	protected StringBuffer getScriptFromPath(LinkedList edgePath) {
 		pushState();
 		StringBuffer path = new StringBuffer();
 		for(Iterator i = edgePath.iterator();i.hasNext();)
 		{
 			DirectedSparseEdge nextEdge = (DirectedSparseEdge) i.next();
-			String l = (String)nextEdge.getUserDatum( Keywords.LABEL_KEY );
-			String p = (String)nextEdge.getUserDatum( Keywords.PARAMETER_KEY );
-			
-			path.append((l==null ? "" : l) + (p==null ? "" : " " + p) + "\n");
+			path.append(getEdgeName(nextEdge)+"\n");
 			walkEdge(nextEdge);
 			path.append(getCurrentStateName()+"\n");
 		}

@@ -256,4 +256,14 @@ public class Util {
 			System.out.println();
 	    }
 	}
+
+	public static void AbortIf(boolean bool, String message)
+	{
+		if(bool)
+		{
+			throw new RuntimeException( message );
+		}
+	}
+	
+
 }
