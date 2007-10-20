@@ -869,9 +869,9 @@ public class CLI
 	
 	static private void printVersionInformation()
 	{
-		System.out.println( "org.tigris.mbt version 2.0 (r253)\n" );
+		System.out.println( "org.tigris.mbt version 2.0 (revision 291)\n" );
 		System.out.println( "org.tigris.mbt is open source software licensed under GPL" );
-		System.out.println( "The software (and it's source) can be downloaded at http://mbt.tigris.org/\n" );
+		System.out.println( "The software (and it's source) can be downloaded from http://mbt.tigris.org/\n" );
 		System.out.println( "This package contains following software packages:" );
 		System.out.println( "  crimson-1.1.3.jar            http://xml.apache.org/crimson/" );
 		System.out.println( "  commons-collections-3.1.jar  http://jakarta.apache.org/commons/collections/" );
@@ -880,5 +880,6 @@ public class CLI
 		System.out.println( "  commons-cli-1.0.jar          http://jakarta.apache.org/commons/cli/" );
 		System.out.println( "  colt-1.2.jar                 http://dsd.lbl.gov/~hoschek/colt/" );
 		System.out.println( "  jung-1.7.6.jar               http://jung.sourceforge.net/" );
+		System.out.println( "  bsh-core-2.0b4.jar           http://www.beanshell.org/" );
 	}
 }
