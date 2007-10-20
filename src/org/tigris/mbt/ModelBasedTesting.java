@@ -817,25 +817,6 @@ public class ModelBasedTesting
 		return edge;
 	}
 
-//	/**
-//	 * This functions shuffle the array, and returns the shuffled array
-//	 * @param array
-//	 * @return
-//	 */
-//	private Object[] shuffle( Object[] array )
-//	{
-//		for ( int i = 0; i < array.length; i++ )
-//		{
-//			Object leftObject = array[ i ];
-//			int index = _radomGenerator.nextInt( array.length );
-//			Object rightObject = array[ index ];
-//
-//			array[ i ]     = rightObject;
-//			array[ index ] = leftObject;
-//		}
-//		return array;
-//	}
-
 	/**
 	 * This functions returns a random element from the Set
 	 * @param Set of either edges or vertices
