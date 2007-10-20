@@ -50,6 +50,7 @@ public class FiniteStateMachine{
 	private Stack stateStack;
 	private Random random = new Random();
 	private boolean weighted = false;
+	private DirectedSparseEdge lastEdge = null;
 	
 	protected void setState(String stateName)
 	{
@@ -118,11 +119,17 @@ public class FiniteStateMachine{
 		if(currentState.isSource(edge))
 		{
 			currentState = (DirectedSparseVertex) edge.getDest();
+			lastEdge = edge;
 			setAsVisited(edge);
 			setAsVisited(currentState);
 		}
 	}
 
+	public DirectedSparseEdge getLastEdge()
+	{
+		return lastEdge;
+	}
+	
 	public String getStatisticsStringHeader()
 	{
 		return "Timestamp,Edges available,Edges covered,Vertices available,Vertices covered\n";
@@ -188,26 +195,12 @@ public class FiniteStateMachine{
 		{
 		case METHOD_RANDOMIZED:
 			return getRandomPath( Integer.parseInt(toState) );
-		case METHOD_ALL_PATHS:
-			return getAllPath( toState );			
 		case METHOD_SHORTEST_PATH:
 			return getShortestPath( toState );
 		}
 		return null;
 	}
 	
-	private Set getAllPath( String toState ) 
-	{
-		HashSet testSuit = new HashSet();
-		Stack currentPath = new Stack();
-		
-		//TODO: add allpath functionality		
-		currentPath.add("// NOT IMPLEMENTED!");
-		
-		testSuit.add(currentPath.toString());
-		return (Set) testSuit;
-	}
-
 	private Set getRandomPath(int length) 
 	{
 		HashSet testSuit = new HashSet();
