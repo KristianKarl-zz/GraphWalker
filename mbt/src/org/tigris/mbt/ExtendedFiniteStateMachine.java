@@ -4,7 +4,6 @@ import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.Set;
 import java.util.Stack;
 import java.util.Vector;
@@ -15,9 +14,7 @@ import bsh.EvalError;
 import bsh.Interpreter;
 
 import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
-import edu.uci.ics.jung.graph.impl.DirectedSparseVertex;
 import edu.uci.ics.jung.graph.impl.SparseGraph;
-import edu.uci.ics.jung.utils.UserData;
 
 public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 
@@ -113,23 +110,14 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 		}
 	}
 
-	protected void restoreModel()
-	{
-		for(Iterator i = model.getVertices().iterator();i.hasNext();)
-		{
-			DirectedSparseVertex dsv = (DirectedSparseVertex)i.next();
-			dsv.setUserDatum(Keywords.DIJKSTRA, new ExtendedDijkstraPoint(this), UserData.SHARED );
-		}
-	}
-	
-	protected void pushState()
+	public void pushState()
 	{
 		super.pushState();
 		String data = getCurrentDataString();
 		dataStack.push(data);
 	}
 
-	protected void peekState()
+	public void peekState()
 	{
 		super.peekState();
 		String data = (String) dataStack.peek();
@@ -140,7 +128,7 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 		}
 	}
 	
-	protected void popState()
+	public void popState()
 	{
 		super.popState();
 		String data = (String) dataStack.pop();
@@ -151,48 +139,4 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 		}
 	}
 	
-	protected class ExtendedDijkstraPoint extends DijkstraPoint implements Comparable
-	{
-		protected Hashtable edgePaths;
-		protected ExtendedFiniteStateMachine parent;
-		
-		public ExtendedDijkstraPoint()
-		{
-			edgePaths = new Hashtable();
-		}
-		
-		public ExtendedDijkstraPoint( ExtendedFiniteStateMachine parent) {
-			this();
-			this.parent = parent;
-		}
-
-		public void setPath( LinkedList edgePath )
-		{
-			if(edgePaths == null) edgePaths = new Hashtable();
-			edgePaths.put(parent.getCurrentDataString(), edgePath.clone()); 
-		}
-
-		public LinkedList getPath()
-		{
-			String key = parent.getCurrentDataString();
-			LinkedList localPath = (LinkedList) edgePaths.get(key);
-			if(localPath == null)
-			{
-				localPath = new LinkedList();
-				edgePaths.put(key, localPath);
-			}
-			return localPath;
-		}
-
-		public LinkedList getShortestPath()
-		{
-			LinkedList retur = null; 
-			for(Iterator i = edgePaths.values().iterator();i.hasNext();)
-			{
-				LinkedList path = (LinkedList) i.next();
-				if(retur == null || retur.size() > path.size()) retur = path;
-			}
-			return retur;
-		}
-	}
 }
