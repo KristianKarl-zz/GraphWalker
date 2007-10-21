@@ -17,15 +17,11 @@
 
 package org.tigris.mbt;
 
-import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
 import java.util.Stack;
-import java.util.Vector;
 
 import edu.uci.ics.jung.graph.impl.AbstractElement;
 import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
@@ -38,19 +34,14 @@ import edu.uci.ics.jung.utils.UserData;
  *
  */
 public class FiniteStateMachine{
-
-	public static final int METHOD_RANDOMIZED = 1;
-	public static final int METHOD_ALL_PATHS = 2;
-	public static final int METHOD_SHORTEST_PATH = 3;
-	public static final int METHOD_RANDOMIZED_WEIGHTED = 4;
 	
 	protected SparseGraph model = null;
 	protected DirectedSparseVertex currentState = null;
-	private long startTimeStamp;
 	private Stack stateStack;
-	private Random random = new Random();
+	private Stack numberOfEdgesTravesedStack;
 	private boolean weighted = false;
 	private DirectedSparseEdge lastEdge = null;
+	private int numberOfEdgesTravesed = 0;
 	
 	protected void setState(String stateName)
 	{
@@ -78,12 +69,32 @@ public class FiniteStateMachine{
 	{
 		model = newModel;
 		stateStack = new Stack();
+		numberOfEdgesTravesedStack = new Stack();
 		setState(Keywords.START_NODE);
 	}
 	
+	public DirectedSparseVertex getCurrentState() {
+		return currentState;
+	}
+
 	public String getCurrentStateName()
 	{
-		return (String) currentState.getUserDatum(Keywords.LABEL_KEY);
+		return getStateName(currentState);
+	}
+	
+	public Set getAllStates()
+	{
+		return model.getVertices();
+	}
+	
+	public Set getAllEdges()
+	{
+		return model.getEdges();
+	}
+	
+	public String getStateName(DirectedSparseVertex state)
+	{
+		return (String) state.getUserDatum(Keywords.LABEL_KEY);
 	}
 	
 	public Set getCurrentOutEdges()
@@ -122,6 +133,7 @@ public class FiniteStateMachine{
 			lastEdge = edge;
 			setAsVisited(edge);
 			setAsVisited(currentState);
+			numberOfEdgesTravesed++;
 		}
 	}
 
@@ -138,7 +150,7 @@ public class FiniteStateMachine{
 	public String getStatisticsString()
 	{
 		Hashtable stats = getStatistics();
-		String retur = ( System.currentTimeMillis() - startTimeStamp ) + 
+		String retur = System.currentTimeMillis() + 
 			"," + stats.get("Edges") + 
 			"," + stats.get("Edges covered") +
 			"," + stats.get("Vertices") + 
@@ -182,102 +194,6 @@ public class FiniteStateMachine{
 		return unique;
 	}
 	
-	public Set getPath(int method, String fromState, String toState)
-	{
-		setState(fromState);
-		return getPath(method, toState);
-	}
-
-	public Set getPath(int method, String toState)
-	{
-		startTimeStamp = System.currentTimeMillis();
-		switch(method)
-		{
-		case METHOD_RANDOMIZED:
-			return getRandomPath( Integer.parseInt(toState) );
-		case METHOD_SHORTEST_PATH:
-			return getShortestPath( toState );
-		}
-		return null;
-	}
-	
-	private Set getRandomPath(int length) 
-	{
-		HashSet testSuit = new HashSet();
-		LinkedList edgePath = new LinkedList();
-
-		pushState();
-		
-		while(length>0)
-		{
-			Set availableEdges = getCurrentOutEdges();
-			DirectedSparseEdge edge = null;
-			Util.AbortIf(availableEdges.size() == 0, "Found a dead end: '" + getCurrentStateName() + "'"); 
-			if( isWeighted() )
-			{
-				Vector zeroes = new Vector();
-				float sum = 0;
-				float limit = random.nextFloat();
-
-				for ( Iterator i = availableEdges.iterator(); i.hasNext();)
-				{
-					DirectedSparseEdge e = (DirectedSparseEdge)i.next();
-					Float weight = (Float) e.getUserDatum( Keywords.WEIGHT_KEY );
-					if(weight == null)
-					{
-						zeroes.add(e);
-					} else {
-						sum += weight.floatValue();
-						if(sum >= limit && edge == null) edge = e;
-					}
-				}
-				Util.AbortIf( sum > 1 ,"The weight of out edges excceds 1 for " + getCurrentStateName() );	
-				if( edge == null )
-				{
-					edge = (DirectedSparseEdge) zeroes.get(random.nextInt(zeroes.size()));
-				}
-			}else{
-				edge = (DirectedSparseEdge) availableEdges.toArray()[random.nextInt(availableEdges.size())];
-			}
-			edgePath.add(edge);
-			walkEdge((DirectedSparseEdge) edge);
-			length--;
-		}
-
-		popState();
-		
-		testSuit.add(getScriptFromPath(edgePath).toString());
-		return (Set) testSuit;
-	}
-
-	protected Set getShortestPath( String toState )
-	{
-		HashSet testSuit = new HashSet();
-		// Clear up model..
-		restoreModel();
-		
-		DirectedSparseVertex targetState = null;
-		for(Iterator i = model.getVertices().iterator();i.hasNext();)
-		{
-			DirectedSparseVertex dsv = (DirectedSparseVertex)i.next();
-			if(((String)dsv.getUserDatum(Keywords.LABEL_KEY)).equals(toState))
-			{
-				targetState = dsv;
-			}
-		}
-		Util.AbortIf(targetState == null, "Destination not Found: '" + toState + "'" );
-		
-		pushState();
-		calculateShortestPath( targetState );
-		popState();
-
-		DijkstraPoint dp = ((DijkstraPoint)targetState.getUserDatum(Keywords.DIJKSTRA));
-		testSuit.add(getScriptFromPath(dp.getShortestPath()).toString());
-		
-
-		return (Set) testSuit;
-	}
-	
 	public String getEdgeName(DirectedSparseEdge edge)
 	{
 		String l = (String)edge.getUserDatum( Keywords.LABEL_KEY );
@@ -286,66 +202,22 @@ public class FiniteStateMachine{
 		return (l==null ? "" : l) + (p==null ? "" : " " + p);
 	}
 	
-	protected StringBuffer getScriptFromPath(LinkedList edgePath) {
-		pushState();
-		StringBuffer path = new StringBuffer();
-		for(Iterator i = edgePath.iterator();i.hasNext();)
-		{
-			DirectedSparseEdge nextEdge = (DirectedSparseEdge) i.next();
-			path.append(getEdgeName(nextEdge)+"\n");
-			walkEdge(nextEdge);
-			path.append(getCurrentStateName()+"\n");
-		}
-		popState();
-		return path;
-	}
-	protected void restoreModel()
-	{
-		for(Iterator i = model.getVertices().iterator();i.hasNext();)
-		{
-			DirectedSparseVertex dsv = (DirectedSparseVertex)i.next();
-			dsv.setUserDatum(Keywords.DIJKSTRA, new DijkstraPoint(), UserData.SHARED );
-		}
-	}
-	
-	private void calculateShortestPath( DirectedSparseVertex toState )
-	{
-		DijkstraPoint dp = ((DijkstraPoint)currentState.getUserDatum(Keywords.DIJKSTRA));
-		LinkedList edgePath = (LinkedList) dp.getPath().clone();
-		Set oe = getCurrentOutEdges();
-		for(Iterator i = oe.iterator();i.hasNext();)
-		{
-			DirectedSparseEdge e = (DirectedSparseEdge)i.next();
-			edgePath.add(e);
-			pushState();
-			walkEdge(e);
-			DijkstraPoint nextDp = ((DijkstraPoint)currentState.getUserDatum(Keywords.DIJKSTRA));
-			if(nextDp.compareTo(edgePath)>0)
-			{
-				nextDp.setPath(edgePath);
-				if(!currentState.equals(toState))
-				{
-					calculateShortestPath( toState );
-				}
-			}
-			popState();
-			edgePath.removeLast();
-		}
-	}
-	
-	protected void pushState()
+	public void pushState()
 	{
 		stateStack.push(currentState);
+		numberOfEdgesTravesedStack.push(new Integer(numberOfEdgesTravesed));
 	}
 	
-	protected void peekState()
+	public void peekState()
 	{
 		currentState = (DirectedSparseVertex) stateStack.peek();
+		numberOfEdgesTravesed = ((Integer)numberOfEdgesTravesedStack.peek()).intValue(); 
 	}
 
-	protected void popState()
+	public void popState()
 	{
 		currentState = (DirectedSparseVertex) stateStack.pop();
+		numberOfEdgesTravesed = ((Integer)numberOfEdgesTravesedStack.pop()).intValue(); 
 	}
 	
 	/**
@@ -361,46 +233,11 @@ public class FiniteStateMachine{
 		return weighted;
 	}
 
-	protected class DijkstraPoint implements Comparable
-	{
-		protected LinkedList edgePath = null;
-		
-		public DijkstraPoint()
-		{
-		}
-		
-		public void setPath( LinkedList edgePath )
-		{
-			this.edgePath = (LinkedList) edgePath.clone();
-		}
-
-		public LinkedList getPath()
-		{
-			if(edgePath==null)edgePath = new LinkedList();
-			return edgePath;
-		}
-
-		public LinkedList getShortestPath()
-		{
-			if(edgePath==null)edgePath = new LinkedList();
-			return edgePath;
-		}
-
-		public int compareTo(Object o) {
-			int a = getPath().size();
-			if(a==0) return 1;
-			int b = 0;
-			if(o instanceof LinkedList)
-			{
-				b = ((LinkedList)o).size();
-			} else {
-				b = ((DijkstraPoint)o).getPath().size();
-			}
-		
-			return a-b;
-		}
-		
-		
+	/**
+	 * @return the number of edges traversed
+	 */
+	public int getNumberOfEdgesTravesed() {
+		return numberOfEdgesTravesed;
 	}
 }
 

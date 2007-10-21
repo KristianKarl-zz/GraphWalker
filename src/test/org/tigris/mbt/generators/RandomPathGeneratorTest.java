@@ -9,6 +9,7 @@ import org.tigris.mbt.conditions.EdgeCoverage;
 import org.tigris.mbt.conditions.ReachedEdge;
 import org.tigris.mbt.conditions.ReachedState;
 import org.tigris.mbt.conditions.StateCoverage;
+import org.tigris.mbt.conditions.TestCaseLength;
 import org.tigris.mbt.conditions.TimeDuration;
 import org.tigris.mbt.generators.RandomPathGenerator;
 import org.tigris.mbt.generators.PathGenerator;
@@ -198,6 +199,21 @@ public class RandomPathGeneratorTest extends TestCase {
 		FiniteStateMachine FSM = new FiniteStateMachine(gml.getModel());
 		FSM.setWeighted(false);
 		PathGenerator pathGenerator = new RandomPathGenerator(FSM, new ReachedEdge(FSM, "S4_1_10") );
+		while(pathGenerator.hasNext())
+		{
+			String[] stepPair = pathGenerator.getNext();
+			System.out.println("call( "+ stepPair[0] + " ) then verify( " + stepPair[1] + " )" );
+		}
+		System.out.println("==============================");
+    }
+
+	public void test_FSM_RandomGenerationTestCaseLength()
+    {
+		GraphML gml = new GraphML();
+		gml.load("graphml/weight/FSM.graphml");
+		FiniteStateMachine FSM = new FiniteStateMachine(gml.getModel());
+		FSM.setWeighted(false);
+		PathGenerator pathGenerator = new RandomPathGenerator(FSM, new TestCaseLength(FSM, 5));
 		while(pathGenerator.hasNext())
 		{
 			String[] stepPair = pathGenerator.getNext();
