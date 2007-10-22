@@ -21,7 +21,6 @@ public class RandomPathGenerator extends PathGenerator {
 	}
 
 	public String[] getNext() {
-		Util.AbortIf(!hasNext(), "No more lines available");
 		Set availableEdges = machine.getCurrentOutEdges();
 		Util.AbortIf(availableEdges.size() == 0, "Found a dead end: '" + machine.getCurrentStateName() + "'"); 
 		DirectedSparseEdge edge = (machine.isWeighted() ? getWeightedEdge(availableEdges) : getRandomEdge(availableEdges));
