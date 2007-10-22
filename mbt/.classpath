@@ -31,9 +31,13 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="lib/jung-1.7.6.jar">
 		<attributes>
-			<attribute name="javadoc_location" value="http://jung.sourceforge.net/doc/api/index.html"/>
+			<attribute name="javadoc_location" value="http://jung.sourceforge.net/doc/api/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/bsh-core-2.0b4.jar"/>
+	<classpathentry kind="lib" path="lib/bsh-core-2.0b4.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="http://www.beanshell.org/javadoc/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
