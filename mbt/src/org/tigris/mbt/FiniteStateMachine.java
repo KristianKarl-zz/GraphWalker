@@ -19,7 +19,6 @@ package org.tigris.mbt;
 
 import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 import java.util.Stack;
 
@@ -42,6 +41,7 @@ public class FiniteStateMachine{
 	private boolean weighted = false;
 	private DirectedSparseEdge lastEdge = null;
 	private int numberOfEdgesTravesed = 0;
+	private boolean backtracking = false;
 	
 	protected void setState(String stateName)
 	{
@@ -117,16 +117,9 @@ public class FiniteStateMachine{
 		e.setUserDatum( Keywords.VISITED_KEY, visited, UserData.SHARED );
 	}
 	
-	public void walkEdge(List edges)
-	{
-		for(Iterator i = edges.iterator();i.hasNext();)
-		{
-			walkEdge( (DirectedSparseEdge) i.next());
-		}
-	}
-	
 	public void walkEdge(DirectedSparseEdge edge)
 	{
+		// TODO add backtracking by pushing states
 		if(currentState.isSource(edge))
 		{
 			currentState = (DirectedSparseVertex) edge.getDest();
@@ -238,6 +231,11 @@ public class FiniteStateMachine{
 	 */
 	public int getNumberOfEdgesTravesed() {
 		return numberOfEdgesTravesed;
+	}
+
+	public void enableBacktrack(boolean backtracking) {
+		this.backtracking  = backtracking;
+		
 	}
 }
 

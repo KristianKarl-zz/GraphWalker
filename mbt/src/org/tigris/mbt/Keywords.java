@@ -166,7 +166,26 @@ public class Keywords {
 	* This datum contains the dijkstra object used to find the shortest path in models.
 	*/
 	public static final String DIJKSTRA = "dijkstra";
+	
+	public static final int CONDITION_REACHED_EDGE = 1001;
 
+	public static final int CONDITION_REACHED_STATE = 1002;
+
+	public static final int CONDITION_EDGE_COVERAGE = 1003;
+
+	public static final int CONDITION_STATE_COVERAGE = 1004;
+
+	public static final int CONDITION_TEST_LENGTH = 1005;
+
+	public static final int CONDITION_TEST_DURATION = 1006;
+
+	public static final int GENERATOR_RANDOM = 2001;
+
+	public static final int GENERATOR_SHORTEST = 2002;
+
+	public static final int GENERATOR_LIST = 2003;
+
+	public static final int GENERATOR_STUB = 2004;
 
 	/**
 	* Holds the pre-defined key words
