@@ -34,6 +34,17 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.apache.log4j.SimpleLayout;
 import org.apache.log4j.WriterAppender;
+import org.tigris.mbt.conditions.CombinationalCondition;
+import org.tigris.mbt.conditions.EdgeCoverage;
+import org.tigris.mbt.conditions.ReachedEdge;
+import org.tigris.mbt.conditions.ReachedState;
+import org.tigris.mbt.conditions.StateCoverage;
+import org.tigris.mbt.conditions.StopCondition;
+import org.tigris.mbt.conditions.TestCaseLength;
+import org.tigris.mbt.conditions.TimeDuration;
+import org.tigris.mbt.generators.PathGenerator;
+import org.tigris.mbt.generators.RandomPathGenerator;
+import org.tigris.mbt.generators.ShortestPathGenerator;
 
 import edu.uci.ics.jung.algorithms.shortestpath.DijkstraShortestPath;
 import edu.uci.ics.jung.graph.impl.AbstractElement;
@@ -69,6 +80,12 @@ public class ModelBasedTesting
 	private boolean				 	_cul_de_sac = false;
 	private List				 	_shortestPathToVertex = null ;
 	private int						_latestNumberOfUnvisitedEdges;
+	private StopCondition condition;
+	private FiniteStateMachine machine;
+	private PathGenerator generator;
+	private String stubTemplate;
+	private AbstractModelHandler modelHandler;
+	private boolean backtracking;
  	
 	public ModelBasedTesting( String graphmlFileName_,
 			  				  Object object_ )
@@ -103,17 +120,6 @@ public class ModelBasedTesting
 	public ModelBasedTesting()
 	{
 		this("",null);
-	}
-	
-	public void readGraph( String graphmlFileName_ )
-	{
-		GraphML graphML = new GraphML();
-		graphML.load( graphmlFileName_ );
-		_graph = graphML.getModel();
-		if ( is_cul_de_sac() )
-		{
-			searchForCulDeSacs();
-		}		
 	}
 	
 	public void initialize( String graphmlFileName, boolean randomWalk, long executionTime )
@@ -928,5 +934,151 @@ public class ModelBasedTesting
 			}
 		}
 		return (numOfVisitedVertices / (float)vertices.length * 100);
+	}
+// 
+//	************************************************************************************
+//	***********************************              ***********************************
+//	***********************************   NEW CODE   ***********************************
+//	***********************************              ***********************************
+//	************************************************************************************
+//
+
+	public void addCondition(int conditionType, String conditionValue) 
+	{
+		StopCondition condition = null;
+		switch (conditionType) {
+		case Keywords.CONDITION_EDGE_COVERAGE:
+			condition = new EdgeCoverage(getMachine(), Double.parseDouble(conditionValue));
+			break;
+		case Keywords.CONDITION_REACHED_EDGE:
+			condition = new ReachedEdge(getMachine(), conditionValue);
+			break;
+		case Keywords.CONDITION_REACHED_STATE:
+			condition = new ReachedState(getMachine(), conditionValue);
+			break;
+		case Keywords.CONDITION_STATE_COVERAGE:
+			condition = new StateCoverage(getMachine(), Double.parseDouble(conditionValue));
+			break;
+		case Keywords.CONDITION_TEST_DURATION:
+			condition = new TimeDuration(Long.parseLong(conditionValue));
+			break;
+		case Keywords.CONDITION_TEST_LENGTH:
+			condition = new TestCaseLength(getMachine(), Integer.parseInt(conditionValue));
+			break;
+		}
+		
+		Util.AbortIf(condition == null , "Unsupported stop condition selected: "+ conditionType);
+		
+		if(	this.condition == null )
+		{
+			this.condition = condition;
+		}
+		else
+		{
+			if(!(this.condition instanceof CombinationalCondition))
+			{
+				StopCondition old= this.condition;
+				this.condition = new CombinationalCondition();
+				((CombinationalCondition)this.condition).add(old);
+			}
+			((CombinationalCondition)this.condition).add(condition);
+		}
+	}
+
+	private StopCondition getCondition()
+	{
+		return this.condition;
+	}
+
+	private FiniteStateMachine getMachine() 
+	{
+		return this.machine;
+	}
+
+	private void setMachine(FiniteStateMachine machine) 
+	{
+		this.machine = machine;
+	}
+
+	public void enableExtended(boolean extended) 
+	{
+		if(extended)
+		{
+			setMachine( new ExtendedFiniteStateMachine(getGraph()) );
+		}
+		else
+		{
+			setMachine( new FiniteStateMachine(getGraph()) );
+		}
+	}
+
+	public void setGenerator(int generatorType) {
+		switch (generatorType) {
+		case Keywords.GENERATOR_RANDOM:
+			this.generator = new RandomPathGenerator(getMachine(), getCondition() );
+			break;
+		case Keywords.GENERATOR_SHORTEST:
+			this.generator = new ShortestPathGenerator(getMachine(), getCondition());
+			break;
+		case Keywords.GENERATOR_STUB:
+			this.generator = null;
+			break;
+		case Keywords.GENERATOR_LIST:
+			this.generator = null;
+			break;
+		}
+		Util.AbortIf(this.generator == null, "Not implemented yet!");
+	}
+	
+	private PathGenerator getGenerator()
+	{
+		return this.generator;
+	}
+
+	public boolean hasNextStep() {
+		Util.AbortIf(getGenerator() == null, "No generator has been defined!");
+		return getGenerator().hasNext();
+	}
+
+	public String[] getNextStep() {
+		Util.AbortIf(getGenerator() == null, "No generator has been defined!");
+		return getGenerator().getNext();
+	}
+
+	public void backtrack() {
+		Util.AbortIf(!this.backtracking, "Backtracking has not been enabled");
+		getMachine().popState();
+	}
+
+	public void readGraph( String graphmlFileName )
+	{
+		if(this.modelHandler == null)
+		{
+			this.modelHandler = new GraphML(); 
+		}
+		this.modelHandler.load( graphmlFileName );
+	}
+
+	public void writeModel(String value) {
+		this.modelHandler.save(value);
+	}
+
+	public void setLogCoverageInterval(String value) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void enableBacktrack(boolean backtracking) {
+		this.backtracking = backtracking;
+		getMachine().enableBacktrack(backtracking);
+	}
+
+	public void ignoreDeadEnds(boolean true1) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void setTemplate(String value) {
+		this.stubTemplate = value;
 	}
 }

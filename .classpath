@@ -39,5 +39,6 @@
 			<attribute name="javadoc_location" value="http://www.beanshell.org/javadoc/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="lib/jcmdline-1.0.3.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
