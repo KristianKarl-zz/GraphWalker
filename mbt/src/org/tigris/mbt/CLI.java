@@ -97,29 +97,29 @@ public class CLI
             new BooleanParam("extended", "Use an extended finite state machine to handle the model.");
         BooleanParam onlineOpt = 
             new BooleanParam("online", "Run the test interactively. The test sequence will be generated " + 
-            		"one line at a time and then wait until a response is fed back via standard input. " +
+            		"two lines at a time (transaction and verification) and then wait until a response is fed back via standard input. " +
             		"The data fed back can be:\n" +
 					"  '0' which means, continue the test as normal\n" +
 					"  '1' which means go back to previous vertex (backtracking)\n" +
 					"  '2' will end the test normally\n" +
-					"anything else will abort the execution.");
+					"anything else will be ignored.");
         
         StringParam reachedEdgeConditionOpt =
         	new StringParam("end-edge", "Halts generation after the specified edge has been traversed.");
         StringParam reachedStateConditionOpt =
         	new StringParam("end-state", "Halts generation after the specified state has been reached.");
         IntParam edgeCoverageConditionOpt =
-        	new IntParam("end-edge-coverage", "Halts generation after the specified edge-coverage has been met.");
+        	new IntParam("end-edge-coverage", "Halts generation after the specified edge-coverage has been met.",0,100);
         IntParam stateCoverageConditionOpt =
-        	new IntParam("end-state-coverage", "Halts generation after the specified state-coverage has been met.");
+        	new IntParam("end-state-coverage", "Halts generation after the specified state-coverage has been met.",0,100);
         IntParam testLengthConditionOpt =
-        	new IntParam("end-length", "Halts generation after the specified script length has been reached.");
+        	new IntParam("end-length", "Halts generation after the specified script length has been reached.",0,Integer.MAX_VALUE);
         IntParam testDurationConditionOpt =
-        	new IntParam("end-duration", "Halts generation after the specified duration in seconds has been reached.");
+        	new IntParam("end-duration", "Halts generation after the specified duration in seconds has been reached.",0,Integer.MAX_VALUE);
         IntParam logCoverageOpt =
         	new IntParam("log-coverage", "Prints the test coverage of the graph during execution every <n>. " +
         			"The printout goes to the log file defined in mbt.properties, " + 
-        			"and only, if at least INFO level is set in that same file." );
+        			"and only, if at least INFO level is set in that same file.",0,Integer.MAX_VALUE );
 
         CmdLineHandler commandLine =
             new VersionCmdLineHandler(version,
@@ -130,7 +130,7 @@ public class CLI
   				// TODO Insert more CLI usage text and add examples.
   				"<INSERT MORE USAGE TEXT AND EXAMPLES HERE>\n" +
   				"<INSERT MORE USAGE TEXT AND EXAMPLES HERE>\n" +
-  				"<INSERT MORE USAGE TEXT AND EXAMPLES HERE>\n" +
+  				"<INSERT MORE USAGE TEXT AND EXAMPLES HERE>\n\n" +
 
   				"org.tigris.mbt is open source software licensed under GPL\n" +
   				"The software (and it's source) can be downloaded at http://mbt.tigris.org/\n\n" +
@@ -240,6 +240,7 @@ public class CLI
 		
 		if(onlineOpt.isTrue())
 		{
+			
 			while(mbt.hasNextStep())
 			{
 				char input = getInput(); 
@@ -284,11 +285,15 @@ public class CLI
 	private static char getInput() 
 	{
 		char c = 0; 
-		try {
-			 int tmp = System.in.read ();
-			   c = (char) tmp;
-			 }
-			 catch (IOException e) {}
+		try 
+		{
+			while(c != '0' && c != '1' && c != '2')
+			{
+				int tmp = System.in.read ();
+				c = (char) tmp;
+			}
+		}
+		catch (IOException e) {}
 		return c;
 	}
 }
