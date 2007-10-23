@@ -450,13 +450,6 @@ public class ModelBasedTesting
 	}
 
 	/**
-	 * Return the instance of the graph
-	 */
-	public SparseGraph getGraph() {
-		return _graph;
-	}
-
-	/**
 	 * Return the logger
 	 */
 	public Logger getLogger() {
@@ -948,7 +941,7 @@ public class ModelBasedTesting
 		StopCondition condition = null;
 		switch (conditionType) {
 		case Keywords.CONDITION_EDGE_COVERAGE:
-			condition = new EdgeCoverage(getMachine(), Double.parseDouble(conditionValue));
+			condition = new EdgeCoverage(getMachine(), Double.parseDouble(conditionValue)/100);
 			break;
 		case Keywords.CONDITION_REACHED_EDGE:
 			condition = new ReachedEdge(getMachine(), conditionValue);
@@ -957,7 +950,7 @@ public class ModelBasedTesting
 			condition = new ReachedState(getMachine(), conditionValue);
 			break;
 		case Keywords.CONDITION_STATE_COVERAGE:
-			condition = new StateCoverage(getMachine(), Double.parseDouble(conditionValue));
+			condition = new StateCoverage(getMachine(), Double.parseDouble(conditionValue)/100);
 			break;
 		case Keywords.CONDITION_TEST_DURATION:
 			condition = new TimeDuration(Long.parseLong(conditionValue));
@@ -998,6 +991,13 @@ public class ModelBasedTesting
 	private void setMachine(FiniteStateMachine machine) 
 	{
 		this.machine = machine;
+	}
+
+	/**
+	 * Return the instance of the graph
+	 */
+	public SparseGraph getGraph() {
+		return this.modelHandler.getModel();
 	}
 
 	public void enableExtended(boolean extended) 

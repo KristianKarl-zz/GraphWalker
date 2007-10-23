@@ -45,6 +45,7 @@ public class FiniteStateMachine{
 	
 	protected void setState(String stateName)
 	{
+		System.out.print(model.getEdges().size());
 		DirectedSparseVertex e = findState(stateName);
 		Util.AbortIf(e == null, "Vertex not Found: '" + stateName + "'");
 		
