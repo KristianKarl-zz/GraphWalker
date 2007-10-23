@@ -414,15 +414,11 @@ public class GraphML extends AbstractModelHandler
 							if(label.indexOf("/")>0)
 							{
 								String actionPart = label.substring(label.indexOf("/")+1);
-								firstLinePattern = Pattern.compile( "[^;]+", Pattern.MULTILINE );
+								firstLinePattern = Pattern.compile( ".*$", Pattern.MULTILINE );
 								firstLineMatcher = firstLinePattern.matcher( actionPart );
-								Vector actions = new Vector(); 
-								while ( firstLineMatcher.find() )
+								if ( firstLineMatcher.find() )
 								{
-									actions.add( firstLineMatcher.group( 0 ).trim() );
-								}
-								if ( actions.size() > 0 )
-								{
+									String actions = firstLineMatcher.group( 0 ).trim();
 									e.addUserDatum( Keywords.ACTIONS_KEY, actions, UserData.SHARED );
 									log.debug( " Found actions: '" + actions + "' for edge id: " + edgeLabel.getQualifiedName() );
 								}
