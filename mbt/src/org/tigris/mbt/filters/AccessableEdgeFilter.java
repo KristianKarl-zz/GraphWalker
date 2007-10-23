@@ -20,8 +20,11 @@ package org.tigris.mbt.filters;
 import edu.uci.ics.jung.graph.Edge;
 import edu.uci.ics.jung.graph.filters.EfficientFilter;
 import edu.uci.ics.jung.graph.filters.GeneralEdgeAcceptFilter;
+import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
 
+import org.apache.log4j.Logger;
 import org.tigris.mbt.Keywords;
+import org.tigris.mbt.Util;
 
 import bsh.EvalError;
 import bsh.Interpreter;
@@ -32,6 +35,8 @@ import bsh.Interpreter;
  */
 public class AccessableEdgeFilter extends GeneralEdgeAcceptFilter implements EfficientFilter
 {
+	static Logger logger = Logger.getLogger(AccessableEdgeFilter.class);
+	
 	private Interpreter i;
 	public AccessableEdgeFilter(Interpreter intepreter) {
 		super();
@@ -51,6 +56,8 @@ public class AccessableEdgeFilter extends GeneralEdgeAcceptFilter implements Eff
 		} 
 		catch (EvalError e) 
 		{
+			logger.error(e);
+			logger.error( Util.getCompleteEdgeName( (DirectedSparseEdge)edge ) );
 			throw new RuntimeException( "Malformed Edge guard: " + e.getErrorText() );
 		}
 	}

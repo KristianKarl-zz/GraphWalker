@@ -8,6 +8,7 @@ import java.util.Set;
 import java.util.Stack;
 import java.util.Vector;
 
+import org.apache.log4j.Logger;
 import org.tigris.mbt.filters.AccessableEdgeFilter;
 
 import bsh.EvalError;
@@ -18,6 +19,8 @@ import edu.uci.ics.jung.graph.impl.SparseGraph;
 
 public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 
+	static Logger logger = Logger.getLogger(ExtendedFiniteStateMachine.class);
+	
 	private Interpreter interpreter = new Interpreter();
 	private AccessableEdgeFilter accessableFilter;
 	private Stack dataStack;
@@ -92,19 +95,14 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 		{
 			if(edge.containsUserDatumKey(Keywords.ACTIONS_KEY))
 			{
-				Vector actions = (Vector)edge.getUserDatum(Keywords.ACTIONS_KEY);
-				for (Iterator iter = actions.iterator(); iter.hasNext();) 
-				{
-					String action = (String) iter.next();
-					if ( action != null )
-					{
-						try {
-							interpreter.eval(action);
-						} catch (EvalError e) {
-							throw new RuntimeException( "Malformed action sequence: " + e.getErrorText() );
-						}
-					}
-				}				
+				String actions = (String)edge.getUserDatum(Keywords.ACTIONS_KEY);
+				try {
+					interpreter.eval(actions);
+				} catch (EvalError e) {
+					logger.error(e);
+					logger.error( Util.getCompleteEdgeName( edge ) );
+					throw new RuntimeException( "Malformed action sequence: " + e.getErrorText() );
+				}
 			}
 			super.walkEdge(edge);
 		}
