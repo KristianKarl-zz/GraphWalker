@@ -73,7 +73,7 @@ public class ModelBasedTesting
 	private Vector 			     	_pathHistory  = new Vector();
 	private boolean 				_randomWalk;
 	private long 					_executionTime = 0;
-	private long				 	_start_time;
+	private long				 	_start_time = System.currentTimeMillis();
 	private long				 	_end_time     = 0;
 	private boolean				 	_runUntilAllEdgesVisited = false;
 	private boolean				 	_backtracking = false;
@@ -391,8 +391,8 @@ public class ModelBasedTesting
 		String stat = new String();
 		String new_line = new String( "\n" );
 
-		Object[] vertices = _graph.getVertices().toArray();
-		Object[] edges    = _graph.getEdges().toArray();
+		Object[] vertices = this.modelHandler.graph.getVertices().toArray();
+		Object[] edges    = this.modelHandler.graph.getEdges().toArray();
 
 		int numOfVisitedVertices      = 0;
 		int numOfVisitedEdges         = 0;
