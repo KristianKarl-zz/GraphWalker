@@ -6,6 +6,11 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Iterator;
 
+import org.apache.log4j.Logger;
+import org.tigris.mbt.filters.AccessableEdgeFilter;
+
+import edu.uci.ics.jung.graph.impl.SparseGraph;
+
 import jcmdline.BooleanParam;
 import jcmdline.CmdLineHandler;
 import jcmdline.FileParam;
@@ -36,12 +41,31 @@ import jcmdline.VersionCmdLineHandler;
  */
 public class CLI 
 {
+	static Logger logger = Logger.getLogger(CLI.class);
+
 	private static String cmdLineSyntax = "java -jar mbt.jar";
 	private static String version = "2.0";
+	private ModelBasedTesting mbt = new ModelBasedTesting();
+	
+	public CLI()
+	{
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			public void run() {
+				logger.info( mbt.getStatistics() );
+			}
+		});
+	}
 	
 	public static void main(String[] args)
 	{
-	       // command line arguments
+		CLI cli = new CLI();
+		cli.run( args );
+	}
+
+	public void run(String[] args)
+	{
+
+	    // command line arguments
         FileParam modelParam =
             new FileParam("model",
                           "the GraphML model or directory of GraphML files to be processed",
@@ -159,7 +183,6 @@ public class CLI
         
         commandLine.parse(args);
         
-        ModelBasedTesting mbt = new ModelBasedTesting();
         for(Iterator i = modelParam.getValues().iterator();i.hasNext();)
         {
         	mbt.readGraph((String) i.next());
