@@ -22,6 +22,9 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.Stack;
 
+import org.apache.log4j.Logger;
+import org.tigris.mbt.filters.AccessableEdgeFilter;
+
 import edu.uci.ics.jung.graph.impl.AbstractElement;
 import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
 import edu.uci.ics.jung.graph.impl.SparseGraph;
@@ -34,6 +37,8 @@ import edu.uci.ics.jung.utils.UserData;
  */
 public class FiniteStateMachine{
 	
+	static Logger logger = Logger.getLogger(FiniteStateMachine.class);
+
 	protected SparseGraph model = null;
 	protected DirectedSparseVertex currentState = null;
 	private Stack stateStack;
@@ -45,7 +50,7 @@ public class FiniteStateMachine{
 	
 	protected void setState(String stateName)
 	{
-		System.out.print(model.getEdges().size());
+		logger.debug("Total number of edges in the model: " + String.valueOf(model.getEdges().size()));
 		DirectedSparseVertex e = findState(stateName);
 		Util.AbortIf(e == null, "Vertex not Found: '" + stateName + "'");
 		
