@@ -1,7 +1,5 @@
 package org.tigris.mbt.conditions;
 
-import java.util.Hashtable;
-
 import org.tigris.mbt.FiniteStateMachine;
 
 public class StateCoverage implements StopCondition {
@@ -16,9 +14,9 @@ public class StateCoverage implements StopCondition {
 	}
 	
 	public boolean isFulfilled() {
-		Hashtable stats = machine.getStatistics();
-		double edges = ((Integer)stats.get("Vertices")).doubleValue();
-		double covered = ((Integer)stats.get("Vertices covered")).doubleValue();
+		int stats[] = machine.getStatistics();
+		double edges = stats[2];
+		double covered = stats[3];
 		return (covered/edges) >= limit;
 	}
 

@@ -17,13 +17,13 @@
 
 package org.tigris.mbt;
 
-import java.util.Hashtable;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.Stack;
+import java.util.Vector;
 
 import org.apache.log4j.Logger;
-import org.tigris.mbt.filters.AccessableEdgeFilter;
 
 import edu.uci.ics.jung.graph.impl.AbstractElement;
 import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
@@ -46,11 +46,14 @@ public class FiniteStateMachine{
 	private boolean weighted = false;
 	private DirectedSparseEdge lastEdge = null;
 	private int numberOfEdgesTravesed = 0;
-	private boolean backtracking = false;
+	protected boolean backtracking = false;
+	protected boolean abortOnDeadEnds = true;
+
+	private long start_time;
 	
 	protected void setState(String stateName)
 	{
-		logger.debug("Total number of edges in the model: " + String.valueOf(model.getEdges().size()));
+		logger.debug("Setting state to: '" + stateName + "'");
 		DirectedSparseVertex e = findState(stateName);
 		Util.AbortIf(e == null, "Vertex not Found: '" + stateName + "'");
 		
@@ -73,10 +76,12 @@ public class FiniteStateMachine{
 	
 	public FiniteStateMachine(SparseGraph newModel)
 	{
+		logger.debug("Initializing");
 		model = newModel;
 		stateStack = new Stack();
 		numberOfEdgesTravesedStack = new Stack();
 		setState(Keywords.START_NODE);
+		start_time = System.currentTimeMillis();
 	}
 	
 	public DirectedSparseVertex getCurrentState() {
@@ -105,7 +110,13 @@ public class FiniteStateMachine{
 	
 	public Set getCurrentOutEdges()
 	{
-		return currentState.getOutEdges();
+		Set retur = currentState.getOutEdges();
+		if(retur.size()==0)
+		{
+			logger.fatal("Cul-De-Sac: Dead end found in '" + getCurrentStateName() + "', aborting.");
+			System.exit(-1);
+		}
+		return retur;
 	}
 	
 	protected void setAsVisited(AbstractElement e)
@@ -123,17 +134,23 @@ public class FiniteStateMachine{
 		e.setUserDatum( Keywords.VISITED_KEY, visited, UserData.SHARED );
 	}
 	
-	public void walkEdge(DirectedSparseEdge edge)
+	public boolean walkEdge(DirectedSparseEdge edge)
 	{
-		// TODO add backtracking by pushing states
 		if(currentState.isSource(edge))
 		{
+			if(this.backtracking && edge.containsUserDatumKey(Keywords.BACKTRACK))
+			{
+				pushState();
+				logger.debug("Backtrack +1: " + stateStack.size() + " states stored");
+			}
 			currentState = (DirectedSparseVertex) edge.getDest();
 			lastEdge = edge;
 			setAsVisited(edge);
 			setAsVisited(currentState);
 			numberOfEdgesTravesed++;
+			return true;
 		}
+		return false;
 	}
 
 	public DirectedSparseEdge getLastEdge()
@@ -141,39 +158,90 @@ public class FiniteStateMachine{
 		return lastEdge;
 	}
 	
-	public String getStatisticsStringHeader()
+	public String getStatisticsStringCompact()
 	{
-		return "Timestamp,Edges available,Edges covered,Vertices available,Vertices covered\n";
+		int stats[] = getStatistics();
+		int e   = stats[0];
+		int ec  = stats[1];
+		int v   = stats[2];
+		int vc  = stats[3];
+		int len = stats[4];
+		
+		return 
+		"EC: " + ec + "/" + e + " => " + (100*ec)/e + "% " +
+		"SC: " + vc + "/" + v + " => " + (100*vc)/v + "% " +
+		"L: " + len; 
 	}
 
 	public String getStatisticsString()
 	{
-		Hashtable stats = getStatistics();
-		String retur = System.currentTimeMillis() + 
-			"," + stats.get("Edges") + 
-			"," + stats.get("Edges covered") +
-			"," + stats.get("Vertices") + 
-			"," + stats.get("Vertices covered") + "\n";
+		int stats[] = getStatistics();
+		int e   = stats[0];
+		int ec  = stats[1];
+		int v   = stats[2];
+		int vc  = stats[3];
+		int len = stats[4];
 		
-		return retur;
+		return 
+		"Coverage Edges: " + ec + "/" + e + " => " +  (100*ec)/e + "%\n" + 
+		"Coverage States: " + vc + "/" + v + " => " + (100*vc)/v  + "%\n" + 
+		"Unvisited Edges:  " + (e-ec) + "\n" + 
+		"Unvisited States: " + (v-vc) + "\n" +
+		"Testcase length:  " + len; 
 	}
 	
-	public Hashtable getStatistics()
+	public int[] getStatistics()
 	{
-		Hashtable retur = new Hashtable();
-		
 		Set e = model.getEdges();
 		Set v = model.getVertices();
 
-		retur.put("Edges", new Integer(e.size()) );
-		retur.put("Edges covered", new Integer(getCoverage(e)) );
-
-		retur.put("Vertices", new Integer(v.size()) );
-		retur.put("Vertices covered", new Integer(getCoverage(v)) );
-
+		int[] retur = {e.size(), getCoverage(e), v.size(), getCoverage(v), numberOfEdgesTravesed};
 		return retur;
 	}
 	
+	public String getStatisticsVerbose()
+	{
+		String retur = "";
+		String newLine = "\n";
+		
+		Vector notCovered = new Vector();
+		for(Iterator i = model.getEdges().iterator();i.hasNext();)
+		{
+			DirectedSparseEdge e = (DirectedSparseEdge) i.next();
+			if(!isVisited(e))
+			{
+				notCovered.add( "Edge not reached: " +
+						getStateName((DirectedSparseVertex) e.getSource()) + " -> " + 
+						getEdgeName(e) + " -> " + 
+						getStateName((DirectedSparseVertex) e.getDest()) + newLine);
+			}
+		}
+		for(Iterator i = model.getVertices().iterator();i.hasNext();)
+		{
+			DirectedSparseVertex v = (DirectedSparseVertex) i.next();
+			if(!isVisited(v))
+			{
+				notCovered.add( "Vertex not reached: " + 
+						getStateName(v) + newLine);
+			}
+		}
+		if(notCovered.size()>0)
+		{
+			Collections.sort(notCovered);
+			for(Iterator i = notCovered.iterator();i.hasNext();)
+			{
+				retur += i.next();
+			}
+		}
+		retur += getStatisticsString() + newLine;
+		retur += "Execution time: " + ( ( System.currentTimeMillis() - start_time ) / 1000 ) + " seconds";
+		return retur;
+	}
+
+	private boolean isVisited(AbstractElement abstractElement) {
+		return abstractElement.containsUserDatumKey( Keywords.VISITED_KEY ) && ((Integer)abstractElement.getUserDatum( Keywords.VISITED_KEY )).intValue() > 0;
+	}
+
 	protected int getCoverage(Set modelItems)
 	{
 		int unique = 0;
@@ -222,24 +290,33 @@ public class FiniteStateMachine{
 	/**
 	 * @param weighted if edge weights are to be considered
 	 */
-	public void setWeighted(boolean weighted) {
+	public void setWeighted(boolean weighted) 
+	{
 		this.weighted = weighted;
 	}
 	/**
 	 * @return true if the edge weights is considered
 	 */
-	public boolean isWeighted() {
+	public boolean isWeighted() 
+	{
 		return weighted;
 	}
 
 	/**
 	 * @return the number of edges traversed
 	 */
-	public int getNumberOfEdgesTravesed() {
+	public int getNumberOfEdgesTravesed() 
+	{
 		return numberOfEdgesTravesed;
 	}
 
-	public void enableBacktrack(boolean backtracking) {
+	public void backtrack()
+	{
+		if(this.backtracking && getLastEdge().containsUserDatumKey(Keywords.BACKTRACK)) popState();
+	}
+	
+	public void enableBacktrack(boolean backtracking) 
+	{
 		this.backtracking  = backtracking;
 		
 	}

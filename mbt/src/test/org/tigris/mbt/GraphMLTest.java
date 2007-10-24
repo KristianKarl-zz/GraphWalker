@@ -28,25 +28,6 @@ public class GraphMLTest extends TestCase {
     }
     
     // Test Generating Tests
-    public void test04()
-    {
-		System.out.println( "TEST: test04" );
-		System.out.println( "=======================================================================" );
-    	try
-    	{
-	    	ModelBasedTesting mbt = new ModelBasedTesting();
-	    	mbt.readGraph( "graphml/merged/test01.graphml" );
-    		mbt.generateTests( false, 0 );
-	    	verifyIds( mbt.getGraph() );
-    	} catch (Exception e) {
-    		String msg = e.getMessage();
-    		System.out.println(e.getMessage());
-    		assertTrue( msg.matches( ".*There is no way to reach.*|.*Found a cul-de-sac.*" ) );
-		}
-		System.out.println( "" );
-    }
-    
-    // Test Generating Tests
     public void test05()
     {
 		System.out.println( "TEST: test05" );
@@ -55,7 +36,6 @@ public class GraphMLTest extends TestCase {
     	{
 	    	ModelBasedTesting mbt = new ModelBasedTesting();
 	    	mbt.readGraph( "graphml/merged/test03.graphml" );
-	    	mbt.generateTests( false, 0 );
 	    	verifyIds( mbt.getGraph() );
 		}
 		catch ( Exception e)
@@ -63,9 +43,7 @@ public class GraphMLTest extends TestCase {
     		System.out.println(e.getMessage());
 			fail( e.getMessage() );
 		}
-		System.out.println( "" );
     }
-    
     
     // Verify that mbt checks that subgraphs are unique.
     public void test09()
@@ -266,38 +244,6 @@ public class GraphMLTest extends TestCase {
 		System.out.println( "" );
     }
 
-    public void testCoverageMethods()
-    {
-		System.out.println( "TEST: testCoverageMethods" );
-		System.out.println( "=======================================================================" );
-    	try
-    	{
-	    	ModelBasedTesting mbt = new ModelBasedTesting();
-			mbt.initialize( "graphml/test03", true, 0 );
-			mbt.reset();
-			
-			float edgesCov = 0;
-			float verticesCov = 0;
-			
-			for ( int i = 0; i < 10000; i++ )
-			{
-				mbt.getEdge();
-				float currEdgesCov = mbt.getTestCoverage4Edges();
-				float currVerticesCov = mbt.getTestCoverage4Vertices();
-				assertTrue( currEdgesCov >= edgesCov );
-				assertTrue( currVerticesCov >= verticesCov );
-				edgesCov = currEdgesCov;
-				verticesCov = currVerticesCov;
-			}
-    	}
-    	catch ( Exception e)
-    	{
-    		System.out.println(e.getMessage());
-    		fail( e.getMessage() );
-    	}
-		System.out.println( "" );
-    }
-    
     // Verify that all vertices and edges has indexes, and that no duplicates exists.
     private void verifyIds( SparseGraph g )
 	{

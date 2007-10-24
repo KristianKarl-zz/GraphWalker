@@ -1,7 +1,5 @@
 package test.org.tigris.mbt.generators;
 
-import java.util.Hashtable;
-
 import org.tigris.mbt.ExtendedFiniteStateMachine;
 import org.tigris.mbt.FiniteStateMachine;
 import org.tigris.mbt.GraphML;
@@ -33,11 +31,10 @@ public class RandomPathGeneratorTest extends TestCase {
 		{
 			String[] stepPair = pathGenerator.getNext();
 
-			Hashtable stats = EFSM.getStatistics();
-			double edges = ((Integer)stats.get("Edges")).doubleValue();
-			double covered = ((Integer)stats.get("Edges covered")).doubleValue();
+			int stats[] = EFSM.getStatistics();
+			int ec = 100*stats[1]/stats[0];
 
-			System.out.println("call( "+ stepPair[0] + " ) then verify( " + stepPair[1] + " ) --> Edge coverage @ " + Math.round((100*covered)/edges) +"%" );
+			System.out.println("call( "+ stepPair[0] + " ) then verify( " + stepPair[1] + " ) --> Edge coverage @ " + ec +"%" );
 		}
 		System.out.println("==============================");
     }
@@ -53,11 +50,10 @@ public class RandomPathGeneratorTest extends TestCase {
 		{
 			String[] stepPair = pathGenerator.getNext();
 
-			Hashtable stats = FSM.getStatistics();
-			double edges = ((Integer)stats.get("Edges")).doubleValue();
-			double covered = ((Integer)stats.get("Edges covered")).doubleValue();
+			int stats[] = FSM.getStatistics();
+			int ec = 100*stats[1]/stats[0];
 
-			System.out.println("call( "+ stepPair[0] + " ) then verify( " + stepPair[1] + " ) --> Edge coverage @ " + Math.round((100*covered)/edges) +"%" );
+			System.out.println("call( "+ stepPair[0] + " ) then verify( " + stepPair[1] + " ) --> Edge coverage @ " + ec +"%" );
 		}
 		System.out.println("==============================");
     }
@@ -73,11 +69,10 @@ public class RandomPathGeneratorTest extends TestCase {
 		{
 			String[] stepPair = pathGenerator.getNext();
 
-			Hashtable stats = EFSM.getStatistics();
-			double edges = ((Integer)stats.get("Edges")).doubleValue();
-			double covered = ((Integer)stats.get("Edges covered")).doubleValue();
+			int stats[] = EFSM.getStatistics();
+			int ec = 100*stats[1]/stats[0];
 
-			System.out.println("call( "+ stepPair[0] + " ) then verify( " + stepPair[1] + " ) --> Edge coverage @ " + Math.round((100*covered)/edges) +"%" );
+			System.out.println("call( "+ stepPair[0] + " ) then verify( " + stepPair[1] + " ) --> Edge coverage @ " + ec +"%" );
 		}
 		System.out.println("==============================");
     }
@@ -93,11 +88,10 @@ public class RandomPathGeneratorTest extends TestCase {
 		{
 			String[] stepPair = pathGenerator.getNext();
 
-			Hashtable stats = FSM.getStatistics();
-			double edges = ((Integer)stats.get("Edges")).doubleValue();
-			double covered = ((Integer)stats.get("Edges covered")).doubleValue();
+			int stats[] = FSM.getStatistics();
+			int ec = 100*stats[1]/stats[0];
 
-			System.out.println("call( "+ stepPair[0] + " ) then verify( " + stepPair[1] + " ) --> Edge coverage @ " + Math.round((100*covered)/edges) +"%" );
+			System.out.println("call( "+ stepPair[0] + " ) then verify( " + stepPair[1] + " ) --> Edge coverage @ " + ec +"%" );
 		}
 		System.out.println("==============================");
     }
@@ -113,11 +107,10 @@ public class RandomPathGeneratorTest extends TestCase {
 		{
 			String[] stepPair = pathGenerator.getNext();
 
-			Hashtable stats = FSM.getStatistics();
-			double edges = ((Integer)stats.get("Edges")).doubleValue();
-			double covered = ((Integer)stats.get("Edges covered")).doubleValue();
+			int stats[] = FSM.getStatistics();
+			int ec = 100*stats[1]/stats[0];
 
-			System.out.println("call( "+ stepPair[0] + " ) then verify( " + stepPair[1] + " ) --> Edge coverage @ " + Math.round((100*covered)/edges) +"%" );
+			System.out.println("call( "+ stepPair[0] + " ) then verify( " + stepPair[1] + " ) --> Edge coverage @ " + ec +"%" );
 		}
 		System.out.println("==============================");
     }
@@ -133,11 +126,10 @@ public class RandomPathGeneratorTest extends TestCase {
 		{
 			String[] stepPair = pathGenerator.getNext();
 
-			Hashtable stats = FSM.getStatistics();
-			double edges = ((Integer)stats.get("Vertices")).doubleValue();
-			double covered = ((Integer)stats.get("Vertices covered")).doubleValue();
+			int stats[] = FSM.getStatistics();
+			int vc = 100*stats[3]/stats[2];
 
-			System.out.println("call( "+ stepPair[0] + " ) then verify( " + stepPair[1] + " ) --> Vertix coverage @ " + Math.round((100*covered)/edges) +"%" );
+			System.out.println("call( "+ stepPair[0] + " ) then verify( " + stepPair[1] + " ) --> State coverage @ " + vc +"%" );
 		}
 		System.out.println("==============================");
     }
@@ -153,11 +145,10 @@ public class RandomPathGeneratorTest extends TestCase {
 		{
 			String[] stepPair = pathGenerator.getNext();
 
-			Hashtable stats = FSM.getStatistics();
-			double edges = ((Integer)stats.get("Vertices")).doubleValue();
-			double covered = ((Integer)stats.get("Vertices covered")).doubleValue();
+			int stats[] = FSM.getStatistics();
+			int vc = 100*stats[3]/stats[2];
 
-			System.out.println("call( "+ stepPair[0] + " ) then verify( " + stepPair[1] + " ) --> Vertix coverage @ " + Math.round((100*covered)/edges) +"%" );
+			System.out.println("call( "+ stepPair[0] + " ) then verify( " + stepPair[1] + " ) --> State coverage @ " + vc +"%" );
 		}
 		System.out.println("==============================");
     }

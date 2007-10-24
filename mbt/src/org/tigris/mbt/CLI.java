@@ -5,11 +5,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Iterator;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.apache.log4j.Logger;
-import org.tigris.mbt.filters.AccessableEdgeFilter;
-
-import edu.uci.ics.jung.graph.impl.SparseGraph;
 
 import jcmdline.BooleanParam;
 import jcmdline.CmdLineHandler;
@@ -46,12 +45,14 @@ public class CLI
 	private static String cmdLineSyntax = "java -jar mbt.jar";
 	private static String version = "2.0";
 	private ModelBasedTesting mbt = new ModelBasedTesting();
+
+	private Timer t = new Timer();
 	
 	public CLI()
 	{
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			public void run() {
-				logger.info( mbt.getStatistics() );
+				logger.info( mbt.getStatisticsVerbose() );
 			}
 		});
 	}
@@ -64,8 +65,6 @@ public class CLI
 
 	public void run(String[] args)
 	{
-
-	    // command line arguments
         FileParam modelParam =
             new FileParam("model",
                           "the GraphML model or directory of GraphML files to be processed",
@@ -112,9 +111,6 @@ public class CLI
         
         BooleanParam statisticsOpt = 
             new BooleanParam("statistics", "Display coverage statistics at the end of the run.");
-        BooleanParam culdesacOpt = 
-            new BooleanParam("cul-de-sac", "Accepts graphs that has cu-de-sac and continue the test," +
-            		" without this flag, the execution of the test will be stopped.");
         BooleanParam backtrackOpt = 
             new BooleanParam("backtrack", "Enable backtracking in the model.");
         BooleanParam extendedOpt = 
@@ -177,19 +173,22 @@ public class CLI
             		testLengthConditionOpt, 
             		testDurationConditionOpt, 
             		logCoverageOpt, statisticsOpt, 
-            		culdesacOpt, templateOpt, outputOpt,  
-            		extendedOpt, onlineOpt, backtrackOpt, mergeOpt},
+            		templateOpt, outputOpt, extendedOpt, 
+            		onlineOpt, backtrackOpt, mergeOpt},
                 new Parameter[] { generatorParam, modelParam } ));
         
         commandLine.parse(args);
         
         for(Iterator i = modelParam.getValues().iterator();i.hasNext();)
         {
-        	mbt.readGraph((String) i.next());
+        	String fileName = (String) i.next();
+        	mbt.readGraph(fileName);
         }
 
+		logger.info("Setting extended: " + extendedOpt.isTrue());
         mbt.enableExtended(extendedOpt.isTrue());
        
+		logger.info("Adding stop conditions.");
 		if(reachedEdgeConditionOpt.isSet())
 		{
 			mbt.addCondition(Keywords.CONDITION_REACHED_EDGE, reachedEdgeConditionOpt.getValue()); 
@@ -216,6 +215,8 @@ public class CLI
 		}
 		
 		String generator = generatorParam.getValue();
+
+		logger.info("Setting generator: " + generator);
 		if(generator.equals("list"))
 		{
 			mbt.setGenerator(Keywords.GENERATOR_LIST);
@@ -232,41 +233,51 @@ public class CLI
 		{
 			mbt.setGenerator(Keywords.GENERATOR_STUB);
 		}
-		
-		mbt.ignoreDeadEnds(culdesacOpt.isTrue());
+
 		if(templateOpt.isSet())
 		{
+			logger.info("Set code template: " + templateOpt.getValue());
 			mbt.setTemplate(templateOpt.getValue());
 		}
 
 		PrintStream oldSystemOut = null;
 		if(outputOpt.isSet())
 		{
+			logger.info("Diverting System.out to file: " + outputOpt.getValue());
 			oldSystemOut = System.out;
 			try {
 				System.setOut( new PrintStream(new FileOutputStream(outputOpt.getValue())));
 			} catch (FileNotFoundException e) {
-				Util.AbortIf(true, "File output error: " + e.getMessage() );
+				logger.fatal("File output error", e);
+				System.exit(-1);
 			}
 		}
-		
+		logger.info("Allow backtracking: " + backtrackOpt.isTrue());
 		mbt.enableBacktrack(backtrackOpt.isTrue());
 		
 		if(logCoverageOpt.isSet())
 		{
-			mbt.setLogCoverageInterval(logCoverageOpt.getValue());
+			logger.info("Append coverage to log every: "+ logCoverageOpt.getValue() +" seconds");
+			t.schedule(	new TimerTask()	{
+				public void run() {
+					logger.info(mbt.getStatisticsCompact());
+				}
+			}, 500, logCoverageOpt.intValue() * 1000);
 		}
+		
 		if(mergeOpt.isSet())
 		{
+			logger.info("Write merged model to: "+ mergeOpt.getValue());
 			mbt.writeModel(mergeOpt.getValue());
 		}
 		
 		if(onlineOpt.isTrue())
 		{
-			
+			logger.info("Use interactive/online mode");
 			while(mbt.hasNextStep())
 			{
 				char input = getInput(); 
+				logger.debug("Recieved: '"+ input+"'");
 				if(input == '2')
 				{
 					break;
@@ -275,34 +286,37 @@ public class CLI
 				{
 					mbt.backtrack();
 				}
-				else if(input != '0')
-				{
-					Util.AbortIf(true, "Input not supported: '"+ input +"'");
-				}
 				String[] stepPair = mbt.getNextStep();
 				System.out.println(stepPair[0]);
+				logger.debug("Execute: " + stepPair[0]);
 				System.out.println(stepPair[1]);
+				logger.debug("Verify: " + stepPair[1]);
 			}
 		}
 		else
 		{
+			logger.info("Use offline mode");
 			while(mbt.hasNextStep())
 			{
 				String[] stepPair = mbt.getNextStep();
 				System.out.println(stepPair[0]);
+				logger.debug("Execute: " + stepPair[0]);
 				System.out.println(stepPair[1]);
+				logger.debug("Verify: " + stepPair[1]);
 			}
 		}
 		
 		if(oldSystemOut != null)
 		{
+			logger.info("Restoring old System.out");
 			System.setOut(oldSystemOut);
 		}
 
 		if(statisticsOpt.isTrue())
 		{
-			System.out.println(mbt.getStatistics());
+			System.out.println(mbt.getStatisticsString());
 		}
+		t.cancel();
 	}
 
 	private static char getInput() 

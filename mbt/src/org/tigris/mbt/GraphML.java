@@ -40,11 +40,10 @@ import edu.uci.ics.jung.utils.UserData;
 public class GraphML extends AbstractModelHandler
 {
 	/**
-	* The name of the single file to be loaded, or the folder containing
-	* the files to be loaded
+	* Indicator if the graph list needs to be merged 
 	*/
-	private String graphFileNameOrFolder;
-	
+	private boolean merged;
+
 	/**
 	* List of parsed graphs
 	*/
@@ -59,7 +58,7 @@ public class GraphML extends AbstractModelHandler
 	* The logger
 	*/
 	private org.apache.log4j.Logger log;
-	
+
 	/**
 	* Default constructor. Initializes the default logger.
 	*/
@@ -95,31 +94,22 @@ public class GraphML extends AbstractModelHandler
 	
 	/**
 	* Reads one single graph, or a folder containing several graphs to be merged into one
-	* graph. The resulting SparseGraph object is returned.
+	* graph.
 	*/
 	public void load( String fileOrfolder )
 	{
-		graphFileNameOrFolder = fileOrfolder;
-		readFiles();
-	}
-	
-	/**
-	* Iterate through all graphml files if graphFileNameOrFolder is a folder,
-	* else parse the single graphml file.
-	*/
-	private void readFiles()
-	{
-		if( graphFileNameOrFolder != "")
+		if( fileOrfolder != "")
 		{
-			File file = new File( graphFileNameOrFolder );
+			File file = new File( fileOrfolder );
 			if ( file.isFile() )
 			{
-		    	parsedGraphList.add( parseFile( graphFileNameOrFolder ) );
+		    	parsedGraphList.add( parseFile( fileOrfolder ) );
+				setMerged(false);
 			}
 			else if ( file.isDirectory() )
 			{
 			    // Only accepts files which suffix is .graphml
-			    FilenameFilter filter = new FilenameFilter()
+			    FilenameFilter graphmlFilter = new FilenameFilter()
 			    {
 			        public boolean accept( File dir, String name )
 			        {
@@ -127,20 +117,28 @@ public class GraphML extends AbstractModelHandler
 			        }
 			    };
 	
-			    File [] allChildren = file.listFiles( filter );
+			    File [] allChildren = file.listFiles( graphmlFilter );
 			    for ( int i = 0; i < allChildren.length; ++i )
 			    {
 			    	parsedGraphList.add( parseFile( allChildren[ i ].getAbsolutePath() ) );
+					setMerged(false);
 			    }
 			}
 			else
 			{
-				throw new RuntimeException( "'" + graphFileNameOrFolder + "' is not a file or a directory. Please specify a valid .graphml file or a directory containing .graphml files" );
+				throw new RuntimeException( "'" + fileOrfolder + "' is not a file or a directory. Please specify a valid .graphml file or a directory containing .graphml files" );
 			}
-		    mergeAllGraphs();
 		}
 	}
-	
+	public SparseGraph getModel()
+	{
+		if(!isMerged())
+		{
+			mergeAllGraphs();
+		}
+		return graph;
+	}
+
 	/**
 	 * Parses the graphml file, and returns the model as a edu.uci.ics.jung.graph.impl.SparseGraph  
 	 */
@@ -580,13 +578,27 @@ public class GraphML extends AbstractModelHandler
 	 */
 	private void mergeAllGraphs()
 	{
-		findMotherAndSubgraphs();
-		checkForDuplicateVerticesInSubgraphs();
-		mergeSubgraphs();
-		mergeVerticesMarked_MERGE();
-		checkForVerticesWithZeroInEdges();
+		if(!isMerged())
+		{
+			findMotherAndSubgraphs();
+			checkForDuplicateVerticesInSubgraphs();
+			mergeSubgraphs();
+			mergeVerticesMarked_MERGE();
+			checkForVerticesWithZeroInEdges();
+	
+			log.info( "Done merging" );		
+			setMerged(true);
+		}
+	}
 
-		log.info( "Done merging" );		
+	private void setMerged(boolean merged) 
+	{
+		this.merged = merged;
+	}
+
+	private boolean isMerged() 
+	{
+		return this.merged;
 	}
 
 	/**
