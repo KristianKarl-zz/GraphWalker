@@ -264,6 +264,4 @@ public class Util {
 			throw new RuntimeException( message );
 		}
 	}
-	
-
 }

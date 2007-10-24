@@ -6,7 +6,6 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.Stack;
-import java.util.Vector;
 
 import org.apache.log4j.Logger;
 import org.tigris.mbt.filters.AccessableEdgeFilter;
@@ -46,6 +45,11 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 			{
 				retur.add(edge);
 			}
+		}
+		if(retur.size()==0)
+		{
+			logger.fatal("Cul-De-Sac: Dead end found in '" + getCurrentStateName() + "', aborting.");
+			System.exit(-1);
 		}
 		return retur;
 	}
@@ -89,9 +93,10 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 		return retur;
 	}
 	
-	public void walkEdge(DirectedSparseEdge edge)
+	public boolean walkEdge(DirectedSparseEdge edge)
 	{
-		if(currentState.isSource(edge))
+		boolean hasWalkedEdge = super.walkEdge(edge);
+		if(hasWalkedEdge)
 		{
 			if(edge.containsUserDatumKey(Keywords.ACTIONS_KEY))
 			{
@@ -104,8 +109,8 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 					throw new RuntimeException( "Malformed action sequence: " + e.getErrorText() );
 				}
 			}
-			super.walkEdge(edge);
 		}
+		return hasWalkedEdge;
 	}
 
 	public void pushState()
