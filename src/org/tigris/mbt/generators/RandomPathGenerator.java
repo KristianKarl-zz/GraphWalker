@@ -5,15 +5,18 @@ import java.util.Random;
 import java.util.Set;
 import java.util.Vector;
 
+import org.apache.log4j.Logger;
 import org.tigris.mbt.FiniteStateMachine;
 import org.tigris.mbt.Keywords;
 import org.tigris.mbt.Util;
 import org.tigris.mbt.conditions.StopCondition;
+import org.tigris.mbt.filters.AccessableEdgeFilter;
 
 import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
 
 public class RandomPathGenerator extends PathGenerator {
 
+	static Logger logger = Logger.getLogger(RandomPathGenerator.class);
 	private Random random = new Random();
 
 	public RandomPathGenerator(FiniteStateMachine machine, StopCondition stopCondition) {
@@ -25,6 +28,7 @@ public class RandomPathGenerator extends PathGenerator {
 		Util.AbortIf(availableEdges.size() == 0, "Found a dead end: '" + machine.getCurrentStateName() + "'"); 
 		DirectedSparseEdge edge = (machine.isWeighted() ? getWeightedEdge(availableEdges) : getRandomEdge(availableEdges));
 		machine.walkEdge(edge);
+		logger.debug( edge.getUserDatum( Keywords.FULL_LABEL_KEY) );
 		String[] retur = {machine.getEdgeName(edge), machine.getCurrentStateName()};
 		return retur;
 	}
