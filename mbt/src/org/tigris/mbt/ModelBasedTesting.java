@@ -250,7 +250,16 @@ public class ModelBasedTesting
 
 	public String[] getNextStep() {
 		Util.AbortIf(getGenerator() == null, "No generator has been defined!");
-		return getGenerator().getNext();
+		try
+		{
+			return getGenerator().getNext();
+		}
+		catch(RuntimeException e)
+		{
+			logger.fatal(e.getMessage());
+			System.exit(-1);
+		}
+		return null;
 	}
 
 	public void backtrack() {
