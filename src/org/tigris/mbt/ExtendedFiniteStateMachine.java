@@ -1,7 +1,6 @@
 package org.tigris.mbt;
 
 import java.util.Enumeration;
-import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Set;
@@ -12,7 +11,10 @@ import org.tigris.mbt.filters.AccessableEdgeFilter;
 
 import bsh.EvalError;
 import bsh.Interpreter;
+import bsh.NameSpace;
+import bsh.UtilEvalError;
 
+import edu.uci.ics.jung.graph.Edge;
 import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
 import edu.uci.ics.jung.graph.impl.SparseGraph;
 
@@ -37,19 +39,17 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 
 	public Set getCurrentOutEdges()
 	{
-		HashSet retur = new HashSet();
-		for(Iterator i = currentState.getOutEdges().iterator();i.hasNext();)
+		Set	retur = super.getCurrentOutEdges();
+		for(Iterator i = retur.iterator();i.hasNext();)
 		{
-			DirectedSparseEdge edge = (DirectedSparseEdge) i.next();
-			if(accessableFilter.acceptEdge(edge))
+			if(!accessableFilter.acceptEdge( (Edge) i.next()))
 			{
-				retur.add(edge);
+				i.remove();
 			}
 		}
 		if(retur.size()==0)
 		{
-			logger.fatal("Cul-De-Sac: Dead end found in '" + getCurrentStateName() + "', aborting.");
-			System.exit(-1);
+			throw new RuntimeException( "Cul-De-Sac: Dead end found in '" + getCurrentStateName() + "', aborting.2");
 		}
 		return retur;
 	}
@@ -64,17 +64,17 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 		if(!hasInternalVariables()) return retur;
 
 		try {
-			String[] variables = interpreter.getNameSpace().getVariableNames();
-			for(int  i=0; i<variables.length; i++)
+			NameSpace ns = interpreter.getNameSpace();
+			String[] variableNames = interpreter.getNameSpace().getVariableNames();
+			for(int  i=0; i<variableNames.length; i++)
 			{
-				String key = variables[i];
-				if(!key.equals("bsh"))
+				if(!variableNames[i].equals("bsh"))
 				{
-					retur.put(key, interpreter.get(key));
+					retur.put(variableNames[i], ns.getVariable(variableNames[i]));
 				}
 			}
-		} catch (EvalError e) {
-			throw new RuntimeException( "Malformed model data: " + e.getErrorText() );
+		} catch (UtilEvalError e) {
+			throw new RuntimeException( "Malformed model data: " + e.getMessage() );
 		}
 		return retur;
 	}
@@ -116,17 +116,20 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 	public void pushState()
 	{
 		super.pushState();
-		String data = getCurrentDataString();
-		dataStack.push(data);
+		dataStack.push(getCurrentData());
 	}
 
 	public void peekState()
 	{
 		super.peekState();
-		String data = (String) dataStack.peek();
+		Hashtable data = (Hashtable) dataStack.peek();
 		try {
-			interpreter.eval(data);
-		} catch (EvalError e) {
+			for(Enumeration e = data.keys();e.hasMoreElements();)
+			{
+				String variableName = (String) e.nextElement();
+				interpreter.getNameSpace().setVariable(variableName, data.get(variableName), false);
+			}
+		} catch (UtilEvalError e) {
 			throw new RuntimeException( "Malformed data: '" + data + "' " + e.getMessage() );
 		}
 	}
@@ -134,12 +137,7 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 	public void popState()
 	{
 		super.popState();
-		String data = (String) dataStack.pop();
-		try {
-			interpreter.eval(data);
-		} catch (EvalError e) {
-			throw new RuntimeException( "Malformed data: '" + data + "' " + e.getMessage() );
-		}
+		peekState();
+		dataStack.pop();
 	}
-	
 }

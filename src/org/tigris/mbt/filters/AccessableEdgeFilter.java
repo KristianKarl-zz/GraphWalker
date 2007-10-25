@@ -56,10 +56,8 @@ public class AccessableEdgeFilter extends GeneralEdgeAcceptFilter implements Eff
 		} 
 		catch (EvalError e) 
 		{
-			logger.fatal( "Malformed Edge guard: " + Util.getCompleteEdgeName( (DirectedSparseEdge)edge ), e );
-			System.exit(-1);
+			throw new RuntimeException( "Malformed Edge guard: " + Util.getCompleteEdgeName( (DirectedSparseEdge)edge )+ " " + e.getMessage() );
 		}
-		return false;
 	}
 
 	public String getName() {

@@ -59,8 +59,17 @@ public class CLI
 	
 	public static void main(String[] args)
 	{
-		CLI cli = new CLI();
-		cli.run( args );
+		try
+		{
+			CLI cli = new CLI();
+			cli.run( args );
+		}
+		catch(RuntimeException e)
+		{
+			logger.fatal(e.getMessage());
+			System.exit(-1);
+		}
+
 	}
 
 	public void run(String[] args)
@@ -248,8 +257,7 @@ public class CLI
 			try {
 				System.setOut( new PrintStream(new FileOutputStream(outputOpt.getValue())));
 			} catch (FileNotFoundException e) {
-				logger.fatal("File output error", e);
-				System.exit(-1);
+				throw new RuntimeException( "File output error: " + e.getMessage() );
 			}
 		}
 		logger.info("Allow backtracking: " + backtrackOpt.isTrue());

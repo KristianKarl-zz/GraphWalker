@@ -18,6 +18,7 @@
 package org.tigris.mbt;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.Stack;
@@ -110,11 +111,10 @@ public class FiniteStateMachine{
 	
 	public Set getCurrentOutEdges()
 	{
-		Set retur = currentState.getOutEdges();
+		Set retur = new HashSet(currentState.getOutEdges());
 		if(retur.size()==0)
 		{
-			logger.fatal("Cul-De-Sac: Dead end found in '" + getCurrentStateName() + "', aborting.");
-			System.exit(-1);
+			throw new RuntimeException( "Cul-De-Sac: Dead end found in '" + getCurrentStateName() + "', aborting.");
 		}
 		return retur;
 	}
@@ -279,8 +279,9 @@ public class FiniteStateMachine{
 
 	public void popState()
 	{
-		currentState = (DirectedSparseVertex) stateStack.pop();
-		numberOfEdgesTravesed = ((Integer)numberOfEdgesTravesedStack.pop()).intValue(); 
+		peekState();
+		stateStack.pop();
+		numberOfEdgesTravesedStack.pop(); 
 	}
 	
 	/**

@@ -227,8 +227,7 @@ public class ModelBasedTesting
 			try {
 				Util.generateCodeByTemplate(getGraph(), this.templateFile);
 			} catch (IOException e) {
-				logger.fatal("Stub file generation error", e);
-				System.exit(-1);
+				throw new RuntimeException( "Stub file generation error: "+ e.getMessage() );
 			}
 			break;
 		case Keywords.GENERATOR_LIST:
@@ -256,7 +255,7 @@ public class ModelBasedTesting
 		}
 		catch(RuntimeException e)
 		{
-			logger.fatal(e.getMessage());
+			logger.fatal(e.toString());
 			System.exit(-1);
 		}
 		return null;
