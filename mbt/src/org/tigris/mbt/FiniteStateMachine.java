@@ -210,10 +210,7 @@ public class FiniteStateMachine{
 			DirectedSparseEdge e = (DirectedSparseEdge) i.next();
 			if(!isVisited(e))
 			{
-				notCovered.add( "Edge not reached: " +
-						getStateName((DirectedSparseVertex) e.getSource()) + " -> " + 
-						getEdgeName(e) + " -> " + 
-						getStateName((DirectedSparseVertex) e.getDest()) + newLine);
+				notCovered.add( "Edge not reached: " + Util.getCompleteEdgeName(e) + newLine);
 			}
 		}
 		for(Iterator i = model.getVertices().iterator();i.hasNext();)
@@ -222,7 +219,7 @@ public class FiniteStateMachine{
 			if(!isVisited(v))
 			{
 				notCovered.add( "Vertex not reached: " + 
-						getStateName(v) + newLine);
+						Util.getCompleteVertexName(v) + newLine);
 			}
 		}
 		if(notCovered.size()>0)
