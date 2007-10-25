@@ -106,7 +106,7 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 				} catch (EvalError e) {
 					logger.error(e);
 					logger.error( Util.getCompleteEdgeName( edge ) );
-					throw new RuntimeException( "Malformed action sequence: " + e.getErrorText() );
+					throw new RuntimeException( "Malformed action sequence: " + e.getMessage() );
 				}
 			}
 		}
@@ -127,7 +127,7 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 		try {
 			interpreter.eval(data);
 		} catch (EvalError e) {
-			throw new RuntimeException( "Malformed data: '" + data + "' " + e.getErrorText() );
+			throw new RuntimeException( "Malformed data: '" + data + "' " + e.getMessage() );
 		}
 	}
 	
@@ -138,7 +138,7 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 		try {
 			interpreter.eval(data);
 		} catch (EvalError e) {
-			throw new RuntimeException( "Malformed data: '" + data + "' " + e.getErrorText() );
+			throw new RuntimeException( "Malformed data: '" + data + "' " + e.getMessage() );
 		}
 	}
 	
