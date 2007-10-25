@@ -218,8 +218,7 @@ public class FiniteStateMachine{
 			DirectedSparseVertex v = (DirectedSparseVertex) i.next();
 			if(!isVisited(v))
 			{
-				notCovered.add( "Vertex not reached: " + 
-						Util.getCompleteVertexName(v) + newLine);
+				notCovered.add( "Vertex not reached: " + Util.getCompleteVertexName(v) + newLine);
 			}
 		}
 		if(notCovered.size()>0)
