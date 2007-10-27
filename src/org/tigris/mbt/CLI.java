@@ -64,12 +64,10 @@ public class CLI
 			CLI cli = new CLI();
 			cli.run( args );
 		}
-		catch(RuntimeException e)
+		catch( RuntimeException e )
 		{
 			logger.fatal(e.getMessage());
-			System.exit(-1);
 		}
-
 	}
 
 	public void run(String[] args)
@@ -186,7 +184,11 @@ public class CLI
             		onlineOpt, backtrackOpt, mergeOpt},
                 new Parameter[] { generatorParam, modelParam } ));
         
-        commandLine.parse(args);
+        commandLine.setDieOnParseError(false);
+        if ( commandLine.parse(args) == false )
+        {
+        	return;
+        }
         
         for(Iterator i = modelParam.getValues().iterator();i.hasNext();)
         {
