@@ -20,6 +20,7 @@ package org.tigris.mbt;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -274,8 +275,9 @@ public class ModelBasedTesting
 		this.modelHandler.load( graphmlFileName );
 	}
 
-	public void writeModel(String value) {
-		this.modelHandler.save(value);
+	public void writeModel(PrintStream ps) {
+		this.modelHandler.getModel();
+		this.modelHandler.save(ps);
 	}
 
 	public void enableBacktrack(boolean backtracking) {

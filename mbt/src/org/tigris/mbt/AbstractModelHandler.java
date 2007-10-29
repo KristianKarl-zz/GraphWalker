@@ -1,5 +1,7 @@
 package org.tigris.mbt;
 
+import java.io.PrintStream;
+
 import edu.uci.ics.jung.graph.impl.SparseGraph;
 
 public abstract class AbstractModelHandler {
@@ -8,7 +10,7 @@ public abstract class AbstractModelHandler {
 	
 	public abstract void load(String fileName);
 	
-	public abstract void save(String fileName);
+	public abstract void save(PrintStream ps);
 	
 	public SparseGraph getModel()
 	{
