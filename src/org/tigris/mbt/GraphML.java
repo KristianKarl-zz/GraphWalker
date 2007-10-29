@@ -98,7 +98,7 @@ public class GraphML extends AbstractModelHandler
 	*/
 	public void load( String fileOrfolder )
 	{
-		if( fileOrfolder != "")
+		if( fileOrfolder != "" )
 		{
 			File file = new File( fileOrfolder );
 			if ( file.isFile() )
