@@ -713,6 +713,11 @@ public class CLI
         	System.err.println( "Type 'java -jar mbt.jar help offline' for help." );
             return;	            	
         }
+        
+        /**
+		 * Set backtracking
+		 */
+        mbt.enableBacktrack( cl.hasOption( "b" ) );
 
 		Timer t = new Timer();
 		if( cl.hasOption( "o" ) )
@@ -754,6 +759,7 @@ public class CLI
 			if(input == '1')
 			{
 				mbt.backtrack();
+				continue;
 			}
 			logger.debug("Verify: " + stepPair[1]);
 			System.out.println(stepPair[1]);
