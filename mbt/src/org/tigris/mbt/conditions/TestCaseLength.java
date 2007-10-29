@@ -8,7 +8,7 @@ public class TestCaseLength implements StopCondition {
 	private int numberOfEdges;
 
 	public boolean isFulfilled() {
-		return machine.getNumberOfEdgesTravesed() >= numberOfEdges / 2;
+		return machine.getNumberOfEdgesTravesed() >= numberOfEdges;
 	}
 
 	public TestCaseLength(FiniteStateMachine machine, int numberOfEdges) {
