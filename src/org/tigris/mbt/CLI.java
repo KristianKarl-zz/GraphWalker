@@ -1,5 +1,6 @@
 package org.tigris.mbt;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Iterator;
@@ -42,14 +43,6 @@ import edu.uci.ics.jung.graph.impl.DirectedSparseVertex;
  */
 public class CLI 
 {
-	static private String graphmlFile;
-	static private String outputFile;
-	static private String templateFile;
-	static private boolean random;
-	static private long seconds;
-	static private long print_coverage;
-	static private long length;
-	static private boolean statistics;
 	static Logger logger = Logger.getLogger(CLI.class);
 	static private Thread shutDownThread = new Thread() {
 		public void run() {
@@ -72,10 +65,14 @@ public class CLI
 			CLI cli = new CLI();
 			cli.run( args );
 		}
-		catch( RuntimeException e )
+		catch ( Exception e )
 		{
-			e.printStackTrace();
-			logger.fatal(e.getMessage());
+			StringWriter sw = new StringWriter();
+		    PrintWriter pw = new PrintWriter( sw );
+		    e.printStackTrace( pw );
+		    pw.close();	    		    
+			logger.error( sw.toString() );
+    		System.err.println( e.getMessage() );
 		}
 		Runtime.getRuntime().removeShutdownHook( shutDownThread );
 	}
@@ -210,157 +207,40 @@ public class CLI
 			CommandLineParser parser = new PosixParser();
 	        CommandLine cl = parser.parse( opt, args );
 	        
+			/**
+			 *  Command: online
+			 */
 			if ( args[ 0 ].equals( "online" ) )
 			{
-	            if ( cl.hasOption( "r" ) && cl.hasOption( "o" ) )
-	            {
-	            	System.out.println( "Can not set -r (--random) and -o (--optimize) at the same time." );
-	            	System.out.println( "Type 'java -jar mbt.jar help online' for help." );
-	                return;
-	            }
-
-	            if ( !cl.hasOption( "r" ) && !cl.hasOption( "o" ) )
-	            {
-	            	System.out.println( "Either -r (--random) or -o (--optimize) must bet set." );
-	            	System.out.println( "Type 'java -jar mbt.jar help online' for help." );
-	                return;
-	            }
-
-	            if ( cl.hasOption( "r" ) ) 
-	            {
-	            	random = true;
-	            	if ( cl.hasOption( "t" ) )
-	            	{
-	            		seconds = Integer.valueOf( cl.getOptionValue( "t" ) ).longValue();
-	            	}
-	            	else
-	            	{
-	            		seconds = 0;
-	            	}
-	            }
-	            
-            	if ( cl.hasOption( "p" ) )
-            	{
-            		print_coverage = Integer.valueOf( cl.getOptionValue( "p" ) ).longValue();
-            		print_coverage *= 1000;
-            	}
-            	else
-            	{
-            		print_coverage = 0;
-            	}
-	            	            
-	            if ( cl.hasOption( "o" ) ) 
-	            {
-	            	random = false;
-	            }
-
-	            if ( !cl.hasOption( "g" ) )
-	            {
-	            	System.out.println( "Missing the input graphml file (folder), See -f (--input_graphml)" );
-	            	System.out.println( "Type 'java -jar mbt.jar help online' for help." );
-	                return;	            	
-	            }
-
-	            if ( cl.hasOption( "s" ) ) 
-	            {
-	            	statistics = true;
-	            }
-	            else
-	            {
-	            	statistics = false;
-	            }
-	            
-            	graphmlFile = cl.getOptionValue( "g" );
-            	
-            	CLI cli = new CLI();
-    			cli.runInteractively();
+				RunCommandOnline( cl );
 			}
 			/**
-			 *  OFFLINE
+			 *  Command: offline
 			 */
 			else if ( args[ 0 ].equals( "offline" ) )
 			{
-				RunOffline( cl );
+				RunCommandOffline( cl );
 			}
+			/**
+			 *  Command: methods
+			 */
 			else if ( args[ 0 ].equals( "methods" ) )
 			{
-	            if ( !cl.hasOption( "g" ) )
-	            {
-	            	System.out.println( "Missing the input graphml file (folder), See -g (--intput_graphml)" );
-	            	System.out.println( "Type 'java -jar mbt.jar help methods' for help." );
-	                return;	            	
-	            }
-            	graphmlFile = cl.getOptionValue( "g" );
-            	CLI cli = new CLI();
-    			cli.generateTestMethods();	            
+				RunCommandMethods( cl );
 			}
+			/**
+			 *  Command: merge
+			 */
 			else if ( args[ 0 ].equals( "merge" ) )
 			{
-	            if ( !cl.hasOption( "g" ) )
-	            {
-	            	System.out.println( "Missing the input graphml file (folder), See -g (--intput_graphml)" );
-	            	System.out.println( "Type 'java -jar mbt.jar help merge' for help." );
-	                return;	            	
-	            }
-	            if ( !cl.hasOption( "l" ) )
-	            {
-	            	System.out.println( "Missing the output graphml file, See -l (--output_graphml)" );
-	            	System.out.println( "Type 'java -jar mbt.jar help merge' for help." );
-	                return;	            	
-	            }
-
-            	graphmlFile = cl.getOptionValue( "g" );
-            	outputFile  = cl.getOptionValue( "l" );            	
-
-    			ModelBasedTesting mbt = new ModelBasedTesting();
-            	try
-	    		{
-	    			mbt.readGraph( graphmlFile );
-	    			Util.writeGraphML( mbt.getGraph(), outputFile );
-	    		}
-	    		catch ( Exception e )
-	    		{
-	    			StringWriter sw = new StringWriter();
-	    		    PrintWriter pw = new PrintWriter( sw );
-	    		    e.printStackTrace( pw );
-	    		    pw.close();	    		    
-	    			logger.error( sw.toString() );
-	    			System.err.println( e.getMessage() );
-	    		}            	
+				RunCommandMerge( cl );
 			}
+			/**
+			 *  Command: source
+			 */
 			else if ( args[ 0 ].equals( "source" ) )
 			{
-	            if ( !cl.hasOption( "g" ) )
-	            {
-	            	System.out.println( "Missing the input graphml file (folder), See -g (--intput_graphml)" );
-	            	System.out.println( "Type 'java -jar mbt.jar help source' for help." );
-	                return;	            	
-	            }
-	            if ( !cl.hasOption( "t" ) )
-	            {
-	            	System.out.println( "Missing the template file, See -t (--template)" );
-	            	System.out.println( "Type 'java -jar mbt.jar help source' for help." );
-	                return;	            	
-	            }
-	            
-            	graphmlFile = cl.getOptionValue( "g" );
-            	templateFile = cl.getOptionValue( "t" );            	
-
-    			ModelBasedTesting mbt = new ModelBasedTesting();
-            	try
-	    		{
-	    			mbt.readGraph( graphmlFile );
-					Util.generateCodeByTemplate( mbt.getGraph(), templateFile );
-	    		}
-	    		catch ( Exception e )
-	    		{
-	    			StringWriter sw = new StringWriter();
-	    		    PrintWriter pw = new PrintWriter( sw );
-	    		    e.printStackTrace( pw );
-	    		    pw.close();	    		    
-	    			logger.error( sw.toString() );
-	        		System.err.println( e.getMessage() );
-	    		}
+				RunCommandSource( cl );
 			}
         }
 		catch ( MissingArgumentException e )
@@ -374,336 +254,19 @@ public class CLI
         }
 	}
 
-
-	private void checkInput( int input ) throws GoBackToPreviousVertexException
+	private static char getInput() 
 	{
-		// 0 : Continue the test
-		switch ( input )
+		char c = 0; 
+		try 
 		{
-			case 0:
-				return;
-				
-			case 1:
-				throw new GoBackToPreviousVertexException();
-				
-			case 2:
-				throw new RuntimeException( "Test ended normally" );					
-				
-			default:
-				throw new RuntimeException( "Unkown input data: '" + input + "', only '0', '1' or '2' is allowed." );					
-		}
-	}
-	
-	
-	private String readFromStdin()
-	{
-		//InputStreamReader reader = new InputStreamReader (System.in);
-		//BufferedReader buf_in = new BufferedReader (reader);
-		
-		String str = "";
-    	int	inChar	= 0;
-    	boolean toggle = false;
-    	while ( inChar != -1 )
-	    {
-    	    try
-    		{
-    	    	inChar = System.in.read();
-    		}
-    	    catch (Exception e)
-    		{
-    	    	break;
-    		}
-    	    if ( !Character.isWhitespace( (char)inChar ) )
-    		{
-        	    str += Character.toString((char) inChar);
-        	    // Ok, so we got our single non-white space char from stdin, so we're done here. 
-        	    toggle = true;
-    		}
-    	    if ( toggle )
-    		{
-    	    	break;
-    		}
-    	}
-	    return str;
-	}
-	
-	private void runInteractively()
-	{
-/*		ModelBasedTesting mbt = new ModelBasedTesting();
-		Logger logger = mbt.getLogger();
-		
-		long startTime = System.currentTimeMillis();
-
-    	try
-		{
-			mbt.initialize( graphmlFile, random, seconds );
-			mbt.reset();
-			
-			// The unique index of the previous vertex.
-			Integer previousVertexIndex = null;
-
-			// If an edge contains the keyword BACKTARCK
-			boolean backtrackingEngaged = false;
-			
-			// Only accept edges that has the same label AND contains the keyword BACKTARCK
-			boolean acceptOnlyBacktracking = false;
-			String  label = "";
-			
-			// Skip printing the label of the edge to stdout
-			boolean skipEdgeLabel = false;
-			
-			 
-			
-			while ( true )
+			while(c != '0' && c != '1' && c != '2')
 			{
-				if ( print_coverage > 0 )
-				{
-					if ( System.currentTimeMillis() - startTime > print_coverage )
-					{						
-						logger.info( "Test coverage: " + mbt.getTestCoverage4Vertices() + "% for vertices, and: " + mbt.getTestCoverage4Edges() + "% for edges." );
-						startTime = System.currentTimeMillis(); 
-					}
-				}
-				
-				DirectedSparseEdge edge = null;
-				
-				if ( acceptOnlyBacktracking )
-				{
-					if ( backtrackingEngaged == false )
-					{
-						throw new RuntimeException( "Internal program problem: If acceptOnlyBacktracking is true also backtrackingEngaged mut be true." );						
-					}
-					
-					while ( true )
-					{
-						edge = mbt.getEdge();
-						if ( edge.containsUserDatumKey( Keywords.BACKTRACK ) == false )
-						{
-							mbt.SetCurrentVertex( previousVertexIndex );
-							continue;
-						}
-
-						if ( label == null )
-						{
-							label = "";
-						}
-						String label2Comp = (String)edge.getUserDatum( Keywords.LABEL_KEY );
-						if ( label2Comp == null )
-						{
-							label2Comp = "";
-						}
-
-						logger.debug( "Label to match: '" + label + "', label to compare: '" + label2Comp + "'" );
-						if ( label.equals( label2Comp ) == false )
-						{
-							mbt.SetCurrentVertex( previousVertexIndex );
-							continue;
-						}
-
-						acceptOnlyBacktracking = false;
-						skipEdgeLabel = true;
-						break;
-					}
-				}
-				else
-				{
-					edge = mbt.getEdge();
-				}
-	
-				// getEdgeAndVertex caught an exception, and returned null
-				if ( edge == null )
-				{
-					break;
-				}
-				
-				if ( skipEdgeLabel == false )
-				{
-					logger.info( "Edge: " + edge.getUserDatum( Keywords.LABEL_KEY ) + ", index=" + 
-							     edge.getUserDatum( Keywords.INDEX_KEY ) );				
-					if ( edge.containsUserDatumKey( Keywords.LABEL_KEY ) )
-					{
-						System.out.print( edge.getUserDatum( Keywords.LABEL_KEY ) );
-					}
-					else
-					{
-						System.out.print( "" );
-					}
-					
-					if ( edge.containsUserDatumKey( Keywords.BACKTRACK ) )
-					{
-						backtrackingEngaged = true;
-						System.out.println( " BACKTRACK" );
-						logger.info( "BACKTRACK enabled" );
-					}
-					else
-					{
-						backtrackingEngaged = false;
-						System.out.println( "" );
-					}
-					
-					try
-					{
-						checkInput( new Integer( readFromStdin() ).intValue() );
-					}
-					catch ( GoBackToPreviousVertexException e )
-					{
-						if ( backtrackingEngaged == false )
-						{
-							throw new RuntimeException( "Test ended with a fault. Backtracking was asked for, where the model did not allow it.\n" +
-									"Please check the model at: '" + edge.getUserDatum( Keywords.LABEL_KEY ) + "', INDEX=" + edge.getUserDatum( Keywords.INDEX_KEY ) +
-									" coming from: '" + edge.getSource().getUserDatum( Keywords.LABEL_KEY ) + "', INDEX=" + edge.getSource().getUserDatum( Keywords.INDEX_KEY ) );					
-						}
-						
-						if ( previousVertexIndex != null )
-						{
-							logger.info("== BACKTRACKING FROM EDGE ==" );
-							mbt.SetCurrentVertex( previousVertexIndex );						
-							continue;
-						}					
-					}
-				}
-				skipEdgeLabel = false;
-					
-				logger.info( "Vertex: " + edge.getDest().getUserDatum( Keywords.LABEL_KEY ) + ", index=" + edge.getDest().getUserDatum( Keywords.INDEX_KEY ) );
-				System.out.print( edge.getDest().getUserDatum( Keywords.LABEL_KEY ) );
-
-				if ( edge.containsUserDatumKey( Keywords.BACKTRACK ) )
-				{
-					backtrackingEngaged = true;
-					System.out.println( " BACKTRACK" );
-					logger.info( "BACKTRACK enabled" );
-				}
-				else
-				{
-					backtrackingEngaged = false;
-					System.out.println( "" );
-				}
-
-				try
-				{
-					checkInput( new Integer( readFromStdin() ).intValue() );
-				}
-				catch ( GoBackToPreviousVertexException e )
-				{
-					if ( backtrackingEngaged == false )
-					{
-						throw new RuntimeException( "Test ended with a fault. Backtracking was asked for, where the model did not allow it.\n" +
-								"Please check the model at: '" + edge.getUserDatum( Keywords.LABEL_KEY ) + "', INDEX=" + edge.getUserDatum( Keywords.INDEX_KEY ) +
-								" coming from: '" + edge.getSource().getUserDatum( Keywords.LABEL_KEY ) + "', INDEX=" + edge.getSource().getUserDatum( Keywords.INDEX_KEY ) );					
-					}
-					
-					if ( previousVertexIndex != null )
-					{
-						acceptOnlyBacktracking = true;
-						label = (String)edge.getUserDatum( Keywords.LABEL_KEY );
-						logger.info("== BACKTRACKING FROM VERTEX ==" );
-						mbt.SetCurrentVertex( previousVertexIndex );
-						continue;
-					}
-				}
-				previousVertexIndex = (Integer)edge.getDest().getUserDatum( Keywords.INDEX_KEY );
+				int tmp = System.in.read ();
+				c = (char) tmp;
 			}
 		}
-		catch ( NumberFormatException e )
-		{
-			System.err.println( "Incorrect indata. Only 0, 1 or 2 is allowed." );
-		}
-		catch ( ExecutionTimeException e )
-		{
-			System.out.println( "End of test. Execution time has ended." );
-		}
-		catch ( Exception e )
-		{
-			if ( e.getMessage() != "Test ended normally" )
-			{
-    			StringWriter sw = new StringWriter();
-    		    PrintWriter pw = new PrintWriter( sw );
-    		    e.printStackTrace( pw );
-    		    pw.close();	    		    
-    			logger.error( sw.toString() );
-				System.err.println( e.getMessage() );
-			}
-		}
-		
-		if ( statistics )
-		{
-			logger.info( mbt.getStatistics() );
-			System.out.println( mbt.getStatistics() );
-		}
-		*/
-	}
-
-	private void generateTestMethods()
-	{
-		ModelBasedTesting mbt = new ModelBasedTesting();
-    	try
-		{
-			mbt.readGraph( graphmlFile );
-			SortedSet set = new TreeSet();
-
-			
-			Object[] vertices = mbt.getGraph().getVertices().toArray();
-			for (int i = 0; i < vertices.length; i++) 
-			{
-				DirectedSparseVertex vertex = (DirectedSparseVertex)vertices[ i ];
-				String element = (String) vertex.getUserDatum( Keywords.LABEL_KEY );
-				if ( element != null )
-				{
-					if ( !element.equals( "Start" ) )
-						set.add( element );
-				}
-			}
-			
-			Object[] edges    = mbt.getGraph().getEdges().toArray();
-			for (int i = 0; i < edges.length; i++) 
-			{
-				DirectedSparseEdge edge = (DirectedSparseEdge)edges[ i ];
-				String element = (String) edge.getUserDatum( Keywords.LABEL_KEY );
-				if ( element != null )
-				{
-					set.add( element );
-				}
-			}
-
-			StringBuffer strBuff = new StringBuffer();
-		    Iterator setIterator = set.iterator();
-		    while ( setIterator.hasNext() ) 
-		    {
-				String element = (String) setIterator.next();
-				strBuff.append( element + "\n" );
-		    }
-			System.out.print( strBuff.toString() );
-		}		
-		catch ( Exception e )
-		{
-			StringWriter sw = new StringWriter();
-		    PrintWriter pw = new PrintWriter( sw );
-		    e.printStackTrace( pw );
-		    pw.close();	    		    
-			logger.error( sw.toString() );
-    		System.err.println( e.getMessage() );
-		}
-	}
-	
-	
-	private void generateTests()
-	{/*
-		ModelBasedTesting mbt = new ModelBasedTesting();
-		Logger logger = mbt.getLogger();
-    	try
-		{
-			mbt.readGraph( graphmlFile );
-			mbt.generateTests( random, length);
-		}
-		catch ( Exception e )
-		{
-			StringWriter sw = new StringWriter();
-		    PrintWriter pw = new PrintWriter( sw );
-		    e.printStackTrace( pw );
-		    pw.close();	    		    
-			logger.error( sw.toString() );
-    		System.err.println( e.getMessage() );
-		}*/
+		catch ( IOException e ) {}
+		return c;
 	}
 	
 	private void printGeneralHelpText()
@@ -722,30 +285,67 @@ public class CLI
 	
 	private void buildOnlineCLI()
 	{
-		opt.addOption( "r", "random", false, "Run the test with a random walk. Can not be combined with --optimize." );
-		opt.addOption( "o", "optimize", false, "Run the test optimized. Can not be combined with --random." );
-		opt.addOption( "s", "statistics", false, "Prints the statistics of the test, at the end of the run." );
+		opt.addOption( "a", "statistics", false, "Prints the statistics of the test, at the end of the run." );
+		opt.addOption( "x", "extended",   false, "Use an extended finite state machine to handle the model." );
+		opt.addOption( "b", "backtrack",  false, "Enable backtracking in the model." );
+		opt.addOption( OptionBuilder.withArgName( "generator" )
+                .withDescription( "The generator to be used when traversing the model. The generator can be " +
+                		          "either 'random' which will generate a sequence using a randomized path algorithm. " +
+                		          "or 'dijkstra' which will generate a sequence using Dijkstras shortest path algorithm." )
+                .hasArg()
+                .withLongOpt( "generator" )
+                .create( "g" ) );
 		opt.addOption( OptionBuilder.withArgName( "file" )
                 .withDescription( "The file (or folder) containing graphml formatted files." )
                 .hasArg()
                 .withLongOpt( "input_graphml" )
-                .create( "g" ) );
-		opt.addOption( OptionBuilder.withLongOpt( "time" )
-				.withArgName( "=seconds" )
-                .withDescription( "The time in seconds for the random walk to run. If 0, the test runs forever." )
-                .withValueSeparator( '=' )
-                .hasArg() 
-                .create( "t" ) );
-		opt.addOption( OptionBuilder.withLongOpt( "print-coverage" )
-				.withArgName( "=seconds" )
-                .withDescription( "Prints the test coverage of the graph during execution every <=seconds>. " +
-						 "The printout goes to the log file defined in mbt.properties, " + 
-						 "and only, if at least INFO level is set in that same file." )
-                .withValueSeparator( '=' )
+                .create( "f" ) );
+		opt.addOption( OptionBuilder.withArgName( "duaration" )
+                .withDescription( "Stop condition. Halts generation after the specified duration in seconds has been reached." )
                 .hasArg()
-                .create( "p" ) );
+                .withLongOpt( "duration" )
+                .create( "u" ) );
+		opt.addOption( OptionBuilder.withArgName( "length" )
+                .withDescription( "Stop condition. Halts generation after the specified length of the test sequence is reached. " +
+                		          "Supply an integer, which tells MBT how many edges a test sequence shall contain." )
+                .hasArg()
+                .withLongOpt( "length" )
+                .create( "l" ) );
+		opt.addOption( OptionBuilder.withArgName( "edge-coverage" )
+                .withDescription( "Stop condition. Halts generation after the specified edge-coverage has been met. " +
+		                          "The given value shall be a real number between 0 and 100" )
+                .hasArg()
+                .withLongOpt( "edge-coverage" )
+                .create( "e" ) );
+		opt.addOption( OptionBuilder.withArgName( "state-coverage" )
+                .withDescription( "Stop condition. Halts generation after the specified state-coverage has been met. " +
+		                          "The given value shall be a real number between 0 and 100" )
+                .hasArg()
+                .withLongOpt( "state-coverage" )
+                .create( "s" ) );
+		opt.addOption( OptionBuilder.withArgName( "end-edge" )
+                .withDescription( "Stop condition. Halts generation after the specified edge has been traversed." )
+                .hasArg()
+                .withLongOpt( "end-edge" )
+                .create( "d" ) );
+		opt.addOption( OptionBuilder.withArgName( "end-state" )
+                .withDescription( "Stop condition. Halts generation after the specified state has been reached." )
+                .hasArg()
+                .withLongOpt( "end-state" )
+                .create( "t" ) );
+		opt.addOption( OptionBuilder.withArgName( "log-coverage" )
+				.withDescription( "Prints the test coverage of the graph during execution every " +
+			              "<n>. The printout goes to the log file defined in " +
+			              "mbt.properties, and only, if at least INFO level is set in " +
+			              "that same file." )
+                .hasArg()
+                .withLongOpt( "log-coverage" )
+                .create( "o" ) );
 	}
 
+	/**
+	 * Build the command offline command line parser
+	 */
 	private void buildOfflineCLI()
 	{
 		opt.addOption( "a", "statistics", false, "Prints the statistics of the test, at the end of the run." );
@@ -764,7 +364,7 @@ public class CLI
                 .create( "f" ) );
 		opt.addOption( OptionBuilder.withArgName( "length" )
                 .withDescription( "Stop condition. Halts generation after the specified length of the test sequence is reached. " +
-                		          "Supply an integer, which tells MBT how many vertices and edges a test sequence shall contain." )
+                		          "Supply an integer, which tells MBT how many edges a test sequence shall contain." )
                 .hasArg()
                 .withLongOpt( "length" )
                 .create( "l" ) );
@@ -806,38 +406,41 @@ public class CLI
                 .withDescription( "The file (or folder) containing graphml formatted files." )
                 .hasArg()
                 .withLongOpt( "input_graphml" )
-                .create( "g" ) );
+                .create( "f" ) );
 	}
 	
+	/**
+	 * Build the command merge command line parser
+	 */
 	private void buildMergeCLI()
 	{
 		opt.addOption( OptionBuilder.withArgName( "file" )
-				.withDescription( "The folder containing graphml formatted files." )
-				.hasArg()
-				.withLongOpt( "input_graphml" )
-				.create( "g" ) );
-			opt.addOption( OptionBuilder.withArgName( "file" )
-				.withDescription( "The ouput file is where the merged graphml file is written to." )
-				.hasArg()
-				.withLongOpt( "output_graphml" )
-				.create( "l" ) );
-		
+                .withDescription( "The file (or folder) containing graphml formatted files." )
+                .hasArg()
+                .withLongOpt( "input_graphml" )
+                .create( "f" ) );
 	}
 	
+	/**
+	 * Build the command source command line parser
+	 */
 	private void buildSourceCLI()
 	{
 		opt.addOption( OptionBuilder.withArgName( "file" )
-			.withDescription( "The folder containing graphml formatted files." )
-			.hasArg()
-			.withLongOpt( "input_graphml" )
-			.create( "g" ) );
+                .withDescription( "The file (or folder) containing graphml formatted files." )
+                .hasArg()
+                .withLongOpt( "input_graphml" )
+                .create( "f" ) );
 		opt.addOption( OptionBuilder.withArgName( "file" )
-            .withDescription( "The template file" )
-            .hasArg()
-            .withLongOpt( "template" )
-            .create( "t" ) );
+                .withDescription( "The template file" )
+                .hasArg()
+                .withLongOpt( "template" )
+                .create( "t" ) );
 	}
 	
+	/**
+	 * Print version information
+	 */
 	private void printVersionInformation()
 	{
 		System.out.println( "org.tigris.mbt version 2.0 (revision 313)\n" );
@@ -854,7 +457,10 @@ public class CLI
 		System.out.println( "  bsh-core-2.0b4.jar           http://www.beanshell.org/" );
 	}
 	
-	private void RunOffline( CommandLine cl )
+	/**
+	 * Run the offline command
+	 */
+	private void RunCommandOffline( CommandLine cl )
 	{
 		/**
 		 * Get the model from the graphml file (or folder)
@@ -960,4 +566,199 @@ public class CLI
 		
 		t.cancel();
 	}
+
+	/**
+	 * Run the source command
+	 */
+	private void RunCommandSource( CommandLine cl )
+	{
+		if ( !cl.hasOption( "f" ) )
+	    {
+	    	System.out.println( "Missing the input graphml file (folder). See -f (--intput_graphml)" );
+	    	System.out.println( "Type 'java -jar mbt.jar help source' for help." );
+	        return;	            	
+	    }
+		if ( !cl.hasOption( "t" ) )
+	    {
+	    	System.out.println( "Missing the template file. See -t (--template)" );
+	    	System.out.println( "Type 'java -jar mbt.jar help source' for help." );
+	        return;	            	
+	    }
+		mbt.readGraph( cl.getOptionValue( "f" ) );
+		mbt.setGenerator( Keywords.GENERATOR_STUB );
+		
+		while( mbt.hasNextStep() )
+		{
+			String[] stepPair = mbt.getNextStep();
+			System.out.println(stepPair[0]);
+			logger.debug( "Execute: " + stepPair[0] );
+			System.out.println(stepPair[1]);
+			logger.debug( "Verify: " + stepPair[1] );
+		}
+	}
+
+	/**
+	 * Run the methods command
+	 */
+	private void RunCommandMethods( CommandLine cl )
+	{
+		if ( !cl.hasOption( "f" ) )
+	    {
+	    	System.out.println( "Missing the input graphml file (folder), See -f (--intput_graphml)" );
+	    	System.out.println( "Type 'java -jar mbt.jar help metrhods' for help." );
+	        return;	            	
+	    }
+		mbt.readGraph( cl.getOptionValue( "f" ) );
+		mbt.setGenerator( Keywords.GENERATOR_LIST );
+		
+		while( mbt.hasNextStep() )
+		{
+			String[] stepPair = mbt.getNextStep();
+			System.out.println(stepPair[0]);
+			logger.debug( "Execute: " + stepPair[0] );
+			System.out.println(stepPair[1]);
+			logger.debug( "Verify: " + stepPair[1] );
+		}
+	}
+
+	/**
+	 * Run the merge command
+	 */
+	private void RunCommandMerge( CommandLine cl )
+	{
+		if ( !cl.hasOption( "f" ) )
+	    {
+	    	System.out.println( "Missing the input graphml file (folder), See -f (--intput_graphml)" );
+	    	System.out.println( "Type 'java -jar mbt.jar help metrhods' for help." );
+	        return;	            	
+	    }
+		mbt.readGraph( cl.getOptionValue( "f" ) );
+		mbt.writeModel( System.out );
+	}
+
+	/**
+	 * Run the online command
+	 */
+	private void RunCommandOnline( CommandLine cl )
+	{
+		/**
+		 * Get the model from the graphml file (or folder)
+		 */
+        if ( !cl.hasOption( "f" ) )
+        {
+        	System.err.println( "Missing the input graphml file (or folder), See -f (--intput_graphml)" );
+        	System.err.println( "Type 'java -jar mbt.jar help offline' for help." );
+            return;	            	
+        }
+        mbt.readGraph( cl.getOptionValue( "f" ) );
+        
+        /**
+		 * Set EFSM
+		 */
+        mbt.enableExtended( cl.hasOption( "x" ) );
+
+		/**
+		 * Set stop condition
+		 */
+        if ( !cl.hasOption( "d" ) &&
+           	 !cl.hasOption( "t" ) &&
+        	 !cl.hasOption( "e" ) &&
+        	 !cl.hasOption( "s" ) &&
+        	 !cl.hasOption( "u" ) &&
+        	 !cl.hasOption( "l" ) )
+        {
+        	System.err.println( "A stop condition must be supplied, See options: -d -t -e -s -l" );
+        	System.err.println( "Type 'java -jar mbt.jar help offline' for help." );
+            return;	            	
+        }
+        if( cl.hasOption( "d" ) )
+		{
+			mbt.addCondition( Keywords.CONDITION_REACHED_EDGE, cl.getOptionValue( "g" ) ); 
+		}
+		if( cl.hasOption( "t" ) )
+		{
+			mbt.addCondition( Keywords.CONDITION_REACHED_STATE, cl.getOptionValue( "t" ) ); 
+		}
+		if( cl.hasOption( "e" ) )
+		{
+			mbt.addCondition( Keywords.CONDITION_EDGE_COVERAGE, cl.getOptionValue( "e" ) ); 
+		}
+		if( cl.hasOption( "s" ) )
+		{
+			mbt.addCondition( Keywords.CONDITION_STATE_COVERAGE, cl.getOptionValue( "s" ) ); 
+		}
+		if( cl.hasOption( "l" ) )
+		{
+			mbt.addCondition( Keywords.CONDITION_TEST_LENGTH, cl.getOptionValue( "l" ) ); 
+		}
+		if( cl.hasOption( "u" ) )
+		{
+			mbt.addCondition( Keywords.CONDITION_TEST_DURATION, cl.getOptionValue( "u" ) ); 
+		}
+
+		/**
+		 * Get the generator
+		 */
+        if ( !cl.hasOption( "g" ) )
+        {
+        	System.err.println( "Missing the generator, See -g (--generator)" );
+        	System.err.println( "Type 'java -jar mbt.jar help offline' for help." );
+            return;	            	
+        }
+        else if ( cl.getOptionValue( "g" ).equals( "random" ) )
+		{
+			mbt.setGenerator( Keywords.GENERATOR_RANDOM );
+		}
+        else if ( cl.getOptionValue( "g" ).equals( "dijkstra" ) )
+		{
+			mbt.setGenerator( Keywords.GENERATOR_SHORTEST );
+		}
+        else
+        {
+        	System.err.println( "Incorrect generator supplied, See -g (--generator)" );
+        	System.err.println( "Type 'java -jar mbt.jar help offline' for help." );
+            return;	            	
+        }
+
+		Timer t = new Timer();
+		if( cl.hasOption( "o" ) )
+		{
+			logger.info( "Append coverage to log every: " + Integer.valueOf( cl.getOptionValue( "o" ) ).longValue() + " seconds" );
+			
+			t.schedule(	new TimerTask()	
+			{
+				public void run() 
+				{
+					logger.info( mbt.getStatisticsCompact() );
+				}
+			}, 500, Integer.valueOf( cl.getOptionValue( "o" ) ).longValue() * 1000 );
+		}
+		
+		while(mbt.hasNextStep())
+		{
+			char input = getInput(); 
+			logger.debug("Recieved: '"+ input+"'");
+			if(input == '2')
+			{
+				break;
+			}
+			if(input == '1')
+			{
+				mbt.backtrack();
+			}
+			String[] stepPair = mbt.getNextStep();
+			System.out.println(stepPair[0]);
+			logger.debug("Execute: " + stepPair[0]);
+			System.out.println(stepPair[1]);
+			logger.debug("Verify: " + stepPair[1]);
+		}
+		
+		if( cl.hasOption( "a" ) )
+		{
+			System.out.println( mbt.getStatisticsString() );
+		}
+		
+		t.cancel();
+	}
 }
+	
