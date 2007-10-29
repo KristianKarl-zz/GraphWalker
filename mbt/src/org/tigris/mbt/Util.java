@@ -1,9 +1,7 @@
 package org.tigris.mbt;
 
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Hashtable;
