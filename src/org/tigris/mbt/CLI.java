@@ -739,12 +739,24 @@ public class CLI
 			if(input == '1')
 			{
 				mbt.backtrack();
+				continue;
 			}
 			String[] stepPair = mbt.getNextStep();
-			System.out.println(stepPair[0]);
 			logger.debug("Execute: " + stepPair[0]);
-			System.out.println(stepPair[1]);
+			System.out.println(stepPair[0]);
+			
+			input = getInput(); 
+			logger.debug("Recieved: '"+ input+"'");
+			if(input == '2')
+			{
+				break;
+			}
+			if(input == '1')
+			{
+				mbt.backtrack();
+			}
 			logger.debug("Verify: " + stepPair[1]);
+			System.out.println(stepPair[1]);
 		}
 		
 		if( cl.hasOption( "a" ) )
