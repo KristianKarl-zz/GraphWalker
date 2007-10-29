@@ -79,67 +79,6 @@ public class ModelBasedTesting
 		}
 	}
 
-//	private void invokeMethod( String method, boolean dryRun, boolean suppressPrintout ) throws GoBackToPreviousVertexException
-//	{
-//		Class cls = null;
-//		
-//		if ( dryRun == false )
-//		{
-//			cls = _object.getClass();
-//			_pathHistory.add( method );
-//		}
-//
-//		if ( method == null )
-//		{
-//			_pathHistory.add( "" );
-//			return;
-//		}
-//
-//
-//		try
-//		{
-//			if ( method.compareTo( "" ) != 0 )
-//			{
-//				if ( dryRun )
-//				{
-//					if ( suppressPrintout == false )
-//					{
-//						System.out.println( method );
-//					}
-//				}
-//				else
-//				{
-//					Method meth = cls.getMethod( method, null );
-//					meth.invoke( _object, null  );
-//				}
-//			}
-//		}
-//		catch( NoSuchMethodException e )
-//		{
-//			logger.error( e );
-//			logger.error( "Try to invoke method: " + method );
-//			throw new RuntimeException( "The method is not defined: " + method );
-//		}
-//		catch( java.lang.reflect.InvocationTargetException e )
-//		{
-//			if ( e.getTargetException().getClass() == GoBackToPreviousVertexException.class )
-//			{
-//				throw new GoBackToPreviousVertexException();
-//			}
-//
-//			logger.error( e.getCause().getMessage() );
-//			e.getCause().printStackTrace();
-//			throw new RuntimeException( e.getCause().getMessage() );
-//		}
-//		catch( Exception e )
-//		{
-//			logger.error( e );
-//			e.printStackTrace();
-//			throw new RuntimeException( "Abrupt end of execution: " + e.getMessage() );
-//		}
-//	}
-
-
 	public void addCondition(int conditionType, String conditionValue) 
 	{
 		StopCondition condition = null;
