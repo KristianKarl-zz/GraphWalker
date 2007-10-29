@@ -309,7 +309,15 @@ public class FiniteStateMachine{
 
 	public void backtrack()
 	{
-		if(this.backtracking && getLastEdge().containsUserDatumKey(Keywords.BACKTRACK)) popState();
+		if( this.backtracking && getLastEdge().containsUserDatumKey( Keywords.BACKTRACK ) )
+		{
+			popState();
+			return;
+		}
+		if( this.backtracking && getLastEdge().containsUserDatumKey( Keywords.BACKTRACK ) == false )
+		{
+			throw new RuntimeException( "Backtracking was asked for, but model does not suppport BACKTRACK at egde: " + Util.getCompleteEdgeName( getLastEdge() ) );			
+		}	
 	}
 	
 	public void enableBacktrack(boolean backtracking) 
