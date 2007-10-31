@@ -130,16 +130,9 @@ public class GraphML extends AbstractModelHandler
 				throw new RuntimeException( "'" + fileOrfolder + "' is not a file or a directory. Please specify a valid .graphml file or a directory containing .graphml files" );
 			}
 		}
+		mergeAllGraphs();
 	}
-	public SparseGraph getModel()
-	{
-		if(!isMerged())
-		{
-			mergeAllGraphs();
-		}
-		return graph;
-	}
-
+	
 	/**
 	 * Parses the graphml file, and returns the model as a edu.uci.ics.jung.graph.impl.SparseGraph  
 	 */

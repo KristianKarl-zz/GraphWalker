@@ -609,9 +609,6 @@ public class CLI
 		{
 			String[] stepPair = mbt.getNextStep();
 			System.out.println(stepPair[0]);
-			logger.debug( "Execute: " + stepPair[0] );
-			System.out.println(stepPair[1]);
-			logger.debug( "Verify: " + stepPair[1] );
 		}
 	}
 

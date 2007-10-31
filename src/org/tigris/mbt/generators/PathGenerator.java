@@ -14,7 +14,12 @@ public abstract class PathGenerator {
     	return !stopCondition.isFulfilled();
     }
     
-    PathGenerator(FiniteStateMachine machine, StopCondition stopCondition)
+    PathGenerator( FiniteStateMachine machine )
+    {
+    	this.machine = machine;
+    }
+
+    PathGenerator( FiniteStateMachine machine, StopCondition stopCondition )
     {
     	this.machine = machine;
     	this.stopCondition = stopCondition;

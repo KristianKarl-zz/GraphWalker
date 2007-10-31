@@ -35,6 +35,7 @@ import org.tigris.mbt.conditions.StateCoverage;
 import org.tigris.mbt.conditions.StopCondition;
 import org.tigris.mbt.conditions.TestCaseLength;
 import org.tigris.mbt.conditions.TimeDuration;
+import org.tigris.mbt.generators.ListGenerator;
 import org.tigris.mbt.generators.PathGenerator;
 import org.tigris.mbt.generators.RandomPathGenerator;
 import org.tigris.mbt.generators.ShortestPathGenerator;
@@ -111,7 +112,7 @@ public class ModelBasedTesting
 		}
 		else
 		{
-			if(!(this.condition instanceof CombinationalCondition))
+			if( !(this.condition instanceof CombinationalCondition) )
 			{
 				StopCondition old= this.condition;
 				this.condition = new CombinationalCondition();
@@ -128,6 +129,10 @@ public class ModelBasedTesting
 
 	private FiniteStateMachine getMachine() 
 	{
+		if ( this.machine == null )
+		{
+			setMachine( new FiniteStateMachine( getGraph() ) );
+		}
 		return this.machine;
 	}
 
@@ -145,36 +150,44 @@ public class ModelBasedTesting
 
 	public void enableExtended(boolean extended) 
 	{
-		if(extended)
+		if( extended )
 		{
-			setMachine( new ExtendedFiniteStateMachine(getGraph()) );
+			setMachine( new ExtendedFiniteStateMachine( getGraph() ) );
 		}
 		else
 		{
-			setMachine( new FiniteStateMachine(getGraph()) );
+			setMachine( new FiniteStateMachine( getGraph() ) );
 		}
 	}
 
-	public void setGenerator(int generatorType) {
-		switch (generatorType) {
-		case Keywords.GENERATOR_RANDOM:
-			this.generator = new RandomPathGenerator(getMachine(), getCondition() );
-			break;
-		case Keywords.GENERATOR_SHORTEST:
-			this.generator = new ShortestPathGenerator(getMachine(), getCondition());
-			break;
-		case Keywords.GENERATOR_STUB:
-			try {
-				Util.generateCodeByTemplate(getGraph(), this.templateFile);
-			} catch (IOException e) {
-				throw new RuntimeException( "Stub file generation error: "+ e.getMessage() );
-			}
-			break;
-		case Keywords.GENERATOR_LIST:
-			this.generator = null;
-			break;
+	public void setGenerator( int generatorType )
+	{
+		switch (generatorType) 
+		{
+			case Keywords.GENERATOR_RANDOM:
+				this.generator = new RandomPathGenerator(getMachine(), getCondition() );
+				break;
+
+			case Keywords.GENERATOR_SHORTEST:
+				this.generator = new ShortestPathGenerator(getMachine(), getCondition());
+				break;
+			
+			case Keywords.GENERATOR_STUB:
+				try 
+				{
+					Util.generateCodeByTemplate(getGraph(), this.templateFile);
+				}
+				catch (IOException e) 
+				{
+					throw new RuntimeException( "Stub file generation error: " + e.getMessage() );
+				}
+				break;
+				
+			case Keywords.GENERATOR_LIST:
+				this.generator = new ListGenerator( getMachine() );
+				break;
 		}
-		Util.AbortIf(this.generator == null, "Not implemented yet!");
+		Util.AbortIf( this.generator == null, "Not implemented yet!" );
 	}
 	
 	private PathGenerator getGenerator()
@@ -215,7 +228,6 @@ public class ModelBasedTesting
 	}
 
 	public void writeModel(PrintStream ps) {
-		this.modelHandler.getModel();
 		this.modelHandler.save(ps);
 	}
 
