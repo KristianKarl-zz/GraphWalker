@@ -579,16 +579,8 @@ public class CLI
 	        return;	            	
 	    }
 		mbt.readGraph( cl.getOptionValue( "f" ) );
+		mbt.setTemplate( cl.getOptionValue( "t" ) );
 		mbt.setGenerator( Keywords.GENERATOR_STUB );
-		
-		while( mbt.hasNextStep() )
-		{
-			String[] stepPair = mbt.getNextStep();
-			System.out.println(stepPair[0]);
-			logger.debug( "Execute: " + stepPair[0] );
-			System.out.println(stepPair[1]);
-			logger.debug( "Verify: " + stepPair[1] );
-		}
 	}
 
 	/**

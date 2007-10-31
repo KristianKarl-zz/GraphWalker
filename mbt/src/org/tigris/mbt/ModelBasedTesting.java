@@ -181,7 +181,7 @@ public class ModelBasedTesting
 				{
 					throw new RuntimeException( "Stub file generation error: " + e.getMessage() );
 				}
-				break;
+				return;
 				
 			case Keywords.GENERATOR_LIST:
 				this.generator = new ListGenerator( getMachine() );
@@ -250,6 +250,8 @@ public class ModelBasedTesting
 		return getMachine().getStatisticsVerbose();
 	}
 
-	public void setTemplate(String templateFile) {
+	public void setTemplate( String templateFile )
+	{
+		this.templateFile = templateFile;
 	}
 }
