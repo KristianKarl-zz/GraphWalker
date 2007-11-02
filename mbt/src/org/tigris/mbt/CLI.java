@@ -591,7 +591,7 @@ public class CLI
 		if ( !cl.hasOption( "f" ) )
 	    {
 	    	System.out.println( "Missing the input graphml file (folder), See -f (--intput_graphml)" );
-	    	System.out.println( "Type 'java -jar mbt.jar help metrhods' for help." );
+	    	System.out.println( "Type 'java -jar mbt.jar help nethods' for help." );
 	        return;	            	
 	    }
 		mbt.readGraph( cl.getOptionValue( "f" ) );
@@ -612,7 +612,7 @@ public class CLI
 		if ( !cl.hasOption( "f" ) )
 	    {
 	    	System.out.println( "Missing the input graphml file (folder), See -f (--intput_graphml)" );
-	    	System.out.println( "Type 'java -jar mbt.jar help metrhods' for help." );
+	    	System.out.println( "Type 'java -jar mbt.jar help nethods' for help." );
 	        return;	            	
 	    }
 		mbt.readGraph( cl.getOptionValue( "f" ) );
