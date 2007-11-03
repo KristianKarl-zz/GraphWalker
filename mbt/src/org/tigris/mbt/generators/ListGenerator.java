@@ -1,16 +1,17 @@
 package org.tigris.mbt.generators;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
-import java.util.SortedSet;
 import java.util.Stack;
 import java.util.TreeSet;
+import java.util.Vector;
 
 import org.tigris.mbt.FiniteStateMachine;
 import org.tigris.mbt.Keywords;
-import org.tigris.mbt.ModelBasedTesting;
 
-import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
-import edu.uci.ics.jung.graph.impl.DirectedSparseVertex;
+import edu.uci.ics.jung.graph.Edge;
+import edu.uci.ics.jung.graph.impl.AbstractElement;
 
 public class ListGenerator extends PathGenerator {
 
@@ -28,40 +29,39 @@ public class ListGenerator extends PathGenerator {
 
     public String[] getNext() 
     {
-		String[] retur = {(String)list.pop(), ""};
-		return retur;
+		return (String[])list.pop();
 	}
-	
+    
 	private void generateList()
 	{
-		SortedSet set = new TreeSet();
+		TreeSet tempList = new TreeSet(new Comparator(){
+
+			public int compare(Object arg0, Object arg1) {
+				return ((String[])arg0)[0].compareTo(((String[])arg1)[0]);
+			}});
 		
-		Object[] vertices = machine.getAllStates().toArray();
-		for (int i = 0; i < vertices.length; i++) 
+		
+		Vector abstractElements = new Vector();
+		abstractElements.addAll(machine.getAllStates());
+		abstractElements.addAll(machine.getAllEdges());
+		
+		for(Iterator i = abstractElements.iterator();i.hasNext();)
 		{
-			DirectedSparseVertex vertex = (DirectedSparseVertex)vertices[ i ];
-			String element = (String) vertex.getUserDatum( Keywords.LABEL_KEY );
-			if ( element != null )
+			AbstractElement ae = (AbstractElement) i.next();
+			Object label = ae.getUserDatum(Keywords.LABEL_KEY);
+			if(label != null && !label.equals(Keywords.START_NODE))
 			{
-				if ( !element.equals( "Start" ) )
-					set.add( element );
+				String[] value = new String[2];
+				value[0] = (String) label;
+				if(ae instanceof Edge ) 
+					value[1] = "Edge"; 
+				else
+					value[1] = "Vertex"; 
+				tempList.add(value);
 			}
 		}
-		
-		Object[] edges    = machine.getAllEdges().toArray();
-		for (int i = 0; i < edges.length; i++) 
-		{
-			DirectedSparseEdge edge = (DirectedSparseEdge)edges[ i ];
-			String element = (String) edge.getUserDatum( Keywords.LABEL_KEY );
-			if ( element != null )
-			{
-				set.add( element );
-			}
-		}
-		
-		for ( Iterator iterator = set.iterator(); iterator.hasNext(); ) 
-		{
-			list.add( iterator.next() );			
-		}
+		//DEFECT sort does not work
+		list.addAll(tempList);
+		Collections.reverse(list);
 	}
 }
