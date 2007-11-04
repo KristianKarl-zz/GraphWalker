@@ -1,6 +1,5 @@
 package org.tigris.mbt.generators;
 
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Stack;
@@ -37,7 +36,7 @@ public class ListGenerator extends PathGenerator {
 		TreeSet tempList = new TreeSet(new Comparator(){
 
 			public int compare(Object arg0, Object arg1) {
-				return ((String[])arg0)[0].compareTo(((String[])arg1)[0]);
+				return ((String[])arg1)[0].compareTo(((String[])arg0)[0]);
 			}});
 		
 		
@@ -58,6 +57,5 @@ public class ListGenerator extends PathGenerator {
 			}
 		}
 		list.addAll(tempList);
-		Collections.reverse(list);
 	}
 }
