@@ -51,12 +51,9 @@ public class ListGenerator extends PathGenerator {
 			Object label = ae.getUserDatum(Keywords.LABEL_KEY);
 			if(label != null && !label.equals(Keywords.START_NODE))
 			{
-				String[] value = new String[2];
-				value[0] = (String) label;
-				if(ae instanceof Edge ) 
-					value[1] = "Edge"; 
-				else
-					value[1] = "Vertex"; 
+				String[] value = { 
+						(String) label, 
+						(ae instanceof Edge ? "Edge" : "Vertex")}; 
 				tempList.add(value);
 			}
 		}
