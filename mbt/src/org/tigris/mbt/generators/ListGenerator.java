@@ -60,7 +60,6 @@ public class ListGenerator extends PathGenerator {
 				tempList.add(value);
 			}
 		}
-		//DEFECT sort does not work
 		list.addAll(tempList);
 		Collections.reverse(list);
 	}
