@@ -37,18 +37,38 @@ import org.apache.log4j.Logger;
  */
 public class CLI 
 {
-	static Logger logger = Logger.getLogger(CLI.class);
-	static private Thread shutDownThread = new Thread() {
-		public void run() {
-			logger.info( mbt.getStatisticsVerbose() );
+	public static class VerboseStatisticsLogger extends Thread
+	{
+		private ModelBasedTesting modelBasedTesting;
+		
+		VerboseStatisticsLogger( ModelBasedTesting modelBasedTesting )
+		{
+			this.modelBasedTesting = modelBasedTesting;
 		}
-	};
-	static private ModelBasedTesting mbt = new ModelBasedTesting();
+		
+		public void run() {
+			logger.info( modelBasedTesting.getStatisticsVerbose() );
+		}
+	}
+	static Logger logger = Logger.getLogger(CLI.class);
+	
+	private ModelBasedTesting mbt;
 	private Timer timer;
-	static Options opt = new Options();
+	private Options opt = new Options();
 
 	public CLI()
 	{
+		mbt = new ModelBasedTesting();
+	}
+	
+	public ModelBasedTesting getMbt() {
+		return mbt;
+	}
+	
+	public static void main(String[] args)
+	{
+		CLI cli = new CLI();
+		Thread shutDownThread = new CLI.VerboseStatisticsLogger(cli.getMbt());
 		try 
 		{
 			Runtime.getRuntime().addShutdownHook( shutDownThread );
@@ -57,13 +77,8 @@ public class CLI
 		{
 			logger.debug( "Hook previously registered" );
 		}
-	}
-	
-	public static void main(String[] args)
-	{
 		try
 		{
-			CLI cli = new CLI();
 			cli.run( args );
 		}
 		catch ( Exception e )
@@ -260,7 +275,7 @@ public class CLI
         }
 	}
 
-	private static char getInput() 
+	private char getInput() 
 	{
 		char c = 0; 
 		try 
@@ -590,6 +605,12 @@ public class CLI
 		mbt.readGraph( cl.getOptionValue( "f" ) );
 		mbt.setTemplate( cl.getOptionValue( "t" ) );
 		mbt.setGenerator( Keywords.GENERATOR_STUB );
+	
+		while( mbt.hasNextStep() )
+		{
+			String[] stepPair = mbt.getNextStep();
+			System.out.println(stepPair[0]);
+		}
 	}
 
 	/**
