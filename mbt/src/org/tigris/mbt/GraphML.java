@@ -1,7 +1,6 @@
 package org.tigris.mbt;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -11,10 +10,7 @@ import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.PropertyConfigurator;
-import org.apache.log4j.SimpleLayout;
-import org.apache.log4j.WriterAppender;
+import org.apache.log4j.Logger;
 import org.jdom.Document;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
@@ -22,6 +18,7 @@ import org.jdom.input.SAXBuilder;
 import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
 import edu.uci.ics.jung.graph.impl.SparseGraph;
 import edu.uci.ics.jung.graph.impl.DirectedSparseVertex;
+import edu.uci.ics.jung.io.GraphMLFile;
 import edu.uci.ics.jung.utils.Pair;
 import edu.uci.ics.jung.utils.UserData;
 
@@ -58,36 +55,14 @@ public class GraphML extends AbstractModelHandler
 	/**
 	* The logger
 	*/
-	private org.apache.log4j.Logger log;
+	private Logger logger;
 
 	/**
 	* Default constructor. Initializes the default logger.
 	*/
 	public GraphML()
 	{	
-		log = org.apache.log4j.Logger.getLogger( ModelBasedTesting.class );
-
-		if ( new File( "mbt.properties" ).exists() )
-		{
-			PropertyConfigurator.configure("mbt.properties");
-		}
-		else
-		{
-			SimpleLayout layout = new SimpleLayout();
-			WriterAppender writerAppender = null;
-	 		try
-	 		{
-	 			FileOutputStream fileOutputStream = new FileOutputStream( "mbt.log" );
-	 			writerAppender = new WriterAppender( layout, fileOutputStream );
-	 		} 
-	 		catch ( Exception e )
-	 		{
-				e.printStackTrace();
-	 		}
-	 
-	 		log.addAppender( writerAppender );
-	 		log.setLevel( (Level)Level.ERROR );
-		}
+		logger = Util.setupLogger( GraphML.class );
 		
 		parsedGraphList = new Vector();
 		vertexAndEdgeIndex = 0;
@@ -144,7 +119,7 @@ public class GraphML extends AbstractModelHandler
 				
 		try
 		{
-			log.info( "Parsing file: " + fileName );
+			logger.debug( "Parsing file: " + fileName );
 			Document doc = parser.build( fileName );
 
 			// Parse all vertices (nodes)
@@ -157,16 +132,16 @@ public class GraphML extends AbstractModelHandler
 					org.jdom.Element element = (org.jdom.Element)o;
 					if ( element.getAttributeValue( "yfiles.foldertype" ) != null )
 					{
-						log.debug( "  Excluded node: " + element.getAttributeValue( "yfiles.foldertype" ) );
+						logger.debug( "  Excluded node: " + element.getAttributeValue( "yfiles.foldertype" ) );
 						continue;
 					}
 					Iterator iterUMLNoteIter = element.getDescendants( new org.jdom.filter.ElementFilter( "UMLNoteNode" ) );
 					if ( iterUMLNoteIter.hasNext() )
 					{
-						log.debug( "  Excluded node: UMLNoteNode" );
+						logger.debug( "  Excluded node: UMLNoteNode" );
 						continue;
 					}
-					log.debug( "  id: " + element.getAttributeValue( "id" ) );
+					logger.debug( "  id: " + element.getAttributeValue( "id" ) );
 
 					// Used to remember which vertex to store the image location.
 					DirectedSparseVertex currentVertex = null;
@@ -178,8 +153,8 @@ public class GraphML extends AbstractModelHandler
 						if ( o2 instanceof org.jdom.Element )
 						{
 							org.jdom.Element nodeLabel = (org.jdom.Element)o2;
-							log.debug( "  Full name: '" + nodeLabel.getQualifiedName() + "'" );
-							log.debug( "  Name: '" + nodeLabel.getTextTrim() + "'" );
+							logger.debug( "  Full name: '" + nodeLabel.getQualifiedName() + "'" );
+							logger.debug( "  Name: '" + nodeLabel.getTextTrim() + "'" );
 
 							DirectedSparseVertex v = (DirectedSparseVertex) graph.addVertex( new DirectedSparseVertex() );
 							currentVertex = v;
@@ -215,7 +190,7 @@ public class GraphML extends AbstractModelHandler
 							{
 								throw new RuntimeException( "Label must be defined in file: '" + fileName + "'" );
 							}
-							log.debug( "  Added vertex: '" + v.getUserDatum( Keywords.LABEL_KEY ) + "', with id: " + v.getUserDatum( Keywords.INDEX_KEY ) );
+							logger.debug( "  Added vertex: '" + v.getUserDatum( Keywords.LABEL_KEY ) + "', with id: " + v.getUserDatum( Keywords.INDEX_KEY ) );
 
 
 
@@ -229,7 +204,7 @@ public class GraphML extends AbstractModelHandler
 							if ( m.find() )
 							{
 								v.addUserDatum( Keywords.MERGE, m.group( 1 ), UserData.SHARED );
-								log.debug( "  Found MERGE for vertex: " + label );
+								logger.debug( "  Found MERGE for vertex: " + label );
 							}
 
 
@@ -242,7 +217,7 @@ public class GraphML extends AbstractModelHandler
 							if ( m.find() )
 							{
 								v.addUserDatum( Keywords.NO_MERGE, m.group( 1 ), UserData.SHARED );
-								log.debug( "  Found NO_MERGE for vertex: " + label );
+								logger.debug( "  Found NO_MERGE for vertex: " + label );
 							}
 
 
@@ -256,7 +231,7 @@ public class GraphML extends AbstractModelHandler
 							m = p.matcher( str );
 							if ( m.find() )
 							{
-								log.debug( "  Found BLOCKED. This vetex will be removed from the graph: " + label );
+								logger.debug( "  Found BLOCKED. This vetex will be removed from the graph: " + label );
 								v.addUserDatum( Keywords.BLOCKED, Keywords.BLOCKED, UserData.SHARED );
 							}
 
@@ -270,7 +245,7 @@ public class GraphML extends AbstractModelHandler
 							if ( m.find() )
 							{
 								String index_key = m.group( 2 );
-								log.debug( "  Found INDEX. This vertex will use the INDEX key: " + index_key );
+								logger.debug( "  Found INDEX. This vertex will use the INDEX key: " + index_key );
 								v.setUserDatum( Keywords.INDEX_KEY, new Integer( index_key ), UserData.SHARED );
 							}
 						}
@@ -288,7 +263,7 @@ public class GraphML extends AbstractModelHandler
 							org.jdom.Element image = (org.jdom.Element)o2;				
 							if ( image.getAttributeValue( "href" ) != null )
 							{
-								log.debug( "  Image: '" + image.getAttributeValue( "href" ) + "'" );
+								logger.debug( "  Image: '" + image.getAttributeValue( "href" ) + "'" );
 								currentVertex.addUserDatum( Keywords.IMAGE_KEY, image.getAttributeValue( "href" ), UserData.SHARED );
 							}
 						}
@@ -300,8 +275,8 @@ public class GraphML extends AbstractModelHandler
 						if ( o2 instanceof org.jdom.Element )
 						{
 							org.jdom.Element geometry = (org.jdom.Element)o2;
-							log.debug( "  width: '" + geometry.getAttributeValue( "width" ) + "'" );
-							log.debug( "  height: '" + geometry.getAttributeValue( "height" ) + "'" );
+							logger.debug( "  width: '" + geometry.getAttributeValue( "width" ) + "'" );
+							logger.debug( "  height: '" + geometry.getAttributeValue( "height" ) + "'" );
 							currentVertex.addUserDatum( Keywords.WIDTH_KEY, geometry.getAttributeValue( "width" ), UserData.SHARED );							
 							currentVertex.addUserDatum( Keywords.HEIGHT_KEY, geometry.getAttributeValue( "height" ), UserData.SHARED );
 						}
@@ -319,7 +294,7 @@ public class GraphML extends AbstractModelHandler
 				if ( o instanceof org.jdom.Element )
 				{
 					org.jdom.Element element = (org.jdom.Element)o;
-					log.debug( "  id: " + element.getAttributeValue( "id" ) );
+					logger.debug( "  id: " + element.getAttributeValue( "id" ) );
 
 					Iterator iter2 = element.getDescendants( new org.jdom.filter.ElementFilter( "EdgeLabel" ) );
 					org.jdom.Element edgeLabel = null;
@@ -329,12 +304,12 @@ public class GraphML extends AbstractModelHandler
 						if ( o2 instanceof org.jdom.Element )
 						{
 							edgeLabel = (org.jdom.Element)o2;
-							log.debug( "  Full name: '" + edgeLabel.getQualifiedName() + "'" );
-							log.debug( "  Name: '" + edgeLabel.getTextTrim() + "'" );
+							logger.debug( "  Full name: '" + edgeLabel.getQualifiedName() + "'" );
+							logger.debug( "  Name: '" + edgeLabel.getTextTrim() + "'" );
 						}
 					}
-					log.debug( "  source: " + element.getAttributeValue( "source" ) );
-					log.debug( "  target: " + element.getAttributeValue( "target" ) );
+					logger.debug( "  source: " + element.getAttributeValue( "source" ) );
+					logger.debug( "  target: " + element.getAttributeValue( "target" ) );
 
 					DirectedSparseVertex source = null;
 					DirectedSparseVertex dest = null;
@@ -358,13 +333,13 @@ public class GraphML extends AbstractModelHandler
 					if ( source == null )
 					{
 						String msg = "Could not find starting node for edge. Name: '" + element.getAttributeValue( "source" ) + "' In file '" + fileName + "'";
-						log.error( msg );
+						logger.error( msg );
 						throw new RuntimeException( msg );
 					}
 					if ( dest == null )
 					{
 						String msg = "Could not find end node for edge. Name: '" + element.getAttributeValue( "target" ) + "' In file '" + fileName + "'";
-						log.error( msg );
+						logger.error( msg );
 						throw new RuntimeException( msg );
 					}
 
@@ -399,7 +374,7 @@ public class GraphML extends AbstractModelHandler
 							{
 								String guard = firstLineMatcher.group( 1 );
 								e.addUserDatum( Keywords.GUARD_KEY, guard, UserData.SHARED );
-								log.debug( " Found guard = '" + guard + "' for edge id: " + edgeLabel.getQualifiedName() );
+								logger.debug( " Found guard = '" + guard + "' for edge id: " + edgeLabel.getQualifiedName() );
 							}							
 
 							// Look for Actions
@@ -412,7 +387,7 @@ public class GraphML extends AbstractModelHandler
 								{
 									String actions = firstLineMatcher.group( 0 ).trim();
 									e.addUserDatum( Keywords.ACTIONS_KEY, actions, UserData.SHARED );
-									log.debug( " Found actions: '" + actions + "' for edge id: " + edgeLabel.getQualifiedName() );
+									logger.debug( " Found actions: '" + actions + "' for edge id: " + edgeLabel.getQualifiedName() );
 								}
 							}
 							
@@ -427,13 +402,13 @@ public class GraphML extends AbstractModelHandler
 									throw new RuntimeException( "Edge has a label '" + label  + "', which is a reserved keyword, in file: '" + fileName + "'" );
 								}
 								e.addUserDatum( Keywords.LABEL_KEY, label_key, UserData.SHARED );
-								log.debug( " Found label = '" + label_key + "' for edge id: " + edgeLabel.getQualifiedName() );
+								logger.debug( " Found label = '" + label_key + "' for edge id: " + edgeLabel.getQualifiedName() );
 								
 								String parameter = firstLineMatcher.group( 2 );
 								if ( parameter != null )
 								{
 									e.addUserDatum( Keywords.PARAMETER_KEY, parameter, UserData.SHARED );
-									log.debug( " Found parameter = '" + parameter + "' for edge id: " + edgeLabel.getQualifiedName() );
+									logger.debug( " Found parameter = '" + parameter + "' for edge id: " + edgeLabel.getQualifiedName() );
 								}
 							}							
 						}
@@ -457,7 +432,7 @@ public class GraphML extends AbstractModelHandler
 							try
 							{
 								weight = Float.valueOf( value.trim() );
-								log.debug( "  Found weight= " + weight + " for edge: " + label );
+								logger.debug( "  Found weight= " + weight + " for edge: " + label );
 							}
 							catch ( NumberFormatException error )
 							{
@@ -477,7 +452,7 @@ public class GraphML extends AbstractModelHandler
 						m = p.matcher( str );
 						if ( m.find() )
 						{
-							log.debug( "  Found BLOCKED. This edge will be removed from the graph: " + label );
+							logger.debug( "  Found BLOCKED. This edge will be removed from the graph: " + label );
 							e.addUserDatum( Keywords.BLOCKED, Keywords.BLOCKED, UserData.SHARED );
 						}
 
@@ -492,7 +467,7 @@ public class GraphML extends AbstractModelHandler
 						m = p.matcher( str );
 						if ( m.find() )
 						{
-							log.debug( "  Found BACKTRACK for edge: " + label );
+							logger.debug( "  Found BACKTRACK for edge: " + label );
 							e.addUserDatum( Keywords.BACKTRACK, Keywords.BACKTRACK, UserData.SHARED );
 						}
 
@@ -506,19 +481,19 @@ public class GraphML extends AbstractModelHandler
 						if ( m.find() )
 						{
 							String index_key = m.group( 2 );
-							log.debug( "  Found INDEX. This edge will use the INDEX key: " + index_key );
+							logger.debug( "  Found INDEX. This edge will use the INDEX key: " + index_key );
 							e.setUserDatum( Keywords.INDEX_KEY, new Integer( index_key ), UserData.SHARED );
 						}
 
 					}
 					e.addUserDatum( Keywords.VISITED_KEY, new Integer( 0 ), UserData.SHARED );
-					log.debug( "  Added edge: '" + e.getUserDatum( Keywords.LABEL_KEY ) + "', with id: " + e.getUserDatum( Keywords.INDEX_KEY ) );
+					logger.debug( "  Added edge: '" + e.getUserDatum( Keywords.LABEL_KEY ) + "', with id: " + e.getUserDatum( Keywords.INDEX_KEY ) );
 				}
 			}
 		}
 		catch ( JDOMException e )
 		{
-			log.error( e );
+			logger.error( e );
 			throw new RuntimeException( "Could not parse file: '" + fileName + "'" );
 		}
 		catch ( IOException e )
@@ -551,7 +526,7 @@ public class GraphML extends AbstractModelHandler
 			DirectedSparseVertex v = (DirectedSparseVertex)vertices[ i ];
 			if ( v.containsUserDatumKey( Keywords.BLOCKED ) )
 			{
-				log.debug( "Removing this vertex because it is BLOCKED: '" + v.getUserDatum( Keywords.LABEL_KEY ) + "'" );
+				logger.debug( "Removing this vertex because it is BLOCKED: '" + v.getUserDatum( Keywords.LABEL_KEY ) + "'" );
 				graph.removeVertex( v );
 			}
 		}
@@ -561,7 +536,7 @@ public class GraphML extends AbstractModelHandler
 			DirectedSparseEdge e = (DirectedSparseEdge)edges[ i ];
 			if ( e.containsUserDatumKey( Keywords.BLOCKED ) )
 			{
-				log.debug( "Removing this edge because it is BLOCKED: '" + e.getUserDatum( Keywords.LABEL_KEY ) + "'" );
+				logger.debug( "Removing this edge because it is BLOCKED: '" + e.getUserDatum( Keywords.LABEL_KEY ) + "'" );
 				graph.removeEdge( e );
 			}
 		}
@@ -580,7 +555,7 @@ public class GraphML extends AbstractModelHandler
 			mergeVerticesMarked_MERGE();
 			checkForVerticesWithZeroInEdges();
 	
-			log.info( "Done merging" );		
+			logger.info( "Done merging" );		
 			setMerged(true);
 		}
 	}
@@ -609,7 +584,7 @@ public class GraphML extends AbstractModelHandler
 			SparseGraph g = (SparseGraph) iter.next();
 			foundSubStartGraph = false;
 	
-			log.debug( "Analyzing graph: " + g.getUserDatum( Keywords.FILE_KEY ) );
+			logger.debug( "Analyzing graph: " + g.getUserDatum( Keywords.FILE_KEY ) );
 	
 			Object[] vertices = g.getVertices().toArray();
 			for ( int i = 0; i < vertices.length; i++ )
@@ -649,7 +624,7 @@ public class GraphML extends AbstractModelHandler
 						foundMotherStartGraph = true;
 						graph = g;
 						edge.getDest().addUserDatum( Keywords.MOTHER_GRAPH_START_VERTEX, Keywords.MOTHER_GRAPH_START_VERTEX, UserData.SHARED );
-						log.debug( "Found the mother graph in the file: " +  graph.getUserDatum( Keywords.FILE_KEY ) );
+						logger.debug( "Found the mother graph in the file: " +  graph.getUserDatum( Keywords.FILE_KEY ) );
 					}
 					else
 					{
@@ -696,8 +671,8 @@ public class GraphML extends AbstractModelHandler
 						foundSubStartGraph = true;
 						edge.getDest().addUserDatum( Keywords.SUBGRAPH_START_VERTEX, Keywords.SUBGRAPH_START_VERTEX, UserData.SHARED );
 						g.addUserDatum( Keywords.LABEL_KEY, edge.getDest().getUserDatum( Keywords.LABEL_KEY ), UserData.SHARED );
-						log.debug( "Found sub-graph: '" + g.getUserDatum( Keywords.LABEL_KEY ) + "', in file '" + g.getUserDatum( Keywords.FILE_KEY ) + "'" );
-						log.debug( "Added SUBGRAPH_START_VERTEX to vertex: " + edge.getDest().getUserDatum( Keywords.INDEX_KEY ) );
+						logger.debug( "Found sub-graph: '" + g.getUserDatum( Keywords.LABEL_KEY ) + "', in file '" + g.getUserDatum( Keywords.FILE_KEY ) + "'" );
+						logger.debug( "Added SUBGRAPH_START_VERTEX to vertex: " + edge.getDest().getUserDatum( Keywords.INDEX_KEY ) );
 					}
 				}
 			}
@@ -726,7 +701,7 @@ public class GraphML extends AbstractModelHandler
 				continue;
 			}
 
-			log.debug( "Looking for infinit recursive loop in file: " + g.getUserDatum( Keywords.FILE_KEY ) );
+			logger.debug( "Looking for infinit recursive loop in file: " + g.getUserDatum( Keywords.FILE_KEY ) );
 
 			String subgraph_label = (String)g.getUserDatum( Keywords.LABEL_KEY );
 			Object[] vertices = g.getVertices().toArray();
@@ -745,7 +720,7 @@ public class GraphML extends AbstractModelHandler
 						continue;
 					}
 					
-					log.error( "Vertex: " + label + ", with id: " + v.getUserDatum( Keywords.INDEX_KEY ) + ", is a duplicate in a subgraph" );
+					logger.error( "Vertex: " + label + ", with id: " + v.getUserDatum( Keywords.INDEX_KEY ) + ", is a duplicate in a subgraph" );
 					throw new RuntimeException( "Found a subgraph containing a duplicate vertex with name: '" + 
 		                    					v.getUserDatum( Keywords.LABEL_KEY ) + 
 		                    					"', in file: '" + 
@@ -753,7 +728,7 @@ public class GraphML extends AbstractModelHandler
 					
 				}
 			}
-			log.debug( "Nope! Did not find any infinit recursive loops." );
+			logger.debug( "Nope! Did not find any infinit recursive loops." );
 		}
 	}
 	private void mergeSubgraphs()
@@ -766,33 +741,33 @@ public class GraphML extends AbstractModelHandler
 			{
 				continue;
 			}
-			log.debug( "Analysing graph in file: " + g.getUserDatum( Keywords.FILE_KEY ) );
+			logger.debug( "Analysing graph in file: " + g.getUserDatum( Keywords.FILE_KEY ) );
 
 			Object[] vertices = graph.getVertices().toArray();
 			for ( int j = 0; j < vertices.length; j++ )
 			{
 				DirectedSparseVertex v1 = (DirectedSparseVertex)vertices[ j ];
-				log.debug( "Investigating vertex(" + v1.getUserDatum( Keywords.INDEX_KEY ) + "): '" + v1.getUserDatum( Keywords.LABEL_KEY ) + "'" );
+				logger.debug( "Investigating vertex(" + v1.getUserDatum( Keywords.INDEX_KEY ) + "): '" + v1.getUserDatum( Keywords.LABEL_KEY ) + "'" );
 
 				if ( v1.getUserDatum( Keywords.LABEL_KEY ).equals( g.getUserDatum( Keywords.LABEL_KEY ) ) )
 				{
 					if ( v1.containsUserDatumKey( Keywords.MERGE ) )
 					{
-						log.debug( "The vertex is marked MERGE, and will not be replaced by a subgraph.");
+						logger.debug( "The vertex is marked MERGE, and will not be replaced by a subgraph.");
 						continue;
 					}
 					if ( v1.containsUserDatumKey( Keywords.NO_MERGE ) )
 					{
-						log.debug( "The vertex is marked NO_MERGE, and will not be replaced by a subgraph.");
+						logger.debug( "The vertex is marked NO_MERGE, and will not be replaced by a subgraph.");
 						continue;
 					}
 					if ( v1.containsUserDatumKey( Keywords.MERGED_BY_MBT ) )
 					{
-						log.debug( "The vertex is marked MERGED_BY_MBT, and will not be replaced by a subgraph.");
+						logger.debug( "The vertex is marked MERGED_BY_MBT, and will not be replaced by a subgraph.");
 						continue;
 					}
 
-					log.debug( "A subgraph'ed vertex: '" + v1.getUserDatum( Keywords.LABEL_KEY ) +
+					logger.debug( "A subgraph'ed vertex: '" + v1.getUserDatum( Keywords.LABEL_KEY ) +
 							       "' in graph: " + g.getUserDatum( Keywords.FILE_KEY )  +
 							       ", equals a node in the graph in file: '" +
 							       graph.getUserDatum( Keywords.FILE_KEY ) + "'" );
@@ -846,7 +821,7 @@ public class GraphML extends AbstractModelHandler
 					continue;
 				}
 
-				log.debug( "Merging vertex(" + v1.getUserDatum( Keywords.INDEX_KEY ) + "): '" + v1.getUserDatum( Keywords.LABEL_KEY ) +
+				logger.debug( "Merging vertex(" + v1.getUserDatum( Keywords.INDEX_KEY ) + "): '" + v1.getUserDatum( Keywords.LABEL_KEY ) +
 						       "' with vertex (" + v2.getUserDatum( Keywords.INDEX_KEY ) + ")" );
 
 				Object[] inEdges = v1.getInEdges().toArray();
@@ -870,7 +845,7 @@ public class GraphML extends AbstractModelHandler
 
 			if ( mergedVertices.isEmpty() == false )
 			{
-				log.debug( "Remvoing merged vertex(" + v1.getUserDatum( Keywords.INDEX_KEY ) + ")" );
+				logger.debug( "Remvoing merged vertex(" + v1.getUserDatum( Keywords.INDEX_KEY ) + ")" );
 				graph.removeVertex( v1 );
 			}
 		}		
@@ -891,7 +866,7 @@ public class GraphML extends AbstractModelHandler
 				{
 					String msg = "No in-edges! The vertex: " + Util.getCompleteVertexName( v ) + " is not reachable," +
 							     " from file: '" + v.getUserDatum( Keywords.FILE_KEY ) + "'";
-					log.error( msg );
+					logger.error( msg );
 					throw new RuntimeException( msg );
 				}
 			}
@@ -918,7 +893,7 @@ public class GraphML extends AbstractModelHandler
 			new_v.importUserData( v );
 			new_v.setUserDatum( Keywords.INDEX_KEY, new Integer( getNewVertexAndEdgeIndex() ), UserData.SHARED );
 			dst.addVertex( new_v );
-			log.debug("Associated vertex: " + v + " to new vertex: " + new_v );
+			logger.debug("Associated vertex: " + v + " to new vertex: " + new_v );
 			map.put( (Integer)v.getUserDatum( Keywords.INDEX_KEY ), new_v );
 		}
 		Object[] edges = src.getEdges().toArray();
@@ -949,11 +924,11 @@ public class GraphML extends AbstractModelHandler
 	{
 		// Save the target vertex out-edge list
 		Vector targetVertexOutEdgeList = new Vector();
-		log.debug( "Target vertex (" + Util.getCompleteVertexName( targetVertex ) + ") out-edge list" );
+		logger.debug( "Target vertex (" + Util.getCompleteVertexName( targetVertex ) + ") out-edge list" );
 		for (Iterator iter = targetVertex.getOutEdges().iterator(); iter.hasNext();)
 		{
 			DirectedSparseEdge element = (DirectedSparseEdge) iter.next();
-			log.debug( "  " + Util.getCompleteEdgeName( element ) );
+			logger.debug( "  " + Util.getCompleteEdgeName( element ) );
 			targetVertexOutEdgeList.add( element );
 		}
 
@@ -995,7 +970,7 @@ public class GraphML extends AbstractModelHandler
 			return;
 		}
 
-		log.debug( "Start merging target vertex: " + Util.getCompleteVertexName( targetVertex ) + " with source vertex: " + Util.getCompleteVertexName( sourceVertex ) );
+		logger.debug( "Start merging target vertex: " + Util.getCompleteVertexName( targetVertex ) + " with source vertex: " + Util.getCompleteVertexName( sourceVertex ) );
 
 		Object[] inEdges = sourceVertex.getInEdges().toArray();
 		for (int i = 0; i < inEdges.length; i++)
@@ -1013,7 +988,7 @@ public class GraphML extends AbstractModelHandler
 			new_edge.importUserData( edge );
 			new_edge.setUserDatum( Keywords.INDEX_KEY, new Integer( getNewVertexAndEdgeIndex() ), UserData.SHARED );
 		}
-		log.debug( "Remvoing source vertex: " + Util.getCompleteVertexName( sourceVertex) );
+		logger.debug( "Remvoing source vertex: " + Util.getCompleteVertexName( sourceVertex) );
 		mainGraph.removeVertex( sourceVertex );
 		targetVertex.addUserDatum( Keywords.MERGED_BY_MBT, Keywords.MERGED_BY_MBT, UserData.SHARED );
 
@@ -1044,17 +1019,17 @@ public class GraphML extends AbstractModelHandler
 			Vector edgesToBeRemoved = new Vector();
 			inEdges = stopVertex.getInEdges().toArray();
 			
-			log.debug( "Stop vertex in-edge list" );
+			logger.debug( "Stop vertex in-edge list" );
 			for (Iterator iter = stopVertex.getInEdges().iterator(); iter.hasNext();)
 			{
 				DirectedSparseEdge element = (DirectedSparseEdge) iter.next();
-				log.debug( "  " + Util.getCompleteEdgeName( element ) );
+				logger.debug( "  " + Util.getCompleteEdgeName( element ) );
 			}
-			log.debug( "Target vertex (" + Util.getCompleteVertexName( targetVertex ) + ") out-edge list" );
+			logger.debug( "Target vertex (" + Util.getCompleteVertexName( targetVertex ) + ") out-edge list" );
 			for (Iterator iter = targetVertexOutEdgeList.iterator(); iter.hasNext();)
 			{
 				DirectedSparseEdge element = (DirectedSparseEdge) iter.next();
-				log.debug( "  " + Util.getCompleteEdgeName( element ) );
+				logger.debug( "  " + Util.getCompleteEdgeName( element ) );
 			}
 
 			Vector mergeList = MergeList( targetVertexOutEdgeList.toArray(), inEdges );
@@ -1073,22 +1048,22 @@ public class GraphML extends AbstractModelHandler
 				DirectedSparseEdge element = (DirectedSparseEdge) iter.next();
 				try {
 					mainGraph.removeEdge( element );
-					log.debug( "Removing edge: " + Util.getCompleteEdgeName( element ) );
-					log.debug( Util.getCompleteEdgeName( element ) + ", was found and removed from graph,: '" + mainGraph.getUserDatum( Keywords.FILE_KEY ) + "'");
+					logger.debug( "Removing edge: " + Util.getCompleteEdgeName( element ) );
+					logger.debug( Util.getCompleteEdgeName( element ) + ", was found and removed from graph,: '" + mainGraph.getUserDatum( Keywords.FILE_KEY ) + "'");
 				} catch (java.lang.IllegalArgumentException e) {
-					log.debug( Util.getCompleteEdgeName( element ) + ", was not found in graph: '" + mainGraph.getUserDatum( Keywords.FILE_KEY ) + "', this is ok, since it probably been removed before. (I know, not ver good progamming practice here)");
+					logger.debug( Util.getCompleteEdgeName( element ) + ", was not found in graph: '" + mainGraph.getUserDatum( Keywords.FILE_KEY ) + "', this is ok, since it probably been removed before. (I know, not ver good progamming practice here)");
 				}
 			}
-			log.debug( "Removing the Stop vertex: " + stopVertex.getUserDatum( Keywords.INDEX_KEY )  );
+			logger.debug( "Removing the Stop vertex: " + stopVertex.getUserDatum( Keywords.INDEX_KEY )  );
 			mainGraph.removeVertex( stopVertex );
 		}
 	}
 	
 	private Vector MergeList( Object[] array_A, Object[] array_B )
 	{
-		log.debug( "Vector twoLists( Object[] array_A, Object[] array_B )" );
+		logger.debug( "Vector twoLists( Object[] array_A, Object[] array_B )" );
 		Vector matches = new Vector();
-		log.debug( "  Looking for exact matches" );
+		logger.debug( "  Looking for exact matches" );
 		for ( int i = 0; i < array_A.length; i++ )
 		{
 			DirectedSparseEdge a = (DirectedSparseEdge)array_A[ i ];			
@@ -1107,21 +1082,21 @@ public class GraphML extends AbstractModelHandler
 				}
 				if ( aLabel == null && bLabel == null )
 				{
-					log.debug( "    adding: " + Util.getCompleteEdgeName( a ) + " and " + Util.getCompleteEdgeName( b ) );
+					logger.debug( "    adding: " + Util.getCompleteEdgeName( a ) + " and " + Util.getCompleteEdgeName( b ) );
 					matches.add( new Pair( a, b ) );
 				}
 				else if ( aLabel != null && bLabel != null )
 				{
 					if ( aLabel.equals( bLabel ) )
 					{
-						log.debug( "    adding: " + Util.getCompleteEdgeName( a ) + " and " + Util.getCompleteEdgeName( b ) );
+						logger.debug( "    adding: " + Util.getCompleteEdgeName( a ) + " and " + Util.getCompleteEdgeName( b ) );
 						matches.add( new Pair( a, b ) );
 					}
 				}
 			}		
 		}
 		
-		log.debug( "  Matching nulls from the first list with non-matched items in the second list" );
+		logger.debug( "  Matching nulls from the first list with non-matched items in the second list" );
 		for ( int i = 0; i < array_A.length; i++ )
 		{
 			DirectedSparseEdge a = (DirectedSparseEdge)array_A[ i ];			
@@ -1147,7 +1122,7 @@ public class GraphML extends AbstractModelHandler
 			
 						if ( alreadyMatched == false )
 						{
-							log.debug( "    adding: " + Util.getCompleteEdgeName( a ) + " and " + Util.getCompleteEdgeName( b ) );
+							logger.debug( "    adding: " + Util.getCompleteEdgeName( a ) + " and " + Util.getCompleteEdgeName( b ) );
 							matches.add( new Pair( a, b ) );
 						}
 					}
@@ -1155,7 +1130,7 @@ public class GraphML extends AbstractModelHandler
 			}
 		}
 		
-		log.debug( "  Matching nulls from the second list with non-matched items in the first list" );
+		logger.debug( "  Matching nulls from the second list with non-matched items in the first list" );
 		for ( int i = 0; i < array_B.length; i++ )
 		{
 			DirectedSparseEdge b = (DirectedSparseEdge)array_B[ i ];			
@@ -1181,7 +1156,7 @@ public class GraphML extends AbstractModelHandler
 			
 						if ( alreadyMatched == false )
 						{
-							log.debug( "    adding: " + Util.getCompleteEdgeName( a ) + " and " + Util.getCompleteEdgeName( b ) );
+							logger.debug( "    adding: " + Util.getCompleteEdgeName( a ) + " and " + Util.getCompleteEdgeName( b ) );
 							matches.add( new Pair( a, b ) );
 						}
 					}
@@ -1194,13 +1169,13 @@ public class GraphML extends AbstractModelHandler
 	
 	private void merge_user_data( DirectedSparseEdge dst_edge, DirectedSparseEdge src_edge_A , DirectedSparseEdge src_edge_B )
 	{
-		log.debug( "    merge_user_data" );
+		logger.debug( "    merge_user_data" );
 		for (Iterator iter = src_edge_A.getUserDatumKeyIterator(); iter.hasNext();)
 		{
 			String element = (String) iter.next();
 			if ( dst_edge.containsUserDatumKey( element ) == false )
 			{
-				log.debug( "      addUserDatum: " + element + " = " + src_edge_A.getUserDatum( element ) );
+				logger.debug( "      addUserDatum: " + element + " = " + src_edge_A.getUserDatum( element ) );
 				dst_edge.addUserDatum( element, src_edge_A.getUserDatum( element ), UserData.SHARED );
 			}
 		}
@@ -1209,7 +1184,7 @@ public class GraphML extends AbstractModelHandler
 			String element = (String) iter.next();
 			if ( dst_edge.containsUserDatumKey( element ) == false )
 			{
-				log.debug( "      addUserDatum: " + element + " = " + src_edge_B.getUserDatum( element ) );
+				logger.debug( "      addUserDatum: " + element + " = " + src_edge_B.getUserDatum( element ) );
 				dst_edge.addUserDatum( element, src_edge_B.getUserDatum( element ), UserData.SHARED );
 			}
 		}
@@ -1220,23 +1195,23 @@ public class GraphML extends AbstractModelHandler
 		{
 			if ( fullLabel_A.length() > fullLabel_B.length() )
 			{
-				log.debug( "      full label: " +  src_edge_A.getUserDatum( Keywords.FULL_LABEL_KEY ) );
+				logger.debug( "      full label: " +  src_edge_A.getUserDatum( Keywords.FULL_LABEL_KEY ) );
 				dst_edge.setUserDatum( Keywords.FULL_LABEL_KEY, src_edge_A.getUserDatum( Keywords.FULL_LABEL_KEY ), UserData.SHARED );
 			}
 			else
 			{
-				log.debug( "      full label: " +  src_edge_B.getUserDatum( Keywords.FULL_LABEL_KEY ) );
+				logger.debug( "      full label: " +  src_edge_B.getUserDatum( Keywords.FULL_LABEL_KEY ) );
 				dst_edge.setUserDatum( Keywords.FULL_LABEL_KEY, src_edge_B.getUserDatum( Keywords.FULL_LABEL_KEY ), UserData.SHARED );
 			}
 		}
 		else if ( fullLabel_A != null  && fullLabel_B == null )
 		{
-			log.debug( "      full label: " +  src_edge_A.getUserDatum( Keywords.FULL_LABEL_KEY ) );
+			logger.debug( "      full label: " +  src_edge_A.getUserDatum( Keywords.FULL_LABEL_KEY ) );
 			dst_edge.setUserDatum( Keywords.FULL_LABEL_KEY, src_edge_A.getUserDatum( Keywords.FULL_LABEL_KEY ), UserData.SHARED );
 		}
 		else if ( fullLabel_A == null  && fullLabel_B != null )
 		{
-			log.debug( "      full label: " +  src_edge_B.getUserDatum( Keywords.FULL_LABEL_KEY ) );
+			logger.debug( "      full label: " +  src_edge_B.getUserDatum( Keywords.FULL_LABEL_KEY ) );
 			dst_edge.setUserDatum( Keywords.FULL_LABEL_KEY, src_edge_B.getUserDatum( Keywords.FULL_LABEL_KEY ), UserData.SHARED );
 		}
 	}
@@ -1244,7 +1219,7 @@ public class GraphML extends AbstractModelHandler
 	private void MergeOutEdgeAndInEdge(DirectedSparseEdge outEdge,
 			DirectedSparseEdge inEdge, Vector edgesToBeRemoved,
 			SparseGraph graph) {
-		log.debug("MergeOutEdgeAndInEdge");
+		logger.debug("MergeOutEdgeAndInEdge");
 
 		if (outEdge == null) {
 			throw new RuntimeException("Internal progamming error");
@@ -1253,8 +1228,8 @@ public class GraphML extends AbstractModelHandler
 			throw new RuntimeException("Internal progamming error");
 		}
 
-		log.debug("  outEdge: " + Util.getCompleteEdgeName(outEdge));
-		log.debug("  inEdge: " + Util.getCompleteEdgeName(inEdge));
+		logger.debug("  outEdge: " + Util.getCompleteEdgeName(outEdge));
+		logger.debug("  inEdge: " + Util.getCompleteEdgeName(inEdge));
 
 		DirectedSparseEdge new_edge = (DirectedSparseEdge) graph
 				.addEdge(new DirectedSparseEdge((DirectedSparseVertex) inEdge
@@ -1264,7 +1239,7 @@ public class GraphML extends AbstractModelHandler
 
 		new_edge.setUserDatum( Keywords.INDEX_KEY,
 				new Integer(getNewVertexAndEdgeIndex()), UserData.SHARED);
-		log.debug("  Replacing the target vertex out-edge: "
+		logger.debug("  Replacing the target vertex out-edge: "
 				+ Util.getCompleteEdgeName(outEdge) + " (old) with: "
 				+ Util.getCompleteEdgeName(new_edge) + "(new), using: "
 				+ Util.getCompleteEdgeName(inEdge));
@@ -1274,6 +1249,6 @@ public class GraphML extends AbstractModelHandler
 	}
 
 	public void save(PrintStream ps) {
-		Util.writeGraphML(graph, ps);		
+		(new GraphMLFile()).save(graph, ps);
 	}
 }
