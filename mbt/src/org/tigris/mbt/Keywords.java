@@ -1,6 +1,5 @@
 package org.tigris.mbt;
 
-import java.util.Iterator;
 import java.util.Vector;
 
 /**
@@ -207,14 +206,6 @@ public class Keywords {
 	*/
 	public static boolean isKeyWord( String wordToCheck )
 	{
-        for ( Iterator iter = reservedKeyWords.iterator(); iter.hasNext(); )
-        {
-            String keyWord = (String) iter.next();
-            if ( keyWord.equals( wordToCheck ) )
-            {
-            	return true;
-            }
-        }
-        return false;
+		return reservedKeyWords.contains(wordToCheck);
 	}
 }
