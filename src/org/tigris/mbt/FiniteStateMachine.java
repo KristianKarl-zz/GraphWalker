@@ -114,7 +114,7 @@ public class FiniteStateMachine{
 		Set retur = new HashSet(currentState.getOutEdges());
 		if(retur.size()==0)
 		{
-			throw new RuntimeException( "Cul-De-Sac: Dead end found in '" + getCurrentStateName() + "', aborting.");
+			throw new RuntimeException( "Cul-De-Sac, dead end found in '" + Util.getCompleteVertexName( getCurrentState() ) + "'" );
 		}
 		return retur;
 	}

@@ -49,7 +49,7 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 		}
 		if(retur.size()==0)
 		{
-			throw new RuntimeException( "Cul-De-Sac: Dead end found in '" + getCurrentStateName() + "', aborting.2");
+			throw new RuntimeException( "Cul-De-Sac, dead end found in '" + Util.getCompleteVertexName( getCurrentState() ) + "'");
 		}
 		return retur;
 	}
