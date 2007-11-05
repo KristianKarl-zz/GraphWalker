@@ -453,7 +453,7 @@ public class CLI
 		System.out.println( "  commons-cli-1.1.jar          http://commons.apache.org/cli/" );
 		System.out.println( "  colt-1.2.jar                 http://dsd.lbl.gov/~hoschek/colt/" );
 		System.out.println( "  jung-1.7.6.jar               http://jung.sourceforge.net/" );
-		System.out.println( "  bsh-core-2.0b4.jar           http://www.beanshell.org/" );
+		System.out.println( "  bsh-2.0b4.jar                http://www.beanshell.org/" );
 	}
 	
 	/**
