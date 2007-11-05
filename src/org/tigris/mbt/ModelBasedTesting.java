@@ -209,9 +209,8 @@ public class ModelBasedTesting
 		catch(RuntimeException e)
 		{
 			logger.fatal(e.toString());
-			System.exit(-1);
+			throw new RuntimeException( "ERROR: " + e.getMessage() );
 		}
-		return null;
 	}
 
 	public void backtrack() {
