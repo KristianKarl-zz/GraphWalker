@@ -17,16 +17,12 @@
 
 package org.tigris.mbt;
 
-import java.io.File;
-import java.io.FileOutputStream;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
 
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
-import org.apache.log4j.SimpleLayout;
-import org.apache.log4j.WriterAppender;
 import org.tigris.mbt.conditions.CombinationalCondition;
 import org.tigris.mbt.conditions.EdgeCoverage;
 import org.tigris.mbt.conditions.ReachedEdge;
@@ -35,6 +31,7 @@ import org.tigris.mbt.conditions.StateCoverage;
 import org.tigris.mbt.conditions.StopCondition;
 import org.tigris.mbt.conditions.TestCaseLength;
 import org.tigris.mbt.conditions.TimeDuration;
+import org.tigris.mbt.generators.CodeGenerator;
 import org.tigris.mbt.generators.ListGenerator;
 import org.tigris.mbt.generators.PathGenerator;
 import org.tigris.mbt.generators.RandomPathGenerator;
@@ -47,38 +44,13 @@ import edu.uci.ics.jung.graph.impl.SparseGraph;
  */
 public class ModelBasedTesting
 {
-	static Logger logger = Logger.getLogger( ModelBasedTesting.class );
+	static Logger logger = Util.setupLogger( ModelBasedTesting.class );
 
 	private AbstractModelHandler modelHandler;
 	private FiniteStateMachine machine;
 	private StopCondition condition;
 	private PathGenerator generator;
-	private String templateFile;
-
-	public ModelBasedTesting()
-	{
-		if ( new File( "mbt.properties" ).exists() )
-		{
-			PropertyConfigurator.configure("mbt.properties");
-		}
-		else
-		{
-			SimpleLayout layout = new SimpleLayout();
-			WriterAppender writerAppender = null;
-	 		try
-	 		{
-	 			FileOutputStream fileOutputStream = new FileOutputStream( "mbt.log" );
-	 			writerAppender = new WriterAppender( layout, fileOutputStream );
-	 		} 
-	 		catch ( Exception e )
-	 		{
-				e.printStackTrace();
-	 		}
-	 
-	 		logger.addAppender( writerAppender );
-	 		logger.setLevel( (Level)Level.ERROR );
-		}
-	}
+	private String template;
 
 	public void addCondition(int conditionType, String conditionValue) 
 	{
@@ -173,15 +145,8 @@ public class ModelBasedTesting
 				break;
 			
 			case Keywords.GENERATOR_STUB:
-				try 
-				{
-					Util.generateCodeByTemplate(getGraph(), this.templateFile);
-				}
-				catch (IOException e) 
-				{
-					throw new RuntimeException( "Stub file generation error: " + e.getMessage() );
-				}
-				return;
+				this.generator = new CodeGenerator(getMachine(), this.template);
+				break;
 				
 			case Keywords.GENERATOR_LIST:
 				this.generator = new ListGenerator( getMachine() );
@@ -251,6 +216,16 @@ public class ModelBasedTesting
 
 	public void setTemplate( String templateFile )
 	{
-		this.templateFile = templateFile;
+		this.template = "";
+		try {
+			BufferedReader in = new BufferedReader(new FileReader(templateFile));
+		
+			for(String tempLine = in.readLine(); tempLine != null; tempLine = in.readLine())
+			{
+				this.template += tempLine + "\n";			
+			}
+		} catch (IOException e) {
+			throw new RuntimeException("Template file read problem: " + e.getMessage());
+		}
 	}
 }
