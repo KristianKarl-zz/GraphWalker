@@ -106,7 +106,7 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 				} catch (EvalError e) {
 					logger.error(e);
 					logger.error( Util.getCompleteEdgeName( edge ) );
-					throw new RuntimeException( "Malformed action sequence: " + e.getMessage() );
+					throw new RuntimeException( "Malformed action sequence at edge: " + Util.getCompleteEdgeName( edge ) + ", " + e.getMessage() );
 				}
 			}
 		}
