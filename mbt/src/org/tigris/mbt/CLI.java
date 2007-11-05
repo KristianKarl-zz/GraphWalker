@@ -49,7 +49,14 @@ public class CLI
 
 	public CLI()
 	{
-		Runtime.getRuntime().addShutdownHook( shutDownThread );
+		try 
+		{
+			Runtime.getRuntime().addShutdownHook( shutDownThread );
+		}
+		catch ( IllegalArgumentException e )
+		{
+			logger.debug( "Hook previously registered" );
+		}
 	}
 	
 	public static void main(String[] args)
