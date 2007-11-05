@@ -44,7 +44,7 @@ public class CLI
 		}
 	};
 	static private ModelBasedTesting mbt = new ModelBasedTesting();
-
+	private Timer timer;
 	static Options opt = new Options();
 
 	public CLI()
@@ -198,6 +198,7 @@ public class CLI
 			
 		try 
 		{			
+			timer = new Timer();
 			CommandLineParser parser = new PosixParser();
 	        CommandLine cl = parser.parse( opt, args );
 	        
@@ -245,6 +246,10 @@ public class CLI
         catch ( ParseException e ) 
         {
     		System.err.println( e.getMessage() );
+        }
+        finally
+        {
+    		timer.cancel();
         }
 	}
 
@@ -530,12 +535,11 @@ public class CLI
             return;	            	
         }
 
-		Timer t = new Timer();
 		if( cl.hasOption( "o" ) )
 		{
 			logger.info( "Append coverage to log every: " + Integer.valueOf( cl.getOptionValue( "o" ) ).longValue() + " seconds" );
 			
-			t.schedule(	new TimerTask()	
+			timer.schedule(	new TimerTask()	
 			{
 				public void run() 
 				{
@@ -557,8 +561,6 @@ public class CLI
 		{
 			System.out.println( mbt.getStatisticsString() );
 		}
-		
-		t.cancel();
 	}
 
 	/**
