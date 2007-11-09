@@ -271,17 +271,10 @@ public class FiniteStateMachine{
 		numberOfEdgesTravesedStack.push(new Integer(numberOfEdgesTravesed));
 	}
 	
-	public void peekState()
-	{
-		currentState = (DirectedSparseVertex) stateStack.peek();
-		numberOfEdgesTravesed = ((Integer)numberOfEdgesTravesedStack.peek()).intValue(); 
-	}
-
 	public void popState()
 	{
-		peekState();
-		stateStack.pop();
-		numberOfEdgesTravesedStack.pop(); 
+		currentState = (DirectedSparseVertex) stateStack.pop();
+		numberOfEdgesTravesed = ((Integer)numberOfEdgesTravesedStack.pop()).intValue(); 
 	}
 	
 	/**
