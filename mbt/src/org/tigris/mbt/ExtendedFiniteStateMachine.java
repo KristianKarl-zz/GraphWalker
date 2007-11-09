@@ -119,10 +119,11 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 		dataStack.push(getCurrentData());
 	}
 
-	public void peekState()
+	public void popState()
 	{
-		super.peekState();
-		Hashtable data = (Hashtable) dataStack.peek();
+		//FIXME Cant handle non finite objects.
+		super.popState();
+		Hashtable data = (Hashtable) dataStack.pop();
 		try {
 			for(Enumeration e = data.keys();e.hasMoreElements();)
 			{
@@ -132,12 +133,5 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 		} catch (UtilEvalError e) {
 			throw new RuntimeException( "Malformed data: '" + data + "' " + e.getMessage() );
 		}
-	}
-	
-	public void popState()
-	{
-		super.popState();
-		peekState();
-		dataStack.pop();
 	}
 }
