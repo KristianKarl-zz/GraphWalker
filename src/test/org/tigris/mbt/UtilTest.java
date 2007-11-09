@@ -2,7 +2,6 @@ package test.org.tigris.mbt;
 
 import org.tigris.mbt.Keywords;
 import org.tigris.mbt.ModelBasedTesting;
-import org.tigris.mbt.Util;
 
 import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
 import edu.uci.ics.jung.graph.impl.DirectedSparseVertex;
@@ -20,7 +19,7 @@ public class UtilTest extends TestCase {
     	{
 	    	ModelBasedTesting mbt = new ModelBasedTesting();
 	    	mbt.readGraph( "graphml/mergeSubgraphs_01" );
-	    	Util.writeGraphML( mbt.getGraph(), System.out );
+	    	mbt.writeModel( System.out );
 	    	assertTrue( mbt.getGraph().getVertices().size() == 6 );
 	    	assertTrue( mbt.getGraph().getEdges().size() == 16 );
 	    	verifyIds( mbt.getGraph() );
@@ -43,7 +42,7 @@ public class UtilTest extends TestCase {
     	{
 	    	ModelBasedTesting mbt = new ModelBasedTesting();
 	    	mbt.readGraph( "graphml/mergeSubgraphs_02" );
-	    	Util.writeGraphML( mbt.getGraph(), System.out );
+	    	mbt.writeModel( System.out );
 	    	assertTrue( mbt.getGraph().getVertices().size() == 16 );
 	    	assertTrue( mbt.getGraph().getEdges().size() == 55 );
 	    	verifyIds( mbt.getGraph() );
@@ -67,7 +66,7 @@ public class UtilTest extends TestCase {
     	{
 	    	ModelBasedTesting mbt = new ModelBasedTesting();
 	    	mbt.readGraph( "graphml/test01" );
-	    	Util.writeGraphML( mbt.getGraph(), System.out );
+	    	mbt.writeModel( System.out );
 	    	assertTrue( mbt.getGraph().getEdges().size() == 9 );
 	    	assertTrue( mbt.getGraph().getVertices().size() == 7 );
 	    	verifyIds( mbt.getGraph() );
@@ -89,7 +88,7 @@ public class UtilTest extends TestCase {
     	{
 	    	ModelBasedTesting mbt = new ModelBasedTesting();
 	    	mbt.readGraph( "graphml/test02" );
-	    	Util.writeGraphML( mbt.getGraph(), System.out );
+	    	mbt.writeModel( System.out );
 	    	assertTrue( mbt.getGraph().getEdges().size() == 11 );
 	    	assertTrue( mbt.getGraph().getVertices().size() == 8 );
 	    	verifyIds( mbt.getGraph() );
@@ -111,7 +110,7 @@ public class UtilTest extends TestCase {
     	{
 	    	ModelBasedTesting mbt = new ModelBasedTesting();
 	    	mbt.readGraph( "graphml/test03" );
-	    	Util.writeGraphML( mbt.getGraph(), System.out );
+	    	mbt.writeModel( System.out );
 	    	assertTrue( mbt.getGraph().getEdges().size() == 1550 );
 	    	assertTrue( mbt.getGraph().getVertices().size() == 788 );
 	    	verifyIds( mbt.getGraph() );
@@ -133,7 +132,7 @@ public class UtilTest extends TestCase {
     	{
 	    	ModelBasedTesting mbt = new ModelBasedTesting();
 	    	mbt.readGraph( "graphml/test22" );
-	    	Util.writeGraphML( mbt.getGraph(), System.out );
+	    	mbt.writeModel( System.out );
 	    	assertTrue( mbt.getGraph().getEdges().size() == 8 );
 	    	assertTrue( mbt.getGraph().getVertices().size() == 8 );
 	    	verifyIds( mbt.getGraph() );
@@ -155,7 +154,7 @@ public class UtilTest extends TestCase {
     	{
 	    	ModelBasedTesting mbt = new ModelBasedTesting();
 	    	mbt.readGraph( "graphml/test23" );
-	    	Util.writeGraphML( mbt.getGraph(), System.out );
+	    	mbt.writeModel( System.out );
 	    	assertTrue( mbt.getGraph().getEdges().size() == 14 );
 	    	assertTrue( mbt.getGraph().getVertices().size() == 9 );
 	    	verifyIds( mbt.getGraph() );

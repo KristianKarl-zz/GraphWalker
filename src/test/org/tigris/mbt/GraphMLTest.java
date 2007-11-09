@@ -35,7 +35,7 @@ public class GraphMLTest extends TestCase {
     	try
     	{
 	    	ModelBasedTesting mbt = new ModelBasedTesting();
-	    	mbt.readGraph( "graphml/merged/test03.graphml" );
+	    	mbt.readGraph( "graphml/test23" );
 	    	verifyIds( mbt.getGraph() );
 		}
 		catch ( Exception e)

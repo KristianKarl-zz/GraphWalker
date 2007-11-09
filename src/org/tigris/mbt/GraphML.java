@@ -15,10 +15,11 @@ import org.jdom.Document;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 
+import edu.uci.ics.jung.graph.Edge;
+import edu.uci.ics.jung.graph.Vertex;
 import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
 import edu.uci.ics.jung.graph.impl.SparseGraph;
 import edu.uci.ics.jung.graph.impl.DirectedSparseVertex;
-import edu.uci.ics.jung.io.GraphMLFile;
 import edu.uci.ics.jung.utils.Pair;
 import edu.uci.ics.jung.utils.UserData;
 
@@ -1248,7 +1249,115 @@ public class GraphML extends AbstractModelHandler
 		edgesToBeRemoved.add(outEdge);
 	}
 
+	/**
+	 * Writes the graph to a PrintStream, using GraphML format.
+	 */
 	public void save(PrintStream ps) {
-		(new GraphMLFile()).save(graph, ps);
+		SparseGraph g = getModel();
+		ps.println( "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>" );
+		ps.println( "<graphml xmlns=\"http://graphml.graphdrawing.org/xmlns/graphml\"  " +
+				            "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" " +
+				            "xsi:schemaLocation=\"http://graphml.graphdrawing.org/xmlns/graphml " +
+				            "http://www.yworks.com/xml/schema/graphml/1.0/ygraphml.xsd\" " +
+				            "xmlns:y=\"http://www.yworks.com/xml/graphml\">" );
+		ps.println( "  <key id=\"d0\" for=\"node\" yfiles.type=\"nodegraphics\"/>" );
+		ps.println( "  <key id=\"d1\" for=\"edge\" yfiles.type=\"edgegraphics\"/>" );
+		ps.println( "  <graph id=\"G\" edgedefault=\"directed\">" );
+
+        int numVertices = g.getVertices().size();
+        edu.uci.ics.jung.graph.decorators.Indexer id = edu.uci.ics.jung.graph.decorators.Indexer.getAndUpdateIndexer( graph );
+        for ( int i = 0; i < numVertices; i++ )
+        {
+            Vertex v = (Vertex) id.getVertex(i);
+            int vId = i+1;
+
+			ps.println( "    <node id=\"n" + vId + "\">" );
+			ps.println( "      <data key=\"d0\" >" );
+
+			if ( v.containsUserDatumKey( Keywords.IMAGE_KEY ) )
+			{
+				ps.println( "        <y:ImageNode >" );
+				ps.println( "          <y:Geometry  x=\"241.875\" y=\"158.701171875\" width=\"" +
+						                        v.getUserDatum( Keywords.WIDTH_KEY ) + "\" height=\"" +
+						                        v.getUserDatum( Keywords.HEIGHT_KEY ) + "\"/>" );
+			}
+			else
+			{
+				ps.println( "        <y:ShapeNode >" );
+				ps.println( "          <y:Geometry  x=\"241.875\" y=\"158.701171875\" width=\"95.0\" height=\"30.0\"/>" );
+			}
+			
+			ps.println( "          <y:Fill color=\"#CCCCFF\"  transparent=\"false\"/>" );
+			ps.println( "          <y:BorderStyle type=\"line\" width=\"1.0\" color=\"#000000\" />" );
+			ps.println( "          <y:NodeLabel x=\"1.5\" y=\"5.6494140625\" width=\"92.0\" height=\"18.701171875\" " +
+					                         "visible=\"true\" alignment=\"center\" fontFamily=\"Dialog\" fontSize=\"12\" " +
+					                         "fontStyle=\"plain\" textColor=\"#000000\" modelName=\"internal\" modelPosition=\"c\" " +
+					                         "autoSizePolicy=\"content\">" + v.getUserDatum( Keywords.FULL_LABEL_KEY ) + 
+					                         "&#xA;INDEX=" + v.getUserDatum( Keywords.INDEX_KEY ) + "</y:NodeLabel>" );
+			
+			if ( v.containsUserDatumKey( Keywords.IMAGE_KEY ) )
+			{
+				ps.println( "          <y:Image href=\"" + v.getUserDatum( Keywords.IMAGE_KEY ) + "\"/>" );
+				ps.println( "        </y:ImageNode>" );
+			}
+			else
+			{
+				ps.println( "          <y:Shape type=\"rectangle\"/>" );
+				ps.println( "        </y:ShapeNode>" );
+			}
+			
+			ps.println( "      </data>" );
+			ps.println( "    </node>" );
+		}
+
+        int i = 0;
+        for ( Iterator edgeIterator = g.getEdges().iterator(); edgeIterator.hasNext(); )
+        {
+            Edge e = (Edge) edgeIterator.next();
+            Pair p = e.getEndpoints();
+            Vertex src = (Vertex) p.getFirst();
+            Vertex dest = (Vertex) p.getSecond();
+            int srcId = id.getIndex(src)+1;
+            int destId = id.getIndex(dest)+1;
+            int nId = ++i;
+
+            ps.println( "    <edge id=\"" + nId + "\" source=\"n" + srcId + "\" target=\"n" + destId + "\">" );
+            ps.println( "      <data key=\"d1\" >" );
+            ps.println( "        <y:PolyLineEdge >" );
+            ps.println( "          <y:Path sx=\"-23.75\" sy=\"15.0\" tx=\"-23.75\" ty=\"-15.0\">" );
+            ps.println( "            <y:Point x=\"273.3125\" y=\"95.0\"/>" );
+            ps.println( "            <y:Point x=\"209.5625\" y=\"95.0\"/>" );
+            ps.println( "            <y:Point x=\"209.5625\" y=\"143.701171875\"/>" );
+            ps.println( "            <y:Point x=\"265.625\" y=\"143.701171875\"/>" );
+            ps.println( "          </y:Path>" );
+            ps.println( "          <y:LineStyle type=\"line\" width=\"1.0\" color=\"#000000\" />" );
+            ps.println( "          <y:Arrows source=\"none\" target=\"standard\"/>" );
+            
+            if ( e.containsUserDatumKey( Keywords.FULL_LABEL_KEY ) )
+            {
+            	String label = (String)e.getUserDatum( Keywords.FULL_LABEL_KEY );
+            	label = label.replaceAll( "&", "&amp;" );
+            	label = label.replaceAll( "<", "&lt;" );
+            	label = label.replaceAll( ">", "&gt;" );
+            	label = label.replaceAll( "'", "&apos;" );
+            	label = label.replaceAll( "\"", "&quot;" );
+            	
+            	ps.println( "          <y:EdgeLabel x=\"-148.25\" y=\"30.000000000000014\" width=\"169.0\" height=\"18.701171875\" " +
+            			                         "visible=\"true\" alignment=\"center\" fontFamily=\"Dialog\" fontSize=\"12\" " +
+            			                         "fontStyle=\"plain\" textColor=\"#000000\" modelName=\"free\" modelPosition=\"anywhere\" " +
+            			                         "preferredPlacement=\"on_edge\" distance=\"2.0\" ratio=\"0.5\">" + label + 
+            			                         "&#xA;INDEX=" + e.getUserDatum( Keywords.INDEX_KEY ) + "</y:EdgeLabel>" );
+            }
+            
+            ps.println( "          <y:BendStyle smoothed=\"false\"/>" );
+            ps.println( "        </y:PolyLineEdge>" );
+            ps.println( "      </data>" );
+            ps.println( "    </edge>" );
+
+        }
+
+        ps.println( "  </graph>" );
+        ps.println( "</graphml>" );
+
 	}
 }
