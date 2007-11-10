@@ -1,4 +1,4 @@
-package org.tigris.mbt;
+package org.tigris.mbt.io;
 
 import java.io.PrintStream;
 

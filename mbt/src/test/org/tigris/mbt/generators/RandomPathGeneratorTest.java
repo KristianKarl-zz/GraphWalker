@@ -2,11 +2,11 @@ package test.org.tigris.mbt.generators;
 
 import org.apache.log4j.Logger;
 import org.tigris.mbt.FiniteStateMachine;
-import org.tigris.mbt.GraphML;
 import org.tigris.mbt.Util;
 import org.tigris.mbt.conditions.EdgeCoverage;
 import org.tigris.mbt.generators.RandomPathGenerator;
 import org.tigris.mbt.generators.PathGenerator;
+import org.tigris.mbt.io.GraphML;
 
 import junit.framework.TestCase;
 
