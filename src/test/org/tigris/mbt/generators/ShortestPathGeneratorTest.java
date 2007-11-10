@@ -23,12 +23,15 @@ public class ShortestPathGeneratorTest extends TestCase {
 		FiniteStateMachine FSM = new FiniteStateMachine(gml.getModel());
 		FSM.setWeighted(false);
 		PathGenerator pathGenerator = new ShortestPathGenerator(FSM, new ReachedState(FSM, "S3") );
-		while(pathGenerator.hasNext())
-		{
-			String[] stepPair = pathGenerator.getNext();
-			System.out.println("call( "+ stepPair[0] + " ) then verify( " + stepPair[1] + " )" );
-		}
-		System.out.println("==============================");
+		
+		String[] stepPair;
+		stepPair = pathGenerator.getNext();
+		assertEquals("Start_1_100",  stepPair[0]);
+		assertEquals("S5", stepPair[1]);
+		stepPair = pathGenerator.getNext();
+		assertEquals("S5_3_80",  stepPair[0]);
+		assertEquals("S3", stepPair[1]);
+		assertFalse(pathGenerator.hasNext());
     }
 
 	public void test_FSM_ShortestGenerationEdgeStop()
@@ -38,12 +41,18 @@ public class ShortestPathGeneratorTest extends TestCase {
 		FiniteStateMachine FSM = new FiniteStateMachine(gml.getModel());
 		FSM.setWeighted(false);
 		PathGenerator pathGenerator = new ShortestPathGenerator(FSM, new ReachedEdge(FSM, "S4_1_10") );
-		while(pathGenerator.hasNext())
-		{
-			String[] stepPair = pathGenerator.getNext();
-			System.out.println("call( "+ stepPair[0] + " ) then verify( " + stepPair[1] + " )" );
-		}
-		System.out.println("==============================");
+		
+		String[] stepPair;
+		stepPair = pathGenerator.getNext();
+		assertEquals("Start_1_100",  stepPair[0]);
+		assertEquals("S5", stepPair[1]);
+		stepPair = pathGenerator.getNext();
+		assertEquals("S5_2_10",  stepPair[0]);
+		assertEquals("S4", stepPair[1]);
+		stepPair = pathGenerator.getNext();
+		assertEquals("S4_1_10",  stepPair[0]);
+		assertEquals("S2", stepPair[1]);
+		assertFalse(pathGenerator.hasNext());
     }
 
 	public void test_EFSM_ShortestGenerationStateStop()
@@ -53,12 +62,46 @@ public class ShortestPathGeneratorTest extends TestCase {
 		ExtendedFiniteStateMachine EFSM = new ExtendedFiniteStateMachine(gml.getModel());
 		EFSM.setWeighted(false);
 		PathGenerator pathGenerator = new ShortestPathGenerator(EFSM, new ReachedState(EFSM, "v_InvalidKey/incorrect=3;databaseChanged=true;") );
-		while(pathGenerator.hasNext())
-		{
-			String[] stepPair = pathGenerator.getNext();
-			System.out.println("call( "+ stepPair[0] + " ) then verify( " + stepPair[1] + " )" );
-		}
-		System.out.println("==============================");
+		
+		String[] stepPair;
+		stepPair = pathGenerator.getNext();
+		assertEquals("e_Initialize",  stepPair[0]);
+		assertEquals("v_KeePassNotRunning/incorrect=0;databaseChanged=false;",  stepPair[1]);
+		stepPair = pathGenerator.getNext();
+		assertEquals("e_StartWithDatabase",  stepPair[0]);
+		assertEquals("v_EnterMasterCompositeMasterKey/incorrect=0;databaseChanged=false;",  stepPair[1]);
+		stepPair = pathGenerator.getNext();
+		assertEquals("e_EnterCorrectKey",  stepPair[0]);
+		assertEquals("v_MainWindow_DB_Loaded/incorrect=0;databaseChanged=false;",  stepPair[1]);
+		stepPair = pathGenerator.getNext();
+		assertEquals("e_ChangeDatabase",  stepPair[0]);
+		assertEquals("v_MainWindow_DB_Loaded/incorrect=0;databaseChanged=true;",  stepPair[1]);
+		stepPair = pathGenerator.getNext();
+		assertEquals("e_CloseApp",  stepPair[0]);
+		assertEquals("v_SaveBeforeCloseLock/incorrect=0;databaseChanged=true;",  stepPair[1]);
+		stepPair = pathGenerator.getNext();
+		assertEquals("e_Yes",  stepPair[0]);
+		assertEquals("v_KeePassNotRunning/incorrect=0;databaseChanged=true;",  stepPair[1]);
+		stepPair = pathGenerator.getNext();
+		assertEquals("e_StartWithDatabase",  stepPair[0]);
+		assertEquals("v_EnterMasterCompositeMasterKey/incorrect=0;databaseChanged=true;",  stepPair[1]);
+		stepPair = pathGenerator.getNext();
+		assertEquals("e_EnterInvalidKey",  stepPair[0]);
+		assertEquals("v_InvalidKey/incorrect=1;databaseChanged=true;",  stepPair[1]);
+		stepPair = pathGenerator.getNext();
+		assertEquals("e_CloseDialog",  stepPair[0]);
+		assertEquals("v_EnterMasterCompositeMasterKey/incorrect=1;databaseChanged=true;",  stepPair[1]);
+		stepPair = pathGenerator.getNext();
+		assertEquals("e_EnterInvalidKey",  stepPair[0]);
+		assertEquals("v_InvalidKey/incorrect=2;databaseChanged=true;",  stepPair[1]);
+		stepPair = pathGenerator.getNext();
+		assertEquals("e_CloseDialog",  stepPair[0]);
+		assertEquals("v_EnterMasterCompositeMasterKey/incorrect=2;databaseChanged=true;",  stepPair[1]);
+		stepPair = pathGenerator.getNext();
+		assertEquals("e_EnterInvalidKey",  stepPair[0]);
+		assertEquals("v_InvalidKey/incorrect=3;databaseChanged=true;",  stepPair[1]);
+		assertFalse(pathGenerator.hasNext());
+
     }
 
 	public void test_EFSM_ShortestGenerationEdgeStop()
@@ -68,12 +111,22 @@ public class ShortestPathGeneratorTest extends TestCase {
 		ExtendedFiniteStateMachine EFSM = new ExtendedFiniteStateMachine(gml.getModel());
 		EFSM.setWeighted(false);
 		PathGenerator pathGenerator = new ShortestPathGenerator(EFSM, new ReachedEdge(EFSM, "e_ChangeDatabase") );
-		while(pathGenerator.hasNext())
-		{
-			String[] stepPair = pathGenerator.getNext();
-			System.out.println("call( "+ stepPair[0] + " ) then verify( " + stepPair[1] + " )" );
-		}
-		System.out.println("==============================");
+		
+		String[] stepPair;
+		stepPair = pathGenerator.getNext();
+		assertEquals("e_Initialize",  stepPair[0]);
+		assertEquals("v_KeePassNotRunning/incorrect=0;databaseChanged=false;", stepPair[1]);
+		stepPair = pathGenerator.getNext();
+		assertEquals("e_StartWithDatabase",  stepPair[0]);
+		assertEquals("v_EnterMasterCompositeMasterKey/incorrect=0;databaseChanged=false;", stepPair[1]);
+		stepPair = pathGenerator.getNext();
+		assertEquals("e_EnterCorrectKey",  stepPair[0]);
+		assertEquals("v_MainWindow_DB_Loaded/incorrect=0;databaseChanged=false;", stepPair[1]);
+		stepPair = pathGenerator.getNext();
+		assertEquals("e_ChangeDatabase",  stepPair[0]);
+		assertEquals("v_MainWindow_DB_Loaded/incorrect=0;databaseChanged=true;", stepPair[1]);
+		assertFalse(pathGenerator.hasNext());
+
     }
 
 }
