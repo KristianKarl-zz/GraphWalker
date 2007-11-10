@@ -2,7 +2,6 @@ package test.org.tigris.mbt;
 
 import org.apache.log4j.Logger;
 import org.tigris.mbt.Keywords;
-import org.tigris.mbt.ModelBasedTesting;
 import org.tigris.mbt.Util;
 
 import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
@@ -44,6 +43,7 @@ public class UtilTest extends TestCase {
 		DirectedSparseEdge edge = new DirectedSparseEdge(v1, v2);
 		edge.setUserDatum(Keywords.INDEX_KEY, new Integer(3), UserData.SHARED);
 		edge.setUserDatum(Keywords.LABEL_KEY, "E1", UserData.SHARED);
+		graph.addEdge(edge);
 
 		assertEquals("'E1', INDEX=3 ('V1', INDEX=1 -> 'V2', INDEX=2)", Util.getCompleteEdgeName(edge));
     }

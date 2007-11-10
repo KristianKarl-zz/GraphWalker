@@ -1,4 +1,4 @@
-package test.org.tigris.mbt;
+package test.org.tigris.mbt.filters;
 
 import java.util.Vector;
 
