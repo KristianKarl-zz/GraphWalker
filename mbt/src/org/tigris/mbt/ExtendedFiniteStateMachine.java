@@ -24,11 +24,14 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 	
 	private Interpreter interpreter = new Interpreter();
 	private AccessableEdgeFilter accessableFilter;
-	private Stack dataStack;
+	private Stack actionStack;
+
+	private Stack edgenameStack;
 	
 	public ExtendedFiniteStateMachine(SparseGraph newModel) {
 		super(newModel);
-		dataStack = new Stack();
+		actionStack = new Stack();
+		edgenameStack = new Stack();
 		accessableFilter = new AccessableEdgeFilter(interpreter);
 	}
 
@@ -42,9 +45,15 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 		Set	retur = super.getCurrentOutEdges();
 		for(Iterator i = retur.iterator();i.hasNext();)
 		{
-			if(!accessableFilter.acceptEdge( (Edge) i.next()))
+			Edge e = (Edge) i.next();
+			if(!accessableFilter.acceptEdge( e ))
 			{
+				logger.debug("Not accessable: " + Util.getCompleteEdgeName((DirectedSparseEdge) e) + " from " + getCurrentStateName());
 				i.remove();
+			}
+			else
+			{
+				logger.debug("Accessable: " + Util.getCompleteEdgeName((DirectedSparseEdge) e) + " from " + getCurrentStateName());
 			}
 		}
 		if(retur.size()==0)
@@ -98,40 +107,49 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 		boolean hasWalkedEdge = super.walkEdge(edge);
 		if(hasWalkedEdge)
 		{
-			if(edge.containsUserDatumKey(Keywords.ACTIONS_KEY))
+			if(hasAction(edge))
 			{
-				String actions = (String)edge.getUserDatum(Keywords.ACTIONS_KEY);
 				try {
-					interpreter.eval(actions);
+					interpreter.eval(getAction(edge));
 				} catch (EvalError e) {
-					logger.error(e);
-					logger.error( Util.getCompleteEdgeName( edge ) );
-					throw new RuntimeException( "Malformed action sequence at edge: " + Util.getCompleteEdgeName( edge ) + ", " + e.getMessage() );
+					throw new RuntimeException( "Malformed action sequence: " + Util.getCompleteEdgeName(edge) +" : "+ e.getMessage() );
 				}
 			}
 		}
 		return hasWalkedEdge;
 	}
 
-	public void pushState()
-	{
-		super.pushState();
-		dataStack.push(getCurrentData());
+	private String getAction(Edge edge) {
+		return (edge==null?"":(String)edge.getUserDatum(Keywords.ACTIONS_KEY));
 	}
 
+	private boolean hasAction(Edge edge) {
+		return (edge==null?false:edge.containsUserDatumKey(Keywords.ACTIONS_KEY));
+	}
+
+	public void track()
+	{
+		super.track();
+		DirectedSparseEdge edge = getLastEdge();
+		String pushedName = (edge==null?"<START>":getEdgeName(edge));
+		edgenameStack.push(pushedName);
+		actionStack.push(getAction(edge));
+	}
+	
 	public void popState()
 	{
-		//FIXME Cant handle non finite objects.
 		super.popState();
-		Hashtable data = (Hashtable) dataStack.pop();
-		try {
-			for(Enumeration e = data.keys();e.hasMoreElements();)
-			{
-				String variableName = (String) e.nextElement();
-				interpreter.getNameSpace().setVariable(variableName, data.get(variableName), false);
+		edgenameStack.pop();
+		actionStack.pop();
+		interpreter.getNameSpace().clear();
+		for(int i = 0;i < actionStack.size();i++)
+		{
+			try {
+				String action = (String) actionStack.get(i);
+				if(action != null && !action.equals("")) interpreter.eval(action);
+			} catch (EvalError e) {
+				throw new RuntimeException( "Malformed action: " + e.getMessage() );
 			}
-		} catch (UtilEvalError e) {
-			throw new RuntimeException( "Malformed data: '" + data + "' " + e.getMessage() );
 		}
 	}
 }

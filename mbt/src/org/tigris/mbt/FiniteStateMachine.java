@@ -138,18 +138,20 @@ public class FiniteStateMachine{
 	{
 		if(currentState.isSource(edge))
 		{
-			if(this.backtracking && edge.containsUserDatumKey(Keywords.BACKTRACK))
+			lastEdge = edge;
+			if(this.backtracking)
 			{
-				pushState();
-				logger.debug("Backtrack +1: " + stateStack.size() + " states stored");
+				track();
+				logger.debug("Backtrack: " + stateStack.size() + " states stored");
 			}
 			currentState = (DirectedSparseVertex) edge.getDest();
-			lastEdge = edge;
 			setAsVisited(edge);
 			setAsVisited(currentState);
 			numberOfEdgesTravesed++;
 			return true;
 		}
+		else
+			System.out.println("WTF!");
 		return false;
 	}
 
@@ -265,13 +267,13 @@ public class FiniteStateMachine{
 		return (l==null ? "" : l) + (p==null ? "" : " " + p);
 	}
 	
-	public void pushState()
+	protected void track()
 	{
 		stateStack.push(currentState);
 		numberOfEdgesTravesedStack.push(new Integer(numberOfEdgesTravesed));
 	}
 	
-	public void popState()
+	protected void popState()
 	{
 		currentState = (DirectedSparseVertex) stateStack.pop();
 		numberOfEdgesTravesed = ((Integer)numberOfEdgesTravesedStack.pop()).intValue(); 
@@ -302,21 +304,27 @@ public class FiniteStateMachine{
 
 	public void backtrack()
 	{
-		if( this.backtracking && getLastEdge().containsUserDatumKey( Keywords.BACKTRACK ) )
+		if(this.backtracking)
 		{
-			popState();
-			return;
+			if( true || getLastEdge().containsUserDatumKey( Keywords.BACKTRACK ) )
+			{
+				popState();
+			}
+			else		
+			{
+				throw new RuntimeException( "Backtracking was asked for, but model does not suppport BACKTRACK at egde: " + Util.getCompleteEdgeName( getLastEdge() ) );			
+			}
 		}
-		if( this.backtracking && getLastEdge().containsUserDatumKey( Keywords.BACKTRACK ) == false )
-		{
-			throw new RuntimeException( "Backtracking was asked for, but model does not suppport BACKTRACK at egde: " + Util.getCompleteEdgeName( getLastEdge() ) );			
-		}	
 	}
 	
-	public void enableBacktrack(boolean backtracking) 
+	public void setBacktrack(boolean backtracking) 
 	{
 		this.backtracking  = backtracking;
-		
+	}
+
+	public boolean isBacktrack() 
+	{
+		return this.backtracking;
 	}
 }
 
