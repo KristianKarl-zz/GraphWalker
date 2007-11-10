@@ -244,6 +244,162 @@ public class GraphMLTest extends TestCase {
 		System.out.println( "" );
     }
 
+    public void test_mergeSubgraphs_01()
+    {
+		System.out.println( "TEST: test_mergeSubgraphs_01" );
+		System.out.println( "=======================================================================" );
+    	try
+    	{
+	    	ModelBasedTesting mbt = new ModelBasedTesting();
+	    	mbt.readGraph( "graphml/mergeSubgraphs_01" );
+	    	mbt.writeModel( System.out );
+	    	assertTrue( mbt.getGraph().getVertices().size() == 6 );
+	    	assertTrue( mbt.getGraph().getEdges().size() == 16 );
+	    	verifyIds( mbt.getGraph() );
+    	}
+    	catch ( Exception e)
+    	{
+    		System.out.println(e.getMessage());
+    		fail( e.getMessage() );
+    	}
+		System.out.println( "" );
+    }
+
+    
+    
+    public void test_mergeSubgraphs_02()
+    {
+		System.out.println( "TEST: test_mergeSubgraphs_02" );
+		System.out.println( "=======================================================================" );
+    	try
+    	{
+	    	ModelBasedTesting mbt = new ModelBasedTesting();
+	    	mbt.readGraph( "graphml/mergeSubgraphs_02" );
+	    	mbt.writeModel( System.out );
+	    	assertTrue( mbt.getGraph().getVertices().size() == 16 );
+	    	assertTrue( mbt.getGraph().getEdges().size() == 55 );
+	    	verifyIds( mbt.getGraph() );
+    	}
+    	catch ( Exception e)
+    	{
+    		System.out.println(e.getMessage());
+    		fail( e.getMessage() );
+    	}
+		System.out.println( "" );
+    }
+
+    
+    
+    // Test merging of 2 simple graphs
+    public void test01()
+    {
+		System.out.println( "TEST: test01" );
+		System.out.println( "=======================================================================" );
+    	try
+    	{
+	    	ModelBasedTesting mbt = new ModelBasedTesting();
+	    	mbt.readGraph( "graphml/test01" );
+	    	mbt.writeModel( System.out );
+	    	assertTrue( mbt.getGraph().getEdges().size() == 9 );
+	    	assertTrue( mbt.getGraph().getVertices().size() == 7 );
+	    	verifyIds( mbt.getGraph() );
+    	}
+    	catch ( Exception e)
+    	{
+    		System.out.println(e.getMessage());
+    		fail( e.getMessage() );
+    	}
+		System.out.println( "" );
+    }
+    
+    // Test merging of 2 simple graphs, with  nodes containing key word NO_MERGE
+    public void test02()
+    {
+		System.out.println( "TEST: test02" );
+		System.out.println( "=======================================================================" );
+    	try
+    	{
+	    	ModelBasedTesting mbt = new ModelBasedTesting();
+	    	mbt.readGraph( "graphml/test02" );
+	    	mbt.writeModel( System.out );
+	    	assertTrue( mbt.getGraph().getEdges().size() == 11 );
+	    	assertTrue( mbt.getGraph().getVertices().size() == 8 );
+	    	verifyIds( mbt.getGraph() );
+    	}
+    	catch ( Exception e)
+    	{
+    		System.out.println(e.getMessage());
+    		fail( e.getMessage() );
+    	}
+		System.out.println( "" );
+    }
+    
+    // Test merging a folder consisting 162 graphs
+    public void test03()
+    {
+		System.out.println( "TEST: test03" );
+		System.out.println( "=======================================================================" );
+    	try
+    	{
+	    	ModelBasedTesting mbt = new ModelBasedTesting();
+	    	mbt.readGraph( "graphml/test03" );
+	    	mbt.writeModel( System.out );
+	    	assertTrue( mbt.getGraph().getEdges().size() == 1550 );
+	    	assertTrue( mbt.getGraph().getVertices().size() == 788 );
+	    	verifyIds( mbt.getGraph() );
+    	}
+    	catch ( Exception e)
+    	{
+    		System.out.println(e.getMessage());
+    		fail( e.getMessage() );
+    	}
+		System.out.println( "" );
+    }
+
+    // Verify that a graph containing a Stop vertex is correctly merged.
+    public void test22()
+    {
+		System.out.println( "TEST: test22" );
+		System.out.println( "=======================================================================" );
+    	try
+    	{
+	    	ModelBasedTesting mbt = new ModelBasedTesting();
+	    	mbt.readGraph( "graphml/test22" );
+	    	mbt.writeModel( System.out );
+	    	assertTrue( mbt.getGraph().getEdges().size() == 8 );
+	    	assertTrue( mbt.getGraph().getVertices().size() == 8 );
+	    	verifyIds( mbt.getGraph() );
+    	}
+    	catch ( Exception e)
+    	{
+    		System.out.println(e.getMessage());
+	    	fail( e.getMessage() );
+    	}
+		System.out.println( "" );
+    }
+
+    // Merging with subgraphs containing Stop vertices 
+    public void test23()
+    {
+		System.out.println( "TEST: test23" );
+		System.out.println( "=======================================================================" );
+    	try
+    	{
+	    	ModelBasedTesting mbt = new ModelBasedTesting();
+	    	mbt.readGraph( "graphml/test23" );
+	    	mbt.writeModel( System.out );
+	    	assertTrue( mbt.getGraph().getEdges().size() == 14 );
+	    	assertTrue( mbt.getGraph().getVertices().size() == 9 );
+	    	verifyIds( mbt.getGraph() );
+    	}
+    	catch ( Exception e)
+    	{
+    		System.out.println(e.getMessage());
+	    	fail( e.getMessage() );
+    	}
+		System.out.println( "" );
+    }
+
     // Verify that all vertices and edges has indexes, and that no duplicates exists.
     private void verifyIds( SparseGraph g )
 	{
