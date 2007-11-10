@@ -1,4 +1,4 @@
-package test.org.tigris.mbt;
+package test.org.tigris.mbt.io;
 
 import org.tigris.mbt.Keywords;
 import org.tigris.mbt.ModelBasedTesting;
