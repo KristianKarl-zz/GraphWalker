@@ -1,234 +1,66 @@
 package test.org.tigris.mbt;
 
+import org.apache.log4j.Logger;
 import org.tigris.mbt.Keywords;
 import org.tigris.mbt.ModelBasedTesting;
+import org.tigris.mbt.Util;
 
 import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
 import edu.uci.ics.jung.graph.impl.DirectedSparseVertex;
 import edu.uci.ics.jung.graph.impl.SparseGraph;
+import edu.uci.ics.jung.utils.UserData;
 
 import junit.framework.TestCase;
 
 public class UtilTest extends TestCase {
 
-    public void test_mergeSubgraphs_01()
+	public void testAbortIf_1()
     {
-		System.out.println( "TEST: test_mergeSubgraphs_01" );
-		System.out.println( "=======================================================================" );
-    	try
-    	{
-	    	ModelBasedTesting mbt = new ModelBasedTesting();
-	    	mbt.readGraph( "graphml/mergeSubgraphs_01" );
-	    	mbt.writeModel( System.out );
-	    	assertTrue( mbt.getGraph().getVertices().size() == 6 );
-	    	assertTrue( mbt.getGraph().getEdges().size() == 16 );
-	    	verifyIds( mbt.getGraph() );
-    	}
-    	catch ( Exception e)
-    	{
-    		System.out.println(e.getMessage());
-    		fail( e.getMessage() );
-    	}
-		System.out.println( "" );
-    }
-
-    
-    
-    public void test_mergeSubgraphs_02()
-    {
-		System.out.println( "TEST: test_mergeSubgraphs_02" );
-		System.out.println( "=======================================================================" );
-    	try
-    	{
-	    	ModelBasedTesting mbt = new ModelBasedTesting();
-	    	mbt.readGraph( "graphml/mergeSubgraphs_02" );
-	    	mbt.writeModel( System.out );
-	    	assertTrue( mbt.getGraph().getVertices().size() == 16 );
-	    	assertTrue( mbt.getGraph().getEdges().size() == 55 );
-	    	verifyIds( mbt.getGraph() );
-    	}
-    	catch ( Exception e)
-    	{
-    		System.out.println(e.getMessage());
-    		fail( e.getMessage() );
-    	}
-		System.out.println( "" );
-    }
-
-    
-    
-    // Test merging of 2 simple graphs
-    public void test01()
-    {
-		System.out.println( "TEST: test01" );
-		System.out.println( "=======================================================================" );
-    	try
-    	{
-	    	ModelBasedTesting mbt = new ModelBasedTesting();
-	    	mbt.readGraph( "graphml/test01" );
-	    	mbt.writeModel( System.out );
-	    	assertTrue( mbt.getGraph().getEdges().size() == 9 );
-	    	assertTrue( mbt.getGraph().getVertices().size() == 7 );
-	    	verifyIds( mbt.getGraph() );
-    	}
-    	catch ( Exception e)
-    	{
-    		System.out.println(e.getMessage());
-    		fail( e.getMessage() );
-    	}
-		System.out.println( "" );
-    }
-    
-    // Test merging of 2 simple graphs, with  nodes containing key word NO_MERGE
-    public void test02()
-    {
-		System.out.println( "TEST: test02" );
-		System.out.println( "=======================================================================" );
-    	try
-    	{
-	    	ModelBasedTesting mbt = new ModelBasedTesting();
-	    	mbt.readGraph( "graphml/test02" );
-	    	mbt.writeModel( System.out );
-	    	assertTrue( mbt.getGraph().getEdges().size() == 11 );
-	    	assertTrue( mbt.getGraph().getVertices().size() == 8 );
-	    	verifyIds( mbt.getGraph() );
-    	}
-    	catch ( Exception e)
-    	{
-    		System.out.println(e.getMessage());
-    		fail( e.getMessage() );
-    	}
-		System.out.println( "" );
-    }
-    
-    // Test merging a folder consisting 162 graphs
-    public void test03()
-    {
-		System.out.println( "TEST: test03" );
-		System.out.println( "=======================================================================" );
-    	try
-    	{
-	    	ModelBasedTesting mbt = new ModelBasedTesting();
-	    	mbt.readGraph( "graphml/test03" );
-	    	mbt.writeModel( System.out );
-	    	assertTrue( mbt.getGraph().getEdges().size() == 1550 );
-	    	assertTrue( mbt.getGraph().getVertices().size() == 788 );
-	    	verifyIds( mbt.getGraph() );
-    	}
-    	catch ( Exception e)
-    	{
-    		System.out.println(e.getMessage());
-    		fail( e.getMessage() );
-    	}
-		System.out.println( "" );
-    }
-
-    // Verify that a graph containing a Stop vertex is correctly merged.
-    public void test22()
-    {
-		System.out.println( "TEST: test22" );
-		System.out.println( "=======================================================================" );
-    	try
-    	{
-	    	ModelBasedTesting mbt = new ModelBasedTesting();
-	    	mbt.readGraph( "graphml/test22" );
-	    	mbt.writeModel( System.out );
-	    	assertTrue( mbt.getGraph().getEdges().size() == 8 );
-	    	assertTrue( mbt.getGraph().getVertices().size() == 8 );
-	    	verifyIds( mbt.getGraph() );
-    	}
-    	catch ( Exception e)
-    	{
-    		System.out.println(e.getMessage());
-	    	fail( e.getMessage() );
-    	}
-		System.out.println( "" );
-    }
-
-    // Merging with subgraphs containing Stop vertices 
-    public void test23()
-    {
-		System.out.println( "TEST: test23" );
-		System.out.println( "=======================================================================" );
-    	try
-    	{
-	    	ModelBasedTesting mbt = new ModelBasedTesting();
-	    	mbt.readGraph( "graphml/test23" );
-	    	mbt.writeModel( System.out );
-	    	assertTrue( mbt.getGraph().getEdges().size() == 14 );
-	    	assertTrue( mbt.getGraph().getVertices().size() == 9 );
-	    	verifyIds( mbt.getGraph() );
-    	}
-    	catch ( Exception e)
-    	{
-    		System.out.println(e.getMessage());
-	    	fail( e.getMessage() );
-    	}
-		System.out.println( "" );
-    }
-    // Verify that all vertices and edges has indexes, and that no duplicates exists.
-    private void verifyIds( SparseGraph g )
-	{
-		Object[] vertices1 = g.getVertices().toArray();
-		for ( int i = 0; i < vertices1.length; i++ )
+		try{
+	    	Util.AbortIf(true, "Working");
+	    	fail("expected error message");
+		}catch(Exception e)
 		{
-			DirectedSparseVertex v1 = (DirectedSparseVertex)vertices1[ i ];
-			int hits = 0;
-			Integer index1 = (Integer)v1.getUserDatum( Keywords.INDEX_KEY );
-	    	Object[] vertices2 = g.getVertices().toArray();
-			for ( int j = 0; j < vertices1.length; j++ )
-			{
-				DirectedSparseVertex v2 = (DirectedSparseVertex)vertices2[ j ];
-				Integer index2 = (Integer)v2.getUserDatum( Keywords.INDEX_KEY );
-				if ( index1.intValue() == index2.intValue() )
-				{
-					hits++;
-		    	}
-	    	}
-	    	assertTrue( hits == 1 );
+			assertEquals("Working", e.getMessage());
+		}
+    }
+	
+	public void testAbortIf_2()
+    {
+    	Util.AbortIf(false, "Working");
+    }
 
-	    	Object[] edges = g.getEdges().toArray();
-			for ( int j = 0; j < edges.length; j++ )
-			{
-				DirectedSparseEdge e = (DirectedSparseEdge)edges[ j ];
-				Integer index2 = (Integer)e.getUserDatum( Keywords.INDEX_KEY );
-				if ( index1.intValue() == index2.intValue() )
-				{
-					hits++;
-		    	}
-	    	}
-	    	assertTrue( hits == 1 );
-		}					
+	public void testGetCompleteEdgeName()
+    {
+		SparseGraph graph = new SparseGraph();
+		DirectedSparseVertex v1 = new DirectedSparseVertex();
+		v1.setUserDatum(Keywords.INDEX_KEY, new Integer(1), UserData.SHARED);
+		v1.setUserDatum(Keywords.LABEL_KEY, "V1", UserData.SHARED);
+		graph.addVertex(v1);
+		DirectedSparseVertex v2 = new DirectedSparseVertex();
+		v2.addUserDatum(Keywords.INDEX_KEY, new Integer(2), UserData.SHARED);
+		v2.setUserDatum(Keywords.LABEL_KEY, "V2", UserData.SHARED);
+		graph.addVertex(v2);
+		DirectedSparseEdge edge = new DirectedSparseEdge(v1, v2);
+		edge.setUserDatum(Keywords.INDEX_KEY, new Integer(3), UserData.SHARED);
+		edge.setUserDatum(Keywords.LABEL_KEY, "E1", UserData.SHARED);
 
-		Object[] edges1 = g.getEdges().toArray();
-		for ( int i = 0; i < edges1.length; i++ )
-		{
-			DirectedSparseEdge e1 = (DirectedSparseEdge)edges1[ i ];
-			int hits = 0;
-			Integer index1 = (Integer)e1.getUserDatum( Keywords.INDEX_KEY );
-	    	Object[] edges2 = g.getEdges().toArray();
-			for ( int j = 0; j < edges2.length; j++ )
-			{
-				DirectedSparseEdge e2 = (DirectedSparseEdge)edges2[ j ];
-				Integer index2 = (Integer)e2.getUserDatum( Keywords.INDEX_KEY );
-				if ( index1.intValue() == index2.intValue() )
-				{
-					hits++;
-		    	}
-	    	}
-	    	assertTrue( hits == 1 );
+		assertEquals("'E1', INDEX=3 ('V1', INDEX=1 -> 'V2', INDEX=2)", Util.getCompleteEdgeName(edge));
+    }
 
-	    	Object[] vertices2 = g.getVertices().toArray();
-			for ( int j = 0; j < vertices1.length; j++ )
-			{
-				DirectedSparseVertex v2 = (DirectedSparseVertex)vertices2[ j ];
-				Integer index2 = (Integer)v2.getUserDatum( Keywords.INDEX_KEY );
-				if ( index1.intValue() == index2.intValue() )
-				{
-					hits++;
-		    	}
-	    	}
-	    	assertTrue( hits == 1 );
-		}					
-	}
+	public void testGetCompleteVertexName()
+    {
+		SparseGraph graph = new SparseGraph();
+		DirectedSparseVertex v1 = new DirectedSparseVertex();
+		v1.setUserDatum(Keywords.INDEX_KEY, new Integer(1), UserData.SHARED);
+		v1.setUserDatum(Keywords.LABEL_KEY, "V1", UserData.SHARED);
+		graph.addVertex(v1);
+		
+		assertEquals("'V1', INDEX=1", Util.getCompleteVertexName(v1));
+    }
+	public void testSetupLogger()
+    {
+    	Logger logger = Util.setupLogger(UtilTest.class);
+    	logger.debug("Working");
+    }
 }
