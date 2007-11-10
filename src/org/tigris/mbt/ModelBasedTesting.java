@@ -196,7 +196,7 @@ public class ModelBasedTesting
 	}
 
 	public void enableBacktrack(boolean backtracking) {
-		getMachine().enableBacktrack(backtracking);
+		getMachine().setBacktrack(backtracking);
 	}
 
 	public String getStatisticsString()
