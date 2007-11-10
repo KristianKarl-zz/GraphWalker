@@ -2,11 +2,11 @@ package test.org.tigris.mbt.generators;
 
 import org.tigris.mbt.ExtendedFiniteStateMachine;
 import org.tigris.mbt.FiniteStateMachine;
-import org.tigris.mbt.GraphML;
 import org.tigris.mbt.conditions.ReachedEdge;
 import org.tigris.mbt.conditions.ReachedState;
 import org.tigris.mbt.generators.PathGenerator;
 import org.tigris.mbt.generators.ShortestPathGenerator;
+import org.tigris.mbt.io.GraphML;
 
 import junit.framework.TestCase;
 

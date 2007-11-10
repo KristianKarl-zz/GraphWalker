@@ -1,4 +1,4 @@
-package org.tigris.mbt;
+package org.tigris.mbt.io;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -14,6 +14,8 @@ import org.apache.log4j.Logger;
 import org.jdom.Document;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
+import org.tigris.mbt.Keywords;
+import org.tigris.mbt.Util;
 
 import edu.uci.ics.jung.graph.Edge;
 import edu.uci.ics.jung.graph.Vertex;
