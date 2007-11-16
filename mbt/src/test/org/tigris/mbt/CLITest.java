@@ -17,14 +17,42 @@ public class CLITest extends TestCase {
 	StringBuffer stdOutput = new StringBuffer();
     
     
+    public void testNoArgs()
+    {
+		System.out.println( "TEST: testNoArgs" );
+		System.out.println( "=======================================================================" );
+		String args[] = new String[ 0 ];
+    	CLI cli = new CLI();
+    	
+    	OutputStream out = new OutputStream() {
+    		public void write(int b) throws IOException {
+    			stdOutput.append( Character.toString((char) b) );
+    		}
+   		};
+    	PrintStream stream = new PrintStream( out );
+    	PrintStream oldOutStream = System.out; //backup
+    	System.setOut( stream );
+    	cli.main( args );
+    	System.setOut( oldOutStream );
+    	
+    	String msg = stdOutput.toString();
+		System.out.println( msg );
+		Pattern p = Pattern.compile( "Type 'java -jar mbt.jar help' for usage.", Pattern.MULTILINE );
+		Matcher m = p.matcher( msg );
+		assertTrue( m.find() );
+		System.out.println( "" );
+    }
+
+    
+    
     public void testGenerateCodeFromTemplate()
     {
 		System.out.println( "TEST: testGenerateCodeFromTemplate" );
 		System.out.println( "=======================================================================" );
 		String args[] = new String[ 5 ];
 		args[ 0 ] = "source";
-		args[ 1 ] = "-g";
-		args[ 2 ] = "graphml/misc/no_missing_inedges.graphml";
+		args[ 1 ] = "-f";
+		args[ 2 ] = "graphml/methods/Main.graphml";
 		args[ 3 ] = "-t";
 		args[ 4 ] = "templates/perl.template";
     	CLI cli = new CLI();
@@ -42,9 +70,9 @@ public class CLITest extends TestCase {
     	
     	String msg = stdOutput.toString();
 		System.out.println( msg );
-		Pattern p = Pattern.compile( "^No in-edges! The vertex: .* is not reachable.$", Pattern.MULTILINE );
+		Pattern p = Pattern.compile( " implements the ", Pattern.MULTILINE );
 		Matcher m = p.matcher( msg );
-		assertTrue( !m.find() );
+		assertTrue( m.find() );
 		System.out.println( "" );
     }
 
@@ -54,10 +82,11 @@ public class CLITest extends TestCase {
     {
 		System.out.println( "TEST: testVertexWithNoInEdges" );
 		System.out.println( "=======================================================================" );
-		String args[] = new String[ 4 ];
+		String args[] = new String[ 5 ];
 		args[ 0 ] = "offline";
-		args[ 1 ] = "-o";
-		args[ 2 ] = "-g";
+		args[ 1 ] = "-e";
+		args[ 2 ] = "100";
+		args[ 3 ] = "-f";
 		args[ 3 ] = "graphml/misc/no_missing_inedges.graphml";
     	CLI cli = new CLI();
     	
@@ -86,11 +115,12 @@ public class CLITest extends TestCase {
     {
 		System.out.println( "TEST: testVertexWithNoInEdges" );
 		System.out.println( "=======================================================================" );
-		String args[] = new String[ 4 ];
+		String args[] = new String[ 5 ];
 		args[ 0 ] = "offline";
-		args[ 1 ] = "-o";
-		args[ 2 ] = "-g";
-		args[ 3 ] = "graphml/misc/missing_inedges.graphml";
+		args[ 1 ] = "-e";
+		args[ 2 ] = "100";
+		args[ 3 ] = "-f";
+		args[ 4 ] = "graphml/misc/missing_inedges.graphml";
     	CLI cli = new CLI();
     	
     	OutputStream out = new OutputStream() {
@@ -124,7 +154,7 @@ public class CLITest extends TestCase {
 		args[ 1 ] = "-r";
 		args[ 2 ] = "-t";
 		args[ 3 ] = "10";
-		args[ 4 ] = "-g";
+		args[ 4 ] = "-f";
 		args[ 5 ] = "graphml/methods/Main.graphml";
     	CLI cli = new CLI();
     	
@@ -174,7 +204,7 @@ public class CLITest extends TestCase {
 		System.out.println( "=======================================================================" );
 		String args[] = new String[ 3 ];
 		args[ 0 ] = "methods";
-		args[ 1 ] = "-g";
+		args[ 1 ] = "-f";
 		args[ 2 ] = "graphml/methods/Main.graphml";
     	CLI cli = new CLI();
     	
@@ -205,7 +235,7 @@ public class CLITest extends TestCase {
 		System.out.println( "=======================================================================" );
 		String args[] = new String[ 5 ];
 		args[ 0 ] = "merge";
-		args[ 1 ] = "-g";
+		args[ 1 ] = "-f";
 		args[ 2 ] = "graphml/CulDeSac";
 		args[ 3 ] = "-l";
 		args[ 4 ] = "graphml/merged/testStopForCulDeSac.graphml";
@@ -240,7 +270,7 @@ public class CLITest extends TestCase {
 		String args[] = new String[ 6 ];
 		args[ 0 ] = "merge";
 		args[ 1 ] = "-c";
-		args[ 2 ] = "-g";
+		args[ 2 ] = "-f";
 		args[ 3 ] = "graphml/CulDeSac";
 		args[ 4 ] = "-l";
 		args[ 5 ] = "graphml/merged/testContinueForCulDeSac.graphml";
@@ -269,11 +299,11 @@ public class CLITest extends TestCase {
     // Check for reserved keywords 
     public void testReservedKeywords()
     {
-		System.out.println( "TEST: test24" );
+		System.out.println( "TEST: testReservedKeywords" );
 		System.out.println( "=======================================================================" );
 		String args[] = new String[ 3 ];
 		args[ 0 ] = "methods";
-		args[ 1 ] = "-g";
+		args[ 1 ] = "-f";
 		args[ 2 ] = "graphml/test24";
     	CLI cli = new CLI();
     	
