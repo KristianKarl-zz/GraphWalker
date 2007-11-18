@@ -197,23 +197,43 @@ public class ModelBasedTesting
 		this.modelHandler.save(ps);
 	}
 
-	public void enableBacktrack(boolean backtracking) {
-		getMachine().setBacktrack(backtracking);
+	public void enableBacktrack(boolean backtracking) 
+	{
+		if ( getMachine() != null )
+		{					
+			getMachine().setBacktrack(backtracking);
+		}
+		logger.warn( "Machine not initialialized" );
 	}
 
 	public String getStatisticsString()
 	{
-		return getMachine().getStatisticsString();
+		if ( getMachine() != null )
+		{			
+			return getMachine().getStatisticsString();
+		}
+		logger.warn( "Machine not initialialized" );
+		return "";
 	}
 	
 	public String getStatisticsCompact()
 	{
-		return getMachine().getStatisticsStringCompact();
+		if ( getMachine() != null )
+		{			
+			return getMachine().getStatisticsStringCompact();
+		}
+		logger.warn( "Machine not initialialized" );
+		return "";
 	}
 
 	public String getStatisticsVerbose()
 	{
-		return getMachine().getStatisticsVerbose();
+		if ( getMachine() != null )
+		{
+			return getMachine().getStatisticsVerbose();
+		}
+		logger.warn( "Machine not initialialized" );
+		return "";
 	}
 
 	public void setTemplate( String templateFile )
