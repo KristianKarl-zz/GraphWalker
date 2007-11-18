@@ -35,6 +35,7 @@ import org.tigris.mbt.generators.CodeGenerator;
 import org.tigris.mbt.generators.ListGenerator;
 import org.tigris.mbt.generators.PathGenerator;
 import org.tigris.mbt.generators.RandomPathGenerator;
+import org.tigris.mbt.generators.RequirementsGenerator;
 import org.tigris.mbt.generators.ShortestPathGenerator;
 import org.tigris.mbt.io.AbstractModelHandler;
 import org.tigris.mbt.io.GraphML;
@@ -152,6 +153,10 @@ public class ModelBasedTesting
 				
 			case Keywords.GENERATOR_LIST:
 				this.generator = new ListGenerator( getMachine() );
+				break;
+				
+			case Keywords.GENERATOR_REQUIREMENTS:
+				this.generator = new RequirementsGenerator( getMachine() );
 				break;
 		}
 		Util.AbortIf( this.generator == null, "Not implemented yet!" );

@@ -251,6 +251,34 @@ public class GraphML extends AbstractModelHandler
 								logger.debug( "  Found INDEX. This vertex will use the INDEX key: " + index_key );
 								v.setUserDatum( Keywords.INDEX_KEY, new Integer( index_key ), UserData.SHARED );
 							}
+
+
+
+							// If the REQTAG is defined, find it...
+							p = Pattern.compile( "\\n(REQTAG=(.*))", Pattern.MULTILINE );
+							m = p.matcher( str );
+							if ( m.find() )
+							{
+								String value = m.group( 2 );
+								p = Pattern.compile( "([^,]+)", Pattern.MULTILINE );
+								m = p.matcher( value );
+								String reqtags = "";
+								while ( m.find() )
+								{
+									String reqtag = m.group( 1 );
+									reqtag = reqtag.trim();
+									logger.debug( "  Found REQTAG: " + reqtag );
+									if ( reqtags.isEmpty() )
+									{
+										reqtags += reqtag;
+									}
+									else
+									{
+										reqtags += "," + reqtag;
+									}
+								}
+								v.addUserDatum( Keywords.REQTAG_KEY, reqtags, UserData.SHARED );
+							}
 						}
 					}
 					
@@ -488,6 +516,33 @@ public class GraphML extends AbstractModelHandler
 							e.setUserDatum( Keywords.INDEX_KEY, new Integer( index_key ), UserData.SHARED );
 						}
 
+
+
+						// If the REQTAG is defined, find it...
+						p = Pattern.compile( "\\n(REQTAG=(.*))", Pattern.MULTILINE );
+						m = p.matcher( str );
+						if ( m.find() )
+						{
+							String value = m.group( 2 );
+							p = Pattern.compile( "([^,]+)", Pattern.MULTILINE );
+							m = p.matcher( value );
+							String reqtags = "";
+							while ( m.find() )
+							{
+								String reqtag = m.group( 1 );
+								reqtag = reqtag.trim();
+								logger.debug( "  Found REQTAG: " + reqtag );
+								if ( reqtags.isEmpty() )
+								{
+									reqtags += reqtag;
+								}
+								else
+								{
+									reqtags += "," + reqtag;
+								}
+							}
+							e.addUserDatum( Keywords.REQTAG_KEY, reqtags, UserData.SHARED );
+						}
 					}
 					e.addUserDatum( Keywords.VISITED_KEY, new Integer( 0 ), UserData.SHARED );
 					logger.debug( "  Added edge: '" + e.getUserDatum( Keywords.LABEL_KEY ) + "', with id: " + e.getUserDatum( Keywords.INDEX_KEY ) );

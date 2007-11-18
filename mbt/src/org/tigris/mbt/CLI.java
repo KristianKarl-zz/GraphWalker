@@ -110,6 +110,17 @@ public class CLI
 					printGeneralHelpText();
 					return;
 				}
+				else if ( args[ 1 ].equals( "requirements" ) )
+				{
+					buildRequirementsCLI();
+					
+					System.out.println( "Print a list of requiremnts found in the model.\n" );					
+
+					HelpFormatter f = new HelpFormatter();
+	                f.printHelp( "'java -jar mbt.jar online [OPTION] [ARGUMENT]'", opt );
+	                
+					return;
+				}
 				else if ( args[ 1 ].equals( "online" ) )
 				{
 					buildOnlineCLI();
@@ -186,6 +197,10 @@ public class CLI
 					return;
 				}
 			}
+			else if ( args[ 0 ].equals( "requirements" ) )
+			{
+				buildRequirementsCLI();
+			}
 			else if ( args[ 0 ].equals( "online" ) )
 			{
 				buildOnlineCLI();
@@ -225,6 +240,13 @@ public class CLI
 			CommandLineParser parser = new PosixParser();
 	        CommandLine cl = parser.parse( opt, args );
 	        
+			/**
+			 *  Command: requirements
+			 */
+			if ( args[ 0 ].equals( "requirements" ) )
+			{
+				RunCommandRequirements( cl );
+			}
 			/**
 			 *  Command: online
 			 */
@@ -299,12 +321,22 @@ public class CLI
 		System.out.println( "    help" );
 		System.out.println( "    online" );
 		System.out.println( "    offline" );
+		System.out.println( "    requirements" );
 		System.out.println( "    methods" );
 		System.out.println( "    merge" );
 		System.out.println( "    source\n" );
 		System.out.println( "Type 'java -jar mbt.jar -v (--version)' for version information." );
 	}
 	
+	private void buildRequirementsCLI()
+	{
+		opt.addOption( OptionBuilder.withArgName( "file" )
+                .withDescription( "The file (or folder) containing graphml formatted files." )
+                .hasArg()
+                .withLongOpt( "input_graphml" )
+                .create( "f" ) );
+	}
+
 	private void buildOnlineCLI()
 	{
 		opt.addOption( "a", "statistics", false, "Prints the statistics of the test, at the end of the run." );
@@ -607,6 +639,27 @@ public class CLI
 		mbt.setTemplate( cl.getOptionValue( "t" ) );
 		mbt.setGenerator( Keywords.GENERATOR_STUB );
 	
+		while( mbt.hasNextStep() )
+		{
+			String[] stepPair = mbt.getNextStep();
+			System.out.println(stepPair[0]);
+		}
+	}
+
+	/**
+	 * Run the requirements command
+	 */
+	private void RunCommandRequirements( CommandLine cl )
+	{
+		if ( !cl.hasOption( "f" ) )
+	    {
+	    	System.out.println( "Missing the input graphml file (folder), See -f (--intput_graphml)" );
+	    	System.out.println( "Type 'java -jar mbt.jar help requirements' for help." );
+	        return;	            	
+	    }
+		mbt.readGraph( cl.getOptionValue( "f" ) );
+		mbt.setGenerator( Keywords.GENERATOR_REQUIREMENTS );
+		
 		while( mbt.hasNextStep() )
 		{
 			String[] stepPair = mbt.getNextStep();
