@@ -24,6 +24,7 @@ public class KeywordsTest extends TestCase {
 		assertEquals( false, Keywords.isKeyWord( "blocked" ) );
 		assertEquals( false, Keywords.isKeyWord( "merge" ) );
 		assertEquals( false, Keywords.isKeyWord( "no_merge" ) );		
+		assertEquals( false, Keywords.isKeyWord( "REQTAG" ) );		
 	}
 
 	public void testEmpty() 

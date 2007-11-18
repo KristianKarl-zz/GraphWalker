@@ -15,6 +15,39 @@ import junit.framework.TestCase;
 public class CLITest extends TestCase {
 
 	StringBuffer stdOutput = new StringBuffer();
+        
+    
+    // Check for reserved keywords 
+    public void testListReqTags()
+    {
+		System.out.println( "TEST: testListReqTags" );
+		System.out.println( "=======================================================================" );
+		String args[] = new String[ 3 ];
+		args[ 0 ] = "requirements";
+		args[ 1 ] = "-f";
+		args[ 2 ] = "graphml/reqtags/ExtendedMain.graphml";
+    	CLI cli = new CLI();
+    	
+    	
+    	OutputStream out = new OutputStream() {
+    		public void write(int b) throws IOException {
+    			stdOutput.append( Character.toString((char) b) );
+    		}
+   		};
+    	PrintStream stream = new PrintStream( out );
+    	PrintStream oldStream = System.out; //backup
+    	System.setOut( stream );
+    	cli.main( args );
+    	System.setOut( oldStream );
+    	
+    	String msg = stdOutput.toString();
+		System.out.println( msg );
+		Pattern p = Pattern.compile( "req 23", Pattern.MULTILINE );
+		Matcher m = p.matcher( msg );
+		assertTrue( m.find() );
+		System.out.println( "" );
+    }
+
     
     
     public void testNoArgs()
@@ -103,9 +136,15 @@ public class CLITest extends TestCase {
     	
     	String msg = stdOutput.toString();
 		System.out.println( msg );
+		
 		Pattern p = Pattern.compile( "^No in-edges! The vertex: .* is not reachable.$", Pattern.MULTILINE );
 		Matcher m = p.matcher( msg );
 		assertTrue( !m.find() );
+
+		p = Pattern.compile( "null", Pattern.MULTILINE );
+		m = p.matcher( msg );
+		assertFalse( m.find() );
+
 		System.out.println( "" );
     }
 

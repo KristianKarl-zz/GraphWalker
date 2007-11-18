@@ -161,6 +161,13 @@ public class Keywords {
 	public static final String ACTIONS_KEY = "action";
 
 	/**
+	* This datum contains the requirement tag which can be set in a vertex or edge.
+	* The datum is a String containing one or more requirement tag.
+	* Multiple tags are to be separated using commas.
+	*/
+	public static final String REQTAG_KEY = "reqtag";
+
+	/**
 	* This datum contains the dijkstra object used to find the shortest path in models.
 	*/
 	public static final String DIJKSTRA = "dijkstra";
@@ -184,6 +191,8 @@ public class Keywords {
 	public static final int GENERATOR_LIST = 2003;
 
 	public static final int GENERATOR_STUB = 2004;
+
+	public static final int GENERATOR_REQUIREMENTS = 2005;
 
 	/**
 	* Holds the pre-defined key words
