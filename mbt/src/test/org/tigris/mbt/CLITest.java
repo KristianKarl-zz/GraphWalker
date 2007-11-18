@@ -149,13 +149,14 @@ public class CLITest extends TestCase {
 		System.out.println( "TEST: testRandom10seconds" );
 		System.out.println( "=======================================================================" );
 		System.out.println( "Please wait for 10 seconds..." );
-		String args[] = new String[ 6 ];
+		String args[] = new String[ 7 ];
 		args[ 0 ] = "online";
-		args[ 1 ] = "-r";
-		args[ 2 ] = "-t";
-		args[ 3 ] = "10";
-		args[ 4 ] = "-f";
-		args[ 5 ] = "graphml/methods/Main.graphml";
+		args[ 1 ] = "-g";
+		args[ 2 ] = "random";
+		args[ 3 ] = "-u";
+		args[ 4 ] = "10";
+		args[ 5 ] = "-f";
+		args[ 6 ] = "graphml/methods/Main.graphml";
     	CLI cli = new CLI();
     	
    		OutputStream out = new OutputStream() {
@@ -184,15 +185,19 @@ public class CLITest extends TestCase {
     	
     	System.setIn( stdin );
     	System.setOut( stream );
+    	
+    	long startTime = System.currentTimeMillis();
     	cli.main( args );
+    	long stopTime = System.currentTimeMillis();
     	System.setOut( oldOutStream );
     	System.setIn( oldInStream );
     	
     	String msg = stdOutput.toString();
 		System.out.println( msg );
-		Pattern p = Pattern.compile( "End of test. Execution time has ended.", Pattern.MULTILINE );
-		Matcher m = p.matcher( msg );
-		assertTrue( m.find() );
+		long runTime = stopTime - startTime;
+		System.out.println(  runTime / 1000 + " seconds" );
+		// Should finish within 10-13 seconds
+		assertTrue( ( runTime - 10000 ) < 3000 );
 		System.out.println( "" );
     }
 
@@ -229,51 +234,15 @@ public class CLITest extends TestCase {
 
     
        
-    public void testStopForCulDeSac()
-    {
-		System.out.println( "TEST: testStopForCulDeSac" );
-		System.out.println( "=======================================================================" );
-		String args[] = new String[ 5 ];
-		args[ 0 ] = "merge";
-		args[ 1 ] = "-f";
-		args[ 2 ] = "graphml/CulDeSac";
-		args[ 3 ] = "-l";
-		args[ 4 ] = "graphml/merged/testStopForCulDeSac.graphml";
-    	CLI cli = new CLI();
-    	
-    	
-    	OutputStream out = new OutputStream() {
-    		public void write(int b) throws IOException {
-    			stdOutput.append( Character.toString((char) b) );
-    		}
-   		};
-    	PrintStream stream = new PrintStream( out );
-    	PrintStream oldStream = System.err; //backup
-    	System.setErr( stream );
-    	cli.main( args );
-    	System.setErr( oldStream );
-    	
-    	String msg = stdOutput.toString();
-		System.out.println( msg );
-		Pattern p = Pattern.compile( "Found a cul-de-sac. Vertex has no out-edges: '.*', in file: '.*'", Pattern.MULTILINE );
-		Matcher m = p.matcher( msg );
-		assertTrue( m.find() );
-		System.out.println( "" );
-    }
-
-    
-    
     public void testContinueForCulDeSac()
     {
 		System.out.println( "TEST: testContinueForCulDeSac" );
 		System.out.println( "=======================================================================" );
-		String args[] = new String[ 6 ];
+		String args[] = new String[ 4 ];
 		args[ 0 ] = "merge";
 		args[ 1 ] = "-c";
 		args[ 2 ] = "-f";
 		args[ 3 ] = "graphml/CulDeSac";
-		args[ 4 ] = "-l";
-		args[ 5 ] = "graphml/merged/testContinueForCulDeSac.graphml";
     	CLI cli = new CLI();
     	
     	
