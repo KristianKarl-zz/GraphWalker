@@ -61,7 +61,8 @@ public class CLI
 		mbt = new ModelBasedTesting();
 	}
 	
-	public ModelBasedTesting getMbt() {
+	public ModelBasedTesting getMbt() 
+	{
 		return mbt;
 	}
 	
@@ -565,7 +566,7 @@ public class CLI
 			{
 				public void run() 
 				{
-					logger.info( mbt.getStatisticsCompact() );
+					logger.info( getMbt().getStatisticsCompact() );
 				}
 			}, 500, Integer.valueOf( cl.getOptionValue( "o" ) ).longValue() * 1000 );
 		}
@@ -747,28 +748,38 @@ public class CLI
 			{
 				public void run() 
 				{
-					logger.info( mbt.getStatisticsCompact() );
+					logger.info( getMbt().getStatisticsCompact() );
 				}
 			}, 500, Integer.valueOf( cl.getOptionValue( "o" ) ).longValue() * 1000 );
 		}
 		
+		boolean firstLine = true;
+		char input = 0;
+		String[] stepPair = null;
 		while(mbt.hasNextStep())
 		{
-			char input = getInput(); 
-			logger.debug("Recieved: '"+ input+"'");
-			if(input == '2')
+			if ( firstLine == false )
 			{
-				break;
+				input = getInput();
+				logger.debug("Recieved: '"+ input+"'");
+				if(input == '2')
+				{
+					break;
+				}
+				if(input == '1')
+				{
+					mbt.backtrack();
+					continue;
+				}
 			}
-			if(input == '1')
+			else
 			{
-				mbt.backtrack();
-				continue;
+				firstLine = false;
 			}
-			String[] stepPair = mbt.getNextStep();
+			stepPair = mbt.getNextStep();
 			logger.debug("Execute: " + stepPair[0]);
 			System.out.println(stepPair[0]);
-			
+
 			input = getInput(); 
 			logger.debug("Recieved: '"+ input+"'");
 			if(input == '2')
