@@ -2,6 +2,9 @@ package org.tigris.mbt;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.lang.reflect.Method;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
@@ -77,5 +80,34 @@ public class Util {
 	 
 		}
 		return logger;
+	}
+
+	public static boolean RunTest( Object ref, Logger log, String method ) 
+	{
+		Class cls = null;
+		cls = ref.getClass();
+		try
+		{
+			Method meth = cls.getMethod( method, null );
+			meth.invoke( ref, null  );
+		}
+		catch( Exception e )
+		{
+			StringWriter sw = new StringWriter();
+		    PrintWriter pw = new PrintWriter( sw );
+		    e.printStackTrace( pw );
+		    pw.close();	    		    
+			log.error( sw.toString() );
+			if ( e.getCause().getMessage() != null )
+			{
+				System.err.println( e.getCause().getMessage() );
+			}
+			if ( e.getMessage() != null )
+			{
+				System.err.println( e.getMessage() );
+			}
+			return false;
+		}
+		return true;
 	}
 }
