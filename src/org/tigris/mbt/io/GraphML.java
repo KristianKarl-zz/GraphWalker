@@ -268,9 +268,9 @@ public class GraphML extends AbstractModelHandler
 									String reqtag = m.group( 1 );
 									reqtag = reqtag.trim();
 									logger.debug( "  Found REQTAG: " + reqtag );
-									if ( reqtags.isEmpty() )
+									if ( reqtags.length() == 0 )
 									{
-										reqtags += reqtag;
+										reqtags = reqtag;
 									}
 									else
 									{
@@ -532,9 +532,9 @@ public class GraphML extends AbstractModelHandler
 								String reqtag = m.group( 1 );
 								reqtag = reqtag.trim();
 								logger.debug( "  Found REQTAG: " + reqtag );
-								if ( reqtags.isEmpty() )
+								if ( reqtags.length() == 0 )
 								{
-									reqtags += reqtag;
+									reqtags = reqtag;
 								}
 								else
 								{
