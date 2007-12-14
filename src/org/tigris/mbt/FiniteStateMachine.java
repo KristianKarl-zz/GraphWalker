@@ -18,14 +18,18 @@
 package org.tigris.mbt;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.Stack;
+import java.util.TreeSet;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import edu.uci.ics.jung.graph.Edge;
 import edu.uci.ics.jung.graph.impl.AbstractElement;
 import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
 import edu.uci.ics.jung.graph.impl.SparseGraph;
@@ -51,6 +55,8 @@ public class FiniteStateMachine{
 	protected boolean abortOnDeadEnds = true;
 
 	private long start_time;
+
+	private Hashtable associatedRequirements;
 	
 	protected void setState(String stateName)
 	{
@@ -132,6 +138,16 @@ public class FiniteStateMachine{
 			visited = new Integer( 1 );
 		}
 		e.setUserDatum( Keywords.VISITED_KEY, visited, UserData.SHARED );
+
+		if(e.containsUserDatumKey(Keywords.REQTAG_KEY))
+		{
+			Hashtable reqs = getRequirements();
+			String[] tags = ((String)e.getUserDatum(Keywords.REQTAG_KEY)).split( "," );
+			for ( int j = 0; j < tags.length; j++ ) 
+			{
+				reqs.put( tags[j], new Integer(((Integer)reqs.get(tags[j])).intValue()+1));	
+			}
+		}
 	}
 	
 	public boolean walkEdge(DirectedSparseEdge edge)
@@ -168,8 +184,11 @@ public class FiniteStateMachine{
 		int v   = stats[2];
 		int vc  = stats[3];
 		int len = stats[4];
+		int req = stats[5];
+		int reqc= stats[6];
 		
 		return 
+		(req>0?"RC: " + reqc + "/" + req + " => " +  (100*reqc)/req + "% ":"") +
 		"EC: " + ec + "/" + e + " => " + (100*ec)/e + "% " +
 		"SC: " + vc + "/" + v + " => " + (100*vc)/v + "% " +
 		"L: " + len; 
@@ -183,8 +202,11 @@ public class FiniteStateMachine{
 		int v   = stats[2];
 		int vc  = stats[3];
 		int len = stats[4];
+		int req = stats[5];
+		int reqc= stats[6];
 		
 		return 
+		(req>0?"Coverage Requirements: " + reqc + "/" + req + " => " +  (100*reqc)/req + "%\n":"") +
 		"Coverage Edges: " + ec + "/" + e + " => " +  (100*ec)/e + "%\n" + 
 		"Coverage States: " + vc + "/" + v + " => " + (100*vc)/v  + "%\n" + 
 		"Unvisited Edges:  " + (e-ec) + "\n" + 
@@ -197,7 +219,7 @@ public class FiniteStateMachine{
 		Set e = model.getEdges();
 		Set v = model.getVertices();
 
-		int[] retur = {e.size(), getCoverage(e), v.size(), getCoverage(v), numberOfEdgesTravesed};
+		int[] retur = {e.size(), getCoverage(e), v.size(), getCoverage(v), numberOfEdgesTravesed, getRequirements().size(), getRequirementCoverage()};
 		return retur;
 	}
 	
@@ -259,6 +281,40 @@ public class FiniteStateMachine{
 		return unique;
 	}
 	
+	protected Hashtable getRequirements()
+	{
+		if(associatedRequirements == null)
+		{ 
+			associatedRequirements = new Hashtable();
+			
+			Vector abstractElements = new Vector();
+			abstractElements.addAll(getAllStates());
+			abstractElements.addAll(getAllEdges());
+			
+			for(Iterator i = abstractElements.iterator();i.hasNext();)
+			{
+				AbstractElement ae = (AbstractElement) i.next();
+				String reqtags = (String)ae.getUserDatum(Keywords.REQTAG_KEY);
+				if(reqtags != null )
+				{
+					String[] tags = reqtags.split( "," );
+					for ( int j = 0; j < tags.length; j++ ) 
+					{
+						associatedRequirements.put( tags[j], new Integer(0) );	
+					}
+				}
+			}
+		}
+		return associatedRequirements;
+	}
+	
+	protected int getRequirementCoverage()
+	{
+		Vector usedReqs = new Vector(getRequirements().values());
+		while(usedReqs.remove(new Integer(0)));
+		return usedReqs.size();
+	}
+
 	public String getEdgeName(DirectedSparseEdge edge)
 	{
 		String l = (String)edge.getUserDatum( Keywords.LABEL_KEY );
