@@ -94,6 +94,13 @@ public class UC01 extends TestCase
 		SeleniumServer selServer = new SeleniumServer();
 		selServer.start();
 		String url = "http://mbt.tigris.org";
+		
+		// For a linux machine with firefox installed in '/usr/lib/mozilla-firefox/'
+		// where the firefox executable is not in the path.
+		// See also: http://release.openqa.org/selenium-remote-control/0.9.2/doc/java/com/thoughtworks/selenium/DefaultSelenium.html#DefaultSelenium(java.lang.String,%20int,%20java.lang.String,%20java.lang.String)
+		//selenium = new DefaultSelenium("localhost", SeleniumServer.getDefaultPort(), "*firefox /usr/lib/mozilla-firefox/firefox-bin", url);
+
+		// Should work fow any machine where the firefox executable is in the path.
 		selenium = new DefaultSelenium("localhost", SeleniumServer.getDefaultPort(), "*firefox", url);
 	}
 
