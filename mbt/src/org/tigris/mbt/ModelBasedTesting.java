@@ -21,6 +21,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.lang.reflect.InvocationTargetException;
 
 import org.apache.log4j.Logger;
 import org.tigris.mbt.conditions.CombinationalCondition;
@@ -254,5 +255,63 @@ public class ModelBasedTesting
 		} catch (IOException e) {
 			throw new RuntimeException("Template file read problem: " + e.getMessage());
 		}
+	}
+	
+	public void execute(String strClassName) throws IllegalArgumentException, SecurityException, IllegalAccessException, InvocationTargetException, NoSuchMethodException
+	{
+		if( strClassName == null || strClassName.trim().equals(""))
+			throw new RuntimeException("Needed execution class name is missing as parameter.");
+		Class clsClass = null;
+		try {
+			clsClass = Class.forName(strClassName);
+		} catch (ClassNotFoundException e) {
+			throw new RuntimeException("Cannot locate execution class.", e);
+		}
+		execute(clsClass, null);
+	}
+
+	public void execute(Class clsClass) throws IllegalArgumentException, SecurityException, IllegalAccessException, InvocationTargetException, NoSuchMethodException
+	{
+		if( clsClass == null )
+			throw new RuntimeException("Needed execution class is missing as parameter.");
+		execute(clsClass, null);
+	}
+
+	public void execute(Object objInstance) throws IllegalArgumentException, SecurityException, IllegalAccessException, InvocationTargetException, NoSuchMethodException
+	{
+		if( objInstance == null )
+			throw new RuntimeException("Needed execution instance is missing as parameter.");
+		execute(null, objInstance);
+	}
+
+	public void execute(Class clsClass, Object objInstance) throws IllegalArgumentException, SecurityException, IllegalAccessException, InvocationTargetException, NoSuchMethodException
+	{
+		if( clsClass == null && objInstance == null )
+			throw new RuntimeException("Execution instance or class is missing as parameters.");
+		if( clsClass == null )
+			clsClass = objInstance.getClass();
+		if( objInstance == null )
+			try {
+				objInstance = clsClass.newInstance();
+			} catch (InstantiationException e) {
+				throw new RuntimeException("Cannot create execution instance.", e);
+			} catch (IllegalAccessException e) {
+				throw new RuntimeException("Cannot access execution instance.", e);
+			} 
+		
+		while( hasNextStep() )
+		{
+			String[] stepPair = getNextStep();
+			
+			execute(clsClass, objInstance, stepPair[ 0 ] );
+			execute(clsClass, objInstance, stepPair[ 1 ] );
+		}
+
+	}
+	
+	private void execute(Class clsClass, Object objInstance, String strMethod) throws IllegalArgumentException, SecurityException, IllegalAccessException, InvocationTargetException, NoSuchMethodException 
+	{
+		//TODO: get parameters if available from strMethod and use them in call
+		clsClass.getMethod( strMethod, null ).invoke( objInstance, null  );
 	}
 }

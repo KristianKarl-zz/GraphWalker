@@ -1,5 +1,7 @@
 package org.tigris.mbt.demo;
 
+import java.lang.reflect.InvocationTargetException;
+
 import junit.framework.TestCase;
 
 import org.apache.log4j.Logger;
@@ -16,7 +18,7 @@ public class UC01 extends TestCase
     private Selenium selenium;
 	private Logger log;
 
-	public void testUC01()
+	public void testUC01() throws IllegalArgumentException, SecurityException, IllegalAccessException, InvocationTargetException, NoSuchMethodException
 	{
 		log = Util.setupLogger( UC01.class );
 
@@ -31,13 +33,8 @@ public class UC01 extends TestCase
 		// Use random walk through the model
 		mbt.setGenerator( Keywords.GENERATOR_RANDOM );
 		
-		while( mbt.hasNextStep() )
-		{
-			String[] stepPair = mbt.getNextStep();
-			
-			if ( Util.RunTest( this, log, stepPair[ 0 ] ) == false ) fail();
-			if ( Util.RunTest( this, log, stepPair[ 1 ] ) == false ) fail();				
-		}
+		// Execute using the methods available in this instance
+		mbt.execute(this);
 	}
 	
 	/**
@@ -100,7 +97,7 @@ public class UC01 extends TestCase
 		// See also: http://release.openqa.org/selenium-remote-control/0.9.2/doc/java/com/thoughtworks/selenium/DefaultSelenium.html#DefaultSelenium(java.lang.String,%20int,%20java.lang.String,%20java.lang.String)
 		//selenium = new DefaultSelenium("localhost", SeleniumServer.getDefaultPort(), "*firefox /usr/lib/mozilla-firefox/firefox-bin", url);
 
-		// Should work fow any machine where the firefox executable is in the path.
+		// Should work for any machine where the firefox executable is in the path.
 		selenium = new DefaultSelenium("localhost", SeleniumServer.getDefaultPort(), "*firefox", url);
 	}
 
