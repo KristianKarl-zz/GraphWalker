@@ -3,6 +3,7 @@ package org.tigris.mbt;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -395,6 +396,7 @@ public class CLI
                 .hasArg()
                 .withLongOpt( "log-coverage" )
                 .create( "o" ) );
+		opt.addOption( "c", "class_name", true, "Optional class name to use for test execution." );
 	}
 
 	/**
@@ -805,15 +807,57 @@ public class CLI
 				}
 			}, 500, Integer.valueOf( cl.getOptionValue( "o" ) ).longValue() * 1000 );
 		}
-		
-		boolean firstLine = true;
-		char input = 0;
-		String[] stepPair = null;
-		while(mbt.hasNextStep())
+	
+		if( cl.hasOption( "c" ) )
 		{
-			if ( firstLine == false )
+			try {
+				mbt.execute( cl.getOptionValue( "c" ) );
+			} catch (IllegalArgumentException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SecurityException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (NoSuchMethodException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} else
+		{
+			boolean firstLine = true;
+			char input = 0;
+			String[] stepPair = null;
+			while(mbt.hasNextStep())
 			{
-				input = getInput();
+				if ( firstLine == false )
+				{
+					input = getInput();
+					logger.debug("Recieved: '"+ input+"'");
+					if(input == '2')
+					{
+						break;
+					}
+					if(input == '1')
+					{
+						mbt.backtrack();
+						continue;
+					}
+				}
+				else
+				{
+					firstLine = false;
+				}
+				stepPair = mbt.getNextStep();
+				logger.debug("Execute: " + stepPair[0]);
+				System.out.println(stepPair[0]);
+	
+				input = getInput(); 
 				logger.debug("Recieved: '"+ input+"'");
 				if(input == '2')
 				{
@@ -824,30 +868,10 @@ public class CLI
 					mbt.backtrack();
 					continue;
 				}
+				logger.debug("Verify: " + stepPair[1]);
+				System.out.println(stepPair[1]);
 			}
-			else
-			{
-				firstLine = false;
-			}
-			stepPair = mbt.getNextStep();
-			logger.debug("Execute: " + stepPair[0]);
-			System.out.println(stepPair[0]);
-
-			input = getInput(); 
-			logger.debug("Recieved: '"+ input+"'");
-			if(input == '2')
-			{
-				break;
-			}
-			if(input == '1')
-			{
-				mbt.backtrack();
-				continue;
-			}
-			logger.debug("Verify: " + stepPair[1]);
-			System.out.println(stepPair[1]);
 		}
-		
 		if( cl.hasOption( "a" ) )
 		{
 			System.out.println( mbt.getStatisticsString() );
