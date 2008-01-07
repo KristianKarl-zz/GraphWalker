@@ -17,6 +17,7 @@
 
 package org.tigris.mbt;
 
+import java.security.AllPermission;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -216,7 +217,7 @@ public class FiniteStateMachine{
 		Set e = model.getEdges();
 		Set v = model.getVertices();
 
-		int[] retur = {e.size(), getCoverage(e), v.size(), getCoverage(v), numberOfEdgesTravesed, getRequirements().size(), getRequirementCoverage()};
+		int[] retur = {e.size(), getCoverage(e), v.size(), getCoverage(v), numberOfEdgesTravesed, getRequirements().size(), getCoveredRequirements().size()};
 		return retur;
 	}
 	
@@ -305,13 +306,15 @@ public class FiniteStateMachine{
 		return associatedRequirements;
 	}
 	
-	protected int getRequirementCoverage()
+	public Set getCoveredRequirements()
 	{
-		Vector usedReqs = new Vector(getRequirements().values());
-		while(usedReqs.remove(new Integer(0)));
-		return usedReqs.size();
+		Vector notCoveredValues = new Vector();
+		notCoveredValues.add(new Integer(0));
+		Hashtable allRequirements = (Hashtable) getRequirements().clone();
+		allRequirements.values().removeAll(notCoveredValues);
+		return allRequirements.keySet();
 	}
-
+	
 	public String getEdgeName(DirectedSparseEdge edge)
 	{
 		String l = (String)edge.getUserDatum( Keywords.LABEL_KEY );
