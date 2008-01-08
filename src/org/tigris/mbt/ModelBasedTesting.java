@@ -320,7 +320,6 @@ public class ModelBasedTesting
 	private void executeMethod(Class clsClass, Object objInstance, String strMethod) throws IllegalArgumentException, SecurityException, IllegalAccessException, InvocationTargetException, NoSuchMethodException 
 	{
 		//TODO: get parameters if available from strMethod and use them in call
-		if(strMethod.contains("/"))
 		clsClass.getMethod( strMethod, null ).invoke( objInstance, null  );
 	}
 }
