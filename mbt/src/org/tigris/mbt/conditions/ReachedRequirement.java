@@ -5,12 +5,12 @@ import java.util.Collection;
 
 import org.tigris.mbt.FiniteStateMachine;
 
-public class RequirementCondition implements StopCondition {
+public class ReachedRequirement implements StopCondition {
 	
 	private FiniteStateMachine machine;
 	private Collection requirements;
 
-	public RequirementCondition(FiniteStateMachine machine, String requirements)
+	public ReachedRequirement(FiniteStateMachine machine, String requirements)
 	{
 		this.machine = machine;
 		this.requirements =  Arrays.asList(requirements.split(","));
