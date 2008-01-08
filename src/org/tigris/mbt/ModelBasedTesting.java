@@ -265,7 +265,7 @@ public class ModelBasedTesting
 		}
 	}
 	
-	public void execute(String strClassName) throws IllegalArgumentException, SecurityException, IllegalAccessException, InvocationTargetException, NoSuchMethodException
+	public void execute(String strClassName) 
 	{
 		if( strClassName == null || strClassName.trim().equals(""))
 			throw new RuntimeException("Needed execution class name is missing as parameter.");
@@ -278,21 +278,21 @@ public class ModelBasedTesting
 		execute(clsClass, null);
 	}
 
-	public void execute(Class clsClass) throws IllegalArgumentException, SecurityException, IllegalAccessException, InvocationTargetException, NoSuchMethodException
+	public void execute(Class clsClass) 
 	{
 		if( clsClass == null )
 			throw new RuntimeException("Needed execution class is missing as parameter.");
 		execute(clsClass, null);
 	}
 
-	public void execute(Object objInstance) throws IllegalArgumentException, SecurityException, IllegalAccessException, InvocationTargetException, NoSuchMethodException
+	public void execute(Object objInstance) 
 	{
 		if( objInstance == null )
 			throw new RuntimeException("Needed execution instance is missing as parameter.");
 		execute(null, objInstance);
 	}
 
-	public void execute(Class clsClass, Object objInstance) throws IllegalArgumentException, SecurityException, IllegalAccessException, InvocationTargetException, NoSuchMethodException
+	public void execute(Class clsClass, Object objInstance)
 	{
 		if( clsClass == null && objInstance == null )
 			throw new RuntimeException("Execution instance or class is missing as parameters.");
@@ -311,8 +311,20 @@ public class ModelBasedTesting
 		{
 			String[] stepPair = getNextStep();
 			
-			executeMethod(clsClass, objInstance, stepPair[ 0 ] );
-			executeMethod(clsClass, objInstance, stepPair[ 1 ] );
+			try {
+				executeMethod(clsClass, objInstance, stepPair[ 0 ] );
+				executeMethod(clsClass, objInstance, stepPair[ 1 ] );
+			} catch (IllegalArgumentException e) {
+				throw new RuntimeException("Illegal argument used.", e);
+			} catch (SecurityException e) {
+				throw new RuntimeException("Security failure occured.", e);
+			} catch (IllegalAccessException e) {
+				throw new RuntimeException("Illegal access was stoped.", e);
+			} catch (InvocationTargetException e) {
+				throw new RuntimeException("Cannot invoke target.", e);
+			} catch (NoSuchMethodException e) {
+				throw new RuntimeException("Cannot find specified method.", e);
+			}
 		}
 
 	}

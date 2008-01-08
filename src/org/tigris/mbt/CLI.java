@@ -3,7 +3,6 @@ package org.tigris.mbt;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -852,25 +851,9 @@ public class CLI
 	
 		if( cl.hasOption( "c" ) )
 		{
-			try {
-				mbt.execute( cl.getOptionValue( "c" ) );
-			} catch (IllegalArgumentException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (SecurityException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (InvocationTargetException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (NoSuchMethodException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		} else
+			mbt.execute( cl.getOptionValue( "c" ) );
+		}
+		else
 		{
 			boolean firstLine = true;
 			char input = 0;

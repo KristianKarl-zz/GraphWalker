@@ -1,7 +1,5 @@
 package org.tigris.mbt.demo;
 
-import java.lang.reflect.InvocationTargetException;
-
 import junit.framework.TestCase;
 
 import org.apache.log4j.Logger;
@@ -18,7 +16,7 @@ public class UC01 extends TestCase
     private Selenium selenium;
 	private Logger log;
 
-	public void testUC01() throws IllegalArgumentException, SecurityException, IllegalAccessException, InvocationTargetException, NoSuchMethodException
+	public void testUC01() 
 	{
 		log = Util.setupLogger( UC01.class );
 
