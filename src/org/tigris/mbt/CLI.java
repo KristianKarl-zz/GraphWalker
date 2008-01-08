@@ -388,6 +388,17 @@ public class CLI
                 .hasArg()
                 .withLongOpt( "end-state" )
                 .create( "t" ) );
+		opt.addOption( OptionBuilder.withArgName( "end-requirement" )
+                .withDescription( "Stop condition. Halts generation after the specified requirements has been reached." )
+                .hasArg()
+                .withLongOpt( "end-requirement" )
+                .create( "r" ) );
+		opt.addOption( OptionBuilder.withArgName( "requirement-coverage" )
+                .withDescription( "Stop condition. Halts generation after the specified requirement-coverage has been met. " +
+		                          "The given value shall be a real number between 0 and 100" )
+                .hasArg()
+                .withLongOpt( "requirement-coverage" )
+                .create( "q" ) );
 		opt.addOption( OptionBuilder.withArgName( "log-coverage" )
 				.withDescription( "Prints the test coverage of the graph during execution every " +
 			              "<n>. The printout goes to the log file defined in " +
@@ -446,6 +457,17 @@ public class CLI
                 .hasArg()
                 .withLongOpt( "end-state" )
                 .create( "t" ) );
+		opt.addOption( OptionBuilder.withArgName( "end-requirement" )
+                .withDescription( "Stop condition. Halts generation after the specified requirements has been reached." )
+                .hasArg()
+                .withLongOpt( "end-requirement" )
+                .create( "r" ) );
+		opt.addOption( OptionBuilder.withArgName( "requirement-coverage" )
+                .withDescription( "Stop condition. Halts generation after the specified requirement-coverage has been met. " +
+		                          "The given value shall be a real number between 0 and 100" )
+                .hasArg()
+                .withLongOpt( "requirement-coverage" )
+                .create( "q" ) );
 		opt.addOption( OptionBuilder.withArgName( "log-coverage" )
 				.withDescription( "Prints the test coverage of the graph during execution every " +
 			              "<n>. The printout goes to the log file defined in " +
@@ -541,7 +563,9 @@ public class CLI
            	 !cl.hasOption( "t" ) &&
         	 !cl.hasOption( "e" ) &&
         	 !cl.hasOption( "s" ) &&
-        	 !cl.hasOption( "l" ) )
+        	 !cl.hasOption( "l" ) &&
+        	 !cl.hasOption( "r" ) &&
+        	 !cl.hasOption( "q" ) )
         {
         	System.err.println( "A stop condition must be supplied, See options: -d -t -e -s -l" );
         	System.err.println( "Type 'java -jar mbt.jar help offline' for help." );
@@ -566,6 +590,14 @@ public class CLI
 		if( cl.hasOption( "l" ) )
 		{
 			mbt.addCondition( Keywords.CONDITION_TEST_LENGTH, cl.getOptionValue( "l" ) ); 
+		}
+		if( cl.hasOption( "r" ) )
+		{
+			mbt.addCondition( Keywords.CONDITION_REACHED_REQUIREMENT, cl.getOptionValue( "r" ) ); 
+		}
+		if( cl.hasOption( "q" ) )
+		{
+			mbt.addCondition( Keywords.CONDITION_REQUIREMENT_COVERAGE, cl.getOptionValue( "q" ) ); 
 		}
 
 		/**
@@ -734,7 +766,9 @@ public class CLI
         	 !cl.hasOption( "e" ) &&
         	 !cl.hasOption( "s" ) &&
         	 !cl.hasOption( "u" ) &&
-        	 !cl.hasOption( "l" ) )
+        	 !cl.hasOption( "l" ) &&
+        	 !cl.hasOption( "r" ) &&
+        	 !cl.hasOption( "q" ) )
         {
         	System.err.println( "A stop condition must be supplied, See options: -d -t -e -s -l" );
         	System.err.println( "Type 'java -jar mbt.jar help offline' for help." );
@@ -763,6 +797,14 @@ public class CLI
 		if( cl.hasOption( "u" ) )
 		{
 			mbt.addCondition( Keywords.CONDITION_TEST_DURATION, cl.getOptionValue( "u" ) ); 
+		}
+		if( cl.hasOption( "r" ) )
+		{
+			mbt.addCondition( Keywords.CONDITION_REACHED_REQUIREMENT, cl.getOptionValue( "r" ) ); 
+		}
+		if( cl.hasOption( "q" ) )
+		{
+			mbt.addCondition( Keywords.CONDITION_REQUIREMENT_COVERAGE, cl.getOptionValue( "q" ) ); 
 		}
 
 		/**
