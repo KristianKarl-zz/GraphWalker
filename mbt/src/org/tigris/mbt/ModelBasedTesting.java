@@ -27,7 +27,9 @@ import org.apache.log4j.Logger;
 import org.tigris.mbt.conditions.CombinationalCondition;
 import org.tigris.mbt.conditions.EdgeCoverage;
 import org.tigris.mbt.conditions.ReachedEdge;
+import org.tigris.mbt.conditions.ReachedRequirement;
 import org.tigris.mbt.conditions.ReachedState;
+import org.tigris.mbt.conditions.RequirementCoverage;
 import org.tigris.mbt.conditions.StateCoverage;
 import org.tigris.mbt.conditions.StopCondition;
 import org.tigris.mbt.conditions.TestCaseLength;
@@ -77,6 +79,12 @@ public class ModelBasedTesting
 			break;
 		case Keywords.CONDITION_TEST_LENGTH:
 			condition = new TestCaseLength(getMachine(), Integer.parseInt(conditionValue));
+			break;
+		case Keywords.CONDITION_REQUIREMENT_COVERAGE:
+			condition = new RequirementCoverage(getMachine(), Double.parseDouble(conditionValue)/100);
+			break;
+		case Keywords.CONDITION_REACHED_REQUIREMENT:
+			condition = new ReachedRequirement(getMachine(), conditionValue);
 			break;
 		}
 		
@@ -303,15 +311,16 @@ public class ModelBasedTesting
 		{
 			String[] stepPair = getNextStep();
 			
-			execute(clsClass, objInstance, stepPair[ 0 ] );
-			execute(clsClass, objInstance, stepPair[ 1 ] );
+			executeMethod(clsClass, objInstance, stepPair[ 0 ] );
+			executeMethod(clsClass, objInstance, stepPair[ 1 ] );
 		}
 
 	}
 	
-	private void execute(Class clsClass, Object objInstance, String strMethod) throws IllegalArgumentException, SecurityException, IllegalAccessException, InvocationTargetException, NoSuchMethodException 
+	private void executeMethod(Class clsClass, Object objInstance, String strMethod) throws IllegalArgumentException, SecurityException, IllegalAccessException, InvocationTargetException, NoSuchMethodException 
 	{
 		//TODO: get parameters if available from strMethod and use them in call
+		if(strMethod.contains("/"))
 		clsClass.getMethod( strMethod, null ).invoke( objInstance, null  );
 	}
 }

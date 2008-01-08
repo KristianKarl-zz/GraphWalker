@@ -184,6 +184,10 @@ public class Keywords {
 
 	public static final int CONDITION_TEST_DURATION = 1006;
 
+	public static final int CONDITION_REQUIREMENT_COVERAGE = 1007;
+
+	public static final int CONDITION_REACHED_REQUIREMENT = 1008;
+
 	public static final int GENERATOR_RANDOM = 2001;
 
 	public static final int GENERATOR_SHORTEST = 2002;
@@ -198,7 +202,7 @@ public class Keywords {
 	* Holds the pre-defined key words
 	*/
 	private static Vector reservedKeyWords = new Vector();
-	
+
 	/**
 	* Defines the key words
 	*/
