@@ -1,4 +1,4 @@
-package org.tigris.mbt;
+package org.tigris.mbt.exceptions;
 
 /**
  * This exception is thrown, whenever the preset execution time has elapsed
