@@ -17,7 +17,6 @@
 
 package org.tigris.mbt;
 
-import java.security.AllPermission;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Hashtable;
