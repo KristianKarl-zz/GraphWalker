@@ -82,6 +82,9 @@ public class Util {
 		return logger;
 	}
 
+	/**
+	 * @deprecated use execute from {@link ModelBasedTesting} instead.
+	 */
 	public static boolean RunTest( Object ref, Logger log, String method ) 
 	{
 		Class cls = null;
