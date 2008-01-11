@@ -3,7 +3,6 @@ package test.org.tigris.mbt;
 import org.tigris.mbt.ExtendedFiniteStateMachine;
 import org.tigris.mbt.Keywords;
 
-import edu.uci.ics.jung.graph.Edge;
 import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
 import edu.uci.ics.jung.graph.impl.DirectedSparseVertex;
 import edu.uci.ics.jung.graph.impl.SparseGraph;
