@@ -138,7 +138,7 @@ public class FiniteStateMachine{
 
 		if(e.containsUserDatumKey(Keywords.REQTAG_KEY))
 		{
-			Hashtable reqs = getRequirements();
+			Hashtable reqs = getAllRequirements();
 			String[] tags = ((String)e.getUserDatum(Keywords.REQTAG_KEY)).split( "," );
 			for ( int j = 0; j < tags.length; j++ ) 
 			{
@@ -216,7 +216,7 @@ public class FiniteStateMachine{
 		Set e = model.getEdges();
 		Set v = model.getVertices();
 
-		int[] retur = {e.size(), getCoverage(e), v.size(), getCoverage(v), numberOfEdgesTravesed, getRequirements().size(), getCoveredRequirements().size()};
+		int[] retur = {e.size(), getCoverage(e), v.size(), getCoverage(v), numberOfEdgesTravesed, getAllRequirements().size(), getCoveredRequirements().size()};
 		return retur;
 	}
 	
@@ -278,7 +278,7 @@ public class FiniteStateMachine{
 		return unique;
 	}
 	
-	protected Hashtable getRequirements()
+	public Hashtable getAllRequirements()
 	{
 		if(associatedRequirements == null)
 		{ 
@@ -309,7 +309,7 @@ public class FiniteStateMachine{
 	{
 		Vector notCoveredValues = new Vector();
 		notCoveredValues.add(new Integer(0));
-		Hashtable allRequirements = (Hashtable) getRequirements().clone();
+		Hashtable allRequirements = (Hashtable) getAllRequirements().clone();
 		allRequirements.values().removeAll(notCoveredValues);
 		return allRequirements.keySet();
 	}

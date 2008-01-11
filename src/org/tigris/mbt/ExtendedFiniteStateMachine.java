@@ -1,6 +1,13 @@
 package org.tigris.mbt;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.Arrays;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Set;
@@ -13,6 +20,7 @@ import bsh.EvalError;
 import bsh.Interpreter;
 import bsh.NameSpace;
 import bsh.UtilEvalError;
+import bsh.Variable;
 
 import edu.uci.ics.jung.graph.Edge;
 import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
@@ -20,18 +28,22 @@ import edu.uci.ics.jung.graph.impl.SparseGraph;
 
 public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 
-	static Logger logger = Logger.getLogger(ExtendedFiniteStateMachine.class);
+	static Logger logger = Util.setupLogger(ExtendedFiniteStateMachine.class);
 	
 	private Interpreter interpreter = new Interpreter();
 	private AccessableEdgeFilter accessableFilter;
-	private Stack actionStack;
+//	private Stack actionStack;
 
 	private Stack edgenameStack;
+
+	private Stack namespaceStack;
 	
 	public ExtendedFiniteStateMachine(SparseGraph newModel) {
 		super(newModel);
-		actionStack = new Stack();
+//		actionStack = new Stack();
 		edgenameStack = new Stack();
+		namespaceStack = new Stack();
+		
 		accessableFilter = new AccessableEdgeFilter(interpreter);
 	}
 
@@ -133,22 +145,43 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 		DirectedSparseEdge edge = getLastEdge();
 		String pushedName = (edge==null?"<START>":getEdgeName(edge));
 		edgenameStack.push(pushedName);
-		actionStack.push(getAction(edge));
+		namespaceStack.push(new CannedNameSpace(interpreter.getNameSpace()));
 	}
 	
 	public void popState()
 	{
 		super.popState();
 		edgenameStack.pop();
-		actionStack.pop();
-		interpreter.getNameSpace().clear();
-		for(int i = 0;i < actionStack.size();i++)
-		{
+		interpreter.setNameSpace(((CannedNameSpace)namespaceStack.pop()).unpack());
+	}
+
+	private class CannedNameSpace
+	{
+		byte [] store;
+		
+		public CannedNameSpace(NameSpace objNameSpace) {
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			ObjectOutputStream oos;
 			try {
-				String action = (String) actionStack.get(i);
-				if(action != null && !action.equals("")) interpreter.eval(action);
-			} catch (EvalError e) {
-				throw new RuntimeException( "Malformed action: " + e.getMessage() );
+				oos = new ObjectOutputStream(baos);
+				oos.writeObject(objNameSpace);
+			} catch (IOException e) {
+				throw new RuntimeException("Unable to store backtrack information due to a IOException.",e);
+			}
+			store = baos.toByteArray();
+		}
+		
+		public NameSpace unpack()
+		{
+			ByteArrayInputStream bais = new ByteArrayInputStream(store);
+			ObjectInputStream ois;
+			try {
+				ois = new ObjectInputStream(bais);
+				return (NameSpace) ois.readObject();
+			} catch (IOException e) {
+				throw new RuntimeException("Unable to restore backtrack information due to a IOException.",e);
+			} catch (ClassNotFoundException e) {
+				throw new RuntimeException("Unable to restore backtrack information as the NameSpace Class could not be found.",e);
 			}
 		}
 	}
