@@ -29,7 +29,6 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 	
 	private Interpreter interpreter = new Interpreter();
 	private AccessableEdgeFilter accessableFilter;
-//	private Stack actionStack;
 
 	private Stack edgenameStack;
 
@@ -37,7 +36,6 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 	
 	public ExtendedFiniteStateMachine(SparseGraph newModel) {
 		super(newModel);
-//		actionStack = new Stack();
 		edgenameStack = new Stack();
 		namespaceStack = new Stack();
 		
