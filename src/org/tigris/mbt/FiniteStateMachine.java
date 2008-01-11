@@ -147,6 +147,31 @@ public class FiniteStateMachine{
 		}
 	}
 	
+	protected void setAsUnvisited(AbstractElement e)
+	{
+		Integer visited;
+		if(e.containsUserDatumKey(Keywords.VISITED_KEY))
+		{
+			visited = (Integer) e.getUserDatum( Keywords.VISITED_KEY );
+			visited = new Integer( visited.intValue() - 1 );
+		}
+		else
+		{
+			visited = new Integer( 0 );
+		}
+		e.setUserDatum( Keywords.VISITED_KEY, visited, UserData.SHARED );
+
+		if(e.containsUserDatumKey(Keywords.REQTAG_KEY))
+		{
+			Hashtable reqs = getAllRequirements();
+			String[] tags = ((String)e.getUserDatum(Keywords.REQTAG_KEY)).split( "," );
+			for ( int j = 0; j < tags.length; j++ ) 
+			{
+				reqs.put( tags[j], new Integer(((Integer)reqs.get(tags[j])).intValue()-1));	
+			}
+		}
+	}
+	
 	public boolean walkEdge(DirectedSparseEdge edge)
 	{
 		if(currentState.isSource(edge))
@@ -330,6 +355,8 @@ public class FiniteStateMachine{
 	
 	protected void popState()
 	{
+		setAsUnvisited(getLastEdge());
+		setAsUnvisited(currentState);
 		currentState = (DirectedSparseVertex) stateStack.pop();
 		numberOfEdgesTravesed = ((Integer)numberOfEdgesTravesedStack.pop()).intValue(); 
 	}
