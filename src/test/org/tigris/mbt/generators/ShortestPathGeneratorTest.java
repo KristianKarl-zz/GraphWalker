@@ -7,7 +7,6 @@ import org.tigris.mbt.conditions.ReachedEdge;
 import org.tigris.mbt.conditions.ReachedState;
 import org.tigris.mbt.generators.PathGenerator;
 import org.tigris.mbt.generators.ShortestPathGenerator;
-import org.tigris.mbt.io.GraphML;
 
 import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
 import edu.uci.ics.jung.graph.impl.DirectedSparseVertex;
