@@ -11,6 +11,7 @@ import org.tigris.mbt.FiniteStateMachine;
 import org.tigris.mbt.Keywords;
 import org.tigris.mbt.Util;
 import org.tigris.mbt.conditions.StopCondition;
+import org.tigris.mbt.exceptions.FoundNoEdgeException;
 import org.tigris.mbt.generators.PathGenerator;
 
 import edu.uci.ics.jung.graph.impl.AbstractElement;
@@ -20,7 +21,7 @@ import edu.uci.ics.jung.utils.UserData;
 
 public class ShortestPathGenerator extends PathGenerator {
 
-	static Logger logger = Logger.getLogger(ShortestPathGenerator.class);
+	static Logger logger = Util.setupLogger(ShortestPathGenerator.class);
 
 	private Stack preCalculatedPath = null;
 	private DirectedSparseVertex lastState;
@@ -48,7 +49,11 @@ public class ShortestPathGenerator extends PathGenerator {
 			}
 			boolean oldBacktracking = machine.isBacktrack();
 			machine.setBacktrack(true);
-			calculateShortestPath();
+			try {
+				calculateShortestPath();
+			} catch (FoundNoEdgeException e) {
+				throw new RuntimeException("No possible edges available for path", e);
+			}
 			machine.setBacktrack(oldBacktracking);
 
 			if(preCalculatedPath == null)
@@ -71,7 +76,7 @@ public class ShortestPathGenerator extends PathGenerator {
 				throw new RuntimeException( "No path found to the following vertices:\n" + unreachableStates +"\n\n"+
 						"Paths found to the following:\n" +reachableStates);
 			}
-
+			
 			// reverse path
 			Stack temp = new Stack();
 			while( preCalculatedPath.size() > 0 )
@@ -88,7 +93,7 @@ public class ShortestPathGenerator extends PathGenerator {
 		return retur;
 	}
 
-	private void calculateShortestPath()
+	private void calculateShortestPath() throws FoundNoEdgeException
 	{
 		DijkstraPoint dp = ((DijkstraPoint)machine.getCurrentState().getUserDatum(Keywords.DIJKSTRA));
 		Stack edgePath = (Stack) dp.getPath().clone();
@@ -98,19 +103,21 @@ public class ShortestPathGenerator extends PathGenerator {
 			DirectedSparseEdge e = (DirectedSparseEdge)i.next();
 			edgePath.push(e);
 			machine.walkEdge(e);
-			if(hasNext())
-			{
-				DijkstraPoint nextDp = ((DijkstraPoint)machine.getCurrentState().getUserDatum(Keywords.DIJKSTRA));
-				if(nextDp.compareTo(edgePath)>0)
+			try {
+				if(hasNext())
 				{
-					nextDp.setPath(edgePath);
-					calculateShortestPath();
+					DijkstraPoint nextDp = ((DijkstraPoint)machine.getCurrentState().getUserDatum(Keywords.DIJKSTRA));
+					if(nextDp.compareTo(edgePath)>0)
+					{
+						nextDp.setPath(edgePath);
+						calculateShortestPath();
+					}
 				}
-			}
-			else
-			{
-				preCalculatedPath = (Stack) edgePath.clone();
-			}
+				else
+				{
+					preCalculatedPath = (Stack) edgePath.clone();
+				}
+			} catch (FoundNoEdgeException culDeSac) { }
 			machine.backtrack();
 			edgePath.pop();
 		}
@@ -180,7 +187,7 @@ public class ShortestPathGenerator extends PathGenerator {
 		{
 			if(edgePaths == null) edgePaths = new Hashtable();
 			edgePaths.put(parent.getCurrentDataString(), edgePath.clone()); 
-			if(edgePaths.size()>50)
+			if(edgePaths.size()>500)
 				throw new RuntimeException( "Too many internal states in "+ Util.getCompleteVertexName(parent.getCurrentState()) + " please revise model.");
 		}
 
