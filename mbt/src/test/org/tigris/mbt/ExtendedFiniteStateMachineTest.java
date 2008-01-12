@@ -1,7 +1,5 @@
 package test.org.tigris.mbt;
 
-import java.util.Vector;
-
 import org.tigris.mbt.ExtendedFiniteStateMachine;
 import org.tigris.mbt.Keywords;
 
