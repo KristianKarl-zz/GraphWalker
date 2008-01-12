@@ -12,6 +12,7 @@ import java.util.Set;
 import java.util.Stack;
 
 import org.apache.log4j.Logger;
+import org.tigris.mbt.exceptions.FoundNoEdgeException;
 import org.tigris.mbt.filters.AccessableEdgeFilter;
 
 import bsh.EvalError;
@@ -47,7 +48,7 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 		return super.getCurrentStateName() + (hasInternalVariables()?"/" + getCurrentDataString():"");
 	}
 
-	public Set getCurrentOutEdges()
+	public Set getCurrentOutEdges() throws FoundNoEdgeException
 	{
 		Set	retur = super.getCurrentOutEdges();
 		for(Iterator i = retur.iterator();i.hasNext();)
@@ -65,7 +66,7 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 		}
 		if(retur.size()==0)
 		{
-			throw new RuntimeException( "Cul-De-Sac, dead end found in '" + Util.getCompleteVertexName( getCurrentState() ) + "'");
+			throw new FoundNoEdgeException( "Cul-De-Sac, dead end found in '" + Util.getCompleteVertexName( getCurrentState() ) + "'");
 		}
 		return retur;
 	}

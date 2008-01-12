@@ -2,129 +2,160 @@ package test.org.tigris.mbt.generators;
 
 import org.tigris.mbt.ExtendedFiniteStateMachine;
 import org.tigris.mbt.FiniteStateMachine;
+import org.tigris.mbt.Keywords;
 import org.tigris.mbt.conditions.ReachedEdge;
 import org.tigris.mbt.conditions.ReachedState;
 import org.tigris.mbt.generators.PathGenerator;
 import org.tigris.mbt.generators.ShortestPathGenerator;
 import org.tigris.mbt.io.GraphML;
 
+import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
+import edu.uci.ics.jung.graph.impl.DirectedSparseVertex;
+import edu.uci.ics.jung.graph.impl.SparseGraph;
+import edu.uci.ics.jung.utils.UserData;
+
 import junit.framework.TestCase;
 
 public class ShortestPathGeneratorTest extends TestCase {
 
+	SparseGraph graph;
+	DirectedSparseEdge e1;
+	DirectedSparseEdge e2;
+	DirectedSparseEdge e3;
+	DirectedSparseEdge e4;
+	
 	protected void setUp() throws Exception {
 		super.setUp();
+		graph = new SparseGraph();
+		DirectedSparseVertex start = new DirectedSparseVertex();
+		start.setUserDatum(Keywords.INDEX_KEY, new Integer(1), UserData.SHARED);
+		start.setUserDatum(Keywords.LABEL_KEY, "Start", UserData.SHARED);
+		graph.addVertex(start);
+		DirectedSparseVertex v1 = new DirectedSparseVertex();
+		v1.addUserDatum(Keywords.INDEX_KEY, new Integer(2), UserData.SHARED);
+		v1.setUserDatum(Keywords.LABEL_KEY, "V1", UserData.SHARED);
+		v1.setUserDatum(Keywords.REQTAG_KEY, "REQ002", UserData.SHARED);
+		graph.addVertex(v1);
+		DirectedSparseVertex v2 = new DirectedSparseVertex();
+		v2.addUserDatum(Keywords.INDEX_KEY, new Integer(3), UserData.SHARED);
+		v2.setUserDatum(Keywords.LABEL_KEY, "V2", UserData.SHARED);
+		v2.setUserDatum(Keywords.REQTAG_KEY, "REQ004", UserData.SHARED);
+		graph.addVertex(v2);
+		e1 = new DirectedSparseEdge(start, v1);
+		e1.setUserDatum(Keywords.INDEX_KEY, new Integer(4), UserData.SHARED);
+		e1.setUserDatum(Keywords.LABEL_KEY, "E1", UserData.SHARED);
+		e1.setUserDatum(Keywords.ACTIONS_KEY, "x=1;y=new Vector()", UserData.SHARED);
+		e1.setUserDatum(Keywords.REQTAG_KEY, "REQ001,REQ002", UserData.SHARED);
+		graph.addEdge(e1);
+		e2 = new DirectedSparseEdge(v1, v2);
+		e2.setUserDatum(Keywords.INDEX_KEY, new Integer(5), UserData.SHARED);
+		e2.setUserDatum(Keywords.LABEL_KEY, "E2", UserData.SHARED);
+		e2.setUserDatum(Keywords.ACTIONS_KEY, "x=2", UserData.SHARED);
+		e2.setUserDatum(Keywords.REQTAG_KEY, "REQ003", UserData.SHARED);
+		graph.addEdge(e2);
+		e3 = new DirectedSparseEdge(v2, v2);
+		e3.setUserDatum(Keywords.INDEX_KEY, new Integer(6), UserData.SHARED);
+		e3.setUserDatum(Keywords.LABEL_KEY, "E3", UserData.SHARED);
+		e3.setUserDatum(Keywords.ACTIONS_KEY, "x++", UserData.SHARED);
+		e3.setUserDatum(Keywords.GUARD_KEY, "x<4", UserData.SHARED);
+		graph.addEdge(e3);
+		e4 = new DirectedSparseEdge(v2, v1);		
+		e4.setUserDatum(Keywords.INDEX_KEY, new Integer(7), UserData.SHARED);
+		e4.setUserDatum(Keywords.LABEL_KEY, "E4", UserData.SHARED);
+		e4.setUserDatum(Keywords.ACTIONS_KEY, "y.add(x)", UserData.SHARED);
+		e4.setUserDatum(Keywords.GUARD_KEY, "y.size()<3", UserData.SHARED);
+		graph.addEdge(e4);
 	}
 
-	public void test_FSM_ShortestGenerationStateStop()
+	public void test_FSM_StateStop()
     {
-		GraphML gml = new GraphML();
-		gml.load("graphml/weight/FSM.graphml");
-		FiniteStateMachine FSM = new FiniteStateMachine(gml.getModel());
+		FiniteStateMachine FSM = new FiniteStateMachine(graph);
 		FSM.setWeighted(false);
-		PathGenerator pathGenerator = new ShortestPathGenerator(FSM, new ReachedState(FSM, "S3") );
+		PathGenerator pathGenerator = new ShortestPathGenerator(FSM, new ReachedState(FSM, "V2") );
 		
 		String[] stepPair;
 		stepPair = pathGenerator.getNext();
-		assertEquals("Start_1_100",  stepPair[0]);
-		assertEquals("S5", stepPair[1]);
+		assertEquals("E1",  stepPair[0]);
+		assertEquals("V1", stepPair[1]);
 		stepPair = pathGenerator.getNext();
-		assertEquals("S5_",  stepPair[0].subSequence(0, 3));
-		assertEquals("S3", stepPair[1]);
+		assertEquals("E2",  stepPair[0]);
+		assertEquals("V2", stepPair[1]);
 		assertFalse(pathGenerator.hasNext());
     }
 
-	public void test_FSM_ShortestGenerationEdgeStop()
+	public void test_FSM_EdgeStop()
     {
-		GraphML gml = new GraphML();
-		gml.load("graphml/weight/FSM.graphml");
-		FiniteStateMachine FSM = new FiniteStateMachine(gml.getModel());
+		FiniteStateMachine FSM = new FiniteStateMachine(graph);
 		FSM.setWeighted(false);
-		PathGenerator pathGenerator = new ShortestPathGenerator(FSM, new ReachedEdge(FSM, "S4_1_10") );
+		PathGenerator pathGenerator = new ShortestPathGenerator(FSM, new ReachedEdge(FSM, "E3") );
 		
 		String[] stepPair;
 		stepPair = pathGenerator.getNext();
-		assertEquals("Start_1_100",  stepPair[0]);
-		assertEquals("S5", stepPair[1]);
+		assertEquals("E1",  stepPair[0]);
+		assertEquals("V1", stepPair[1]);
 		stepPair = pathGenerator.getNext();
-		assertEquals("S5_2_10",  stepPair[0]);
-		assertEquals("S4", stepPair[1]);
+		assertEquals("E2",  stepPair[0]);
+		assertEquals("V2", stepPair[1]);
 		stepPair = pathGenerator.getNext();
-		assertEquals("S4_1_10",  stepPair[0]);
-		assertEquals("S2", stepPair[1]);
+		assertEquals("E3",  stepPair[0]);
+		assertEquals("V2", stepPair[1]);
 		assertFalse(pathGenerator.hasNext());
     }
 
-	public void test_EFSM_ShortestGenerationStateStop()
+	public void test_EFSM_StateStop()
     {
-		GraphML gml = new GraphML();
-		gml.load("graphml/methods/ExtendedMain.graphml");
-		ExtendedFiniteStateMachine EFSM = new ExtendedFiniteStateMachine(gml.getModel());
+		ExtendedFiniteStateMachine EFSM = new ExtendedFiniteStateMachine(graph);
 		EFSM.setWeighted(false);
-		PathGenerator pathGenerator = new ShortestPathGenerator(EFSM, new ReachedState(EFSM, "v_InvalidKey/incorrect=3;databaseChanged=true;") );
+		PathGenerator pathGenerator = new ShortestPathGenerator(EFSM, new ReachedState(EFSM, "V1/x=3;y=[2, 3, 3];") );
 		
 		String[] stepPair;
 		stepPair = pathGenerator.getNext();
-		assertEquals("e_Initialize",  stepPair[0]);
-		assertEquals("v_KeePassNotRunning/incorrect=0;databaseChanged=false;",  stepPair[1]);
+		assertEquals("E1",  stepPair[0]);
+		assertEquals("V1/x=1;y=[];",  stepPair[1]);
 		stepPair = pathGenerator.getNext();
-		assertEquals("e_StartWithDatabase",  stepPair[0]);
-		assertEquals("v_EnterMasterCompositeMasterKey/incorrect=0;databaseChanged=false;",  stepPair[1]);
+		assertEquals("E2",  stepPair[0]);
+		assertEquals("V2/x=2;y=[];",  stepPair[1]);
 		stepPair = pathGenerator.getNext();
-		assertEquals("e_EnterCorrectKey",  stepPair[0]);
-		assertEquals("v_MainWindow_DB_Loaded/incorrect=0;databaseChanged=false;",  stepPair[1]);
+		assertEquals("E4",  stepPair[0]);
+		assertEquals("V1/x=2;y=[2];",  stepPair[1]);
 		stepPair = pathGenerator.getNext();
-		assertEquals("e_ChangeDatabase",  stepPair[0]);
-		assertEquals("v_MainWindow_DB_Loaded/incorrect=0;databaseChanged=true;",  stepPair[1]);
+		assertEquals("E2",  stepPair[0]);
+		assertEquals("V2/x=2;y=[2];",  stepPair[1]);
 		stepPair = pathGenerator.getNext();
-		assertEquals("e_CloseApp",  stepPair[0]);
-		assertEquals("v_SaveBeforeCloseLock/incorrect=0;databaseChanged=true;",  stepPair[1]);
+		assertEquals("E3",  stepPair[0]);
+		assertEquals("V2/x=3;y=[2];",  stepPair[1]);
 		stepPair = pathGenerator.getNext();
-		assertEquals("e_Yes",  stepPair[0]);
-		assertEquals("v_KeePassNotRunning/incorrect=0;databaseChanged=true;",  stepPair[1]);
+		assertEquals("E4",  stepPair[0]);
+		assertEquals("V1/x=3;y=[2, 3];",  stepPair[1]);
 		stepPair = pathGenerator.getNext();
-		assertEquals("e_StartWithDatabase",  stepPair[0]);
-		assertEquals("v_EnterMasterCompositeMasterKey/incorrect=0;databaseChanged=true;",  stepPair[1]);
+		assertEquals("E2",  stepPair[0]);
+		assertEquals("V2/x=2;y=[2, 3];",  stepPair[1]);
 		stepPair = pathGenerator.getNext();
-		assertEquals("e_EnterInvalidKey",  stepPair[0]);
-		assertEquals("v_InvalidKey/incorrect=1;databaseChanged=true;",  stepPair[1]);
+		assertEquals("E3",  stepPair[0]);
+		assertEquals("V2/x=3;y=[2, 3];",  stepPair[1]);
 		stepPair = pathGenerator.getNext();
-		assertEquals("e_CloseDialog",  stepPair[0]);
-		assertEquals("v_EnterMasterCompositeMasterKey/incorrect=1;databaseChanged=true;",  stepPair[1]);
-		stepPair = pathGenerator.getNext();
-		assertEquals("e_EnterInvalidKey",  stepPair[0]);
-		assertEquals("v_InvalidKey/incorrect=2;databaseChanged=true;",  stepPair[1]);
-		stepPair = pathGenerator.getNext();
-		assertEquals("e_CloseDialog",  stepPair[0]);
-		assertEquals("v_EnterMasterCompositeMasterKey/incorrect=2;databaseChanged=true;",  stepPair[1]);
-		stepPair = pathGenerator.getNext();
-		assertEquals("e_EnterInvalidKey",  stepPair[0]);
-		assertEquals("v_InvalidKey/incorrect=3;databaseChanged=true;",  stepPair[1]);
+		assertEquals("E4",  stepPair[0]);
+		assertEquals("V1/x=3;y=[2, 3, 3];",  stepPair[1]);
 		assertFalse(pathGenerator.hasNext());
 
     }
 
-	public void test_EFSM_ShortestGenerationEdgeStop()
+	public void test_EFSM_EdgeStop()
     {
-		GraphML gml = new GraphML();
-		gml.load("graphml/methods/ExtendedMain.graphml");
-		ExtendedFiniteStateMachine EFSM = new ExtendedFiniteStateMachine(gml.getModel());
+		ExtendedFiniteStateMachine EFSM = new ExtendedFiniteStateMachine(graph);
 		EFSM.setWeighted(false);
-		PathGenerator pathGenerator = new ShortestPathGenerator(EFSM, new ReachedEdge(EFSM, "e_ChangeDatabase") );
+		PathGenerator pathGenerator = new ShortestPathGenerator(EFSM, new ReachedEdge(EFSM, "E3") );
 		
 		String[] stepPair;
 		stepPair = pathGenerator.getNext();
-		assertEquals("e_Initialize",  stepPair[0]);
-		assertEquals("v_KeePassNotRunning/incorrect=0;databaseChanged=false;", stepPair[1]);
+		assertEquals("E1",  stepPair[0]);
+		assertEquals("V1/x=1;y=[];",  stepPair[1]);
 		stepPair = pathGenerator.getNext();
-		assertEquals("e_StartWithDatabase",  stepPair[0]);
-		assertEquals("v_EnterMasterCompositeMasterKey/incorrect=0;databaseChanged=false;", stepPair[1]);
+		assertEquals("E2",  stepPair[0]);
+		assertEquals("V2/x=2;y=[];",  stepPair[1]);
 		stepPair = pathGenerator.getNext();
-		assertEquals("e_EnterCorrectKey",  stepPair[0]);
-		assertEquals("v_MainWindow_DB_Loaded/incorrect=0;databaseChanged=false;", stepPair[1]);
-		stepPair = pathGenerator.getNext();
-		assertEquals("e_ChangeDatabase",  stepPair[0]);
-		assertEquals("v_MainWindow_DB_Loaded/incorrect=0;databaseChanged=true;", stepPair[1]);
+		assertEquals("E3",  stepPair[0]);
+		assertEquals("V2/x=3;y=[];",  stepPair[1]);
 		assertFalse(pathGenerator.hasNext());
 
     }

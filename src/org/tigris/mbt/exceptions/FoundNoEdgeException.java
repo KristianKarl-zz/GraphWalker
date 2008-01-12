@@ -25,5 +25,12 @@ package org.tigris.mbt.exceptions;
  */
 public class FoundNoEdgeException extends Exception
 {
+	/**
+	 * @param string
+	 */
+	public FoundNoEdgeException(String string) {
+		super(string);
+	}
+
 	private static final long serialVersionUID = -2597269122921601356L;
 }

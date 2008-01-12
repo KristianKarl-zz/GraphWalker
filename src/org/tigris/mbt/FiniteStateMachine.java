@@ -26,6 +26,7 @@ import java.util.Stack;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
+import org.tigris.mbt.exceptions.FoundNoEdgeException;
 
 import edu.uci.ics.jung.graph.impl.AbstractElement;
 import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
@@ -39,7 +40,7 @@ import edu.uci.ics.jung.utils.UserData;
  */
 public class FiniteStateMachine{
 	
-	static Logger logger = Logger.getLogger(FiniteStateMachine.class);
+	static Logger logger = Util.setupLogger(FiniteStateMachine.class);
 
 	protected SparseGraph model = null;
 	protected DirectedSparseVertex currentState = null;
@@ -112,12 +113,12 @@ public class FiniteStateMachine{
 		return (String) state.getUserDatum(Keywords.LABEL_KEY);
 	}
 	
-	public Set getCurrentOutEdges()
+	public Set getCurrentOutEdges() throws FoundNoEdgeException
 	{
 		Set retur = new HashSet(currentState.getOutEdges());
 		if(retur.size()==0)
 		{
-			throw new RuntimeException( "Cul-De-Sac, dead end found in '" + Util.getCompleteVertexName( getCurrentState() ) + "'" );
+			throw new FoundNoEdgeException( "Cul-De-Sac, dead end found in '" + Util.getCompleteVertexName( getCurrentState() ) + "'" );
 		}
 		return retur;
 	}
