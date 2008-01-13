@@ -52,14 +52,24 @@ public class CombinedPathGeneratorTest extends TestCase {
 	CodeGenerator generator1 = new CodeGenerator(FSM, "{EDGE_VERTEX}: {LABEL}");
 	ListGenerator generator2 = new ListGenerator(FSM);
 	
-	CombinedPathGenerator generator = new CombinedPathGenerator(generator1);
-	generator.addPathGenerator(generator2);
+	CombinedPathGenerator pathGenerator = new CombinedPathGenerator(generator1);
+	pathGenerator.addPathGenerator(generator2);
 	
-	while(generator.hasNext())
-	{
-		String[] s = generator.getNext();
-		System.out.println(s[0]);
-		System.out.println(s[1]);
-	}
+	String[] stepPair;
+	
+	stepPair = pathGenerator.getNext();
+	assertEquals("E1",  stepPair[0]);
+	assertEquals("Edge",  stepPair[1]);
+	stepPair = pathGenerator.getNext();
+	assertEquals("V2",  stepPair[0]);
+	assertEquals("Vertex",  stepPair[1]);
+	stepPair = pathGenerator.getNext();
+	assertEquals("Edge: E1",  stepPair[0]);
+	assertEquals("Edge",  stepPair[1]);
+	stepPair = pathGenerator.getNext();
+	assertEquals("Vertex: V2",  stepPair[0]);
+	assertEquals("Vertex",  stepPair[1]);
+	assertFalse(pathGenerator.hasNext());
+
 	}
 }
