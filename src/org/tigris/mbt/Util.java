@@ -14,6 +14,8 @@ import org.apache.log4j.WriterAppender;
 
 import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
 import edu.uci.ics.jung.graph.impl.DirectedSparseVertex;
+import edu.uci.ics.jung.graph.impl.SparseGraph;
+import edu.uci.ics.jung.utils.UserData;
 
 /**
  * This class has some utility functionality used by org.tigris.mbt
@@ -82,6 +84,34 @@ public class Util {
 		return logger;
 	}
 
+	public static DirectedSparseVertex addVertexToGraph(
+			SparseGraph graph, 
+			String strLabel)
+	{
+		DirectedSparseVertex retur = new DirectedSparseVertex();
+		retur.setUserDatum(Keywords.INDEX_KEY, new Integer(graph.numEdges()+graph.numVertices()+1), UserData.SHARED);
+		if(strLabel != null) retur.setUserDatum(Keywords.LABEL_KEY, strLabel, UserData.SHARED);
+		return (DirectedSparseVertex) graph.addVertex(retur);
+	}
+	
+	public static DirectedSparseEdge addEdgeToGraph(
+			SparseGraph graph, 
+			DirectedSparseVertex vertexFrom, 
+			DirectedSparseVertex vertexTo, 
+			String strLabel,
+			String strParameter,
+			String strGuard,
+			String strAction)
+	{
+		DirectedSparseEdge retur = new DirectedSparseEdge(vertexFrom, vertexTo);
+		retur.setUserDatum(Keywords.INDEX_KEY, new Integer(graph.numEdges()+graph.numVertices()+1), UserData.SHARED);
+		if(strLabel != null) retur.setUserDatum(Keywords.LABEL_KEY, strLabel, UserData.SHARED);
+		if(strParameter != null) retur.setUserDatum(Keywords.PARAMETER_KEY, strParameter, UserData.SHARED);
+		if(strGuard != null) retur.setUserDatum(Keywords.GUARD_KEY, strGuard, UserData.SHARED);
+		if(strAction != null) retur.setUserDatum(Keywords.ACTIONS_KEY, strAction, UserData.SHARED);
+		return (DirectedSparseEdge) graph.addEdge(retur);
+	}
+	
 	/**
 	 * @deprecated use execute from {@link ModelBasedTesting} instead.
 	 */
