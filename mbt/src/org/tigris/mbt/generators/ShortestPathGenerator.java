@@ -34,14 +34,14 @@ public class ShortestPathGenerator extends PathGenerator {
 
 	private void resetNode(AbstractElement abstractElement)
 	{
-		DijkstraPoint dp = (extended?new ExtendedDijkstraPoint((ExtendedFiniteStateMachine) machine):new DijkstraPoint()); 
+		DijkstraPoint dp = (extended?new ExtendedDijkstraPoint((ExtendedFiniteStateMachine) machine):new DijkstraPoint(machine)); 
 		abstractElement.setUserDatum(Keywords.DIJKSTRA, dp, UserData.SHARED );
 	}
 	
 	public String[] getNext() {
 		Util.AbortIf(!hasNext(), "No more lines available");
 		
-		if(lastState == null || lastState != machine.getCurrentState() || preCalculatedPath.size() == 0)
+		if(lastState == null || lastState != machine.getCurrentState() || preCalculatedPath == null || preCalculatedPath.size() == 0)
 		{
 			for(Iterator i = machine.getAllStates().iterator();i.hasNext();)
 			{
@@ -113,11 +113,11 @@ public class ShortestPathGenerator extends PathGenerator {
 						calculateShortestPath();
 					}
 				}
-				else
+				else if(preCalculatedPath == null || preCalculatedPath.size() > edgePath.size())
 				{
 					preCalculatedPath = (Stack) edgePath.clone();
 				}
-			} catch (FoundNoEdgeException culDeSac) { }
+			} catch (FoundNoEdgeException culDeSac) {}
 			machine.backtrack();
 			edgePath.pop();
 		}
@@ -126,16 +126,25 @@ public class ShortestPathGenerator extends PathGenerator {
 	protected class DijkstraPoint implements Comparable
 	{
 		protected Stack edgePath = null;
+		protected double completion = 0;
+		protected FiniteStateMachine parent;
 		
-		public DijkstraPoint()
+		public DijkstraPoint(FiniteStateMachine parent)
 		{
+			this.parent = parent;
 		}
 		
 		public void setPath( Stack edgePath )
 		{
 			this.edgePath = (Stack) edgePath.clone();
+			this.completion = getConditionFulfillment();
 		}
 
+		public double getCompletion() 
+		{
+			return completion;
+		}
+		
 		public Stack getPath()
 		{
 			if(edgePath==null)edgePath = new Stack();
@@ -149,6 +158,11 @@ public class ShortestPathGenerator extends PathGenerator {
 		}
 
 		public int compareTo(Object o) {
+			
+			double newComplete = getConditionFulfillment();
+			double myComplete = getCompletion();
+			if(newComplete > myComplete) return 1;
+			if(0.0000001 + newComplete < myComplete ) return -1;
 			int a = getPath().size();
 			if(a==0) return 1;
 			int b = 0;
@@ -158,7 +172,6 @@ public class ShortestPathGenerator extends PathGenerator {
 			} else {
 				b = ((DijkstraPoint)o).getPath().size();
 			}
-		
 			return a-b;
 		}
 
@@ -171,29 +184,34 @@ public class ShortestPathGenerator extends PathGenerator {
 	protected class ExtendedDijkstraPoint extends DijkstraPoint implements Comparable
 	{
 		protected Hashtable edgePaths;
-		protected ExtendedFiniteStateMachine parent;
+		protected Hashtable completions;
 		
-		public ExtendedDijkstraPoint()
+		public ExtendedDijkstraPoint( ExtendedFiniteStateMachine parent) 
 		{
+			super(parent);
 			edgePaths = new Hashtable();
-		}
-		
-		public ExtendedDijkstraPoint( ExtendedFiniteStateMachine parent) {
-			this();
-			this.parent = parent;
+			completions = new Hashtable();
 		}
 
+		public double getCompletion() {
+			String key = ((ExtendedFiniteStateMachine)parent).getCurrentDataString();
+			Double compDouble = ((Double)completions.get(key));
+			return (compDouble==null?0:compDouble.doubleValue()); 
+		}
+		
 		public void setPath( Stack edgePath )
 		{
 			if(edgePaths == null) edgePaths = new Hashtable();
-			edgePaths.put(parent.getCurrentDataString(), edgePath.clone()); 
+			String key = ((ExtendedFiniteStateMachine)parent).getCurrentDataString();
+			edgePaths.put(key, edgePath.clone()); 
+			completions.put(key, new Double(getConditionFulfillment())); 
 			if(edgePaths.size()>500)
 				throw new RuntimeException( "Too many internal states in "+ Util.getCompleteVertexName(parent.getCurrentState()) + " please revise model.");
 		}
 
 		public Stack getPath()
 		{
-			String key = parent.getCurrentDataString();
+			String key = ((ExtendedFiniteStateMachine)parent).getCurrentDataString();
 			Stack localPath = (Stack) edgePaths.get(key);
 			if(localPath == null)
 			{
@@ -205,6 +223,7 @@ public class ShortestPathGenerator extends PathGenerator {
 
 		public Stack getShortestPath()
 		{
+			System.out.println("ERROR!!");
 			Stack retur = null; 
 			for(Iterator i = edgePaths.values().iterator();i.hasNext();)
 			{

@@ -14,6 +14,11 @@ public abstract class PathGenerator {
     	return !stopCondition.isFulfilled();
     }
     
+    public double getConditionFulfillment()
+    {
+    	return stopCondition.getFulfillment();
+    }
+    
     PathGenerator( FiniteStateMachine machine )
     {
     	this.machine = machine;

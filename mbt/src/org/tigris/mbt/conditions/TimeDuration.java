@@ -11,4 +11,8 @@ public class TimeDuration implements StopCondition {
 	public TimeDuration(long seconds) {
 		this.end_time = seconds*1000 + System.currentTimeMillis();
 	}
+
+	public double getFulfillment() {
+		return System.currentTimeMillis() / this.end_time;
+	}
 }

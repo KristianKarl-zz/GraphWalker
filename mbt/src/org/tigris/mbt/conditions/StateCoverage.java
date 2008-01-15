@@ -20,4 +20,11 @@ public class StateCoverage implements StopCondition {
 		return (covered/edges) >= limit;
 	}
 
+	public double getFulfillment() {
+		int stats[] = machine.getStatistics();
+		double edges = stats[2];
+		double covered = stats[3];
+		return (covered/edges) / limit;
+	}
+
 }

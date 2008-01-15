@@ -15,4 +15,8 @@ public class ReachedState implements StopCondition {
 		this.machine = machine;
 		this.endState = stateName;
 	}
+
+	public double getFulfillment() {
+		return (isFulfilled()?1:0);
+	}
 }

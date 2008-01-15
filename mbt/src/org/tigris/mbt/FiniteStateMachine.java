@@ -44,7 +44,6 @@ public class FiniteStateMachine{
 
 	protected SparseGraph model = null;
 	protected DirectedSparseVertex currentState = null;
-	private Stack stateStack;
 	private Stack numberOfEdgesTravesedStack;
 	private boolean weighted = false;
 	private DirectedSparseEdge lastEdge = null;
@@ -55,6 +54,8 @@ public class FiniteStateMachine{
 	private long start_time;
 
 	private Hashtable associatedRequirements;
+
+	private Stack edgeStack;
 	
 	protected void setState(String stateName)
 	{
@@ -83,7 +84,7 @@ public class FiniteStateMachine{
 	{
 		logger.debug("Initializing");
 		model = newModel;
-		stateStack = new Stack();
+		edgeStack = new Stack();
 		numberOfEdgesTravesedStack = new Stack();
 		setState(Keywords.START_NODE);
 		start_time = System.currentTimeMillis();
@@ -129,6 +130,7 @@ public class FiniteStateMachine{
 		if(e.containsUserDatumKey(Keywords.VISITED_KEY))
 		{
 			visited = (Integer) e.getUserDatum( Keywords.VISITED_KEY );
+			if(visited.intValue()<0) System.out.println("WHAT!");
 			visited = new Integer( visited.intValue() + 1 );
 		}
 		else
@@ -160,6 +162,9 @@ public class FiniteStateMachine{
 		{
 			visited = new Integer( 0 );
 		}
+		
+		if(visited.intValue() < 0 ) System.out.println("WTF!!");
+		
 		e.setUserDatum( Keywords.VISITED_KEY, visited, UserData.SHARED );
 
 		if(e.containsUserDatumKey(Keywords.REQTAG_KEY))
@@ -181,10 +186,9 @@ public class FiniteStateMachine{
 			if(this.backtracking)
 			{
 				track();
-				logger.debug("Backtrack: " + stateStack.size() + " states stored");
 			}
 			currentState = (DirectedSparseVertex) edge.getDest();
-			setAsVisited(edge);
+			setAsVisited(lastEdge);
 			setAsVisited(currentState);
 			numberOfEdgesTravesed++;
 			return true;
@@ -350,16 +354,21 @@ public class FiniteStateMachine{
 	
 	protected void track()
 	{
-		stateStack.push(currentState);
-		numberOfEdgesTravesedStack.push(new Integer(numberOfEdgesTravesed));
+		edgeStack.push(getLastEdge());
+		numberOfEdgesTravesedStack.push(new Integer(numberOfEdgesTravesed)); //TODO varför en stack?
 	}
 	
 	protected void popState()
 	{
+
 		setAsUnvisited(getLastEdge());
-		setAsUnvisited(currentState);
-		currentState = (DirectedSparseVertex) stateStack.pop();
-		numberOfEdgesTravesed = ((Integer)numberOfEdgesTravesedStack.pop()).intValue(); 
+		setAsUnvisited(getCurrentState());
+
+		lastEdge = (DirectedSparseEdge) edgeStack.pop();
+		currentState = (DirectedSparseVertex) lastEdge.getSource();
+		lastEdge = (edgeStack.size()>0?(DirectedSparseEdge) edgeStack.peek():null);
+
+		numberOfEdgesTravesed = ((Integer)numberOfEdgesTravesedStack.pop()).intValue(); //TODO farför en stack? 
 	}
 	
 	/**
@@ -397,6 +406,8 @@ public class FiniteStateMachine{
 			{
 				throw new RuntimeException( "Backtracking was asked for, but model does not suppport BACKTRACK at egde: " + Util.getCompleteEdgeName( getLastEdge() ) );			
 			}
+		} else {
+			System.err.println("WHAAAAA!");
 		}
 	}
 	

@@ -15,4 +15,8 @@ public class TestCaseLength implements StopCondition {
 		this.machine = machine;
 		this.numberOfEdges = numberOfEdges;
 	}
+
+	public double getFulfillment() {
+		return machine.getNumberOfEdgesTravesed() / (double)numberOfEdges;
+	}
 }
