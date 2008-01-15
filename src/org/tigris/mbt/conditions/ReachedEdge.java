@@ -15,4 +15,8 @@ public class ReachedEdge implements StopCondition {
 		this.machine = machine;
 		this.endEdge = edgeName;
 	}
+
+	public double getFulfillment() {
+		return (isFulfilled()?1:0);
+	}
 }

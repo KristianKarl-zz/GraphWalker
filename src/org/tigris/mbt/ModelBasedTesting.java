@@ -193,6 +193,11 @@ public class ModelBasedTesting
 			throw new RuntimeException( "ERROR: " + e.getMessage() );
 		}
 	}
+	
+	public String getCurrentState()
+	{
+		return getMachine().getCurrentStateName();
+	}
 
 	public void backtrack() {
 		getMachine().backtrack();
@@ -314,6 +319,7 @@ public class ModelBasedTesting
 			try {
 				executeMethod(clsClass, objInstance, stepPair[ 0 ] );
 				executeMethod(clsClass, objInstance, stepPair[ 1 ] );
+				System.out.println((int)(100*generator.getConditionFulfillment()) +"% done");
 			} catch (IllegalArgumentException e) {
 				throw new RuntimeException("Illegal argument used.", e);
 			} catch (SecurityException e) {
@@ -331,7 +337,23 @@ public class ModelBasedTesting
 	
 	private void executeMethod(Class clsClass, Object objInstance, String strMethod) throws IllegalArgumentException, SecurityException, IllegalAccessException, InvocationTargetException, NoSuchMethodException 
 	{
-		//TODO: get parameters if available from strMethod and use them in call
-		clsClass.getMethod( strMethod, null ).invoke( objInstance, null  );
+		if(strMethod.contains("/") ) 
+			strMethod = strMethod.substring(0, strMethod.indexOf("/"));
+		
+		if(strMethod.contains("[") ) 
+			strMethod = strMethod.substring(0, strMethod.indexOf("["));
+		
+		if(strMethod.contains(" "))
+		{
+			String s1 = strMethod.substring(0, strMethod.indexOf(" "));
+			String s2 = strMethod.substring(strMethod.indexOf(" ")+1);
+			Class[] paramTypes = { String.class };
+			Object[] paramValues = { s2 };
+			clsClass.getMethod( s1, paramTypes ).invoke( objInstance, paramValues );
+		}
+		else
+		{
+			clsClass.getMethod( strMethod, null ).invoke( objInstance, null  );
+		}
 	}
 }

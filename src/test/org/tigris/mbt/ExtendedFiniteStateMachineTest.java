@@ -2,6 +2,8 @@ package test.org.tigris.mbt;
 
 import org.tigris.mbt.ExtendedFiniteStateMachine;
 import org.tigris.mbt.Keywords;
+import org.tigris.mbt.conditions.StateCoverage;
+import org.tigris.mbt.generators.ShortestPathGenerator;
 import org.tigris.mbt.Util;
 
 import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
@@ -112,6 +114,22 @@ public class ExtendedFiniteStateMachineTest extends TestCase {
 		assertEquals("V1/x=1;y=[];",EFSM.getCurrentStateName());
 		EFSM.backtrack();
 		assertEquals("Start",EFSM.getCurrentStateName());
+	}
+	
+	public void testStateCoverage()
+	{
+		ExtendedFiniteStateMachine EFSM = new ExtendedFiniteStateMachine(graph);
+		StateCoverage sc = new StateCoverage(EFSM, 1.0);
+		ShortestPathGenerator spg = new ShortestPathGenerator(EFSM, sc);
+		assertTrue(spg.hasNext());
+		String[] steps = spg.getNext();
+		assertEquals("E1",steps[0]);
+		assertEquals("V1/x=1;y=[];",steps[1]);
+		steps = spg.getNext();
+		assertEquals("E2",steps[0]);
+		assertEquals("V2/x=2;y=[];",steps[1]);
+		assertFalse(spg.hasNext());
+		System.out.println(EFSM.getStatisticsVerbose());
 	}
 
 }

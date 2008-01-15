@@ -20,4 +20,11 @@ public class RequirementCoverage implements StopCondition {
 		return (covered/requirements) >= limit;
 	}
 
+	public double getFulfillment() {
+		int stats[] = machine.getStatistics();
+		double requirements = stats[5];
+		double covered = stats[6];
+		return (covered/requirements) / limit;
+	}
+
 }

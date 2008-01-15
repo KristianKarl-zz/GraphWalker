@@ -5,6 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.PrintStream;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -26,21 +27,21 @@ import edu.uci.ics.jung.graph.impl.SparseGraph;
 
 public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 
+	private PrintStream Void;
+
 	static Logger logger = Util.setupLogger(ExtendedFiniteStateMachine.class);
 	
 	private Interpreter interpreter = new Interpreter();
 	private AccessableEdgeFilter accessableFilter;
 
-	private Stack edgenameStack;
-
 	private Stack namespaceStack;
 	
 	public ExtendedFiniteStateMachine(SparseGraph newModel) {
 		super(newModel);
-		edgenameStack = new Stack();
 		namespaceStack = new Stack();
 		
 		accessableFilter = new AccessableEdgeFilter(interpreter);
+		Void = new VoidPrintStream();
 	}
 
 	public String getCurrentStateName()
@@ -118,7 +119,10 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 			if(hasAction(edge))
 			{
 				try {
+					PrintStream ps = System.out;
+					System.setOut(Void);
 					interpreter.eval(getAction(edge));
+					System.setOut(ps);
 				} catch (EvalError e) {
 					throw new RuntimeException( "Malformed action sequence: " + Util.getCompleteEdgeName(edge) +" : "+ e.getMessage() );
 				}
@@ -134,20 +138,15 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 	private boolean hasAction(Edge edge) {
 		return (edge==null?false:edge.containsUserDatumKey(Keywords.ACTIONS_KEY));
 	}
-
-	public void track()
+	protected void track()
 	{
 		super.track();
-		DirectedSparseEdge edge = getLastEdge();
-		String pushedName = (edge==null?"<START>":getEdgeName(edge));
-		edgenameStack.push(pushedName);
 		namespaceStack.push(new CannedNameSpace(interpreter.getNameSpace()));
 	}
 	
-	public void popState()
+	protected void popState()
 	{
 		super.popState();
-		edgenameStack.pop();
 		interpreter.setNameSpace(((CannedNameSpace)namespaceStack.pop()).unpack());
 	}
 
@@ -180,5 +179,15 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 				throw new RuntimeException("Unable to restore backtrack information as the NameSpace Class could not be found.",e);
 			}
 		}
+	}
+	
+	private class VoidPrintStream extends PrintStream
+	{
+		public VoidPrintStream()
+		{
+			super(System.out);
+		}
+
+		public void write(byte[] buf, int off, int len) {}
 	}
 }

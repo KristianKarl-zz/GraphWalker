@@ -23,4 +23,13 @@ public class CombinationalCondition implements StopCondition {
 	{
 		this.conditions.add(conditon);
 	}
+
+	public double getFulfillment() {
+		double retur = 0;
+		for(Iterator i = conditions.iterator();i.hasNext();)
+		{
+			retur += ((StopCondition)i.next()).getFulfillment();
+		}
+		return retur / (double)conditions.size();
+	}
 }
