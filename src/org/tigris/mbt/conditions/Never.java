@@ -10,4 +10,8 @@ public class Never implements StopCondition {
 
 	public Never(FiniteStateMachine machine) {
 	}
+
+	public double getFulfillment() {
+		return (isFulfilled()?1:0);
+	}
 }
