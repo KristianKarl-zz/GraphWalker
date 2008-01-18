@@ -39,11 +39,15 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 	public ExtendedFiniteStateMachine(SparseGraph newModel) {
 		super(newModel);
 		namespaceStack = new Stack();
-		
 		accessableFilter = new AccessableEdgeFilter(interpreter);
 		Void = new VoidPrintStream();
 	}
 
+	public void eval(String script) throws EvalError
+	{
+		interpreter.eval(script);
+	}
+	
 	public String getCurrentStateName()
 	{
 		return super.getCurrentStateName() + (hasInternalVariables()?"/" + getCurrentDataString():"");
@@ -67,7 +71,7 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 		}
 		if(retur.size()==0)
 		{
-			throw new FoundNoEdgeException( "Cul-De-Sac, dead end found in '" + Util.getCompleteVertexName( getCurrentState() ) + "'");
+			throw new FoundNoEdgeException("Cul-De-Sac, dead end found in '" + Util.getCompleteVertexName( getCurrentState() ) + "'");
 		}
 		return retur;
 	}
