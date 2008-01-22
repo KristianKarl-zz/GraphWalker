@@ -14,6 +14,7 @@ import java.util.Stack;
 
 import org.apache.log4j.Logger;
 import org.tigris.mbt.exceptions.FoundNoEdgeException;
+import org.tigris.mbt.exceptions.InvalidDataException;
 import org.tigris.mbt.filters.AccessableEdgeFilter;
 
 import bsh.EvalError;
@@ -105,6 +106,27 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 			throw new RuntimeException( "Malformed model data: " + e.getMessage() );
 		}
 		return retur;
+	}
+	
+	/**
+	 * Walks the data space, and return the value of the data, if found.
+	 * @param data
+	 * @return
+	 * @throws InvalidDataException is thrown if the data is not found in the data space
+	 */
+	public String getDataValue( String data ) throws InvalidDataException
+	{
+		Hashtable dataTable = getCurrentData();
+		Enumeration e = dataTable.keys();
+		while(e.hasMoreElements())
+		{
+			String key = (String) e.nextElement();
+			if ( data.equals( key ))
+			{
+				return dataTable.get(key).toString();
+			}
+		}
+		throw new InvalidDataException( "The data: '" + data + "', does not exist in the data space." );
 	}
 
 	public String getCurrentDataString() 
