@@ -4,16 +4,12 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 
-import org.tigris.mbt.FiniteStateMachine;
-
-public class ReachedRequirement implements StopCondition {
+public class ReachedRequirement extends StopCondition {
 	
-	private FiniteStateMachine machine;
 	private Collection requirements;
 
-	public ReachedRequirement(FiniteStateMachine machine, String requirements)
+	public ReachedRequirement(String requirements)
 	{
-		this.machine = machine;
 		this.requirements = new HashSet(Arrays.asList(requirements.split(",")));
 	}
 	

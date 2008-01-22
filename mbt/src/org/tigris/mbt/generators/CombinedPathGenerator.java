@@ -1,8 +1,11 @@
 package org.tigris.mbt.generators;
 
+import java.util.Iterator;
 import java.util.Stack;
 
 import org.apache.log4j.Logger;
+import org.tigris.mbt.FiniteStateMachine;
+import org.tigris.mbt.conditions.StopCondition;
 
 public class CombinedPathGenerator extends PathGenerator {
 
@@ -11,7 +14,7 @@ public class CombinedPathGenerator extends PathGenerator {
 	private Stack paths = new Stack();
 
 	public CombinedPathGenerator(PathGenerator generator) {
-		super(null);
+		super();
 		addPathGenerator(generator);
 	}
 	
@@ -21,6 +24,20 @@ public class CombinedPathGenerator extends PathGenerator {
 		paths.add(generator);
 	}
 
+	public void setMachine(FiniteStateMachine machine) {
+		for(Iterator i = paths.iterator();i.hasNext();)
+		{
+			((PathGenerator)i.next()).setMachine(machine);
+		}
+	}
+	
+	public void setStopCondition(StopCondition stopCondition) {
+		for(Iterator i = paths.iterator();i.hasNext();)
+		{
+			((PathGenerator)i.next()).setStopCondition(stopCondition);
+		}
+	}
+	
 	private PathGenerator getActivePathGenerator()
 	{
 		return (PathGenerator) paths.peek();

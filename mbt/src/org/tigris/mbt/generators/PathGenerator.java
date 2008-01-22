@@ -4,7 +4,7 @@ import org.tigris.mbt.FiniteStateMachine;
 import org.tigris.mbt.conditions.StopCondition;
 
 public abstract class PathGenerator {
-    protected FiniteStateMachine machine;
+    private FiniteStateMachine machine;
 	private StopCondition stopCondition;
 	
 	public abstract String[] getNext();
@@ -13,20 +13,37 @@ public abstract class PathGenerator {
     {
     	return !stopCondition.isFulfilled();
     }
-    
+    public FiniteStateMachine getMachine() {
+		return machine;
+	}
+    public void setMachine(FiniteStateMachine machine) {
+		this.machine = machine;
+		if(this.stopCondition != null)
+			this.stopCondition.setMachine(machine);
+	}
+    public void setStopCondition(StopCondition stopCondition) {
+		this.stopCondition = stopCondition;
+		if(this.machine != null)
+			this.stopCondition.setMachine(this.machine);
+	}
+    public StopCondition getStopCondition() {
+		return stopCondition;
+	}
     public double getConditionFulfillment()
     {
     	return stopCondition.getFulfillment();
     }
-    
-    PathGenerator( FiniteStateMachine machine )
-    {
-    	this.machine = machine;
-    }
 
+    PathGenerator() {
+	}
+    
+    PathGenerator( StopCondition stopCondition ) {
+    	setStopCondition(stopCondition);
+	}
+    
     PathGenerator( FiniteStateMachine machine, StopCondition stopCondition )
     {
-    	this.machine = machine;
-    	this.stopCondition = stopCondition;
+    	this(stopCondition);
+    	setMachine(machine);
     }
 }

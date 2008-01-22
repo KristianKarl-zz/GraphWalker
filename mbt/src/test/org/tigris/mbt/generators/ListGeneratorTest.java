@@ -33,9 +33,8 @@ public class ListGeneratorTest extends TestCase {
 		edge.setUserDatum(Keywords.LABEL_KEY, "E1", UserData.SHARED);
 		graph.addEdge(edge);
 		
-		FiniteStateMachine FSM = new FiniteStateMachine(graph);
-		
-		ListGenerator generator = new ListGenerator(FSM);
+		ListGenerator generator = new ListGenerator();
+		generator.setMachine(new FiniteStateMachine(graph));
 
 		String[] s = generator.getNext();
 		assertEquals("E1", s[0]);

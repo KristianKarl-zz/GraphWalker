@@ -26,6 +26,7 @@ import java.lang.reflect.InvocationTargetException;
 import org.apache.log4j.Logger;
 import org.tigris.mbt.conditions.CombinationalCondition;
 import org.tigris.mbt.conditions.EdgeCoverage;
+import org.tigris.mbt.conditions.Never;
 import org.tigris.mbt.conditions.ReachedEdge;
 import org.tigris.mbt.conditions.ReachedRequirement;
 import org.tigris.mbt.conditions.ReachedState;
@@ -57,53 +58,58 @@ public class ModelBasedTesting
 	private StopCondition condition;
 	private PathGenerator generator;
 	private String template;
+	private boolean backtracking = false;
 
 	public void addCondition(int conditionType, String conditionValue) 
 	{
 		StopCondition condition = null;
 		switch (conditionType) {
-		case Keywords.CONDITION_EDGE_COVERAGE:
-			condition = new EdgeCoverage(getMachine(), Double.parseDouble(conditionValue)/100);
-			break;
-		case Keywords.CONDITION_REACHED_EDGE:
-			condition = new ReachedEdge(getMachine(), conditionValue);
-			break;
-		case Keywords.CONDITION_REACHED_STATE:
-			condition = new ReachedState(getMachine(), conditionValue);
-			break;
-		case Keywords.CONDITION_STATE_COVERAGE:
-			condition = new StateCoverage(getMachine(), Double.parseDouble(conditionValue)/100);
-			break;
-		case Keywords.CONDITION_TEST_DURATION:
-			condition = new TimeDuration(Long.parseLong(conditionValue));
-			break;
-		case Keywords.CONDITION_TEST_LENGTH:
-			condition = new TestCaseLength(getMachine(), Integer.parseInt(conditionValue));
-			break;
-		case Keywords.CONDITION_REQUIREMENT_COVERAGE:
-			condition = new RequirementCoverage(getMachine(), Double.parseDouble(conditionValue)/100);
-			break;
-		case Keywords.CONDITION_REACHED_REQUIREMENT:
-			condition = new ReachedRequirement(getMachine(), conditionValue);
-			break;
+			case Keywords.CONDITION_EDGE_COVERAGE:
+				condition = new EdgeCoverage(Double.parseDouble(conditionValue)/100);
+				break;
+			case Keywords.CONDITION_REACHED_EDGE:
+				condition = new ReachedEdge(conditionValue);
+				break;
+			case Keywords.CONDITION_REACHED_STATE:
+				condition = new ReachedState(conditionValue);
+				break;
+			case Keywords.CONDITION_STATE_COVERAGE:
+				condition = new StateCoverage(Double.parseDouble(conditionValue)/100);
+				break;
+			case Keywords.CONDITION_TEST_DURATION:
+				condition = new TimeDuration(Long.parseLong(conditionValue));
+				break;
+			case Keywords.CONDITION_TEST_LENGTH:
+				condition = new TestCaseLength(Integer.parseInt(conditionValue));
+				break;
+			case Keywords.CONDITION_REQUIREMENT_COVERAGE:
+				condition = new RequirementCoverage(Double.parseDouble(conditionValue)/100);
+				break;
+			case Keywords.CONDITION_REACHED_REQUIREMENT:
+				condition = new ReachedRequirement(conditionValue);
+				break;
+			default:
+				throw new RuntimeException("Unsupported stop condition selected: "+ conditionType);
 		}
 		
-		Util.AbortIf(condition == null , "Unsupported stop condition selected: "+ conditionType);
-		
-		if(	this.condition == null )
+		if(	getCondition() == null )
 		{
 			this.condition = condition;
 		}
 		else
 		{
-			if( !(this.condition instanceof CombinationalCondition) )
+			if( !(getCondition() instanceof CombinationalCondition) )
 			{
-				StopCondition old= this.condition;
+				StopCondition old= getCondition();
 				this.condition = new CombinationalCondition();
-				((CombinationalCondition)this.condition).add(old);
+				((CombinationalCondition)getCondition()).add(old);
 			}
-			((CombinationalCondition)this.condition).add(condition);
+			((CombinationalCondition)getCondition()).add(condition);
 		}
+		if(getGenerator() != null)
+			getGenerator().setStopCondition(getCondition());
+		if(this.machine != null)
+			getCondition().setMachine(getMachine());
 	}
 
 	private StopCondition getCondition()
@@ -115,7 +121,7 @@ public class ModelBasedTesting
 	{
 		if ( this.machine == null )
 		{
-			setMachine( new FiniteStateMachine( getGraph() ) );
+			setMachine( new FiniteStateMachine() );
 		}
 		return this.machine;
 	}
@@ -123,6 +129,13 @@ public class ModelBasedTesting
 	private void setMachine(FiniteStateMachine machine) 
 	{
 		this.machine = machine;
+		if(this.modelHandler != null)
+			getMachine().setModel(getGraph());
+		if(getCondition() != null)
+			getCondition().setMachine(machine);
+		if(getGenerator() != null)
+			getGenerator().setMachine(machine);
+		getMachine().setBacktrack(this.backtracking);
 	}
 
 	/**
@@ -134,14 +147,7 @@ public class ModelBasedTesting
 
 	public void enableExtended(boolean extended) 
 	{
-		if( extended )
-		{
-			setMachine( new ExtendedFiniteStateMachine( getGraph() ) );
-		}
-		else
-		{
-			setMachine( new FiniteStateMachine( getGraph() ) );
-		}
+		setMachine( (extended?new ExtendedFiniteStateMachine():new FiniteStateMachine()));
 	}
 
 	public void setGenerator( int generatorType )
@@ -149,26 +155,37 @@ public class ModelBasedTesting
 		switch (generatorType) 
 		{
 			case Keywords.GENERATOR_RANDOM:
-				this.generator = new RandomPathGenerator(getMachine(), getCondition() );
+				setGenerator( new RandomPathGenerator() );
 				break;
 
 			case Keywords.GENERATOR_SHORTEST:
-				this.generator = new ShortestPathGenerator(getMachine(), getCondition());
+				setGenerator( new ShortestPathGenerator() );
 				break;
 			
 			case Keywords.GENERATOR_STUB:
-				this.generator = new CodeGenerator(getMachine(), this.template);
+				setGenerator( new CodeGenerator() );
+				if(this.template != null)
+					((CodeGenerator)getGenerator()).setTemplate(this.template);
 				break;
 				
 			case Keywords.GENERATOR_LIST:
-				this.generator = new ListGenerator( getMachine() );
+				setGenerator( new ListGenerator() );
+				if(getCondition() == null)
+					this.condition = new Never();
 				break;
 				
 			case Keywords.GENERATOR_REQUIREMENTS:
-				this.generator = new RequirementsGenerator( getMachine() );
+				setGenerator( new RequirementsGenerator() );
 				break;
+			
+			default:
+				throw new RuntimeException("Not implemented yet!");
 		}
-		Util.AbortIf( this.generator == null, "Not implemented yet!" );
+
+		if(this.machine != null)
+			getGenerator().setMachine(getMachine());
+		if(getCondition() != null)
+			getGenerator().setStopCondition(getCondition());
 	}
 	
 	private PathGenerator getGenerator()
@@ -176,13 +193,22 @@ public class ModelBasedTesting
 		return this.generator;
 	}
 
+	private void setGenerator(PathGenerator generator)
+	{
+		this.generator = generator;
+	}
+	
+
 	public boolean hasNextStep() {
+		if(this.machine == null) getMachine();
 		Util.AbortIf(getGenerator() == null, "No generator has been defined!");
 		return getGenerator().hasNext();
 	}
 
 	public String[] getNextStep() {
+		if(this.machine == null) getMachine();
 		Util.AbortIf(getGenerator() == null, "No generator has been defined!");
+		
 		try
 		{
 			return getGenerator().getNext();
@@ -196,11 +222,16 @@ public class ModelBasedTesting
 	
 	public String getCurrentState()
 	{
-		return getMachine().getCurrentStateName();
+		if(this.machine != null)
+			return getMachine().getCurrentStateName();
+		logger.warn( "Trying to retrieve current state without specifying machine" );
+		return "";
 	}
 
 	public void backtrack() {
-		getMachine().backtrack();
+		if(this.machine != null)
+			getMachine().backtrack();
+		logger.warn( "Trying to backtrack without specifying machine" );
 	}
 
 	public void readGraph( String graphmlFileName )
@@ -210,6 +241,9 @@ public class ModelBasedTesting
 			this.modelHandler = new GraphML(); 
 		}
 		this.modelHandler.load( graphmlFileName );
+		
+		if(this.machine != null)
+			getMachine().setModel(getGraph());
 	}
 
 	public void writeModel(PrintStream ps) {
@@ -218,40 +252,40 @@ public class ModelBasedTesting
 
 	public void enableBacktrack(boolean backtracking) 
 	{
-		if ( getMachine() != null )
+		this.backtracking = backtracking;
+		if(this.machine != null)
 		{					
 			getMachine().setBacktrack(backtracking);
 		}
-		logger.warn( "Machine not initialialized" );
 	}
 
 	public String getStatisticsString()
 	{
-		if ( getMachine() != null )
+		if(this.machine != null)
 		{			
 			return getMachine().getStatisticsString();
 		}
-		logger.warn( "Machine not initialialized" );
+		logger.warn( "Trying to retrieve statistics without specifying machine" );
 		return "";
 	}
 	
 	public String getStatisticsCompact()
 	{
-		if ( getMachine() != null )
+		if(this.machine != null)
 		{			
 			return getMachine().getStatisticsStringCompact();
 		}
-		logger.warn( "Machine not initialialized" );
+		logger.warn( "Trying to retrieve compact statistics without specifying machine" );
 		return "";
 	}
 
 	public String getStatisticsVerbose()
 	{
-		if ( getMachine() != null )
+		if(this.machine != null)
 		{
 			return getMachine().getStatisticsVerbose();
 		}
-		logger.warn( "Machine not initialialized" );
+		logger.warn( "Trying to retrieve verbose statistics without specifying machine" );
 		return "";
 	}
 
@@ -268,6 +302,9 @@ public class ModelBasedTesting
 		} catch (IOException e) {
 			throw new RuntimeException("Template file read problem: " + e.getMessage());
 		}
+		
+		if(getGenerator() != null && getGenerator() instanceof CodeGenerator)
+			((CodeGenerator)getGenerator()).setTemplate(this.template);
 	}
 	
 	public void execute(String strClassName) 
@@ -299,6 +336,7 @@ public class ModelBasedTesting
 
 	public void execute(Class clsClass, Object objInstance)
 	{
+		if(this.machine == null) getMachine(); 
 		if( clsClass == null && objInstance == null )
 			throw new RuntimeException("Execution instance or class is missing as parameters.");
 		if( clsClass == null )
@@ -311,15 +349,16 @@ public class ModelBasedTesting
 			} catch (IllegalAccessException e) {
 				throw new RuntimeException("Cannot access execution instance.", e);
 			} 
-		
+		int step = 0;
 		while( hasNextStep() )
 		{
 			String[] stepPair = getNextStep();
 			
 			try {
+				logger.info("Step: "+ (++step) +" Navigate: "+stepPair[ 0 ]);
 				executeMethod(clsClass, objInstance, stepPair[ 0 ] );
+				logger.info("Step: "+ (++step) +" Verify: "+stepPair[ 1 ]);
 				executeMethod(clsClass, objInstance, stepPair[ 1 ] );
-				System.out.println((int)(100*generator.getConditionFulfillment()) +"% done");
 			} catch (IllegalArgumentException e) {
 				throw new RuntimeException("Illegal argument used.", e);
 			} catch (SecurityException e) {

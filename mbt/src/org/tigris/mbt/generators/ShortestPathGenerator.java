@@ -10,7 +10,6 @@ import org.tigris.mbt.ExtendedFiniteStateMachine;
 import org.tigris.mbt.FiniteStateMachine;
 import org.tigris.mbt.Keywords;
 import org.tigris.mbt.Util;
-import org.tigris.mbt.conditions.StopCondition;
 import org.tigris.mbt.exceptions.FoundNoEdgeException;
 import org.tigris.mbt.generators.PathGenerator;
 
@@ -27,40 +26,39 @@ public class ShortestPathGenerator extends PathGenerator {
 	private DirectedSparseVertex lastState;
 	private boolean extended;
 
-	public ShortestPathGenerator(FiniteStateMachine machine, StopCondition stopCondition) {
-		super(machine, stopCondition);
-		extended = machine instanceof ExtendedFiniteStateMachine;
+	public void setMachine(FiniteStateMachine machine) {
+		super.setMachine(machine);
+		this.extended = machine instanceof ExtendedFiniteStateMachine;
 	}
-
 	private void resetNode(AbstractElement abstractElement)
 	{
-		DijkstraPoint dp = (extended?new ExtendedDijkstraPoint((ExtendedFiniteStateMachine) machine):new DijkstraPoint(machine)); 
+		DijkstraPoint dp = (extended?new ExtendedDijkstraPoint((ExtendedFiniteStateMachine) getMachine()):new DijkstraPoint(getMachine())); 
 		abstractElement.setUserDatum(Keywords.DIJKSTRA, dp, UserData.SHARED );
 	}
 	
 	public String[] getNext() {
 		Util.AbortIf(!hasNext(), "No more lines available");
 		
-		if(lastState == null || lastState != machine.getCurrentState() || preCalculatedPath == null || preCalculatedPath.size() == 0)
+		if(lastState == null || lastState != getMachine().getCurrentState() || preCalculatedPath == null || preCalculatedPath.size() == 0)
 		{
-			for(Iterator i = machine.getAllStates().iterator();i.hasNext();)
+			for(Iterator i = getMachine().getAllStates().iterator();i.hasNext();)
 			{
 				resetNode((AbstractElement)i.next());
 			}
-			boolean oldBacktracking = machine.isBacktrack();
-			machine.setBacktrack(true);
+			boolean oldBacktracking = getMachine().isBacktrack();
+			getMachine().setBacktrack(true);
 			try {
 				calculateShortestPath();
 			} catch (FoundNoEdgeException e) {
 				throw new RuntimeException("No possible edges available for path", e);
 			}
-			machine.setBacktrack(oldBacktracking);
+			getMachine().setBacktrack(oldBacktracking);
 
 			if(preCalculatedPath == null)
 			{
 				String unreachableStates = "";
 				String reachableStates = "";
-				for(Iterator i = machine.getAllStates().iterator();i.hasNext();)
+				for(Iterator i = getMachine().getAllStates().iterator();i.hasNext();)
 				{
 					DirectedSparseVertex dsv = (DirectedSparseVertex)i.next();
 					DijkstraPoint dp = (DijkstraPoint) dsv.getUserDatum(Keywords.DIJKSTRA);
@@ -87,26 +85,26 @@ public class ShortestPathGenerator extends PathGenerator {
 		}
 
 		DirectedSparseEdge edge = (DirectedSparseEdge) preCalculatedPath.pop();
-		machine.walkEdge(edge);
-		lastState = machine.getCurrentState();
-		String[] retur = {machine.getEdgeName(edge), machine.getCurrentStateName()};
+		getMachine().walkEdge(edge);
+		lastState = getMachine().getCurrentState();
+		String[] retur = {getMachine().getEdgeName(edge), getMachine().getCurrentStateName()};
 		return retur;
 	}
 
 	private void calculateShortestPath() throws FoundNoEdgeException
 	{
-		DijkstraPoint dp = ((DijkstraPoint)machine.getCurrentState().getUserDatum(Keywords.DIJKSTRA));
+		DijkstraPoint dp = ((DijkstraPoint)getMachine().getCurrentState().getUserDatum(Keywords.DIJKSTRA));
 		Stack edgePath = (Stack) dp.getPath().clone();
-		Set outEdges = machine.getCurrentOutEdges();
+		Set outEdges = getMachine().getCurrentOutEdges();
 		for(Iterator i = outEdges.iterator();i.hasNext();)
 		{
 			DirectedSparseEdge e = (DirectedSparseEdge)i.next();
 			edgePath.push(e);
-			machine.walkEdge(e);
+			getMachine().walkEdge(e);
 			try {
 				if(hasNext())
 				{
-					DijkstraPoint nextDp = ((DijkstraPoint)machine.getCurrentState().getUserDatum(Keywords.DIJKSTRA));
+					DijkstraPoint nextDp = ((DijkstraPoint)getMachine().getCurrentState().getUserDatum(Keywords.DIJKSTRA));
 					if(nextDp.compareTo(edgePath)>0)
 					{
 						nextDp.setPath(edgePath);
@@ -118,7 +116,7 @@ public class ShortestPathGenerator extends PathGenerator {
 					preCalculatedPath = (Stack) edgePath.clone();
 				}
 			} catch (FoundNoEdgeException culDeSac) {}
-			machine.backtrack();
+			getMachine().backtrack();
 			edgePath.pop();
 		}
 	}

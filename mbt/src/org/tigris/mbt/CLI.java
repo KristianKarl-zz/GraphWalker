@@ -548,12 +548,12 @@ public class CLI
         	System.err.println( "Type 'java -jar mbt.jar help offline' for help." );
             return;	            	
         }
-        mbt.readGraph( cl.getOptionValue( "f" ) );
+        getMbt().readGraph( cl.getOptionValue( "f" ) );
         
         /**
 		 * Set EFSM
 		 */
-        mbt.enableExtended( cl.hasOption( "x" ) );
+        getMbt().enableExtended( cl.hasOption( "x" ) );
 
 		/**
 		 * Set stop condition
@@ -572,31 +572,31 @@ public class CLI
         }
         if( cl.hasOption( "d" ) )
 		{
-			mbt.addCondition( Keywords.CONDITION_REACHED_EDGE, cl.getOptionValue( "g" ) ); 
+        	getMbt().addCondition( Keywords.CONDITION_REACHED_EDGE, cl.getOptionValue( "g" ) ); 
 		}
 		if( cl.hasOption( "t" ) )
 		{
-			mbt.addCondition( Keywords.CONDITION_REACHED_STATE, cl.getOptionValue( "t" ) ); 
+			getMbt().addCondition( Keywords.CONDITION_REACHED_STATE, cl.getOptionValue( "t" ) ); 
 		}
 		if( cl.hasOption( "e" ) )
 		{
-			mbt.addCondition( Keywords.CONDITION_EDGE_COVERAGE, cl.getOptionValue( "e" ) ); 
+			getMbt().addCondition( Keywords.CONDITION_EDGE_COVERAGE, cl.getOptionValue( "e" ) ); 
 		}
 		if( cl.hasOption( "s" ) )
 		{
-			mbt.addCondition( Keywords.CONDITION_STATE_COVERAGE, cl.getOptionValue( "s" ) ); 
+			getMbt().addCondition( Keywords.CONDITION_STATE_COVERAGE, cl.getOptionValue( "s" ) ); 
 		}
 		if( cl.hasOption( "l" ) )
 		{
-			mbt.addCondition( Keywords.CONDITION_TEST_LENGTH, cl.getOptionValue( "l" ) ); 
+			getMbt().addCondition( Keywords.CONDITION_TEST_LENGTH, cl.getOptionValue( "l" ) ); 
 		}
 		if( cl.hasOption( "r" ) )
 		{
-			mbt.addCondition( Keywords.CONDITION_REACHED_REQUIREMENT, cl.getOptionValue( "r" ) ); 
+			getMbt().addCondition( Keywords.CONDITION_REACHED_REQUIREMENT, cl.getOptionValue( "r" ) ); 
 		}
 		if( cl.hasOption( "q" ) )
 		{
-			mbt.addCondition( Keywords.CONDITION_REQUIREMENT_COVERAGE, cl.getOptionValue( "q" ) ); 
+			getMbt().addCondition( Keywords.CONDITION_REQUIREMENT_COVERAGE, cl.getOptionValue( "q" ) ); 
 		}
 
 		/**
@@ -610,11 +610,11 @@ public class CLI
         }
         else if ( cl.getOptionValue( "g" ).equals( "random" ) )
 		{
-			mbt.setGenerator( Keywords.GENERATOR_RANDOM );
+        	getMbt().setGenerator( Keywords.GENERATOR_RANDOM );
 		}
         else if ( cl.getOptionValue( "g" ).equals( "dijkstra" ) )
 		{
-			mbt.setGenerator( Keywords.GENERATOR_SHORTEST );
+        	getMbt().setGenerator( Keywords.GENERATOR_SHORTEST );
 		}
         else
         {
@@ -636,9 +636,9 @@ public class CLI
 			}, 500, Integer.valueOf( cl.getOptionValue( "o" ) ).longValue() * 1000 );
 		}
 		
-		while( mbt.hasNextStep() )
+		while( getMbt().hasNextStep() )
 		{
-			String[] stepPair = mbt.getNextStep();
+			String[] stepPair = getMbt().getNextStep();
 			System.out.println(stepPair[0]);
 			logger.debug( "Execute: " + stepPair[0] );
 			System.out.println(stepPair[1]);
@@ -647,7 +647,7 @@ public class CLI
 		
 		if( cl.hasOption( "a" ) )
 		{
-			System.out.println( mbt.getStatisticsString() );
+			System.out.println( getMbt().getStatisticsString() );
 		}
 	}
 
@@ -668,13 +668,13 @@ public class CLI
 	    	System.out.println( "Type 'java -jar mbt.jar help source' for help." );
 	        return;	            	
 	    }
-		mbt.readGraph( cl.getOptionValue( "f" ) );
-		mbt.setTemplate( cl.getOptionValue( "t" ) );
-		mbt.setGenerator( Keywords.GENERATOR_STUB );
+		getMbt().readGraph( cl.getOptionValue( "f" ) );
+		getMbt().setTemplate( cl.getOptionValue( "t" ) );
+		getMbt().setGenerator( Keywords.GENERATOR_STUB );
 	
-		while( mbt.hasNextStep() )
+		while( getMbt().hasNextStep() )
 		{
-			String[] stepPair = mbt.getNextStep();
+			String[] stepPair = getMbt().getNextStep();
 			System.out.println(stepPair[0]);
 		}
 	}
@@ -690,12 +690,12 @@ public class CLI
 	    	System.out.println( "Type 'java -jar mbt.jar help requirements' for help." );
 	        return;	            	
 	    }
-		mbt.readGraph( cl.getOptionValue( "f" ) );
-		mbt.setGenerator( Keywords.GENERATOR_REQUIREMENTS );
+		getMbt().readGraph( cl.getOptionValue( "f" ) );
+		getMbt().setGenerator( Keywords.GENERATOR_REQUIREMENTS );
 		
-		while( mbt.hasNextStep() )
+		while( getMbt().hasNextStep() )
 		{
-			String[] stepPair = mbt.getNextStep();
+			String[] stepPair = getMbt().getNextStep();
 			System.out.println(stepPair[0]);
 		}
 	}
@@ -711,12 +711,12 @@ public class CLI
 	    	System.out.println( "Type 'java -jar mbt.jar help methods' for help." );
 	        return;	            	
 	    }
-		mbt.readGraph( cl.getOptionValue( "f" ) );
-		mbt.setGenerator( Keywords.GENERATOR_LIST );
+		getMbt().readGraph( cl.getOptionValue( "f" ) );
+		getMbt().setGenerator( Keywords.GENERATOR_LIST );
 		
-		while( mbt.hasNextStep() )
+		while( getMbt().hasNextStep() )
 		{
-			String[] stepPair = mbt.getNextStep();
+			String[] stepPair = getMbt().getNextStep();
 			System.out.println(stepPair[0]);
 		}
 	}
@@ -732,8 +732,8 @@ public class CLI
 	    	System.out.println( "Type 'java -jar mbt.jar help merge' for help." );
 	        return;	            	
 	    }
-		mbt.readGraph( cl.getOptionValue( "f" ) );
-		mbt.writeModel( System.out );
+		getMbt().readGraph( cl.getOptionValue( "f" ) );
+		getMbt().writeModel( System.out );
 	}
 
 	/**
@@ -750,12 +750,12 @@ public class CLI
         	System.err.println( "Type 'java -jar mbt.jar help offline' for help." );
             return;	            	
         }
-        mbt.readGraph( cl.getOptionValue( "f" ) );
+        getMbt().readGraph( cl.getOptionValue( "f" ) );
         
         /**
 		 * Set EFSM
 		 */
-        mbt.enableExtended( cl.hasOption( "x" ) );
+        getMbt().enableExtended( cl.hasOption( "x" ) );
 
 		/**
 		 * Set stop condition
@@ -775,35 +775,35 @@ public class CLI
         }
         if( cl.hasOption( "d" ) )
 		{
-			mbt.addCondition( Keywords.CONDITION_REACHED_EDGE, cl.getOptionValue( "g" ) ); 
+        	getMbt().addCondition( Keywords.CONDITION_REACHED_EDGE, cl.getOptionValue( "g" ) ); 
 		}
 		if( cl.hasOption( "t" ) )
 		{
-			mbt.addCondition( Keywords.CONDITION_REACHED_STATE, cl.getOptionValue( "t" ) ); 
+			getMbt().addCondition( Keywords.CONDITION_REACHED_STATE, cl.getOptionValue( "t" ) ); 
 		}
 		if( cl.hasOption( "e" ) )
 		{
-			mbt.addCondition( Keywords.CONDITION_EDGE_COVERAGE, cl.getOptionValue( "e" ) ); 
+			getMbt().addCondition( Keywords.CONDITION_EDGE_COVERAGE, cl.getOptionValue( "e" ) ); 
 		}
 		if( cl.hasOption( "s" ) )
 		{
-			mbt.addCondition( Keywords.CONDITION_STATE_COVERAGE, cl.getOptionValue( "s" ) ); 
+			getMbt().addCondition( Keywords.CONDITION_STATE_COVERAGE, cl.getOptionValue( "s" ) ); 
 		}
 		if( cl.hasOption( "l" ) )
 		{
-			mbt.addCondition( Keywords.CONDITION_TEST_LENGTH, cl.getOptionValue( "l" ) ); 
+			getMbt().addCondition( Keywords.CONDITION_TEST_LENGTH, cl.getOptionValue( "l" ) ); 
 		}
 		if( cl.hasOption( "u" ) )
 		{
-			mbt.addCondition( Keywords.CONDITION_TEST_DURATION, cl.getOptionValue( "u" ) ); 
+			getMbt().addCondition( Keywords.CONDITION_TEST_DURATION, cl.getOptionValue( "u" ) ); 
 		}
 		if( cl.hasOption( "r" ) )
 		{
-			mbt.addCondition( Keywords.CONDITION_REACHED_REQUIREMENT, cl.getOptionValue( "r" ) ); 
+			getMbt().addCondition( Keywords.CONDITION_REACHED_REQUIREMENT, cl.getOptionValue( "r" ) ); 
 		}
 		if( cl.hasOption( "q" ) )
 		{
-			mbt.addCondition( Keywords.CONDITION_REQUIREMENT_COVERAGE, cl.getOptionValue( "q" ) ); 
+			getMbt().addCondition( Keywords.CONDITION_REQUIREMENT_COVERAGE, cl.getOptionValue( "q" ) ); 
 		}
 
 		/**
@@ -817,11 +817,11 @@ public class CLI
         }
         else if ( cl.getOptionValue( "g" ).equals( "random" ) )
 		{
-			mbt.setGenerator( Keywords.GENERATOR_RANDOM );
+        	getMbt().setGenerator( Keywords.GENERATOR_RANDOM );
 		}
         else if ( cl.getOptionValue( "g" ).equals( "dijkstra" ) )
 		{
-			mbt.setGenerator( Keywords.GENERATOR_SHORTEST );
+        	getMbt().setGenerator( Keywords.GENERATOR_SHORTEST );
 		}
         else
         {
@@ -833,7 +833,7 @@ public class CLI
         /**
 		 * Set backtracking
 		 */
-        mbt.enableBacktrack( cl.hasOption( "b" ) );
+        getMbt().enableBacktrack( cl.hasOption( "b" ) );
 
 		Timer t = new Timer();
 		if( cl.hasOption( "o" ) )
@@ -851,14 +851,14 @@ public class CLI
 	
 		if( cl.hasOption( "c" ) )
 		{
-			mbt.execute( cl.getOptionValue( "c" ) );
+			getMbt().execute( cl.getOptionValue( "c" ) );
 		}
 		else
 		{
 			boolean firstLine = true;
 			char input = 0;
 			String[] stepPair = null;
-			while(mbt.hasNextStep())
+			while(getMbt().hasNextStep())
 			{
 				if ( firstLine == false )
 				{
@@ -870,7 +870,7 @@ public class CLI
 					}
 					if(input == '1')
 					{
-						mbt.backtrack();
+						getMbt().backtrack();
 						continue;
 					}
 				}
@@ -878,7 +878,7 @@ public class CLI
 				{
 					firstLine = false;
 				}
-				stepPair = mbt.getNextStep();
+				stepPair = getMbt().getNextStep();
 				logger.debug("Execute: " + stepPair[0]);
 				System.out.println(stepPair[0]);
 	
@@ -890,7 +890,7 @@ public class CLI
 				}
 				if(input == '1')
 				{
-					mbt.backtrack();
+					getMbt().backtrack();
 					continue;
 				}
 				logger.debug("Verify: " + stepPair[1]);
@@ -899,7 +899,7 @@ public class CLI
 		}
 		if( cl.hasOption( "a" ) )
 		{
-			System.out.println( mbt.getStatisticsString() );
+			System.out.println( getMbt().getStatisticsString() );
 		}
 		
 		t.cancel();
