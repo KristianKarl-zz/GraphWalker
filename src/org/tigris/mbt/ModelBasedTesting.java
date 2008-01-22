@@ -161,12 +161,13 @@ public class ModelBasedTesting
 	 * Returns the value of an data object within the data space of the model.
 	 * @param data The name of the data object, which value is to be retrieved.
 	 * @return The value of the data object. The value is always returned a s string. It is
-	 * the calling partys task to parse the string and convert it to correct type.
+	 * the calling parties task to parse the string and convert it to correct type.
 	 * @throws InvalidDataException If the retrieval of the data fails, the InvalidDataException is thrown. For example
 	 * if a FiniteStateMachine is used, which has no data space, the exception is thrown.
 	 */
 	public String getDataValue( String data ) throws InvalidDataException
 	{
+		Util.AbortIf(this.machine == null, "No machine has been defined!");
 		if ( this.machine instanceof ExtendedFiniteStateMachine )
 		{
 			return ((ExtendedFiniteStateMachine)this.machine).getDataValue( data );
