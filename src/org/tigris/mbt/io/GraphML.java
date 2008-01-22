@@ -423,7 +423,7 @@ public class GraphML extends AbstractModelHandler
 							}
 							
 							// Look for the Label and Parameter
-							firstLinePattern = Pattern.compile( "^(\\w+)\\s?([^\\s^/^\\[]+)?", Pattern.MULTILINE );
+							firstLinePattern = Pattern.compile( "^(\\w+)\\s?([^/^\\[]+)?", Pattern.MULTILINE );
 							firstLineMatcher = firstLinePattern.matcher( label );
 							if ( firstLineMatcher.find() )
 							{
@@ -438,6 +438,7 @@ public class GraphML extends AbstractModelHandler
 								String parameter = firstLineMatcher.group( 2 );
 								if ( parameter != null )
 								{
+									parameter = parameter.trim();
 									e.addUserDatum( Keywords.PARAMETER_KEY, parameter, UserData.SHARED );
 									logger.debug( " Found parameter = '" + parameter + "' for edge id: " + edgeLabel.getQualifiedName() );
 								}
