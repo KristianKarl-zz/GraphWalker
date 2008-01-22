@@ -35,6 +35,7 @@ import org.tigris.mbt.conditions.StateCoverage;
 import org.tigris.mbt.conditions.StopCondition;
 import org.tigris.mbt.conditions.TestCaseLength;
 import org.tigris.mbt.conditions.TimeDuration;
+import org.tigris.mbt.exceptions.InvalidDataException;
 import org.tigris.mbt.generators.CodeGenerator;
 import org.tigris.mbt.generators.ListGenerator;
 import org.tigris.mbt.generators.PathGenerator;
@@ -48,6 +49,14 @@ import edu.uci.ics.jung.graph.impl.SparseGraph;
 
 /**
  * The object handles the test case generation, both online and offline.
+ */
+/**
+ * @author krikar
+ *
+ */
+/**
+ * @author krikar
+ *
  */
 public class ModelBasedTesting
 {
@@ -146,6 +155,23 @@ public class ModelBasedTesting
 	 */
 	public SparseGraph getGraph() {
 		return this.modelHandler.getModel();
+	}
+
+	/**
+	 * Returns the value of an data object within the data space of the model.
+	 * @param data The name of the data object, which value is to be retrieved.
+	 * @return The value of the data object. The value is always returned a s string. It is
+	 * the calling partys task to parse the string and convert it to correct type.
+	 * @throws InvalidDataException If the retrieval of the data fails, the InvalidDataException is thrown. For example
+	 * if a FiniteStateMachine is used, which has no data space, the exception is thrown.
+	 */
+	public String getDataValue( String data ) throws InvalidDataException
+	{
+		if ( this.machine instanceof ExtendedFiniteStateMachine )
+		{
+			return ((ExtendedFiniteStateMachine)this.machine).getDataValue( data );
+		}
+		throw new InvalidDataException( "Data can only be fetched from a ExtendedFiniteStateMachine. Please enable EFSM." );
 	}
 
 	public void enableExtended(boolean extended) 
@@ -371,7 +397,6 @@ public class ModelBasedTesting
 				throw new RuntimeException("Cannot find specified method.", e);
 			}
 		}
-
 	}
 	
 	private void executeMethod(Class clsClass, Object objInstance, String strMethod) throws IllegalArgumentException, SecurityException, IllegalAccessException, InvocationTargetException, NoSuchMethodException 
