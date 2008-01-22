@@ -188,6 +188,8 @@ public class Keywords {
 
 	public static final int CONDITION_REACHED_REQUIREMENT = 1008;
 
+	public static final int CONDITION_NEVER = 1009;
+
 	public static final int GENERATOR_RANDOM = 2001;
 
 	public static final int GENERATOR_SHORTEST = 2002;

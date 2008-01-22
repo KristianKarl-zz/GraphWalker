@@ -82,6 +82,9 @@ public class ModelBasedTesting
 			case Keywords.CONDITION_TEST_LENGTH:
 				condition = new TestCaseLength(Integer.parseInt(conditionValue));
 				break;
+			case Keywords.CONDITION_NEVER:
+				condition = new Never();
+				break;
 			case Keywords.CONDITION_REQUIREMENT_COVERAGE:
 				condition = new RequirementCoverage(Double.parseDouble(conditionValue)/100);
 				break;
@@ -170,8 +173,6 @@ public class ModelBasedTesting
 				
 			case Keywords.GENERATOR_LIST:
 				setGenerator( new ListGenerator() );
-				if(getCondition() == null)
-					this.condition = new Never();
 				break;
 				
 			case Keywords.GENERATOR_REQUIREMENTS:
@@ -198,7 +199,6 @@ public class ModelBasedTesting
 		this.generator = generator;
 	}
 	
-
 	public boolean hasNextStep() {
 		if(this.machine == null) getMachine();
 		Util.AbortIf(getGenerator() == null, "No generator has been defined!");
