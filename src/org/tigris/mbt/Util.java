@@ -24,31 +24,43 @@ import edu.uci.ics.jung.utils.UserData;
  * * Setting up the logger for classes<br>
  */
 public class Util {
+    /**
+     * Retries information regarding an edge, and returns it as a String.
+     * This method is for logging purposes.
+     * 
+     * @param edge The edge about which information shall be retrieved.
+     * @return Returns a String with information regarding the edge, including the source and
+     *  destination vertices. The format is:<br>
+     *  <pre>'&lt;EDGE LABEL&gt;', INDEX=x ('&lt;SOURCE VERTEX LABEL&gt;', INDEX=y -&gt; '&lt;DEST VERTEX LABEL&gt;', INDEX=z)</pre>
+     *  Where x, y and n are the unique indexes for the edge, the source vertex and the destination vertex.<br>
+     *  Please note that the label of an edge can be either null, or empty ("");
+     */
+    public static String getCompleteEdgeName( DirectedSparseEdge edge )
+    {
+            String str = "'" + (String)edge.getUserDatum( Keywords.LABEL_KEY ) + 
+                         "', INDEX=" + edge.getUserDatum( Keywords.INDEX_KEY ) + 
+                         " ('" + (String)edge.getSource().getUserDatum( Keywords.LABEL_KEY ) + 
+                         "', INDEX=" + edge.getSource().getUserDatum( Keywords.INDEX_KEY ) + 
+                         " -> '" + (String)edge.getDest().getUserDatum( Keywords.LABEL_KEY ) + 
+                         "', INDEX=" + edge.getDest().getUserDatum( Keywords.INDEX_KEY ) +  ")";
+            return str;
+    }
 
-	/**
-	 * Returns information regarding an edge, including the source and
-	 * destination vertices.
-	 */
-	public static String getCompleteEdgeName( DirectedSparseEdge edge )
-	{
-		String str = "'" + (String)edge.getUserDatum( Keywords.LABEL_KEY ) + 
-		             "', INDEX=" + edge.getUserDatum( Keywords.INDEX_KEY ) + 
-		             " ('" + (String)edge.getSource().getUserDatum( Keywords.LABEL_KEY ) + 
-		             "', INDEX=" + edge.getSource().getUserDatum( Keywords.INDEX_KEY ) + 
-		             " -> '" + (String)edge.getDest().getUserDatum( Keywords.LABEL_KEY ) + 
-		             "', INDEX=" + edge.getDest().getUserDatum( Keywords.INDEX_KEY ) +  ")";
-		return str;
-	}
-
-	/**
-	 * Returns information regarding a vertex.
-	 */
-	public static String getCompleteVertexName( DirectedSparseVertex vertex )
-	{
-		String str = "'" + (String)vertex.getUserDatum( Keywords.LABEL_KEY ) + 
-		             "', INDEX=" + vertex.getUserDatum( Keywords.INDEX_KEY );
-		return str;
-	}
+    /**
+     * Retries information regarding a vertex, and returns it as a String.
+     * This method is for logging purposes.
+     *
+     * @param vertex The vertex about which information shall be retrieved.
+     * @return Returns a String with information regarding the vertex. The format is:<br>
+     *  <pre>'&lt;VERTEX LABEL&gt;', INDEX=n</pre>
+     *  Where is the unique index for the vertex.
+     */
+    public static String getCompleteVertexName( DirectedSparseVertex vertex )
+    {
+            String str = "'" + (String)vertex.getUserDatum( Keywords.LABEL_KEY ) + 
+                         "', INDEX=" + vertex.getUserDatum( Keywords.INDEX_KEY );
+            return str;
+    }
 
 	public static void AbortIf(boolean bool, String message)
 	{
