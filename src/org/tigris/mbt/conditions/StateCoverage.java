@@ -1,15 +1,11 @@
 package org.tigris.mbt.conditions;
 
-import org.tigris.mbt.FiniteStateMachine;
-
-public class StateCoverage implements StopCondition {
+public class StateCoverage extends StopCondition {
 	
-	private FiniteStateMachine machine;
 	private double limit;
 
-	public StateCoverage(FiniteStateMachine machine, double limit)
+	public StateCoverage(double limit)
 	{
-		this.machine = machine;
 		this.limit = limit;
 	}
 	

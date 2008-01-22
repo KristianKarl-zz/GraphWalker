@@ -80,14 +80,23 @@ public class FiniteStateMachine{
 		return null;
 	}
 	
-	public FiniteStateMachine(SparseGraph newModel)
+	public FiniteStateMachine(SparseGraph model)
+	{
+		this();
+		this.setModel(model);
+	}
+	
+	public FiniteStateMachine()
 	{
 		logger.debug("Initializing");
-		model = newModel;
 		edgeStack = new Stack();
 		numberOfEdgesTravesedStack = new Stack();
-		setState(Keywords.START_NODE);
 		start_time = System.currentTimeMillis();
+	}
+	
+	public void setModel(SparseGraph model) {
+		this.model = model;
+		setState(Keywords.START_NODE);
 	}
 	
 	public DirectedSparseVertex getCurrentState() {

@@ -48,9 +48,9 @@ public class ShortestPathGeneratorTest extends TestCase {
 	}
 	public void test_FSM_StateStop()
     {
-		FiniteStateMachine FSM = new FiniteStateMachine(graph);
-		FSM.setWeighted(false);
-		PathGenerator pathGenerator = new ShortestPathGenerator(FSM, new ReachedState(FSM, "V2") );
+		PathGenerator pathGenerator = new ShortestPathGenerator();
+		pathGenerator.setStopCondition(new ReachedState("V2"));
+		pathGenerator.setMachine(new FiniteStateMachine(graph));
 		
 		String[] stepPair;
 		stepPair = pathGenerator.getNext();
@@ -64,9 +64,10 @@ public class ShortestPathGeneratorTest extends TestCase {
 
 	public void test_FSM_EdgeStop()
     {
-		FiniteStateMachine FSM = new FiniteStateMachine(graph);
-		FSM.setWeighted(false);
-		PathGenerator pathGenerator = new ShortestPathGenerator(FSM, new ReachedEdge(FSM, "E2") );
+		PathGenerator pathGenerator = new ShortestPathGenerator();
+		pathGenerator.setStopCondition(new ReachedEdge("E2"));
+		pathGenerator.setMachine(new FiniteStateMachine(graph));
+		
 		
 		String[] stepPair;
 		stepPair = pathGenerator.getNext();
@@ -83,9 +84,9 @@ public class ShortestPathGeneratorTest extends TestCase {
 
 	public void test_EFSM_StateStop()
     {
-		ExtendedFiniteStateMachine EFSM = new ExtendedFiniteStateMachine(graph);
-		EFSM.setWeighted(false);
-		PathGenerator pathGenerator = new ShortestPathGenerator(EFSM, new ReachedState(EFSM, "V1/x=3;y=[2, 3, 3];") );
+		PathGenerator pathGenerator = new ShortestPathGenerator();
+		pathGenerator.setStopCondition(new ReachedState("V1/x=3;y=[2, 3, 3];") );
+		pathGenerator.setMachine(new ExtendedFiniteStateMachine(graph));
 		
 		String[] stepPair;
 		stepPair = pathGenerator.getNext();
@@ -121,9 +122,9 @@ public class ShortestPathGeneratorTest extends TestCase {
 
 	public void test_EFSM_EdgeStop()
     {
-		ExtendedFiniteStateMachine EFSM = new ExtendedFiniteStateMachine(graph);
-		EFSM.setWeighted(false);
-		PathGenerator pathGenerator = new ShortestPathGenerator(EFSM, new ReachedEdge(EFSM, "E2") );
+		PathGenerator pathGenerator = new ShortestPathGenerator();
+		pathGenerator.setStopCondition(new ReachedEdge("E2"));
+		pathGenerator.setMachine(new ExtendedFiniteStateMachine(graph));
 		
 		String[] stepPair;
 		stepPair = pathGenerator.getNext();
@@ -138,5 +139,23 @@ public class ShortestPathGeneratorTest extends TestCase {
 		assertFalse(pathGenerator.hasNext());
 
     }
+
+//	public void test_FSM_Big_StateCoverageStop()
+//    {
+//		GraphML modelLoader = new GraphML();
+//		modelLoader.load("graphml/test03");
+//		PathGenerator pathGenerator = new ShortestPathGenerator();
+//		pathGenerator.setMachine(new FiniteStateMachine(modelLoader.getModel()));
+//		pathGenerator.setStopCondition(new StateCoverage(100));
+//		
+//		String[] stepPair;
+//		stepPair = pathGenerator.getNext();
+//		assertEquals("E0",  stepPair[0]);
+//		assertEquals("V1", stepPair[1]);
+//		stepPair = pathGenerator.getNext();
+//		assertEquals("E1",  stepPair[0]);
+//		assertEquals("V2", stepPair[1]);
+//		assertFalse(pathGenerator.hasNext());
+//    }
 
 }

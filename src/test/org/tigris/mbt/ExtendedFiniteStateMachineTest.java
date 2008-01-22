@@ -119,8 +119,11 @@ public class ExtendedFiniteStateMachineTest extends TestCase {
 	public void testStateCoverage()
 	{
 		ExtendedFiniteStateMachine EFSM = new ExtendedFiniteStateMachine(graph);
-		StateCoverage sc = new StateCoverage(EFSM, 1.0);
-		ShortestPathGenerator spg = new ShortestPathGenerator(EFSM, sc);
+		StateCoverage sc = new StateCoverage(1.0);
+		sc.setMachine(EFSM);
+		ShortestPathGenerator spg = new ShortestPathGenerator();
+		spg.setStopCondition(sc);
+		spg.setMachine(EFSM);
 		assertTrue(spg.hasNext());
 		String[] steps = spg.getNext();
 		assertEquals("E1",steps[0]);

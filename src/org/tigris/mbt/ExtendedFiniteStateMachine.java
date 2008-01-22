@@ -36,8 +36,14 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 
 	private Stack namespaceStack;
 	
-	public ExtendedFiniteStateMachine(SparseGraph newModel) {
-		super(newModel);
+	public ExtendedFiniteStateMachine(SparseGraph model)
+	{
+		this();
+		setModel(model);
+	}
+	
+	public ExtendedFiniteStateMachine() {
+		super();
 		namespaceStack = new Stack();
 		accessableFilter = new AccessableEdgeFilter(interpreter);
 		Void = new VoidPrintStream();

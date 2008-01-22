@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import org.tigris.mbt.FiniteStateMachine;
 import org.tigris.mbt.Util;
 import org.tigris.mbt.conditions.EdgeCoverage;
+import org.tigris.mbt.conditions.StopCondition;
 import org.tigris.mbt.generators.RandomPathGenerator;
 import org.tigris.mbt.generators.PathGenerator;
 import org.tigris.mbt.io.GraphML;
@@ -26,7 +27,12 @@ public class RandomPathGeneratorTest extends TestCase {
 		gml.load("graphml/weight/FSM.graphml");
 		FiniteStateMachine FSM = new FiniteStateMachine(gml.getModel());
 		FSM.setWeighted(true);
-		PathGenerator pathGenerator = new RandomPathGenerator(FSM, new EdgeCoverage(FSM, 1.0) );
+		
+		StopCondition sc = new EdgeCoverage(1.0);
+		PathGenerator pathGenerator = new RandomPathGenerator();
+		pathGenerator.setMachine(FSM);
+		pathGenerator.setStopCondition(sc);
+		
 		while(pathGenerator.hasNext())
 		{
 			String[] stepPair = pathGenerator.getNext();
@@ -47,7 +53,11 @@ public class RandomPathGeneratorTest extends TestCase {
 		gml.load("graphml/weight/FSM.graphml");
 		FiniteStateMachine FSM = new FiniteStateMachine(gml.getModel());
 		FSM.setWeighted(false);
-		PathGenerator pathGenerator = new RandomPathGenerator(FSM, new EdgeCoverage(FSM, 1.0) );
+		StopCondition sc = new EdgeCoverage(1.0);
+		PathGenerator pathGenerator = new RandomPathGenerator();
+		pathGenerator.setMachine(FSM);
+		pathGenerator.setStopCondition(sc);
+		
 		while(pathGenerator.hasNext())
 		{
 			String[] stepPair = pathGenerator.getNext();

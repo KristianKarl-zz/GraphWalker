@@ -1,7 +1,5 @@
 package org.tigris.mbt.generators;
 
-import org.tigris.mbt.FiniteStateMachine;
-
 /**
  * Will generate code using a template. The code generated will contain all lables/names
  * defined by the vertices and edges. This enables the user to write templates for a 
@@ -25,8 +23,15 @@ public class CodeGenerator extends ListGenerator {
 
 	String template;
 	
-	public CodeGenerator(FiniteStateMachine machine, String template) {
-		super(machine);
+	public CodeGenerator() {
+		super();
+	}
+	
+	public CodeGenerator(String template) {
+		setTemplate(template);
+	}
+	
+	public void setTemplate(String template) {
 		this.template = template;
 	}
 	
