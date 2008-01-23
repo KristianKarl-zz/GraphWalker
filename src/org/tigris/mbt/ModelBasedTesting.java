@@ -24,6 +24,7 @@ import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
 
 import org.apache.log4j.Logger;
+import org.tigris.mbt.conditions.AlternativeCondition;
 import org.tigris.mbt.conditions.CombinationalCondition;
 import org.tigris.mbt.conditions.EdgeCoverage;
 import org.tigris.mbt.conditions.Never;
@@ -64,10 +65,11 @@ public class ModelBasedTesting
 	private String template;
 	private boolean backtracking = false;
 
-	public void addCondition(int conditionType, String conditionValue) 
+	private StopCondition getConditionObject(int conditionType, String conditionValue)
 	{
 		StopCondition condition = null;
-		switch (conditionType) {
+		switch (conditionType) 
+		{
 			case Keywords.CONDITION_EDGE_COVERAGE:
 				condition = new EdgeCoverage(Double.parseDouble(conditionValue)/100);
 				break;
@@ -98,27 +100,58 @@ public class ModelBasedTesting
 			default:
 				throw new RuntimeException("Unsupported stop condition selected: "+ conditionType);
 		}
+		return condition ;
+	}
+	
+	public void addAlternativeCondition(int conditionType, String conditionValue)
+	{
+		StopCondition condition = getConditionObject(conditionType, conditionValue);
 		
 		if(	getCondition() == null )
 		{
-			this.condition = condition;
+			setCondition(new AlternativeCondition());
+			((AlternativeCondition)getCondition()).add(condition);
 		}
-		else
+		else 
+		{
+			if( !(getCondition() instanceof AlternativeCondition) )
+			{
+				StopCondition old = getCondition();
+				setCondition(new AlternativeCondition());
+				((AlternativeCondition)getCondition()).add(old);
+			}
+			((AlternativeCondition)getCondition()).add(condition);
+		}
+	}
+	
+	public void addCondition(int conditionType, String conditionValue) 
+	{
+		StopCondition condition = getConditionObject(conditionType, conditionValue);
+		
+		if(	getCondition() == null )
+		{
+			setCondition(condition);
+		}
+		else 
 		{
 			if( !(getCondition() instanceof CombinationalCondition) )
 			{
-				StopCondition old= getCondition();
-				this.condition = new CombinationalCondition();
+				StopCondition old = getCondition();
+				setCondition(new CombinationalCondition());
 				((CombinationalCondition)getCondition()).add(old);
 			}
 			((CombinationalCondition)getCondition()).add(condition);
 		}
+	}
+
+	public void setCondition(StopCondition condition) {
+		this.condition = condition;
 		if(getGenerator() != null)
 			getGenerator().setStopCondition(getCondition());
 		if(this.machine != null)
 			getCondition().setMachine(getMachine());
 	}
-
+	
 	private StopCondition getCondition()
 	{
 		return this.condition;
@@ -379,8 +412,8 @@ public class ModelBasedTesting
 			try {
 				logger.info("Step: "+ (++step) +" Navigate: "+stepPair[ 0 ]);
 				executeMethod(clsClass, objInstance, stepPair[ 0 ] );
-				logger.info("Step: "+ (++step) +" Verify: "+stepPair[ 1 ]);
 				executeMethod(clsClass, objInstance, stepPair[ 1 ] );
+				logger.info(getStatisticsCompact());
 			} catch (IllegalArgumentException e) {
 				throw new RuntimeException("Illegal argument used.", e);
 			} catch (SecurityException e) {
