@@ -44,7 +44,6 @@ public class FiniteStateMachine{
 
 	protected SparseGraph model = null;
 	protected DirectedSparseVertex currentState = null;
-	private Stack numberOfEdgesTravesedStack;
 	private boolean weighted = false;
 	private DirectedSparseEdge lastEdge = null;
 	private int numberOfEdgesTravesed = 0;
@@ -90,7 +89,6 @@ public class FiniteStateMachine{
 	{
 		logger.debug("Initializing");
 		edgeStack = new Stack();
-		numberOfEdgesTravesedStack = new Stack();
 		start_time = System.currentTimeMillis();
 	}
 	
@@ -364,7 +362,6 @@ public class FiniteStateMachine{
 	protected void track()
 	{
 		edgeStack.push(getLastEdge());
-		numberOfEdgesTravesedStack.push(new Integer(numberOfEdgesTravesed)); //TODO varför en stack?
 	}
 	
 	protected void popState()
@@ -376,8 +373,7 @@ public class FiniteStateMachine{
 		lastEdge = (DirectedSparseEdge) edgeStack.pop();
 		currentState = (DirectedSparseVertex) lastEdge.getSource();
 		lastEdge = (edgeStack.size()>0?(DirectedSparseEdge) edgeStack.peek():null);
-
-		numberOfEdgesTravesed = ((Integer)numberOfEdgesTravesedStack.pop()).intValue(); //TODO farför en stack? 
+		numberOfEdgesTravesed--;
 	}
 	
 	/**
