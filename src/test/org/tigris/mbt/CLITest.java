@@ -113,14 +113,16 @@ public class CLITest extends TestCase {
     
     public void testNoVerticesWithNoInEdges()
     {
-		System.out.println( "TEST: testVertexWithNoInEdges" );
+		System.out.println( "TEST: testNoVerticesWithNoInEdges" );
 		System.out.println( "=======================================================================" );
-		String args[] = new String[ 5 ];
+		String args[] = new String[ 7 ];
 		args[ 0 ] = "offline";
 		args[ 1 ] = "-e";
 		args[ 2 ] = "100";
-		args[ 3 ] = "-f";
-		args[ 3 ] = "graphml/misc/no_missing_inedges.graphml";
+		args[ 3 ] = "-g";
+		args[ 4 ] = "random";
+		args[ 5 ] = "-f";
+		args[ 6 ] = "graphml/misc/no_missing_inedges.graphml";
     	CLI cli = new CLI();
     	
     	OutputStream out = new OutputStream() {
@@ -137,13 +139,16 @@ public class CLITest extends TestCase {
     	String msg = stdOutput.toString();
 		System.out.println( msg );
 		
-		Pattern p = Pattern.compile( "^No in-edges! The vertex: .* is not reachable.$", Pattern.MULTILINE );
-		Matcher m = p.matcher( msg );
-		assertTrue( !m.find() );
-
-		p = Pattern.compile( "null", Pattern.MULTILINE );
-		m = p.matcher( msg );
-		assertFalse( m.find() );
+		if ( msg != null )
+		{		
+			Pattern p = Pattern.compile( "^No in-edges! The vertex: .* is not reachable.$", Pattern.MULTILINE );
+			Matcher m = p.matcher( msg );
+			assertTrue( !m.find() );
+	
+			p = Pattern.compile( "null", Pattern.MULTILINE );
+			m = p.matcher( msg );
+			assertFalse( m.find() );
+		}
 
 		System.out.println( "" );
     }
@@ -154,12 +159,14 @@ public class CLITest extends TestCase {
     {
 		System.out.println( "TEST: testVertexWithNoInEdges" );
 		System.out.println( "=======================================================================" );
-		String args[] = new String[ 5 ];
+		String args[] = new String[ 7 ];
 		args[ 0 ] = "offline";
 		args[ 1 ] = "-e";
 		args[ 2 ] = "100";
-		args[ 3 ] = "-f";
-		args[ 4 ] = "graphml/misc/missing_inedges.graphml";
+		args[ 3 ] = "-g";
+		args[ 4 ] = "random";
+		args[ 5 ] = "-f";
+		args[ 6 ] = "graphml/misc/missing_inedges.graphml";
     	CLI cli = new CLI();
     	
     	OutputStream out = new OutputStream() {
