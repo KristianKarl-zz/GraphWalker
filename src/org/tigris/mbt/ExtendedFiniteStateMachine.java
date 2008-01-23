@@ -110,23 +110,16 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 	
 	/**
 	 * Walks the data space, and return the value of the data, if found.
-	 * @param data
+	 * @param dataName
 	 * @return
 	 * @throws InvalidDataException is thrown if the data is not found in the data space
 	 */
-	public String getDataValue( String data ) throws InvalidDataException
+	public String getDataValue( String dataName ) throws InvalidDataException
 	{
 		Hashtable dataTable = getCurrentData();
-		Enumeration e = dataTable.keys();
-		while(e.hasMoreElements())
-		{
-			String key = (String) e.nextElement();
-			if ( data.equals( key ))
-			{
-				return dataTable.get(key).toString();
-			}
-		}
-		throw new InvalidDataException( "The data: '" + data + "', does not exist in the data space." );
+		if(dataTable.containsKey(dataName))
+			return dataTable.get(dataName).toString();
+		throw new InvalidDataException( "The data name: '" + dataName + "', does not exist in the namespace." );
 	}
 
 	public String getCurrentDataString() 

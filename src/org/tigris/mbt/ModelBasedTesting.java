@@ -49,12 +49,7 @@ import edu.uci.ics.jung.graph.impl.SparseGraph;
 
 /**
  * The object handles the test case generation, both online and offline.
- */
-/**
- * @author krikar
  *
- */
-/**
  * @author krikar
  *
  */
