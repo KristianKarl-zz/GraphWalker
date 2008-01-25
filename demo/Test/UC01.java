@@ -1,5 +1,3 @@
-package org.tigris.mbt.demo;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -38,7 +36,7 @@ public class UC01 extends TestCase
 		mbt.setGenerator( Keywords.GENERATOR_SHORTEST );
 		
 		// Execute using the methods available in this instance
-		mbt.executePath(this);
+		mbt.execute(this);
 	}
 	
 	/**
