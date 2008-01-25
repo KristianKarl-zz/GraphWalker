@@ -4,6 +4,10 @@ public class RequirementCoverage extends StopCondition {
 	
 	private double limit;
 
+	public RequirementCoverage() {
+		this(1);
+	}
+
 	public RequirementCoverage(double limit)
 	{
 		this.limit = limit;
