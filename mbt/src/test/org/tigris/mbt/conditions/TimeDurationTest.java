@@ -54,10 +54,9 @@ public class TimeDurationTest extends TestCase {
 		mbt.setGraph(graph);
 		mbt.setGenerator(Keywords.GENERATOR_SHORTEST);
 		assertTrue(mbt.hasNextStep());
-		
 		while((System.currentTimeMillis() - startTime) < 10);
 		assertEquals((System.currentTimeMillis() - startTime) / 1000, condition.getFulfillment(), 0.1);
-		while((System.currentTimeMillis() - startTime) < 500);
+		while((System.currentTimeMillis() - startTime) < 900);
 		assertEquals((System.currentTimeMillis() - startTime) / 1000, condition.getFulfillment(), 0.1);
 		while((System.currentTimeMillis() - startTime) < 1000);
 		assertEquals((System.currentTimeMillis() - startTime) / 1000, condition.getFulfillment(), 0.1);
@@ -75,7 +74,7 @@ public class TimeDurationTest extends TestCase {
 
 		while((System.currentTimeMillis() - startTime) < 10);
 		assertEquals(false, condition.isFulfilled());
-		while((System.currentTimeMillis() - startTime) < 500);
+		while((System.currentTimeMillis() - startTime) < 900);
 		assertEquals(false, condition.isFulfilled());
 		while((System.currentTimeMillis() - startTime) < 1000);
 		assertEquals(true, condition.isFulfilled());
