@@ -2,19 +2,19 @@ package org.tigris.mbt.conditions;
 
 public class TimeDuration extends StopCondition {
 
-	private long end_time;
-	private long start_time;
+	private double duration;
+	private double start_time;
 
 	public boolean isFulfilled() {
-		return this.end_time < System.currentTimeMillis();
+		return this.start_time + this.duration < System.currentTimeMillis();
 	}
 
 	public TimeDuration(long seconds) {
 		this.start_time = System.currentTimeMillis();
-		this.end_time = seconds*1000 + this.start_time;
+		this.duration = seconds * 1000;
 	}
 
 	public double getFulfillment() {
-		return (System.currentTimeMillis()-this.start_time) / (this.end_time-this.start_time);
+		return (System.currentTimeMillis()-this.start_time) / this.duration;
 	}
 }
