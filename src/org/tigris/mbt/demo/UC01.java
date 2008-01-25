@@ -38,7 +38,7 @@ public class UC01 extends TestCase
 		mbt.setGenerator( Keywords.GENERATOR_SHORTEST );
 		
 		// Execute using the methods available in this instance
-		mbt.execute(this);
+		mbt.executePath(this);
 	}
 	
 	/**
