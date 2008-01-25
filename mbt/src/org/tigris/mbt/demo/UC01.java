@@ -35,7 +35,7 @@ public class UC01 extends TestCase
 		mbt.addCondition( Keywords.CONDITION_EDGE_COVERAGE, "100" );
 		
 		// Use random walk through the model
-		mbt.setGenerator( Keywords.GENERATOR_RANDOM );
+		mbt.setGenerator( Keywords.GENERATOR_SHORTEST );
 		
 		// Execute using the methods available in this instance
 		mbt.execute(this);
@@ -69,15 +69,6 @@ public class UC01 extends TestCase
 	}
 
 	/**
-	 * This method implements the Edge 'e_SubversionLink'
-	 */
-	public void e_SubversionLink()
-	{
-	  log.info( "Edge: e_SubversionLink" );
-	  browser.click( "link=Subversion" );
-	}
-
-	/**
 	 * This method implements the Edge 'e_init'
 	 */
 	public void e_init() throws Exception
@@ -90,10 +81,10 @@ public class UC01 extends TestCase
 		// For a linux machine with firefox installed in '/usr/lib/mozilla-firefox/'
 		// where the firefox executable is not in the path.
 		// See also: http://release.openqa.org/selenium-remote-control/0.9.2/doc/java/com/thoughtworks/selenium/DefaultSelenium.html#DefaultSelenium(java.lang.String,%20int,%20java.lang.String,%20java.lang.String)
-		browser = new DefaultSelenium("localhost", SeleniumServer.getDefaultPort(), "*firefox /usr/lib/mozilla-firefox/firefox-bin", url);
+		//browser = new DefaultSelenium("localhost", SeleniumServer.getDefaultPort(), "*firefox /usr/lib/mozilla-firefox/firefox-bin", url);
 
 		// Should work for any machine where the firefox executable is in the path.
-		//browser = new DefaultSelenium("localhost", SeleniumServer.getDefaultPort(), "*firefox", url);
+		browser = new DefaultSelenium("localhost", SeleniumServer.getDefaultPort(), "*firefox", url);
 	}
 
 	/**
