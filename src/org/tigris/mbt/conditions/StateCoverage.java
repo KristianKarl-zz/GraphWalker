@@ -4,6 +4,10 @@ public class StateCoverage extends StopCondition {
 	
 	private double limit;
 
+	public StateCoverage() {
+		this(1);
+	}
+
 	public StateCoverage(double limit)
 	{
 		this.limit = limit;

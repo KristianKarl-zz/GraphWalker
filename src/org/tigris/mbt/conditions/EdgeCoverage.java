@@ -4,6 +4,10 @@ public class EdgeCoverage extends StopCondition {
 	
 	private double limit;
 
+	public EdgeCoverage() {
+		this(1);
+	}
+
 	public EdgeCoverage(double limit)
 	{
 		this.limit = limit;
