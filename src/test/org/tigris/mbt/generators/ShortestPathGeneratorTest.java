@@ -46,6 +46,7 @@ public class ShortestPathGeneratorTest extends TestCase {
 		start = v1 = v2 = null; 
 		e0 = e1 = e2 = e3 = null;
 	}
+	
 	public void test_FSM_StateStop()
     {
 		PathGenerator pathGenerator = new ShortestPathGenerator();
@@ -139,23 +140,5 @@ public class ShortestPathGeneratorTest extends TestCase {
 		assertFalse(pathGenerator.hasNext());
 
     }
-
-//	public void test_FSM_Big_StateCoverageStop()
-//    {
-//		GraphML modelLoader = new GraphML();
-//		modelLoader.load("graphml/test03");
-//		PathGenerator pathGenerator = new ShortestPathGenerator();
-//		pathGenerator.setMachine(new FiniteStateMachine(modelLoader.getModel()));
-//		pathGenerator.setStopCondition(new StateCoverage(100));
-//		
-//		String[] stepPair;
-//		stepPair = pathGenerator.getNext();
-//		assertEquals("E0",  stepPair[0]);
-//		assertEquals("V1", stepPair[1]);
-//		stepPair = pathGenerator.getNext();
-//		assertEquals("E1",  stepPair[0]);
-//		assertEquals("V2", stepPair[1]);
-//		assertFalse(pathGenerator.hasNext());
-//    }
 
 }
