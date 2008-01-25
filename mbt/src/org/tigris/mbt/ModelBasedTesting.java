@@ -22,12 +22,15 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Iterator;
 
 import org.apache.log4j.Logger;
+import org.jdom.Document;
+import org.jdom.input.SAXBuilder;
 import org.tigris.mbt.conditions.AlternativeCondition;
 import org.tigris.mbt.conditions.CombinationalCondition;
 import org.tigris.mbt.conditions.EdgeCoverage;
-import org.tigris.mbt.conditions.Never;
+import org.tigris.mbt.conditions.NeverCondition;
 import org.tigris.mbt.conditions.ReachedEdge;
 import org.tigris.mbt.conditions.ReachedRequirement;
 import org.tigris.mbt.conditions.ReachedState;
@@ -89,7 +92,7 @@ public class ModelBasedTesting
 				condition = new TestCaseLength(Integer.parseInt(conditionValue));
 				break;
 			case Keywords.CONDITION_NEVER:
-				condition = new Never();
+				condition = new NeverCondition();
 				break;
 			case Keywords.CONDITION_REQUIREMENT_COVERAGE:
 				condition = new RequirementCoverage(Double.parseDouble(conditionValue)/100);
@@ -185,6 +188,17 @@ public class ModelBasedTesting
 		return this.modelHandler.getModel();
 	}
 
+	public void setGraph(SparseGraph graph) {
+		if(	this.modelHandler == null )
+		{
+			this.modelHandler = new GraphML();
+		}
+		this.modelHandler.setModel(graph);
+		if(this.machine != null)
+			getMachine().setModel(graph);
+	}
+
+	
 	/**
 	 * Returns the value of an data object within the data space of the model.
 	 * @param data The name of the data object, which value is to be retrieved.
@@ -463,4 +477,39 @@ public class ModelBasedTesting
 			out.println( stepPair[ 1 ] );
 		}
 	}
+	
+	/**
+	 * @param fileName The XML settings file
+	 */
+	public void loadSetup( String fileName )
+	{
+		SAXBuilder parser = new SAXBuilder( "org.apache.crimson.parser.XMLReaderImpl", false );		
+				
+		try
+		{
+			logger.debug( "Parsing settings file: " + fileName );
+			Document doc = parser.build( fileName );
+
+			// Parse all vertices (nodes)
+			Iterator generators = doc.getDescendants( new org.jdom.filter.ElementFilter( "generator" ) );
+			while ( generators.hasNext() )
+			{
+				org.jdom.Element generatorElement = (org.jdom.Element)generators.next();
+				String generatorType = generatorElement.getAttributeValue( "type" );
+				String generatorValue = generatorElement.getAttributeValue( "value" );
+
+				Iterator conditions = generatorElement.getDescendants( new org.jdom.filter.ElementFilter( "condition" ) );
+				while ( conditions.hasNext() )
+				{
+					org.jdom.Element conditionElement = (org.jdom.Element)conditions.next();
+					String conditionType = conditionElement.getAttributeValue( "type" );
+					String conditionValue = conditionElement.getAttributeValue( "value" );
+				}
+			}
+		}
+		catch (Exception e) {
+			// TODO: handle exception
+		}
+	}
+
 }
