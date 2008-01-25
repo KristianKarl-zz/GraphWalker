@@ -851,7 +851,7 @@ public class CLI
 	
 		if( cl.hasOption( "c" ) )
 		{
-			getMbt().execute( cl.getOptionValue( "c" ) );
+			getMbt().executePath( cl.getOptionValue( "c" ) );
 		}
 		else
 		{

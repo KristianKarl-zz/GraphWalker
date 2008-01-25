@@ -362,7 +362,7 @@ public class ModelBasedTesting
 			((CodeGenerator)getGenerator()).setTemplate(this.template);
 	}
 	
-	public void execute(String strClassName) 
+	public void executePath(String strClassName) 
 	{
 		if( strClassName == null || strClassName.trim().equals(""))
 			throw new RuntimeException("Needed execution class name is missing as parameter.");
@@ -372,24 +372,24 @@ public class ModelBasedTesting
 		} catch (ClassNotFoundException e) {
 			throw new RuntimeException("Cannot locate execution class.", e);
 		}
-		execute(clsClass, null);
+		executePath(clsClass, null);
 	}
 
-	public void execute(Class clsClass) 
+	public void executePath(Class clsClass) 
 	{
 		if( clsClass == null )
 			throw new RuntimeException("Needed execution class is missing as parameter.");
-		execute(clsClass, null);
+		executePath(clsClass, null);
 	}
 
-	public void execute(Object objInstance) 
+	public void executePath(Object objInstance) 
 	{
 		if( objInstance == null )
 			throw new RuntimeException("Needed execution instance is missing as parameter.");
-		execute(null, objInstance);
+		executePath(null, objInstance);
 	}
 
-	public void execute(Class clsClass, Object objInstance)
+	public void executePath(Class clsClass, Object objInstance)
 	{
 		if(this.machine == null) getMachine(); 
 		if( clsClass == null && objInstance == null )
@@ -413,7 +413,6 @@ public class ModelBasedTesting
 				logger.info("Step: "+ (++step) +" Navigate: "+stepPair[ 0 ]);
 				executeMethod(clsClass, objInstance, stepPair[ 0 ] );
 				executeMethod(clsClass, objInstance, stepPair[ 1 ] );
-				logger.info(getStatisticsCompact());
 			} catch (IllegalArgumentException e) {
 				throw new RuntimeException("Illegal argument used.", e);
 			} catch (SecurityException e) {
@@ -447,6 +446,21 @@ public class ModelBasedTesting
 		else
 		{
 			clsClass.getMethod( strMethod, null ).invoke( objInstance, null  );
+		}
+	}
+
+	public void writePath() {
+		writePath(System.out);
+	}
+
+	public void writePath(PrintStream out) {
+		if(this.machine == null) getMachine(); 
+		while( hasNextStep() )
+		{
+			String[] stepPair = getNextStep();
+			
+			out.println( stepPair[ 0 ] );
+			out.println( stepPair[ 1 ] );
 		}
 	}
 }
