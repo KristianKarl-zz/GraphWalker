@@ -100,7 +100,7 @@ public class CLI
 	{
 		if ( args.length < 1 )
 		{
-			System.out.println( "Type 'java -jar mbt.jar help' for usage." );
+			System.err.println( "Type 'java -jar mbt.jar help' for usage." );
 			return;
 		}
 		else
@@ -195,7 +195,7 @@ public class CLI
 				}
 				else
 				{
-					System.out.println( "Type 'java -jar mbt.jar help' for usage." );
+					System.err.println( "Type 'java -jar mbt.jar help' for usage." );
 					return;
 				}
 			}
@@ -536,7 +536,14 @@ public class CLI
 			String[] stopConditions = argument.split( "\\|" );
 			for (int i = 0; i < stopConditions.length; i++) {
 				String[] stopCondition = stopConditions[ i ].trim().split( ":" );
-				getMbt().addAlternativeCondition( Keywords.getKeyword( stopCondition[ 0 ].trim() ), stopCondition[ 1 ].trim() );
+				if ( stopCondition.length == 1 )
+				{
+					getMbt().addAlternativeCondition( Keywords.getKeyword( stopCondition[ 0 ].trim() ), "" );					
+				}
+				else
+				{
+					getMbt().addAlternativeCondition( Keywords.getKeyword( stopCondition[ 0 ].trim() ), stopCondition[ 1 ].trim() );
+				}
 			}
 		}
 
@@ -629,7 +636,14 @@ public class CLI
 			String[] stopConditions = argument.split( "\\|" );
 			for (int i = 0; i < stopConditions.length; i++) {
 				String[] stopCondition = stopConditions[ i ].trim().split( ":" );
-				getMbt().addAlternativeCondition( Keywords.getKeyword( stopCondition[ 0 ].trim() ), stopCondition[ 1 ].trim() );
+				if ( stopCondition.length == 1 )
+				{
+					getMbt().addAlternativeCondition( Keywords.getKeyword( stopCondition[ 0 ].trim() ), "" );					
+				}
+				else
+				{
+					getMbt().addAlternativeCondition( Keywords.getKeyword( stopCondition[ 0 ].trim() ), stopCondition[ 1 ].trim() );
+				}
 			}
 		}
 
