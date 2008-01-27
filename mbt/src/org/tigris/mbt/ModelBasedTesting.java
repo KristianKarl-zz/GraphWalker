@@ -249,7 +249,7 @@ public class ModelBasedTesting
 				break;
 			
 			default:
-				throw new RuntimeException("Not implemented yet!");
+				throw new RuntimeException("Generator not implemented yet!");
 		}
 
 		if(this.machine != null)

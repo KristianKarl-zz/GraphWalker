@@ -209,7 +209,7 @@ public class CLITest extends TestCase {
     		public void write(int b) throws IOException {
     			stdOutput.append( Character.toString((char) b) );
     			try {
-					Thread.sleep( 50 );
+					Thread.sleep( 10 );
 				} catch (InterruptedException e) {
 				}
     		}
