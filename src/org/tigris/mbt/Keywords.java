@@ -6,7 +6,6 @@ import java.util.Vector;
  * Handles the common constants for the org.tigris.mbt package. This includes
  * reserved key words, and text strings used for storing custom data as
  * UserDatum in graphs, vertices and edges.
- *
  */
 public class Keywords {
 
@@ -222,5 +221,120 @@ public class Keywords {
 	public static boolean isKeyWord( String wordToCheck )
 	{
 		return reservedKeyWords.contains(wordToCheck);
+	}
+	
+	/**
+	* Holds the pre-defined list of stop-condition.
+	*/
+	private static Vector stopConditions = new Vector();
+
+	/**
+	* Defines the stop-condition strings
+	*/
+	static
+	{
+		stopConditions.add( "REACHED_EDGE" );
+		stopConditions.add( "REACHED_STATE" );
+		stopConditions.add( "EDGE_COVERAGE" );
+		stopConditions.add( "STATE_COVERAGE" );
+		stopConditions.add( "TEST_LENGTH" );
+		stopConditions.add( "TEST_DURATION" );
+		stopConditions.add( "REQUIREMENT_COVERAGE" );
+		stopConditions.add( "REACHED_REQUIREMENT" );
+		stopConditions.add( "NEVER" );
+	}
+
+	static public Vector getStopConditions()
+	{
+		return stopConditions;
+	}
+	
+	/**
+	* Holds the pre-defined list of generators
+	*/
+	private static Vector generators = new Vector();
+
+	/**
+	* Defines the generators strings
+	*/
+	static
+	{
+		generators.add( "RANDOM" );
+		generators.add( "SHORTEST" );
+		generators.add( "LIST" );
+		generators.add( "STUB" );
+		generators.add( "REQUIREMENTS" );
+	}
+
+	static public Vector getGenerators()
+	{
+		return generators;
+	}
+	
+	/**
+	 * Does a lookup, and try to find the corresponding keyword, and returns the int assigned to that keyword.
+	 * @param key The string that is used trying to find the keyword.
+	 * @return The keywords corresponding int.
+	 */
+	static public int getKeyword( String key )
+	{
+		if ( key.equalsIgnoreCase( "REACHED_EDGE" ) )
+		{
+			return CONDITION_REACHED_EDGE;
+		}
+		else if ( key.equalsIgnoreCase( "REACHED_STATE" ) )
+		{
+			return CONDITION_REACHED_STATE;
+		}
+		else if ( key.equalsIgnoreCase( "EDGE_COVERAGE" ) )
+		{
+			return CONDITION_EDGE_COVERAGE;
+		}
+		else if ( key.equalsIgnoreCase( "STATE_COVERAGE" ) )
+		{
+			return CONDITION_STATE_COVERAGE;
+		}
+		else if ( key.equalsIgnoreCase( "TEST_LENGTH" ) )
+		{
+			return CONDITION_TEST_LENGTH;
+		}
+		else if ( key.equalsIgnoreCase( "TEST_DURATION" ) )
+		{
+			return CONDITION_TEST_DURATION;
+		}
+		else if ( key.equalsIgnoreCase( "REQUIREMENT_COVERAGE" ) )
+		{
+			return CONDITION_REQUIREMENT_COVERAGE;
+		}
+		else if ( key.equalsIgnoreCase( "REACHED_REQUIREMENT" ) )
+		{
+			return CONDITION_REACHED_REQUIREMENT;
+		}
+		else if ( key.equalsIgnoreCase( "NEVER" ) )
+		{
+			return CONDITION_NEVER;
+		}
+		else if ( key.equalsIgnoreCase( "RANDOM" ) )
+		{
+			return GENERATOR_RANDOM;
+		}
+		else if ( key.equalsIgnoreCase( "SHORTEST" ) )
+		{
+			return GENERATOR_SHORTEST;
+		}
+		else if ( key.equalsIgnoreCase( "LIST" ) )
+		{
+			return GENERATOR_LIST;
+		}
+		else if ( key.equalsIgnoreCase( "STUB" ) )
+		{
+			return GENERATOR_STUB;
+		}
+		else if ( key.equalsIgnoreCase( "REQUIREMENTS" ) )
+		{
+			return GENERATOR_REQUIREMENTS;
+		}
+
+		return -1;
 	}
 }

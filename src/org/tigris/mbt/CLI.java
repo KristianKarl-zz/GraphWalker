@@ -3,8 +3,10 @@ package org.tigris.mbt;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Iterator;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.Vector;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -282,15 +284,17 @@ public class CLI
 			{
 				RunCommandSource( cl );
 			}
+        }		
+		catch ( ArrayIndexOutOfBoundsException e )
+        {
+			System.err.println( "The arguments for either the generator, or the stop-condition, is incorrect." );
+			System.err.println( "Example: java -jar mbt.jar offline -f ../demo/model/UC01.graphml -s EDGE_COVERAGE:100 -g SHORTEST" );
+        	System.err.println( "Type 'java -jar mbt.jar help " + args[ 0 ] + "' for help." );
         }
-		catch ( MissingArgumentException e )
+		catch ( Exception e )
         {
 			System.err.println( e.getMessage() );
         	System.err.println( "Type 'java -jar mbt.jar help " + args[ 0 ] + "' for help." );
-        }
-        catch ( ParseException e ) 
-        {
-    		System.err.println( e.getMessage() );
         }
         finally
         {
@@ -337,67 +341,50 @@ public class CLI
                 .create( "f" ) );
 	}
 
+	private String generateListOfValidStopConditions()
+	{
+		String list = "";
+		Vector stopConditions = Keywords.getStopConditions();
+		for (int i = 0; i < stopConditions.size(); i++) {
+			list += (String)stopConditions.get( i ) + "\n";
+		}
+		return list;
+	}
+	
+	private String generateListOfValidGenerators()
+	{
+		String list = "";
+		Vector generators = Keywords.getGenerators();
+		for (int i = 0; i < generators.size(); i++) {
+			list += (String)generators.get( i ) + "\n";
+		}
+		return list;
+	}
+	
 	private void buildOnlineCLI()
 	{
 		opt.addOption( "a", "statistics", false, "Prints the statistics of the test, at the end of the run." );
 		opt.addOption( "x", "extended",   false, "Use an extended finite state machine to handle the model." );
 		opt.addOption( "b", "backtrack",  false, "Enable backtracking in the model." );
-		opt.addOption( OptionBuilder.withArgName( "generator" )
-                .withDescription( "The generator to be used when traversing the model. The generator can be " +
-                		          "either 'random' which will generate a sequence using a randomized path algorithm. " +
-                		          "or 'dijkstra' which will generate a sequence using Dijkstras shortest path algorithm." )
+		opt.addOption( OptionBuilder.withArgName( "stop-condition" )
+                .withDescription( "Stop condition. Halts generation after the specified stop-conditon(s) has been met. " +
+		                          "At least 1 condition can be given. If more are given, the condition that meets" +
+		                          "it's stop-condition first, will cause the generation to halt.\n" +
+		                  		"Each stop condition must be followed with a : and then an integer between 1-100, representing the" + 
+		                		" percentage that the stop-condition should reach. Every stop-condition is seperated with a |. " +
+		                		"A list of valid stop-conditions are:\n" + generateListOfValidStopConditions() )
                 .hasArg()
-                .withLongOpt( "generator" )
+                .create( "s" ) );
+		opt.addOption( OptionBuilder.withArgName( "generator" )
+                .withDescription( "The generator to be used when traversing the model. At least 1 generator must be given. " +
+                		"Every generator is seperated with a |.\nA list of valid generators are:\n" + generateListOfValidGenerators() )
+                .hasArg()
                 .create( "g" ) );
 		opt.addOption( OptionBuilder.withArgName( "file" )
                 .withDescription( "The file (or folder) containing graphml formatted files." )
                 .hasArg()
                 .withLongOpt( "input_graphml" )
                 .create( "f" ) );
-		opt.addOption( OptionBuilder.withArgName( "duaration" )
-                .withDescription( "Stop condition. Halts generation after the specified duration in seconds has been reached." )
-                .hasArg()
-                .withLongOpt( "duration" )
-                .create( "u" ) );
-		opt.addOption( OptionBuilder.withArgName( "length" )
-                .withDescription( "Stop condition. Halts generation after the specified length of the test sequence is reached. " +
-                		          "Supply an integer, which tells MBT how many edges a test sequence shall contain." )
-                .hasArg()
-                .withLongOpt( "length" )
-                .create( "l" ) );
-		opt.addOption( OptionBuilder.withArgName( "edge-coverage" )
-                .withDescription( "Stop condition. Halts generation after the specified edge-coverage has been met. " +
-		                          "The given value shall be a real number between 0 and 100" )
-                .hasArg()
-                .withLongOpt( "edge-coverage" )
-                .create( "e" ) );
-		opt.addOption( OptionBuilder.withArgName( "state-coverage" )
-                .withDescription( "Stop condition. Halts generation after the specified state-coverage has been met. " +
-		                          "The given value shall be a real number between 0 and 100" )
-                .hasArg()
-                .withLongOpt( "state-coverage" )
-                .create( "s" ) );
-		opt.addOption( OptionBuilder.withArgName( "end-edge" )
-                .withDescription( "Stop condition. Halts generation after the specified edge has been traversed." )
-                .hasArg()
-                .withLongOpt( "end-edge" )
-                .create( "d" ) );
-		opt.addOption( OptionBuilder.withArgName( "end-state" )
-                .withDescription( "Stop condition. Halts generation after the specified state has been reached." )
-                .hasArg()
-                .withLongOpt( "end-state" )
-                .create( "t" ) );
-		opt.addOption( OptionBuilder.withArgName( "end-requirement" )
-                .withDescription( "Stop condition. Halts generation after the specified requirements has been reached." )
-                .hasArg()
-                .withLongOpt( "end-requirement" )
-                .create( "r" ) );
-		opt.addOption( OptionBuilder.withArgName( "requirement-coverage" )
-                .withDescription( "Stop condition. Halts generation after the specified requirement-coverage has been met. " +
-		                          "The given value shall be a real number between 0 and 100" )
-                .hasArg()
-                .withLongOpt( "requirement-coverage" )
-                .create( "q" ) );
 		opt.addOption( OptionBuilder.withArgName( "log-coverage" )
 				.withDescription( "Prints the test coverage of the graph during execution every " +
 			              "<n>. The printout goes to the log file defined in " +
@@ -414,66 +401,32 @@ public class CLI
 	 */
 	private void buildOfflineCLI()
 	{
-		opt.addOption( "a", "statistics", false, "Prints the statistics of the test, at the end of the run." );
-		opt.addOption( "x", "extended",   false, "Use an extended finite state machine to handle the model." );
-		opt.addOption( OptionBuilder.withArgName( "generator" )
-                .withDescription( "The generator to be used when traversing the model. The generator can be " +
-                		          "either 'random' which will generate a sequence using a randomized path algorithm. " +
-                		          "or 'dijkstra' which will generate a sequence using Dijkstras shortest path algorithm." )
+		opt.addOption( "a", false, "Prints the statistics of the test, at the end of the run." );
+		opt.addOption( "x", false, "Use an extended finite state machine to handle the model." );
+		opt.addOption( OptionBuilder.withArgName( "stop-condition" )
+                .withDescription( "Stop condition. Halts generation after the specified stop-conditon(s) has been met. " +
+		                          "At least 1 condition can be given. If more are given, the condition that meets" +
+		                          "it's stop-condition first, will cause the generation to halt.\n" +
+		                  		"Each stop condition must be followed with a : and then an integer between 1-100, representing the" + 
+		                		" percentage that the stop-condition should reach. Every stop-condition is seperated with a |. " +
+		                		"A list of valid stop-conditions are:\n" + generateListOfValidStopConditions() )
                 .hasArg()
-                .withLongOpt( "generator" )
+                .create( "s" ) );
+		opt.addOption( OptionBuilder.withArgName( "generator" )
+                .withDescription( "The generator to be used when traversing the model. At least 1 generator must be given. " +
+                		"Every generator is seperated with a |.\nA list of valid generators are:\n" + generateListOfValidGenerators() )
+                .hasArg()
                 .create( "g" ) );
 		opt.addOption( OptionBuilder.withArgName( "file" )
                 .withDescription( "The file (or folder) containing graphml formatted files." )
                 .hasArg()
-                .withLongOpt( "input_graphml" )
                 .create( "f" ) );
-		opt.addOption( OptionBuilder.withArgName( "length" )
-                .withDescription( "Stop condition. Halts generation after the specified length of the test sequence is reached. " +
-                		          "Supply an integer, which tells MBT how many edges a test sequence shall contain." )
-                .hasArg()
-                .withLongOpt( "length" )
-                .create( "l" ) );
-		opt.addOption( OptionBuilder.withArgName( "edge-coverage" )
-                .withDescription( "Stop condition. Halts generation after the specified edge-coverage has been met. " +
-		                          "The given value shall be a real number between 0 and 100" )
-                .hasArg()
-                .withLongOpt( "edge-coverage" )
-                .create( "e" ) );
-		opt.addOption( OptionBuilder.withArgName( "state-coverage" )
-                .withDescription( "Stop condition. Halts generation after the specified state-coverage has been met. " +
-		                          "The given value shall be a real number between 0 and 100" )
-                .hasArg()
-                .withLongOpt( "state-coverage" )
-                .create( "s" ) );
-		opt.addOption( OptionBuilder.withArgName( "end-edge" )
-                .withDescription( "Stop condition. Halts generation after the specified edge has been traversed." )
-                .hasArg()
-                .withLongOpt( "end-edge" )
-                .create( "d" ) );
-		opt.addOption( OptionBuilder.withArgName( "end-state" )
-                .withDescription( "Stop condition. Halts generation after the specified state has been reached." )
-                .hasArg()
-                .withLongOpt( "end-state" )
-                .create( "t" ) );
-		opt.addOption( OptionBuilder.withArgName( "end-requirement" )
-                .withDescription( "Stop condition. Halts generation after the specified requirements has been reached." )
-                .hasArg()
-                .withLongOpt( "end-requirement" )
-                .create( "r" ) );
-		opt.addOption( OptionBuilder.withArgName( "requirement-coverage" )
-                .withDescription( "Stop condition. Halts generation after the specified requirement-coverage has been met. " +
-		                          "The given value shall be a real number between 0 and 100" )
-                .hasArg()
-                .withLongOpt( "requirement-coverage" )
-                .create( "q" ) );
 		opt.addOption( OptionBuilder.withArgName( "log-coverage" )
 				.withDescription( "Prints the test coverage of the graph during execution every " +
 			              "<n>. The printout goes to the log file defined in " +
 			              "mbt.properties, and only, if at least INFO level is set in " +
 			              "that same file." )
                 .hasArg()
-                .withLongOpt( "log-coverage" )
                 .create( "o" ) );
 	}
 	
@@ -556,72 +509,48 @@ public class CLI
         getMbt().enableExtended( cl.hasOption( "x" ) );
 
 		/**
-		 * Set stop condition
+		 * Check that a stop-condition exists
 		 */
-        if ( !cl.hasOption( "d" ) &&
-           	 !cl.hasOption( "t" ) &&
-        	 !cl.hasOption( "e" ) &&
-        	 !cl.hasOption( "s" ) &&
-        	 !cl.hasOption( "l" ) &&
-        	 !cl.hasOption( "r" ) &&
-        	 !cl.hasOption( "q" ) )
+        if ( !cl.hasOption( "s" ) )
         {
-        	System.err.println( "A stop condition must be supplied, See options: -d -t -e -s -l" );
+        	System.err.println( "A stop condition must be supplied, See option -s" );
         	System.err.println( "Type 'java -jar mbt.jar help offline' for help." );
             return;	            	
         }
-        if( cl.hasOption( "d" ) )
-		{
-        	getMbt().addCondition( Keywords.CONDITION_REACHED_EDGE, cl.getOptionValue( "g" ) ); 
-		}
-		if( cl.hasOption( "t" ) )
-		{
-			getMbt().addCondition( Keywords.CONDITION_REACHED_STATE, cl.getOptionValue( "t" ) ); 
-		}
-		if( cl.hasOption( "e" ) )
-		{
-			getMbt().addCondition( Keywords.CONDITION_EDGE_COVERAGE, cl.getOptionValue( "e" ) ); 
-		}
-		if( cl.hasOption( "s" ) )
-		{
-			getMbt().addCondition( Keywords.CONDITION_STATE_COVERAGE, cl.getOptionValue( "s" ) ); 
-		}
-		if( cl.hasOption( "l" ) )
-		{
-			getMbt().addCondition( Keywords.CONDITION_TEST_LENGTH, cl.getOptionValue( "l" ) ); 
-		}
-		if( cl.hasOption( "r" ) )
-		{
-			getMbt().addCondition( Keywords.CONDITION_REACHED_REQUIREMENT, cl.getOptionValue( "r" ) ); 
-		}
-		if( cl.hasOption( "q" ) )
-		{
-			getMbt().addCondition( Keywords.CONDITION_REQUIREMENT_COVERAGE, cl.getOptionValue( "q" ) ); 
-		}
-
 		/**
-		 * Get the generator
+		 * Check that a generator exists
 		 */
         if ( !cl.hasOption( "g" ) )
         {
-        	System.err.println( "Missing the generator, See -g (--generator)" );
+        	System.err.println( "Missing the generator, See option -g" );
         	System.err.println( "Type 'java -jar mbt.jar help offline' for help." );
             return;	            	
         }
-        else if ( cl.getOptionValue( "g" ).equals( "random" ) )
+
+        /*
+         * Set the stop-conditions(s)
+         */
+		if( cl.hasOption( "s" ) )
 		{
-        	getMbt().setGenerator( Keywords.GENERATOR_RANDOM );
+			String argument = cl.getOptionValue( "s" );
+			String[] stopConditions = argument.split( "\\|" );
+			for (int i = 0; i < stopConditions.length; i++) {
+				String[] stopCondition = stopConditions[ i ].trim().split( ":" );
+				getMbt().addAlternativeCondition( Keywords.getKeyword( stopCondition[ 0 ].trim() ), stopCondition[ 1 ].trim() );
+			}
 		}
-        else if ( cl.getOptionValue( "g" ).equals( "dijkstra" ) )
+
+        /*
+         * Set the generators(s)
+         */
+        if ( cl.hasOption( "g" ) )
 		{
-        	getMbt().setGenerator( Keywords.GENERATOR_SHORTEST );
+			String argument = cl.getOptionValue( "g" );
+			String[] genrators = argument.split( "\\|" );
+			for (int i = 0; i < genrators.length; i++) {
+				getMbt().setGenerator( Keywords.getKeyword( genrators[ 0 ].trim() ) );
+			}
 		}
-        else
-        {
-        	System.err.println( "Incorrect generator supplied, See -g (--generator)" );
-        	System.err.println( "Type 'java -jar mbt.jar help offline' for help." );
-            return;	            	
-        }
 
 		if( cl.hasOption( "o" ) )
 		{
@@ -649,6 +578,146 @@ public class CLI
 		{
 			System.out.println( getMbt().getStatisticsString() );
 		}
+	}
+
+	/**
+	 * Run the online command
+	 */
+	private void RunCommandOnline( CommandLine cl )
+	{
+		/**
+		 * Get the model from the graphml file (or folder)
+		 */
+        if ( !cl.hasOption( "f" ) )
+        {
+        	System.err.println( "Missing the input graphml file (or folder), See -f (--intput_graphml)" );
+        	System.err.println( "Type 'java -jar mbt.jar help offline' for help." );
+            return;	            	
+        }
+        getMbt().readGraph( cl.getOptionValue( "f" ) );
+        
+        /**
+		 * Set EFSM
+		 */
+        getMbt().enableExtended( cl.hasOption( "x" ) );
+
+		/**
+		 * Check that a stop-condition exists
+		 */
+        if ( !cl.hasOption( "s" ) )
+        {
+        	System.err.println( "A stop condition must be supplied, See options: -d -t -e -s -l" );
+        	System.err.println( "Type 'java -jar mbt.jar help offline' for help." );
+            return;	            	
+        }
+		/**
+		 * Check that a generator exists
+		 */
+        if ( !cl.hasOption( "g" ) )
+        {
+        	System.err.println( "Missing the generator, See -g (--generator)" );
+        	System.err.println( "Type 'java -jar mbt.jar help offline' for help." );
+            return;	            	
+        }
+
+        /*
+         * Set the stop-conditions(s)
+         */
+		if( cl.hasOption( "s" ) )
+		{
+			String argument = cl.getOptionValue( "s" );
+			String[] stopConditions = argument.split( "\\|" );
+			for (int i = 0; i < stopConditions.length; i++) {
+				String[] stopCondition = stopConditions[ i ].trim().split( ":" );
+				getMbt().addAlternativeCondition( Keywords.getKeyword( stopCondition[ 0 ].trim() ), stopCondition[ 1 ].trim() );
+			}
+		}
+
+        /*
+         * Set the generators(s)
+         */
+        if ( cl.hasOption( "g" ) )
+		{
+			String argument = cl.getOptionValue( "g" );
+			String[] genrators = argument.split( "\\|" );
+			for (int i = 0; i < genrators.length; i++) {
+				getMbt().setGenerator( Keywords.getKeyword( genrators[ 0 ].trim() ) );
+			}
+		}
+        
+        /**
+		 * Set backtracking
+		 */
+        getMbt().enableBacktrack( cl.hasOption( "b" ) );
+
+		Timer t = new Timer();
+		if( cl.hasOption( "o" ) )
+		{
+			logger.info( "Append coverage to log every: " + Integer.valueOf( cl.getOptionValue( "o" ) ).longValue() + " seconds" );
+			
+			t.schedule(	new TimerTask()	
+			{
+				public void run() 
+				{
+					logger.info( getMbt().getStatisticsCompact() );
+				}
+			}, 500, Integer.valueOf( cl.getOptionValue( "o" ) ).longValue() * 1000 );
+		}
+	
+		if( cl.hasOption( "c" ) )
+		{
+			getMbt().executePath( cl.getOptionValue( "c" ) );
+		}
+		else
+		{
+			boolean firstLine = true;
+			char input = 0;
+			String[] stepPair = null;
+			while(getMbt().hasNextStep())
+			{
+				if ( firstLine == false )
+				{
+					input = getInput();
+					logger.debug("Recieved: '"+ input+"'");
+					if(input == '2')
+					{
+						break;
+					}
+					if(input == '1')
+					{
+						getMbt().backtrack();
+						continue;
+					}
+				}
+				else
+				{
+					firstLine = false;
+				}
+				stepPair = getMbt().getNextStep();
+				logger.debug("Execute: " + stepPair[0]);
+				System.out.println(stepPair[0]);
+	
+				input = getInput(); 
+				logger.debug("Recieved: '"+ input+"'");
+				if(input == '2')
+				{
+					break;
+				}
+				if(input == '1')
+				{
+					getMbt().backtrack();
+					continue;
+				}
+				logger.debug("Verify: " + stepPair[1]);
+				System.out.println(stepPair[1]);
+			}
+		}
+		if( cl.hasOption( "a" ) )
+		{
+			System.out.println( getMbt().getStatisticsString() );
+		}
+		
+		t.cancel();
 	}
 
 	/**
@@ -734,175 +803,6 @@ public class CLI
 	    }
 		getMbt().readGraph( cl.getOptionValue( "f" ) );
 		getMbt().writeModel( System.out );
-	}
-
-	/**
-	 * Run the online command
-	 */
-	private void RunCommandOnline( CommandLine cl )
-	{
-		/**
-		 * Get the model from the graphml file (or folder)
-		 */
-        if ( !cl.hasOption( "f" ) )
-        {
-        	System.err.println( "Missing the input graphml file (or folder), See -f (--intput_graphml)" );
-        	System.err.println( "Type 'java -jar mbt.jar help offline' for help." );
-            return;	            	
-        }
-        getMbt().readGraph( cl.getOptionValue( "f" ) );
-        
-        /**
-		 * Set EFSM
-		 */
-        getMbt().enableExtended( cl.hasOption( "x" ) );
-
-		/**
-		 * Set stop condition
-		 */
-        if ( !cl.hasOption( "d" ) &&
-           	 !cl.hasOption( "t" ) &&
-        	 !cl.hasOption( "e" ) &&
-        	 !cl.hasOption( "s" ) &&
-        	 !cl.hasOption( "u" ) &&
-        	 !cl.hasOption( "l" ) &&
-        	 !cl.hasOption( "r" ) &&
-        	 !cl.hasOption( "q" ) )
-        {
-        	System.err.println( "A stop condition must be supplied, See options: -d -t -e -s -l" );
-        	System.err.println( "Type 'java -jar mbt.jar help offline' for help." );
-            return;	            	
-        }
-        if( cl.hasOption( "d" ) )
-		{
-        	getMbt().addCondition( Keywords.CONDITION_REACHED_EDGE, cl.getOptionValue( "g" ) ); 
-		}
-		if( cl.hasOption( "t" ) )
-		{
-			getMbt().addCondition( Keywords.CONDITION_REACHED_STATE, cl.getOptionValue( "t" ) ); 
-		}
-		if( cl.hasOption( "e" ) )
-		{
-			getMbt().addCondition( Keywords.CONDITION_EDGE_COVERAGE, cl.getOptionValue( "e" ) ); 
-		}
-		if( cl.hasOption( "s" ) )
-		{
-			getMbt().addCondition( Keywords.CONDITION_STATE_COVERAGE, cl.getOptionValue( "s" ) ); 
-		}
-		if( cl.hasOption( "l" ) )
-		{
-			getMbt().addCondition( Keywords.CONDITION_TEST_LENGTH, cl.getOptionValue( "l" ) ); 
-		}
-		if( cl.hasOption( "u" ) )
-		{
-			getMbt().addCondition( Keywords.CONDITION_TEST_DURATION, cl.getOptionValue( "u" ) ); 
-		}
-		if( cl.hasOption( "r" ) )
-		{
-			getMbt().addCondition( Keywords.CONDITION_REACHED_REQUIREMENT, cl.getOptionValue( "r" ) ); 
-		}
-		if( cl.hasOption( "q" ) )
-		{
-			getMbt().addCondition( Keywords.CONDITION_REQUIREMENT_COVERAGE, cl.getOptionValue( "q" ) ); 
-		}
-
-		/**
-		 * Get the generator
-		 */
-        if ( !cl.hasOption( "g" ) )
-        {
-        	System.err.println( "Missing the generator, See -g (--generator)" );
-        	System.err.println( "Type 'java -jar mbt.jar help offline' for help." );
-            return;	            	
-        }
-        else if ( cl.getOptionValue( "g" ).equals( "random" ) )
-		{
-        	getMbt().setGenerator( Keywords.GENERATOR_RANDOM );
-		}
-        else if ( cl.getOptionValue( "g" ).equals( "dijkstra" ) )
-		{
-        	getMbt().setGenerator( Keywords.GENERATOR_SHORTEST );
-		}
-        else
-        {
-        	System.err.println( "Incorrect generator supplied, See -g (--generator)" );
-        	System.err.println( "Type 'java -jar mbt.jar help offline' for help." );
-            return;	            	
-        }
-        
-        /**
-		 * Set backtracking
-		 */
-        getMbt().enableBacktrack( cl.hasOption( "b" ) );
-
-		Timer t = new Timer();
-		if( cl.hasOption( "o" ) )
-		{
-			logger.info( "Append coverage to log every: " + Integer.valueOf( cl.getOptionValue( "o" ) ).longValue() + " seconds" );
-			
-			t.schedule(	new TimerTask()	
-			{
-				public void run() 
-				{
-					logger.info( getMbt().getStatisticsCompact() );
-				}
-			}, 500, Integer.valueOf( cl.getOptionValue( "o" ) ).longValue() * 1000 );
-		}
-	
-		if( cl.hasOption( "c" ) )
-		{
-			getMbt().executePath( cl.getOptionValue( "c" ) );
-		}
-		else
-		{
-			boolean firstLine = true;
-			char input = 0;
-			String[] stepPair = null;
-			while(getMbt().hasNextStep())
-			{
-				if ( firstLine == false )
-				{
-					input = getInput();
-					logger.debug("Recieved: '"+ input+"'");
-					if(input == '2')
-					{
-						break;
-					}
-					if(input == '1')
-					{
-						getMbt().backtrack();
-						continue;
-					}
-				}
-				else
-				{
-					firstLine = false;
-				}
-				stepPair = getMbt().getNextStep();
-				logger.debug("Execute: " + stepPair[0]);
-				System.out.println(stepPair[0]);
-	
-				input = getInput(); 
-				logger.debug("Recieved: '"+ input+"'");
-				if(input == '2')
-				{
-					break;
-				}
-				if(input == '1')
-				{
-					getMbt().backtrack();
-					continue;
-				}
-				logger.debug("Verify: " + stepPair[1]);
-				System.out.println(stepPair[1]);
-			}
-		}
-		if( cl.hasOption( "a" ) )
-		{
-			System.out.println( getMbt().getStatisticsString() );
-		}
-		
-		t.cancel();
 	}
 }
 	
