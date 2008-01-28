@@ -13,6 +13,10 @@ public class CombinedPathGenerator extends PathGenerator {
 
 	private Stack paths = new Stack();
 
+	public CombinedPathGenerator() {
+		super();
+	}
+	
 	public CombinedPathGenerator(PathGenerator generator) {
 		super();
 		addPathGenerator(generator);
