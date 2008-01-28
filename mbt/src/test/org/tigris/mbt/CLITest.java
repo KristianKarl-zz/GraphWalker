@@ -43,6 +43,11 @@ public class CLITest extends TestCase {
 	{
 		return new InputStream() {
 			public int read() throws IOException {
+				try {
+					Thread.sleep( 300 );
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 				return '0';
 			}
 		};
