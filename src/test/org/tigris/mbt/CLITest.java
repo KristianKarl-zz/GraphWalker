@@ -77,27 +77,25 @@ public class CLITest extends TestCase {
 
     
     /**
-     * Test command: offline -f graphml/reqtags/ExtendedMain.graphml -g RANDOM -s EDGE_COVERAGE:100
-     */
-    public void testOfflineRandomEdgeCoverage()
-    {
-		String args[] = { "offline", "-f", "graphml/reqtags/ExtendedMain.graphml", "-g", "RANDOM", "-s", "EDGE_COVERAGE:100" } ;
-    	runCommand( args );
-    	assertTrue( "No error messgaes should occur.", errMsg.isEmpty()  );
-    	String[] newLines = outMsg.split("\r\n|\r|\n");
-    	assertTrue( "At least 78, or more lines should be returned.", newLines.length >= 78 );
-    }
-
-    /**
      * Test command: offline -f graphml/reqtags/ExtendedMain.graphml -g SHORTEST -s EDGE_COVERAGE:100
      */
     public void testOfflineShortestEdgeCoverage()
     {
-		String args[] = { "offline", "-f", "graphml/reqtags/ExtendedMain.graphml", "-g", "SHORTEST", "-s", "EDGE_COVERAGE:100" } ;
+		String args[] = { "offline", "-f", "graphml/reqtags/ExtendedMain.graphml", "-g", "SHORTEST", "-s", "EDGE_COVERAGE:100" };
     	runCommand( args );
     	assertTrue( "No error messages should occur.", errMsg.isEmpty()  );
-    	String[] newLines = outMsg.split("\r\n|\r|\n");
-    	assertTrue( "At least 78, or more lines should be returned.", newLines.length == 78 );
+    	assertTrue( "At least 78, or more lines should be returned.", outMsg.split("\r\n|\r|\n").length == 78 );
+    }
+
+    /**
+     * Test command: offline -f graphml/reqtags/ExtendedMain.graphml -g RANDOM -s EDGE_COVERAGE:100
+     */
+    public void testOfflineRandomEdgeCoverage()
+    {
+		String args[] = { "offline", "-f", "graphml/reqtags/ExtendedMain.graphml", "-g", "RANDOM", "-s", "EDGE_COVERAGE:100" };
+    	runCommand( args );
+    	assertTrue( "No error messgaes should occur.", errMsg.isEmpty()  );
+    	assertTrue( "At least 78, or more lines should be returned.", outMsg.split("\r\n|\r|\n").length >= 78 );
     }
 
     /**
@@ -105,11 +103,10 @@ public class CLITest extends TestCase {
      */
     public void testOfflineRandomStateCoverage()
     {
-		String args[] = { "offline", "-f", "graphml/reqtags/ExtendedMain.graphml", "-g", "RANDOM", "-s", "STATE_COVERAGE:100" } ;
+		String args[] = { "offline", "-f", "graphml/reqtags/ExtendedMain.graphml", "-g", "RANDOM", "-s", "STATE_COVERAGE:100" };
     	runCommand( args );
     	assertTrue( "No error messages should occur.", errMsg.isEmpty()  );
-    	String[] newLines = outMsg.split("\r\n|\r|\n");
-    	assertTrue( "At least 24, or more lines should be returned.", newLines.length >= 24 );
+    	assertTrue( "At least 24, or more lines should be returned.", outMsg.split("\r\n|\r|\n").length >= 24 );
     }
 
     /**
@@ -117,11 +114,10 @@ public class CLITest extends TestCase {
      */
     public void testOfflineShortestStateCoverage()
     {
-		String args[] = { "offline", "-f", "graphml/reqtags/ExtendedMain.graphml", "-g", "SHORTEST", "-s", "STATE_COVERAGE:100" } ;
+		String args[] = { "offline", "-f", "graphml/reqtags/ExtendedMain.graphml", "-g", "SHORTEST", "-s", "STATE_COVERAGE:100" };
     	runCommand( args );
     	assertTrue( "No error messages should occur.", errMsg.isEmpty()  );
-    	String[] newLines = outMsg.split("\r\n|\r|\n");
-    	assertTrue( "At least 24, or more lines should be returned.", newLines.length == 24 );
+    	assertTrue( "At least 24, or more lines should be returned.", outMsg.split("\r\n|\r|\n").length == 24 );
     }
 
     
@@ -130,11 +126,10 @@ public class CLITest extends TestCase {
      */
     public void testOfflineShortestReachedRequirement()
     {
-		String args[] = { "offline", "-f", "graphml/reqtags/ExtendedMain.graphml", "-g", "SHORTEST", "-s", "REACHED_REQUIREMENT:req 78" } ;
+		String args[] = { "offline", "-f", "graphml/reqtags/ExtendedMain.graphml", "-g", "SHORTEST", "-s", "REACHED_REQUIREMENT:req 78" };
     	runCommand( args );
     	assertTrue( "No error messages should occur.", errMsg.isEmpty()  );
-    	String[] newLines = outMsg.split("\r\n|\r|\n");
-    	assertTrue( "At least 6, or more lines should be returned.", newLines.length == 6 );
+    	assertTrue( "At least 6, or more lines should be returned.", outMsg.split("\r\n|\r|\n").length == 6 );
     }
 
     
@@ -143,11 +138,10 @@ public class CLITest extends TestCase {
      */
     public void testListReqTags()
     {
-		String args[] = { "requirements", "-f", "graphml/reqtags/ExtendedMain.graphml" } ;
+		String args[] = { "requirements", "-f", "graphml/reqtags/ExtendedMain.graphml" };
     	runCommand( args );
     	assertTrue( "No error messages should occur.", errMsg.isEmpty()  );
-    	String[] newLines = outMsg.split("\r\n|\r|\n");
-    	assertTrue( "At least 6, or more lines should be returned.", newLines.length == 6 );
+    	assertTrue( "At least 6, or more lines should be returned.", outMsg.split("\r\n|\r|\n").length == 6 );
     }
 
     
@@ -157,7 +151,7 @@ public class CLITest extends TestCase {
      */
     public void testNoArgs()
     {
-		String args[] = {  } ;
+		String args[] = {  };
     	runCommand( args );
 		pattern = Pattern.compile( "Type 'java -jar mbt.jar help' for usage.", Pattern.MULTILINE );
 		matcher = pattern.matcher( errMsg );
@@ -171,7 +165,7 @@ public class CLITest extends TestCase {
      */
     public void testGenerateCodeFromTemplate()
     {
-		String args[] = { "source", "-f", "graphml/methods/Main.graphml", "-t", "templates/perl.template" } ;
+		String args[] = { "source", "-f", "graphml/methods/Main.graphml", "-t", "templates/perl.template" };
     	runCommand( args );
     	assertTrue( "No error messages should occur.", errMsg.isEmpty()  );
 		pattern = Pattern.compile( " implements the ", Pattern.MULTILINE );
@@ -186,7 +180,7 @@ public class CLITest extends TestCase {
      */
     public void testNoVerticesWithNoInEdges()
     {
-		String args[] = { "offline", "-f", "graphml/misc/missing_inedges.graphml", "-g", "RANDOM", "-s", "EDGE_COVERAGE:100" } ;
+		String args[] = { "offline", "-f", "graphml/misc/missing_inedges.graphml", "-g", "RANDOM", "-s", "EDGE_COVERAGE:100" };
     	runCommand( args );
 		pattern = Pattern.compile( "^No in-edges! The vertex: .* is not reachable, from file: 'graphml.misc.missing_inedges.graphml'$", Pattern.MULTILINE );
 		matcher = pattern.matcher( errMsg );
@@ -200,7 +194,7 @@ public class CLITest extends TestCase {
      */
     public void testVertexWithNoInEdges()
     {
-		String args[] = { "offline", "-f", "graphml/misc/missing_inedges.graphml", "-g", "RANDOM", "-s", "EDGE_COVERAGE:100" } ;
+		String args[] = { "offline", "-f", "graphml/misc/missing_inedges.graphml", "-g", "RANDOM", "-s", "EDGE_COVERAGE:100" };
     	runCommand( args );
 		pattern = Pattern.compile( "No in-edges! The vertex: 'v_InvalidKey', INDEX=9 is not reachable.", Pattern.MULTILINE );
 		matcher = pattern.matcher( errMsg );
@@ -214,7 +208,7 @@ public class CLITest extends TestCase {
      */
     public void testRandom10seconds()
     {
-		String args[] = { "online", "-f", "graphml/methods/Main.graphml", "-g", "RANDOM", "-s", "TEST_DURATION:10" } ;
+		String args[] = { "online", "-f", "graphml/methods/Main.graphml", "-g", "RANDOM", "-s", "TEST_DURATION:10" };
     	InputStream oldInputStream = System.in; //backup
     	System.setIn( redirectIn() );
 		long startTime = System.currentTimeMillis();
@@ -232,7 +226,7 @@ public class CLITest extends TestCase {
      */
     public void testCountMethods()
     {
-		String args[] = { "methods", "-f", "graphml/methods/Main.graphml" } ;
+		String args[] = { "methods", "-f", "graphml/methods/Main.graphml" };
     	runCommand( args );
     	assertTrue( "No error messages should occur.", errMsg.isEmpty()  );
 		pattern = Pattern.compile( "e_Cancel\\s+e_CloseApp\\s+e_CloseDB\\s+e_CloseDialog\\s+e_EnterCorrectKey\\s+e_EnterInvalidKey\\s+e_Initialize\\s+e_No\\s+e_Start\\s+e_StartWithDatabase\\s+e_Yes\\s+v_EnterMasterCompositeMasterKey\\s+v_InvalidKey\\s+v_KeePassNotRunning\\s+v_MainWindowEmpty\\s+v_MainWindow_DB_Loaded\\s+v_SaveBeforeCloseLock", Pattern.MULTILINE );
@@ -248,7 +242,7 @@ public class CLITest extends TestCase {
      */
     public void testReservedKeywords()
     {
-		String args[] = { "methods", "-f", "graphml/test24" } ;
+		String args[] = { "methods", "-f", "graphml/test24" };
     	runCommand( args );
 		pattern = Pattern.compile( "Edge has a label 'BACKTRACK', which is a reserved keyword, in file: '.*graphml.test24.(Camera|Time).graphml'", Pattern.MULTILINE );
 		matcher = pattern.matcher( errMsg );
