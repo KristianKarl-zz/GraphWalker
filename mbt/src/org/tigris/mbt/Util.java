@@ -5,12 +5,34 @@ import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Method;
+import java.util.Iterator;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 import org.apache.log4j.PropertyConfigurator;
 import org.apache.log4j.SimpleLayout;
 import org.apache.log4j.WriterAppender;
+import org.jdom.Element;
+import org.jdom.input.SAXBuilder;
+import org.tigris.mbt.conditions.CombinationalCondition;
+import org.tigris.mbt.conditions.EdgeCoverage;
+import org.tigris.mbt.conditions.NeverCondition;
+import org.tigris.mbt.conditions.ReachedEdge;
+import org.tigris.mbt.conditions.ReachedRequirement;
+import org.tigris.mbt.conditions.ReachedState;
+import org.tigris.mbt.conditions.RequirementCoverage;
+import org.tigris.mbt.conditions.StateCoverage;
+import org.tigris.mbt.conditions.StopCondition;
+import org.tigris.mbt.conditions.TestCaseLength;
+import org.tigris.mbt.conditions.TimeDuration;
+import org.tigris.mbt.generators.CodeGenerator;
+import org.tigris.mbt.generators.CombinedPathGenerator;
+import org.tigris.mbt.generators.ListGenerator;
+import org.tigris.mbt.generators.PathGenerator;
+import org.tigris.mbt.generators.RandomPathGenerator;
+import org.tigris.mbt.generators.RequirementsGenerator;
+import org.tigris.mbt.generators.ShortestPathGenerator;
 
 import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
 import edu.uci.ics.jung.graph.impl.DirectedSparseVertex;
@@ -155,4 +177,170 @@ public class Util {
 		}
 		return true;
 	}
+	
+	public static StopCondition getCondition(int conditionType, String conditionValue)
+	{
+		StopCondition condition = null;
+		switch (conditionType) 
+		{
+			case Keywords.CONDITION_EDGE_COVERAGE:
+				condition = new EdgeCoverage(Double.parseDouble(conditionValue)/100);
+				break;
+			case Keywords.CONDITION_REACHED_EDGE:
+				condition = new ReachedEdge(conditionValue);
+				break;
+			case Keywords.CONDITION_REACHED_STATE:
+				condition = new ReachedState(conditionValue);
+				break;
+			case Keywords.CONDITION_STATE_COVERAGE:
+				condition = new StateCoverage(Double.parseDouble(conditionValue)/100);
+				break;
+			case Keywords.CONDITION_TEST_DURATION:
+				condition = new TimeDuration(Long.parseLong(conditionValue));
+				break;
+			case Keywords.CONDITION_TEST_LENGTH:
+				condition = new TestCaseLength(Integer.parseInt(conditionValue));
+				break;
+			case Keywords.CONDITION_NEVER:
+				condition = new NeverCondition();
+				break;
+			case Keywords.CONDITION_REQUIREMENT_COVERAGE:
+				condition = new RequirementCoverage(Double.parseDouble(conditionValue)/100);
+				break;
+			case Keywords.CONDITION_REACHED_REQUIREMENT:
+				condition = new ReachedRequirement(conditionValue);
+				break;
+			default:
+				throw new RuntimeException("Unsupported stop condition selected: "+ conditionType);
+		}
+		return condition ;
+	}
+	
+	public static PathGenerator getGenerator(int generatorType)
+	{
+		PathGenerator generator = null;
+		
+		switch (generatorType) 
+		{
+			case Keywords.GENERATOR_RANDOM:
+				generator = new RandomPathGenerator();
+				break;
+
+			case Keywords.GENERATOR_SHORTEST:
+				generator = new ShortestPathGenerator();
+				break;
+			
+			case Keywords.GENERATOR_STUB:
+				generator = new CodeGenerator();
+				break;
+				
+			case Keywords.GENERATOR_LIST:
+				generator = new ListGenerator();
+				break;
+				
+			case Keywords.GENERATOR_REQUIREMENTS:
+				generator = new RequirementsGenerator();
+				break;
+			
+			default:
+				throw new RuntimeException("Generator not implemented yet!");
+		}
+
+		return generator;
+	}
+	
+	/**
+	 * @param fileName The XML settings file
+	 */
+	public static ModelBasedTesting loadMbtFromXml( String fileName )
+	{
+		ModelBasedTesting mbt = new ModelBasedTesting();
+		
+		SAXBuilder parser = new SAXBuilder( "org.apache.crimson.parser.XMLReaderImpl", false );		
+				
+		try
+		{
+			Element root = parser.build( fileName ).getRootElement();
+			List models = root.getChildren("MODEL");
+			
+			if(models.size()==0)
+				throw new RuntimeException("Model is missing from XML");
+				
+			for(Iterator i=models.iterator();i.hasNext();)
+			{
+				mbt.readGraph((String) i.next());
+			}
+			
+			if(root.getAttributeValue("EXTENDED").equalsIgnoreCase("true"))
+			{
+				mbt.enableExtended(true);
+				mbt.setStartupScript(root.getChildText("SCRIPT"));
+			}
+			 
+			List generators = root.getChildren("GENERATOR");
+
+			if(generators.size()==0)
+				throw new RuntimeException("Generator is missing from XML");
+
+			PathGenerator generator;
+			if(generators.size() > 1)
+			{
+				generator = new CombinedPathGenerator();
+				for(Iterator i=generators.iterator();i.hasNext();)
+				{
+					((CombinedPathGenerator)generator).addPathGenerator(getGenerator((Element) i.next()));
+				}
+			} else {
+				generator = getGenerator((Element) generators.get(0));
+			}
+			if(generator == null)
+				throw new RuntimeException("Failed to set generator");
+			mbt.setGenerator(generator);
+		}
+		catch (Exception e) {
+			// TODO: handle exception
+		}
+		return mbt;
+	}
+
+	private static PathGenerator getGenerator(Element generator) {
+		int generatorType = Keywords.getGenerator(generator.getAttributeValue("TYPE"));
+		PathGenerator generatorObject = getGenerator(generatorType);
+		StopCondition stopCondition = getCondition(generator.getChildren());
+		if(stopCondition != null )
+			generatorObject.setStopCondition( stopCondition );
+		return generatorObject;
+	}
+
+	private static StopCondition getCondition(List conditions)
+	{
+		StopCondition condition = null;
+		if(conditions.size()>1)
+		{
+			condition = new CombinationalCondition();
+			for(Iterator i = conditions.iterator(); i.hasNext();)
+				((CombinationalCondition)condition).add(getCondition((Element) i.next()));
+		} else if(conditions.size() == 1){
+			condition = getCondition((Element) conditions.get(0));
+		}
+		return condition;
+	}
+
+	private static StopCondition getCondition(Element condition)
+	{
+		StopCondition stopCondition = null;
+		if(condition.getName().equalsIgnoreCase("AND")) {
+			stopCondition = new CombinationalCondition();
+			//TODO iterate and add children
+		} else if(condition.getName().equalsIgnoreCase("OR")) {
+			stopCondition = new CombinationalCondition();
+			//TODO iterate and add children
+		} else if(condition.getName().equalsIgnoreCase("CONDITION")){
+			int type = Keywords.getStopCondition(condition.getAttributeValue("TYPE"));
+			String value = condition.getAttributeValue("VALUE");
+			stopCondition = getCondition(type, value);
+		}
+		return stopCondition;
+	}
+
 }

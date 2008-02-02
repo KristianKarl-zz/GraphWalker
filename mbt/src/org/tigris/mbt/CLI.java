@@ -3,9 +3,10 @@ package org.tigris.mbt;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Iterator;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.Vector;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -341,9 +342,9 @@ public class CLI
 	private String generateListOfValidStopConditions()
 	{
 		String list = "";
-		Vector stopConditions = Keywords.getStopConditions();
-		for (int i = 0; i < stopConditions.size(); i++) {
-			list += (String)stopConditions.get( i ) + "\n";
+		Set stopConditions = Keywords.getStopConditions();
+		for (Iterator i = stopConditions.iterator(); i.hasNext();) {
+			list += (String)i.next() + "\n";
 		}
 		return list;
 	}
@@ -351,9 +352,9 @@ public class CLI
 	private String generateListOfValidGenerators()
 	{
 		String list = "";
-		Vector generators = Keywords.getGenerators();
-		for (int i = 0; i < generators.size(); i++) {
-			list += (String)generators.get( i ) + "\n";
+		Set generators = Keywords.getGenerators();
+		for (Iterator i = generators.iterator(); i.hasNext();) {
+			list += (String)i.next() + "\n";
 		}
 		return list;
 	}
@@ -535,11 +536,11 @@ public class CLI
 				String[] stopCondition = stopConditions[ i ].trim().split( ":" );
 				if ( stopCondition.length == 1 )
 				{
-					getMbt().addAlternativeCondition( Keywords.getKeyword( stopCondition[ 0 ].trim() ), "" );					
+					getMbt().addAlternativeCondition( Keywords.getStopCondition( stopCondition[ 0 ].trim() ), "" );					
 				}
 				else
 				{
-					getMbt().addAlternativeCondition( Keywords.getKeyword( stopCondition[ 0 ].trim() ), stopCondition[ 1 ].trim() );
+					getMbt().addAlternativeCondition( Keywords.getStopCondition( stopCondition[ 0 ].trim() ), stopCondition[ 1 ].trim() );
 				}
 			}
 		}
@@ -552,7 +553,7 @@ public class CLI
 			String argument = cl.getOptionValue( "g" );
 			String[] genrators = argument.split( "\\|" );
 			for (int i = 0; i < genrators.length; i++) {
-				getMbt().setGenerator( Keywords.getKeyword( genrators[ 0 ].trim() ) );
+				getMbt().setGenerator( Keywords.getGenerator( genrators[ 0 ].trim() ) );
 			}
 		}
 
@@ -635,11 +636,11 @@ public class CLI
 				String[] stopCondition = stopConditions[ i ].trim().split( ":" );
 				if ( stopCondition.length == 1 )
 				{
-					getMbt().addAlternativeCondition( Keywords.getKeyword( stopCondition[ 0 ].trim() ), "" );					
+					getMbt().addAlternativeCondition( Keywords.getStopCondition( stopCondition[ 0 ].trim() ), "" );					
 				}
 				else
 				{
-					getMbt().addAlternativeCondition( Keywords.getKeyword( stopCondition[ 0 ].trim() ), stopCondition[ 1 ].trim() );
+					getMbt().addAlternativeCondition( Keywords.getStopCondition( stopCondition[ 0 ].trim() ), stopCondition[ 1 ].trim() );
 				}
 			}
 		}
@@ -652,7 +653,7 @@ public class CLI
 			String argument = cl.getOptionValue( "g" );
 			String[] genrators = argument.split( "\\|" );
 			for (int i = 0; i < genrators.length; i++) {
-				getMbt().setGenerator( Keywords.getKeyword( genrators[ 0 ].trim() ) );
+				getMbt().setGenerator( Keywords.getGenerator( genrators[ 0 ].trim() ) );
 			}
 		}
         

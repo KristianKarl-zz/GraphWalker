@@ -1,5 +1,7 @@
 package org.tigris.mbt;
 
+import java.util.Hashtable;
+import java.util.Set;
 import java.util.Vector;
 
 /**
@@ -226,115 +228,79 @@ public class Keywords {
 	/**
 	* Holds the pre-defined list of stop-condition.
 	*/
-	private static Vector stopConditions = new Vector();
+	private static Hashtable stopConditions = new Hashtable();
 
 	/**
 	* Defines the stop-condition strings
 	*/
 	static
 	{
-		stopConditions.add( "REACHED_EDGE" );
-		stopConditions.add( "REACHED_STATE" );
-		stopConditions.add( "EDGE_COVERAGE" );
-		stopConditions.add( "STATE_COVERAGE" );
-		stopConditions.add( "TEST_LENGTH" );
-		stopConditions.add( "TEST_DURATION" );
-		stopConditions.add( "REQUIREMENT_COVERAGE" );
-		stopConditions.add( "REACHED_REQUIREMENT" );
-		stopConditions.add( "NEVER" );
+		stopConditions.put( "REACHED_EDGE", new Integer(CONDITION_REACHED_EDGE) );
+		stopConditions.put( "REACHED_STATE", new Integer(CONDITION_REACHED_STATE) );
+		stopConditions.put( "EDGE_COVERAGE", new Integer(CONDITION_EDGE_COVERAGE) );
+		stopConditions.put( "STATE_COVERAGE", new Integer(CONDITION_STATE_COVERAGE) );
+		stopConditions.put( "TEST_LENGTH", new Integer(CONDITION_TEST_LENGTH) );
+		stopConditions.put( "TEST_DURATION", new Integer(CONDITION_TEST_DURATION) );
+		stopConditions.put( "REQUIREMENT_COVERAGE", new Integer(CONDITION_REQUIREMENT_COVERAGE) );
+		stopConditions.put( "REACHED_REQUIREMENT", new Integer(CONDITION_REACHED_REQUIREMENT) );
+		stopConditions.put( "NEVER", new Integer(CONDITION_NEVER) );
 	}
 
-	static public Vector getStopConditions()
+	static public Set getStopConditions()
 	{
-		return stopConditions;
+		return stopConditions.keySet();
+	}
+	
+	static public boolean isStopCondition(String presumedCondition)
+	{
+		return stopConditions.containsKey(presumedCondition);
+	}
+	
+	/**
+	 * @param stopCondition
+	 * @return if supplied with a valid stop condition returns its constant value. returns -1 if supplied with false value. 
+	 */
+	static public int getStopCondition(String stopCondition)
+	{
+		if(!isStopCondition(stopCondition)) return -1;
+		return ((Integer)stopConditions.get(stopCondition)).intValue();
 	}
 	
 	/**
 	* Holds the pre-defined list of generators
 	*/
-	private static Vector generators = new Vector();
+	private static Hashtable generators = new Hashtable();
 
 	/**
 	* Defines the generators strings
 	*/
 	static
 	{
-		generators.add( "RANDOM" );
-		generators.add( "SHORTEST" );
-		generators.add( "LIST" );
-		generators.add( "STUB" );
-		generators.add( "REQUIREMENTS" );
+		generators.put( "RANDOM", new Integer(GENERATOR_RANDOM) );
+		generators.put( "SHORTEST", new Integer(GENERATOR_SHORTEST) );
+		generators.put( "LIST", new Integer(GENERATOR_LIST) );
+		generators.put( "STUB", new Integer(GENERATOR_STUB) );
+		generators.put( "REQUIREMENTS", new Integer(GENERATOR_REQUIREMENTS) );
 	}
 
-	static public Vector getGenerators()
+	static public Set getGenerators()
 	{
-		return generators;
+		return generators.keySet();
+	}
+	
+	static public boolean isGenerator(String presumedGenerator)
+	{
+		return generators.containsKey(presumedGenerator);
 	}
 	
 	/**
-	 * Does a lookup, and try to find the corresponding keyword, and returns the int assigned to that keyword.
-	 * @param key The string that is used trying to find the keyword.
-	 * @return The keywords corresponding int.
+	 * @param generator
+	 * @return if supplied with a valid generator returns its constant value. returns -1 if supplied with false value. 
 	 */
-	static public int getKeyword( String key )
+	static public int getGenerator(String generator)
 	{
-		if ( key.equalsIgnoreCase( "REACHED_EDGE" ) )
-		{
-			return CONDITION_REACHED_EDGE;
-		}
-		else if ( key.equalsIgnoreCase( "REACHED_STATE" ) )
-		{
-			return CONDITION_REACHED_STATE;
-		}
-		else if ( key.equalsIgnoreCase( "EDGE_COVERAGE" ) )
-		{
-			return CONDITION_EDGE_COVERAGE;
-		}
-		else if ( key.equalsIgnoreCase( "STATE_COVERAGE" ) )
-		{
-			return CONDITION_STATE_COVERAGE;
-		}
-		else if ( key.equalsIgnoreCase( "TEST_LENGTH" ) )
-		{
-			return CONDITION_TEST_LENGTH;
-		}
-		else if ( key.equalsIgnoreCase( "TEST_DURATION" ) )
-		{
-			return CONDITION_TEST_DURATION;
-		}
-		else if ( key.equalsIgnoreCase( "REQUIREMENT_COVERAGE" ) )
-		{
-			return CONDITION_REQUIREMENT_COVERAGE;
-		}
-		else if ( key.equalsIgnoreCase( "REACHED_REQUIREMENT" ) )
-		{
-			return CONDITION_REACHED_REQUIREMENT;
-		}
-		else if ( key.equalsIgnoreCase( "NEVER" ) )
-		{
-			return CONDITION_NEVER;
-		}
-		else if ( key.equalsIgnoreCase( "RANDOM" ) )
-		{
-			return GENERATOR_RANDOM;
-		}
-		else if ( key.equalsIgnoreCase( "SHORTEST" ) )
-		{
-			return GENERATOR_SHORTEST;
-		}
-		else if ( key.equalsIgnoreCase( "LIST" ) )
-		{
-			return GENERATOR_LIST;
-		}
-		else if ( key.equalsIgnoreCase( "STUB" ) )
-		{
-			return GENERATOR_STUB;
-		}
-		else if ( key.equalsIgnoreCase( "REQUIREMENTS" ) )
-		{
-			return GENERATOR_REQUIREMENTS;
-		}
-
-		return -1;
+		if(!isGenerator(generator)) return -1;
+		return ((Integer)generators.get(generator)).intValue();
 	}
+	
 }
