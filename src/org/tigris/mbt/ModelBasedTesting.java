@@ -22,30 +22,14 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Iterator;
 
 import org.apache.log4j.Logger;
-import org.jdom.Document;
-import org.jdom.input.SAXBuilder;
 import org.tigris.mbt.conditions.AlternativeCondition;
 import org.tigris.mbt.conditions.CombinationalCondition;
-import org.tigris.mbt.conditions.EdgeCoverage;
-import org.tigris.mbt.conditions.NeverCondition;
-import org.tigris.mbt.conditions.ReachedEdge;
-import org.tigris.mbt.conditions.ReachedRequirement;
-import org.tigris.mbt.conditions.ReachedState;
-import org.tigris.mbt.conditions.RequirementCoverage;
-import org.tigris.mbt.conditions.StateCoverage;
 import org.tigris.mbt.conditions.StopCondition;
-import org.tigris.mbt.conditions.TestCaseLength;
-import org.tigris.mbt.conditions.TimeDuration;
 import org.tigris.mbt.exceptions.InvalidDataException;
 import org.tigris.mbt.generators.CodeGenerator;
-import org.tigris.mbt.generators.ListGenerator;
 import org.tigris.mbt.generators.PathGenerator;
-import org.tigris.mbt.generators.RandomPathGenerator;
-import org.tigris.mbt.generators.RequirementsGenerator;
-import org.tigris.mbt.generators.ShortestPathGenerator;
 import org.tigris.mbt.io.AbstractModelHandler;
 import org.tigris.mbt.io.GraphML;
 
@@ -68,47 +52,11 @@ public class ModelBasedTesting
 	private String template;
 	private boolean backtracking = false;
 
-	private StopCondition getConditionObject(int conditionType, String conditionValue)
-	{
-		StopCondition condition = null;
-		switch (conditionType) 
-		{
-			case Keywords.CONDITION_EDGE_COVERAGE:
-				condition = new EdgeCoverage(Double.parseDouble(conditionValue)/100);
-				break;
-			case Keywords.CONDITION_REACHED_EDGE:
-				condition = new ReachedEdge(conditionValue);
-				break;
-			case Keywords.CONDITION_REACHED_STATE:
-				condition = new ReachedState(conditionValue);
-				break;
-			case Keywords.CONDITION_STATE_COVERAGE:
-				condition = new StateCoverage(Double.parseDouble(conditionValue)/100);
-				break;
-			case Keywords.CONDITION_TEST_DURATION:
-				condition = new TimeDuration(Long.parseLong(conditionValue));
-				break;
-			case Keywords.CONDITION_TEST_LENGTH:
-				condition = new TestCaseLength(Integer.parseInt(conditionValue));
-				break;
-			case Keywords.CONDITION_NEVER:
-				condition = new NeverCondition();
-				break;
-			case Keywords.CONDITION_REQUIREMENT_COVERAGE:
-				condition = new RequirementCoverage(Double.parseDouble(conditionValue)/100);
-				break;
-			case Keywords.CONDITION_REACHED_REQUIREMENT:
-				condition = new ReachedRequirement(conditionValue);
-				break;
-			default:
-				throw new RuntimeException("Unsupported stop condition selected: "+ conditionType);
-		}
-		return condition ;
-	}
-	
+	private String startupScript;
+
 	public void addAlternativeCondition(int conditionType, String conditionValue)
 	{
-		StopCondition condition = getConditionObject(conditionType, conditionValue);
+		StopCondition condition = Util.getCondition(conditionType, conditionValue);
 		
 		if(	getCondition() == null )
 		{
@@ -129,7 +77,7 @@ public class ModelBasedTesting
 	
 	public void addCondition(int conditionType, String conditionValue) 
 	{
-		StopCondition condition = getConditionObject(conditionType, conditionValue);
+		StopCondition condition = Util.getCondition(conditionType, conditionValue);
 		
 		if(	getCondition() == null )
 		{
@@ -222,38 +170,20 @@ public class ModelBasedTesting
 		setMachine( (extended?new ExtendedFiniteStateMachine():new FiniteStateMachine()));
 	}
 
+	public void setGenerator(PathGenerator generator)
+	{
+		this.generator = generator;
+	}
+	
 	public void setGenerator( int generatorType )
 	{
-		switch (generatorType) 
-		{
-			case Keywords.GENERATOR_RANDOM:
-				setGenerator( new RandomPathGenerator() );
-				break;
-
-			case Keywords.GENERATOR_SHORTEST:
-				setGenerator( new ShortestPathGenerator() );
-				break;
-			
-			case Keywords.GENERATOR_STUB:
-				setGenerator( new CodeGenerator() );
-				if(this.template != null)
-					((CodeGenerator)getGenerator()).setTemplate(this.template);
-				break;
-				
-			case Keywords.GENERATOR_LIST:
-				setGenerator( new ListGenerator() );
-				break;
-				
-			case Keywords.GENERATOR_REQUIREMENTS:
-				setGenerator( new RequirementsGenerator() );
-				break;
-			
-			default:
-				throw new RuntimeException("Generator not implemented yet!");
-		}
+		
+		setGenerator(Util.getGenerator(generatorType));
 
 		if(this.machine != null)
 			getGenerator().setMachine(getMachine());
+		if(this.template != null && this.generator instanceof CodeGenerator)
+			((CodeGenerator)generator).setTemplate(this.template);
 		if(getCondition() != null)
 			getGenerator().setStopCondition(getCondition());
 	}
@@ -263,11 +193,6 @@ public class ModelBasedTesting
 		return this.generator;
 	}
 
-	private void setGenerator(PathGenerator generator)
-	{
-		this.generator = generator;
-	}
-	
 	public boolean hasNextStep() {
 		if(this.machine == null) getMachine();
 		Util.AbortIf(getGenerator() == null, "No generator has been defined!");
@@ -479,37 +404,18 @@ public class ModelBasedTesting
 	}
 	
 	/**
-	 * @param fileName The XML settings file
+	 * @param childText
 	 */
-	public void loadSetup( String fileName )
-	{
-		SAXBuilder parser = new SAXBuilder( "org.apache.crimson.parser.XMLReaderImpl", false );		
-				
-		try
-		{
-			logger.debug( "Parsing settings file: " + fileName );
-			Document doc = parser.build( fileName );
-
-			// Parse all vertices (nodes)
-			Iterator generators = doc.getDescendants( new org.jdom.filter.ElementFilter( "generator" ) );
-			while ( generators.hasNext() )
-			{
-				org.jdom.Element generatorElement = (org.jdom.Element)generators.next();
-				String generatorType = generatorElement.getAttributeValue( "type" );
-				String generatorValue = generatorElement.getAttributeValue( "value" );
-
-				Iterator conditions = generatorElement.getDescendants( new org.jdom.filter.ElementFilter( "condition" ) );
-				while ( conditions.hasNext() )
-				{
-					org.jdom.Element conditionElement = (org.jdom.Element)conditions.next();
-					String conditionType = conditionElement.getAttributeValue( "type" );
-					String conditionValue = conditionElement.getAttributeValue( "value" );
-				}
-			}
-		}
-		catch (Exception e) {
-			// TODO: handle exception
-		}
+	public void setStartupScript(String script) {
+		this.startupScript = script;
+		
+	}
+	
+	/**
+	 * @return the startupScript
+	 */
+	public String getStartupScript() {
+		return this.startupScript;
 	}
 
 }
