@@ -253,6 +253,8 @@ public class Keywords {
 	
 	static public boolean isStopCondition(String presumedCondition)
 	{
+		if ( presumedCondition == null )
+			return false;
 		return stopConditions.containsKey(presumedCondition);
 	}
 	
@@ -290,6 +292,8 @@ public class Keywords {
 	
 	static public boolean isGenerator(String presumedGenerator)
 	{
+		if ( presumedGenerator == null )
+			return false;
 		return generators.containsKey(presumedGenerator);
 	}
 	
