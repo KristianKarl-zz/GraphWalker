@@ -84,7 +84,7 @@ public class CLITest extends TestCase {
 		String args[] = { "offline", "-f", "graphml/reqtags/ExtendedMain.graphml", "-g", "SHORTEST", "-s", "EDGE_COVERAGE:100" };
     	runCommand( args );
     	assertTrue( "No error messages should occur.", errMsg.isEmpty()  );
-    	assertTrue( "At least 78, or more lines should be returned.", outMsg.split("\r\n|\r|\n").length == 78 );
+    	assertEquals( 78, outMsg.split("\r\n|\r|\n").length );
     }
 
     /**
@@ -95,7 +95,7 @@ public class CLITest extends TestCase {
 		String args[] = { "offline", "-f", "graphml/reqtags/ExtendedMain.graphml", "-g", "RANDOM", "-s", "EDGE_COVERAGE:100" };
     	runCommand( args );
     	assertTrue( "No error messgaes should occur.", errMsg.isEmpty()  );
-    	assertTrue( "At least 78, or more lines should be returned.", outMsg.split("\r\n|\r|\n").length >= 78 );
+    	assertTrue( "Expected at least 78 lines, got: " + outMsg.split("\r\n|\r|\n").length, outMsg.split("\r\n|\r|\n").length >= 78 );
     }
 
     /**
@@ -106,7 +106,7 @@ public class CLITest extends TestCase {
 		String args[] = { "offline", "-f", "graphml/reqtags/ExtendedMain.graphml", "-g", "RANDOM", "-s", "STATE_COVERAGE:100" };
     	runCommand( args );
     	assertTrue( "No error messages should occur.", errMsg.isEmpty()  );
-    	assertTrue( "At least 24, or more lines should be returned.", outMsg.split("\r\n|\r|\n").length >= 24 );
+    	assertTrue( "Expected at least 24 lines, got: " + outMsg.split("\r\n|\r|\n").length, outMsg.split("\r\n|\r|\n").length >= 24 );
     }
 
     /**
@@ -117,7 +117,7 @@ public class CLITest extends TestCase {
 		String args[] = { "offline", "-f", "graphml/reqtags/ExtendedMain.graphml", "-g", "SHORTEST", "-s", "STATE_COVERAGE:100" };
     	runCommand( args );
     	assertTrue( "No error messages should occur.", errMsg.isEmpty()  );
-    	assertTrue( "At least 24, or more lines should be returned.", outMsg.split("\r\n|\r|\n").length == 24 );
+    	assertEquals( 24, outMsg.split("\r\n|\r|\n").length );
     }
 
     
@@ -129,7 +129,7 @@ public class CLITest extends TestCase {
 		String args[] = { "offline", "-f", "graphml/reqtags/ExtendedMain.graphml", "-g", "SHORTEST", "-s", "REACHED_REQUIREMENT:req 78" };
     	runCommand( args );
     	assertTrue( "No error messages should occur.", errMsg.isEmpty()  );
-    	assertTrue( "At least 6, or more lines should be returned.", outMsg.split("\r\n|\r|\n").length == 6 );
+    	assertEquals( 6, outMsg.split("\r\n|\r|\n").length );
     }
 
     
@@ -141,7 +141,7 @@ public class CLITest extends TestCase {
 		String args[] = { "requirements", "-f", "graphml/reqtags/ExtendedMain.graphml" };
     	runCommand( args );
     	assertTrue( "No error messages should occur.", errMsg.isEmpty()  );
-    	assertTrue( "At least 6, or more lines should be returned.", outMsg.split("\r\n|\r|\n").length == 6 );
+    	assertEquals( 6, outMsg.split("\r\n|\r|\n").length );
     }
 
     
