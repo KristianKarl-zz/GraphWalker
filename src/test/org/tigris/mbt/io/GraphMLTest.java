@@ -14,24 +14,19 @@ public class GraphMLTest extends TestCase {
     // Test various types of efsm labels
     public void testMergeEFSM_Lables()
     {
-		System.out.println( "TEST: testMergeEFSM_Lables" );
-		System.out.println( "=======================================================================" );
     	try
     	{
 	    	ModelBasedTesting mbt = new ModelBasedTesting();
 	    	mbt.readGraph( "graphml/efsm_lables/testMergeEFSM_Lables.graphml" );
     	} catch (Exception e) {
-    		System.out.println(e.getMessage());
+    		System.err.println(e.getMessage());
 			fail( e.getMessage() );
 		}
-		System.out.println( "" );
     }
     
-    // Test Generating Tests
-    public void test05()
+    // Test merging and verifying that unique id's are created
+    public void testVerifyIds()
     {
-		System.out.println( "TEST: test05" );
-		System.out.println( "=======================================================================" );
     	try
     	{
 	    	ModelBasedTesting mbt = new ModelBasedTesting();
@@ -40,16 +35,14 @@ public class GraphMLTest extends TestCase {
 		}
 		catch ( Exception e)
 		{
-    		System.out.println(e.getMessage());
+    		System.err.println(e.getMessage());
 			fail( e.getMessage() );
 		}
     }
     
     // Verify that mbt checks that subgraphs are unique.
-    public void test09()
+    public void testUniqueSubGraphs()
     {
-		System.out.println( "TEST: test09" );
-		System.out.println( "=======================================================================" );
     	try
     	{
 	    	ModelBasedTesting mbt = new ModelBasedTesting();
@@ -59,17 +52,13 @@ public class GraphMLTest extends TestCase {
     	catch ( RuntimeException e)
     	{
     		String msg = e.getMessage();
-    		System.out.println(e.getMessage());
     		assertTrue( msg.matches( "Found 2 subgraphs using the same name: 'B', they are defined in files: '.*graphml.test09.(C|B).graphml', and :'.*graphml.test09.(B|C).graphml'" ) );
     	}
-		System.out.println( "" );
     }
 
     // Verify that mbt reports and exits when an node without name is found 
-    public void test10()
+    public void testEmptyVertexLabel()
     {
-		System.out.println( "TEST: test10" );
-		System.out.println( "=======================================================================" );
     	try
     	{
 	    	ModelBasedTesting mbt = new ModelBasedTesting();
@@ -79,17 +68,13 @@ public class GraphMLTest extends TestCase {
     	catch ( RuntimeException e)
     	{
     		String msg = e.getMessage();
-    		System.out.println(e.getMessage());
     		assertTrue( msg.matches( "Vertex is missing its label in file: '.*test10.B\\.graphml'" ) );
     	}
-		System.out.println( "" );
     }
 
     // Verify that mbt reports and exits when a recursive subgraph situation emerges 
-    public void test11()
+    public void testRecuresiveIncident()
     {
-		System.out.println( "TEST: test11" );
-		System.out.println( "=======================================================================" );
     	try
     	{
 	    	ModelBasedTesting mbt = new ModelBasedTesting();
@@ -99,18 +84,14 @@ public class GraphMLTest extends TestCase {
     	catch ( RuntimeException e)
     	{
     		String msg = e.getMessage();
-    		System.out.println(e.getMessage());
     		assertTrue( msg.matches( "Found a subgraph containing a duplicate vertex with name: 'C', in file: '.*test11.C\\.graphml'" ) );
     	}
-		System.out.println( "" );
     }
     
 
     // Verify that mbt reports and exits when an edge containing a whitespace (tab) is found 
-    public void test13()
+    public void testWhiteSpaceInEdgeLabel()
     {
-		System.out.println( "TEST: test13" );
-		System.out.println( "=======================================================================" );
     	try
     	{
 	    	ModelBasedTesting mbt = new ModelBasedTesting();
@@ -118,17 +99,14 @@ public class GraphMLTest extends TestCase {
     	}
     	catch ( RuntimeException e)
     	{
-    		System.out.println(e.getMessage());
+    		System.err.println(e.getMessage());
 			fail( e.getMessage() );
     	}
-		System.out.println( "" );
     }
     
     // Verify that mbt reports and exits when a vertex containing a whitespace (tab) is found 
-    public void test14()
+    public void testWhiteSpaceInVertexLabel()
     {
-		System.out.println( "TEST: test14" );
-		System.out.println( "=======================================================================" );
     	try
     	{
 	    	ModelBasedTesting mbt = new ModelBasedTesting();
@@ -138,17 +116,13 @@ public class GraphMLTest extends TestCase {
     	catch ( RuntimeException e)
     	{
     		String msg = e.getMessage();
-    		System.out.println(e.getMessage());
     		assertTrue( msg.matches( "Vertex has a label 'Containing a whitespace', containing whitespaces in file: '.*graphml.test14.C\\.graphml'" ) );
     	}
-		System.out.println( "" );
     }
     
-    // Verify that a single graphml file with an edge comming from the START vertex with an empty label is catched 
-    public void test15()
+    // Verify that a single graphml file with an edge coming from the START vertex with an empty label is catched.
+    public void testMainGraphWithStartVertexOutEdgeEmptyLabel()
     {
-		System.out.println( "TEST: test15" );
-		System.out.println( "=======================================================================" );
     	try
     	{
 	    	ModelBasedTesting mbt = new ModelBasedTesting();
@@ -158,17 +132,13 @@ public class GraphMLTest extends TestCase {
     	catch ( Exception e)
     	{
     		String msg = e.getMessage();
-    		System.out.println(e.getMessage());
     		assertTrue( msg.matches( "Did not find a Start vertex with an out edge with a label." ) );
     	}
-		System.out.println( "" );
     }
     
     // Verify that a file with 2 Start vertices is catched. Both Start vertices has edges with labels.
-    public void test17()
+    public void testTwoStartVerticesWithLabels()
     {
-		System.out.println( "TEST: test17" );
-		System.out.println( "=======================================================================" );
     	try
     	{
 	    	ModelBasedTesting mbt = new ModelBasedTesting();
@@ -178,17 +148,13 @@ public class GraphMLTest extends TestCase {
     	catch ( Exception e)
     	{
     		String msg = e.getMessage();
-    		System.out.println(e.getMessage());
     		assertTrue( msg.matches( "Only one Start vertex can exist in one file, see file 'graphml/test17/test17.graphml'" ) );
     	}
-		System.out.println( "" );
     }
 
     // Verify that a file with 2 Start vertices is catched. One edge has a label, the other has not.
-    public void test18()
+    public void testTwoStartVerticesOneLabel()
     {
-		System.out.println( "TEST: test18" );
-		System.out.println( "=======================================================================" );
     	try
     	{
 	    	ModelBasedTesting mbt = new ModelBasedTesting();
@@ -198,17 +164,13 @@ public class GraphMLTest extends TestCase {
     	catch ( Exception e)
     	{
     		String msg = e.getMessage();
-    		System.out.println(e.getMessage());
     		assertTrue( msg.matches( "Only one Start vertex can exist in one file, see file 'graphml/test18/test18.graphml'" ) );
     	}
-		System.out.println( "" );
     }
 
     // Verify that a file with 2 Start vertices is catched. Both edges has no labels.
-    public void test19()
+    public void testTwoStartVerticesNoLabel()
     {
-		System.out.println( "TEST: test19" );
-		System.out.println( "=======================================================================" );
     	try
     	{
 	    	ModelBasedTesting mbt = new ModelBasedTesting();
@@ -218,17 +180,13 @@ public class GraphMLTest extends TestCase {
     	catch ( Exception e)
     	{
     		String msg = e.getMessage();
-    		System.out.println(e.getMessage());
     		assertTrue( msg.matches( "Only one Start vertex can exist in one file, see file 'graphml/test19/test19.graphml'" ) );
     	}
-		System.out.println( "" );
     }
 
-    // Verify that a file with 2 outedges from the Start vertex is catched.
-    public void test20()
+    // Verify that a file with 2 out edges from the Start vertex is catched.
+    public void testTwoOutEdgesFromStart()
     {
-		System.out.println( "TEST: test20" );
-		System.out.println( "=======================================================================" );
     	try
     	{
 	    	ModelBasedTesting mbt = new ModelBasedTesting();
@@ -238,166 +196,134 @@ public class GraphMLTest extends TestCase {
     	catch ( Exception e)
     	{
     		String msg = e.getMessage();
-    		System.out.println(e.getMessage());
     		assertTrue( msg.matches( "A Start vertex can only have one out edge, look in file: graphml/test20/test20.graphml" ) );
     	}
-		System.out.println( "" );
     }
 
+    // Verify that merging of subgraphs works for graphml/mergeSubgraphs_01.
     public void test_mergeSubgraphs_01()
     {
-		System.out.println( "TEST: test_mergeSubgraphs_01" );
-		System.out.println( "=======================================================================" );
     	try
     	{
 	    	ModelBasedTesting mbt = new ModelBasedTesting();
 	    	mbt.readGraph( "graphml/mergeSubgraphs_01" );
-	    	mbt.writeModel( System.out );
 	    	assertTrue( mbt.getGraph().getVertices().size() == 6 );
 	    	assertTrue( mbt.getGraph().getEdges().size() == 16 );
 	    	verifyIds( mbt.getGraph() );
     	}
     	catch ( Exception e)
     	{
-    		System.out.println(e.getMessage());
+    		System.err.println(e.getMessage());
     		fail( e.getMessage() );
     	}
-		System.out.println( "" );
     }
 
-    
-    
+    // Verify that merging of subgraphs works for graphml/mergeSubgraphs_02.
     public void test_mergeSubgraphs_02()
     {
-		System.out.println( "TEST: test_mergeSubgraphs_02" );
-		System.out.println( "=======================================================================" );
     	try
     	{
 	    	ModelBasedTesting mbt = new ModelBasedTesting();
 	    	mbt.readGraph( "graphml/mergeSubgraphs_02" );
-	    	mbt.writeModel( System.out );
 	    	assertTrue( mbt.getGraph().getVertices().size() == 16 );
 	    	assertTrue( mbt.getGraph().getEdges().size() == 55 );
 	    	verifyIds( mbt.getGraph() );
     	}
     	catch ( Exception e)
     	{
-    		System.out.println(e.getMessage());
+    		System.err.println(e.getMessage());
     		fail( e.getMessage() );
     	}
-		System.out.println( "" );
     }
-
-    
     
     // Test merging of 2 simple graphs
-    public void test01()
+    public void testMergeSimpleGraph()
     {
-		System.out.println( "TEST: test01" );
-		System.out.println( "=======================================================================" );
     	try
     	{
 	    	ModelBasedTesting mbt = new ModelBasedTesting();
 	    	mbt.readGraph( "graphml/test01" );
-	    	mbt.writeModel( System.out );
 	    	assertTrue( mbt.getGraph().getEdges().size() == 9 );
 	    	assertTrue( mbt.getGraph().getVertices().size() == 7 );
 	    	verifyIds( mbt.getGraph() );
     	}
     	catch ( Exception e)
     	{
-    		System.out.println(e.getMessage());
+    		System.err.println(e.getMessage());
     		fail( e.getMessage() );
     	}
-		System.out.println( "" );
     }
     
     // Test merging of 2 simple graphs, with  nodes containing key word NO_MERGE
-    public void test02()
+    public void testMergeSimpleGraph_Keyword_NO_MERGE()
     {
-		System.out.println( "TEST: test02" );
-		System.out.println( "=======================================================================" );
     	try
     	{
 	    	ModelBasedTesting mbt = new ModelBasedTesting();
 	    	mbt.readGraph( "graphml/test02" );
-	    	mbt.writeModel( System.out );
 	    	assertTrue( mbt.getGraph().getEdges().size() == 11 );
 	    	assertTrue( mbt.getGraph().getVertices().size() == 8 );
 	    	verifyIds( mbt.getGraph() );
     	}
     	catch ( Exception e)
     	{
-    		System.out.println(e.getMessage());
+    		System.err.println(e.getMessage());
     		fail( e.getMessage() );
     	}
-		System.out.println( "" );
     }
     
     // Test merging a folder consisting 162 graphs
-    public void test03()
+    public void testMergeLargeGraph()
     {
-		System.out.println( "TEST: test03" );
-		System.out.println( "=======================================================================" );
     	try
     	{
 	    	ModelBasedTesting mbt = new ModelBasedTesting();
 	    	mbt.readGraph( "graphml/test03" );
-	    	mbt.writeModel( System.out );
 	    	assertTrue( mbt.getGraph().getEdges().size() == 1550 );
 	    	assertTrue( mbt.getGraph().getVertices().size() == 788 );
 	    	verifyIds( mbt.getGraph() );
     	}
     	catch ( Exception e)
     	{
-    		System.out.println(e.getMessage());
+    		System.err.println(e.getMessage());
     		fail( e.getMessage() );
     	}
-		System.out.println( "" );
     }
 
     // Verify that a graph containing a Stop vertex is correctly merged.
-    public void test22()
+    public void testMergeSubGraphUsingStopVertex()
     {
-		System.out.println( "TEST: test22" );
-		System.out.println( "=======================================================================" );
     	try
     	{
 	    	ModelBasedTesting mbt = new ModelBasedTesting();
 	    	mbt.readGraph( "graphml/test22" );
-	    	mbt.writeModel( System.out );
 	    	assertTrue( mbt.getGraph().getEdges().size() == 8 );
 	    	assertTrue( mbt.getGraph().getVertices().size() == 8 );
 	    	verifyIds( mbt.getGraph() );
     	}
     	catch ( Exception e)
     	{
-    		System.out.println(e.getMessage());
+    		System.err.println(e.getMessage());
 	    	fail( e.getMessage() );
     	}
-		System.out.println( "" );
     }
 
     // Merging with subgraphs containing Stop vertices 
-    public void test23()
+    public void testMergeSubGraphUsingStopVertices()
     {
-		System.out.println( "TEST: test23" );
-		System.out.println( "=======================================================================" );
     	try
     	{
 	    	ModelBasedTesting mbt = new ModelBasedTesting();
 	    	mbt.readGraph( "graphml/test23" );
-	    	mbt.writeModel( System.out );
 	    	assertTrue( mbt.getGraph().getEdges().size() == 14 );
 	    	assertTrue( mbt.getGraph().getVertices().size() == 9 );
 	    	verifyIds( mbt.getGraph() );
     	}
     	catch ( Exception e)
     	{
-    		System.out.println(e.getMessage());
+    		System.err.println(e.getMessage());
 	    	fail( e.getMessage() );
     	}
-		System.out.println( "" );
     }
 
     // Verify that all vertices and edges has indexes, and that no duplicates exists.
