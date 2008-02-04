@@ -105,7 +105,7 @@ public class Util {
 	 		{
 	 			WriterAppender writerAppender = new WriterAppender( 
 	 					new SimpleLayout(), 
-	 					new FileOutputStream( "logs/mbt.log" ) );
+	 					new FileOutputStream( "mbt.log" ) );
 		 		logger.addAppender( writerAppender );
 		 		logger.setLevel( (Level)Level.ERROR );
 	 		} 

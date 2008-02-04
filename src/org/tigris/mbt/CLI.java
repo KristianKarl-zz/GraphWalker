@@ -50,8 +50,8 @@ public class CLI
 			logger.info( modelBasedTesting.getStatisticsVerbose() );
 		}
 	}
-	static Logger logger = Logger.getLogger(CLI.class);
-	
+
+	static Logger logger = Util.setupLogger(CLI.class);
 	private ModelBasedTesting mbt;
 	private Timer timer;
 	private Options opt = new Options();
@@ -228,8 +228,8 @@ public class CLI
 			}
 			else
 			{
-				System.out.println( "Unkown command: " + args[ 0 ] );
-				System.out.println( "Type 'java -jar mbt.jar help' for usage." );
+				System.err.println( "Unkown command: " + args[ 0 ] );
+				System.err.println( "Type 'java -jar mbt.jar help' for usage." );
 				return;				
 			}
 		}
@@ -471,7 +471,7 @@ public class CLI
 	 */
 	private void printVersionInformation()
 	{
-		System.out.println( "org.tigris.mbt version 2.0 (revision 313)\n" );
+		System.out.println( "org.tigris.mbt version 2.0 (revision 449.2)\n" );
 		System.out.println( "org.tigris.mbt is open source software licensed under GPL" );
 		System.out.println( "The software (and it's source) can be downloaded from http://mbt.tigris.org/\n" );
 		System.out.println( "This package contains following software packages:" );
