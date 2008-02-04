@@ -35,7 +35,7 @@ import bsh.Interpreter;
  */
 public class AccessableEdgeFilter extends GeneralEdgeAcceptFilter implements EfficientFilter
 {
-	static Logger logger = Logger.getLogger(AccessableEdgeFilter.class);
+	static Logger logger = Util.setupLogger(AccessableEdgeFilter.class);
 	
 	private Interpreter i;
 	public AccessableEdgeFilter(Interpreter intepreter) {
