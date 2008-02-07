@@ -30,6 +30,8 @@ import org.tigris.mbt.conditions.StopCondition;
 import org.tigris.mbt.exceptions.InvalidDataException;
 import org.tigris.mbt.generators.CodeGenerator;
 import org.tigris.mbt.generators.PathGenerator;
+import org.tigris.mbt.generators.RandomPathGenerator;
+import org.tigris.mbt.generators.ShortestPathGenerator;
 import org.tigris.mbt.io.AbstractModelHandler;
 import org.tigris.mbt.io.GraphML;
 
@@ -51,6 +53,7 @@ public class ModelBasedTesting
 	private PathGenerator generator;
 	private String template;
 	private boolean backtracking = false;
+	private boolean runRandomGeneratorOnce = false;
 
 	private String startupScript;
 
@@ -199,10 +202,21 @@ public class ModelBasedTesting
 		return getGenerator().hasNext();
 	}
 
-	public String[] getNextStep() {
+	public String[] getNextStep()
+	{		
 		if(this.machine == null) getMachine();
 		Util.AbortIf(getGenerator() == null, "No generator has been defined!");
 		
+		PathGenerator backupGenerator = null;
+		if ( runRandomGeneratorOnce )
+		{
+			if ( !(getGenerator() instanceof RandomPathGenerator) ) 
+			{
+				backupGenerator = getGenerator();				
+			}
+			setGenerator(Keywords.GENERATOR_RANDOM);
+		}
+
 		try
 		{
 			return getGenerator().getNext();
@@ -211,6 +225,14 @@ public class ModelBasedTesting
 		{
 			logger.fatal(e.toString());
 			throw new RuntimeException( "ERROR: " + e.getMessage() );
+		}
+		finally
+		{
+			if ( runRandomGeneratorOnce )
+			{
+				runRandomGeneratorOnce = false;
+				setGenerator(backupGenerator);
+			}
 		}
 	}
 	
@@ -222,10 +244,11 @@ public class ModelBasedTesting
 		return "";
 	}
 
-	public void backtrack() {
+	public void backtrack( boolean popEdge ) {
 		if(this.machine != null)
-			getMachine().backtrack();
-		logger.warn( "Trying to backtrack without specifying machine" );
+			getMachine().backtrack( popEdge );
+		getGenerator().reset();
+		runRandomGeneratorOnce = true;
 	}
 
 	public void readGraph( String graphmlFileName )
@@ -242,6 +265,24 @@ public class ModelBasedTesting
 
 	public void writeModel(PrintStream ps) {
 		this.modelHandler.save(ps);
+	}
+
+	public boolean hasCurrentEdgeBackTracking() 
+	{
+		if(this.machine != null)
+		{					
+			return getMachine().getLastEdge().containsUserDatumKey( Keywords.BACKTRACK );
+		}
+		return false;
+	}
+
+	public boolean hasCurrentVertexBackTracking() 
+	{
+		if(this.machine != null)
+		{					
+			return  getMachine().getCurrentState().containsUserDatumKey( Keywords.BACKTRACK );
+		}
+		return false;
 	}
 
 	public void enableBacktrack(boolean backtracking) 

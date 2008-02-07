@@ -34,7 +34,14 @@ public abstract class PathGenerator {
     	return stopCondition.getFulfillment();
     }
 
-    PathGenerator() {
+	/**
+	 * Will reset the generator to its initial state.
+	 */
+	public void reset()
+	{
+	}
+
+	PathGenerator() {
 	}
     
     PathGenerator( StopCondition stopCondition ) {
