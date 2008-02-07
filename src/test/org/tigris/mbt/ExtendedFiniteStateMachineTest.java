@@ -85,11 +85,11 @@ public class ExtendedFiniteStateMachineTest extends TestCase {
 		assertEquals("V2/x=2;y=[];",EFSM.getCurrentStateName());
 		EFSM.walkEdge(e3);
 		assertEquals("V2/x=3;y=[];",EFSM.getCurrentStateName());
-		EFSM.backtrack();
+		EFSM.backtrack( false );
 		assertEquals("V2/x=2;y=[];",EFSM.getCurrentStateName());
-		EFSM.backtrack();
+		EFSM.backtrack( false );
 		assertEquals("V1/x=1;y=[];",EFSM.getCurrentStateName());
-		EFSM.backtrack();
+		EFSM.backtrack( false );
 		assertEquals("Start",EFSM.getCurrentStateName());
 	}
 
@@ -106,13 +106,13 @@ public class ExtendedFiniteStateMachineTest extends TestCase {
 		assertEquals("V2/x=3;y=[];",EFSM.getCurrentStateName());
 		EFSM.walkEdge(e4);
 		assertEquals("V1/x=3;y=[3];",EFSM.getCurrentStateName());
-		EFSM.backtrack();
+		EFSM.backtrack( false );
 		assertEquals("V2/x=3;y=[];",EFSM.getCurrentStateName());
-		EFSM.backtrack();
+		EFSM.backtrack( false );
 		assertEquals("V2/x=2;y=[];",EFSM.getCurrentStateName());
-		EFSM.backtrack();
+		EFSM.backtrack( false );
 		assertEquals("V1/x=1;y=[];",EFSM.getCurrentStateName());
-		EFSM.backtrack();
+		EFSM.backtrack( false );
 		assertEquals("Start",EFSM.getCurrentStateName());
 	}
 	

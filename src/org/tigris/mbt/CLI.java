@@ -697,7 +697,8 @@ public class CLI
 					}
 					if(input == '1')
 					{
-						getMbt().backtrack();
+						getMbt().backtrack( false );
+						firstLine = true;
 						continue;
 					}
 				}
@@ -707,7 +708,15 @@ public class CLI
 				}
 				stepPair = getMbt().getNextStep();
 				logger.debug("Execute: " + stepPair[0]);
-				System.out.println(stepPair[0]);
+				System.out.print(stepPair[0]);
+				if ( getMbt().hasCurrentVertexBackTracking() )
+				{
+					System.out.println( " BACKTRACK" );					
+				}
+				else
+				{
+					System.out.println( "" );										
+				}
 	
 				input = getInput(); 
 				logger.debug("Recieved: '"+ input+"'");
@@ -717,11 +726,20 @@ public class CLI
 				}
 				if(input == '1')
 				{
-					getMbt().backtrack();
+					getMbt().backtrack( true );
+					firstLine = true;
 					continue;
 				}
 				logger.debug("Verify: " + stepPair[1]);
-				System.out.println(stepPair[1]);
+				System.out.print(stepPair[1]);
+				if ( getMbt().hasCurrentEdgeBackTracking() )
+				{
+					System.out.println( " BACKTRACK" );					
+				}
+				else
+				{
+					System.out.println( "" );										
+				}
 			}
 		}
 		if( cl.hasOption( "a" ) )

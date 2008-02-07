@@ -49,6 +49,7 @@ public class FiniteStateMachine{
 	private int numberOfEdgesTravesed = 0;
 	protected boolean backtracking = false;
 	protected boolean abortOnDeadEnds = true;
+	protected boolean calculatingShortestPath = false;
 
 	private long start_time;
 
@@ -366,13 +367,22 @@ public class FiniteStateMachine{
 	
 	protected void popState()
 	{
-
 		setAsUnvisited(getLastEdge());
 		setAsUnvisited(getCurrentState());
 
 		lastEdge = (DirectedSparseEdge) edgeStack.pop();
 		currentState = (DirectedSparseVertex) lastEdge.getSource();
 		lastEdge = (edgeStack.size()>0?(DirectedSparseEdge) edgeStack.peek():null);
+		numberOfEdgesTravesed--;
+	}
+	
+	protected void popEdge()
+	{
+		setAsUnvisited(getLastEdge());
+
+		lastEdge = (DirectedSparseEdge) edgeStack.pop();
+		lastEdge = (edgeStack.size()>0?(DirectedSparseEdge) edgeStack.peek():null);
+		currentState = (DirectedSparseVertex) lastEdge.getDest();
 		numberOfEdgesTravesed--;
 	}
 	
@@ -399,20 +409,27 @@ public class FiniteStateMachine{
 		return numberOfEdgesTravesed;
 	}
 
-	public void backtrack()
+	public void backtrack( boolean popEdge )
 	{
 		if(this.backtracking)
 		{
-			if( true || getLastEdge().containsUserDatumKey( Keywords.BACKTRACK ) )
+			if( calculatingShortestPath || getLastEdge().containsUserDatumKey( Keywords.BACKTRACK ) )
 			{
-				popState();
+				if ( popEdge )
+				{
+					popEdge();
+				}
+				else
+				{
+					popState();
+				}
 			}
 			else		
 			{
 				throw new RuntimeException( "Backtracking was asked for, but model does not suppport BACKTRACK at egde: " + Util.getCompleteEdgeName( getLastEdge() ) );			
 			}
 		} else {
-			System.err.println("WHAAAAA!");
+			throw new RuntimeException( "Backtracking was asked for, but the -b flag was not enabled. Please use -b" );			
 		}
 	}
 	
@@ -424,6 +441,14 @@ public class FiniteStateMachine{
 	public boolean isBacktrack() 
 	{
 		return this.backtracking;
+	}
+
+	public boolean isCalculatingShortestPath() {
+		return calculatingShortestPath;
+	}
+
+	public void setCalculatingShortestPath(boolean calculatingShortestPath) {
+		this.calculatingShortestPath = calculatingShortestPath;
 	}
 }
 

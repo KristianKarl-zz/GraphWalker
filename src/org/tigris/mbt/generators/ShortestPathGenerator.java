@@ -47,12 +47,17 @@ public class ShortestPathGenerator extends PathGenerator {
 			}
 			boolean oldBacktracking = getMachine().isBacktrack();
 			getMachine().setBacktrack(true);
+			getMachine().setCalculatingShortestPath(true);
 			try {
 				calculateShortestPath();
 			} catch (FoundNoEdgeException e) {
 				throw new RuntimeException("No possible edges available for path", e);
 			}
-			getMachine().setBacktrack(oldBacktracking);
+			finally
+			{
+				getMachine().setBacktrack(oldBacktracking);
+				getMachine().setCalculatingShortestPath(false);				
+			}
 
 			if(preCalculatedPath == null)
 			{
@@ -116,9 +121,17 @@ public class ShortestPathGenerator extends PathGenerator {
 					preCalculatedPath = (Stack) edgePath.clone();
 				}
 			} catch (FoundNoEdgeException culDeSac) {}
-			getMachine().backtrack();
+			getMachine().backtrack( false );
 			edgePath.pop();
 		}
+	}
+
+	/**
+	 * Will reset the generator to its initial state.
+	 */
+	public void reset()
+	{
+		preCalculatedPath = null;
 	}
 
 	protected class DijkstraPoint implements Comparable
