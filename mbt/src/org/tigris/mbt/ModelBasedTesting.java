@@ -280,7 +280,7 @@ public class ModelBasedTesting
 	{
 		if(this.machine != null)
 		{					
-			return  getMachine().getCurrentState().containsUserDatumKey( Keywords.BACKTRACK );
+			return  getMachine().getLastEdge().containsUserDatumKey( Keywords.BACKTRACK );
 		}
 		return false;
 	}
