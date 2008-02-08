@@ -709,7 +709,7 @@ public class CLI
 				stepPair = getMbt().getNextStep();
 				logger.debug("Execute: " + stepPair[0]);
 				System.out.print(stepPair[0]);
-				if ( getMbt().hasCurrentVertexBackTracking() )
+				if ( getMbt().hasCurrentEdgeBackTracking() )
 				{
 					System.out.println( " BACKTRACK" );					
 				}
@@ -732,7 +732,7 @@ public class CLI
 				}
 				logger.debug("Verify: " + stepPair[1]);
 				System.out.print(stepPair[1]);
-				if ( getMbt().hasCurrentEdgeBackTracking() )
+				if ( getMbt().hasCurrentVertexBackTracking() )
 				{
 					System.out.println( " BACKTRACK" );					
 				}
