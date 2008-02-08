@@ -53,7 +53,7 @@ public class CLI
 
 	static Logger logger = Util.setupLogger(CLI.class);
 	private ModelBasedTesting mbt;
-	private Timer timer;
+	private Timer timer = null;
 	private Options opt = new Options();
 
 	public CLI()
@@ -662,12 +662,11 @@ public class CLI
 		 */
         getMbt().enableBacktrack( cl.hasOption( "b" ) );
 
-		Timer t = new Timer();
 		if( cl.hasOption( "o" ) )
 		{
 			logger.info( "Append coverage to log every: " + Integer.valueOf( cl.getOptionValue( "o" ) ).longValue() + " seconds" );
 			
-			t.schedule(	new TimerTask()	
+			timer.schedule(	new TimerTask()	
 			{
 				public void run() 
 				{
@@ -746,8 +745,6 @@ public class CLI
 		{
 			System.out.println( getMbt().getStatisticsString() );
 		}
-		
-		t.cancel();
 	}
 
 	/**
