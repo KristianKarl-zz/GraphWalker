@@ -36,8 +36,6 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 	private AccessableEdgeFilter accessableFilter;
 
 	private Stack namespaceStack;
-
-	private String startupScript = "";
 	
 	public ExtendedFiniteStateMachine(SparseGraph model)
 	{

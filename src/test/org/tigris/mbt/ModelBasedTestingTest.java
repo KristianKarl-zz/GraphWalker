@@ -3,13 +3,8 @@
  */
 package test.org.tigris.mbt;
 
-import java.io.OutputStream;
-import java.io.PrintStream;
-
 import org.tigris.mbt.ModelBasedTesting;
 import org.tigris.mbt.Util;
-
-import com.sun.xml.internal.ws.util.ByteArrayBuffer;
 
 import junit.framework.TestCase;
 

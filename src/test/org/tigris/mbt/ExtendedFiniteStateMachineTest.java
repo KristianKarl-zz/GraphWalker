@@ -2,8 +2,6 @@ package test.org.tigris.mbt;
 
 import org.tigris.mbt.ExtendedFiniteStateMachine;
 import org.tigris.mbt.Keywords;
-import org.tigris.mbt.conditions.StateCoverage;
-import org.tigris.mbt.generators.ShortestPathGenerator;
 import org.tigris.mbt.Util;
 
 import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
