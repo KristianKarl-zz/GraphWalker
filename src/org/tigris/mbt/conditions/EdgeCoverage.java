@@ -27,4 +27,8 @@ public class EdgeCoverage extends StopCondition {
 		return (covered/edges) / limit;
 	}
 
+	public String toString() {
+		return "EC>="+ (int)(100*limit);
+	}
+
 }

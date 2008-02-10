@@ -64,5 +64,8 @@ public class RandomPathGenerator extends PathGenerator {
 	{
 		return (DirectedSparseEdge) availableEdges.toArray()[random.nextInt(availableEdges.size())];
 	}
-
+	
+	public String toString() {
+		return "RANDOM{"+ super.toString() +"}";
+	}
 }

@@ -41,4 +41,14 @@ public class AlternativeCondition extends StopCondition {
 		}
 		return retur;
 	}
+	
+	public String toString() {
+		String retur = "(";
+		for(Iterator i = conditions.iterator();i.hasNext();)
+		{
+			retur += ((StopCondition)i.next()).toString();
+			if(i.hasNext()) retur += " OR ";
+		}
+		return retur + ")";
+	}
 }

@@ -40,4 +40,15 @@ public class CombinationalCondition extends StopCondition {
 		}
 		return retur / (double)conditions.size();
 	}
+	
+	public String toString() {
+		String retur = "(";
+		for(Iterator i = conditions.iterator();i.hasNext();)
+		{
+			retur += ((StopCondition)i.next()).toString();
+			if(i.hasNext()) retur += " AND ";
+		}
+		return retur + ")";
+	}
+
 }

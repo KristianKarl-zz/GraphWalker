@@ -51,7 +51,7 @@ public class TestCaseLengthTest extends TestCase {
 		StopCondition condition = new TestCaseLength(2);
 		mbt.setCondition(condition);
 		mbt.setGraph(graph);
-		mbt.setGenerator(Keywords.GENERATOR_SHORTEST);
+		mbt.setGenerator(Keywords.GENERATOR_RANDOM);
 		assertTrue(mbt.hasNextStep());
 		
 		assertEquals((double)0/2, condition.getFulfillment(), 0.01);
@@ -67,7 +67,7 @@ public class TestCaseLengthTest extends TestCase {
 		StopCondition condition = new TestCaseLength(2);
 		mbt.setCondition(condition);
 		mbt.setGraph(graph);
-		mbt.setGenerator(Keywords.GENERATOR_SHORTEST);
+		mbt.setGenerator(Keywords.GENERATOR_RANDOM);
 		assertTrue(mbt.hasNextStep());
 
 		assertEquals(false, condition.isFulfilled());

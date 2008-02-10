@@ -59,7 +59,7 @@ public class RequirementCoverageTest extends TestCase {
 		StopCondition condition = new RequirementCoverage();
 		mbt.setCondition(condition);
 		mbt.setGraph(graph);
-		mbt.setGenerator(Keywords.GENERATOR_SHORTEST);
+		mbt.setGenerator(Keywords.GENERATOR_RANDOM);
 		assertTrue(mbt.hasNextStep());
 		
 		assertEquals((double)0/4, condition.getFulfillment(), 0.01);
@@ -75,7 +75,7 @@ public class RequirementCoverageTest extends TestCase {
 		StopCondition condition = new RequirementCoverage();
 		mbt.setCondition(condition);
 		mbt.setGraph(graph);
-		mbt.setGenerator(Keywords.GENERATOR_SHORTEST);
+		mbt.setGenerator(Keywords.GENERATOR_RANDOM);
 		assertTrue(mbt.hasNextStep());
 
 		assertEquals(false, condition.isFulfilled());

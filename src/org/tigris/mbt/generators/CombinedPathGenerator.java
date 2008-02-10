@@ -25,7 +25,7 @@ public class CombinedPathGenerator extends PathGenerator {
 	public void addPathGenerator(PathGenerator generator)
 	{
 		logger.debug("Adding PathGenerator: " + generator);
-		paths.add(generator);
+		paths.add(0, generator);
 	}
 
 	public void setMachine(FiniteStateMachine machine) {
@@ -81,4 +81,15 @@ public class CombinedPathGenerator extends PathGenerator {
 		if(!nextIsAvailable) return retur;
 		return getActivePathGenerator().getNext();
 	}
+	
+	
+	public String toString() {
+		String retur = "";
+		for(Iterator i = paths.iterator();i.hasNext();)
+		{
+			retur =((PathGenerator)i.next()).toString() + "\n" + retur;
+		}
+		return retur.trim();
+	}
+
 }

@@ -56,4 +56,8 @@ public class ListGenerator extends PathGenerator {
 		}
 		list.addAll(tempList);
 	}
+	
+	public String toString() {
+		return "LIST";
+	}
 }

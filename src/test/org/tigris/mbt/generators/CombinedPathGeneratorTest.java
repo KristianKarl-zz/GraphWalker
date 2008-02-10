@@ -47,16 +47,14 @@ public class CombinedPathGeneratorTest extends TestCase {
 	String[] stepPair;
 	
 	stepPair = pathGenerator.getNext();
+	assertEquals("Edge: E1",  stepPair[0]);
+	stepPair = pathGenerator.getNext();
+	assertEquals("Vertex: V1",  stepPair[0]);
+	stepPair = pathGenerator.getNext();
 	assertEquals("E1",  stepPair[0]);
 	assertEquals("Edge",  stepPair[1]);
 	stepPair = pathGenerator.getNext();
 	assertEquals("V1",  stepPair[0]);
-	assertEquals("Vertex",  stepPair[1]);
-	stepPair = pathGenerator.getNext();
-	assertEquals("Edge: E1",  stepPair[0]);
-	assertEquals("Edge",  stepPair[1]);
-	stepPair = pathGenerator.getNext();
-	assertEquals("Vertex: V1",  stepPair[0]);
 	assertEquals("Vertex",  stepPair[1]);
 	assertFalse(pathGenerator.hasNext());
 

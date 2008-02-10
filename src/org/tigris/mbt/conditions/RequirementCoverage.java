@@ -26,5 +26,9 @@ public class RequirementCoverage extends StopCondition {
 		double covered = stats[6];
 		return (covered/requirements) / limit;
 	}
+	
+	public String toString() {
+		return "RC>="+ (int)(100*limit);
+	}
 
 }

@@ -17,9 +17,6 @@
 
 package org.tigris.mbt;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
 
@@ -33,6 +30,8 @@ import org.tigris.mbt.generators.PathGenerator;
 import org.tigris.mbt.generators.RandomPathGenerator;
 import org.tigris.mbt.io.AbstractModelHandler;
 import org.tigris.mbt.io.GraphML;
+
+import bsh.EvalError;
 
 import edu.uci.ics.jung.graph.impl.SparseGraph;
 
@@ -54,7 +53,7 @@ public class ModelBasedTesting
 	private boolean backtracking = false;
 	private boolean runRandomGeneratorOnce = false;
 
-	private String startupScript;
+	private String startupScript = "";
 
 	public void addAlternativeCondition(int conditionType, String conditionValue)
 	{
@@ -128,7 +127,7 @@ public class ModelBasedTesting
 			getCondition().setMachine(machine);
 		if(getGenerator() != null)
 			getGenerator().setMachine(machine);
-		getMachine().setBacktrack(this.backtracking);
+		getMachine().setBacktrackEnabled(this.backtracking);
 	}
 
 	/**
@@ -169,18 +168,23 @@ public class ModelBasedTesting
 
 	public void enableExtended(boolean extended) 
 	{
-		setMachine( (extended?new ExtendedFiniteStateMachine():new FiniteStateMachine()));
+		if(extended)
+		{
+			setMachine(new ExtendedFiniteStateMachine());
+			if(!getStartupScript().equals(""))
+			try {
+				((ExtendedFiniteStateMachine)getMachine()).eval(getStartupScript());
+			} catch (EvalError e) {
+				throw new RuntimeException("Execution of startup script generated an error.",e);
+			}
+		} else {
+			setMachine( new FiniteStateMachine() );
+		}
 	}
 
 	public void setGenerator(PathGenerator generator)
 	{
 		this.generator = generator;
-	}
-	
-	public void setGenerator( int generatorType )
-	{
-		
-		setGenerator(Util.getGenerator(generatorType));
 
 		if(this.machine != null)
 			getGenerator().setMachine(getMachine());
@@ -188,6 +192,11 @@ public class ModelBasedTesting
 			((CodeGenerator)generator).setTemplate(this.template);
 		if(getCondition() != null)
 			getGenerator().setStopCondition(getCondition());
+	}
+	
+	public void setGenerator( int generatorType )
+	{
+		setGenerator(Util.getGenerator(generatorType));
 	}
 	
 	private PathGenerator getGenerator()
@@ -223,7 +232,7 @@ public class ModelBasedTesting
 		catch(RuntimeException e)
 		{
 			logger.fatal(e.toString());
-			throw new RuntimeException( "ERROR: " + e.getMessage() );
+			throw new RuntimeException( "ERROR: ", e);
 		}
 		finally
 		{
@@ -289,7 +298,7 @@ public class ModelBasedTesting
 		this.backtracking = backtracking;
 		if(this.machine != null)
 		{					
-			getMachine().setBacktrack(backtracking);
+			getMachine().setBacktrackEnabled(backtracking);
 		}
 	}
 
@@ -325,17 +334,7 @@ public class ModelBasedTesting
 
 	public void setTemplate( String templateFile )
 	{
-		this.template = "";
-		try {
-			BufferedReader in = new BufferedReader(new FileReader(templateFile));
-		
-			for(String tempLine = in.readLine(); tempLine != null; tempLine = in.readLine())
-			{
-				this.template += tempLine + "\n";			
-			}
-		} catch (IOException e) {
-			throw new RuntimeException("Template file read problem: " + e.getMessage());
-		}
+		this.template = Util.readFile(templateFile);
 		
 		if(getGenerator() != null && getGenerator() instanceof CodeGenerator)
 			((CodeGenerator)getGenerator()).setTemplate(this.template);
@@ -438,8 +437,8 @@ public class ModelBasedTesting
 		{
 			String[] stepPair = getNextStep();
 			
-			out.println( stepPair[ 0 ] );
-			out.println( stepPair[ 1 ] );
+			if(stepPair[0].trim()!="")out.println( stepPair[0] );
+			if(stepPair[1].trim()!="")out.println( stepPair[1] );
 		}
 	}
 	
@@ -448,7 +447,14 @@ public class ModelBasedTesting
 	 */
 	public void setStartupScript(String script) {
 		this.startupScript = script;
-		
+		if(this.machine != null && this.machine instanceof ExtendedFiniteStateMachine)
+		{
+			try {
+				((ExtendedFiniteStateMachine)this.machine).eval(script);
+			} catch (EvalError e) {
+				throw new RuntimeException("Execution of startup script generated an error.",e);
+			}
+		}
 	}
 	
 	/**
@@ -458,4 +464,7 @@ public class ModelBasedTesting
 		return this.startupScript;
 	}
 
+	public String toString() {
+		return getGenerator().toString();
+	}
 }

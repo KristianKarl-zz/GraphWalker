@@ -77,7 +77,7 @@ public class ExtendedFiniteStateMachineTest extends TestCase {
 	public void testBacktrackWalk() 
 	{
 		ExtendedFiniteStateMachine EFSM = new ExtendedFiniteStateMachine(graph);
-		EFSM.setBacktrack(true);
+		EFSM.setBacktrackEnabled(true);
 		assertEquals("Start",EFSM.getCurrentStateName());
 		EFSM.walkEdge(e1);
 		assertEquals("V1/x=1;y=[];",EFSM.getCurrentStateName());
@@ -96,7 +96,7 @@ public class ExtendedFiniteStateMachineTest extends TestCase {
 	public void testBacktrackWalk2() 
 	{
 		ExtendedFiniteStateMachine EFSM = new ExtendedFiniteStateMachine(graph);
-		EFSM.setBacktrack(true);
+		EFSM.setBacktrackEnabled(true);
 		assertEquals("Start",EFSM.getCurrentStateName());
 		EFSM.walkEdge(e1);
 		assertEquals("V1/x=1;y=[];",EFSM.getCurrentStateName());
@@ -115,24 +115,4 @@ public class ExtendedFiniteStateMachineTest extends TestCase {
 		EFSM.backtrack( false );
 		assertEquals("Start",EFSM.getCurrentStateName());
 	}
-	
-	public void testStateCoverage()
-	{
-		ExtendedFiniteStateMachine EFSM = new ExtendedFiniteStateMachine(graph);
-		StateCoverage sc = new StateCoverage(1.0);
-		sc.setMachine(EFSM);
-		ShortestPathGenerator spg = new ShortestPathGenerator();
-		spg.setStopCondition(sc);
-		spg.setMachine(EFSM);
-		assertTrue(spg.hasNext());
-		String[] steps = spg.getNext();
-		assertEquals("E1",steps[0]);
-		assertEquals("V1/x=1;y=[];",steps[1]);
-		steps = spg.getNext();
-		assertEquals("E2",steps[0]);
-		assertEquals("V2/x=2;y=[];",steps[1]);
-		assertFalse(spg.hasNext());
-		System.out.println(EFSM.getStatisticsVerbose());
-	}
-
 }
