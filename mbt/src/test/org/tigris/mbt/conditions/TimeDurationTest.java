@@ -77,6 +77,7 @@ public class TimeDurationTest extends TestCase {
 		while((System.currentTimeMillis() - startTime) < 900);
 		assertEquals(false, condition.isFulfilled());
 		while((System.currentTimeMillis() - startTime) < 1000);
+		System.out.println(condition.getFulfillment());
 		assertEquals(true, condition.isFulfilled());
 	}
 

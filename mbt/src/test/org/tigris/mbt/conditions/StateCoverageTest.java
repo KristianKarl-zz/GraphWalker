@@ -51,7 +51,7 @@ public class StateCoverageTest extends TestCase {
 		StopCondition condition = new StateCoverage();
 		mbt.setCondition(condition);
 		mbt.setGraph(graph);
-		mbt.setGenerator(Keywords.GENERATOR_SHORTEST);
+		mbt.setGenerator(Keywords.GENERATOR_RANDOM);
 		assertTrue(mbt.hasNextStep());
 		
 		assertEquals((double)1/3, condition.getFulfillment(), 0.01);
@@ -67,7 +67,7 @@ public class StateCoverageTest extends TestCase {
 		StopCondition condition = new StateCoverage();
 		mbt.setCondition(condition);
 		mbt.setGraph(graph);
-		mbt.setGenerator(Keywords.GENERATOR_SHORTEST);
+		mbt.setGenerator(Keywords.GENERATOR_RANDOM);
 		assertTrue(mbt.hasNextStep());
 
 		assertEquals(false, condition.isFulfilled());

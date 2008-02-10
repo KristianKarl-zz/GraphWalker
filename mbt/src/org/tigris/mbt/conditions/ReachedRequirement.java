@@ -22,5 +22,8 @@ public class ReachedRequirement extends StopCondition {
 		covered.retainAll(requirements);
 		return covered.size() / (double)requirements.size();
 	}
+	public String toString() {
+		return "RC="+ Arrays.deepToString(requirements.toArray());
+	}
 
 }

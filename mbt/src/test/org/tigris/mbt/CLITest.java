@@ -155,7 +155,7 @@ public class CLITest extends TestCase {
     	runCommand( args );
 		restoreMbtPropertiesFile();
 		System.out.println( errMsg );
-    	assertTrue( "No error messages should occur.", errMsg.isEmpty() );
+    	assertEquals( "No error messages should occur.", "", errMsg);
     	assertEquals( 78, outMsg.split("\r\n|\r|\n").length );
     }
 
@@ -179,7 +179,7 @@ public class CLITest extends TestCase {
     {
 		String args[] = { "offline", "-f", "graphml/reqtags/ExtendedMain.graphml", "-g", "SHORTEST", "-s", "EDGE_COVERAGE:100" };
     	runCommand( args );
-    	assertTrue( "No error messages should occur.", errMsg.isEmpty() );
+    	assertEquals( "No error messages should occur.", "", errMsg);
     	assertEquals( 78, outMsg.split("\r\n|\r|\n").length );
     }
 
@@ -212,7 +212,7 @@ public class CLITest extends TestCase {
     {
 		String args[] = { "offline", "-f", "graphml/reqtags/ExtendedMain.graphml", "-g", "SHORTEST", "-s", "STATE_COVERAGE:100" };
     	runCommand( args );
-    	assertTrue( "No error messages should occur.", errMsg.isEmpty() );
+    	assertEquals( "No error messages should occur.", "", errMsg );
     	assertEquals( 24, outMsg.split("\r\n|\r|\n").length );
     }
     
@@ -223,7 +223,7 @@ public class CLITest extends TestCase {
     {
 		String args[] = { "offline", "-f", "graphml/reqtags/ExtendedMain.graphml", "-g", "SHORTEST", "-s", "REACHED_REQUIREMENT:req 78" };
     	runCommand( args );
-    	assertTrue( "No error messages should occur.", errMsg.isEmpty() );
+    	assertEquals( "No error messages should occur.", "", errMsg );
     	assertEquals( 6, outMsg.split("\r\n|\r|\n").length );
     }
     

@@ -1,7 +1,10 @@
 package org.tigris.mbt;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Method;
@@ -13,8 +16,11 @@ import org.apache.log4j.Level;
 import org.apache.log4j.PropertyConfigurator;
 import org.apache.log4j.SimpleLayout;
 import org.apache.log4j.WriterAppender;
+import org.jdom.Document;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
+import org.tigris.mbt.conditions.AlternativeCondition;
 import org.tigris.mbt.conditions.CombinationalCondition;
 import org.tigris.mbt.conditions.EdgeCoverage;
 import org.tigris.mbt.conditions.NeverCondition;
@@ -258,57 +264,80 @@ public class Util {
 		
 		SAXBuilder parser = new SAXBuilder( "org.apache.crimson.parser.XMLReaderImpl", false );		
 				
-		try
+		Document doc;
+		try {
+			doc = parser.build( fileName );
+		} catch (JDOMException e) {
+			throw new RuntimeException("Error parsing XML file.",e);
+		} catch (IOException e) {
+			throw new RuntimeException("Error reading XML file.",e);
+		}
+		Element root = doc.getRootElement();
+		List models = root.getChildren("MODEL");
+		
+		if(models.size()==0)
+			throw new RuntimeException("Model is missing from XML");
+			
+		for(Iterator i=models.iterator();i.hasNext();)
 		{
-			Element root = parser.build( fileName ).getRootElement();
-			List models = root.getChildren("MODEL");
-			
-			if(models.size()==0)
-				throw new RuntimeException("Model is missing from XML");
-				
-			for(Iterator i=models.iterator();i.hasNext();)
-			{
-				mbt.readGraph((String) i.next());
-			}
-			
-			if(root.getAttributeValue("EXTENDED").equalsIgnoreCase("true"))
-			{
-				mbt.enableExtended(true);
-				mbt.setStartupScript(root.getChildText("SCRIPT"));
-			}
-			 
-			List generators = root.getChildren("GENERATOR");
-
-			if(generators.size()==0)
-				throw new RuntimeException("Generator is missing from XML");
-
-			PathGenerator generator;
-			if(generators.size() > 1)
-			{
-				generator = new CombinedPathGenerator();
-				for(Iterator i=generators.iterator();i.hasNext();)
-				{
-					((CombinedPathGenerator)generator).addPathGenerator(getGenerator((Element) i.next()));
-				}
-			} else {
-				generator = getGenerator((Element) generators.get(0));
-			}
-			if(generator == null)
-				throw new RuntimeException("Failed to set generator");
-			mbt.setGenerator(generator);
+			mbt.readGraph(((Element) i.next()).getAttributeValue("PATH"));
 		}
-		catch (Exception e) {
-			// TODO: handle exception
+		
+		if(root.getAttributeValue("EXTENDED").equalsIgnoreCase("true"))
+		{
+			mbt.enableExtended(true);
+			mbt.setStartupScript(root.getChildText("SCRIPT"));
 		}
+		 
+		List generators = root.getChildren("GENERATOR");
+
+		if(generators.size()==0)
+			throw new RuntimeException("Generator is missing from XML");
+
+		PathGenerator generator;
+		if(generators.size() > 1)
+		{
+			generator = new CombinedPathGenerator();
+			for(Iterator i=generators.iterator();i.hasNext();)
+			{
+				((CombinedPathGenerator)generator).addPathGenerator(getGenerator((Element) i.next()));
+			}
+		} else {
+			generator = getGenerator((Element) generators.get(0));
+		}
+		if(generator == null)
+			throw new RuntimeException("Failed to set generator");
+		mbt.setGenerator(generator);
 		return mbt;
 	}
 
 	private static PathGenerator getGenerator(Element generator) {
 		int generatorType = Keywords.getGenerator(generator.getAttributeValue("TYPE"));
 		PathGenerator generatorObject = getGenerator(generatorType);
-		StopCondition stopCondition = getCondition(generator.getChildren());
-		if(stopCondition != null )
-			generatorObject.setStopCondition( stopCondition );
+		if(generatorObject instanceof CodeGenerator)
+		{
+			String template = "";
+			String templateFile = generator.getAttributeValue("VALUE");
+			if(templateFile != null)
+			{
+				template = readFile(templateFile.trim());
+			} else {
+				Element templateElement = generator.getChild("TEMPLATE");
+				if(templateElement != null)
+				{
+					template = templateElement.getTextTrim();
+				} else {
+					throw new RuntimeException("No Template is specified for the stub generator.");
+				}
+			} 
+			((CodeGenerator)generatorObject).setTemplate(template);
+		} else {
+			StopCondition stopCondition = getCondition(generator.getChildren());
+			if(stopCondition != null )
+			{
+				generatorObject.setStopCondition( stopCondition );
+			}
+		}
 		return generatorObject;
 	}
 
@@ -331,16 +360,31 @@ public class Util {
 		StopCondition stopCondition = null;
 		if(condition.getName().equalsIgnoreCase("AND")) {
 			stopCondition = new CombinationalCondition();
-			//TODO iterate and add children
+			for(Iterator i = condition.getChildren().iterator(); i.hasNext();)
+				((CombinationalCondition)stopCondition).add(getCondition((Element) i.next()));
 		} else if(condition.getName().equalsIgnoreCase("OR")) {
-			stopCondition = new CombinationalCondition();
-			//TODO iterate and add children
+			stopCondition = new AlternativeCondition();
+			for(Iterator i = condition.getChildren().iterator(); i.hasNext();)
+				((AlternativeCondition)stopCondition).add(getCondition((Element) i.next()));
 		} else if(condition.getName().equalsIgnoreCase("CONDITION")){
 			int type = Keywords.getStopCondition(condition.getAttributeValue("TYPE"));
 			String value = condition.getAttributeValue("VALUE");
 			stopCondition = getCondition(type, value);
 		}
 		return stopCondition;
+	}
+	
+	public static String readFile(String fileName)
+	{
+		String retur = "";
+		try {
+			BufferedReader in = new BufferedReader(new FileReader(fileName));
+			while(in.ready())
+				retur+=in.readLine() + "\n";
+		} catch (IOException e) {
+			throw new RuntimeException("Problem reading file '"+ fileName + "'",e);
+		}
+		return retur;
 	}
 
 }

@@ -53,4 +53,8 @@ public abstract class PathGenerator {
     	this(stopCondition);
     	setMachine(machine);
     }
+    
+    public String toString() {
+    	return getStopCondition().toString();
+    }
 }

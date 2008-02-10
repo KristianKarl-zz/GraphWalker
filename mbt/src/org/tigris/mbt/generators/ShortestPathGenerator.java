@@ -45,9 +45,8 @@ public class ShortestPathGenerator extends PathGenerator {
 			{
 				resetNode((AbstractElement)i.next());
 			}
-			boolean oldBacktracking = getMachine().isBacktrack();
-			getMachine().setBacktrack(true);
-			getMachine().setCalculatingShortestPath(true);
+			boolean oldCalculatingPathValue = getMachine().isCalculatingPath();
+			getMachine().setCalculatingPath(true);
 			try {
 				calculateShortestPath();
 			} catch (FoundNoEdgeException e) {
@@ -55,8 +54,7 @@ public class ShortestPathGenerator extends PathGenerator {
 			}
 			finally
 			{
-				getMachine().setBacktrack(oldBacktracking);
-				getMachine().setCalculatingShortestPath(false);				
+				getMachine().setCalculatingPath(oldCalculatingPathValue);				
 			}
 
 			if(preCalculatedPath == null)
@@ -248,5 +246,9 @@ public class ShortestPathGenerator extends PathGenerator {
 		{
 			return edgePaths.toString();
 		}
+	}
+	
+	public String toString() {
+		return "SHORT{"+ super.toString() +"}";
 	}
 }

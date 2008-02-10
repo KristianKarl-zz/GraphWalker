@@ -52,7 +52,7 @@ public class EdgeCoverageTest extends TestCase {
 		StopCondition condition = new EdgeCoverage();
 		mbt.setCondition(condition);
 		mbt.setGraph(graph);
-		mbt.setGenerator(Keywords.GENERATOR_SHORTEST);
+		mbt.setGenerator(Keywords.GENERATOR_RANDOM);
 		assertTrue(mbt.hasNextStep());
 		
 		assertEquals((double)0/2, condition.getFulfillment(), 0.01);
@@ -68,7 +68,7 @@ public class EdgeCoverageTest extends TestCase {
 		StopCondition condition = new EdgeCoverage();
 		mbt.setCondition(condition);
 		mbt.setGraph(graph);
-		mbt.setGenerator(Keywords.GENERATOR_SHORTEST);
+		mbt.setGenerator(Keywords.GENERATOR_RANDOM);
 		assertTrue(mbt.hasNextStep());
 
 		assertEquals(false, condition.isFulfilled());

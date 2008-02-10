@@ -58,7 +58,7 @@ public class ReachedRequirementTest extends TestCase {
 		StopCondition condition = new ReachedRequirement("R4");
 		mbt.setCondition(condition);
 		mbt.setGraph(graph);
-		mbt.setGenerator(Keywords.GENERATOR_SHORTEST);
+		mbt.setGenerator(Keywords.GENERATOR_RANDOM);
 		assertTrue(mbt.hasNextStep());
 		
 		assertEquals((double)0, condition.getFulfillment(), 0.01);
@@ -74,7 +74,7 @@ public class ReachedRequirementTest extends TestCase {
 		StopCondition condition = new ReachedRequirement("R4");
 		mbt.setCondition(condition);
 		mbt.setGraph(graph);
-		mbt.setGenerator(Keywords.GENERATOR_SHORTEST);
+		mbt.setGenerator(Keywords.GENERATOR_RANDOM);
 		assertTrue(mbt.hasNextStep());
 
 		assertEquals(false, condition.isFulfilled());

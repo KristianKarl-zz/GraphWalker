@@ -273,7 +273,7 @@ public class GraphMLTest extends TestCase {
     }
     
     // Test merging a folder consisting 162 graphs
-    public void testMergeLargeGraph()
+    public void xtestMergeLargeGraph()
     {
     	try
     	{

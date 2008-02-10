@@ -17,4 +17,9 @@ public class TimeDuration extends StopCondition {
 	public double getFulfillment() {
 		return (System.currentTimeMillis()-this.start_time) / this.duration;
 	}
+	
+	public String toString() {
+		return "DURATION="+ (duration/1000) +"s";
+	}
+
 }

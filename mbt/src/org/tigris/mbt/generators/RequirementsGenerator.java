@@ -8,7 +8,6 @@ import java.util.Vector;
 
 import org.tigris.mbt.Keywords;
 
-import edu.uci.ics.jung.graph.Edge;
 import edu.uci.ics.jung.graph.impl.AbstractElement;
 
 public class RequirementsGenerator extends PathGenerator {
@@ -52,12 +51,16 @@ public class RequirementsGenerator extends PathGenerator {
 				for ( int j = 0; j < tags.length; j++ ) 
 				{
 					String[] value = { 
-							tags[ j ], 
-							(ae instanceof Edge ? "Edge" : "Vertex")}; 
+							tags[ j ], ""}; 
 					tempList.add( value );	
 				}
 			}
 		}
 		list.addAll(tempList);
 	}
+	
+	public String toString() {
+		return "REQUIREMENTS";
+	}
+
 }

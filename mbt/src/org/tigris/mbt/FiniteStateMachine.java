@@ -49,7 +49,7 @@ public class FiniteStateMachine{
 	private int numberOfEdgesTravesed = 0;
 	protected boolean backtracking = false;
 	protected boolean abortOnDeadEnds = true;
-	protected boolean calculatingShortestPath = false;
+	protected boolean calculatingPath = false;
 
 	private long start_time;
 
@@ -191,7 +191,7 @@ public class FiniteStateMachine{
 		if(currentState.isSource(edge))
 		{
 			lastEdge = edge;
-			if(this.backtracking)
+			if(isBacktrackPossible())
 			{
 				track();
 			}
@@ -411,44 +411,50 @@ public class FiniteStateMachine{
 
 	public void backtrack( boolean popEdge )
 	{
-		if(this.backtracking)
+		if(isBacktrackPossible())
 		{
-			if( calculatingShortestPath || getLastEdge().containsUserDatumKey( Keywords.BACKTRACK ) )
+			if ( popEdge )
 			{
-				if ( popEdge )
-				{
-					popEdge();
-				}
-				else
-				{
-					popState();
-				}
+				popEdge();
 			}
-			else		
+			else
 			{
-				throw new RuntimeException( "Backtracking was asked for, but model does not suppport BACKTRACK at egde: " + Util.getCompleteEdgeName( getLastEdge() ) );			
+				popState();
 			}
 		} else {
-			throw new RuntimeException( "Backtracking was asked for, but the -b flag was not enabled. Please use -b" );			
+			
+			if(!isBacktrackEnabled())
+				throw new RuntimeException( "Backtracking was asked for, but was disabled." );			
+			throw new RuntimeException( "Backtracking was asked for, but model does not suppport BACKTRACK at egde: " + Util.getCompleteEdgeName( getLastEdge() ) );			
 		}
 	}
 	
-	public void setBacktrack(boolean backtracking) 
+	public void setBacktrackEnabled(boolean backtracking) 
 	{
 		this.backtracking  = backtracking;
 	}
 
-	public boolean isBacktrack() 
+	public boolean isBacktrackEnabled() 
 	{
 		return this.backtracking;
 	}
 
-	public boolean isCalculatingShortestPath() {
-		return calculatingShortestPath;
+	public boolean isBacktrackPossible() 
+	{
+		return isBacktrackEnabled() || isCalculatingPath() || isLastEdgeBacktrackSupported();
+	}
+	
+	private boolean isLastEdgeBacktrackSupported()
+	{
+		return getLastEdge().containsUserDatumKey( Keywords.BACKTRACK );
+	}
+	
+	public boolean isCalculatingPath() {
+		return calculatingPath;
 	}
 
-	public void setCalculatingShortestPath(boolean calculatingShortestPath) {
-		this.calculatingShortestPath = calculatingShortestPath;
+	public void setCalculatingPath(boolean calculatingPath) {
+		this.calculatingPath = calculatingPath;
 	}
 }
 

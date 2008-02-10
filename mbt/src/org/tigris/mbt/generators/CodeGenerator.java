@@ -40,6 +40,11 @@ public class CodeGenerator extends ListGenerator {
 		retur[0] = template
 			.replaceAll( "\\{LABEL\\}", retur[0])
 			.replaceAll( "\\{EDGE_VERTEX\\}",retur[1]);
+		retur[1] = "";
 		return retur;
+	}
+	
+	public String toString() {
+		return "CODE";
 	}
 }

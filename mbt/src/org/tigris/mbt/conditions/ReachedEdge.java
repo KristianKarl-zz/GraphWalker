@@ -15,4 +15,9 @@ public class ReachedEdge extends StopCondition {
 	public double getFulfillment() {
 		return (isFulfilled()?1:0);
 	}
+	
+	public String toString() {
+		return "EDGE='"+ endEdge +"'";
+	}
+
 }
