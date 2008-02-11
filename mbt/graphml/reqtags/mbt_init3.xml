@@ -2,6 +2,7 @@
 <!DOCTYPE MBTINIT SYSTEM "../../templates/mbt_setup.dtd" >
 <MBTINIT EXTENDED="true">
   <MODEL PATH="graphml/reqtags/ExtendedMain.graphml"/>
+  <SCRIPT PATH="graphml/reqtags/graph.bsh"/>
   <SCRIPT PATH="graphml/reqtags/mbt_startup.bsh"/>
   <SCRIPT>
 	v.add("Option 1");
