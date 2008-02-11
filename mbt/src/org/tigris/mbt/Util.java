@@ -286,7 +286,7 @@ public class Util {
 		if(root.getAttributeValue("EXTENDED").equalsIgnoreCase("true"))
 		{
 			mbt.enableExtended(true);
-			mbt.setStartupScript(root.getChildText("SCRIPT"));
+			mbt.setStartupScript(getScriptContent(root.getChildren("SCRIPT")));
 		}
 		 
 		List generators = root.getChildren("GENERATOR");
@@ -309,6 +309,21 @@ public class Util {
 			throw new RuntimeException("Failed to set generator");
 		mbt.setGenerator(generator);
 		return mbt;
+	}
+
+	private static String getScriptContent(List scripts) {
+		String retur = "";
+		for(Iterator i=scripts.iterator();i.hasNext();)
+		{
+			Element script = (Element) i.next();
+			String internal = script.getTextTrim();
+			if(internal != null && !internal.equals(""))
+				retur += internal + "\n";
+			String external = script.getAttributeValue("PATH");
+			if(external != null && !external.equals(""))
+				retur += readFile(external) + "\n";
+		}
+		return retur;
 	}
 
 	private static PathGenerator getGenerator(Element generator) {

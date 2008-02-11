@@ -29,6 +29,12 @@ public class ModelBasedTestingTest extends TestCase {
 	public void testXmlLoading_advanced()
 	{
 		ModelBasedTesting mbt = Util.loadMbtFromXml("graphml/reqtags/mbt_init3.xml");
-		assertEquals(mbt.toString(), "RANDOM{EC>=100}\nREQUIREMENTS\nCODE");
+		assertEquals(mbt.toString(), "RANDOM{EC>=10}\nRANDOM{(SC>=30 AND EC>=10)}");
+	}
+
+	public void testXmlLoading_requirementsAndStub()
+	{
+		ModelBasedTesting mbt = Util.loadMbtFromXml("graphml/reqtags/mbt_init4.xml");
+		assertEquals(mbt.toString(), "REQUIREMENTS\nCODE");
 	}
 }
