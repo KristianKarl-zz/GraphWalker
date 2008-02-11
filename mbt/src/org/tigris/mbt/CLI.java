@@ -76,7 +76,7 @@ public class CLI
 		}
 		catch ( IllegalArgumentException e )
 		{
-			logger.debug( "Hook previously registered" );
+			logger.debug( "Could not register ShutdownHook for statistics logger, it has already been registered" );
 		}
 		try
 		{
