@@ -2,25 +2,18 @@
 <!DOCTYPE MBTINIT SYSTEM "../../templates/mbt_setup.dtd" >
 <MBTINIT EXTENDED="true">
   <MODEL PATH="graphml/reqtags/ExtendedMain.graphml"/>
+  <SCRIPT PATH="graphml/reqtags/mbt_startup.bsh"/>
   <SCRIPT>
-  	import java.util.Vector;
-  	x=0;
-  	Vector v = new Vector(); 
+	v.add("Option 1");
+	x = 0;
   </SCRIPT>
     <GENERATOR TYPE="RANDOM">
-  	<CONDITION TYPE="EDGE_COVERAGE" VALUE="100"/>
-  </GENERATOR>
-  <GENERATOR TYPE="REQUIREMENTS"/>
-  <GENERATOR TYPE="STUB">
-  	<TEMPLATE>
-/**
- * This method implements the {EDGE_VERTEX} '{LABEL}'
- */
-public void {LABEL}()
-{
-  log.info( "{EDGE_VERTEX}: {LABEL}" );
-  throw new RuntimeException( "The {EDGE_VERTEX}: {LABEL} is not implemented yet!" );
-}
-	</TEMPLATE>
-  </GENERATOR>
+  		<CONDITION TYPE="EDGE_COVERAGE" VALUE="10"/>
+  	</GENERATOR>
+    <GENERATOR TYPE="RANDOM">
+    	<AND>
+	  		<CONDITION TYPE="STATE_COVERAGE" VALUE="30"/>
+  			<CONDITION TYPE="EDGE_COVERAGE" VALUE="10"/>
+  		</AND>
+  	</GENERATOR>
 </MBTINIT>
