@@ -332,6 +332,7 @@ public class Util {
 			}, 500, seconds * 1000 );
 		}
 
+		try {
 		
 		String executor = root.getAttributeValue("EXECUTOR");
 		String executorParam = null;
@@ -370,9 +371,11 @@ public class Util {
 		} else {
 			throw new RuntimeException("Unknown executor '"+executor+"'");
 		}
-		
-		if(timer != null)
-			timer.cancel();
+			
+		} finally {
+			if(timer != null)
+				timer.cancel();
+		}
 		return mbt;
 	}
 
