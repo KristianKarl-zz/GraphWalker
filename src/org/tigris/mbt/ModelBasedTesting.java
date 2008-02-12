@@ -17,8 +17,11 @@
 
 package org.tigris.mbt;
 
+import java.io.InputStream;
 import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
+import java.util.Vector;
 
 import org.apache.log4j.Logger;
 import org.tigris.mbt.conditions.AlternativeCondition;
@@ -49,7 +52,7 @@ public class ModelBasedTesting
 	private FiniteStateMachine machine;
 	private StopCondition condition;
 	private PathGenerator generator;
-	private String template;
+	private String[] template;
 	private boolean backtracking = false;
 	private boolean runRandomGeneratorOnce = false;
 
@@ -277,7 +280,7 @@ public class ModelBasedTesting
 
 	public boolean hasCurrentEdgeBackTracking() 
 	{
-		if(this.machine != null)
+		if(this.machine != null && getMachine().getLastEdge() != null)
 		{					
 			return getMachine().getLastEdge().containsUserDatumKey( Keywords.BACKTRACK );
 		}
@@ -286,7 +289,7 @@ public class ModelBasedTesting
 
 	public boolean hasCurrentVertexBackTracking() 
 	{
-		if(this.machine != null)
+		if(this.machine != null && getMachine().getLastEdge() != null)
 		{					
 			return  getMachine().getLastEdge().containsUserDatumKey( Keywords.BACKTRACK );
 		}
@@ -334,10 +337,47 @@ public class ModelBasedTesting
 
 	public void setTemplate( String templateFile )
 	{
-		this.template = Util.readFile(templateFile);
+		this.template = new String[]{"", Util.readFile(templateFile), ""};
 		
 		if(getGenerator() != null && getGenerator() instanceof CodeGenerator)
 			((CodeGenerator)getGenerator()).setTemplate(this.template);
+	}
+	
+	public void interractivePath()
+	{
+		interractivePath(System.in);
+	}
+	
+	public void interractivePath(InputStream in)
+	{
+		Vector stepPair = new Vector();
+		while( hasNextStep() )
+		{
+			char input = Util.getInput();
+			logger.debug("Recieved: '"+ input+"'");
+
+			switch (input) {
+			case '1':
+				backtrack(stepPair.size()<=1);
+				stepPair.clear();
+				break;
+			case '2':
+				return;
+			case '0':
+				if(stepPair.size() == 0)
+					stepPair = new Vector(Arrays.asList(getNextStep()));
+				System.out.print( (String) stepPair.remove(0) );
+				if((stepPair.size() == 1 && hasCurrentEdgeBackTracking()) || 
+						(stepPair.size() == 0 && hasCurrentVertexBackTracking()))
+					System.out.println(" BACKTRACK");
+				else
+					System.out.println();
+				break;
+
+			default:
+				throw new RuntimeException("Unsupported input recieved.");
+			} 
+		}
 	}
 	
 	public void executePath(String strClassName) 

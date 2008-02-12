@@ -36,6 +36,8 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 	private AccessableEdgeFilter accessableFilter;
 
 	private Stack namespaceStack;
+
+	private PrintStream oldPrintStream;
 	
 	public ExtendedFiniteStateMachine(SparseGraph model)
 	{
@@ -203,6 +205,18 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 			} catch (ClassNotFoundException e) {
 				throw new RuntimeException("Unable to restore backtrack information as the NameSpace Class could not be found.",e);
 			}
+		}
+	}
+	
+	public void setCalculatingPath(boolean calculatingPath) {
+		super.setCalculatingPath(calculatingPath);
+		if(calculatingPath && this.oldPrintStream != System.out)
+		{
+			this.oldPrintStream = System.out;
+			System.setOut(new VoidPrintStream());
+		} else if(!calculatingPath && this.oldPrintStream != System.out)
+		{
+			System.setOut(this.oldPrintStream);
 		}
 	}
 	

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE MBTINIT SYSTEM "../../templates/mbt_setup.dtd" >
+<MBTINIT EXECUTOR="online">
+	<MODEL PATH="graphml/reqtags/ExtendedMain.graphml"/>
+    <GENERATOR TYPE="REQUIREMENTS" />
+</MBTINIT>

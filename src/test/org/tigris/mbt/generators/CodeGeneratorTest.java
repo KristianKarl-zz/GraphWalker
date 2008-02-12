@@ -35,7 +35,8 @@ public class CodeGeneratorTest extends TestCase {
 		
 		FiniteStateMachine FSM = new FiniteStateMachine(graph);
 		
-		CodeGenerator generator = new CodeGenerator("{EDGE_VERTEX}: {LABEL}");
+		String[] template = {"", "{EDGE_VERTEX}: {LABEL}", ""};
+		CodeGenerator generator = new CodeGenerator(template);
 		generator.setMachine(FSM);
 
 		assertEquals("Edge: E1", generator.getNext()[0]);

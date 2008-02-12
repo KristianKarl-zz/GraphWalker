@@ -36,8 +36,9 @@ public class CombinedPathGeneratorTest extends TestCase {
 	public void testCodeList()
 	{
 	FiniteStateMachine FSM = new FiniteStateMachine(graph);
-	
-	CodeGenerator generator1 = new CodeGenerator("{EDGE_VERTEX}: {LABEL}");
+
+	String[] template = {"", "{EDGE_VERTEX}: {LABEL}", ""};
+	CodeGenerator generator1 = new CodeGenerator(template);
 	ListGenerator generator2 = new ListGenerator();
 	
 	CombinedPathGenerator pathGenerator = new CombinedPathGenerator(generator1);

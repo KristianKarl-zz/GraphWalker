@@ -21,26 +21,30 @@ package org.tigris.mbt.generators;
  */
 public class CodeGenerator extends ListGenerator {
 
-	String template;
+	String[] template; // {HEADER, BODY, FOOTER}
+	private boolean first = true;
 	
 	public CodeGenerator() {
 		super();
 	}
 	
-	public CodeGenerator(String template) {
+	public CodeGenerator(String[] template) {
 		setTemplate(template);
 	}
 	
-	public void setTemplate(String template) {
+	public void setTemplate(String[] template) {
 		this.template = template;
 	}
 	
 	public String[] getNext() {
 		String[] retur = super.getNext();
-		retur[0] = template
+		retur[0] = (first&&template[0].length()>0?template[0]+"\n":"")+ // HEADER
+			template[1]	// BODY
 			.replaceAll( "\\{LABEL\\}", retur[0])
-			.replaceAll( "\\{EDGE_VERTEX\\}",retur[1]);
+			.replaceAll( "\\{EDGE_VERTEX\\}",retur[1])+
+			(!hasNext()&&template[2].length()>0?"\n"+template[2]:""); // FOOTER
 		retur[1] = "";
+		first = false;
 		return retur;
 	}
 	

@@ -2,9 +2,11 @@ package org.tigris.mbt;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Method;
@@ -261,9 +263,7 @@ public class Util {
 	public static ModelBasedTesting loadMbtFromXml( String fileName )
 	{
 		ModelBasedTesting mbt = new ModelBasedTesting();
-		
 		SAXBuilder parser = new SAXBuilder( "org.apache.crimson.parser.XMLReaderImpl", false );		
-				
 		Document doc;
 		try {
 			doc = parser.build( fileName );
@@ -288,7 +288,7 @@ public class Util {
 			mbt.enableExtended(true);
 			mbt.setStartupScript(getScriptContent(root.getChildren("SCRIPT")));
 		}
-		 
+		
 		List generators = root.getChildren("GENERATOR");
 
 		if(generators.size()==0)
@@ -308,6 +308,45 @@ public class Util {
 		if(generator == null)
 			throw new RuntimeException("Failed to set generator");
 		mbt.setGenerator(generator);
+		
+		String executor = root.getAttributeValue("EXECUTOR");
+		String executorParam = null;
+		if(executor.contains(":"))
+		{
+			executorParam = executor.substring(executor.indexOf(':')+1);
+			executor = executor.substring(0, executor.indexOf(':'));
+		}
+
+		if(executor.equalsIgnoreCase("offline"))
+		{
+			PrintStream out = System.out;
+			if(executorParam != null && !executorParam.equals(""))
+			{
+				try {
+					out = new PrintStream(executorParam);
+				} catch (FileNotFoundException e) {
+					throw new RuntimeException("offline filename '"+executorParam+"' could not be created or is writeprotected.", e);
+				}
+			}
+			mbt.writePath(out);
+			if(out != System.out)
+				out.close();
+		
+		} else if(executor.equalsIgnoreCase("java")){
+			if(executorParam == null || executorParam.equals(""))
+				throw new RuntimeException("No java class specified for execution");
+			mbt.executePath(executorParam);
+		
+		} else if(executor.equalsIgnoreCase("online")){
+			mbt.interractivePath();
+		
+		} else if(executor.equalsIgnoreCase("none") || executor.equals("")){
+			// no execution (for debug purpose)
+		
+		} else {
+			throw new RuntimeException("Unknown executor '"+executor+"'");
+		}
+		
 		return mbt;
 	}
 
@@ -331,16 +370,18 @@ public class Util {
 		PathGenerator generatorObject = getGenerator(generatorType);
 		if(generatorObject instanceof CodeGenerator)
 		{
-			String template = "";
+			String[] template = {"","",""};
 			String templateFile = generator.getAttributeValue("VALUE");
 			if(templateFile != null)
 			{
-				template = readFile(templateFile.trim());
+				template[1] = readFile(templateFile.trim());
 			} else {
 				Element templateElement = generator.getChild("TEMPLATE");
 				if(templateElement != null)
 				{
-					template = templateElement.getTextTrim();
+					template[0] = templateElement.getChildTextTrim("HEADER");
+					template[1] = templateElement.getChildTextTrim("BODY");
+					template[2] = templateElement.getChildTextTrim("FOOTER");
 				} else {
 					throw new RuntimeException("No Template is specified for the stub generator.");
 				}
@@ -400,6 +441,21 @@ public class Util {
 			throw new RuntimeException("Problem reading file '"+ fileName + "'",e);
 		}
 		return retur;
+	}
+	
+	public static char getInput() 
+	{
+		char c = 0; 
+		try 
+		{
+			while(c != '0' && c != '1' && c != '2')
+			{
+				int tmp = System.in.read ();
+				c = (char) tmp;
+			}
+		}
+		catch ( IOException e ) {}
+		return c;
 	}
 
 }
