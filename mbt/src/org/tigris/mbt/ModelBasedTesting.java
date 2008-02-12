@@ -334,13 +334,19 @@ public class ModelBasedTesting
 		logger.warn( "Trying to retrieve verbose statistics without specifying machine" );
 		return "";
 	}
-
-	public void setTemplate( String templateFile )
+	
+	public void setTemplate( String[] template )
 	{
-		this.template = new String[]{"", Util.readFile(templateFile), ""};
+		this.template = template;
 		
 		if(getGenerator() != null && getGenerator() instanceof CodeGenerator)
 			((CodeGenerator)getGenerator()).setTemplate(this.template);
+		
+	}
+	
+	public void setTemplate( String templateFile )
+	{
+		setTemplate( new String[]{"", Util.readFile(templateFile), ""} );
 	}
 	
 	public void interractivePath()

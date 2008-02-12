@@ -52,20 +52,28 @@ public class CLI
 	}
 
 	static Logger logger = Util.setupLogger(CLI.class);
-	private ModelBasedTesting mbt;
+	private ModelBasedTesting mbt = null;
 	private Timer timer = null;
 	private Options opt = new Options();
 
 	public CLI()
 	{
-		mbt = new ModelBasedTesting();
 	}
 	
-	public ModelBasedTesting getMbt() 
+	private ModelBasedTesting getMbt() 
 	{
+		if(mbt == null)
+			mbt = new ModelBasedTesting();
 		return mbt;
 	}
-	
+
+	/**
+	 * @param mbt the ModelBasedTesting to set
+	 */
+	private void setMbt(ModelBasedTesting mbt) {
+		this.mbt = mbt;
+	}
+
 	public static void main(String[] args)
 	{
 		CLI cli = new CLI();
@@ -300,21 +308,6 @@ public class CLI
         }
 	}
 
-	private char getInput() 
-	{
-		char c = 0; 
-		try 
-		{
-			while(c != '0' && c != '1' && c != '2')
-			{
-				int tmp = System.in.read ();
-				c = (char) tmp;
-			}
-		}
-		catch ( IOException e ) {}
-		return c;
-	}
-	
 	private void printGeneralHelpText()
 	{
 		System.out.println( "usage: 'java -jar mbt.jar <COMMAND> [OPTION] [ARGUMENT]'\n" );
@@ -569,15 +562,7 @@ public class CLI
 				}
 			}, 500, Integer.valueOf( cl.getOptionValue( "o" ) ).longValue() * 1000 );
 		}
-		
-		while( getMbt().hasNextStep() )
-		{
-			String[] stepPair = getMbt().getNextStep();
-			System.out.println(stepPair[0]);
-			logger.debug( "Execute: " + stepPair[0] );
-			System.out.println(stepPair[1]);
-			logger.debug( "Verify: " + stepPair[1] );
-		}
+		getMbt().writePath();
 		
 		if( cl.hasOption( "a" ) )
 		{
@@ -681,65 +666,7 @@ public class CLI
 		}
 		else
 		{
-			boolean firstLine = true;
-			char input = 0;
-			String[] stepPair = null;
-			while(getMbt().hasNextStep())
-			{
-				if ( firstLine == false )
-				{
-					input = getInput();
-					logger.debug("Recieved: '"+ input+"'");
-					if(input == '2')
-					{
-						break;
-					}
-					if(input == '1')
-					{
-						getMbt().backtrack( false );
-						firstLine = true;
-						continue;
-					}
-				}
-				else
-				{
-					firstLine = false;
-				}
-				stepPair = getMbt().getNextStep();
-				logger.debug("Execute: " + stepPair[0]);
-				System.out.print(stepPair[0]);
-				if ( getMbt().hasCurrentEdgeBackTracking() )
-				{
-					System.out.println( " BACKTRACK" );					
-				}
-				else
-				{
-					System.out.println( "" );										
-				}
-	
-				input = getInput(); 
-				logger.debug("Recieved: '"+ input+"'");
-				if(input == '2')
-				{
-					break;
-				}
-				if(input == '1')
-				{
-					getMbt().backtrack( true );
-					firstLine = true;
-					continue;
-				}
-				logger.debug("Verify: " + stepPair[1]);
-				System.out.print(stepPair[1]);
-				if ( getMbt().hasCurrentVertexBackTracking() )
-				{
-					System.out.println( " BACKTRACK" );					
-				}
-				else
-				{
-					System.out.println( "" );										
-				}
-			}
+			getMbt().interractivePath();
 		}
 		if( cl.hasOption( "a" ) )
 		{
@@ -767,12 +694,7 @@ public class CLI
 		getMbt().readGraph( cl.getOptionValue( "f" ) );
 		getMbt().setTemplate( cl.getOptionValue( "t" ) );
 		getMbt().setGenerator( Keywords.GENERATOR_STUB );
-	
-		while( getMbt().hasNextStep() )
-		{
-			String[] stepPair = getMbt().getNextStep();
-			System.out.println(stepPair[0]);
-		}
+		getMbt().writePath(System.out);
 	}
 
 	/**
@@ -788,12 +710,7 @@ public class CLI
 	    }
 		getMbt().readGraph( cl.getOptionValue( "f" ) );
 		getMbt().setGenerator( Keywords.GENERATOR_REQUIREMENTS );
-		
-		while( getMbt().hasNextStep() )
-		{
-			String[] stepPair = getMbt().getNextStep();
-			System.out.println(stepPair[0]);
-		}
+		getMbt().writePath(System.out);
 	}
 
 	/**
@@ -808,13 +725,9 @@ public class CLI
 	        return;	            	
 	    }
 		getMbt().readGraph( cl.getOptionValue( "f" ) );
-		getMbt().setGenerator( Keywords.GENERATOR_LIST );
-		
-		while( getMbt().hasNextStep() )
-		{
-			String[] stepPair = getMbt().getNextStep();
-			System.out.println(stepPair[0]);
-		}
+		getMbt().setTemplate(new String[]{"","{LABEL}",""});
+		getMbt().setGenerator( Keywords.GENERATOR_STUB );
+		getMbt().writePath(System.out);
 	}
 
 	/**
