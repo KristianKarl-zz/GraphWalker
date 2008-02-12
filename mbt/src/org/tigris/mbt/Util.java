@@ -12,6 +12,8 @@ import java.io.StringWriter;
 import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
@@ -54,6 +56,9 @@ import edu.uci.ics.jung.utils.UserData;
  * * Setting up the logger for classes<br>
  */
 public class Util {
+	
+	static Logger logger = setupLogger(Util.class);
+	
     /**
      * Retries information regarding an edge, and returns it as a String.
      * This method is for logging purposes.
@@ -262,7 +267,7 @@ public class Util {
 	 */
 	public static ModelBasedTesting loadMbtFromXml( String fileName )
 	{
-		ModelBasedTesting mbt = new ModelBasedTesting();
+		final ModelBasedTesting mbt = new ModelBasedTesting();
 		SAXBuilder parser = new SAXBuilder( "org.apache.crimson.parser.XMLReaderImpl", false );		
 		Document doc;
 		try {
@@ -309,6 +314,25 @@ public class Util {
 			throw new RuntimeException("Failed to set generator");
 		mbt.setGenerator(generator);
 		
+		String logCoverage = root.getAttributeValue("LOG-COVERAGE");
+		Timer timer = null;
+		
+		if( logCoverage != null )
+		{
+			long seconds = Integer.valueOf( logCoverage ).longValue();
+			logger.info( "Append coverage to log every: " + seconds + " seconds" );
+
+			timer = new Timer();
+			timer.schedule(	new TimerTask()	
+			{
+				public void run() 
+				{
+					logger.info( mbt.getStatisticsCompact() );
+				}
+			}, 500, seconds * 1000 );
+		}
+
+		
 		String executor = root.getAttributeValue("EXECUTOR");
 		String executorParam = null;
 		if(executor.contains(":"))
@@ -347,6 +371,8 @@ public class Util {
 			throw new RuntimeException("Unknown executor '"+executor+"'");
 		}
 		
+		if(timer != null)
+			timer.cancel();
 		return mbt;
 	}
 

@@ -1,6 +1,5 @@
 package org.tigris.mbt;
 
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Iterator;
@@ -116,94 +115,10 @@ public class CLI
 				if ( args.length == 1 )
 				{
 					printGeneralHelpText();
-					return;
+				} else {
+					printHelpText(args[ 1 ]);
 				}
-				else if ( args[ 1 ].equals( "requirements" ) )
-				{
-					buildRequirementsCLI();
-					
-					System.out.println( "Print a list of requiremnts found in the model.\n" );					
-
-					HelpFormatter f = new HelpFormatter();
-	                f.printHelp( "'java -jar mbt.jar online [OPTION] [ARGUMENT]'", opt );
-	                
-					return;
-				}
-				else if ( args[ 1 ].equals( "online" ) )
-				{
-					buildOnlineCLI();
-					
-					System.out.println( "Run the test online.\n" +			
-							"MBT will return a test sequence, one line at a time to standard output, " +
-							"it will wait until a line is fed back via standard input. The data fed back can be:\n" +
-							"  '0' which means, continue the test as normal\n" +
-							"  '1' which means go back to previous vertex (backtracking)\n" +
-							"  '2' will end the test normally\n" +
-							"anything else will abort the execution.\n" );					
-
-					HelpFormatter f = new HelpFormatter();
-	                f.printHelp( "'java -jar mbt.jar online [OPTION] [ARGUMENT]'", opt );
-	                
-					return;
-				}
-				else if ( args[ 1 ].equals( "offline" ) )
-				{
-					buildOfflineCLI();
-					
-					System.out.println( "Generate a test sequence offline. The sequence is printed to the standard output\n" );					
-
-					HelpFormatter f = new HelpFormatter();
-	                f.printHelp( "'java -jar mbt.jar offline [OPTION] [ARGUMENT]'", opt );
-	                
-					return;
-				}
-				else if ( args[ 1 ].equals( "methods" ) )
-				{
-					buildMethodsCLI();
-					
-					System.out.println( "Generate all methods, or tests existing in the model.\n" +			
-										"MBT will parse the graph(s), and return all methods (or tests) that" +
-										" exists in the graph(s). The list will onyl print out a unique name once." +
-										" The list is printed to stdout.\n" );					
-
-					HelpFormatter f = new HelpFormatter();
-	                f.printHelp( "'java -jar mbt.jar methods [OPTION] [ARGUMENT]'", opt );
-	                
-					return;
-				}
-				else if ( args[ 1 ].equals( "merge" ) )
-				{
-					buildMergeCLI();
-					
-					System.out.println( "Merge several graphml files into one single graphml file.\n" +			
-										"The files to be merged, shall all exist in a single folder.\n" );					
-
-					HelpFormatter f = new HelpFormatter();
-	                f.printHelp( "'java -jar mbt.jar merge [OPTION] [ARGUMENT]'", opt );
-	                
-					return;
-				}
-				else if ( args[ 1 ].equals( "source" ) )
-				{
-					buildSourceCLI();
-					
-					System.out.println( "Generate code from a template.\n" +			
-										"Will generate code using a template. The code generated will contain all lables/names " +
-										"defined by the vertices and edges. This enables the user to write templates for a " +
-										"multitude of scripting or programming languages. " +
-										"The result will be printed to stdout. " +
-										"There is 1 variable in the template, that will be replaced: {LABEL} ->Will be replace " +
-										"by the actual name of the edge or vertex." );
-					HelpFormatter f = new HelpFormatter();
-	                f.printHelp( "'java -jar mbt.jar source [OPTION] [ARGUMENT]'", opt );
-	                
-					return;
-				}
-				else
-				{
-					System.err.println( "Type 'java -jar mbt.jar help' for usage." );
-					return;
-				}
+				return;
 			}
 			else if ( args[ 0 ].equals( "requirements" ) )
 			{
@@ -228,6 +143,10 @@ public class CLI
 			else if ( args[ 0 ].equals( "source" ) )
 			{
 				buildSourceCLI();
+			}
+			else if ( args[ 0 ].equals( "xml" ) )
+			{
+				buildXmlCLI();
 			}
 			else if ( args[ 0 ].equals( "-v" ) || args[ 0 ].equals( "--version" ) )
 			{
@@ -290,6 +209,13 @@ public class CLI
 			{
 				RunCommandSource( cl );
 			}
+			/**
+			 *  Command: xml
+			 */
+			else if ( args[ 0 ].equals( "xml" ) )
+			{
+				RunCommandXml( cl );
+			}
         }		
 		catch ( ArrayIndexOutOfBoundsException e )
         {
@@ -319,8 +245,58 @@ public class CLI
 		System.out.println( "    requirements" );
 		System.out.println( "    methods" );
 		System.out.println( "    merge" );
+		System.out.println( "    xml" );
 		System.out.println( "    source\n" );
 		System.out.println( "Type 'java -jar mbt.jar -v (--version)' for version information." );
+	}
+	
+	private void printHelpText(String helpSection)
+	{
+		if(helpSection.equalsIgnoreCase("online")) {
+			buildOnlineCLI();
+			System.out.println( "Run the test online.\n" +			
+					"MBT will return a test sequence, one line at a time to standard output, " +
+					"it will wait until a line is fed back via standard input. The data fed back can be:\n" +
+					"  '0' which means, continue the test as normal\n" +
+					"  '1' which means go back to previous vertex (backtracking)\n" +
+					"  '2' will end the test normally\n" +
+					"anything else will abort the execution.\n" );					
+		} else if(helpSection.equalsIgnoreCase("requirements")){
+			buildRequirementsCLI();
+			System.out.println( "Print a list of requiremnts found in the model.\n" );					
+		} else if(helpSection.equalsIgnoreCase("offline")){
+			buildOfflineCLI();
+			System.out.println( "Generate a test sequence offline. The sequence is printed to the standard output\n" );					
+		} else if(helpSection.equalsIgnoreCase("methods")){
+			buildMethodsCLI();
+			System.out.println( "Generate all methods, or tests existing in the model.\n" +			
+								"MBT will parse the graph(s), and return all methods (or tests) that" +
+								" exists in the graph(s). The list will onyl print out a unique name once." +
+								" The list is printed to stdout.\n" );					
+		} else if(helpSection.equalsIgnoreCase("merge")){
+			buildMergeCLI();
+			System.out.println( "Merge several graphml files into one single graphml file.\n" +			
+								"The files to be merged, shall all exist in a single folder.\n" );					
+		} else if(helpSection.equalsIgnoreCase("source")){
+			buildSourceCLI();
+			System.out.println( "Generate code from a template.\n" +			
+								"Will generate code using a template. The code generated will contain all lables/names " +
+								"defined by the vertices and edges. This enables the user to write templates for a " +
+								"multitude of scripting or programming languages. " +
+								"The result will be printed to stdout. " +
+								"There is 1 variable in the template, that will be replaced: {LABEL} ->Will be replace " +
+								"by the actual name of the edge or vertex." );
+		} else if(helpSection.equalsIgnoreCase("xml")){
+			buildXmlCLI();
+			System.out.println( "Setup mbt engine from xml.\n" +
+					"Will setup and execute an engine based on xml specified criterias.");
+		} else {
+			System.err.println( "Type 'java -jar mbt.jar help' for usage." );
+			return;
+		}
+
+		HelpFormatter f = new HelpFormatter();
+        f.printHelp( "'java -jar mbt.jar "+ helpSection.toLowerCase()+" [OPTION] [ARGUMENT]'", opt );
 	}
 	
 	private void buildRequirementsCLI()
@@ -458,6 +434,24 @@ public class CLI
                 .withLongOpt( "template" )
                 .create( "t" ) );
 	}
+
+	/**
+	 * Build the command xml command line parser
+	 */
+	private void buildXmlCLI() {
+		opt.addOption( "a", false, "Prints the statistics of the test, at the end of the run." );
+		opt.addOption( OptionBuilder.withArgName( "file" )
+                .withDescription( "The xml file containing the mbt settings." )
+                .hasArg()
+                .create( "f" ) );
+		opt.addOption( OptionBuilder.withArgName( "log-coverage" )
+				.withDescription( "Prints the test coverage of the graph during execution every " +
+			              "<n>. The printout goes to the log file defined in " +
+			              "mbt.properties, and only, if at least INFO level is set in " +
+			              "that same file." )
+                .hasArg()
+                .create( "o" ) );
+	}
 	
 	/**
 	 * Print version information
@@ -486,68 +480,31 @@ public class CLI
 		/**
 		 * Get the model from the graphml file (or folder)
 		 */
-        if ( !cl.hasOption( "f" ) )
-        {
-        	System.err.println( "Missing the input graphml file (or folder), See -f (--intput_graphml)" );
-        	System.err.println( "Type 'java -jar mbt.jar help offline' for help." );
-            return;	            	
-        }
-        getMbt().readGraph( cl.getOptionValue( "f" ) );
-        
-        /**
-		 * Set EFSM
-		 */
-        getMbt().enableExtended( cl.hasOption( "x" ) );
+		if( helpNeeded("offline", !cl.hasOption( "f" ), "Missing the input graphml file (folder), See -f (--intput_graphml)") || 
+			helpNeeded("offline", !cl.hasOption( "s" ), "A stop condition must be supplied, See option -s") || 
+			helpNeeded("offline", !cl.hasOption( "g" ), "Missing the generator, See option -g") ) 
+			return;
 
-		/**
-		 * Check that a stop-condition exists
-		 */
-        if ( !cl.hasOption( "s" ) )
-        {
-        	System.err.println( "A stop condition must be supplied, See option -s" );
-        	System.err.println( "Type 'java -jar mbt.jar help offline' for help." );
-            return;	            	
-        }
-		/**
-		 * Check that a generator exists
-		 */
-        if ( !cl.hasOption( "g" ) )
-        {
-        	System.err.println( "Missing the generator, See option -g" );
-        	System.err.println( "Type 'java -jar mbt.jar help offline' for help." );
-            return;	            	
-        }
+        getMbt().readGraph( cl.getOptionValue( "f" ) );
+        getMbt().enableExtended( cl.hasOption( "x" ) );
 
         /*
          * Set the stop-conditions(s)
          */
-		if( cl.hasOption( "s" ) )
-		{
-			String argument = cl.getOptionValue( "s" );
-			String[] stopConditions = argument.split( "\\|" );
-			for (int i = 0; i < stopConditions.length; i++) {
-				String[] stopCondition = stopConditions[ i ].trim().split( ":" );
-				if ( stopCondition.length == 1 )
-				{
-					getMbt().addAlternativeCondition( Keywords.getStopCondition( stopCondition[ 0 ].trim() ), "" );					
-				}
-				else
-				{
-					getMbt().addAlternativeCondition( Keywords.getStopCondition( stopCondition[ 0 ].trim() ), stopCondition[ 1 ].trim() );
-				}
-			}
+		String[] stopConditions = cl.getOptionValue( "s" ).split( "\\|" );
+		for (int i = 0; i < stopConditions.length; i++) {
+			String[] sc = stopConditions[ i ].trim().split( ":" );
+			getMbt().addAlternativeCondition( Keywords.getStopCondition( 
+				sc[ 0 ].trim() ), // Stop condition 
+				(sc.length==1?"":sc[ 1 ].trim()) ); // Optional condition parameter					
 		}
 
         /*
          * Set the generators(s)
          */
-        if ( cl.hasOption( "g" ) )
-		{
-			String argument = cl.getOptionValue( "g" );
-			String[] genrators = argument.split( "\\|" );
-			for (int i = 0; i < genrators.length; i++) {
-				getMbt().setGenerator( Keywords.getGenerator( genrators[ 0 ].trim() ) );
-			}
+		String[] genrators = cl.getOptionValue( "g" ).split( "\\|" );
+		for (int i = 0; i < genrators.length; i++) {
+			getMbt().setGenerator( Keywords.getGenerator( genrators[ 0 ].trim() ) );
 		}
 
 		if( cl.hasOption( "o" ) )
@@ -578,68 +535,36 @@ public class CLI
 		/**
 		 * Get the model from the graphml file (or folder)
 		 */
-        if ( !cl.hasOption( "f" ) )
-        {
-        	System.err.println( "Missing the input graphml file (or folder), See -f (--intput_graphml)" );
-        	System.err.println( "Type 'java -jar mbt.jar help offline' for help." );
-            return;	            	
-        }
-        getMbt().readGraph( cl.getOptionValue( "f" ) );
-        
-        /**
-		 * Set EFSM
-		 */
-        getMbt().enableExtended( cl.hasOption( "x" ) );
+		if( helpNeeded("online", !cl.hasOption( "f" ), "Missing the input graphml file (folder), See -f (--intput_graphml)") || 
+				helpNeeded("online", !cl.hasOption( "s" ), "A stop condition must be supplied, See option -s") || 
+				helpNeeded("online", !cl.hasOption( "g" ), "Missing the generator, See option -g") ) 
+				return;
 
-		/**
-		 * Check that a stop-condition exists
-		 */
-        if ( !cl.hasOption( "s" ) )
-        {
-        	System.err.println( "A stop condition must be supplied, See options: -d -t -e -s -l" );
-        	System.err.println( "Type 'java -jar mbt.jar help offline' for help." );
-            return;	            	
-        }
-		/**
-		 * Check that a generator exists
-		 */
-        if ( !cl.hasOption( "g" ) )
-        {
-        	System.err.println( "Missing the generator, See -g (--generator)" );
-        	System.err.println( "Type 'java -jar mbt.jar help offline' for help." );
-            return;	            	
-        }
+        getMbt().readGraph( cl.getOptionValue( "f" ) );
+        getMbt().enableExtended( cl.hasOption( "x" ) );
 
         /*
          * Set the stop-conditions(s)
          */
-		if( cl.hasOption( "s" ) )
-		{
-			String argument = cl.getOptionValue( "s" );
-			String[] stopConditions = argument.split( "\\|" );
-			for (int i = 0; i < stopConditions.length; i++) {
-				String[] stopCondition = stopConditions[ i ].trim().split( ":" );
-				if ( stopCondition.length == 1 )
-				{
-					getMbt().addAlternativeCondition( Keywords.getStopCondition( stopCondition[ 0 ].trim() ), "" );					
-				}
-				else
-				{
-					getMbt().addAlternativeCondition( Keywords.getStopCondition( stopCondition[ 0 ].trim() ), stopCondition[ 1 ].trim() );
-				}
+		String[] stopConditions = cl.getOptionValue( "s" ).split( "\\|" );
+		for (int i = 0; i < stopConditions.length; i++) {
+			String[] stopCondition = stopConditions[ i ].trim().split( ":" );
+			if ( stopCondition.length == 1 )
+			{
+				getMbt().addAlternativeCondition( Keywords.getStopCondition( stopCondition[ 0 ].trim() ), "" );					
+			}
+			else
+			{
+				getMbt().addAlternativeCondition( Keywords.getStopCondition( stopCondition[ 0 ].trim() ), stopCondition[ 1 ].trim() );
 			}
 		}
 
         /*
          * Set the generators(s)
          */
-        if ( cl.hasOption( "g" ) )
-		{
-			String argument = cl.getOptionValue( "g" );
-			String[] genrators = argument.split( "\\|" );
-			for (int i = 0; i < genrators.length; i++) {
-				getMbt().setGenerator( Keywords.getGenerator( genrators[ 0 ].trim() ) );
-			}
+		String[] genrators = cl.getOptionValue( "g" ).split( "\\|" );
+		for (int i = 0; i < genrators.length; i++) {
+			getMbt().setGenerator( Keywords.getGenerator( genrators[ 0 ].trim() ) );
 		}
         
         /**
@@ -679,18 +604,10 @@ public class CLI
 	 */
 	private void RunCommandSource( CommandLine cl )
 	{
-		if ( !cl.hasOption( "f" ) )
-	    {
-	    	System.out.println( "Missing the input graphml file (folder). See -f (--intput_graphml)" );
-	    	System.out.println( "Type 'java -jar mbt.jar help source' for help." );
-	        return;	            	
-	    }
-		if ( !cl.hasOption( "t" ) )
-	    {
-	    	System.out.println( "Missing the template file. See -t (--template)" );
-	    	System.out.println( "Type 'java -jar mbt.jar help source' for help." );
-	        return;	            	
-	    }
+		if( helpNeeded("source", !cl.hasOption( "f" ), "Missing the input graphml file (folder), See -f (--intput_graphml)") || 
+			helpNeeded("source", !cl.hasOption( "t" ), "Missing the template file. See -t (--template)") ) 
+			return;
+
 		getMbt().readGraph( cl.getOptionValue( "f" ) );
 		getMbt().setTemplate( cl.getOptionValue( "t" ) );
 		getMbt().setGenerator( Keywords.GENERATOR_STUB );
@@ -702,12 +619,10 @@ public class CLI
 	 */
 	private void RunCommandRequirements( CommandLine cl )
 	{
-		if ( !cl.hasOption( "f" ) )
-	    {
-	    	System.out.println( "Missing the input graphml file (folder), See -f (--intput_graphml)" );
-	    	System.out.println( "Type 'java -jar mbt.jar help requirements' for help." );
-	        return;	            	
-	    }
+		if ( helpNeeded("requirements", !cl.hasOption( "f" ), 
+				"Missing the input graphml file (folder), See -f (--intput_graphml)") ) 
+			return;
+
 		getMbt().readGraph( cl.getOptionValue( "f" ) );
 		getMbt().setGenerator( Keywords.GENERATOR_REQUIREMENTS );
 		getMbt().writePath(System.out);
@@ -718,12 +633,10 @@ public class CLI
 	 */
 	private void RunCommandMethods( CommandLine cl )
 	{
-		if ( !cl.hasOption( "f" ) )
-	    {
-	    	System.out.println( "Missing the input graphml file (folder), See -f (--intput_graphml)" );
-	    	System.out.println( "Type 'java -jar mbt.jar help methods' for help." );
-	        return;	            	
-	    }
+		if ( helpNeeded("methods", !cl.hasOption( "f" ), 
+				"Missing the input graphml file (folder), See -f (--intput_graphml)") ) 
+			return;
+
 		getMbt().readGraph( cl.getOptionValue( "f" ) );
 		getMbt().setTemplate(new String[]{"","{LABEL}",""});
 		getMbt().setGenerator( Keywords.GENERATOR_STUB );
@@ -735,14 +648,37 @@ public class CLI
 	 */
 	private void RunCommandMerge( CommandLine cl )
 	{
-		if ( !cl.hasOption( "f" ) )
-	    {
-	    	System.out.println( "Missing the input graphml file (folder), See -f (--intput_graphml)" );
-	    	System.out.println( "Type 'java -jar mbt.jar help merge' for help." );
-	        return;	            	
-	    }
+		if ( helpNeeded("merge", !cl.hasOption( "f" ), 
+				"Missing the input graphml file (folder), See -f (--intput_graphml)") ) 
+			return;
+		
 		getMbt().readGraph( cl.getOptionValue( "f" ) );
 		getMbt().writeModel( System.out );
+	}
+	
+	/**
+	 * Run the xml command
+	 */
+	private void RunCommandXml(CommandLine cl) {
+		if( helpNeeded("xml", !cl.hasOption( "f" ), "Missing the input xml file, See  option -f") ) 
+			return;
+
+		setMbt(Util.loadMbtFromXml( cl.getOptionValue( "f" ) ));
+		
+		if( cl.hasOption( "a" ) )
+		{
+			System.out.println( getMbt().getStatisticsString() );
+		}
+	}
+
+	private boolean helpNeeded(String module, boolean condition, String message)
+	{
+		if(condition)
+		{
+			System.out.println(message);
+			System.out.println( "Type 'java -jar mbt.jar help "+module+"' for help." );
+		}
+		return condition;
 	}
 }
 	
