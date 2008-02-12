@@ -1,7 +1,7 @@
 package org.tigris.mbt.generators;
 
 import java.util.Iterator;
-import java.util.Stack;
+import java.util.Vector;
 
 import org.apache.log4j.Logger;
 import org.tigris.mbt.FiniteStateMachine;
@@ -11,8 +11,9 @@ public class CombinedPathGenerator extends PathGenerator {
 
 	static Logger logger = Logger.getLogger(CombinedPathGenerator.class);
 
-	private Stack paths = new Stack();
-
+	private Vector paths = new Vector();
+	private int currentGenerator = 0;
+	
 	public CombinedPathGenerator() {
 		super();
 	}
@@ -25,7 +26,7 @@ public class CombinedPathGenerator extends PathGenerator {
 	public void addPathGenerator(PathGenerator generator)
 	{
 		logger.debug("Adding PathGenerator: " + generator);
-		paths.add(0, generator);
+		paths.add(generator);
 	}
 
 	public void setMachine(FiniteStateMachine machine) {
@@ -44,18 +45,18 @@ public class CombinedPathGenerator extends PathGenerator {
 	
 	private PathGenerator getActivePathGenerator()
 	{
-		return (PathGenerator) paths.peek();
+		return (PathGenerator) paths.get(currentGenerator);
 	}
 
 	private boolean hasPath()
 	{
-		return paths.size() > 0;
+		return paths.size() > currentGenerator;
 	}
 	
 	private void scrapActivePathGenerator()
 	{
 		logger.debug("Removing PathGenerator: " + getActivePathGenerator());
-		paths.pop();
+		currentGenerator++;
 	}
 	
 	public boolean hasNext() 
@@ -87,7 +88,7 @@ public class CombinedPathGenerator extends PathGenerator {
 		String retur = "";
 		for(Iterator i = paths.iterator();i.hasNext();)
 		{
-			retur =((PathGenerator)i.next()).toString() + "\n" + retur;
+			retur +=((PathGenerator)i.next()).toString() + "\n";
 		}
 		return retur.trim();
 	}
