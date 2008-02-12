@@ -316,4 +316,17 @@ public class CLITest extends TestCase {
 		matcher = pattern.matcher( errMsg );
 		assertTrue( matcher.find() );
     }
+    
+    /**
+     * Check for reserved keywords
+     * Test command: java -jar mbt.jar methods -f graphml/test24
+     */
+    public void testXmlSetup()
+    {
+		String args[] = { "xml", "-f", "graphml/reqtags/mbt_init6.xml" };
+    	runCommand( args );
+    	assertTrue( "No error messages should occur.", errMsg.isEmpty() );
+    	assertEquals( 6, outMsg.split("\r\n|\r|\n").length );
+    }
+    
 }
