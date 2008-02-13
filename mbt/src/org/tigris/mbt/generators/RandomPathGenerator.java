@@ -28,7 +28,7 @@ public class RandomPathGenerator extends PathGenerator {
 		DirectedSparseEdge edge = (getMachine().isWeighted() ? getWeightedEdge(availableEdges) : getRandomEdge(availableEdges));
 		getMachine().walkEdge(edge);
 		logger.debug( edge.getUserDatum( Keywords.FULL_LABEL_KEY) );
-		logger.debug( Util.getCompleteEdgeName(edge ) );
+		logger.debug( Util.getCompleteName(edge ) );
 		String[] retur = {getMachine().getEdgeName(edge), getMachine().getCurrentStateName()};
 		return retur;
 	}

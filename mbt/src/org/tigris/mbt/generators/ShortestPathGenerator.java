@@ -67,11 +67,11 @@ public class ShortestPathGenerator extends PathGenerator {
 					DijkstraPoint dp = (DijkstraPoint) dsv.getUserDatum(Keywords.DIJKSTRA);
 					if(dp == null || dp.getShortestPath() == null || dp.getShortestPath().size() == 0)
 					{
-						unreachableStates += "Unreachable vertex: " + Util.getCompleteVertexName( dsv ) + "\n";
+						unreachableStates += "Unreachable vertex: " + Util.getCompleteName( dsv ) + "\n";
 					}
 					else
 					{
-						reachableStates += "Reachable vertex: " + Util.getCompleteVertexName( dsv ) + " by means of " + dp + "\n";
+						reachableStates += "Reachable vertex: " + Util.getCompleteName( dsv ) + " by means of " + dp + "\n";
 					}
 				}
 				throw new RuntimeException( "No path found to the following vertices:\n" + unreachableStates +"\n\n"+
@@ -215,7 +215,7 @@ public class ShortestPathGenerator extends PathGenerator {
 			edgePaths.put(key, edgePath.clone()); 
 			completions.put(key, new Double(getConditionFulfillment())); 
 			if(edgePaths.size()>500)
-				throw new RuntimeException( "Too many internal states in "+ Util.getCompleteVertexName(parent.getCurrentState()) + " please revise model.");
+				throw new RuntimeException( "Too many internal states in "+ Util.getCompleteName(parent.getCurrentState()) + " please revise model.");
 		}
 
 		public Stack getPath()

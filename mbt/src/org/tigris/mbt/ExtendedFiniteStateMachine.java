@@ -70,17 +70,17 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 			Edge e = (Edge) i.next();
 			if(!accessableFilter.acceptEdge( e ))
 			{
-				logger.debug("Not accessable: " + Util.getCompleteEdgeName((DirectedSparseEdge) e) + " from " + getCurrentStateName());
+				logger.debug("Not accessable: " + Util.getCompleteName((DirectedSparseEdge) e) + " from " + getCurrentStateName());
 				i.remove();
 			}
 			else
 			{
-				logger.debug("Accessable: " + Util.getCompleteEdgeName((DirectedSparseEdge) e) + " from " + getCurrentStateName());
+				logger.debug("Accessable: " + Util.getCompleteName((DirectedSparseEdge) e) + " from " + getCurrentStateName());
 			}
 		}
 		if(retur.size()==0)
 		{
-			throw new FoundNoEdgeException("Cul-De-Sac, dead end found in '" + Util.getCompleteVertexName( getCurrentState() ) + "'");
+			throw new FoundNoEdgeException("Cul-De-Sac, dead end found in '" + Util.getCompleteName( getCurrentState() ) + "'");
 		}
 		return retur;
 	}
@@ -151,7 +151,7 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 					interpreter.eval(getAction(edge));
 					System.setOut(ps);
 				} catch (EvalError e) {
-					throw new RuntimeException( "Malformed action sequence: " + Util.getCompleteEdgeName(edge) +" : "+ e.getMessage() );
+					throw new RuntimeException( "Malformed action sequence: " + Util.getCompleteName(edge) +" : "+ e.getMessage() );
 				}
 			}
 		}

@@ -928,7 +928,7 @@ public class GraphML extends AbstractModelHandler
 			{
 				if ( v.getInEdges().toArray().length == 0 )
 				{
-					String msg = "No in-edges! The vertex: " + Util.getCompleteVertexName( v ) + " is not reachable," +
+					String msg = "No in-edges! The vertex: " + Util.getCompleteName( v ) + " is not reachable," +
 							     " from file: '" + v.getUserDatum( Keywords.FILE_KEY ) + "'";
 					logger.error( msg );
 					throw new RuntimeException( msg );
@@ -988,11 +988,11 @@ public class GraphML extends AbstractModelHandler
 	{
 		// Save the target vertex out-edge list
 		Vector targetVertexOutEdgeList = new Vector();
-		logger.debug( "Target vertex (" + Util.getCompleteVertexName( targetVertex ) + ") out-edge list" );
+		logger.debug( "Target vertex (" + Util.getCompleteName( targetVertex ) + ") out-edge list" );
 		for (Iterator iter = targetVertex.getOutEdges().iterator(); iter.hasNext();)
 		{
 			DirectedSparseEdge element = (DirectedSparseEdge) iter.next();
-			logger.debug( "  " + Util.getCompleteEdgeName( element ) );
+			logger.debug( "  " + Util.getCompleteName( element ) );
 			targetVertexOutEdgeList.add( element );
 		}
 
@@ -1034,7 +1034,7 @@ public class GraphML extends AbstractModelHandler
 			return;
 		}
 
-		logger.debug( "Start merging target vertex: " + Util.getCompleteVertexName( targetVertex ) + " with source vertex: " + Util.getCompleteVertexName( sourceVertex ) );
+		logger.debug( "Start merging target vertex: " + Util.getCompleteName( targetVertex ) + " with source vertex: " + Util.getCompleteName( sourceVertex ) );
 
 		Object[] inEdges = sourceVertex.getInEdges().toArray();
 		for (int i = 0; i < inEdges.length; i++)
@@ -1052,7 +1052,7 @@ public class GraphML extends AbstractModelHandler
 			new_edge.importUserData( edge );
 			new_edge.setUserDatum( Keywords.INDEX_KEY, new Integer( getNewVertexAndEdgeIndex() ), UserData.SHARED );
 		}
-		logger.debug( "Remvoing source vertex: " + Util.getCompleteVertexName( sourceVertex) );
+		logger.debug( "Remvoing source vertex: " + Util.getCompleteName( sourceVertex) );
 		mainGraph.removeVertex( sourceVertex );
 		targetVertex.addUserDatum( Keywords.MERGED_BY_MBT, Keywords.MERGED_BY_MBT, UserData.SHARED );
 
@@ -1087,13 +1087,13 @@ public class GraphML extends AbstractModelHandler
 			for (Iterator iter = stopVertex.getInEdges().iterator(); iter.hasNext();)
 			{
 				DirectedSparseEdge element = (DirectedSparseEdge) iter.next();
-				logger.debug( "  " + Util.getCompleteEdgeName( element ) );
+				logger.debug( "  " + Util.getCompleteName( element ) );
 			}
-			logger.debug( "Target vertex (" + Util.getCompleteVertexName( targetVertex ) + ") out-edge list" );
+			logger.debug( "Target vertex (" + Util.getCompleteName( targetVertex ) + ") out-edge list" );
 			for (Iterator iter = targetVertexOutEdgeList.iterator(); iter.hasNext();)
 			{
 				DirectedSparseEdge element = (DirectedSparseEdge) iter.next();
-				logger.debug( "  " + Util.getCompleteEdgeName( element ) );
+				logger.debug( "  " + Util.getCompleteName( element ) );
 			}
 
 			Vector mergeList = MergeList( targetVertexOutEdgeList.toArray(), inEdges );
@@ -1112,10 +1112,10 @@ public class GraphML extends AbstractModelHandler
 				DirectedSparseEdge element = (DirectedSparseEdge) iter.next();
 				try {
 					mainGraph.removeEdge( element );
-					logger.debug( "Removing edge: " + Util.getCompleteEdgeName( element ) );
-					logger.debug( Util.getCompleteEdgeName( element ) + ", was found and removed from graph,: '" + mainGraph.getUserDatum( Keywords.FILE_KEY ) + "'");
+					logger.debug( "Removing edge: " + Util.getCompleteName( element ) );
+					logger.debug( Util.getCompleteName( element ) + ", was found and removed from graph,: '" + mainGraph.getUserDatum( Keywords.FILE_KEY ) + "'");
 				} catch (java.lang.IllegalArgumentException e) {
-					logger.debug( Util.getCompleteEdgeName( element ) + ", was not found in graph: '" + mainGraph.getUserDatum( Keywords.FILE_KEY ) + "', this is ok, since it probably been removed before. (I know, not ver good progamming practice here)");
+					logger.debug( Util.getCompleteName( element ) + ", was not found in graph: '" + mainGraph.getUserDatum( Keywords.FILE_KEY ) + "', this is ok, since it probably been removed before. (I know, not ver good progamming practice here)");
 				}
 			}
 			logger.debug( "Removing the Stop vertex: " + stopVertex.getUserDatum( Keywords.INDEX_KEY )  );
@@ -1146,14 +1146,14 @@ public class GraphML extends AbstractModelHandler
 				}
 				if ( aLabel == null && bLabel == null )
 				{
-					logger.debug( "    adding: " + Util.getCompleteEdgeName( a ) + " and " + Util.getCompleteEdgeName( b ) );
+					logger.debug( "    adding: " + Util.getCompleteName( a ) + " and " + Util.getCompleteName( b ) );
 					matches.add( new Pair( a, b ) );
 				}
 				else if ( aLabel != null && bLabel != null )
 				{
 					if ( aLabel.equals( bLabel ) )
 					{
-						logger.debug( "    adding: " + Util.getCompleteEdgeName( a ) + " and " + Util.getCompleteEdgeName( b ) );
+						logger.debug( "    adding: " + Util.getCompleteName( a ) + " and " + Util.getCompleteName( b ) );
 						matches.add( new Pair( a, b ) );
 					}
 				}
@@ -1186,7 +1186,7 @@ public class GraphML extends AbstractModelHandler
 			
 						if ( alreadyMatched == false )
 						{
-							logger.debug( "    adding: " + Util.getCompleteEdgeName( a ) + " and " + Util.getCompleteEdgeName( b ) );
+							logger.debug( "    adding: " + Util.getCompleteName( a ) + " and " + Util.getCompleteName( b ) );
 							matches.add( new Pair( a, b ) );
 						}
 					}
@@ -1220,7 +1220,7 @@ public class GraphML extends AbstractModelHandler
 			
 						if ( alreadyMatched == false )
 						{
-							logger.debug( "    adding: " + Util.getCompleteEdgeName( a ) + " and " + Util.getCompleteEdgeName( b ) );
+							logger.debug( "    adding: " + Util.getCompleteName( a ) + " and " + Util.getCompleteName( b ) );
 							matches.add( new Pair( a, b ) );
 						}
 					}
@@ -1292,8 +1292,8 @@ public class GraphML extends AbstractModelHandler
 			throw new RuntimeException("Internal progamming error");
 		}
 
-		logger.debug("  outEdge: " + Util.getCompleteEdgeName(outEdge));
-		logger.debug("  inEdge: " + Util.getCompleteEdgeName(inEdge));
+		logger.debug("  outEdge: " + Util.getCompleteName(outEdge));
+		logger.debug("  inEdge: " + Util.getCompleteName(inEdge));
 
 		DirectedSparseEdge new_edge = (DirectedSparseEdge) graph
 				.addEdge(new DirectedSparseEdge((DirectedSparseVertex) inEdge
@@ -1304,9 +1304,9 @@ public class GraphML extends AbstractModelHandler
 		new_edge.setUserDatum( Keywords.INDEX_KEY,
 				new Integer(getNewVertexAndEdgeIndex()), UserData.SHARED);
 		logger.debug("  Replacing the target vertex out-edge: "
-				+ Util.getCompleteEdgeName(outEdge) + " (old) with: "
-				+ Util.getCompleteEdgeName(new_edge) + "(new), using: "
-				+ Util.getCompleteEdgeName(inEdge));
+				+ Util.getCompleteName(outEdge) + " (old) with: "
+				+ Util.getCompleteName(new_edge) + "(new), using: "
+				+ Util.getCompleteName(inEdge));
 
 		edgesToBeRemoved.add(inEdge);
 		edgesToBeRemoved.add(outEdge);

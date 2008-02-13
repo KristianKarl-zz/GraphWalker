@@ -44,6 +44,7 @@ import org.tigris.mbt.generators.RandomPathGenerator;
 import org.tigris.mbt.generators.RequirementsGenerator;
 import org.tigris.mbt.generators.ShortestPathGenerator;
 
+import edu.uci.ics.jung.graph.impl.AbstractElement;
 import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
 import edu.uci.ics.jung.graph.impl.DirectedSparseVertex;
 import edu.uci.ics.jung.graph.impl.SparseGraph;
@@ -59,6 +60,15 @@ public class Util {
 	
 	static Logger logger = setupLogger(Util.class);
 	
+	public static String getCompleteName( AbstractElement element )
+	{
+		if(element instanceof DirectedSparseEdge)
+			return getCompleteEdgeName((DirectedSparseEdge) element);
+		if(element instanceof DirectedSparseVertex)
+			return getCompleteVertexName((DirectedSparseVertex) element);
+		throw new RuntimeException("Element type not supported '"+element.getClass().getName()+"'");
+	}
+	
     /**
      * Retries information regarding an edge, and returns it as a String.
      * This method is for logging purposes.
@@ -70,7 +80,7 @@ public class Util {
      *  Where x, y and n are the unique indexes for the edge, the source vertex and the destination vertex.<br>
      *  Please note that the label of an edge can be either null, or empty ("");
      */
-    public static String getCompleteEdgeName( DirectedSparseEdge edge )
+    private static String getCompleteEdgeName( DirectedSparseEdge edge )
     {
             String str = "'" + (String)edge.getUserDatum( Keywords.LABEL_KEY ) + 
                          "', INDEX=" + edge.getUserDatum( Keywords.INDEX_KEY ) + 
@@ -90,7 +100,7 @@ public class Util {
      *  <pre>'&lt;VERTEX LABEL&gt;', INDEX=n</pre>
      *  Where is the unique index for the vertex.
      */
-    public static String getCompleteVertexName( DirectedSparseVertex vertex )
+    private static String getCompleteVertexName( DirectedSparseVertex vertex )
     {
             String str = "'" + (String)vertex.getUserDatum( Keywords.LABEL_KEY ) + 
                          "', INDEX=" + vertex.getUserDatum( Keywords.INDEX_KEY );
