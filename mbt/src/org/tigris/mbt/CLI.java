@@ -19,19 +19,21 @@ import org.apache.log4j.Logger;
  * Command Line Interface object, to the org.tigris.mbt package.
  * The object provides a way of working with MBT using a Windows DOS,
  * or a console window in *nix system. The CLI works like the cvs or the subversion
- * command svn. The syntax is:<br><strong>java -jar mbt.jar COMMAND <options></strong><br>
+ * command svn. The syntax is:<br><pre>java -jar mbt.jar COMMAND <options></pre>
  * Where mbt.jar is the whole package org.tigris.mbt built using the tool Fat Jar
  * from http://fjep.sourceforge.net/ using org.tigris.mbt.CLI as the main class<br><br>
- * <strong>Example: Print help for mbt.jar</strong><br>
- * java -jar mbt.jar help<br><br>
- * <strong>Example: Merge graphml files and save the merged result.</strong><br>
- * java -jar mbt.jar merge -g folder -l result.graphml<br><br>
- * <strong>Example: Generate offline test sequence, using random walk</strong><br>
- * java -jar mbt.jar offline -r -g folder<br><br>
- * <strong>Example: Generate online test sequence, using random walk</strong><br>
- * java -jar mbt.jar online -r -g folder<br><br>
- * <strong>Example: Print all names of edges and vertices (Sorted, and unique)</strong><br>
- * java -jar mbt.jar methods -g folder<br><br>
+ * <strong>Example:</strong> Print help for mbt.jar<br>
+ * <pre>java -jar mbt.jar help</pre><br>
+ * <strong>Example:</strong> Merge graphml files and save the merged result.<br>
+ * <pre>java -jar mbt.jar merge -f folder</pre><br>
+ * <strong>Example:</strong> Generate offline test sequence, using random walk<br>
+ * <pre>java -jar mbt.jar offline -f folder -g RANDOM -s EDGE_COVERAGE:30</pre><br>
+ * <strong>Example:</strong> Generate online test sequence, using shortest walk<br>
+ * <pre>java -jar mbt.jar online -f folder -g SHORTEST -s EDGE_COVERAGE:100</pre><br>
+ * <strong>Example:</strong> Print all names of edges and vertices (Sorted, and unique)<br>
+ * <pre>java -jar mbt.jar methods -f folder</pre><br>
+ * <strong>Example:</strong> When you need to define more complex abstract test cases working with the CLI can sometimes be a burden. For this reason we have added a easier way to structure the abstract test cases, using XML.<br>
+ * <pre>java -jar mbt.jar xml -f testcase.xml</pre><br>
  *
  */
 public class CLI 
@@ -458,7 +460,7 @@ public class CLI
 	 */
 	private void printVersionInformation()
 	{
-		System.out.println( "org.tigris.mbt version 2.0 (revision 480)\n" );
+		System.out.println( "org.tigris.mbt version 2.0 (revision 487)\n" );
 		System.out.println( "org.tigris.mbt is open source software licensed under GPL" );
 		System.out.println( "The software (and it's source) can be downloaded from http://mbt.tigris.org/\n" );
 		System.out.println( "This package contains following software packages:" );
