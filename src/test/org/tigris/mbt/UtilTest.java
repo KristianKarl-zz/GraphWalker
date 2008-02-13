@@ -45,7 +45,7 @@ public class UtilTest extends TestCase {
 		edge.setUserDatum(Keywords.LABEL_KEY, "E1", UserData.SHARED);
 		graph.addEdge(edge);
 
-		assertEquals("'E1', INDEX=3 ('V1', INDEX=1 -> 'V2', INDEX=2)", Util.getCompleteEdgeName(edge));
+		assertEquals("'E1', INDEX=3 ('V1', INDEX=1 -> 'V2', INDEX=2)", Util.getCompleteName(edge));
     }
 
 	public void testGetCompleteVertexName()
@@ -56,7 +56,7 @@ public class UtilTest extends TestCase {
 		v1.setUserDatum(Keywords.LABEL_KEY, "V1", UserData.SHARED);
 		graph.addVertex(v1);
 		
-		assertEquals("'V1', INDEX=1", Util.getCompleteVertexName(v1));
+		assertEquals("'V1', INDEX=1", Util.getCompleteName(v1));
     }
 	public void testSetupLogger()
     {

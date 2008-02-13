@@ -127,7 +127,7 @@ public class FiniteStateMachine{
 		Set retur = new HashSet(currentState.getOutEdges());
 		if(retur.size()==0)
 		{
-			throw new FoundNoEdgeException( "Cul-De-Sac, dead end found in '" + Util.getCompleteVertexName( getCurrentState() ) + "'" );
+			throw new FoundNoEdgeException( "Cul-De-Sac, dead end found in '" + Util.getCompleteName( getCurrentState() ) + "'" );
 		}
 		return retur;
 	}
@@ -269,7 +269,7 @@ public class FiniteStateMachine{
 			DirectedSparseEdge e = (DirectedSparseEdge) i.next();
 			if(!isVisited(e))
 			{
-				notCovered.add( "Edge not reached: " + Util.getCompleteEdgeName(e) + newLine);
+				notCovered.add( "Edge not reached: " + Util.getCompleteName(e) + newLine);
 			}
 		}
 		for(Iterator i = model.getVertices().iterator();i.hasNext();)
@@ -277,7 +277,7 @@ public class FiniteStateMachine{
 			DirectedSparseVertex v = (DirectedSparseVertex) i.next();
 			if(!isVisited(v))
 			{
-				notCovered.add( "Vertex not reached: " + Util.getCompleteVertexName(v) + newLine);
+				notCovered.add( "Vertex not reached: " + Util.getCompleteName(v) + newLine);
 			}
 		}
 		if(notCovered.size()>0)
@@ -425,7 +425,7 @@ public class FiniteStateMachine{
 			
 			if(!isBacktrackEnabled())
 				throw new RuntimeException( "Backtracking was asked for, but was disabled." );			
-			throw new RuntimeException( "Backtracking was asked for, but model does not suppport BACKTRACK at egde: " + Util.getCompleteEdgeName( getLastEdge() ) );			
+			throw new RuntimeException( "Backtracking was asked for, but model does not suppport BACKTRACK at egde: " + Util.getCompleteName( getLastEdge() ) );			
 		}
 	}
 	

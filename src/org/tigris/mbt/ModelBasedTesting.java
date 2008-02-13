@@ -468,11 +468,11 @@ public class ModelBasedTesting
 			{
 				if ( isEdge )
 				{
-					logger.error("InvocationTargetException for: " +  Util.getCompleteEdgeName( getMachine().getLastEdge() ) );
+					logger.error("InvocationTargetException for: " +  Util.getCompleteName( getMachine().getLastEdge() ) );
 				}
 				else
 				{
-					logger.error("InvocationTargetException for: " + Util.getCompleteVertexName(getMachine().getCurrentState() ) );
+					logger.error("InvocationTargetException for: " + Util.getCompleteName(getMachine().getCurrentState() ) );
 				}
 				throw new RuntimeException("InvocationTargetException.", e);
 			} 
@@ -480,11 +480,11 @@ public class ModelBasedTesting
 			{
 				if ( isEdge )
 				{
-					logger.error("NoSuchMethodException for: " +  Util.getCompleteEdgeName( getMachine().getLastEdge() ) );
+					logger.error("NoSuchMethodException for: " +  Util.getCompleteName( getMachine().getLastEdge() ) );
 				}
 				else
 				{
-					logger.error("NoSuchMethodException for: " + Util.getCompleteVertexName(getMachine().getCurrentState() ) );
+					logger.error("NoSuchMethodException for: " + Util.getCompleteName(getMachine().getCurrentState() ) );
 				}
 				throw new RuntimeException("NoSuchMethodException.", e);
 			}
@@ -498,11 +498,11 @@ public class ModelBasedTesting
 			{
 				if ( isEdge )
 				{
-					logger.error("InvocationTargetException for: " +  Util.getCompleteEdgeName( getMachine().getLastEdge() ) );
+					logger.error("InvocationTargetException for: " +  Util.getCompleteName( getMachine().getLastEdge() ) );
 				}
 				else
 				{
-					logger.error("InvocationTargetException for: " + Util.getCompleteVertexName(getMachine().getCurrentState() ) );
+					logger.error("InvocationTargetException for: " + Util.getCompleteName(getMachine().getCurrentState() ) );
 				}
 				throw new RuntimeException("InvocationTargetException.", e);
 			} 
@@ -510,11 +510,11 @@ public class ModelBasedTesting
 			{
 				if ( isEdge )
 				{
-					logger.error("NoSuchMethodException for: " +  Util.getCompleteEdgeName( getMachine().getLastEdge() ) );
+					logger.error("NoSuchMethodException for: " +  Util.getCompleteName( getMachine().getLastEdge() ) );
 				}
 				else
 				{
-					logger.error("NoSuchMethodException for: " + Util.getCompleteVertexName(getMachine().getCurrentState() ) );
+					logger.error("NoSuchMethodException for: " + Util.getCompleteName(getMachine().getCurrentState() ) );
 				}
 				throw new RuntimeException("NoSuchMethodException.", e);
 			}
