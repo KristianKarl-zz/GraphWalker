@@ -435,23 +435,19 @@ public class ModelBasedTesting
 			
 			try {
 				logger.info("Step: "+ (++step) +" Navigate: "+stepPair[ 0 ]);
-				executeMethod(clsClass, objInstance, stepPair[ 0 ] );
-				executeMethod(clsClass, objInstance, stepPair[ 1 ] );
+				executeMethod(clsClass, objInstance, stepPair[ 0 ], true );
+				executeMethod(clsClass, objInstance, stepPair[ 1 ], false );
 			} catch (IllegalArgumentException e) {
 				throw new RuntimeException("Illegal argument used.", e);
 			} catch (SecurityException e) {
 				throw new RuntimeException("Security failure occured.", e);
 			} catch (IllegalAccessException e) {
 				throw new RuntimeException("Illegal access was stoped.", e);
-			} catch (InvocationTargetException e) {
-				throw new RuntimeException("Cannot invoke target.", e);
-			} catch (NoSuchMethodException e) {
-				throw new RuntimeException("Cannot find specified method.", e);
 			}
 		}
 	}
 	
-	private void executeMethod(Class clsClass, Object objInstance, String strMethod) throws IllegalArgumentException, SecurityException, IllegalAccessException, InvocationTargetException, NoSuchMethodException 
+	private void executeMethod(Class clsClass, Object objInstance, String strMethod, boolean isEdge) throws IllegalArgumentException, SecurityException, IllegalAccessException 
 	{
 		if(strMethod.contains("/") ) 
 			strMethod = strMethod.substring(0, strMethod.indexOf("/"));
@@ -465,11 +461,63 @@ public class ModelBasedTesting
 			String s2 = strMethod.substring(strMethod.indexOf(" ")+1);
 			Class[] paramTypes = { String.class };
 			Object[] paramValues = { s2 };
-			clsClass.getMethod( s1, paramTypes ).invoke( objInstance, paramValues );
+			try {
+				clsClass.getMethod( s1, paramTypes ).invoke( objInstance, paramValues );
+			} 
+			catch (InvocationTargetException e)
+			{
+				if ( isEdge )
+				{
+					logger.error("InvocationTargetException for: " +  Util.getCompleteEdgeName( getMachine().getLastEdge() ) );
+				}
+				else
+				{
+					logger.error("InvocationTargetException for: " + Util.getCompleteVertexName(getMachine().getCurrentState() ) );
+				}
+				throw new RuntimeException("InvocationTargetException.", e);
+			} 
+			catch (NoSuchMethodException e) 
+			{
+				if ( isEdge )
+				{
+					logger.error("NoSuchMethodException for: " +  Util.getCompleteEdgeName( getMachine().getLastEdge() ) );
+				}
+				else
+				{
+					logger.error("NoSuchMethodException for: " + Util.getCompleteVertexName(getMachine().getCurrentState() ) );
+				}
+				throw new RuntimeException("NoSuchMethodException.", e);
+			}
 		}
 		else
 		{
-			clsClass.getMethod( strMethod, null ).invoke( objInstance, null  );
+			try {
+				clsClass.getMethod( strMethod, null ).invoke( objInstance, null  );
+			} 
+			catch (InvocationTargetException e) 
+			{
+				if ( isEdge )
+				{
+					logger.error("InvocationTargetException for: " +  Util.getCompleteEdgeName( getMachine().getLastEdge() ) );
+				}
+				else
+				{
+					logger.error("InvocationTargetException for: " + Util.getCompleteVertexName(getMachine().getCurrentState() ) );
+				}
+				throw new RuntimeException("InvocationTargetException.", e);
+			} 
+			catch (NoSuchMethodException e) 
+			{
+				if ( isEdge )
+				{
+					logger.error("NoSuchMethodException for: " +  Util.getCompleteEdgeName( getMachine().getLastEdge() ) );
+				}
+				else
+				{
+					logger.error("NoSuchMethodException for: " + Util.getCompleteVertexName(getMachine().getCurrentState() ) );
+				}
+				throw new RuntimeException("NoSuchMethodException.", e);
+			}
 		}
 	}
 
