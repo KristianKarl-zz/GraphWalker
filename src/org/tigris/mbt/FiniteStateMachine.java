@@ -17,6 +17,7 @@
 
 package org.tigris.mbt;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -27,9 +28,14 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 import org.tigris.mbt.exceptions.FoundNoEdgeException;
+import org.tigris.mbt.statistics.EdgeCoverageStatistics;
+import org.tigris.mbt.statistics.EdgeSequenceCoverageStatistics;
+import org.tigris.mbt.statistics.RequirementCoverageStatistics;
+import org.tigris.mbt.statistics.StateCoverageStatistics;
 
 import edu.uci.ics.jung.graph.impl.AbstractElement;
 import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
+import edu.uci.ics.jung.graph.impl.DirectedSparseGraph;
 import edu.uci.ics.jung.graph.impl.SparseGraph;
 import edu.uci.ics.jung.graph.impl.DirectedSparseVertex;
 import edu.uci.ics.jung.utils.UserData;

@@ -2,6 +2,7 @@ package org.tigris.mbt;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.Timer;
@@ -48,6 +49,7 @@ public class CLI
 		}
 		
 		public void run() {
+
 			logger.info( modelBasedTesting.getStatisticsVerbose() );
 		}
 	}
@@ -517,6 +519,8 @@ public class CLI
 			{
 				public void run() 
 				{
+					logger.info(Arrays.deepToString(getMbt().getStatisticsManager().getStatistics()));
+
 					logger.info( getMbt().getStatisticsCompact() );
 				}
 			}, 500, Integer.valueOf( cl.getOptionValue( "o" ) ).longValue() * 1000 );
@@ -582,6 +586,8 @@ public class CLI
 			{
 				public void run() 
 				{
+					logger.info(Arrays.deepToString(getMbt().getStatisticsManager().getStatistics()));
+
 					logger.info( getMbt().getStatisticsCompact() );
 				}
 			}, 500, Integer.valueOf( cl.getOptionValue( "o" ) ).longValue() * 1000 );

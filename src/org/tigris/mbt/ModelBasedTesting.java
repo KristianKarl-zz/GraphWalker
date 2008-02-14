@@ -33,6 +33,10 @@ import org.tigris.mbt.generators.PathGenerator;
 import org.tigris.mbt.generators.RandomPathGenerator;
 import org.tigris.mbt.io.AbstractModelHandler;
 import org.tigris.mbt.io.GraphML;
+import org.tigris.mbt.statistics.EdgeCoverageStatistics;
+import org.tigris.mbt.statistics.EdgeSequenceCoverageStatistics;
+import org.tigris.mbt.statistics.RequirementCoverageStatistics;
+import org.tigris.mbt.statistics.StateCoverageStatistics;
 
 import bsh.EvalError;
 
@@ -55,9 +59,28 @@ public class ModelBasedTesting
 	private String[] template;
 	private boolean backtracking = false;
 	private boolean runRandomGeneratorOnce = false;
-
+	
 	private String startupScript = "";
 
+	private StatisticsManager statisticsManager;
+	
+	private void setupStatisticsManager()
+	{
+		statisticsManager = new StatisticsManager();
+		statisticsManager.addStatisicsCounter("State Coverage", new StateCoverageStatistics( getGraph() ));
+		statisticsManager.addStatisicsCounter("Edge Coverage", new EdgeCoverageStatistics( getGraph() ));
+		statisticsManager.addStatisicsCounter("2-Edge Sequence Coverage", new EdgeSequenceCoverageStatistics( getGraph(), 2 ));
+		statisticsManager.addStatisicsCounter("3-Edge Sequence Coverage", new EdgeSequenceCoverageStatistics( getGraph(), 3 ));
+		statisticsManager.addStatisicsCounter("Requirements Coverage", new RequirementCoverageStatistics( getGraph() ));
+	}
+	
+	/**
+	 * @return the statisticsManager
+	 */
+	public StatisticsManager getStatisticsManager() {
+		return this.statisticsManager;
+	}
+	
 	public void addAlternativeCondition(int conditionType, String conditionValue)
 	{
 		StopCondition condition = Util.getCondition(conditionType, conditionValue);
@@ -216,6 +239,7 @@ public class ModelBasedTesting
 	public String[] getNextStep()
 	{		
 		if(this.machine == null) getMachine();
+		if(this.statisticsManager == null) setupStatisticsManager();
 		Util.AbortIf(getGenerator() == null, "No generator has been defined!");
 		
 		PathGenerator backupGenerator = null;
@@ -378,6 +402,10 @@ public class ModelBasedTesting
 					System.out.println(" BACKTRACK");
 				else
 					System.out.println();
+				if(stepPair.size() == 1)
+					statisticsManager.addProgress(getMachine().getLastEdge());
+				else
+					statisticsManager.addProgress(getMachine().getCurrentState());
 				break;
 
 			default:
@@ -436,7 +464,9 @@ public class ModelBasedTesting
 			try {
 				logger.info("Step: "+ (++step) +" Navigate: "+stepPair[ 0 ]);
 				executeMethod(clsClass, objInstance, stepPair[ 0 ], true );
+				statisticsManager.addProgress(getMachine().getLastEdge());
 				executeMethod(clsClass, objInstance, stepPair[ 1 ], false );
+				statisticsManager.addProgress(getMachine().getCurrentState());
 			} catch (IllegalArgumentException e) {
 				throw new RuntimeException("Illegal argument used.", e);
 			} catch (SecurityException e) {
@@ -531,8 +561,17 @@ public class ModelBasedTesting
 		{
 			String[] stepPair = getNextStep();
 			
-			if(stepPair[0].trim()!="")out.println( stepPair[0] );
-			if(stepPair[1].trim()!="")out.println( stepPair[1] );
+			if(stepPair[0].trim()!="")
+			{
+				out.println( stepPair[0] );
+				statisticsManager.addProgress(getMachine().getLastEdge());
+			}
+			if(stepPair[1].trim()!="")
+			{
+				out.println( stepPair[1] );
+				statisticsManager.addProgress(getMachine().getCurrentState());
+			}
+
 		}
 	}
 	
