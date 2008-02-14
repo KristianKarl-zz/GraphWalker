@@ -280,7 +280,7 @@ public class CLITest extends TestCase {
      */
     public void testRandom10seconds()
     {
-		String args[] = { "online", "-f", "graphml/methods/Main.graphml", "-g", "RANDOM", "-s", "TEST_DURATION:10" };
+		String args[] = { "online", "-f", "graphml/methods/Main.graphml", "-g", "RANDOM", "-s", "TEST_DURATION:10", "-o", "1" };
     	InputStream oldInputStream = System.in; //backup
     	System.setIn( redirectIn() );
 		long startTime = System.currentTimeMillis();
