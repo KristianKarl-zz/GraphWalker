@@ -52,7 +52,7 @@ public class FiniteStateMachine{
 	protected DirectedSparseVertex currentState = null;
 	private boolean weighted = false;
 	private DirectedSparseEdge lastEdge = null;
-	private DirectedSparseEdge prevEdge = null;
+	private Stack edgeStack;
 	private int numberOfEdgesTravesed = 0;
 	protected boolean backtracking = false;
 	protected boolean abortOnDeadEnds = true;
@@ -94,6 +94,7 @@ public class FiniteStateMachine{
 	public FiniteStateMachine()
 	{
 		logger.debug("Initializing");
+		edgeStack = new Stack();
 		start_time = System.currentTimeMillis();
 	}
 	
@@ -195,8 +196,8 @@ public class FiniteStateMachine{
 	{
 		if(currentState.isSource(edge))
 		{
-			prevEdge = lastEdge;
 			lastEdge = edge;
+ 			edgeStack.push( lastEdge );
 			currentState = (DirectedSparseVertex) edge.getDest();
 			setAsVisited(lastEdge);
 			setAsVisited(currentState);
@@ -367,14 +368,16 @@ public class FiniteStateMachine{
 		setAsUnvisited(getLastEdge());
 		setAsUnvisited(getCurrentState());
 		currentState = (DirectedSparseVertex) lastEdge.getSource();
-		lastEdge = prevEdge;
+		edgeStack.pop();
+		lastEdge = (edgeStack.size()>0?(DirectedSparseEdge) edgeStack.peek():null);
 		numberOfEdgesTravesed--;
 	}
 	
 	protected void popEdge()
 	{
 		setAsUnvisited(getLastEdge());
-		lastEdge = prevEdge;
+		edgeStack.pop();
+		lastEdge = (edgeStack.size()>0?(DirectedSparseEdge) edgeStack.peek():null);
 		currentState = (DirectedSparseVertex) lastEdge.getDest();
 		numberOfEdgesTravesed--;
 	}
