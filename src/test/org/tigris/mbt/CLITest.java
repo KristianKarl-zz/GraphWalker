@@ -146,17 +146,17 @@ public class CLITest extends TestCase {
     }
 
     /**
-     * Test command: java -jar mbt.jar offline -f graphml/reqtags/ExtendedMain.graphml -g SHORTEST -s EDGE_COVERAGE:100
+     * Test command: java -jar mbt.jar offline -f graphml/reqtags/ExtendedMain.graphml -g RANDOM -s TEST_LENGTH:10
      */
-    public void testNoMbtPropertiesFileOfffline()
+    public void testNoMbtPropertiesFileOffline()
     {
-		String args[] = { "offline", "-f", "graphml/reqtags/ExtendedMain.graphml", "-g", "SHORTEST", "-s", "EDGE_COVERAGE:100" };
+		String args[] = { "offline", "-f", "graphml/reqtags/ExtendedMain.graphml", "-g", "RANDOM", "-s", "TEST_LENGTH:10" };
 		moveMbtPropertiesFile();
     	runCommand( args );
 		restoreMbtPropertiesFile();
 		System.out.println( errMsg );
     	assertEquals( "No error messages should occur.", "", errMsg);
-    	assertTrue( outMsg.split("\r\n|\r|\n").length < 90);
+    	assertEquals( 20, outMsg.split("\r\n|\r|\n").length); // 20 rows as 1 step = 1 edge
     }
 
     /**
@@ -287,7 +287,7 @@ public class CLITest extends TestCase {
     	runCommand( args );
     	long runTime = System.currentTimeMillis() - startTime;
     	System.setIn( oldInputStream );
-    	assertTrue( "No error messages should occur.", errMsg.isEmpty() );
+    	assertEquals( "No error messages should occur.", "", errMsg );
 		assertTrue( ( runTime - 10000 ) < 3000 );
     }
          
