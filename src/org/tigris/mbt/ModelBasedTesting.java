@@ -30,7 +30,6 @@ import org.tigris.mbt.conditions.StopCondition;
 import org.tigris.mbt.exceptions.InvalidDataException;
 import org.tigris.mbt.generators.CodeGenerator;
 import org.tigris.mbt.generators.PathGenerator;
-import org.tigris.mbt.generators.RandomPathGenerator;
 import org.tigris.mbt.io.AbstractModelHandler;
 import org.tigris.mbt.io.GraphML;
 import org.tigris.mbt.statistics.EdgeCoverageStatistics;
@@ -377,66 +376,36 @@ public class ModelBasedTesting
 	
 	public void interractivePath(InputStream in)
 	{
-		boolean firstLine = true;
-		char input = 0;
-		String[] stepPair = null;
-		while( hasNextStep() )
+		Vector stepPair = new Vector();
+		for( char input = '0'; hasNextStep(); input = Util.getInput() )
 		{
-			if ( firstLine == false )
-			{
-				input = Util.getInput();
-				logger.debug("Recieved: '"+ input+"'");
-				if(input == '2')
-				{
-					break;
-				}
-				if(input == '1')
-				{
-					backtrack( false );
-					firstLine = true;
-					continue;
-				}
-			}
-			else
-			{
-				firstLine = false;
-			}
-			stepPair = getNextStep();
-			statisticsManager.addProgress(getMachine().getLastEdge());
-			logger.debug("Execute: " + stepPair[0]);
-			System.out.print(stepPair[0]);
-			if ( hasCurrentEdgeBackTracking() )
-			{
-				System.out.println( " BACKTRACK" );					
-			}
-			else
-			{
-				System.out.println( "" );										
-			}
-
-			input = Util.getInput(); 
 			logger.debug("Recieved: '"+ input+"'");
-			if(input == '2')
-			{
+
+			switch (input) {
+			case '1':
+				backtrack(stepPair.size()<=1);
+				stepPair.clear();
 				break;
-			}
-			if(input == '1')
-			{
-				backtrack( true );
-				firstLine = true;
-				continue;
-			}
-			statisticsManager.addProgress(getMachine().getCurrentState());
-			logger.debug("Verify: " + stepPair[1]);
-			System.out.print(stepPair[1]);
-			if ( hasCurrentVertexBackTracking() )
-			{
-				System.out.println( " BACKTRACK" );					
-			}
-			else
-			{
-				System.out.println( "" );										
-			}
+			case '2':
+				return;
+			case '0':
+				if(stepPair.size() == 0)
+					stepPair = new Vector(Arrays.asList(getNextStep()));
+				System.out.print( (String) stepPair.remove(0) );
+				if((stepPair.size() == 1 && hasCurrentEdgeBackTracking()) || 
+						(stepPair.size() == 0 && hasCurrentVertexBackTracking()))
+					System.out.println(" BACKTRACK");
+				else
+					System.out.println();
+				if(stepPair.size() == 1)
+					statisticsManager.addProgress(getMachine().getLastEdge());
+				else
+					statisticsManager.addProgress(getMachine().getCurrentState());
+				break;
+
+			default:
+				throw new RuntimeException("Unsupported input recieved.");
+			} 
 		}
 	}
 	
