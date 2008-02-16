@@ -229,6 +229,11 @@ public class CLI
         }
 		catch ( Exception e )
         {
+			StringWriter sw = new StringWriter();
+		    PrintWriter pw = new PrintWriter( sw );
+		    e.printStackTrace( pw );
+		    pw.close();	    		    
+			logger.debug( sw.toString() );
 			System.err.println( e.getMessage() );
         	System.err.println( "Type 'java -jar mbt.jar help " + args[ 0 ] + "' for help." );
         }

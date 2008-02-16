@@ -52,6 +52,7 @@ public class FiniteStateMachine{
 	protected DirectedSparseVertex currentState = null;
 	private boolean weighted = false;
 	private DirectedSparseEdge lastEdge = null;
+	private DirectedSparseEdge prevEdge = null;
 	private int numberOfEdgesTravesed = 0;
 	protected boolean backtracking = false;
 	protected boolean abortOnDeadEnds = true;
@@ -61,8 +62,6 @@ public class FiniteStateMachine{
 
 	private Hashtable associatedRequirements;
 
-	private Stack edgeStack;
-	
 	protected void setState(String stateName)
 	{
 		logger.debug("Setting state to: '" + stateName + "'");
@@ -95,7 +94,6 @@ public class FiniteStateMachine{
 	public FiniteStateMachine()
 	{
 		logger.debug("Initializing");
-		edgeStack = new Stack();
 		start_time = System.currentTimeMillis();
 	}
 	
@@ -177,7 +175,8 @@ public class FiniteStateMachine{
 			visited = new Integer( 0 );
 		}
 		
-		if(visited.intValue() < 0 ) System.out.println("WTF!!");
+		if(visited.intValue() < 0 )
+			logger.error( "Edge: " + Util.getCompleteName( e ) + ", has a negative number in VISITED_KEY" );
 		
 		e.setUserDatum( Keywords.VISITED_KEY, visited, UserData.SHARED );
 
@@ -196,11 +195,8 @@ public class FiniteStateMachine{
 	{
 		if(currentState.isSource(edge))
 		{
+			prevEdge = lastEdge;
 			lastEdge = edge;
-			if(isBacktrackPossible())
-			{
-				track();
-			}
 			currentState = (DirectedSparseVertex) edge.getDest();
 			setAsVisited(lastEdge);
 			setAsVisited(currentState);
@@ -208,7 +204,7 @@ public class FiniteStateMachine{
 			return true;
 		}
 		else
-			System.out.println("WTF!");
+			logger.error( "Edge: " + Util.getCompleteName( edge ) + ", is not the source of: " + Util.getCompleteName( currentState ) );
 		return false;
 	}
 
@@ -366,28 +362,19 @@ public class FiniteStateMachine{
 		return (l==null ? "" : l) + (p==null ? "" : " " + p);
 	}
 	
-	protected void track()
-	{
-		edgeStack.push(getLastEdge());
-	}
-	
 	protected void popState()
 	{
 		setAsUnvisited(getLastEdge());
 		setAsUnvisited(getCurrentState());
-
-		lastEdge = (DirectedSparseEdge) edgeStack.pop();
 		currentState = (DirectedSparseVertex) lastEdge.getSource();
-		lastEdge = (edgeStack.size()>0?(DirectedSparseEdge) edgeStack.peek():null);
+		lastEdge = prevEdge;
 		numberOfEdgesTravesed--;
 	}
 	
 	protected void popEdge()
 	{
 		setAsUnvisited(getLastEdge());
-
-		lastEdge = (DirectedSparseEdge) edgeStack.pop();
-		lastEdge = (edgeStack.size()>0?(DirectedSparseEdge) edgeStack.peek():null);
+		lastEdge = prevEdge;
 		currentState = (DirectedSparseVertex) lastEdge.getDest();
 		numberOfEdgesTravesed--;
 	}

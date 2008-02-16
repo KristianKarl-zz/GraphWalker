@@ -245,10 +245,7 @@ public class ModelBasedTesting
 		PathGenerator backupGenerator = null;
 		if ( runRandomGeneratorOnce )
 		{
-			if ( !(getGenerator() instanceof RandomPathGenerator) ) 
-			{
-				backupGenerator = getGenerator();				
-			}
+			backupGenerator = getGenerator();				
 			setGenerator(Keywords.GENERATOR_RANDOM);
 		}
 
@@ -380,37 +377,66 @@ public class ModelBasedTesting
 	
 	public void interractivePath(InputStream in)
 	{
-		Vector stepPair = new Vector();
+		boolean firstLine = true;
+		char input = 0;
+		String[] stepPair = null;
 		while( hasNextStep() )
 		{
-			char input = Util.getInput();
+			if ( firstLine == false )
+			{
+				input = Util.getInput();
+				logger.debug("Recieved: '"+ input+"'");
+				if(input == '2')
+				{
+					break;
+				}
+				if(input == '1')
+				{
+					backtrack( false );
+					firstLine = true;
+					continue;
+				}
+			}
+			else
+			{
+				firstLine = false;
+			}
+			stepPair = getNextStep();
+			statisticsManager.addProgress(getMachine().getLastEdge());
+			logger.debug("Execute: " + stepPair[0]);
+			System.out.print(stepPair[0]);
+			if ( hasCurrentEdgeBackTracking() )
+			{
+				System.out.println( " BACKTRACK" );					
+			}
+			else
+			{
+				System.out.println( "" );										
+			}
+
+			input = Util.getInput(); 
 			logger.debug("Recieved: '"+ input+"'");
-
-			switch (input) {
-			case '1':
-				backtrack(stepPair.size()<=1);
-				stepPair.clear();
+			if(input == '2')
+			{
 				break;
-			case '2':
-				return;
-			case '0':
-				if(stepPair.size() == 0)
-					stepPair = new Vector(Arrays.asList(getNextStep()));
-				System.out.print( (String) stepPair.remove(0) );
-				if((stepPair.size() == 1 && hasCurrentEdgeBackTracking()) || 
-						(stepPair.size() == 0 && hasCurrentVertexBackTracking()))
-					System.out.println(" BACKTRACK");
-				else
-					System.out.println();
-				if(stepPair.size() == 1)
-					statisticsManager.addProgress(getMachine().getLastEdge());
-				else
-					statisticsManager.addProgress(getMachine().getCurrentState());
-				break;
-
-			default:
-				throw new RuntimeException("Unsupported input recieved.");
-			} 
+			}
+			if(input == '1')
+			{
+				backtrack( true );
+				firstLine = true;
+				continue;
+			}
+			statisticsManager.addProgress(getMachine().getCurrentState());
+			logger.debug("Verify: " + stepPair[1]);
+			System.out.print(stepPair[1]);
+			if ( hasCurrentVertexBackTracking() )
+			{
+				System.out.println( " BACKTRACK" );					
+			}
+			else
+			{
+				System.out.println( "" );										
+			}
 		}
 	}
 	
