@@ -1,6 +1,7 @@
 package test.org.tigris.mbt;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -53,7 +54,7 @@ public class CLITest extends TestCase {
 			}
 		};
 	}
-	
+		
 	private void runCommand( String args[] )
 	{
 		stdOutput = new StringBuffer();
@@ -69,6 +70,41 @@ public class CLITest extends TestCase {
     	
     	CLI.main( args );
     	
+    	System.setOut( oldOutStream );
+    	System.setErr( oldErrStream );		
+
+    	outMsg = stdOutput.toString();
+    	errMsg = errOutput.toString();
+	}
+
+	private void runCommandWithInputFile( String args[], String fileName )
+	{
+		stdOutput = new StringBuffer();
+		errOutput = new StringBuffer();
+		
+    	PrintStream outStream = new PrintStream( redirectOut() );
+    	PrintStream oldOutStream = System.out; //backup
+    	PrintStream errStream = new PrintStream( redirectErr() );
+    	PrintStream oldErrStream = System.err; //backup
+    	InputStream oldInputStream = System.in; //backup
+    	    	
+    	InputStream	stdin	= null;
+    	try
+	    {
+    		stdin = new FileInputStream( fileName );
+	    }
+    	catch (Exception e)
+	    {
+    		e.printStackTrace();
+		    fail( e.getMessage() );
+	    }
+    	System.setOut( outStream );
+    	System.setErr( errStream );
+    	System.setIn( stdin );
+    	
+    	CLI.main( args );
+    	
+    	System.setIn( oldInputStream );
     	System.setOut( oldOutStream );
     	System.setErr( oldErrStream );		
 
@@ -170,6 +206,42 @@ public class CLITest extends TestCase {
 		matcher = pattern.matcher( errMsg );
 		assertTrue( matcher.find() );
 		assertTrue( "Nothing should be written to standard output.", outMsg.isEmpty() );
+    }
+
+    /**
+     * Test command: java -jar mbt.jar online -f graphml/backtrack/simpleGraph.graphml -g RANDOM -s EDGE_COVERAGE:100
+     */
+    public void testOnlineBacktrackingDisabled()
+    {
+		String args[] = { "online", "-f", "graphml/backtrack/simpleGraph.graphml", "-g", "RANDOM", "-s", "EDGE_COVERAGE:100" };
+		runCommandWithInputFile( args, "graphml/backtrack/testOnlineBacktrackingSimple.stdin" );
+		pattern = Pattern.compile( "Backtracking was asked for, but was disabled.", Pattern.MULTILINE );
+		matcher = pattern.matcher( errMsg );
+		assertTrue( matcher.find() );
+    }
+
+    /**
+     * Test command: java -jar mbt.jar online -b -f graphml/backtrack/simpleGraph.graphml -g RANDOM -s EDGE_COVERAGE:100
+     */
+    public void testOnlineBacktrackingEnabledNoBacktrackInModel()
+    {
+		String args[] = { "online", "-b", "-f", "graphml/backtrack/simpleGraph.graphml", "-g", "RANDOM", "-s", "EDGE_COVERAGE:100" };
+		runCommandWithInputFile( args, "graphml/backtrack/testOnlineBacktrackingIncorrect.stdin" );
+		pattern = Pattern.compile( "Backtracking was asked for, but model does not suppport BACKTRACK at egde:", Pattern.MULTILINE );
+		matcher = pattern.matcher( errMsg );
+		assertTrue( matcher.find() );
+    }
+
+    /**
+     * Test command: java -jar mbt.jar online -b -f graphml/backtrack/simpleGraph.graphml -g RANDOM -s EDGE_COVERAGE:100
+     */
+    public void testOnlineBacktrackingEnabled()
+    {
+		String args[] = { "online", "-b", "-f", "graphml/backtrack/simpleGraph.graphml", "-g", "RANDOM", "-s", "EDGE_COVERAGE:100" };
+		runCommandWithInputFile( args, "graphml/backtrack/testOnlineBacktrackingCorrect.stdin" );
+		pattern = Pattern.compile( "e_Init\\sv_Main\\se_NodeA BACKTRACK\\se_NodeA BACKTRACK\\se_NodeA BACKTRACK\\sv_NodeA BACKTRACK\\se_NodeA BACKTRACK", Pattern.MULTILINE );
+		matcher = pattern.matcher( outMsg );
+		assertTrue( matcher.find() );
     }
 
     /**
@@ -278,7 +350,7 @@ public class CLITest extends TestCase {
     /**
      * Test command: java -jar mbt.jar online -f graphml/methods/Main.graphml -g RANDOM -s TEST_DURATION:10
      */
-    public void testRandom10seconds()
+    public void testOnlineRandom10seconds()
     {
 		String args[] = { "online", "-f", "graphml/methods/Main.graphml", "-g", "RANDOM", "-s", "TEST_DURATION:10", "-o", "1" };
     	InputStream oldInputStream = System.in; //backup
