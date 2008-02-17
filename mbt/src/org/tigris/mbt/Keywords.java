@@ -286,7 +286,6 @@ public class Keywords {
 		generators.put( "STUB", new Integer(GENERATOR_STUB) );
 		generators.put( "REQUIREMENTS", new Integer(GENERATOR_REQUIREMENTS) );
 		generators.put( "SHORTEST_NON_OPTIMIZED", new Integer(GENERATOR_SHORTEST_NON_OPTIMIZED) );
-		
 	}
 
 	static public Set getGenerators()
