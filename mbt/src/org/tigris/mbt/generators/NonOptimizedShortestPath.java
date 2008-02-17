@@ -14,7 +14,7 @@ import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
 
 public class NonOptimizedShortestPath extends PathGenerator
 {
-	static Logger logger = Util.setupLogger(ShortestPathGenerator.class);
+	static Logger logger = Util.setupLogger(NonOptimizedShortestPath.class);
 	private List shortestPathToVertex = null ;
 
 	public String[] getNext() 
