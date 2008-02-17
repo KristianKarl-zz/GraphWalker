@@ -211,21 +211,9 @@ public class CLITest extends TestCase {
     /**
      * Test command: java -jar mbt.jar online -f graphml/backtrack/simpleGraph.graphml -g RANDOM -s EDGE_COVERAGE:100
      */
-    public void testOnlineBacktrackingDisabled()
+    public void testOnlineBacktrackingIncorrectInput()
     {
 		String args[] = { "online", "-f", "graphml/backtrack/simpleGraph.graphml", "-g", "RANDOM", "-s", "EDGE_COVERAGE:100" };
-		runCommandWithInputFile( args, "graphml/backtrack/testOnlineBacktrackingSimple.stdin" );
-		pattern = Pattern.compile( "Backtracking was asked for, but was disabled.", Pattern.MULTILINE );
-		matcher = pattern.matcher( errMsg );
-		assertTrue( matcher.find() );
-    }
-
-    /**
-     * Test command: java -jar mbt.jar online -b -f graphml/backtrack/simpleGraph.graphml -g RANDOM -s EDGE_COVERAGE:100
-     */
-    public void testOnlineBacktrackingEnabledNoBacktrackInModel()
-    {
-		String args[] = { "online", "-b", "-f", "graphml/backtrack/simpleGraph.graphml", "-g", "RANDOM", "-s", "EDGE_COVERAGE:100" };
 		runCommandWithInputFile( args, "graphml/backtrack/testOnlineBacktrackingIncorrect.stdin" );
 		pattern = Pattern.compile( "Backtracking was asked for, but model does not suppport BACKTRACK at egde:", Pattern.MULTILINE );
 		matcher = pattern.matcher( errMsg );
@@ -233,11 +221,11 @@ public class CLITest extends TestCase {
     }
 
     /**
-     * Test command: java -jar mbt.jar online -b -f graphml/backtrack/simpleGraph.graphml -g RANDOM -s EDGE_COVERAGE:100
+     * Test command: java -jar mbt.jar online -f graphml/backtrack/simpleGraph.graphml -g RANDOM -s EDGE_COVERAGE:100
      */
-    public void testOnlineBacktrackingEnabled()
+    public void testOnlineBacktrackingCorrectInput()
     {
-		String args[] = { "online", "-b", "-f", "graphml/backtrack/simpleGraph.graphml", "-g", "RANDOM", "-s", "EDGE_COVERAGE:100" };
+		String args[] = { "online", "-f", "graphml/backtrack/simpleGraph.graphml", "-g", "RANDOM", "-s", "EDGE_COVERAGE:100" };
 		runCommandWithInputFile( args, "graphml/backtrack/testOnlineBacktrackingCorrect.stdin" );
 		pattern = Pattern.compile( "e_Init\\sv_Main\\se_NodeA BACKTRACK\\se_NodeA BACKTRACK\\se_NodeA BACKTRACK\\sv_NodeA BACKTRACK\\se_NodeA BACKTRACK", Pattern.MULTILINE );
 		matcher = pattern.matcher( outMsg );
