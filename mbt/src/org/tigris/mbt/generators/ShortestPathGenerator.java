@@ -119,7 +119,7 @@ public class ShortestPathGenerator extends PathGenerator {
 					preCalculatedPath = (Stack) edgePath.clone();
 				}
 			} catch (FoundNoEdgeException culDeSac) {}
-			getMachine().backtrack( false );
+			getMachine().backtrack();
 			edgePath.pop();
 		}
 	}
