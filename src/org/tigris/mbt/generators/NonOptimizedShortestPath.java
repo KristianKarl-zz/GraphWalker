@@ -15,13 +15,14 @@ import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
 public class NonOptimizedShortestPath extends PathGenerator
 {
 	static Logger logger = Util.setupLogger(NonOptimizedShortestPath.class);
-	private List shortestPathToVertex = null ;
+	private List dijkstraShortestPath = null ;
 
 	public String[] getNext() 
 	{
 		Util.AbortIf(!hasNext(), "Finished");
 		
-		if ( shortestPathToVertex == null || shortestPathToVertex.size() == 0 )
+		// Is there a path to walk, given from DijkstraShortestPath?
+		if ( dijkstraShortestPath == null || dijkstraShortestPath.size() == 0 )
 		{
 			Vector unvisitedEdges = getMachine().getUnvisitedEdges();
 			logger.debug( "Number of unvisited edges: " + unvisitedEdges.size() );
@@ -31,15 +32,15 @@ public class NonOptimizedShortestPath extends PathGenerator
 			logger.debug( "Current state: " + Util.getCompleteName( getMachine().getCurrentState() ) );
 			logger.debug( "Unvisited edge: " + Util.getCompleteName( e ) );
 			
-			shortestPathToVertex = 
+			dijkstraShortestPath = 
 				new DijkstraShortestPath( 
 						getMachine().getModel() ).getPath( 
 								getMachine().getCurrentState(), 
 								e.getSource() );
-			shortestPathToVertex.add( e );
-			logger.debug( "Dijkstra path length: " + shortestPathToVertex.size() );
+			dijkstraShortestPath.add( e );
+			logger.debug( "Dijkstra path length: " + dijkstraShortestPath.size() );
 		}
-		DirectedSparseEdge edge = (DirectedSparseEdge)shortestPathToVertex.remove( 0 );
+		DirectedSparseEdge edge = (DirectedSparseEdge)dijkstraShortestPath.remove( 0 );
 		
 		getMachine().walkEdge( edge );
 		String[] retur = { getMachine().getEdgeName( edge ),
