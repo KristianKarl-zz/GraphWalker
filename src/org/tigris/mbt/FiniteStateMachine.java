@@ -446,5 +446,31 @@ public class FiniteStateMachine{
 	public void setCalculatingPath(boolean calculatingPath) {
 		this.calculatingPath = calculatingPath;
 	}
+	/**
+	 * This functions returns a list of edges, which has not yet been visited
+	 * @return DirectedSparseEdge
+	 */
+	public Vector getUnvisitedEdges()
+	{
+		Vector edgesNotVisited = new Vector();
+		Object[] edges = getAllEdges().toArray();
+
+		for ( int i = 0; i < edges.length; i++ )
+		{
+			DirectedSparseEdge edge = (DirectedSparseEdge)edges[ i ];
+
+			Integer vistited = (Integer)edge.getUserDatum( Keywords.VISITED_KEY );
+			if ( vistited.intValue() == 0 )
+			{
+				edgesNotVisited.add( edge );
+			}
+		}
+		return edgesNotVisited;
+	}
+	
+	public SparseGraph getModel()
+	{
+		return model;
+	}
 }
 

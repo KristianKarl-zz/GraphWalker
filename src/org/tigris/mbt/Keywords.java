@@ -200,6 +200,8 @@ public class Keywords {
 	public static final int GENERATOR_STUB = 2004;
 
 	public static final int GENERATOR_REQUIREMENTS = 2005;
+	
+	public static final int GENERATOR_SHORTEST_NON_OPTIMIZED = 2006;
 
 	/**
 	* Holds the pre-defined key words
@@ -283,6 +285,8 @@ public class Keywords {
 		generators.put( "LIST", new Integer(GENERATOR_LIST) );
 		generators.put( "STUB", new Integer(GENERATOR_STUB) );
 		generators.put( "REQUIREMENTS", new Integer(GENERATOR_REQUIREMENTS) );
+		generators.put( "SHORTEST_NON_OPTIMIZED", new Integer(GENERATOR_SHORTEST_NON_OPTIMIZED) );
+		
 	}
 
 	static public Set getGenerators()

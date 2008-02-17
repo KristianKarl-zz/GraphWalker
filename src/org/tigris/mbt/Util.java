@@ -12,6 +12,7 @@ import java.io.StringWriter;
 import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -39,6 +40,7 @@ import org.tigris.mbt.conditions.TimeDuration;
 import org.tigris.mbt.generators.CodeGenerator;
 import org.tigris.mbt.generators.CombinedPathGenerator;
 import org.tigris.mbt.generators.ListGenerator;
+import org.tigris.mbt.generators.NonOptimizedShortestPath;
 import org.tigris.mbt.generators.PathGenerator;
 import org.tigris.mbt.generators.RandomPathGenerator;
 import org.tigris.mbt.generators.RequirementsGenerator;
@@ -59,6 +61,7 @@ import edu.uci.ics.jung.utils.UserData;
 public class Util {
 	
 	static Logger logger = setupLogger(Util.class);
+	static private Random random = new Random();
 	
 	public static String getCompleteName( AbstractElement element )
 	{
@@ -263,6 +266,10 @@ public class Util {
 				
 			case Keywords.GENERATOR_REQUIREMENTS:
 				generator = new RequirementsGenerator();
+				break;
+			
+			case Keywords.GENERATOR_SHORTEST_NON_OPTIMIZED:
+				generator = new NonOptimizedShortestPath();
 				break;
 			
 			default:
@@ -497,4 +504,22 @@ public class Util {
 		return c;
 	}
 
+	/**
+	 * This functions shuffle the array, and returns the shuffled array
+	 * @param array
+	 * @return
+	 */
+	public static Object[] shuffle( Object[] array )
+	{
+		for ( int i = 0; i < array.length; i++ )
+		{
+			Object leftObject = array[ i ];
+			int index = random.nextInt( array.length );
+			Object rightObject = array[ index ];
+
+			array[ i ]     = rightObject;
+			array[ index ] = leftObject;
+		}
+		return array;
+	}
 }
