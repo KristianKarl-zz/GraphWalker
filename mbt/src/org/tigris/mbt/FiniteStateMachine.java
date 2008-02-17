@@ -200,6 +200,7 @@ public class FiniteStateMachine{
 			setAsVisited(lastEdge);
 			setAsVisited(currentState);
 			numberOfEdgesTravesed++;
+			logger.debug( "No. of walked edges: " + numberOfEdgesTravesed );
 			return true;
 		}
 		else

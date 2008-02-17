@@ -10,7 +10,6 @@ import org.tigris.mbt.Util;
 
 import edu.uci.ics.jung.algorithms.shortestpath.DijkstraShortestPath;
 import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
-import edu.uci.ics.jung.graph.impl.DirectedSparseVertex;
 
 
 public class NonOptimizedShortestPath extends PathGenerator
@@ -37,25 +36,8 @@ public class NonOptimizedShortestPath extends PathGenerator
 						getMachine().getModel() ).getPath( 
 								getMachine().getCurrentState(), 
 								e.getSource() );
-			
+			shortestPathToVertex.add( e );
 			logger.debug( "Dijkstra path length: " + shortestPathToVertex.size() );
-			
-			// DijkstraShortestPath.getPath returns 0 if there is no way to reach the destination. But,
-			// DijkstraShortestPath.getPath also returns 0 paths if the the source and destination vertex are the same, even if there is
-			// an edge there (self-loop). So we have to check for that.
-			if ( shortestPathToVertex.size() == 0 )
-			{
-				if ( e.getSource().getUserDatum( Keywords.INDEX_KEY ) != e.getDest().getUserDatum( Keywords.INDEX_KEY ) )
-				{
-					shortestPathToVertex.add( e );
-				}
-				else
-				{
-					String msg = "There is no way to reach: " + Util.getCompleteName( e ) +
-		                         ", from: " + Util.getCompleteName( getMachine().getCurrentState() );
-					logger.warn( msg );
-				}
-			}
 		}
 		DirectedSparseEdge edge = (DirectedSparseEdge)shortestPathToVertex.remove( 0 );
 		
