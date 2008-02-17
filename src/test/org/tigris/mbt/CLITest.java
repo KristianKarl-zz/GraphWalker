@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -215,9 +216,7 @@ public class CLITest extends TestCase {
     {
 		String args[] = { "online", "-f", "graphml/backtrack/simpleGraph.graphml", "-g", "RANDOM", "-s", "EDGE_COVERAGE:100" };
 		runCommandWithInputFile( args, "graphml/backtrack/testOnlineBacktrackingIncorrect.stdin" );
-		pattern = Pattern.compile( "Backtracking was asked for, but model does not suppport BACKTRACK at egde:", Pattern.MULTILINE );
-		matcher = pattern.matcher( errMsg );
-		assertTrue( matcher.find() );
+		assertEquals("Backtracking was asked for, but model does not suppport BACKTRACK at egde: 'e_Init', INDEX=4 ('Start', INDEX=1 -> 'v_Main', INDEX=2)", errMsg.split("\r\n|\r|\n")[0]);
     }
 
     /**
@@ -227,9 +226,8 @@ public class CLITest extends TestCase {
     {
 		String args[] = { "online", "-f", "graphml/backtrack/simpleGraph.graphml", "-g", "RANDOM", "-s", "EDGE_COVERAGE:100" };
 		runCommandWithInputFile( args, "graphml/backtrack/testOnlineBacktrackingCorrect.stdin" );
-		pattern = Pattern.compile( "e_Init\\sv_Main\\se_NodeA BACKTRACK\\se_NodeA BACKTRACK\\se_NodeA BACKTRACK\\sv_NodeA BACKTRACK\\se_NodeA BACKTRACK", Pattern.MULTILINE );
-		matcher = pattern.matcher( outMsg );
-		assertTrue( matcher.find() );
+		String[] expected = {"e_Init", "v_Main", "e_NodeA BACKTRACK", "e_NodeA BACKTRACK", "e_NodeA BACKTRACK", "v_NodeA BACKTRACK", "e_NodeA BACKTRACK", "v_NodeA BACKTRACK"};
+		assertTrue(Arrays.deepEquals(expected, outMsg.split("\r\n|\r|\n")));
     }
 
     /**

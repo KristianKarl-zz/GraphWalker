@@ -232,6 +232,7 @@ public class ModelBasedTesting
 	public boolean hasNextStep() {
 		if(this.machine == null) getMachine();
 		Util.AbortIf(getGenerator() == null, "No generator has been defined!");
+//		System.out.println("hasnext: "+getGenerator().hasNext());
 		return getGenerator().hasNext();
 	}
 
@@ -277,7 +278,7 @@ public class ModelBasedTesting
 
 	public void backtrack( boolean popEdge ) {
 		if(this.machine != null)
-			getMachine().backtrack( popEdge );
+			getMachine().backtrack();
 		getGenerator().reset();
 		runRandomGeneratorOnce = true;
 	}
@@ -377,18 +378,19 @@ public class ModelBasedTesting
 	public void interractivePath(InputStream in)
 	{
 		Vector stepPair = new Vector();
-		for( char input = '0'; hasNextStep(); input = Util.getInput() )
+		for( char input = '0'; true; input = Util.getInput() )
 		{
 			logger.debug("Recieved: '"+ input+"'");
 
 			switch (input) {
-			case '1':
-				backtrack(stepPair.size()<=1);
-				stepPair.clear();
-				break;
 			case '2':
 				return;
+			case '1':
+				backtrack(stepPair.size()==0);
+				stepPair.clear();
 			case '0':
+//				System.out.println("nomoreSteps: "+ (stepPair.size()==0));
+				if(!hasNextStep() && (stepPair.size()==0))return;
 				if(stepPair.size() == 0)
 					stepPair = new Vector(Arrays.asList(getNextStep()));
 				System.out.print( (String) stepPair.remove(0) );
@@ -401,6 +403,7 @@ public class ModelBasedTesting
 					statisticsManager.addProgress(getMachine().getLastEdge());
 				else
 					statisticsManager.addProgress(getMachine().getCurrentState());
+
 				break;
 
 			default:

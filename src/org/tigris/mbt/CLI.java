@@ -1,8 +1,8 @@
 package org.tigris.mbt;
 
+import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.Timer;
@@ -59,9 +59,7 @@ public class CLI
 	private Timer timer = null;
 	private Options opt = new Options();
 
-	public CLI()
-	{
-	}
+	public CLI(){}
 	
 	private ModelBasedTesting getMbt() 
 	{
@@ -80,6 +78,7 @@ public class CLI
 	public static void main(String[] args)
 	{
 		CLI cli = new CLI();
+		//if(args.length >= 0)return;
 		Thread shutDownThread = new CLI.VerboseStatisticsLogger(cli.getMbt());
 		try 
 		{
@@ -261,51 +260,52 @@ public class CLI
 	
 	private void printHelpText(String helpSection)
 	{
+		String header = "";
 		if(helpSection.equalsIgnoreCase("online")) {
 			buildOnlineCLI();
-			System.out.println( "Run the test online.\n" +			
+			header = "Run the test online.\n" +			
 					"MBT will return a test sequence, one line at a time to standard output, " +
 					"it will wait until a line is fed back via standard input. The data fed back can be:\n" +
 					"  '0' which means, continue the test as normal\n" +
 					"  '1' which means go back to previous vertex (backtracking)\n" +
 					"  '2' will end the test normally\n" +
-					"anything else will abort the execution.\n" );					
+					"anything else will abort the execution.\n" ;					
 		} else if(helpSection.equalsIgnoreCase("requirements")){
 			buildRequirementsCLI();
-			System.out.println( "Print a list of requiremnts found in the model.\n" );					
+			header = "Print a list of requiremnts found in the model.\n" ;					
 		} else if(helpSection.equalsIgnoreCase("offline")){
 			buildOfflineCLI();
-			System.out.println( "Generate a test sequence offline. The sequence is printed to the standard output\n" );					
+			header = "Generate a test sequence offline. The sequence is printed to the standard output\n" ;					
 		} else if(helpSection.equalsIgnoreCase("methods")){
 			buildMethodsCLI();
-			System.out.println( "Generate all methods, or tests existing in the model.\n" +			
+			header = "Generate all methods, or tests existing in the model.\n" +			
 								"MBT will parse the graph(s), and return all methods (or tests) that" +
 								" exists in the graph(s). The list will onyl print out a unique name once." +
-								" The list is printed to stdout.\n" );					
+								" The list is printed to stdout.\n" ;					
 		} else if(helpSection.equalsIgnoreCase("merge")){
 			buildMergeCLI();
-			System.out.println( "Merge several graphml files into one single graphml file.\n" +			
-								"The files to be merged, shall all exist in a single folder.\n" );					
+			header = "Merge several graphml files into one single graphml file.\n" +			
+								"The files to be merged, shall all exist in a single folder.\n" ;					
 		} else if(helpSection.equalsIgnoreCase("source")){
 			buildSourceCLI();
-			System.out.println( "Generate code from a template.\n" +			
+			header = "Generate code from a template.\n" +			
 								"Will generate code using a template. The code generated will contain all lables/names " +
 								"defined by the vertices and edges. This enables the user to write templates for a " +
 								"multitude of scripting or programming languages. " +
 								"The result will be printed to stdout. " +
 								"There is 1 variable in the template, that will be replaced: {LABEL} ->Will be replace " +
-								"by the actual name of the edge or vertex." );
+								"by the actual name of the edge or vertex." ;
 		} else if(helpSection.equalsIgnoreCase("xml")){
 			buildXmlCLI();
-			System.out.println( "Setup mbt engine from xml.\n" +
-					"Will setup and execute an engine based on xml specified criterias.");
+			header = "Setup mbt engine from xml.\n" +
+					"Will setup and execute an engine based on xml specified criterias.";
 		} else {
 			System.err.println( "Type 'java -jar mbt.jar help' for usage." );
 			return;
 		}
 
 		HelpFormatter f = new HelpFormatter();
-        f.printHelp( "'java -jar mbt.jar "+ helpSection.toLowerCase()+" [OPTION] [ARGUMENT]'", opt );
+        f.printHelp( "java -jar mbt.jar "+ helpSection.toLowerCase(), header, opt , "", true);
 	}
 	
 	private void buildRequirementsCLI()
@@ -524,8 +524,6 @@ public class CLI
 			{
 				public void run() 
 				{
-					logger.info(Arrays.deepToString(getMbt().getStatisticsManager().getStatistics()));
-
 					logger.info( getMbt().getStatisticsCompact() );
 				}
 			}, 500, Integer.valueOf( cl.getOptionValue( "o" ) ).longValue() * 1000 );
@@ -591,8 +589,6 @@ public class CLI
 			{
 				public void run() 
 				{
-					logger.info(Arrays.deepToString(getMbt().getStatisticsManager().getStatistics()));
-
 					logger.info( getMbt().getStatisticsCompact() );
 				}
 			}, 500, Integer.valueOf( cl.getOptionValue( "o" ) ).longValue() * 1000 );
@@ -606,10 +602,13 @@ public class CLI
 		{
 			getMbt().interractivePath();
 		}
-		if( cl.hasOption( "a" ) )
-		{
-			System.out.println( getMbt().getStatisticsString() );
-		}
+		if( cl.hasOption( "a" ) ) writeStatisticsVerbose(System.out);
+
+		logger.info(getMbt().getStatisticsManager().getFullProgressXml());
+	}
+
+	private void writeStatisticsVerbose(PrintStream out) {
+		out.println( getMbt().getStatisticsString() );
 	}
 
 	/**
@@ -678,10 +677,7 @@ public class CLI
 
 		setMbt(Util.loadMbtFromXml( cl.getOptionValue( "f" ) ));
 		
-		if( cl.hasOption( "a" ) )
-		{
-			System.out.println( getMbt().getStatisticsString() );
-		}
+		if( cl.hasOption( "a" ) ) writeStatisticsVerbose( System.out );
 	}
 
 	private boolean helpNeeded(String module, boolean condition, String message)

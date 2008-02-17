@@ -381,21 +381,7 @@ public class FiniteStateMachine{
 		lastEdge = (edgeStack.size()>0?(DirectedSparseEdge) edgeStack.peek():null);
 		numberOfEdgesTravesed--;
 	}
-	
-	protected void popEdge()
-	{
-		setAsUnvisited(getLastEdge());
-		edgeStack.pop();
-		lastEdge = (edgeStack.size()>0?(DirectedSparseEdge) edgeStack.peek():null);
-		if(lastEdge == null)
-		{
-			setState(Keywords.START_NODE);
-		} else {
-			currentState = (DirectedSparseVertex) lastEdge.getDest();
-		}
-		numberOfEdgesTravesed--;
-	}
-	
+		
 	/**
 	 * @param weighted if edge weights are to be considered
 	 */
@@ -419,23 +405,17 @@ public class FiniteStateMachine{
 		return numberOfEdgesTravesed;
 	}
 
-	public void backtrack( boolean popEdge )
+	public void backtrack()
 	{
 		if(isBacktrackPossible())
 		{
-			if ( popEdge )
-			{
-				popEdge();
-			}
-			else
-			{
-				popState();
-			}
+			popState();
 		} else {
-			
+			if(!isLastEdgeBacktrackSupported())
+				throw new RuntimeException( "Backtracking was asked for, but model does not suppport BACKTRACK at egde: " + Util.getCompleteName( getLastEdge() ) );	
 			if(!isBacktrackEnabled())
 				throw new RuntimeException( "Backtracking was asked for, but was disabled." );			
-			throw new RuntimeException( "Backtracking was asked for, but model does not suppport BACKTRACK at egde: " + Util.getCompleteName( getLastEdge() ) );			
+			throw new RuntimeException( "Backtracking was asked for, but was refused" );						
 		}
 	}
 	

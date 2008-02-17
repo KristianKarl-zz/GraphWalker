@@ -167,6 +167,7 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 	}
 	protected void track()
 	{
+		super.track();
 		namespaceStack.push(new CannedNameSpace(interpreter.getNameSpace()));
 	}
 	
