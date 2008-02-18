@@ -62,6 +62,7 @@ public class Util {
 	
 	static Logger logger = setupLogger(Util.class);
 	static private Random random = new Random();
+	public static String newline = System.getProperty("line.separator");
 	
 	public static String getCompleteName( AbstractElement element )
 	{
