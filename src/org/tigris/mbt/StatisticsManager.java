@@ -5,20 +5,21 @@ package org.tigris.mbt;
 
 import org.jdom.Document;
 import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.input.SAXBuilder;
 import org.jdom.output.XMLOutputter;
 import org.tigris.mbt.statistics.*;
 
-import java.io.IOException;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintStream;
 import java.io.StringReader;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.Set;
 
 import javax.xml.transform.Templates;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
@@ -34,7 +35,8 @@ public class StatisticsManager {
 
 	Hashtable counters;
 	Document progress;
-	private String xsltReport;
+	private Transformer stylesheet;
+
 	/**
 	 * 
 	 */
@@ -96,44 +98,44 @@ public class StatisticsManager {
 	
 	public void setReportTemplate(String filename)
 	{
-		this.xsltReport = Util.readFile(filename);
+	    TransformerFactory transformerFactory = TransformerFactory.newInstance();
+	    try {
+	    	Templates stylesheetTemplate = transformerFactory.newTemplates( new StreamSource(new File(filename)));
+	    this.stylesheet = stylesheetTemplate.newTransformer();
+		} catch (TransformerConfigurationException e) {
+			throw new RuntimeException("A serious configuration error detected in '"+filename+"' while creating report template.", e);
+		}
 		
 	}
 	
-	public String getFullReport() {
+	public void writeFullReport() {
+		writeFullReport(System.out);
+	}
+	
+	public void writeFullReport(String fileName) {
+		try {
+			writeFullReport(new PrintStream(new File(fileName)));
+		} catch (FileNotFoundException e) {
+			throw new RuntimeException("Could not create or open '"+fileName+"'", e);
+		}
+	}
+	
+	public void writeFullReport(PrintStream out) {
 	    
 		try {
-			// Set up the XSLT stylesheet for use with Xalan-J 2
-		    TransformerFactory transformerFactory = TransformerFactory.newInstance();
-		    Templates stylesheet = transformerFactory.newTemplates( new StreamSource(new StringReader(this.xsltReport)));
-		    Transformer processor = stylesheet.newTransformer();
-		    // Use I/O streams for source files
-		    PipedInputStream sourceIn = new PipedInputStream();
-		    PipedOutputStream sourceOut = new PipedOutputStream(sourceIn);
-		    StreamSource source = new StreamSource(sourceIn);
-		    // Use I/O streams for output files
-		    PipedInputStream resultIn = new PipedInputStream();
-		    PipedOutputStream resultOut = new PipedOutputStream(resultIn);
-		    // Convert the output target for use in Xalan-J 2
-		    StreamResult result = new StreamResult(resultOut);
-		    // Get a means for output of the JDOM Document
 		    XMLOutputter xmlOutputter = new XMLOutputter();
-		    // Output to the I/O stream
-		    xmlOutputter.output(this.progress, sourceOut);
-		    sourceOut.close();
-		    // Feed the resultant I/O stream into the XSLT processor
-		    processor.transform(source, result);
-		    resultOut.close();
-		    // Convert the resultant transformed document back to JDOM
-		    SAXBuilder builder = new SAXBuilder();
-		    Document resultDoc = builder.build(resultIn);
-		    return xmlOutputter.outputString(resultDoc);
-		} catch(IOException e){
-			throw new RuntimeException("Could not read needed information for report.", e);
+		    StreamSource source = new StreamSource(new StringReader(xmlOutputter.outputString(this.progress)));
+		    StreamResult result = new StreamResult(out);
+		    this.stylesheet.transform(source, result);
 		} catch(TransformerException e){
 			throw new RuntimeException("Could not complete transformation of report.", e);
-		} catch (JDOMException e) {
-			throw new RuntimeException("Could not rebuild report after transformation.", e);
 		}
+	}
+
+	/**
+	 * @return the available Statistics counter names used by this manager
+	 */
+	public Set getCounterNames() {
+		return new HashSet(counters.keySet());
 	}
 }

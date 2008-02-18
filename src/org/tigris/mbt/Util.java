@@ -7,9 +7,6 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
@@ -171,38 +168,6 @@ public class Util {
 		if(strGuard != null) retur.setUserDatum(Keywords.GUARD_KEY, strGuard, UserData.SHARED);
 		if(strAction != null) retur.setUserDatum(Keywords.ACTIONS_KEY, strAction, UserData.SHARED);
 		return (DirectedSparseEdge) graph.addEdge(retur);
-	}
-	
-	/**
-	 * @deprecated use execute from {@link ModelBasedTesting} instead.
-	 */
-	public static boolean RunTest( Object ref, Logger log, String method ) 
-	{
-		Class cls = null;
-		cls = ref.getClass();
-		try
-		{
-			Method meth = cls.getMethod( method, null );
-			meth.invoke( ref, null  );
-		}
-		catch( Exception e )
-		{
-			StringWriter sw = new StringWriter();
-		    PrintWriter pw = new PrintWriter( sw );
-		    e.printStackTrace( pw );
-		    pw.close();	    		    
-			log.error( sw.toString() );
-			if ( e.getCause().getMessage() != null )
-			{
-				System.err.println( e.getCause().getMessage() );
-			}
-			if ( e.getMessage() != null )
-			{
-				System.err.println( e.getMessage() );
-			}
-			return false;
-		}
-		return true;
 	}
 	
 	public static StopCondition getCondition(int conditionType, String conditionValue)
