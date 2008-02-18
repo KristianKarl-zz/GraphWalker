@@ -32,5 +32,9 @@ public class FoundNoEdgeException extends Exception
 		super(string);
 	}
 
+	public FoundNoEdgeException(String string, Throwable e) {
+		super(string, e);
+	}
+
 	private static final long serialVersionUID = -2597269122921601356L;
 }

@@ -47,6 +47,7 @@ public class FiniteStateMachine{
 	private boolean weighted = false;
 	private DirectedSparseEdge lastEdge = null;
 	private Stack edgeStack;
+	private Stack statestore;
 	private int numberOfEdgesTravesed = 0;
 	protected boolean backtracking = false;
 	protected boolean abortOnDeadEnds = true;
@@ -66,7 +67,7 @@ public class FiniteStateMachine{
 		setAsVisited(e);
 	}
 
-	private DirectedSparseVertex findState(String stateName)
+	public DirectedSparseVertex findState(String stateName)
 	{
 		for(Iterator i = model.getVertices().iterator(); i.hasNext();)
 		{
@@ -183,6 +184,14 @@ public class FiniteStateMachine{
 			{
 				reqs.put( tags[j], new Integer(((Integer)reqs.get(tags[j])).intValue()-1));	
 			}
+		}
+	}
+	
+	public void walkEdge(Stack p) 
+	{
+		for(int i = 0; i < p.size(); i++)
+		{
+			walkEdge((DirectedSparseEdge) p.get(i));
 		}
 	}
 	
@@ -360,6 +369,26 @@ public class FiniteStateMachine{
 		String p = (String)edge.getUserDatum( Keywords.PARAMETER_KEY );
 		
 		return (l==null ? "" : l) + (p==null ? "" : " " + p);
+	}
+	
+	public void storeState()
+	{
+		if(this.statestore == null)
+			this.statestore = new Stack();
+		this.statestore.push(new Integer(edgeStack.size()));
+	}
+	
+	public void restoreState()
+	{
+		if(this.statestore == null || this.statestore.size() == 0)
+			throw new RuntimeException("Nothing to restore");
+		int prevState = ((Integer)this.statestore.pop()).intValue();
+		if( prevState > edgeStack.size())
+			throw new RuntimeException("Cannot restore state from backtrack");
+		while(prevState < edgeStack.size())
+		{
+			popState();
+		}
 	}
 	
 	protected void track()

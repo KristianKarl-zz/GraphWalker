@@ -56,7 +56,7 @@ public class ReachedStateTest extends TestCase {
 		
 		assertEquals((double)0, condition.getFulfillment(), 0.01);
 		mbt.getNextStep();
-		assertEquals((double)0, condition.getFulfillment(), 0.01);
+		assertEquals((double)0.5, condition.getFulfillment(), 0.01);
 		mbt.getNextStep();
 		assertEquals((double)1, condition.getFulfillment(), 0.01);
 	}

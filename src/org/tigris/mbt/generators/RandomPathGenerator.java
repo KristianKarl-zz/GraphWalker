@@ -14,7 +14,7 @@ import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
 
 public class RandomPathGenerator extends PathGenerator {
 
-	static Logger logger = Logger.getLogger(RandomPathGenerator.class);
+	static Logger logger = Util.setupLogger(RandomPathGenerator.class);
 
 	private Random random = new Random();
 

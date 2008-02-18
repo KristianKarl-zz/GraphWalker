@@ -47,13 +47,14 @@ public class TimeDurationTest extends TestCase {
 	
 	public void testFulfillment()
 	{
-		double startTime = (double)System.currentTimeMillis();
 		ModelBasedTesting mbt = new ModelBasedTesting();
 		StopCondition condition = new TimeDuration(1);
+		double startTime = (double)System.currentTimeMillis();
 		mbt.setCondition(condition);
 		mbt.setGraph(graph);
-		mbt.setGenerator(Keywords.GENERATOR_SHORTEST);
+		mbt.setGenerator(Keywords.GENERATOR_RANDOM);
 		assertTrue(mbt.hasNextStep());
+
 		while((System.currentTimeMillis() - startTime) < 10);
 		assertEquals((System.currentTimeMillis() - startTime) / 1000, condition.getFulfillment(), 0.1);
 		while((System.currentTimeMillis() - startTime) < 900);
@@ -64,12 +65,12 @@ public class TimeDurationTest extends TestCase {
 
 	public void testIsFulfilled()
 	{
-		double startTime = (double)System.currentTimeMillis();
 		ModelBasedTesting mbt = new ModelBasedTesting();
 		StopCondition condition = new TimeDuration(1);
+		double startTime = (double)System.currentTimeMillis();
 		mbt.setCondition(condition);
 		mbt.setGraph(graph);
-		mbt.setGenerator(Keywords.GENERATOR_SHORTEST);
+		mbt.setGenerator(Keywords.GENERATOR_RANDOM);
 		assertTrue(mbt.hasNextStep());
 
 		while((System.currentTimeMillis() - startTime) < 10);

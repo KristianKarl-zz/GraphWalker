@@ -47,7 +47,6 @@ public class ListGenerator extends PathGenerator {
 			Object label = ae.getUserDatum(Keywords.LABEL_KEY);
 			if(label != null && !label.equals(Keywords.START_NODE))
 			{
-				// TODO: The printout of the label Edge and Vertex, should precede the label on the same line.
 				String[] value = { 
 						(String) label, 
 						(ae instanceof Edge ? "Edge" : "Vertex")}; 
