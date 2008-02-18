@@ -62,11 +62,11 @@ public class RequirementCoverageTest extends TestCase {
 		mbt.setGenerator(Keywords.GENERATOR_RANDOM);
 		assertTrue(mbt.hasNextStep());
 		
-		assertEquals((double)0/4, condition.getFulfillment(), 0.01);
+		assertEquals((double)0/4, condition.getFulfilment(), 0.01);
 		mbt.getNextStep();
-		assertEquals((double)2/4, condition.getFulfillment(), 0.01);
+		assertEquals((double)2/4, condition.getFulfilment(), 0.01);
 		mbt.getNextStep();
-		assertEquals((double)4/4, condition.getFulfillment(), 0.01);
+		assertEquals((double)4/4, condition.getFulfilment(), 0.01);
 	}
 
 	public void testIsFulfilled()

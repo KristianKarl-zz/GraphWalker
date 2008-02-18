@@ -56,11 +56,11 @@ public class TimeDurationTest extends TestCase {
 		assertTrue(mbt.hasNextStep());
 
 		while((System.currentTimeMillis() - startTime) < 10);
-		assertEquals((System.currentTimeMillis() - startTime) / 1000, condition.getFulfillment(), 0.1);
+		assertEquals((System.currentTimeMillis() - startTime) / 1000, condition.getFulfilment(), 0.1);
 		while((System.currentTimeMillis() - startTime) < 900);
-		assertEquals((System.currentTimeMillis() - startTime) / 1000, condition.getFulfillment(), 0.1);
+		assertEquals((System.currentTimeMillis() - startTime) / 1000, condition.getFulfilment(), 0.1);
 		while((System.currentTimeMillis() - startTime) < 1000);
-		assertEquals((System.currentTimeMillis() - startTime) / 1000, condition.getFulfillment(), 0.1);
+		assertEquals((System.currentTimeMillis() - startTime) / 1000, condition.getFulfilment(), 0.1);
 	}
 
 	public void testIsFulfilled()
@@ -78,7 +78,7 @@ public class TimeDurationTest extends TestCase {
 		while((System.currentTimeMillis() - startTime) < 900);
 		assertEquals(false, condition.isFulfilled());
 		while((System.currentTimeMillis() - startTime) < 1000);
-		System.out.println(condition.getFulfillment());
+		System.out.println(condition.getFulfilment());
 		assertEquals(true, condition.isFulfilled());
 	}
 

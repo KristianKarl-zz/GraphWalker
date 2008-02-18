@@ -17,7 +17,7 @@ public class ReachedRequirement extends StopCondition {
 		return machine.getCoveredRequirements().containsAll(requirements);
 	}
 
-	public double getFulfillment() {
+	public double getFulfilment() {
 		Collection covered = machine.getCoveredRequirements();
 		covered.retainAll(requirements);
 		return covered.size() / (double)requirements.size();

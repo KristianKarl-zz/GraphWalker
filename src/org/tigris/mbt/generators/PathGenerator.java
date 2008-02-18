@@ -29,9 +29,12 @@ public abstract class PathGenerator {
     public StopCondition getStopCondition() {
 		return stopCondition;
 	}
-    public double getConditionFulfillment()
+    /**
+     * @return the condition fulfilment
+     */
+    public double getConditionFulfilment()
     {
-    	return stopCondition.getFulfillment();
+    	return stopCondition.getFulfilment();
     }
 
 	/**

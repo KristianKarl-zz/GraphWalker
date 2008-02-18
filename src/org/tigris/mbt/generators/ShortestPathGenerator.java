@@ -131,7 +131,7 @@ public class ShortestPathGenerator extends PathGenerator {
 
 		getMachine().storeState();
 		getMachine().walkEdge(path);
-		weight = getConditionFulfillment();
+		weight = getConditionFulfilment();
 		String currentState = getMachine().getCurrentStateName();
 		if(currentState.contains("/"))
 		{

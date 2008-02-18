@@ -54,11 +54,11 @@ public class TestCaseLengthTest extends TestCase {
 		mbt.setGenerator(Keywords.GENERATOR_RANDOM);
 		assertTrue(mbt.hasNextStep());
 		
-		assertEquals((double)0/2, condition.getFulfillment(), 0.01);
+		assertEquals((double)0/2, condition.getFulfilment(), 0.01);
 		mbt.getNextStep();
-		assertEquals((double)1/2, condition.getFulfillment(), 0.01);
+		assertEquals((double)1/2, condition.getFulfilment(), 0.01);
 		mbt.getNextStep();
-		assertEquals((double)2/2, condition.getFulfillment(), 0.01);
+		assertEquals((double)2/2, condition.getFulfilment(), 0.01);
 	}
 
 	public void testIsFulfilled()

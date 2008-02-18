@@ -32,11 +32,11 @@ public class AlternativeCondition extends StopCondition {
 			((StopCondition)i.next()).setMachine(machine);
 	}
 
-	public double getFulfillment() {
+	public double getFulfilment() {
 		double retur = 0; 
 		for(Iterator i = conditions.iterator();i.hasNext();)
 		{
-			double newFullfillment = ((StopCondition)i.next()).getFulfillment();
+			double newFullfillment = ((StopCondition)i.next()).getFulfilment();
 			if( newFullfillment > retur ) retur = newFullfillment;
 		}
 		return retur;

@@ -54,11 +54,11 @@ public class StateCoverageTest extends TestCase {
 		mbt.setGenerator(Keywords.GENERATOR_RANDOM);
 		assertTrue(mbt.hasNextStep());
 		
-		assertEquals((double)1/3, condition.getFulfillment(), 0.01);
+		assertEquals((double)1/3, condition.getFulfilment(), 0.01);
 		mbt.getNextStep();
-		assertEquals((double)2/3, condition.getFulfillment(), 0.01);
+		assertEquals((double)2/3, condition.getFulfilment(), 0.01);
 		mbt.getNextStep();
-		assertEquals((double)3/3, condition.getFulfillment(), 0.01);
+		assertEquals((double)3/3, condition.getFulfilment(), 0.01);
 	}
 
 	public void testIsFulfilled()
