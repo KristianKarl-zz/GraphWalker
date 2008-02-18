@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.tigris.mbt.ExtendedFiniteStateMachine;
 import org.tigris.mbt.FiniteStateMachine;
+import org.tigris.mbt.Util;
 
 import edu.uci.ics.jung.graph.impl.DirectedSparseVertex;
 
@@ -40,19 +41,17 @@ public class ReachedState extends StopCondition {
 		int distance = proximity[allStates.indexOf(getMachine().getCurrentState())];
 		if(getMachine() instanceof ExtendedFiniteStateMachine)
 		{
-			double substateFulfillment = 0;
 			String currentState = getMachine().getCurrentStateName();
 			String currentSubState = "";
 			if(currentState.contains("/"))
 			{
 				currentSubState = currentState.split("/",2)[1];
-			}
-			//FIXME Fix this to reflect how equal the sub-states are in % /Tejle
-			if(currentSubState.equals(this.subState))
-				substateFulfillment = 1;
-			
-			return (substateFulfillment + ((double)1)-( (double)distance / (double)maxDistance))/2;
+			} 
+			double maxDiff = Math.max(currentSubState.length(), this.subState.length());
+			double substateFulfilment = (double)1 - ((double)Util.getLevenshteinDistance(currentSubState, this.subState)) / maxDiff;
+			return (substateFulfilment + ((double)1)-( (double)distance / (double)maxDistance))/2;
 		}
+		
 		return ((double)1)-( (double)distance / (double)maxDistance);
 	}
 	
