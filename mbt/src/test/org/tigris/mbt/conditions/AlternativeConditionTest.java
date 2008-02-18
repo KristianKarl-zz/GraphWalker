@@ -17,15 +17,15 @@ public class AlternativeConditionTest extends TestCase {
 	{
 		AlternativeCondition condition = new AlternativeCondition();
 		condition.add(new NeverCondition());
-		assertEquals((double)0, condition.getFulfillment(), 0.01);
+		assertEquals((double)0, condition.getFulfilment(), 0.01);
 		condition.add(new NeverCondition());
-		assertEquals((double)0, condition.getFulfillment(), 0.01);
+		assertEquals((double)0, condition.getFulfilment(), 0.01);
 		condition.add(new AlwaysCondition());
-		assertEquals((double)1, condition.getFulfillment(), 0.01);
+		assertEquals((double)1, condition.getFulfilment(), 0.01);
 		condition.add(new AlwaysCondition());
-		assertEquals((double)1, condition.getFulfillment(), 0.01);
+		assertEquals((double)1, condition.getFulfilment(), 0.01);
 		condition.add(new NeverCondition());
-		assertEquals((double)1, condition.getFulfillment(), 0.01);
+		assertEquals((double)1, condition.getFulfilment(), 0.01);
 	}
 
 	public void testIsFulfilled()

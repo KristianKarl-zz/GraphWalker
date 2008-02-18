@@ -6,7 +6,7 @@ public class TimeDuration extends StopCondition {
 	private double start_time;
 
 	public boolean isFulfilled() {
-		return getFulfillment() >= 0.99999;
+		return getFulfilment() >= 0.99999;
 	}
 
 	public TimeDuration(long seconds) {
@@ -14,7 +14,7 @@ public class TimeDuration extends StopCondition {
 		this.duration = seconds * 1000;
 	}
 
-	public double getFulfillment() {
+	public double getFulfilment() {
 		return (System.currentTimeMillis()-this.start_time) / this.duration;
 	}
 	

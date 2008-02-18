@@ -4,7 +4,7 @@ public class AlwaysCondition extends StopCondition
 {
 	public AlwaysCondition() {}
 	public boolean isFulfilled() { return true; }
-	public double getFulfillment() { return 1; }
+	public double getFulfilment() { return 1; }
 	
 	public String toString() {
 		return "TRUE";

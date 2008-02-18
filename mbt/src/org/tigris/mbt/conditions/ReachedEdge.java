@@ -12,7 +12,8 @@ public class ReachedEdge extends StopCondition {
 		this.endEdge = edgeName;
 	}
 
-	public double getFulfillment() {
+	public double getFulfilment() {
+		//FIXME change to reflect fulfilment in %  /Tejle
 		return (isFulfilled()?1:0);
 	}
 	

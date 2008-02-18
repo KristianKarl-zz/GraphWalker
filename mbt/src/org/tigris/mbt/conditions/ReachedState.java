@@ -17,7 +17,7 @@ public class ReachedState extends StopCondition {
 	private String subState;
 
 	public boolean isFulfilled() {
-		return getFulfillment() >= 0.99999;
+		return getFulfilment() >= 0.99999;
 	}
 
 	public void setMachine(FiniteStateMachine machine) {
@@ -36,7 +36,7 @@ public class ReachedState extends StopCondition {
 		this.subState = (state.length>1?state[1]:"");
 	}
 
-	public double getFulfillment() {
+	public double getFulfilment() {
 		int distance = proximity[allStates.indexOf(getMachine().getCurrentState())];
 		if(getMachine() instanceof ExtendedFiniteStateMachine)
 		{

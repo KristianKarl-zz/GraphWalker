@@ -32,11 +32,11 @@ public class CombinationalCondition extends StopCondition {
 			((StopCondition)i.next()).setMachine(machine);
 	}
 
-	public double getFulfillment() {
+	public double getFulfilment() {
 		double retur = 0;
 		for(Iterator i = conditions.iterator();i.hasNext();)
 		{
-			retur += ((StopCondition)i.next()).getFulfillment();
+			retur += ((StopCondition)i.next()).getFulfilment();
 		}
 		return retur / (double)conditions.size();
 	}

@@ -17,17 +17,17 @@ public class CombinationalConditionTest extends TestCase {
 	{
 		CombinationalCondition condition = new CombinationalCondition();
 		condition.add(new AlwaysCondition());
-		assertEquals((double)1/1, condition.getFulfillment(), 0.01);
+		assertEquals((double)1/1, condition.getFulfilment(), 0.01);
 		condition.add(new AlwaysCondition());
-		assertEquals((double)2/2, condition.getFulfillment(), 0.01);
+		assertEquals((double)2/2, condition.getFulfilment(), 0.01);
 		condition.add(new NeverCondition());
-		assertEquals((double)2/3, condition.getFulfillment(), 0.01);
+		assertEquals((double)2/3, condition.getFulfilment(), 0.01);
 		condition.add(new AlwaysCondition());
-		assertEquals((double)3/4, condition.getFulfillment(), 0.01);
+		assertEquals((double)3/4, condition.getFulfilment(), 0.01);
 		condition.add(new NeverCondition());
-		assertEquals((double)3/5, condition.getFulfillment(), 0.01);
+		assertEquals((double)3/5, condition.getFulfilment(), 0.01);
 		condition.add(new NeverCondition());
-		assertEquals((double)3/6, condition.getFulfillment(), 0.01);
+		assertEquals((double)3/6, condition.getFulfilment(), 0.01);
 	}
 
 	public void testIsFulfilled()

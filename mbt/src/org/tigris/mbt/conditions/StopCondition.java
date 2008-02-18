@@ -12,7 +12,14 @@ public abstract class StopCondition {
 	public void setMachine(FiniteStateMachine machine) {
 		this.machine = machine;
 	}
-	
+
+	/**
+	 * @return true if the condition is fulfilled
+	 */
 	public abstract boolean isFulfilled();
-	public abstract double getFulfillment();
+
+	/**
+	 * @return the condition fulfilment
+	 */
+	public abstract double getFulfilment();
 }

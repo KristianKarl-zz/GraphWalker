@@ -12,7 +12,7 @@ public class TestCaseLength extends StopCondition {
 		this.numberOfEdges = numberOfEdges;
 	}
 
-	public double getFulfillment() {
+	public double getFulfilment() {
 		return machine.getNumberOfEdgesTravesed() / (double)numberOfEdges;
 	}
 	
