@@ -101,13 +101,13 @@ public class ShortestPathGenerator extends PathGenerator {
 			DirectedSparseEdge x = (DirectedSparseEdge) p.getPath().peek();
 			
 			// have we been here before?
-			if(closed.contains(Util.getCompleteName(x)+p.getSubState()+p.getWeight()))
+			if(closed.contains(x.hashCode()+"."+p.getSubState().hashCode()+"."+p.getWeight()))
 				continue; // ignore this and move on
 
 			// We don't want to use this edge again as this path is 
 			// the fastest, and if we come here again we have used more 
 			// steps to get here than we used this time. 
-			closed.add(Util.getCompleteName(x)+p.getSubState()+p.getWeight());
+			closed.add(x.hashCode()+"."+p.getSubState().hashCode()+"."+p.getWeight());
 
 			availableOutEdges = getPathOutEdges(p.getPath());
 			if(availableOutEdges != null && availableOutEdges.size()>0)
