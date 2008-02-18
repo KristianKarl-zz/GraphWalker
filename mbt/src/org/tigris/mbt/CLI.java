@@ -370,6 +370,8 @@ public class CLI
                 .withLongOpt( "log-coverage" )
                 .create( "o" ) );
 		opt.addOption( "c", "class_name", true, "Optional class name to use for test execution." );
+		opt.addOption( "t", "report-template", true, "Optional report template to use." );
+		opt.addOption( "r", "report-output", true, "Optional report filename to save report to." );
 	}
 
 	/**
@@ -404,6 +406,8 @@ public class CLI
 			              "that same file." )
                 .hasArg()
                 .create( "o" ) );
+		opt.addOption( "t", "report-template", true, "Optional report template to use." );
+		opt.addOption( "r", "report-output", true, "Optional report filename to save report to." );
 	}
 	
 	private void buildMethodsCLI()
@@ -491,6 +495,8 @@ public class CLI
 		 */
 		if( helpNeeded("offline", !cl.hasOption( "f" ), "Missing the input graphml file (folder), See -f (--intput_graphml)") || 
 			helpNeeded("offline", !cl.hasOption( "s" ), "A stop condition must be supplied, See option -s") || 
+			helpNeeded("offline", cl.hasOption( "t" ) && !cl.hasOption( "r" ), "A report output file must be set, See -t, when using a report template") || 
+			helpNeeded("offline", !cl.hasOption( "t" ) && cl.hasOption( "r" ), "A report template must be set, See -r, when using a report output file") || 
 			helpNeeded("offline", !cl.hasOption( "g" ), "Missing the generator, See option -g") ) 
 			return;
 
@@ -534,6 +540,12 @@ public class CLI
 		{
 			System.out.println( getMbt().getStatisticsString() );
 		}
+		if( cl.hasOption( "t" ) && cl.hasOption( "r" ) )
+		{
+			getMbt().getStatisticsManager().setReportTemplate(cl.getOptionValue('t'));
+			getMbt().getStatisticsManager().writeFullReport(cl.getOptionValue('r'));
+		}
+
 	}
 
 	/**
@@ -546,6 +558,8 @@ public class CLI
 		 */
 		if( helpNeeded("online", !cl.hasOption( "f" ), "Missing the input graphml file (folder), See -f (--intput_graphml)") || 
 				helpNeeded("online", !cl.hasOption( "s" ), "A stop condition must be supplied, See option -s") || 
+				helpNeeded("online", cl.hasOption( "t" ) && !cl.hasOption( "r" ), "A report output file must be set, See -t, when using a report template") || 
+				helpNeeded("online", !cl.hasOption( "t" ) && cl.hasOption( "r" ), "A report template must be set, See -r, when using a report output file") || 
 				helpNeeded("online", !cl.hasOption( "g" ), "Missing the generator, See option -g") ) 
 				return;
 
@@ -603,8 +617,12 @@ public class CLI
 			getMbt().interractivePath();
 		}
 		if( cl.hasOption( "a" ) ) writeStatisticsVerbose(System.out);
-
-		logger.info(getMbt().getStatisticsManager().getFullProgressXml());
+		if( cl.hasOption( "t" ) && cl.hasOption( "r" ) )
+		{
+			getMbt().getStatisticsManager().setReportTemplate(cl.getOptionValue('t'));
+			getMbt().getStatisticsManager().writeFullReport(cl.getOptionValue('r'));
+		}
+		
 	}
 
 	private void writeStatisticsVerbose(PrintStream out) {
