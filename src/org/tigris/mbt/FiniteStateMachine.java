@@ -469,11 +469,11 @@ public class FiniteStateMachine{
 	public void setCalculatingPath(boolean calculatingPath) {
 		this.calculatingPath = calculatingPath;
 	}
+	
 	/**
-	 * This functions returns a list of edges, which has not yet been visited
-	 * @return DirectedSparseEdge
+	 * This functions returns a list of edges, which has not yet been covered
 	 */
-	public Vector getUnvisitedEdges()
+	public Vector getUncoveredEdges()
 	{
 		Vector retur = new Vector();
 		for ( Iterator i = getAllEdges().iterator(); i.hasNext();)
@@ -487,6 +487,51 @@ public class FiniteStateMachine{
 		return retur;
 	}
 	
+	/**
+	 * This functions returns a list of edges, which has been covered
+	 */
+	public Vector getCoveredEdges()
+	{
+		Vector retur = new Vector(getAllEdges());
+		retur.removeAll(getUncoveredEdges());
+		return retur;
+	}
+	
+	public Vector getUncoveredStates()
+	{
+		Vector retur = new Vector();
+		for ( Iterator i = getAllStates().iterator(); i.hasNext();)
+		{
+			AbstractElement element = (AbstractElement) i.next();
+			if(!isVisited( element ))
+			{
+				retur.add( element );
+			}
+		}
+		return retur;
+	}
+	
+	public Vector getCoveredStates()
+	{
+		Vector retur = new Vector(getAllStates());
+		retur.removeAll(getUncoveredStates());
+		return retur;
+	}
+	
+	public Vector getUncoveredElements()
+	{
+		Vector retur = new Vector(getUncoveredEdges());
+		retur.addAll(getUncoveredStates());
+		return retur;
+	}
+
+	public Vector getCoveredElements()
+	{
+		Vector retur = new Vector(getCoveredEdges());
+		retur.addAll(getCoveredStates());
+		return retur;
+	}
+
 	public SparseGraph getModel()
 	{
 		return model;
