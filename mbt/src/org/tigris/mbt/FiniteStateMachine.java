@@ -132,20 +132,10 @@ public class FiniteStateMachine{
 		return retur;
 	}
 	
-	protected void setAsVisited(AbstractElement e)
+	public void setAsVisited(AbstractElement e)
 	{
-		Integer visited;
-		if(e.containsUserDatumKey(Keywords.VISITED_KEY))
-		{
-			visited = (Integer) e.getUserDatum( Keywords.VISITED_KEY );
-			if(visited.intValue()<0) System.out.println("WHAT!");
-			visited = new Integer( visited.intValue() + 1 );
-		}
-		else
-		{
-			visited = new Integer( 1 );
-		}
-		e.setUserDatum( Keywords.VISITED_KEY, visited, UserData.SHARED );
+		int visits = getVisited(e);
+		setVisited(e, visits + 1);
 
 		if(e.containsUserDatumKey(Keywords.REQTAG_KEY))
 		{
@@ -158,24 +148,14 @@ public class FiniteStateMachine{
 		}
 	}
 	
-	protected void setAsUnvisited(AbstractElement e)
+	public void setAsUnvisited(AbstractElement e)
 	{
-		Integer visited;
-		if(e.containsUserDatumKey(Keywords.VISITED_KEY))
-		{
-			visited = (Integer) e.getUserDatum( Keywords.VISITED_KEY );
-			visited = new Integer( visited.intValue() - 1 );
-		}
-		else
-		{
-			visited = new Integer( 0 );
-		}
-		
-		if(visited.intValue() < 0 )
+		int visits = getVisited(e);
+		setVisited(e, visits - 1);
+
+		if(visits <= 0 )
 			logger.error( "Edge: " + Util.getCompleteName( e ) + ", has a negative number in VISITED_KEY" );
 		
-		e.setUserDatum( Keywords.VISITED_KEY, visited, UserData.SHARED );
-
 		if(e.containsUserDatumKey(Keywords.REQTAG_KEY))
 		{
 			Hashtable reqs = getAllRequirements();
@@ -185,6 +165,19 @@ public class FiniteStateMachine{
 				reqs.put( tags[j], new Integer(((Integer)reqs.get(tags[j])).intValue()-1));	
 			}
 		}
+	}
+	
+	protected int getVisited(AbstractElement element)
+	{
+		int retur = 0;
+		if(element.containsUserDatumKey( Keywords.VISITED_KEY ))
+			retur = ((Integer)element.getUserDatum( Keywords.VISITED_KEY )).intValue();
+		return retur; 
+	}
+	
+	protected void setVisited(AbstractElement element, int timesVisited)
+	{
+		element.setUserDatum(Keywords.VISITED_KEY, new Integer(timesVisited), UserData.SHARED);
 	}
 	
 	public void walkEdge(Stack p) 
@@ -304,7 +297,7 @@ public class FiniteStateMachine{
 		return retur;
 	}
 
-	private boolean isVisited(AbstractElement abstractElement) {
+	public boolean isVisited(AbstractElement abstractElement) {
 		return abstractElement.containsUserDatumKey( Keywords.VISITED_KEY ) && ((Integer)abstractElement.getUserDatum( Keywords.VISITED_KEY )).intValue() > 0;
 	}
 
@@ -482,20 +475,16 @@ public class FiniteStateMachine{
 	 */
 	public Vector getUnvisitedEdges()
 	{
-		Vector edgesNotVisited = new Vector();
-		Object[] edges = getAllEdges().toArray();
-
-		for ( int i = 0; i < edges.length; i++ )
+		Vector retur = new Vector();
+		for ( Iterator i = getAllEdges().iterator(); i.hasNext();)
 		{
-			DirectedSparseEdge edge = (DirectedSparseEdge)edges[ i ];
-
-			Integer vistited = (Integer)edge.getUserDatum( Keywords.VISITED_KEY );
-			if ( vistited.intValue() == 0 )
+			AbstractElement element = (AbstractElement) i.next();
+			if(!isVisited( element ))
 			{
-				edgesNotVisited.add( edge );
+				retur.add( element );
 			}
 		}
-		return edgesNotVisited;
+		return retur;
 	}
 	
 	public SparseGraph getModel()
