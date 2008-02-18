@@ -23,7 +23,7 @@ public class NonOptimizedShortestPath extends PathGenerator
 		// Is there a path to walk, given from DijkstraShortestPath?
 		if ( dijkstraShortestPath == null || dijkstraShortestPath.size() == 0 )
 		{
-			Vector unvisitedEdges = getMachine().getUnvisitedEdges();
+			Vector unvisitedEdges = getMachine().getUncoveredEdges();
 			logger.debug( "Number of unvisited edges: " + unvisitedEdges.size() );
 			Object[] shuffledList = Util.shuffle( unvisitedEdges.toArray() );
 			DirectedSparseEdge e = (DirectedSparseEdge)shuffledList[ 0 ];
