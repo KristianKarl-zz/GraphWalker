@@ -90,23 +90,24 @@ public class ShortestPathGenerator extends PathGenerator {
 			s.push(y);
 			q.add(getWeightedPath(s));
 		}
-		
+		double maxWeight = 0;
 		while(q.size() > 0)
 		{
 			weightedPath p = (weightedPath) q.poll();
+			if(p.getWeight() > maxWeight) maxWeight = p.getWeight();
 			if( p.getWeight() > 0.99999) // are we done yet?
 				return p.getPath();
 
 			DirectedSparseEdge x = (DirectedSparseEdge) p.getPath().peek();
 			
 			// have we been here before?
-			if(closed.contains(Util.getCompleteName(x)+p.getSubState()))
+			if(closed.contains(Util.getCompleteName(x)+p.getSubState()+p.getWeight()))
 				continue; // ignore this and move on
 
 			// We don't want to use this edge again as this path is 
 			// the fastest, and if we come here again we have used more 
 			// steps to get here than we used this time. 
-			closed.add(Util.getCompleteName(x)+p.getSubState());
+			closed.add(Util.getCompleteName(x)+p.getSubState()+p.getWeight());
 
 			availableOutEdges = getPathOutEdges(p.getPath());
 			if(availableOutEdges != null && availableOutEdges.size()>0)
@@ -120,7 +121,7 @@ public class ShortestPathGenerator extends PathGenerator {
 				}
 			}
 		}
-		throw new RuntimeException("No path found to satisfy stop condition "+getStopCondition()); 
+		throw new RuntimeException("No path found to satisfy stop condition "+getStopCondition() +", best path satified only "+ (int)(maxWeight*100) +"% of condition."); 
 	}
 	
 	private weightedPath getWeightedPath(Stack path)
