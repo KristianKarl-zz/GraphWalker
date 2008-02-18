@@ -256,7 +256,7 @@ public class ModelBasedTesting
 		catch(RuntimeException e)
 		{
 			logger.fatal(e.toString());
-			throw new RuntimeException( "ERROR: ", e);
+			throw new RuntimeException( "ERROR: "+e.getMessage(), e);
 		}
 		finally
 		{

@@ -6,7 +6,7 @@ public class TimeDuration extends StopCondition {
 	private double start_time;
 
 	public boolean isFulfilled() {
-		return getFulfillment() >= 0.9999;
+		return getFulfillment() >= 0.99999;
 	}
 
 	public TimeDuration(long seconds) {
