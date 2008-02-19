@@ -1,15 +1,24 @@
 package org.tigris.mbt.conditions;
 
+import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
+
 public class ReachedEdge extends StopCondition {
 
-	private String endEdge;
+	private String edgeName;
+	private DirectedSparseEdge endEdge;
 
 	public boolean isFulfilled() {
-		return machine.getLastEdge() != null && endEdge.equals(machine.getEdgeName(machine.getLastEdge()));
+		if(endEdge != null)
+			return machine.getLastEdge().equals(endEdge);
+		return machine.getLastEdge() != null && edgeName.equals(machine.getEdgeName(machine.getLastEdge()));
 	}
 
 	public ReachedEdge(String edgeName) {
-		this.endEdge = edgeName;
+		this.edgeName = edgeName;
+	}
+
+	public ReachedEdge(DirectedSparseEdge endEdge) {
+		this.endEdge = endEdge;
 	}
 
 	public double getFulfilment() {
@@ -18,7 +27,7 @@ public class ReachedEdge extends StopCondition {
 	}
 	
 	public String toString() {
-		return "EDGE='"+ endEdge +"'";
+		return "EDGE='"+ edgeName +"'";
 	}
 
 }
