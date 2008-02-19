@@ -23,11 +23,18 @@ public class ReachedState extends StopCondition {
 
 	public void setMachine(FiniteStateMachine machine) {
 		super.setMachine(machine);
-		this.endState = machine.findState(stateName);
+		if(this.endState == null)
+			this.endState = machine.findState(stateName);
 		if(this.endState == null)
 			throw new RuntimeException("State '"+stateName+"' not found in model");
 		this.proximity = getFloydWarshall();
 		this.maxDistance = max(this.proximity);
+	}
+
+	public ReachedState(DirectedSparseVertex endState)
+	{
+		this.endState = endState;
+		this.subState = "";
 	}
 	
 	public ReachedState(String stateName) {
@@ -102,7 +109,7 @@ public class ReachedState extends StopCondition {
 		int startIndex = allStates.indexOf(endState);
 		if(startIndex >= 0)
 			return path[startIndex];
-		throw new RuntimeException("Startstate no longer in Graph!");
+		throw new RuntimeException("state no longer in Graph!");
 	}
 	
 	public String toString() {

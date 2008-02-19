@@ -78,7 +78,20 @@ public class FiniteStateMachine{
 		}
 		return null;
 	}
-	
+
+	public DirectedSparseEdge findEdge(String edgeName) 
+	{
+		for(Iterator i = model.getEdges().iterator(); i.hasNext();)
+		{
+			DirectedSparseEdge e = (DirectedSparseEdge) i.next();
+			if( ((String)e.getUserDatum(Keywords.LABEL_KEY)).equals(edgeName))
+			{
+				return e;
+			}
+		}
+		return null;
+	}
+
 	public FiniteStateMachine(SparseGraph model)
 	{
 		this();
