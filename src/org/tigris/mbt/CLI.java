@@ -1,5 +1,6 @@
 package org.tigris.mbt;
 
+import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -524,16 +525,39 @@ public class CLI
 
 		if( cl.hasOption( "o" ) )
 		{
-			logger.info( "Append coverage to log every: " + Integer.valueOf( cl.getOptionValue( "o" ) ).longValue() + " seconds" );
-			
-			timer.schedule(	new TimerTask()	
+			long seconds = Integer.valueOf( cl.getOptionValue( "o" ) ).longValue();
+
+			logger.info( "Append coverage to log every: " + seconds + " seconds" );
+
+			TimerTask logTask;
+			if(cl.hasOption( "t" ) && cl.hasOption( "r" ))
 			{
-				public void run() 
+				getMbt().getStatisticsManager().setReportTemplate(cl.getOptionValue('t'));
+				final String reportName = cl.getOptionValue('r');
+				logTask = new TimerTask()	
 				{
-					logger.info( getMbt().getStatisticsCompact() );
-				}
-			}, 500, Integer.valueOf( cl.getOptionValue( "o" ) ).longValue() * 1000 );
+					public void run() 
+					{
+						try {
+							getMbt().getStatisticsManager().writeFullReport(new PrintStream(reportName));
+						} catch (FileNotFoundException e) {
+							throw new RuntimeException("Could not open or write report file '"+reportName+"'", e);
+						}
+					}
+				};
+			} else {
+				logTask = new TimerTask()	
+				{
+					public void run() 
+					{
+						logger.info( mbt.getStatisticsCompact() );
+					}
+				};
+			}
+			timer = new Timer();
+			timer.schedule(	logTask, 500, seconds * 1000 );
 		}
+
 		getMbt().writePath();
 		
 		if( cl.hasOption( "a" ) )
@@ -597,15 +621,37 @@ public class CLI
 
 		if( cl.hasOption( "o" ) )
 		{
-			logger.info( "Append coverage to log every: " + Integer.valueOf( cl.getOptionValue( "o" ) ).longValue() + " seconds" );
-			
-			timer.schedule(	new TimerTask()	
+			long seconds = Integer.valueOf( cl.getOptionValue( "o" ) ).longValue();
+
+			logger.info( "Append coverage to log every: " + seconds + " seconds" );
+
+			TimerTask logTask;
+			if(cl.hasOption( "t" ) && cl.hasOption( "r" ))
 			{
-				public void run() 
+				getMbt().getStatisticsManager().setReportTemplate(cl.getOptionValue('t'));
+				final String reportName = cl.getOptionValue('r');
+				logTask = new TimerTask()	
 				{
-					logger.info( getMbt().getStatisticsCompact() );
-				}
-			}, 500, Integer.valueOf( cl.getOptionValue( "o" ) ).longValue() * 1000 );
+					public void run() 
+					{
+						try {
+							getMbt().getStatisticsManager().writeFullReport(new PrintStream(reportName));
+						} catch (FileNotFoundException e) {
+							throw new RuntimeException("Could not open or write report file '"+reportName+"'", e);
+						}
+					}
+				};
+			} else {
+				logTask = new TimerTask()	
+				{
+					public void run() 
+					{
+						logger.info( mbt.getStatisticsCompact() );
+					}
+				};
+			}
+			timer = new Timer();
+			timer.schedule(	logTask, 500, seconds * 1000 );
 		}
 	
 		if( cl.hasOption( "c" ) )

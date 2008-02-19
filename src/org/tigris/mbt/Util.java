@@ -311,7 +311,6 @@ public class Util {
 		if( logInterval != null )
 		{
 			long seconds = Integer.valueOf( logInterval ).longValue();
-			logger.info( "Append coverage every: " + seconds + " seconds" );
 			TimerTask logTask;
 			if(reportName != null && reportTemplate != null)
 			{
@@ -321,9 +320,7 @@ public class Util {
 					{
 						try {
 							mbt.getStatisticsManager().writeFullReport(new PrintStream(reportName));
-							logger.info("Wrote report file '"+reportName+"'");
 						} catch (FileNotFoundException e) {
-							logger.fatal("Could not open or write report file '"+reportName+"'");
 							throw new RuntimeException("Could not open or write report file '"+reportName+"'", e);
 						}
 					}
