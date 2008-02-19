@@ -297,67 +297,97 @@ public class Util {
 			throw new RuntimeException("Failed to set generator");
 		mbt.setGenerator(generator);
 		
-		String logCoverage = root.getAttributeValue("LOG-COVERAGE");
-		Timer timer = null;
-		
-		if( logCoverage != null )
-		{
-			long seconds = Integer.valueOf( logCoverage ).longValue();
-			logger.info( "Append coverage to log every: " + seconds + " seconds" );
+		final String reportName = root.getAttributeValue("REPORT");
+		String reportTemplate = root.getAttributeValue("REPORT-TEMPLATE");
 
-			timer = new Timer();
-			timer.schedule(	new TimerTask()	
+		if(reportName != null && reportTemplate != null)
+		{
+			mbt.getStatisticsManager().setReportTemplate(reportTemplate);
+		}
+
+		String logInterval = root.getAttributeValue("LOG-INTERVAL");
+		Timer timer = null;
+
+		if( logInterval != null )
+		{
+			long seconds = Integer.valueOf( logInterval ).longValue();
+			logger.info( "Append coverage every: " + seconds + " seconds" );
+			TimerTask logTask;
+			if(reportName != null && reportTemplate != null)
 			{
-				public void run() 
+				logTask = new TimerTask()	
 				{
-					logger.info( mbt.getStatisticsCompact() );
-				}
-			}, 500, seconds * 1000 );
+					public void run() 
+					{
+						try {
+							mbt.getStatisticsManager().writeFullReport(new PrintStream(reportName));
+							logger.info("Wrote report file '"+reportName+"'");
+						} catch (FileNotFoundException e) {
+							logger.fatal("Could not open or write report file '"+reportName+"'");
+							throw new RuntimeException("Could not open or write report file '"+reportName+"'", e);
+						}
+					}
+				};
+			} else {
+				logTask = new TimerTask()	
+				{
+					public void run() 
+					{
+						logger.info( mbt.getStatisticsCompact() );
+					}
+				};
+			}
+			timer = new Timer();
+			timer.schedule(	logTask, 500, seconds * 1000 );
 		}
 
 		try {
 		
-		String executor = root.getAttributeValue("EXECUTOR");
-		String executorParam = null;
-		if(executor.contains(":"))
-		{
-			executorParam = executor.substring(executor.indexOf(':')+1);
-			executor = executor.substring(0, executor.indexOf(':'));
-		}
-
-		if(executor.equalsIgnoreCase("offline"))
-		{
-			PrintStream out = System.out;
-			if(executorParam != null && !executorParam.equals(""))
+			String executor = root.getAttributeValue("EXECUTOR");
+			String executorParam = null;
+			if(executor.contains(":"))
 			{
-				try {
-					out = new PrintStream(executorParam);
-				} catch (FileNotFoundException e) {
-					throw new RuntimeException("offline filename '"+executorParam+"' could not be created or is writeprotected.", e);
-				}
+				executorParam = executor.substring(executor.indexOf(':')+1);
+				executor = executor.substring(0, executor.indexOf(':'));
 			}
-			mbt.writePath(out);
-			if(out != System.out)
-				out.close();
-		
-		} else if(executor.equalsIgnoreCase("java")){
-			if(executorParam == null || executorParam.equals(""))
-				throw new RuntimeException("No java class specified for execution");
-			mbt.executePath(executorParam);
-		
-		} else if(executor.equalsIgnoreCase("online")){
-			mbt.interractivePath();
-		
-		} else if(executor.equalsIgnoreCase("none") || executor.equals("")){
-			// no execution (for debug purpose)
-		
-		} else {
-			throw new RuntimeException("Unknown executor '"+executor+"'");
-		}
+	
+			if(executor.equalsIgnoreCase("offline"))
+			{
+				PrintStream out = System.out;
+				if(executorParam != null && !executorParam.equals(""))
+				{
+					try {
+						out = new PrintStream(executorParam);
+					} catch (FileNotFoundException e) {
+						throw new RuntimeException("offline file '"+executorParam+"' could not be created or is writeprotected.", e);
+					}
+				}
+				mbt.writePath(out);
+				if(out != System.out)
+					out.close();
+			
+			} else if(executor.equalsIgnoreCase("java")){
+				if(executorParam == null || executorParam.equals(""))
+					throw new RuntimeException("No java class specified for execution");
+				mbt.executePath(executorParam);
+			
+			} else if(executor.equalsIgnoreCase("online")){
+				mbt.interractivePath();
+			
+			} else if(executor.equalsIgnoreCase("none") || executor.equals("")){
+				// no execution (for debug purpose)
+			
+			} else {
+				throw new RuntimeException("Unknown executor '"+executor+"'");
+			}
 			
 		} finally {
 			if(timer != null)
 				timer.cancel();
+			if(reportName != null && reportTemplate != null)
+			{
+				mbt.getStatisticsManager().writeFullReport(reportName);
+			}
 		}
 		return mbt;
 	}

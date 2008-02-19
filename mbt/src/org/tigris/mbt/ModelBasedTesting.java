@@ -65,18 +65,26 @@ public class ModelBasedTesting
 	
 	private void setupStatisticsManager()
 	{
-		statisticsManager = new StatisticsManager();
-		statisticsManager.addStatisicsCounter("State Coverage", new StateCoverageStatistics( getGraph() ));
-		statisticsManager.addStatisicsCounter("Edge Coverage", new EdgeCoverageStatistics( getGraph() ));
-		statisticsManager.addStatisicsCounter("2-Edge Sequence Coverage", new EdgeSequenceCoverageStatistics( getGraph(), 2 ));
-		statisticsManager.addStatisicsCounter("3-Edge Sequence Coverage", new EdgeSequenceCoverageStatistics( getGraph(), 3 ));
-		statisticsManager.addStatisicsCounter("Requirements Coverage", new RequirementCoverageStatistics( getGraph() ));
+		if(this.statisticsManager == null)
+			this.statisticsManager = new StatisticsManager();
+		this.statisticsManager.addStatisicsCounter("State Coverage", new StateCoverageStatistics( getGraph() ));
+		this.statisticsManager.addStatisicsCounter("Edge Coverage", new EdgeCoverageStatistics( getGraph() ));
+		this.statisticsManager.addStatisicsCounter("2-Edge Sequence Coverage", new EdgeSequenceCoverageStatistics( getGraph(), 2 ));
+		this.statisticsManager.addStatisicsCounter("3-Edge Sequence Coverage", new EdgeSequenceCoverageStatistics( getGraph(), 3 ));
+		this.statisticsManager.addStatisicsCounter("Requirements Coverage", new RequirementCoverageStatistics( getGraph() ));
+		this.statisticsManager.addProgress(getMachine().getCurrentState());
 	}
 	
 	/**
 	 * @return the statisticsManager
 	 */
 	public StatisticsManager getStatisticsManager() {
+		if(this.statisticsManager == null)
+		{
+			this.statisticsManager = new StatisticsManager();
+			if(this.machine != null)
+				setupStatisticsManager();
+		}
 		return this.statisticsManager;
 	}
 	
@@ -239,7 +247,7 @@ public class ModelBasedTesting
 	public String[] getNextStep()
 	{		
 		if(this.machine == null) getMachine();
-		if(this.statisticsManager == null) setupStatisticsManager();
+		getStatisticsManager();
 		Util.AbortIf(getGenerator() == null, "No generator has been defined!");
 		
 		PathGenerator backupGenerator = null;
@@ -276,11 +284,10 @@ public class ModelBasedTesting
 		return "";
 	}
 
-	public void backtrack( boolean popEdge ) {
+	public void backtrack() {
 		if(this.machine != null)
 			getMachine().backtrack();
 		getGenerator().reset();
-		runRandomGeneratorOnce = true;
 	}
 
 	public void readGraph( String graphmlFileName )
@@ -386,7 +393,8 @@ public class ModelBasedTesting
 			case '2':
 				return;
 			case '1':
-				backtrack(stepPair.size()==0);
+				backtrack();
+				runRandomGeneratorOnce = true;
 				stepPair.clear();
 			case '0':
 //				System.out.println("nomoreSteps: "+ (stepPair.size()==0));
@@ -400,9 +408,9 @@ public class ModelBasedTesting
 				else
 					System.out.println();
 				if(stepPair.size() == 1)
-					statisticsManager.addProgress(getMachine().getLastEdge());
+					getStatisticsManager().addProgress(getMachine().getLastEdge());
 				else
-					statisticsManager.addProgress(getMachine().getCurrentState());
+					getStatisticsManager().addProgress(getMachine().getCurrentState());
 
 				break;
 
@@ -448,7 +456,22 @@ public class ModelBasedTesting
 			clsClass = objInstance.getClass();
 		if( objInstance == null )
 			try {
-				objInstance = clsClass.newInstance();
+				objInstance = clsClass.getConstructor(new Class[]{ModelBasedTesting.class}).newInstance(new Object[]{this});
+			} catch (SecurityException e) {
+				throw new RuntimeException("Execution instance generated exception.", e);
+			} catch (NoSuchMethodException e) {
+			} catch (IllegalArgumentException e) {
+				throw new RuntimeException("Execution instance generated exception.", e);
+			} catch (InstantiationException e) {
+				throw new RuntimeException("Cannot create execution instance.", e);
+			} catch (IllegalAccessException e) {
+				throw new RuntimeException("Cannot access execution instance.", e);
+			} catch (InvocationTargetException e) {
+				throw new RuntimeException("Execution instance generated exception.", e);
+			}
+			try {
+				if(objInstance == null)
+					objInstance = clsClass.newInstance();
 			} catch (InstantiationException e) {
 				throw new RuntimeException("Cannot create execution instance.", e);
 			} catch (IllegalAccessException e) {
@@ -462,9 +485,9 @@ public class ModelBasedTesting
 			try {
 				logger.info("Step: "+ (++step) +" Navigate: "+stepPair[ 0 ]);
 				executeMethod(clsClass, objInstance, stepPair[ 0 ], true );
-				statisticsManager.addProgress(getMachine().getLastEdge());
+				getStatisticsManager().addProgress(getMachine().getLastEdge());
 				executeMethod(clsClass, objInstance, stepPair[ 1 ], false );
-				statisticsManager.addProgress(getMachine().getCurrentState());
+				getStatisticsManager().addProgress(getMachine().getCurrentState());
 			} catch (IllegalArgumentException e) {
 				throw new RuntimeException("Illegal argument used.", e);
 			} catch (SecurityException e) {
@@ -562,12 +585,12 @@ public class ModelBasedTesting
 			if(stepPair[0].trim()!="")
 			{
 				out.println( stepPair[0] );
-				statisticsManager.addProgress(getMachine().getLastEdge());
+				getStatisticsManager().addProgress(getMachine().getLastEdge());
 			}
 			if(stepPair[1].trim()!="")
 			{
 				out.println( stepPair[1] );
-				statisticsManager.addProgress(getMachine().getCurrentState());
+				getStatisticsManager().addProgress(getMachine().getCurrentState());
 			}
 
 		}
