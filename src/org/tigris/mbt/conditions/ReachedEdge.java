@@ -2,9 +2,7 @@ package org.tigris.mbt.conditions;
 
 import java.util.ArrayList;
 
-import org.tigris.mbt.ExtendedFiniteStateMachine;
 import org.tigris.mbt.FiniteStateMachine;
-import org.tigris.mbt.Util;
 
 import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
 
@@ -15,7 +13,7 @@ public class ReachedEdge extends StopCondition {
 	private int[] proximity;
 	private int maxDistance;
 	private String edgeName;
-	private String subState;
+//	private String subState;
 
 	public boolean isFulfilled() {
 		return getFulfilment() >= 0.99999;
@@ -34,14 +32,14 @@ public class ReachedEdge extends StopCondition {
 	public ReachedEdge(DirectedSparseEdge endEdge)
 	{
 		this.endEdge = endEdge;
-		this.subState = "";
+//		this.subState = "";
 	}
 
 	public ReachedEdge(String edgeName) 
 	{
 		String[] state = edgeName.split("/", 2);
 		this.edgeName = state[0];
-		this.subState = (state.length>1?state[1]:"");
+//		this.subState = (state.length>1?state[1]:"");
 	}
 
 	public double getFulfilment() {
