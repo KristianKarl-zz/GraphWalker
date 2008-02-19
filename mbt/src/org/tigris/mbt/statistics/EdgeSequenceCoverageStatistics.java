@@ -6,8 +6,6 @@ package org.tigris.mbt.statistics;
 import java.util.HashSet;
 import java.util.Stack;
 
-import org.tigris.mbt.Util;
-
 import edu.uci.ics.jung.graph.impl.AbstractElement;
 import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
 import edu.uci.ics.jung.graph.impl.SparseGraph;
@@ -62,7 +60,7 @@ public class EdgeSequenceCoverageStatistics extends Statistics {
 	private String getSequenceName(Stack[] possibilities) {
 		String retur="";
 		for(int i=0;i<possibilities.length;i++)
-			retur += Util.getCompleteName((AbstractElement) possibilities[i].peek()) +" ";
+			retur += ((AbstractElement) possibilities[i].peek()).hashCode() +" ";
 		return retur.trim();
 	}
 
@@ -73,7 +71,7 @@ public class EdgeSequenceCoverageStatistics extends Statistics {
 	private String getCurrentSequenceName() {
 		String retur="";
 		for(int i=0;i<pathHistory.size();i++)
-			retur += Util.getCompleteName((AbstractElement) pathHistory.elementAt(i)) +" ";
+			retur += ((AbstractElement) pathHistory.elementAt(i)).hashCode() +" ";
 		return retur.trim();
 	}
 
