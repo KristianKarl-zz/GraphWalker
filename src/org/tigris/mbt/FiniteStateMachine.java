@@ -50,7 +50,6 @@ public class FiniteStateMachine{
 	private Stack statestore;
 	private int numberOfEdgesTravesed = 0;
 	protected boolean backtracking = false;
-	protected boolean abortOnDeadEnds = true;
 	protected boolean calculatingPath = false;
 
 	private long start_time;
