@@ -3,25 +3,26 @@
  */
 package org.tigris.mbt;
 
+import org.apache.log4j.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.output.XMLOutputter;
+import org.jdom.transform.JDOMSource;
 import org.tigris.mbt.statistics.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
-import java.io.StringReader;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Set;
 
-import javax.xml.transform.Templates;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
@@ -33,9 +34,10 @@ import edu.uci.ics.jung.graph.impl.AbstractElement;
  */
 public class StatisticsManager {
 
+	static private Logger log = Util.setupLogger(StatisticsManager.class);
 	Hashtable counters;
 	Document progress;
-	private Transformer stylesheet;
+	private Transformer styleTemplate;
 
 	/**
 	 * 
@@ -98,14 +100,14 @@ public class StatisticsManager {
 	
 	public void setReportTemplate(String filename)
 	{
-	    TransformerFactory transformerFactory = TransformerFactory.newInstance();
-	    try {
-	    	Templates stylesheetTemplate = transformerFactory.newTemplates( new StreamSource(new File(filename)));
-	    this.stylesheet = stylesheetTemplate.newTransformer();
+		log.info("Setting template to '"+filename+"'");
+		try {
+			styleTemplate = TransformerFactory.newInstance().newTemplates(new StreamSource(new File(filename))).newTransformer();
 		} catch (TransformerConfigurationException e) {
+			throw new RuntimeException("A serious configuration exception detected in '"+filename+"' while creating report template.", e);
+		} catch (TransformerFactoryConfigurationError e) {
 			throw new RuntimeException("A serious configuration error detected in '"+filename+"' while creating report template.", e);
 		}
-		
 	}
 	
 	public void writeFullReport() {
@@ -121,14 +123,12 @@ public class StatisticsManager {
 	}
 	
 	public void writeFullReport(PrintStream out) {
-	    
+		log.info("Writing full report");
 		try {
-		    XMLOutputter xmlOutputter = new XMLOutputter();
-		    StreamSource source = new StreamSource(new StringReader(xmlOutputter.outputString(this.progress)));
-		    StreamResult result = new StreamResult(out);
-		    this.stylesheet.transform(source, result);
-		} catch(TransformerException e){
-			throw new RuntimeException("Could not complete transformation of report.", e);
+			styleTemplate.transform(new JDOMSource((Document) this.progress.clone()), new StreamResult(out));
+//			out.close();
+		} catch (TransformerException e) {
+			throw new RuntimeException("Could not create report", e);
 		}
 	}
 
