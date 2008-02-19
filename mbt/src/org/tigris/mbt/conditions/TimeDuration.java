@@ -1,5 +1,9 @@
 package org.tigris.mbt.conditions;
 
+/** Stops test execution after a certain amount of time has passed.
+ * @author Johan Tejle
+ *
+ */
 public class TimeDuration extends StopCondition {
 
 	private double duration;
