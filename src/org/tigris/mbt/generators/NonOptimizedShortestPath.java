@@ -2,12 +2,10 @@ package org.tigris.mbt.generators;
 
 
 import java.util.List;
-import java.util.Random;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
 import org.tigris.mbt.Util;
-import org.tigris.mbt.conditions.ReachedEdge;
 
 import edu.uci.ics.jung.algorithms.shortestpath.DijkstraShortestPath;
 import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
@@ -16,23 +14,10 @@ import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
 public class NonOptimizedShortestPath extends PathGenerator
 {
 	static Logger logger = Util.setupLogger(NonOptimizedShortestPath.class);
-//	private PathGenerator shortestPathGenerator;
-//	private Random rand = new Random();
 	private List dijkstraShortestPath;
 	
 	public String[] getNext() 
 	{
-//		if(shortestPathGenerator == null)
-//			shortestPathGenerator = new ShortestPathGenerator();
-//		if(shortestPathGenerator.getStopCondition() == null || 
-//				!shortestPathGenerator.hasNext())
-//		{
-//			Vector uncoveredEdges = getMachine().getUncoveredEdges();
-//			DirectedSparseEdge nextUncoveredEdge = (DirectedSparseEdge) uncoveredEdges.get(rand.nextInt(uncoveredEdges.size()));
-//			shortestPathGenerator.setStopCondition(new ReachedEdge(nextUncoveredEdge));
-//		}
-//		return shortestPathGenerator.getNext();
-//	}
 		Util.AbortIf(!hasNext(), "Finished");
 	
 		
