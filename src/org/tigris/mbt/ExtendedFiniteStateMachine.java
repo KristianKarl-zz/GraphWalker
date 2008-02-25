@@ -85,7 +85,7 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 		return retur;
 	}
 
-	private boolean hasInternalVariables()
+	public boolean hasInternalVariables()
 	{
 		return interpreter.getNameSpace().getVariableNames().length > 1;
 	}
