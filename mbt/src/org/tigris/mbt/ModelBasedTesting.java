@@ -39,6 +39,9 @@ import org.tigris.mbt.statistics.StateCoverageStatistics;
 
 import bsh.EvalError;
 
+import edu.uci.ics.jung.graph.impl.AbstractElement;
+import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
+import edu.uci.ics.jung.graph.impl.DirectedSparseVertex;
 import edu.uci.ics.jung.graph.impl.SparseGraph;
 
 /**
@@ -397,20 +400,34 @@ public class ModelBasedTesting
 				runRandomGeneratorOnce = true;
 				stepPair.clear();
 			case '0':
-//				System.out.println("nomoreSteps: "+ (stepPair.size()==0));
-				if(!hasNextStep() && (stepPair.size()==0))return;
-				if(stepPair.size() == 0)
-					stepPair = new Vector(Arrays.asList(getNextStep()));
+
+				if( !hasNextStep() && ( stepPair.size() == 0 ) )
+					return;
+				if( stepPair.size() == 0 )
+					stepPair = new Vector( Arrays.asList( getNextStep() ) );
+				
 				System.out.print( (String) stepPair.remove(0) );
-				if((stepPair.size() == 1 && hasCurrentEdgeBackTracking()) || 
-						(stepPair.size() == 0 && hasCurrentVertexBackTracking()))
-					System.out.println(" BACKTRACK");
+				
+				String addInfo = "";
+				if( ( stepPair.size() == 1 && hasCurrentEdgeBackTracking() ) || 
+					( stepPair.size() == 0 && hasCurrentVertexBackTracking() ) )
+				{
+					System.out.println( " BACKTRACK" );
+					addInfo = " BACKTRACK";
+				}
 				else
 					System.out.println();
-				if(stepPair.size() == 1)
-					getStatisticsManager().addProgress(getMachine().getLastEdge());
+				
+				if ( stepPair.size() == 1 )
+				{
+					logExecution( getMachine().getLastEdge(), addInfo );
+					getStatisticsManager().addProgress( getMachine().getLastEdge() );
+				}
 				else
-					getStatisticsManager().addProgress(getMachine().getCurrentState());
+				{
+					logExecution( getMachine().getCurrentState(), addInfo );
+					getStatisticsManager().addProgress( getMachine().getCurrentState() );
+				}
 
 				break;
 
@@ -419,7 +436,24 @@ public class ModelBasedTesting
 			} 
 		}
 	}
-	
+
+	private void logExecution( AbstractElement element, String additionalInfo ) 
+	{
+		if( element instanceof DirectedSparseEdge )
+		{
+			logger.info( "Edge: " + Util.getCompleteName( getMachine().getLastEdge() ) + additionalInfo );
+			return;
+		}
+		if( element instanceof DirectedSparseVertex )
+		{
+			logger.info( "Vertex: " + Util.getCompleteName( getMachine().getCurrentState() ) + 
+					    ( getMachine().hasInternalVariables() ? " DATA: " + getMachine().getCurrentDataString() : "" ) 
+					    + additionalInfo );
+			return;
+		}
+		throw new RuntimeException( "Element type not supported '" + element.getClass().getName() + "'" );
+	}
+
 	public void executePath(String strClassName) 
 	{
 		if( strClassName == null || strClassName.trim().equals(""))
@@ -482,10 +516,12 @@ public class ModelBasedTesting
 		{
 			String[] stepPair = getNextStep();
 			
-			try {
-				logger.info("Step: "+ (++step) +" Navigate: "+stepPair[ 0 ]);
+			try {				
+				logExecution( getMachine().getLastEdge(), "" );
 				executeMethod(clsClass, objInstance, stepPair[ 0 ], true );
 				getStatisticsManager().addProgress(getMachine().getLastEdge());
+				
+				logExecution( getMachine().getCurrentState(), "" );
 				executeMethod(clsClass, objInstance, stepPair[ 1 ], false );
 				getStatisticsManager().addProgress(getMachine().getCurrentState());
 			} catch (IllegalArgumentException e) {

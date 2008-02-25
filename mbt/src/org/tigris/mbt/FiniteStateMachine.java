@@ -548,5 +548,15 @@ public class FiniteStateMachine{
 	{
 		return model;
 	}
+	
+	public String getCurrentDataString() 
+	{
+		return "";
+	}
+
+	public boolean hasInternalVariables()
+	{
+		return false;
+	}
 }
 
