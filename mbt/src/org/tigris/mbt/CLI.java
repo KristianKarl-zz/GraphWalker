@@ -564,6 +564,10 @@ public class CLI
 		{
 			System.out.println( getMbt().getStatisticsString() );
 		}
+		if( cl.hasOption( "o" ) )
+		{
+			logger.info( mbt.getStatisticsCompact() );
+		}
 		if( cl.hasOption( "t" ) && cl.hasOption( "r" ) )
 		{
 			getMbt().getStatisticsManager().setReportTemplate(cl.getOptionValue('t'));
@@ -662,7 +666,15 @@ public class CLI
 		{
 			getMbt().interractivePath();
 		}
-		if( cl.hasOption( "a" ) ) writeStatisticsVerbose(System.out);
+
+		if( cl.hasOption( "a" ) )
+		{
+			writeStatisticsVerbose(System.out);
+		}
+		if( cl.hasOption( "o" ) )
+		{
+			logger.info( mbt.getStatisticsCompact() );
+		}
 		if( cl.hasOption( "t" ) && cl.hasOption( "r" ) )
 		{
 			getMbt().getStatisticsManager().setReportTemplate(cl.getOptionValue('t'));
