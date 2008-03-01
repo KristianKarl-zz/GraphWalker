@@ -1,7 +1,12 @@
 package org.tigris.mbt.generators;
 
+import java.util.Set;
+
 import org.tigris.mbt.FiniteStateMachine;
 import org.tigris.mbt.conditions.StopCondition;
+import org.tigris.mbt.exceptions.FoundNoEdgeException;
+
+import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
 
 public abstract class PathGenerator {
     private FiniteStateMachine machine;
@@ -60,4 +65,23 @@ public abstract class PathGenerator {
     public String toString() {
     	return getStopCondition().toString();
     }
+
+    public boolean isEdgeAvailable( DirectedSparseEdge edge )
+    {
+		Set availableEdges;
+		try 
+		{
+			availableEdges = getMachine().getCurrentOutEdges();
+		}
+		catch ( FoundNoEdgeException e )
+		{
+			throw new RuntimeException("No possible edges available for path", e);
+		}
+		if ( availableEdges.contains( edge ) )
+		{
+			return true;
+		}
+    	
+		return false;
+	}
 }
