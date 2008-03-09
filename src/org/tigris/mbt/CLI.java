@@ -31,7 +31,7 @@ import org.apache.log4j.Logger;
  * <strong>Example:</strong> Generate offline test sequence, using random walk<br>
  * <pre>java -jar mbt.jar offline -f folder -g RANDOM -s EDGE_COVERAGE:30</pre><br>
  * <strong>Example:</strong> Generate online test sequence, using shortest walk<br>
- * <pre>java -jar mbt.jar online -f folder -g SHORTEST -s EDGE_COVERAGE:100</pre><br>
+ * <pre>java -jar mbt.jar online -f folder -g A_STAR -s EDGE_COVERAGE:100</pre><br>
  * <strong>Example:</strong> Print all names of edges and vertices (Sorted, and unique)<br>
  * <pre>java -jar mbt.jar methods -f folder</pre><br>
  * <strong>Example:</strong> When you need to define more complex abstract test cases working with the CLI can sometimes be a burden. For this reason we have added a easier way to structure the abstract test cases, using XML.<br>
@@ -224,7 +224,7 @@ public class CLI
 		catch ( ArrayIndexOutOfBoundsException e )
         {
 			System.err.println( "The arguments for either the generator, or the stop-condition, is incorrect." );
-			System.err.println( "Example: java -jar mbt.jar offline -f ../demo/model/UC01.graphml -s EDGE_COVERAGE:100 -g SHORTEST" );
+			System.err.println( "Example: java -jar mbt.jar offline -f ../demo/model/UC01.graphml -s EDGE_COVERAGE:100 -g A_STAR" );
         	System.err.println( "Type 'java -jar mbt.jar help " + args[ 0 ] + "' for help." );
         }
 		catch ( Exception e )

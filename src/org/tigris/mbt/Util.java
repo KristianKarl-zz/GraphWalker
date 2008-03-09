@@ -41,7 +41,7 @@ import org.tigris.mbt.generators.NonOptimizedShortestPath;
 import org.tigris.mbt.generators.PathGenerator;
 import org.tigris.mbt.generators.RandomPathGenerator;
 import org.tigris.mbt.generators.RequirementsGenerator;
-import org.tigris.mbt.generators.ShortestPathGenerator;
+import org.tigris.mbt.generators.A_StarPathGenerator;
 
 import edu.uci.ics.jung.graph.impl.AbstractElement;
 import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
@@ -218,8 +218,8 @@ public class Util {
 				generator = new RandomPathGenerator();
 				break;
 
-			case Keywords.GENERATOR_SHORTEST:
-				generator = new ShortestPathGenerator();
+			case Keywords.GENERATOR_A_STAR:
+				generator = new A_StarPathGenerator();
 				break;
 			
 			case Keywords.GENERATOR_STUB:

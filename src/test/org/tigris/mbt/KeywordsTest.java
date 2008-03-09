@@ -50,7 +50,7 @@ public class KeywordsTest extends TestCase {
 	public void testGetGenerator() 
 	{
 		assertTrue( Keywords.getGenerator( "RANDOM" ) != -1 );
-		assertTrue( Keywords.getGenerator( "SHORTEST" ) != -1 );
+		assertTrue( Keywords.getGenerator( "A_STAR" ) != -1 );
 		assertTrue( Keywords.getGenerator( "LIST" ) != -1 );
 		assertTrue( Keywords.getGenerator( "STUB" ) != -1 );
 		assertTrue( Keywords.getGenerator( "REQUIREMENTS" ) != -1 );

@@ -16,9 +16,9 @@ import org.tigris.mbt.generators.PathGenerator;
 import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
 import edu.uci.ics.jung.graph.impl.DirectedSparseVertex;
 
-public class ShortestPathGenerator extends PathGenerator {
+public class A_StarPathGenerator extends PathGenerator {
 
-	static Logger logger = Util.setupLogger(ShortestPathGenerator.class);
+	static Logger logger = Util.setupLogger(A_StarPathGenerator.class);
 
 	private Stack preCalculatedPath = null;
 	private DirectedSparseVertex lastState;
@@ -165,7 +165,7 @@ public class ShortestPathGenerator extends PathGenerator {
 	}
 
 	public String toString() {
-		return "SHORTEST{"+ super.toString() +"}";
+		return "A_STAR{"+ super.toString() +"}";
 	}
 
 	private class weightedPath{

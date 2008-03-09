@@ -231,11 +231,11 @@ public class CLITest extends TestCase {
     }
 
     /**
-     * Test command: java -jar mbt.jar offline -f graphml/reqtags/ExtendedMain.graphml -g SHORTEST -s EDGE_COVERAGE:100
+     * Test command: java -jar mbt.jar offline -f graphml/reqtags/ExtendedMain.graphml -g A_STAR -s EDGE_COVERAGE:100
      */
-    public void testOfflineShortestEdgeCoverage()
+    public void testOfflineA_StarEdgeCoverage()
     {
-		String args[] = { "offline", "-f", "graphml/reqtags/ExtendedMain.graphml", "-g", "SHORTEST", "-s", "EDGE_COVERAGE:100" };
+		String args[] = { "offline", "-f", "graphml/reqtags/ExtendedMain.graphml", "-g", "A_STAR", "-s", "EDGE_COVERAGE:100" };
     	runCommand( args );
     	assertEquals( "No error messages should occur.", "", errMsg);
     	assertTrue( outMsg.split("\r\n|\r|\n").length <= 110 );
@@ -264,22 +264,22 @@ public class CLITest extends TestCase {
     }
 
     /**
-     * Test command: java -jar mbt.jar offline -f graphml/reqtags/ExtendedMain.graphml -g SHORTEST -s STATE_COVERAGE:100
+     * Test command: java -jar mbt.jar offline -f graphml/reqtags/ExtendedMain.graphml -g A_STAR -s STATE_COVERAGE:100
      */
-    public void testOfflineShortestStateCoverage()
+    public void testOfflineA_StarStateCoverage()
     {
-		String args[] = { "offline", "-f", "graphml/reqtags/ExtendedMain.graphml", "-g", "SHORTEST", "-s", "STATE_COVERAGE:100" };
+		String args[] = { "offline", "-f", "graphml/reqtags/ExtendedMain.graphml", "-g", "A_STAR", "-s", "STATE_COVERAGE:100" };
     	runCommand( args );
     	assertEquals( "No error messages should occur.", "", errMsg );
     	assertTrue( outMsg.split("\r\n|\r|\n").length <= 32 );
     }
     
     /**
-     * Test command: java -jar mbt.jar offline -f graphml/reqtags/ExtendedMain.graphml -g shortest -s "REACHED_REQUIREMENT:req 78
+     * Test command: java -jar mbt.jar offline -f graphml/reqtags/ExtendedMain.graphml -g a_star -s "REACHED_REQUIREMENT:req 78
      */
-    public void testOfflineShortestReachedRequirement()
+    public void testOfflineA_StarReachedRequirement()
     {
-		String args[] = { "offline", "-f", "graphml/reqtags/ExtendedMain.graphml", "-g", "SHORTEST", "-s", "REACHED_REQUIREMENT:req 78" };
+		String args[] = { "offline", "-f", "graphml/reqtags/ExtendedMain.graphml", "-g", "a_star", "-s", "REACHED_REQUIREMENT:req 78" };
     	runCommand( args );
     	assertEquals( "No error messages should occur.", "", errMsg );
     	assertEquals( 6, outMsg.split("\r\n|\r|\n").length );
