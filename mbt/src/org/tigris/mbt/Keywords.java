@@ -193,7 +193,7 @@ public class Keywords {
 
 	public static final int GENERATOR_RANDOM = 2001;
 
-	public static final int GENERATOR_SHORTEST = 2002;
+	public static final int GENERATOR_A_STAR = 2002;
 
 	public static final int GENERATOR_LIST = 2003;
 
@@ -281,7 +281,7 @@ public class Keywords {
 	static
 	{
 		generators.put( "RANDOM", new Integer(GENERATOR_RANDOM) );
-		generators.put( "SHORTEST", new Integer(GENERATOR_SHORTEST) );
+		generators.put( "A_STAR", new Integer(GENERATOR_A_STAR) );
 		generators.put( "LIST", new Integer(GENERATOR_LIST) );
 		generators.put( "STUB", new Integer(GENERATOR_STUB) );
 		generators.put( "REQUIREMENTS", new Integer(GENERATOR_REQUIREMENTS) );

@@ -6,7 +6,7 @@ import org.tigris.mbt.Util;
 import org.tigris.mbt.conditions.ReachedEdge;
 import org.tigris.mbt.conditions.ReachedState;
 import org.tigris.mbt.generators.PathGenerator;
-import org.tigris.mbt.generators.ShortestPathGenerator;
+import org.tigris.mbt.generators.A_StarPathGenerator;
 
 import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
 import edu.uci.ics.jung.graph.impl.DirectedSparseVertex;
@@ -14,7 +14,7 @@ import edu.uci.ics.jung.graph.impl.SparseGraph;
 
 import junit.framework.TestCase;
 
-public class ShortestPathGeneratorTest extends TestCase {
+public class A_StarPathGeneratorTest extends TestCase {
 
 	SparseGraph graph;
 	DirectedSparseVertex start;
@@ -49,7 +49,7 @@ public class ShortestPathGeneratorTest extends TestCase {
 	
 	public void test_FSM_StateStop()
     {
-		PathGenerator pathGenerator = new ShortestPathGenerator();
+		PathGenerator pathGenerator = new A_StarPathGenerator();
 		pathGenerator.setStopCondition(new ReachedState("V2"));
 		pathGenerator.setMachine(new FiniteStateMachine(graph));
 		
@@ -65,7 +65,7 @@ public class ShortestPathGeneratorTest extends TestCase {
 
 	public void test_FSM_EdgeStop()
     {
-		PathGenerator pathGenerator = new ShortestPathGenerator();
+		PathGenerator pathGenerator = new A_StarPathGenerator();
 		pathGenerator.setStopCondition(new ReachedEdge("E2"));
 		pathGenerator.setMachine(new FiniteStateMachine(graph));
 		
@@ -85,7 +85,7 @@ public class ShortestPathGeneratorTest extends TestCase {
 
 	public void test_EFSM_StateStop()
     {
-		PathGenerator pathGenerator = new ShortestPathGenerator();
+		PathGenerator pathGenerator = new A_StarPathGenerator();
 		pathGenerator.setStopCondition(new ReachedState("V1/x=3;y=[2, 3, 3];") );
 		pathGenerator.setMachine(new ExtendedFiniteStateMachine(graph));
 		
@@ -123,7 +123,7 @@ public class ShortestPathGeneratorTest extends TestCase {
 
 	public void test_EFSM_EdgeStop()
     {
-		PathGenerator pathGenerator = new ShortestPathGenerator();
+		PathGenerator pathGenerator = new A_StarPathGenerator();
 		pathGenerator.setStopCondition(new ReachedEdge("E2"));
 		pathGenerator.setMachine(new ExtendedFiniteStateMachine(graph));
 		
