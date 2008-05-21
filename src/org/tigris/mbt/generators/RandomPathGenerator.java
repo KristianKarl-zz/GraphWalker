@@ -57,6 +57,7 @@ public class RandomPathGenerator extends PathGenerator {
 		{
 			edge = (DirectedSparseEdge) zeroes.get(random.nextInt(zeroes.size()));
 		}
+		logger.debug( "Weighted edge selection (out of: " + availableEdges.size() + " edge(s)): " + Util.getCompleteName(edge) );
 		return edge;
 	}
 	
