@@ -373,6 +373,7 @@ public class CLI
 		opt.addOption( "c", "class_name", true, "Optional class name to use for test execution." );
 		opt.addOption( "t", "report-template", true, "Optional report template to use." );
 		opt.addOption( "r", "report-output", true, "Optional report filename to save report to." );
+		opt.addOption( "w", "weighted", false, "Use weighted values if they exists in the model, and the generator is RANDOM." );
 	}
 
 	/**
@@ -409,6 +410,7 @@ public class CLI
                 .create( "o" ) );
 		opt.addOption( "t", "report-template", true, "Optional report template to use." );
 		opt.addOption( "r", "report-output", true, "Optional report filename to save report to." );
+		opt.addOption( "w", "weighted", false, "Use weighted values if they exists in the model, and the generator is RANDOM." );
 	}
 	
 	private void buildMethodsCLI()
@@ -472,7 +474,7 @@ public class CLI
 	 */
 	private void printVersionInformation()
 	{
-		System.out.println( "org.tigris.mbt version 2.0 (revision 563)\n" );
+		System.out.println( "org.tigris.mbt version 2.0 (revision 565)\n" );
 		System.out.println( "org.tigris.mbt is open source software licensed under GPL" );
 		System.out.println( "The software (and it's source) can be downloaded from http://mbt.tigris.org/\n" );
 		System.out.println( "This package contains following software packages:" );
@@ -503,6 +505,7 @@ public class CLI
 
         getMbt().readGraph( cl.getOptionValue( "f" ) );
         getMbt().enableExtended( cl.hasOption( "x" ) );
+		getMbt().setWeighted( cl.hasOption( "w" ) );
 
         /*
          * Set the stop-conditions(s)
@@ -522,7 +525,7 @@ public class CLI
 		for (int i = 0; i < genrators.length; i++) {
 			getMbt().setGenerator( Keywords.getGenerator( genrators[ 0 ].trim() ) );
 		}
-
+		
 		if( cl.hasOption( "o" ) )
 		{
 			long seconds = Integer.valueOf( cl.getOptionValue( "o" ) ).longValue();
@@ -593,6 +596,7 @@ public class CLI
 
         getMbt().readGraph( cl.getOptionValue( "f" ) );
         getMbt().enableExtended( cl.hasOption( "x" ) );
+		getMbt().setWeighted( cl.hasOption( "w" ) );
 
         /*
          * Set the stop-conditions(s)

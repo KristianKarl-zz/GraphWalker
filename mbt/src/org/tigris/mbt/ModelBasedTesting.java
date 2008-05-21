@@ -657,4 +657,8 @@ public class ModelBasedTesting
 	public String toString() {
 		return getGenerator().toString();
 	}
+
+	public void setWeighted(boolean b) {
+		getMachine().setWeighted(b);
+	}
 }
