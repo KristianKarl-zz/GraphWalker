@@ -26,6 +26,8 @@ import java.util.Vector;
 import org.apache.log4j.Logger;
 import org.tigris.mbt.conditions.AlternativeCondition;
 import org.tigris.mbt.conditions.CombinationalCondition;
+import org.tigris.mbt.conditions.ReachedRequirement;
+import org.tigris.mbt.conditions.RequirementCoverage;
 import org.tigris.mbt.conditions.StopCondition;
 import org.tigris.mbt.exceptions.InvalidDataException;
 import org.tigris.mbt.generators.CodeGenerator;
@@ -94,6 +96,14 @@ public class ModelBasedTesting
 	public void addAlternativeCondition(int conditionType, String conditionValue)
 	{
 		StopCondition condition = Util.getCondition(conditionType, conditionValue);
+		
+		// If requirement stop condition, check if requirement exists in model
+		if ( condition instanceof RequirementCoverage ||
+			 condition instanceof ReachedRequirement )			
+		{
+			Util.AbortIf( getMachine().getAllRequirements().containsKey( conditionValue ) == false, 
+					"Requirement: '" + conditionValue + "' do not exist in the model" );
+		}
 		
 		if(	getCondition() == null )
 		{
