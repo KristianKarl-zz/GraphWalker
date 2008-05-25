@@ -3,6 +3,7 @@ package org.tigris.mbt.conditions;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 
 public class ReachedRequirement extends StopCondition {
 	
@@ -10,7 +11,11 @@ public class ReachedRequirement extends StopCondition {
 
 	public ReachedRequirement(String requirements)
 	{
-		this.requirements = new HashSet(Arrays.asList(requirements.split(",")));
+		String[] list = requirements.split(",");
+		for (int i = 0; i < list.length; i++) {
+			list[i] = list[i].trim();
+		}
+		this.requirements = new HashSet(Arrays.asList( list ));
 	}
 	
 	public boolean isFulfilled() {
@@ -24,6 +29,10 @@ public class ReachedRequirement extends StopCondition {
 	}
 	public String toString() {
 		return "RC="+ Arrays.deepToString(requirements.toArray());
+	}
+
+	public Collection getRequirements() {
+		return requirements;
 	}
 
 }
