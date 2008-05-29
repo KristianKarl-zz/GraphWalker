@@ -1,9 +1,7 @@
 package org.tigris.mbt.generators;
 
-import java.util.Iterator;
 import java.util.Random;
 import java.util.Set;
-import java.util.Vector;
 
 import org.apache.log4j.Logger;
 import org.tigris.mbt.Keywords;

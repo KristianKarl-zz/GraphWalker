@@ -525,7 +525,6 @@ public class ModelBasedTesting
 			} catch (IllegalAccessException e) {
 				throw new RuntimeException("Cannot access execution instance.", e);
 			} 
-		int step = 0;
 		while( hasNextStep() )
 		{
 			String[] stepPair = getNextStep();

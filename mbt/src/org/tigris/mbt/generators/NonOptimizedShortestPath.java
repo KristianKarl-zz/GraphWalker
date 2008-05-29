@@ -3,13 +3,11 @@ package org.tigris.mbt.generators;
 
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
 import org.tigris.mbt.Keywords;
 import org.tigris.mbt.Util;
-import org.tigris.mbt.exceptions.FoundNoEdgeException;
 
 import edu.uci.ics.jung.algorithms.shortestpath.DijkstraShortestPath;
 import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
