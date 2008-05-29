@@ -33,33 +33,61 @@ public class RandomPathGenerator extends PathGenerator {
 		return retur;
 	}
 	
-	private DirectedSparseEdge getWeightedEdge(Set availableEdges)
-	{
-		DirectedSparseEdge edge = null;
-		Vector zeroes = new Vector();
-		float sum = 0;
-		float limit = random.nextFloat();
+    private DirectedSparseEdge getWeightedEdge(Set availableEdges)
+    {
+        Object[] edges = availableEdges.toArray();
+        DirectedSparseEdge edge = null;
+        float probabilities[]   = new float[ availableEdges.size() ];
+        int   numberOfZeros     = 0;
+        float sum               = 0;
 
-		for ( Iterator i = availableEdges.iterator(); i.hasNext();)
-		{
-			DirectedSparseEdge e = (DirectedSparseEdge)i.next();
-			Float weight = (Float) e.getUserDatum( Keywords.WEIGHT_KEY );
-			if(weight == null)
-			{
-				zeroes.add(e);
-			} else {
-				sum += weight.floatValue();
-				if(sum >= limit && edge == null) edge = e;
-			}
-		}
-		Util.AbortIf( sum > 1 ,"The weight of out edges excceds 1 for " + getMachine().getCurrentStateName() );
-		if( edge == null )
-		{
-			edge = (DirectedSparseEdge) zeroes.get(random.nextInt(zeroes.size()));
-		}
-		logger.debug( "Weighted edge selection (out of: " + availableEdges.size() + " edge(s)): " + Util.getCompleteName(edge) );
-		return edge;
-	}
+        for ( int i = 0; i < edges.length; i++ )
+        {
+            edge = (DirectedSparseEdge)edges[ i ];
+
+            if ( edge.containsUserDatumKey( Keywords.WEIGHT_KEY ) )
+            {
+                Float weight = (Float)edge.getUserDatum( Keywords.WEIGHT_KEY );
+                probabilities[ i ] = weight.floatValue();
+                sum += probabilities[ i ];
+            }
+            else
+            {
+                numberOfZeros++;
+                probabilities[ i ] = 0;
+            }
+        }
+
+        if ( sum > 1 )
+        {
+            throw new RuntimeException( "The sum of all weights in edges from vertex: '" + (String)edge.getSource().getUserDatum( Keywords.LABEL_KEY ) + "', adds up to more than 1.00" );
+        }
+
+        float rest = ( 1 - sum ) / numberOfZeros;
+        int index = random.nextInt( 100 );
+        logger.debug( "Randomized integer index = " + index );
+
+        float weight = 0;
+        for ( int i = 0; i < edges.length; i++ )
+        {
+            if ( probabilities[ i ] == 0 )
+            {
+                probabilities[ i ] = rest;
+            }
+            logger.debug( "The edge: '" + (String)((DirectedSparseEdge)edges[ i ]).getUserDatum( Keywords.LABEL_KEY ) + "' is given the probability of " + probabilities[ i ] * 100 + "%"  );
+
+            weight = weight + probabilities[ i ] * 100;
+            logger.debug( "Current weight is: " + weight  );
+            if ( index < weight )
+            {
+                edge = (DirectedSparseEdge)edges[ i ];
+                logger.debug( "Selected edge is: " + Util.getCompleteName( edge ) );
+                break;
+            }
+        }
+
+        return edge;
+    }
 	
 	private DirectedSparseEdge getRandomEdge(Set availableEdges)
 	{
