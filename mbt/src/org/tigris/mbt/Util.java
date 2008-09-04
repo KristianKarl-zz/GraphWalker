@@ -248,7 +248,7 @@ public class Util {
 	/**
 	 * @param fileName The XML settings file
 	 */
-	public static ModelBasedTesting loadMbtFromXml( String fileName )
+	public static ModelBasedTesting loadMbtFromXml( String fileName, boolean runningSoapServices )
 	{
 		final ModelBasedTesting mbt = new ModelBasedTesting();
 		SAXBuilder parser = new SAXBuilder( "org.apache.crimson.parser.XMLReaderImpl", false );		
@@ -275,6 +275,10 @@ public class Util {
 		{
 			mbt.enableExtended(true);
 			mbt.setStartupScript(getScriptContent(root.getChildren("SCRIPT")));
+		}
+		else
+		{
+			mbt.enableExtended(false);
 		}
 		
 		List generators = root.getChildren("GENERATOR");
@@ -338,52 +342,55 @@ public class Util {
 			timer.schedule(	logTask, 500, seconds * 1000 );
 		}
 
-		try {
-		
-			String executor = root.getAttributeValue("EXECUTOR");
-			String executorParam = null;
-			if(executor.contains(":"))
-			{
-				executorParam = executor.substring(executor.indexOf(':')+1);
-				executor = executor.substring(0, executor.indexOf(':'));
-			}
-	
-			if(executor.equalsIgnoreCase("offline"))
-			{
-				PrintStream out = System.out;
-				if(executorParam != null && !executorParam.equals(""))
+		if ( runningSoapServices == false )
+		{
+			try {
+			
+				String executor = root.getAttributeValue("EXECUTOR");
+				String executorParam = null;
+				if(executor.contains(":"))
 				{
-					try {
-						out = new PrintStream(executorParam);
-					} catch (FileNotFoundException e) {
-						throw new RuntimeException("offline file '"+executorParam+"' could not be created or is writeprotected.", e);
-					}
+					executorParam = executor.substring(executor.indexOf(':')+1);
+					executor = executor.substring(0, executor.indexOf(':'));
 				}
-				mbt.writePath(out);
-				if(out != System.out)
-					out.close();
-			
-			} else if(executor.equalsIgnoreCase("java")){
-				if(executorParam == null || executorParam.equals(""))
-					throw new RuntimeException("No java class specified for execution");
-				mbt.executePath(executorParam);
-			
-			} else if(executor.equalsIgnoreCase("online")){
-				mbt.interractivePath();
-			
-			} else if(executor.equalsIgnoreCase("none") || executor.equals("")){
-				// no execution (for debug purpose)
-			
-			} else {
-				throw new RuntimeException("Unknown executor '"+executor+"'");
-			}
-			
-		} finally {
-			if(timer != null)
-				timer.cancel();
-			if(reportName != null && reportTemplate != null)
-			{
-				mbt.getStatisticsManager().writeFullReport(reportName);
+		
+				if(executor.equalsIgnoreCase("offline"))
+				{
+					PrintStream out = System.out;
+					if(executorParam != null && !executorParam.equals(""))
+					{
+						try {
+							out = new PrintStream(executorParam);
+						} catch (FileNotFoundException e) {
+							throw new RuntimeException("offline file '"+executorParam+"' could not be created or is writeprotected.", e);
+						}
+					}
+					mbt.writePath(out);
+					if(out != System.out)
+						out.close();
+				
+				} else if(executor.equalsIgnoreCase("java")){
+					if(executorParam == null || executorParam.equals(""))
+						throw new RuntimeException("No java class specified for execution");
+					mbt.executePath(executorParam);
+				
+				} else if(executor.equalsIgnoreCase("online")){
+					mbt.interractivePath();
+				
+				} else if(executor.equalsIgnoreCase("none") || executor.equals("")){
+					// no execution (for debug purpose)
+				
+				} else {
+					throw new RuntimeException("Unknown executor '"+executor+"'");
+				}
+				
+			} finally {
+				if(timer != null)
+					timer.cancel();
+				if(reportName != null && reportTemplate != null)
+				{
+					mbt.getStatisticsManager().writeFullReport(reportName);
+				}
 			}
 		}
 		return mbt;

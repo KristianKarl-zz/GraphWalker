@@ -9,6 +9,9 @@ import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.jws.WebService;
+import javax.xml.ws.Endpoint;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.HelpFormatter;
@@ -38,7 +41,7 @@ import org.apache.log4j.Logger;
  * <pre>java -jar mbt.jar xml -f testcase.xml</pre><br>
  *
  */
-public class CLI 
+public class CLI
 {
 	public static class VerboseStatisticsLogger extends Thread
 	{
@@ -79,7 +82,6 @@ public class CLI
 	public static void main(String[] args)
 	{
 		CLI cli = new CLI();
-		//if(args.length >= 0)return;
 		Thread shutDownThread = new CLI.VerboseStatisticsLogger(cli.getMbt());
 		try 
 		{
@@ -152,6 +154,10 @@ public class CLI
 			{
 				buildXmlCLI();
 			}
+			else if ( args[ 0 ].equals( "soap" ) )
+			{
+				buildSoapCLI();
+			}
 			else if ( args[ 0 ].equals( "-v" ) || args[ 0 ].equals( "--version" ) )
 			{
 				printVersionInformation();
@@ -220,6 +226,13 @@ public class CLI
 			{
 				RunCommandXml( cl );
 			}
+			/**
+			 *  Command: soap
+			 */
+			else if ( args[ 0 ].equals( "soap" ) )
+			{
+				RunCommandSoap( cl );
+			}
         }		
 		catch ( ArrayIndexOutOfBoundsException e )
         {
@@ -255,6 +268,7 @@ public class CLI
 		System.out.println( "    methods" );
 		System.out.println( "    merge" );
 		System.out.println( "    xml" );
+		System.out.println( "    soap" );
 		System.out.println( "    source\n" );
 		System.out.println( "Type 'java -jar mbt.jar -v (--version)' for version information." );
 	}
@@ -300,6 +314,10 @@ public class CLI
 			buildXmlCLI();
 			header = "Setup mbt engine from xml.\n" +
 					"Will setup and execute an engine based on xml specified criterias.";
+		} else if(helpSection.equalsIgnoreCase("soap")){
+			buildSoapCLI();
+			header = "Run MBT as a Web Services (SOAP) server.\n" +
+					"To see the services, see the WSDL file at: http://localhost:8080/mbt-services?WSDL";
 		} else {
 			System.err.println( "Type 'java -jar mbt.jar help' for usage." );
 			return;
@@ -470,11 +488,21 @@ public class CLI
 	}
 	
 	/**
+	 * Build the command soap command line parser
+	 */
+	private void buildSoapCLI() {
+		opt.addOption( OptionBuilder.withArgName( "file" )
+                .withDescription( "The xml file containing the mbt settings." )
+                .hasArg()
+                .create( "f" ) );
+	}
+	
+	/**
 	 * Print version information
 	 */
 	private void printVersionInformation()
 	{
-		System.out.println( "org.tigris.mbt version 2.0 (revision 578)\n" );
+		System.out.println( "org.tigris.mbt version 2.1 (revision 578)\n" );
 		System.out.println( "org.tigris.mbt is open source software licensed under GPL" );
 		System.out.println( "The software (and it's source) can be downloaded from http://mbt.tigris.org/\n" );
 		System.out.println( "This package contains following software packages:" );
@@ -755,9 +783,23 @@ public class CLI
 		if( helpNeeded("xml", !cl.hasOption( "f" ), "Missing the input xml file, See  option -f") ) 
 			return;
 
-		setMbt(Util.loadMbtFromXml( cl.getOptionValue( "f" ) ));
+		setMbt( Util.loadMbtFromXml( cl.getOptionValue( "f" ), false ) );
 		
 		if( cl.hasOption( "a" ) ) writeStatisticsVerbose( System.out );
+	}
+
+	/**
+	 * Run the soap command
+	 */
+	private void RunCommandSoap(CommandLine cl) {
+		if( helpNeeded("soap", !cl.hasOption( "f" ), "Missing the input xml file, See  option -f") ) 
+			return;
+
+		Endpoint.publish( "http://localhost:8080/mbt-services", new SoapServices( cl.getOptionValue( "f" ) ) );
+		
+		System.out.println( "Now Running as a SOAP server..." );
+		System.out.println( "Press Ctrl+C to quit" );
+		System.out.println( "" );
 	}
 
 	private boolean helpNeeded(String module, boolean condition, String message)
@@ -770,4 +812,3 @@ public class CLI
 		return condition;
 	}
 }
-	
