@@ -159,7 +159,7 @@ public class ModelBasedTesting
 		return this.condition;
 	}
 
-	private FiniteStateMachine getMachine() 
+	public FiniteStateMachine getMachine() 
 	{
 		if ( this.machine == null )
 		{
@@ -451,7 +451,7 @@ public class ModelBasedTesting
 		}
 	}
 
-	private void logExecution( AbstractElement element, String additionalInfo ) 
+	public void logExecution( AbstractElement element, String additionalInfo ) 
 	{
 		if( element instanceof DirectedSparseEdge )
 		{

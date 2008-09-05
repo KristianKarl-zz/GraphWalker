@@ -262,7 +262,7 @@ public class FiniteStateMachine{
 		"Coverage States: " + vc + "/" + v + " => " + (100*vc)/v  + "%\n" + 
 		"Unvisited Edges:  " + (e-ec) + "\n" + 
 		"Unvisited States: " + (v-vc) + "\n" +
-		"Testcase length:  " + len; 
+		"Test sequence length:  " + len; 
 	}
 	
 	public int[] getStatistics()
