@@ -1,0 +1,14 @@
+#Fat Jar Configuration File
+#Sat Sep 06 13:37:49 CEST 2008
+onejar.license.required=true
+manifest.classpath=
+manifest.removesigners=true
+onejar.checkbox=false
+jarname=mbt.jar
+manifest.mergeall=true
+manifest.mainclass=org.tigris.mbt.CLI
+manifest.file=<createnew>
+jarname.isextern=false
+onejar.expand=
+excludes=<po|mbt2.1>~.svn/;<po|mbt2.1>~test/;<jar|junit.jar>
+includes=
