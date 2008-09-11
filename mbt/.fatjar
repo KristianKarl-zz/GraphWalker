@@ -1,5 +1,5 @@
 #Fat Jar Configuration File
-#Sat Jan 26 19:51:27 CET 2008
+#Sat Sep 06 13:37:17 CEST 2008
 onejar.license.required=true
 manifest.classpath=
 manifest.removesigners=true
@@ -10,5 +10,5 @@ manifest.mainclass=org.tigris.mbt.CLI
 manifest.file=<createnew>
 jarname.isextern=false
 onejar.expand=
-excludes=<po|mbt>~.svn/;<po|mbt>~test/;<jar|junit.jar>
+excludes=<po|mbt2.1>~.svn/;<po|mbt2.1>~test/;<jar|junit.jar>
 includes=

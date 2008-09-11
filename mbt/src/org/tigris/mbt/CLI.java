@@ -1,15 +1,18 @@
 package org.tigris.mbt;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import javax.jws.WebService;
 import javax.xml.ws.Endpoint;
 
 import org.apache.commons.cli.CommandLine;
@@ -18,6 +21,8 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.PosixParser;
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.log4j.Logger;
 
 /**
@@ -62,6 +67,7 @@ public class CLI
 	private ModelBasedTesting mbt = null;
 	private Timer timer = null;
 	private Options opt = new Options();
+	private String port = null; 
 
 	public CLI(){}
 	
@@ -790,14 +796,46 @@ public class CLI
 
 	/**
 	 * Run the soap command
+	 * @throws ConfigurationException 
+	 * @throws IOException 
 	 */
-	private void RunCommandSoap(CommandLine cl) {
+	private void RunCommandSoap(CommandLine cl) throws ConfigurationException, IOException {
 		if( helpNeeded("soap", !cl.hasOption( "f" ), "Missing the input xml file, See  option -f") ) 
 			return;
 
-		Endpoint.publish( "http://localhost:8080/mbt-services", new SoapServices( cl.getOptionValue( "f" ) ) );
-		
-		System.out.println( "Now Running as a SOAP server..." );
+		// Find the real network interface
+		NetworkInterface iface = null;
+		InetAddress ia = null;
+		boolean foundNIC = false;
+		for( Enumeration<NetworkInterface> ifaces = NetworkInterface.getNetworkInterfaces();
+		     ifaces.hasMoreElements() && foundNIC == false; )
+		{
+			iface = (NetworkInterface)ifaces.nextElement();
+			logger.debug( "Interface: "+ iface.getDisplayName() );
+			for ( Enumeration<InetAddress> ips = iface.getInetAddresses();
+			      ips.hasMoreElements() && foundNIC == false; )
+			{
+				ia = (InetAddress)ips.nextElement();
+				logger.debug( ia.getCanonicalHostName() + " " + ia.getHostAddress() );
+				//if( !ia.isSiteLocalAddress() ){
+				//	logger.debug( "  Not a local address..." );
+					if( !ia.isLoopbackAddress() ){
+						logger.debug( "  Not a loopback address..." );
+						if( ia.getHostAddress().indexOf(":") == -1 ){							
+							logger.debug( "  Host address does not contain ':'" );
+							logger.debug( "  Interface: " + iface.getName() + " seems to be InternetInterface. I'll take it...");
+							foundNIC = true;
+						}
+					}
+					//}
+			}
+		}
+
+		readProperties();
+		String wsURL = "http://" + ia.getCanonicalHostName() + ":" + port + "/mbt-services";
+		Endpoint.publish( wsURL, new SoapServices( cl.getOptionValue( "f" ) ) );
+
+		System.out.println( "Now running as a SOAP server. For the WSDL file, see: " + wsURL + "?WSDL" );
 		System.out.println( "Press Ctrl+C to quit" );
 		System.out.println( "" );
 	}
@@ -810,5 +848,13 @@ public class CLI
 			System.out.println( "Type 'java -jar mbt.jar help "+module+"' for help." );
 		}
 		return condition;
+	}
+	
+	private void readProperties() throws ConfigurationException
+	{
+		PropertiesConfiguration conf;
+		conf = new PropertiesConfiguration("mbt.properties");
+	    port = conf.getString( "mbt.ws.port" );
+	    logger.debug("Read port from mbt.properties: " + port);
 	}
 }
