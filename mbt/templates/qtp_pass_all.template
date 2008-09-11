@@ -1,0 +1,5 @@
+'@Description Implements the {EDGE_VERTEX} '{LABEL}'
+Public Function {LABEL}()
+  Reporter.ReportEvent micPass, "{EDGE_VERTEX}: {LABEL}", "Function {LABEL} is not implemented yet!"
+  {LABEL} = True
+End Function
