@@ -1,12 +1,12 @@
 #Fat Jar Configuration File
-#Sat Sep 06 13:37:17 CEST 2008
+#Sun Nov 02 15:20:47 CET 2008
 onejar.license.required=true
 manifest.classpath=
 manifest.removesigners=true
 onejar.checkbox=false
 jarname=mbt.jar
 manifest.mergeall=true
-manifest.mainclass=org.tigris.mbt.CLI
+manifest.mainclass=org.tigris.mbt.GUI.mbt
 manifest.file=<createnew>
 jarname.isextern=false
 onejar.expand=

@@ -247,10 +247,15 @@ public class Util {
 	
 	/**
 	 * @param fileName The XML settings file
+	 * @param runningSoapServices Is mbt to run in webs ervices mode?
+	 * @param dryRun Is mbt to be run in a dry run mode?
+	 * @return
 	 */
-	public static ModelBasedTesting loadMbtFromXml( String fileName, boolean runningSoapServices )
+	public static ModelBasedTesting loadMbtFromXml( String fileName, boolean runningSoapServices, boolean dryRun )
 	{
 		final ModelBasedTesting mbt = new ModelBasedTesting();
+		mbt.setDryRun( dryRun );
+		
 		SAXBuilder parser = new SAXBuilder( "org.apache.crimson.parser.XMLReaderImpl", false );		
 		Document doc;
 		try {
@@ -375,6 +380,11 @@ public class Util {
 					mbt.executePath(executorParam);
 				
 				} else if(executor.equalsIgnoreCase("online")){
+					if ( mbt.isDryRun() )
+					{
+						logger.debug( "Executing a dry run" );
+						mbt.executePath( null, null);
+					}
 					mbt.interractivePath();
 				
 				} else if(executor.equalsIgnoreCase("none") || executor.equals("")){

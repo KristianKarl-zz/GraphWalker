@@ -17,9 +17,11 @@
 
 package org.tigris.mbt;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
@@ -39,6 +41,7 @@ import org.tigris.mbt.statistics.EdgeCoverageStatistics;
 import org.tigris.mbt.statistics.EdgeSequenceCoverageStatistics;
 import org.tigris.mbt.statistics.RequirementCoverageStatistics;
 import org.tigris.mbt.statistics.StateCoverageStatistics;
+
 
 import bsh.EvalError;
 
@@ -64,7 +67,16 @@ public class ModelBasedTesting
 	private String[] template;
 	private boolean backtracking = false;
 	private boolean runRandomGeneratorOnce = false;
+	private boolean dryRun = false;
 	
+	public boolean isDryRun() {
+		return dryRun;
+	}
+
+	public void setDryRun(boolean dryRun) {
+		this.dryRun = dryRun;
+	}
+
 	private String startupScript = "";
 
 	private StatisticsManager statisticsManager;
@@ -470,13 +482,18 @@ public class ModelBasedTesting
 
 	public void executePath(String strClassName) 
 	{
+		if ( isDryRun() )
+		{
+			logger.debug( "Executing a dry run" );
+			executePath( null, null);
+		}
 		if( strClassName == null || strClassName.trim().equals(""))
 			throw new RuntimeException("Needed execution class name is missing as parameter.");
 		Class clsClass = null;
 		try {
 			clsClass = Class.forName(strClassName);
 		} catch (ClassNotFoundException e) {
-			throw new RuntimeException("Cannot locate execution class.", e);
+	        throw new RuntimeException("Cannot locate execution class.\n Current class path is: " + System.getProperty("java.class.path"), e);
 		}
 		executePath(clsClass, null);
 	}
@@ -497,7 +514,34 @@ public class ModelBasedTesting
 
 	public void executePath(Class clsClass, Object objInstance)
 	{
-		if(this.machine == null) getMachine(); 
+		if(this.machine == null) getMachine();
+		
+		if ( isDryRun() )
+		{
+			logger.debug( "Executing a dry run" );
+			while( hasNextStep() )
+			{
+				String[] stepPair = getNextStep();
+				
+				logExecution( getMachine().getLastEdge(), "" );
+				System.out.println( "Do edge: " + Util.getCompleteName( getMachine().getLastEdge() ) );
+				System.out.println( "Data: " + stepPair[ 0 ] );
+				try {
+					System.in.read();
+				} catch (IOException e) {}
+				getStatisticsManager().addProgress(getMachine().getLastEdge());
+				
+				logExecution( getMachine().getCurrentState(), "" );
+				System.out.println( "Do vertex: " + Util.getCompleteName( getMachine().getCurrentState() ) );
+				System.out.println( "Data: " + stepPair[ 1 ] );
+				try {
+					System.in.read();
+				} catch (IOException e) {}
+				getStatisticsManager().addProgress(getMachine().getCurrentState());
+			}	
+			return;
+		}
+		
 		if( clsClass == null && objInstance == null )
 			throw new RuntimeException("Execution instance or class is missing as parameters.");
 		if( clsClass == null )
@@ -592,7 +636,8 @@ public class ModelBasedTesting
 		else
 		{
 			try {
-				clsClass.getMethod( strMethod, null ).invoke( objInstance, null  );
+				Method m = clsClass.getMethod( strMethod, null );
+				m.invoke( objInstance, null  );
 			} 
 			catch (InvocationTargetException e) 
 			{

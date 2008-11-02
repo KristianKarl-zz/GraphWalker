@@ -387,4 +387,25 @@ public class CLITest extends TestCase {
     	assertEquals( 6, outMsg.split("\r\n|\r|\n").length );
     }
     
+    /**
+     * Test command: java -jar mbt.jar soap -f graphml/reqtags/mbt_init6.xml
+     */
+    public void testSOAPWithXML()
+    {
+		String args[] = { "soap", "-f", "graphml/reqtags/mbt_init6.xml" };
+    	runCommand( args );
+    	assertTrue( "No error messages should occur.", errMsg.isEmpty() );
+    	assertEquals( true, outMsg.matches("Now running as a SOAP server. For the WSDL file, see: http://.*:9090/mbt-services\\?WSDL\\s+Press Ctrl\\+C to quit\\s+") );
+    }
+    
+    /**
+     * Test command: java -jar mbt.jar soap
+     */
+    public void testSOAPWithoutXML()
+    {
+		String args[] = { "soap" };
+    	runCommand( args );
+    	assertTrue( "No error messages should occur.", errMsg.isEmpty() );
+    	assertEquals( true, outMsg.matches("Now running as a SOAP server. For the WSDL file, see: http://.*:9090/mbt-services\\?WSDL\\s+Press Ctrl\\+C to quit\\s+") );
+    }
 }

@@ -68,6 +68,7 @@ public class CLI
 	private Timer timer = null;
 	private Options opt = new Options();
 	private String port = null; 
+	private static Endpoint endpoint = null;
 
 	public CLI(){}
 	
@@ -100,6 +101,7 @@ public class CLI
 		try
 		{
 			cli.run( args );
+			endpoint = cli.GetEndpoint();
 		}
 		catch ( Exception e )
 		{
@@ -398,6 +400,7 @@ public class CLI
 		opt.addOption( "t", "report-template", true, "Optional report template to use." );
 		opt.addOption( "r", "report-output", true, "Optional report filename to save report to." );
 		opt.addOption( "w", "weighted", false, "Use weighted values if they exists in the model, and the generator is RANDOM." );
+		opt.addOption( "d", "dry-run", false, "Will execute a dry-run of the model. Dialog will pop up for every edge and vertex." );
 	}
 
 	/**
@@ -491,6 +494,7 @@ public class CLI
 			              "that same file." )
                 .hasArg()
                 .create( "o" ) );
+		opt.addOption( "d", "dry-run", false, "Will execute a dry-run of the model. Dialog will pop up for every edge and vertex." );
 	}
 	
 	/**
@@ -508,18 +512,21 @@ public class CLI
 	 */
 	private void printVersionInformation()
 	{
-		System.out.println( "org.tigris.mbt version 2.1 (revision 578)\n" );
+		System.out.println( "org.tigris.mbt version 2.1 (revision 583)\n" );
 		System.out.println( "org.tigris.mbt is open source software licensed under GPL" );
 		System.out.println( "The software (and it's source) can be downloaded from http://mbt.tigris.org/\n" );
 		System.out.println( "This package contains following software packages:" );
-		System.out.println( "  crimson-1.1.3.jar            http://xml.apache.org/crimson/" );
-		System.out.println( "  commons-collections-3.1.jar  http://jakarta.apache.org/commons/collections/" );
-		System.out.println( "  jdom-1.0.jar                 http://www.jdom.org/" );
-		System.out.println( "  log4j-1.2.8.jar              http://logging.apache.org/log4j/" );
-		System.out.println( "  commons-cli-1.1.jar          http://commons.apache.org/cli/" );
-		System.out.println( "  colt-1.2.jar                 http://dsd.lbl.gov/~hoschek/colt/" );
-		System.out.println( "  jung-1.7.6.jar               http://jung.sourceforge.net/" );
-		System.out.println( "  bsh-2.0b4.jar                http://www.beanshell.org/" );
+		System.out.println( "  crimson-1.1.3.jar              http://xml.apache.org/crimson/" );
+		System.out.println( "  commons-collections-3.2.1.jar  http://jakarta.apache.org/commons/collections/" );
+		System.out.println( "  jdom-1.0.jar                   http://www.jdom.org/" );
+		System.out.println( "  log4j-1.2.15.jar               http://logging.apache.org/log4j/" );
+		System.out.println( "  commons-cli-1.1.jar            http://commons.apache.org/cli/" );
+		System.out.println( "  colt-1.2.jar                   http://dsd.lbl.gov/~hoschek/colt/" );
+		System.out.println( "  jung-1.7.6.jar                 http://jung.sourceforge.net/" );
+		System.out.println( "  bsh-2.0b4.jar                  http://www.beanshell.org/" );
+		System.out.println( "  commons-configuration-1.5.jar  http://commons.apache.org/configuration/" );
+		System.out.println( "  commons-lang-2.4.jar           http://commons.apache.org/lang/" );
+		System.out.println( "  commons-logging-1.1.1.jar      http://commons.apache.org/logging/" );
 	}
 	
 	/**
@@ -530,7 +537,7 @@ public class CLI
 		/**
 		 * Get the model from the graphml file (or folder)
 		 */
-		if( helpNeeded("offline", !cl.hasOption( "f" ), "Missing the input graphml file (folder), See -f (--intput_graphml)") || 
+		if( helpNeeded("offline", !cl.hasOption( "f" ), "Missing the input graphml file (folder), See -f (--input_graphml)") || 
 			helpNeeded("offline", !cl.hasOption( "s" ), "A stop condition must be supplied, See option -s") || 
 			helpNeeded("offline", cl.hasOption( "t" ) && !cl.hasOption( "r" ), "A report output file must be set, See -t, when using a report template") || 
 			helpNeeded("offline", !cl.hasOption( "t" ) && cl.hasOption( "r" ), "A report template must be set, See -r, when using a report output file") || 
@@ -621,7 +628,7 @@ public class CLI
 		/**
 		 * Get the model from the graphml file (or folder)
 		 */
-		if( helpNeeded("online", !cl.hasOption( "f" ), "Missing the input graphml file (folder), See -f (--intput_graphml)") || 
+		if( helpNeeded("online", !cl.hasOption( "f" ), "Missing the input graphml file (folder), See -f (--input_graphml)") || 
 				helpNeeded("online", !cl.hasOption( "s" ), "A stop condition must be supplied, See option -s") || 
 				helpNeeded("online", cl.hasOption( "t" ) && !cl.hasOption( "r" ), "A report output file must be set, See -t, when using a report template") || 
 				helpNeeded("online", !cl.hasOption( "t" ) && cl.hasOption( "r" ), "A report template must be set, See -r, when using a report output file") || 
@@ -660,6 +667,11 @@ public class CLI
 		 * Set backtracking
 		 */
         getMbt().enableBacktrack( cl.hasOption( "b" ) );
+
+        /**
+		 * Set dry-run
+		 */
+        getMbt().setDryRun( cl.hasOption( "d" ) );
 
 		if( cl.hasOption( "o" ) )
 		{
@@ -700,6 +712,10 @@ public class CLI
 		{
 			getMbt().executePath( cl.getOptionValue( "c" ) );
 		}
+		else if( cl.hasOption( "d" ) )
+		{
+			getMbt().executePath( (String)null );
+		}
 		else
 		{
 			getMbt().interractivePath();
@@ -730,7 +746,7 @@ public class CLI
 	 */
 	private void RunCommandSource( CommandLine cl )
 	{
-		if( helpNeeded("source", !cl.hasOption( "f" ), "Missing the input graphml file (folder), See -f (--intput_graphml)") || 
+		if( helpNeeded("source", !cl.hasOption( "f" ), "Missing the input graphml file (folder), See -f (--input_graphml)") || 
 			helpNeeded("source", !cl.hasOption( "t" ), "Missing the template file. See -t (--template)") ) 
 			return;
 
@@ -746,7 +762,7 @@ public class CLI
 	private void RunCommandRequirements( CommandLine cl )
 	{
 		if ( helpNeeded("requirements", !cl.hasOption( "f" ), 
-				"Missing the input graphml file (folder), See -f (--intput_graphml)") ) 
+				"Missing the input graphml file (folder), See -f (--input_graphml)") ) 
 			return;
 
 		getMbt().readGraph( cl.getOptionValue( "f" ) );
@@ -760,7 +776,7 @@ public class CLI
 	private void RunCommandMethods( CommandLine cl )
 	{
 		if ( helpNeeded("methods", !cl.hasOption( "f" ), 
-				"Missing the input graphml file (folder), See -f (--intput_graphml)") ) 
+				"Missing the input graphml file (folder), See -f (--input_graphml)") ) 
 			return;
 
 		getMbt().readGraph( cl.getOptionValue( "f" ) );
@@ -775,7 +791,7 @@ public class CLI
 	private void RunCommandMerge( CommandLine cl )
 	{
 		if ( helpNeeded("merge", !cl.hasOption( "f" ), 
-				"Missing the input graphml file (folder), See -f (--intput_graphml)") ) 
+				"Missing the input graphml file (folder), See -f (--input_graphml)") ) 
 			return;
 		
 		getMbt().readGraph( cl.getOptionValue( "f" ) );
@@ -789,9 +805,13 @@ public class CLI
 		if( helpNeeded("xml", !cl.hasOption( "f" ), "Missing the input xml file, See  option -f") ) 
 			return;
 
-		setMbt( Util.loadMbtFromXml( cl.getOptionValue( "f" ), false ) );
+        setMbt( Util.loadMbtFromXml( cl.getOptionValue( "f" ), false, cl.hasOption( "d" ) ) );
 		
-		if( cl.hasOption( "a" ) ) writeStatisticsVerbose( System.out );
+		if( cl.hasOption( "a" ) )
+		{
+			logger.info( getMbt().getStatisticsString() );
+			writeStatisticsVerbose( System.out );
+		}
 	}
 
 	/**
@@ -800,9 +820,6 @@ public class CLI
 	 * @throws IOException 
 	 */
 	private void RunCommandSoap(CommandLine cl) throws ConfigurationException, IOException {
-		if( helpNeeded("soap", !cl.hasOption( "f" ), "Missing the input xml file, See  option -f") ) 
-			return;
-
 		// Find the real network interface
 		NetworkInterface iface = null;
 		InetAddress ia = null;
@@ -833,7 +850,7 @@ public class CLI
 
 		readProperties();
 		String wsURL = "http://" + ia.getCanonicalHostName() + ":" + port + "/mbt-services";
-		Endpoint.publish( wsURL, new SoapServices( cl.getOptionValue( "f" ) ) );
+		endpoint = Endpoint.publish( wsURL, new SoapServices( cl.getOptionValue( "f" ) ) );
 
 		System.out.println( "Now running as a SOAP server. For the WSDL file, see: " + wsURL + "?WSDL" );
 		System.out.println( "Press Ctrl+C to quit" );
@@ -856,5 +873,19 @@ public class CLI
 		conf = new PropertiesConfiguration("mbt.properties");
 	    port = conf.getString( "mbt.ws.port" );
 	    logger.debug("Read port from mbt.properties: " + port);
+	}
+	
+	public Endpoint GetEndpoint()
+	{
+		return endpoint;
+	}
+	
+	public void StopSOAP()
+	{
+		if ( endpoint != null )
+		{
+		    logger.debug("Stopping the SOAP service");
+			endpoint.stop();
+		}
 	}
 }

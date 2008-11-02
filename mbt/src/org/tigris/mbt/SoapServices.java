@@ -1,5 +1,7 @@
 package org.tigris.mbt;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.Vector;
 
@@ -21,12 +23,15 @@ public class SoapServices {
 	public SoapServices() {
 	}
 
-	public SoapServices( String xmlFile) {
-		this.xmlFile = xmlFile; 
-		mbt = Util.loadMbtFromXml( this.xmlFile, true );
+	public SoapServices( String xmlFile ) {
+		if ( xmlFile != null )
+		{
+			this.xmlFile = xmlFile; 
+			mbt = Util.loadMbtFromXml( this.xmlFile, true, false );
+		}
 	}
 
-	public String getDataValue( String data ) {
+	public String GetDataValue( String data ) {
 		logger.debug( "SOAP service getDataValue recieving: " + data );
 		String value = "";
 		try {
@@ -38,7 +43,7 @@ public class SoapServices {
 		return value;
 	}
 
-	public String getNextStep() {
+	public String GetNextStep() {
 		logger.debug( "SOAP service getNextStep" );
 		String value = "";
 		
@@ -76,7 +81,7 @@ public class SoapServices {
 		return value;
 	}
 
-	public boolean hasNextStep() {
+	public boolean HasNextStep() {
 		logger.debug( "SOAP service hasNextStep" );
 		boolean value = false;
 		if ( hardStop )
@@ -93,15 +98,54 @@ public class SoapServices {
 		return value;
 	}
 
-	public void reload() {
+	public boolean Reload() {
 		logger.debug( "SOAP service reload" );
 		mbt = null;
-		mbt = Util.loadMbtFromXml( this.xmlFile, true );
+		boolean retValue = true;
+		try
+		{
+			mbt = Util.loadMbtFromXml( this.xmlFile, true, false );
+		}
+		catch ( Exception e )
+		{			
+			StringWriter sw = new StringWriter();
+		    PrintWriter pw = new PrintWriter( sw );
+		    e.printStackTrace( pw );
+		    pw.close();	    		    
+			logger.error( sw.toString() );
+    		System.err.println( e.getMessage() );
+    		retValue = false;	
+		}
 		hardStop = false;
-		logger.debug( "SOAP service reload returning" );
+		logger.debug( "SOAP service reload returning: " + retValue );
+		return retValue;
 	}
 
-	public String getStatistics() {
+	public boolean Load( String xmlFile ) {
+		logger.debug( "SOAP service load recieving: " + xmlFile );
+		this.xmlFile = xmlFile; 
+		mbt = null;
+		boolean retValue = true;
+		try
+		{
+			mbt = Util.loadMbtFromXml( this.xmlFile, true, false );
+		}
+		catch ( Exception e )
+		{			
+			StringWriter sw = new StringWriter();
+		    PrintWriter pw = new PrintWriter( sw );
+		    e.printStackTrace( pw );
+		    pw.close();	    		    
+			logger.error( sw.toString() );
+    		System.err.println( e.getMessage() );
+    		retValue = false;	
+		}
+		hardStop = false;
+		logger.debug( "SOAP service load returning: " + retValue );
+		return retValue;
+	}
+
+	public String GetStatistics() {
 		logger.debug( "SOAP service getStatistics" );
 		logger.debug( "SOAP service getStatistics returning: " + mbt.getStatisticsString() );
 		return mbt.getStatisticsString();
