@@ -119,7 +119,7 @@ public class mbt extends JFrame implements ActionListener, ItemListener {
 		setTitle("MBT Setup and Launch Utility");
 
 		// Create a file chooser
-		fileChooser = new JFileChooser();
+		fileChooser = new JFileChooser( System.getProperty("user.dir") );
 		GridBagConstraints c = new GridBagConstraints();
 
 		commandPanel = new JPanel(new GridBagLayout());
@@ -351,12 +351,12 @@ public class mbt extends JFrame implements ActionListener, ItemListener {
 	private void removeAllPanels() {
 		remove(commandPanel);
 		remove(modelPanel);
-		remove(xmlPanel);
 		remove(outputFilePanel);
 		remove(templatePanel);
 		remove(generatorPanel);
 		remove(optionsPanel);
 		remove(stopConditionPanel);
+		remove(xmlPanel);
 		remove(outputPanel);
 		remove(runPanel);
 	}
