@@ -339,7 +339,7 @@ public class CLI
 			header = "Run MBT as a Web Services (SOAP) server.\n" +
 					"To see the services, see the WSDL file at: http://localhost:8080/mbt-services?WSDL";
 		} else if(helpSection.equalsIgnoreCase("gui")){
-			buildSoapCLI();
+			buildGuiCLI();
 			header = "Run MBT in a GUI mode.\n" +
 					"All other commands are available in this mode.";
 		} else {
@@ -534,7 +534,7 @@ public class CLI
 	 */
 	private void printVersionInformation()
 	{
-		System.out.println( "org.tigris.mbt version 2.1 (revision 588)\n" );
+		System.out.println( "org.tigris.mbt version 2.1 (revision 590)\n" );
 		System.out.println( "org.tigris.mbt is open source software licensed under GPL" );
 		System.out.println( "The software (and it's source) can be downloaded from http://mbt.tigris.org/\n" );
 		System.out.println( "This package contains following software packages:" );
