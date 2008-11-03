@@ -60,6 +60,7 @@ public class Util {
 	static Logger logger = setupLogger(Util.class);
 	static private Random random = new Random();
 	public static String newline = System.getProperty("line.separator");
+	static private Timer timer = null;
 	
 	public static String getCompleteName( AbstractElement element )
 	{
@@ -315,7 +316,6 @@ public class Util {
 		}
 
 		String logInterval = root.getAttributeValue("LOG-INTERVAL");
-		Timer timer = null;
 
 		if( logInterval != null )
 		{
@@ -404,6 +404,13 @@ public class Util {
 			}
 		}
 		return mbt;
+	}
+
+	public static void killTimer() {
+		if(timer != null)
+		{
+			timer.cancel();
+		}
 	}
 
 	private static String getScriptContent(List scripts) {

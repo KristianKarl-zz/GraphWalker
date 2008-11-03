@@ -834,17 +834,14 @@ public class CLI
 			{
 				ia = (InetAddress)ips.nextElement();
 				logger.debug( ia.getCanonicalHostName() + " " + ia.getHostAddress() );
-				//if( !ia.isSiteLocalAddress() ){
-				//	logger.debug( "  Not a local address..." );
-					if( !ia.isLoopbackAddress() ){
-						logger.debug( "  Not a loopback address..." );
-						if( ia.getHostAddress().indexOf(":") == -1 ){							
-							logger.debug( "  Host address does not contain ':'" );
-							logger.debug( "  Interface: " + iface.getName() + " seems to be InternetInterface. I'll take it...");
-							foundNIC = true;
-						}
+				if( !ia.isLoopbackAddress() ){
+					logger.debug( "  Not a loopback address..." );
+					if( ia.getHostAddress().indexOf(":") == -1 ){							
+						logger.debug( "  Host address does not contain ':'" );
+						logger.debug( "  Interface: " + iface.getName() + " seems to be InternetInterface. I'll take it...");
+						foundNIC = true;
 					}
-					//}
+				}
 			}
 		}
 

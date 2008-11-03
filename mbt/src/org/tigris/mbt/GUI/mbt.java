@@ -14,6 +14,10 @@ import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -28,9 +32,12 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.xml.ws.Endpoint;
 
 import org.tigris.mbt.CLI;
 import org.tigris.mbt.Keywords;
+import org.tigris.mbt.SoapServices;
+import org.tigris.mbt.Util;
 
 public class mbt extends JFrame implements ActionListener, ItemListener {
 
@@ -38,6 +45,7 @@ public class mbt extends JFrame implements ActionListener, ItemListener {
 	private CLI cli = null;
 
 	Thread workerThread = null;
+	private Endpoint endpoint = null;
 
 	JFileChooser fileChooser;
 
@@ -268,10 +276,11 @@ public class mbt extends JFrame implements ActionListener, ItemListener {
 			}
 		} else if (e.getSource() == runButton) {
 			if (runButton.getText().equals("Stop")) {
-				workerThread.stop();
+				if ( workerThread instanceof SOAPThread )
+				{
+					((SOAPThread)workerThread).stopService();
+				}
 				workerThread = null;
-				cli.StopSOAP();
-				cli = null;
 				setGUIIdleMode();
 			} else if (commandsComboBox.getSelectedItem().equals("merge")) {
 				workerThread = new MergeThread();
@@ -571,9 +580,39 @@ public class mbt extends JFrame implements ActionListener, ItemListener {
 		public void run() {
 			reset();
 			setGUIRunningMode();
-			String args[] = { "soap", "-f", xmlTextField.getText() };
-			cli = new CLI();
-			cli.main(args);
+			NetworkInterface iface = null;
+			InetAddress ia = null;
+			boolean foundNIC = false;
+			try {
+				for( Enumeration<NetworkInterface> ifaces = NetworkInterface.getNetworkInterfaces();
+				     ifaces.hasMoreElements() && foundNIC == false; )
+				{
+					iface = (NetworkInterface)ifaces.nextElement();
+					for ( Enumeration<InetAddress> ips = iface.getInetAddresses();
+					      ips.hasMoreElements() && foundNIC == false; )
+					{
+						ia = (InetAddress)ips.nextElement();
+						if( !ia.isLoopbackAddress() ){
+							if( ia.getHostAddress().indexOf(":") == -1 ){							
+								foundNIC = true;
+							}
+						}
+					}
+				}
+			} catch (SocketException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			String wsURL = "http://" + ia.getCanonicalHostName() + ":9090/mbt-services";
+			endpoint = Endpoint.publish( wsURL, new SoapServices( xmlTextField.getText() ) );
+			System.out.println( "Now running as a SOAP server." );
+			System.out.println( "For the WSDL file, see: " + wsURL + "?WSDL" );
+		}
+		
+		public void stopService()
+		{
+			endpoint.stop();
+			Util.killTimer();
 		}
 	}
 
