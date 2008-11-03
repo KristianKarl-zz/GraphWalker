@@ -337,15 +337,6 @@ public class mbt extends JFrame implements ActionListener, ItemListener {
 		}
 	}
 
-	public static void main(String[] args) {
-		try {
-			new mbt();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
 	private static void setMyConstraints(GridBagConstraints c, int gridx,
 			int gridy, int anchor) {
 		c.gridx = gridx;

@@ -166,6 +166,10 @@ public class CLI
 			{
 				buildSoapCLI();
 			}
+			else if ( args[ 0 ].equals( "gui" ) )
+			{
+				buildGuiCLI();
+			}
 			else if ( args[ 0 ].equals( "-v" ) || args[ 0 ].equals( "--version" ) )
 			{
 				printVersionInformation();
@@ -241,6 +245,13 @@ public class CLI
 			{
 				RunCommandSoap( cl );
 			}
+			/**
+			 *  Command: gui
+			 */
+			else if ( args[ 0 ].equals( "gui" ) )
+			{
+				RunCommandGui( cl );
+			}
         }		
 		catch ( ArrayIndexOutOfBoundsException e )
         {
@@ -277,6 +288,7 @@ public class CLI
 		System.out.println( "    merge" );
 		System.out.println( "    xml" );
 		System.out.println( "    soap" );
+		System.out.println( "    gui" );
 		System.out.println( "    source\n" );
 		System.out.println( "Type 'java -jar mbt.jar -v (--version)' for version information." );
 	}
@@ -326,6 +338,10 @@ public class CLI
 			buildSoapCLI();
 			header = "Run MBT as a Web Services (SOAP) server.\n" +
 					"To see the services, see the WSDL file at: http://localhost:8080/mbt-services?WSDL";
+		} else if(helpSection.equalsIgnoreCase("gui")){
+			buildSoapCLI();
+			header = "Run MBT in a GUI mode.\n" +
+					"All other commands are available in this mode.";
 		} else {
 			System.err.println( "Type 'java -jar mbt.jar help' for usage." );
 			return;
@@ -508,11 +524,17 @@ public class CLI
 	}
 	
 	/**
+	 * Build the command gui command line parser
+	 */
+	private void buildGuiCLI() {
+	}
+	
+	/**
 	 * Print version information
 	 */
 	private void printVersionInformation()
 	{
-		System.out.println( "org.tigris.mbt version 2.1 (revision 583)\n" );
+		System.out.println( "org.tigris.mbt version 2.1 (revision 588)\n" );
 		System.out.println( "org.tigris.mbt is open source software licensed under GPL" );
 		System.out.println( "The software (and it's source) can be downloaded from http://mbt.tigris.org/\n" );
 		System.out.println( "This package contains following software packages:" );
@@ -852,6 +874,14 @@ public class CLI
 		System.out.println( "Now running as a SOAP server. For the WSDL file, see: " + wsURL + "?WSDL" );
 		System.out.println( "Press Ctrl+C to quit" );
 		System.out.println( "" );
+	}
+
+	/**
+	 * Run the gui command
+	 * @throws IOException 
+	 */
+	private void RunCommandGui(CommandLine cl) throws IOException {
+		new org.tigris.mbt.GUI.mbt();
 	}
 
 	private boolean helpNeeded(String module, boolean condition, String message)
