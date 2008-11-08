@@ -408,4 +408,26 @@ public class CLITest extends TestCase {
     	assertTrue( "No error messages should occur.", errMsg.isEmpty() );
     	assertEquals( true, outMsg.matches("Now running as a SOAP server. For the WSDL file, see: http://.*:9090/mbt-services\\?WSDL\\s+Press Ctrl\\+C to quit\\s+") );
     }
+    
+    /**
+     * Test command: java -jar mbt.jar soap -f graphml/reqtags/mbt_init6.xml
+     */
+    public void testSOAPWithCorrectClassPathInXML()
+    {
+		String args[] = { "soap", "-f", "graphml/reqtags/mbt_init8.xml" };
+    	runCommand( args );
+    	assertTrue( "No error messages should occur.", errMsg.isEmpty() );
+    	assertEquals( true, outMsg.matches("Now running as a SOAP server. For the WSDL file, see: http://.*:9090/mbt-services\\?WSDL\\s+Press Ctrl\\+C to quit\\s+") );
+    }
+    
+    /**
+     * Test command: java -jar mbt.jar soap -f graphml/reqtags/mbt_init6.xml
+     */
+    public void testSOAPWithIncorrectClassPathInXML()
+    {
+		String args[] = { "soap", "-f", "graphml/reqtags/mbt_init9.xml" };
+    	runCommand( args );
+    	assertTrue( "No error messages should occur.", errMsg.isEmpty() );
+    	assertEquals( true, outMsg.matches("Now running as a SOAP server. For the WSDL file, see: http://.*:9090/mbt-services\\?WSDL\\s+Press Ctrl\\+C to quit\\s+") );
+    }
 }

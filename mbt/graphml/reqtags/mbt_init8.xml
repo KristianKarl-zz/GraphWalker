@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE MBTINIT SYSTEM "../../templates/mbt_setup.dtd" >
+<MBTINIT LOG-INTERVAL="1" >
+  <MODEL PATH="graphml/reqtags/ExtendedMain.graphml"/>
+  <CLASS PATH="lib/colt-1.2.jar"/>
+  <GENERATOR TYPE="RANDOM">
+  	<OR>
+	  	<AND>
+	  		<CONDITION TYPE="EDGE_COVERAGE" VALUE="100"/>
+	  		<CONDITION TYPE="STATE_COVERAGE" VALUE="100"/>
+	  	</AND>
+  		<CONDITION TYPE="TEST_LENGTH" VALUE="50"/>
+  	</OR>
+  </GENERATOR>
+</MBTINIT>

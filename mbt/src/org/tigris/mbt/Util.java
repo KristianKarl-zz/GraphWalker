@@ -277,6 +277,20 @@ public class Util {
 			mbt.readGraph(((Element) i.next()).getAttributeValue("PATH"));
 		}
 		
+		List classPath = root.getChildren("CLASS");
+		for(Iterator i=classPath.iterator();i.hasNext();)
+		{
+			String classPaths[] = ((Element) i.next()).getAttributeValue("PATH").split(":");
+			for (int j = 0; j < classPaths.length; j++) {
+				try {
+					ClassPathHack.addFile(classPaths[j]);
+				} catch (Exception e) {					
+					throw new RuntimeException("Could not add: '" + classPaths[j] + "' to CLASSPATH\n" +
+							"Please review your xml file: '" + fileName + "' at CLASS PATH" ,e);
+				}
+			}			
+		}
+
 		if(root.getAttributeValue("EXTENDED").equalsIgnoreCase("true"))
 		{
 			mbt.enableExtended(true);
