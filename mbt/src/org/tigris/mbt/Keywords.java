@@ -224,7 +224,7 @@ public class Keywords {
 	*/
 	public static boolean isKeyWord( String wordToCheck )
 	{
-		return reservedKeyWords.contains(wordToCheck);
+		return reservedKeyWords.contains(wordToCheck.toUpperCase());
 	}
 	
 	/**
@@ -257,7 +257,7 @@ public class Keywords {
 	{
 		if ( presumedCondition == null )
 			return false;
-		return stopConditions.containsKey(presumedCondition);
+		return stopConditions.containsKey(presumedCondition.toUpperCase());
 	}
 	
 	/**
@@ -267,7 +267,7 @@ public class Keywords {
 	static public int getStopCondition(String stopCondition)
 	{
 		if(!isStopCondition(stopCondition)) return -1;
-		return ((Integer)stopConditions.get(stopCondition)).intValue();
+		return ((Integer)stopConditions.get(stopCondition.toUpperCase())).intValue();
 	}
 	
 	/**
@@ -297,7 +297,7 @@ public class Keywords {
 	{
 		if ( presumedGenerator == null )
 			return false;
-		return generators.containsKey(presumedGenerator);
+		return generators.containsKey(presumedGenerator.toUpperCase());
 	}
 	
 	/**
@@ -307,7 +307,7 @@ public class Keywords {
 	static public int getGenerator(String generator)
 	{
 		if(!isGenerator(generator)) return -1;
-		return ((Integer)generators.get(generator)).intValue();
+		return ((Integer)generators.get(generator.toUpperCase())).intValue();
 	}
 	
 }
