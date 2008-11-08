@@ -427,7 +427,6 @@ public class CLITest extends TestCase {
     {
 		String args[] = { "soap", "-f", "graphml/reqtags/mbt_init9.xml" };
     	runCommand( args );
-    	assertTrue( "No error messages should occur.", errMsg.isEmpty() );
-    	assertEquals( true, outMsg.matches("Now running as a SOAP server. For the WSDL file, see: http://.*:9090/mbt-services\\?WSDL\\s+Press Ctrl\\+C to quit\\s+") );
+    	assertEquals( true, errMsg.matches("Could not add: 'non-existing-path' to CLASSPATH\\s+Please review your xml file: 'graphml/reqtags/mbt_init9.xml' at CLASS PATH\\s+Type 'java -jar mbt.jar help soap' for help.\\s+") );
     }
 }

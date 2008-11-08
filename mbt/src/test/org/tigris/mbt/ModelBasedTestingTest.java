@@ -95,7 +95,7 @@ public class ModelBasedTestingTest extends TestCase {
 		System.setOut( oldOut );
 
 		assertEquals("REQUIREMENTS", mbt.toString());
-		assertEquals(11, innerOut.toString().trim().split("\r\n|\r|\n").length);
+		assertEquals(6, innerOut.toString().trim().split("\r\n|\r|\n").length);
 	}
 	
 	public void testGetdataValue() throws InvalidDataException
@@ -106,13 +106,13 @@ public class ModelBasedTestingTest extends TestCase {
 
 		System.setOut( new PrintStream(innerOut) );
 		System.setIn( redirectIn() );
-		ModelBasedTesting mbt = Util.loadMbtFromXml("graphml/getDataValue/getDataValue.xml",false, false);
+		ModelBasedTesting mbt = Util.loadMbtFromXml("graphml/reqtags/mbt_init10.xml",false, false);
 		System.setIn( oldIn );
 		System.setOut( oldOut );
 		
-		System.out.print(mbt.getDataValue("v"));
+		System.out.print(mbt.getDataValue("incorrect"));
 
-		assertEquals("[Hello,  , world]", mbt.getDataValue("v"));
+		assertEquals("0", mbt.getDataValue("incorrect"));
 	}
 	
 }
