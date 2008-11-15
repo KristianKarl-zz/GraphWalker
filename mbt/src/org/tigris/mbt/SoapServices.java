@@ -43,6 +43,18 @@ public class SoapServices {
 		return value;
 	}
 
+	public String ExecAction( String action ) {
+		logger.debug( "SOAP service ExecAction recieving: " + action );
+		String value = "";
+		try {
+			value = mbt.execAction( action );
+		} catch (InvalidDataException e) {
+			logger.error( e );
+		}
+		logger.debug( "SOAP service getDataValue returning: " + value );
+		return value;
+	}
+
 	public String GetNextStep() {
 		logger.debug( "SOAP service getNextStep" );
 		String value = "";
