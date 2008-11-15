@@ -900,6 +900,11 @@ public class CLI
 		conf = new PropertiesConfiguration("mbt.properties");
 	    port = conf.getString( "mbt.ws.port" );
 	    logger.debug("Read port from mbt.properties: " + port);
+	    if (port==null)
+	    {
+	    	port = "9090";
+		    logger.debug("Setting port to: 9090");
+	    }
 	}
 	
 	public Endpoint GetEndpoint()
