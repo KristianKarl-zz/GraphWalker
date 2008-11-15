@@ -115,4 +115,21 @@ public class ModelBasedTestingTest extends TestCase {
 		assertEquals("0", mbt.getDataValue("incorrect"));
 	}
 	
+	
+	public void testExecAction() throws InvalidDataException
+	{
+		InputStream oldIn = System.in;
+		PrintStream oldOut = System.out;
+		ByteArrayOutputStream innerOut = new ByteArrayOutputStream();
+
+		System.setOut( new PrintStream(innerOut) );
+		System.setIn( redirectIn() );
+		ModelBasedTesting mbt = Util.loadMbtFromXml("graphml/reqtags/mbt_init11.xml",false, false);
+		System.setIn( oldIn );
+		System.setOut( oldOut );
+
+		System.out.print(mbt.execAction("str.toUpperCase()"));
+
+		assertEquals("ABC", mbt.execAction("str.toUpperCase()"));
+	}
 }

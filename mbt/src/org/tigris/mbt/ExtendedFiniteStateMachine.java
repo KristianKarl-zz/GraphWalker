@@ -124,6 +124,23 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 		throw new InvalidDataException( "The data name: '" + dataName + "', does not exist in the namespace." );
 	}
 
+	/**
+	 * Executes an action, and returns any outcome as a string.
+	 * @param action
+	 * @return
+	 * @throws InvalidDataException is thrown if the data is not found in the data space
+	 */
+	public String execAction( String action ) throws InvalidDataException
+	{
+		Object res = null;
+		try {
+			res = interpreter.eval(action);
+		} catch (EvalError e) {
+			throw new InvalidDataException( "The action: '" + action + "', does not evaluate correctly. Detail: " + e.getMessage() );
+		}
+		return res.toString();
+	}
+
 	public String getCurrentDataString() 
 	{
 		String retur = "";

@@ -228,6 +228,25 @@ public class ModelBasedTesting
 		throw new InvalidDataException( "Data can only be fetched from a ExtendedFiniteStateMachine. Please enable EFSM." );
 	}
 
+	
+	/**
+	 * Executes an action, and returns any outcome as a string.
+	 * @param data The name of the data object and the method, which value is to be retrieved.
+	 * @return The value of the data object's method. The value is always returned a s string. It is
+	 * the calling parties task to parse the string and convert it to correct type.
+	 * @throws InvalidDataException If the retrieval of the data fails, the InvalidDataException is thrown. For example
+	 * if a FiniteStateMachine is used, which has no data space, the exception is thrown.
+	 */
+	public String execAction( String action ) throws InvalidDataException
+	{
+		Util.AbortIf(this.machine == null, "No machine has been defined!");
+		if ( this.machine instanceof ExtendedFiniteStateMachine )
+		{
+			return ((ExtendedFiniteStateMachine)this.machine).execAction( action );
+		}
+		throw new InvalidDataException( "Data can only be fetched from a ExtendedFiniteStateMachine. Please enable EFSM." );
+	}
+
 	public void enableExtended(boolean extended) 
 	{
 		if(extended)
