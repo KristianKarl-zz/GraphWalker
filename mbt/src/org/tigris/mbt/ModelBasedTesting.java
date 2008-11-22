@@ -247,6 +247,28 @@ public class ModelBasedTesting
 		throw new InvalidDataException( "Data can only be fetched from a ExtendedFiniteStateMachine. Please enable EFSM." );
 	}
 
+	
+	/**
+	 * Tells mbt that a requirement (if any), has passed or failed. MBT will look at the most recent edge or
+	 * vertex and check if they have requirement. If none is found, then no action is taken. If req. is found
+	 * mbt will log the information using the logger.   
+	 * @param pass Tells mbt if the requirement has pass (true), or failed (false). 
+	 */
+	public void passRequirement( boolean pass )
+	{
+		Util.AbortIf(this.machine == null, "No machine has been defined!");
+		DirectedSparseVertex v = getMachine().getCurrentState();
+		if ( v.containsUserDatumKey( Keywords.REQTAG_KEY ) )
+		{
+			String str = "REQUIREMENT: '" + v.getUserDatum( Keywords.REQTAG_KEY ) + "' has ";
+			if ( pass )
+				str += "PASSED, at " + Util.getCompleteName(v);
+			else
+				str += "FAILED, at " + Util.getCompleteName(v);
+			logger.info( str );
+		}
+	}
+
 	public void enableExtended(boolean extended) 
 	{
 		if(extended)

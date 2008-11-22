@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE MBTINIT SYSTEM "templates/mbt_setup.dtd" >
 <MBTINIT EXTENDED="true" EXECUTOR="none">
-  <MODEL PATH="graphml/methods"/>
+  <MODEL PATH="graphml/test01"/>
   <GENERATOR TYPE="RANDOM">
     <CONDITION TYPE="TEST_DURATION" VALUE="120"/>
   </GENERATOR>

@@ -55,6 +55,18 @@ public class SoapServices {
 		return value;
 	}
 
+	public void PassRequirement( String pass ) {
+		logger.debug( "SOAP service PassRequirement recieving: " + pass );
+		if ( pass.toUpperCase().equals("true") )
+			mbt.passRequirement(true);
+		else if ( pass.toUpperCase().equals("false") )
+			mbt.passRequirement(false);
+		else
+			logger.error( "SOAP service PassRequirement dont know how to handle: " + pass +
+					"\nOnly the strings true or false are permitted" );
+			
+	}
+
 	public String GetNextStep() {
 		logger.debug( "SOAP service getNextStep" );
 		String value = "";
