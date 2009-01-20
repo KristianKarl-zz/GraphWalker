@@ -455,6 +455,8 @@ public class ModelBasedTesting
 	public void interractivePath(InputStream in)
 	{
 		Vector stepPair = new Vector();
+		String req = "";
+		
 		for( char input = '0'; true; input = Util.getInput() )
 		{
 			logger.debug("Recieved: '"+ input+"'");
@@ -471,9 +473,21 @@ public class ModelBasedTesting
 				if( !hasNextStep() && ( stepPair.size() == 0 ) )
 					return;
 				if( stepPair.size() == 0 )
+				{
 					stepPair = new Vector( Arrays.asList( getNextStep() ) );
+					req = getRequirement( getMachine().getLastEdge() );
+				}
+				else
+				{
+					req = getRequirement( getMachine().getCurrentState() );
+				}
 				
-				System.out.print( (String) stepPair.remove(0) );
+				if ( req.length() > 0 )
+				{
+					req = "/" + req;
+				}
+				
+				System.out.print( (String) stepPair.remove(0) + req );
 				
 				String addInfo = "";
 				if( ( stepPair.size() == 1 && hasCurrentEdgeBackTracking() ) || 
@@ -503,17 +517,40 @@ public class ModelBasedTesting
 			} 
 		}
 	}
+	
+	public String getRequirement( AbstractElement element )
+	{
+		String req = "";
+		if( element instanceof DirectedSparseEdge )
+		{
+			if ( getMachine().getLastEdge().containsUserDatumKey( Keywords.REQTAG_KEY ) )
+			{
+				req = "REQUIREMENT: '" + getMachine().getLastEdge().getUserDatum( Keywords.REQTAG_KEY ) + "'";
+			}
+			return req;
+		}
+		else if( element instanceof DirectedSparseVertex )
+		{
+			if ( getMachine().getCurrentState().containsUserDatumKey( Keywords.REQTAG_KEY ) )
+			{
+				req = "REQUIREMENT: '" + getMachine().getCurrentState().getUserDatum( Keywords.REQTAG_KEY ) + "'";
+			}
+			return req;
+		}
+		throw new RuntimeException( "Element type not supported '" + element.getClass().getName() + "'" );
+	}
 
 	public void logExecution( AbstractElement element, String additionalInfo ) 
 	{
+		String req = " " + getRequirement( element );
 		if( element instanceof DirectedSparseEdge )
 		{
-			logger.info( "Edge: " + Util.getCompleteName( getMachine().getLastEdge() ) + additionalInfo );
+			logger.info( "Edge: " + Util.getCompleteName( getMachine().getLastEdge() ) + req + additionalInfo );
 			return;
 		}
-		if( element instanceof DirectedSparseVertex )
+		else if( element instanceof DirectedSparseVertex )
 		{
-			logger.info( "Vertex: " + Util.getCompleteName( getMachine().getCurrentState() ) + 
+			logger.info( "Vertex: " + Util.getCompleteName( getMachine().getCurrentState() ) + req + 
 					    ( getMachine().hasInternalVariables() ? " DATA: " + getMachine().getCurrentDataString() : "" ) 
 					    + additionalInfo );
 			return;
