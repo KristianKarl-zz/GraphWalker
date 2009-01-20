@@ -301,6 +301,15 @@ public class Util {
 			mbt.enableExtended(false);
 		}
 		
+		if(root.getAttributeValue("WEIGHT").equalsIgnoreCase("true"))
+		{
+			mbt.setWeighted(true);
+		}
+		else
+		{
+			mbt.setWeighted(false);
+		}
+		
 		List generators = root.getChildren("GENERATOR");
 
 		if(generators.size()==0)

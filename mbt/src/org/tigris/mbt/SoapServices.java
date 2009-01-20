@@ -39,6 +39,9 @@ public class SoapServices {
 		} catch (InvalidDataException e) {
 			logger.error( e );
 		}
+		catch (Exception e) {
+			logger.error( e );
+		}
 		logger.debug( "SOAP service getDataValue returning: " + value );
 		return value;
 	}
@@ -51,15 +54,18 @@ public class SoapServices {
 		} catch (InvalidDataException e) {
 			logger.error( e );
 		}
-		logger.debug( "SOAP service getDataValue returning: " + value );
+		catch (Exception e) {
+			logger.error( e );
+		}
+		logger.debug( "SOAP service ExecAction returning: " + value );
 		return value;
 	}
 
 	public void PassRequirement( String pass ) {
 		logger.debug( "SOAP service PassRequirement recieving: " + pass );
-		if ( pass.toUpperCase().equals("true") )
+		if ( pass.toUpperCase().equals("TRUE") )
 			mbt.passRequirement(true);
-		else if ( pass.toUpperCase().equals("false") )
+		else if ( pass.toUpperCase().equals("FALSE") )
 			mbt.passRequirement(false);
 		else
 			logger.error( "SOAP service PassRequirement dont know how to handle: " + pass +
