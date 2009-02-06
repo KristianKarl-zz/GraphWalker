@@ -291,7 +291,7 @@ public class Util {
 			}			
 		}
 
-		if(root.getAttributeValue("EXTENDED").equalsIgnoreCase("true"))
+		if( root.getAttributeValue("EXTENDED") != null && root.getAttributeValue("EXTENDED").equalsIgnoreCase("true") )
 		{
 			mbt.enableExtended(true);
 			mbt.setStartupScript(getScriptContent(root.getChildren("SCRIPT")));
@@ -301,7 +301,7 @@ public class Util {
 			mbt.enableExtended(false);
 		}
 		
-		if(root.getAttributeValue("WEIGHT").equalsIgnoreCase("true"))
+		if(root.getAttributeValue("WEIGHT") != null && root.getAttributeValue("WEIGHT").equalsIgnoreCase("true"))
 		{
 			mbt.setWeighted(true);
 		}
