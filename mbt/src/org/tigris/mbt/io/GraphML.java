@@ -460,7 +460,7 @@ public class GraphML extends AbstractModelHandler
 						// weight must be associated with a value, which depicts the probability for the edge
 						// to be executed.
 						// A value of 0.05 is the same as 5% chance of going down this road.
-						p = Pattern.compile( "\\n(weight\\s+=\\s+(.*))", Pattern.MULTILINE );
+						p = Pattern.compile( "\\n(weight\\s*=\\s*(.*))", Pattern.MULTILINE );
 						m = p.matcher( str );
 						if ( m.find() )
 						{
