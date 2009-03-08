@@ -10,7 +10,10 @@ import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.log4j.Logger;
 import org.tigris.mbt.CLI;
+import org.tigris.mbt.ModelBasedTesting;
+import org.tigris.mbt.Util;
 
 import junit.framework.TestCase;
 
@@ -22,7 +25,7 @@ public class CLITest extends TestCase {
 	StringBuffer errOutput;
 	String outMsg;
 	String errMsg;
-
+	static Logger logger = Util.setupLogger( CLITest.class );
 	
 	private OutputStream redirectOut()
 	{
@@ -76,6 +79,8 @@ public class CLITest extends TestCase {
 
     	outMsg = stdOutput.toString();
     	errMsg = errOutput.toString();
+    	logger.debug( "stdout: " + outMsg );
+    	logger.debug( "stderr: " + errMsg );
 	}
 
 	private void runCommandWithInputFile( String args[], String fileName )
@@ -428,5 +433,15 @@ public class CLITest extends TestCase {
 		String args[] = { "soap", "-f", "graphml/reqtags/mbt_init9.xml" };
     	runCommand( args );
     	assertEquals( true, errMsg.matches("Could not add: 'non-existing-path' to CLASSPATH\\s+Please review your xml file: 'graphml/reqtags/mbt_init9.xml' at CLASS PATH\\s+Type 'java -jar mbt.jar help soap' for help.\\s+") );
+    }
+    
+    /**
+     * Test command: java -jar mbt.jar xml -f xml/ReachedState.xml
+     */
+    public void testReachedStateXML()
+    {
+		String args[] = { "xml", "-f", "xml/ReachedState.xml" };
+    	runCommand( args );
+    	assertTrue( "No error messages should occur.", errMsg.isEmpty() );
     }
 }
