@@ -537,7 +537,7 @@ public class ModelBasedTesting
 			}
 			return req;
 		}
-		throw new RuntimeException( "Element type not supported '" + element.getClass().getName() + "'" );
+		return "";
 	}
 
 	public void logExecution( AbstractElement element, String additionalInfo ) 
@@ -555,7 +555,6 @@ public class ModelBasedTesting
 					    + additionalInfo );
 			return;
 		}
-		throw new RuntimeException( "Element type not supported '" + element.getClass().getName() + "'" );
 	}
 
 	public void executePath(String strClassName) 
@@ -757,11 +756,13 @@ public class ModelBasedTesting
 			if(stepPair[0].trim()!="")
 			{
 				out.println( stepPair[0] );
+				logExecution( getMachine().getLastEdge(), "" );
 				getStatisticsManager().addProgress(getMachine().getLastEdge());
 			}
 			if(stepPair[1].trim()!="")
 			{
 				out.println( stepPair[1] );
+				logExecution( getMachine().getCurrentState(), "" );
 				getStatisticsManager().addProgress(getMachine().getCurrentState());
 			}
 
