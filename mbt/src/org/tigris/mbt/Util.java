@@ -247,12 +247,44 @@ public class Util {
 	}
 	
 	/**
+	 * Load MBT settings from a xml file
 	 * @param fileName The XML settings file
-	 * @param runningSoapServices Is mbt to run in webs ervices mode?
+	 * @return
+	 */
+	public static ModelBasedTesting loadMbtAsWSFromXml( String fileName )
+	{
+		return loadXml( fileName, true, false );
+	}
+
+	/**
+	 * Load MBT settings from a xml file
+	 * @param fileName The XML settings file
 	 * @param dryRun Is mbt to be run in a dry run mode?
 	 * @return
 	 */
-	public static ModelBasedTesting loadMbtFromXml( String fileName, boolean runningSoapServices, boolean dryRun )
+	public static ModelBasedTesting loadMbtFromXml( String fileName, boolean dryRun )
+	{
+		return loadXml( fileName, false, dryRun );
+	}
+
+	/**
+	 * Load MBT settings from a xml file
+	 * @param fileName The XML settings file
+	 * @return
+	 */
+	public static ModelBasedTesting loadMbtFromXml( String fileName )
+	{
+		return loadXml( fileName, false, false );
+	}
+
+	/**
+	 * Load MBT settings from a xml file
+	 * @param fileName The XML settings file
+	 * @param runningSoapServices Is mbt to run in Web Services mode?
+	 * @param dryRun Is mbt to be run in a dry run mode?
+	 * @return
+	 */
+	private static ModelBasedTesting loadXml( String fileName, boolean runningSoapServices, boolean dryRun )
 	{
 		final ModelBasedTesting mbt = new ModelBasedTesting();
 		mbt.setDryRun( dryRun );

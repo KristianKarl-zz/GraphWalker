@@ -827,7 +827,7 @@ public class CLI
 		if( helpNeeded("xml", !cl.hasOption( "f" ), "Missing the input xml file, See  option -f") ) 
 			return;
 
-        setMbt( Util.loadMbtFromXml( cl.getOptionValue( "f" ), false, cl.hasOption( "d" ) ) );
+        setMbt( Util.loadMbtFromXml( cl.getOptionValue( "f" ), cl.hasOption( "d" ) ) );
 		
 		if( cl.hasOption( "a" ) )
 		{

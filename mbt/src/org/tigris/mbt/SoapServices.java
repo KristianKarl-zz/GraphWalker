@@ -27,7 +27,7 @@ public class SoapServices {
 		if ( xmlFile != null )
 		{
 			this.xmlFile = xmlFile; 
-			mbt = Util.loadMbtFromXml( this.xmlFile, true, false );
+			mbt = Util.loadMbtAsWSFromXml( this.xmlFile );
 		}
 	}
 
@@ -134,7 +134,7 @@ public class SoapServices {
 		boolean retValue = true;
 		try
 		{
-			mbt = Util.loadMbtFromXml( this.xmlFile, true, false );
+			mbt = Util.loadMbtAsWSFromXml( this.xmlFile );
 		}
 		catch ( Exception e )
 		{			
@@ -158,7 +158,7 @@ public class SoapServices {
 		boolean retValue = true;
 		try
 		{
-			mbt = Util.loadMbtFromXml( this.xmlFile, true, false );
+			mbt = Util.loadMbtAsWSFromXml( this.xmlFile );
 		}
 		catch ( Exception e )
 		{			

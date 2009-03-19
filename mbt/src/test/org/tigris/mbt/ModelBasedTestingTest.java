@@ -47,25 +47,25 @@ public class ModelBasedTestingTest extends TestCase {
 	
 	public void testXmlLoading_Simple()
 	{
-		ModelBasedTesting mbt = Util.loadMbtFromXml("graphml/reqtags/mbt_init.xml", false, false);
+		ModelBasedTesting mbt = Util.loadMbtFromXml("graphml/reqtags/mbt_init.xml" );
 		assertEquals("RANDOM{EC>=100}", mbt.toString());
 	}
 
 	public void testXmlLoading_Moderate()
 	{
-		ModelBasedTesting mbt = Util.loadMbtFromXml("graphml/reqtags/mbt_init2.xml",false, false);
+		ModelBasedTesting mbt = Util.loadMbtFromXml("graphml/reqtags/mbt_init2.xml");
 		assertEquals("RANDOM{((EC>=100 AND SC>=100) OR L=50)}", mbt.toString());
 	}
 
 	public void testXmlLoading_Advanced()
 	{
-		ModelBasedTesting mbt = Util.loadMbtFromXml("graphml/reqtags/mbt_init3.xml",false, false);
+		ModelBasedTesting mbt = Util.loadMbtFromXml("graphml/reqtags/mbt_init3.xml");
 		assertEquals("RANDOM{EC>=10}\nRANDOM{(SC>=30 AND EC>=10)}", mbt.toString());
 	}
 
 	public void testXmlLoading_OfflineStub()
 	{
-		ModelBasedTesting mbt = Util.loadMbtFromXml("graphml/reqtags/mbt_init4.xml",false, false);
+		ModelBasedTesting mbt = Util.loadMbtFromXml("graphml/reqtags/mbt_init4.xml");
 		assertEquals("CODE", mbt.toString());
 		File f = new File("mbt_init4.java");
 		assertTrue(f.exists());
@@ -75,7 +75,7 @@ public class ModelBasedTestingTest extends TestCase {
 
 	public void testXmlLoading_JavaExecution()
 	{
-		ModelBasedTesting mbt = Util.loadMbtFromXml("graphml/reqtags/mbt_init5.xml",false, false);
+		ModelBasedTesting mbt = Util.loadMbtFromXml("graphml/reqtags/mbt_init5.xml");
 		assertEquals("RANDOM{SC>=40}", mbt.toString());
 	}
 
@@ -85,7 +85,7 @@ public class ModelBasedTestingTest extends TestCase {
 		ByteArrayOutputStream innerOut = new ByteArrayOutputStream();
 
 		System.setOut( new PrintStream(innerOut) );
-		ModelBasedTesting mbt = Util.loadMbtFromXml("graphml/reqtags/mbt_init6.xml",false, false);
+		ModelBasedTesting mbt = Util.loadMbtFromXml("graphml/reqtags/mbt_init6.xml");
 		System.setOut( oldOut );
 
 		assertEquals("REQUIREMENTS", mbt.toString());
@@ -100,7 +100,7 @@ public class ModelBasedTestingTest extends TestCase {
 
 		System.setOut( new PrintStream(innerOut) );
 		System.setIn( redirectIn() );
-		ModelBasedTesting mbt = Util.loadMbtFromXml("graphml/reqtags/mbt_init7.xml",false, false);
+		ModelBasedTesting mbt = Util.loadMbtFromXml("graphml/reqtags/mbt_init7.xml");
 		System.setIn( oldIn );
 		System.setOut( oldOut );
 
@@ -116,7 +116,7 @@ public class ModelBasedTestingTest extends TestCase {
 
 		System.setOut( new PrintStream(innerOut) );
 		System.setIn( redirectIn() );
-		ModelBasedTesting mbt = Util.loadMbtFromXml("graphml/reqtags/mbt_init10.xml",false, false);
+		ModelBasedTesting mbt = Util.loadMbtFromXml("graphml/reqtags/mbt_init10.xml");
 		System.setIn( oldIn );
 		System.setOut( oldOut );
 		
@@ -134,7 +134,7 @@ public class ModelBasedTestingTest extends TestCase {
 
 		System.setOut( new PrintStream(innerOut) );
 		System.setIn( redirectIn() );
-		ModelBasedTesting mbt = Util.loadMbtFromXml("graphml/reqtags/mbt_init11.xml",false, false);
+		ModelBasedTesting mbt = Util.loadMbtFromXml("graphml/reqtags/mbt_init11.xml");
 		System.setIn( oldIn );
 		System.setOut( oldOut );
 
@@ -147,7 +147,7 @@ public class ModelBasedTestingTest extends TestCase {
 	public void testPassRequirement()
 	{
 		ModelBasedTesting mbt;
-		mbt = Util.loadMbtFromXml( "xml/reqCoverage.xml", false, false );
+		mbt = Util.loadMbtFromXml( "xml/reqCoverage.xml" );
 		String pair[] = mbt.getNextStep();
 		pair = mbt.getNextStep();
 		mbt.passRequirement(true);
