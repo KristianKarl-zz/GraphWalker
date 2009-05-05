@@ -2,14 +2,13 @@ package org.tigris.mbt.conditions;
 
 import java.util.ArrayList;
 
+import org.tigris.mbt.Edge;
 import org.tigris.mbt.FiniteStateMachine;
-
-import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
 
 public class ReachedEdge extends StopCondition {
 
-	private ArrayList allEdges;
-	private DirectedSparseEdge endEdge;
+	private ArrayList<Edge> allEdges;
+	private Edge endEdge;
 	private int[] proximity;
 	private int maxDistance;
 	private String edgeName;
@@ -29,7 +28,7 @@ public class ReachedEdge extends StopCondition {
 		this.maxDistance = max(this.proximity);
 	}
 	
-	public ReachedEdge(DirectedSparseEdge endEdge)
+	public ReachedEdge(Edge endEdge)
 	{
 		this.endEdge = endEdge;
 //		this.subState = "";
@@ -82,7 +81,7 @@ public class ReachedEdge extends StopCondition {
 	
 	private int[][] getFloydWarshallMatrix()
 	{
-		allEdges = new ArrayList(getMachine().getAllEdges());
+		allEdges = new ArrayList<Edge>(getMachine().getAllEdges());
 		int n = allEdges.size();
 		int[][] retur = new int[n][n];
 		for(int i = 0; i<n;i++)
@@ -93,7 +92,7 @@ public class ReachedEdge extends StopCondition {
 				{
 					x = 0;
 				}
-				else if(((DirectedSparseEdge)allEdges.get(j)).getDest().isSource((DirectedSparseEdge)allEdges.get(i)))
+				else if ( getMachine().getModel().isSource( getMachine().getModel().getDest( allEdges.get(j) ), allEdges.get(i) ) )
 				{
 					x = 1;
 				}

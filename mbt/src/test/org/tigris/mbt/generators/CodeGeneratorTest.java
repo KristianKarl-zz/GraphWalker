@@ -1,37 +1,35 @@
 package test.org.tigris.mbt.generators;
 
 import org.apache.log4j.Logger;
+import org.tigris.mbt.Edge;
 import org.tigris.mbt.FiniteStateMachine;
-import org.tigris.mbt.Keywords;
+import org.tigris.mbt.Graph;
+import org.tigris.mbt.Vertex;
 import org.tigris.mbt.generators.CodeGenerator;
 import org.tigris.mbt.Util;
 
-import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
-import edu.uci.ics.jung.graph.impl.DirectedSparseVertex;
-import edu.uci.ics.jung.graph.impl.SparseGraph;
-import edu.uci.ics.jung.utils.UserData;
 import junit.framework.TestCase;
 
 public class CodeGeneratorTest extends TestCase {
 	Logger logger = Util.setupLogger(CodeGeneratorTest.class);
 	
 	public void testGetNext() {
-		SparseGraph graph = new SparseGraph();
+		Graph graph = new Graph();
 		
-		DirectedSparseVertex v1 = new DirectedSparseVertex();
-		v1.setUserDatum(Keywords.INDEX_KEY, new Integer(1), UserData.SHARED);
-		v1.setUserDatum(Keywords.LABEL_KEY, "Start", UserData.SHARED);
+		Vertex v1 = new Vertex();
+		v1.setIndexKey( new Integer(1) );
+		v1.setLabelKey( "Start" );
 		graph.addVertex(v1);
 		
-		DirectedSparseVertex v2 = new DirectedSparseVertex();
-		v2.addUserDatum(Keywords.INDEX_KEY, new Integer(2), UserData.SHARED);
-		v2.setUserDatum(Keywords.LABEL_KEY, "V2", UserData.SHARED);
+		Vertex v2 = new Vertex();
+		v2.setIndexKey( new Integer(2) );
+		v2.setLabelKey( "V2" );
 		graph.addVertex(v2);
 		
-		DirectedSparseEdge edge = new DirectedSparseEdge(v1, v2);
-		edge.setUserDatum(Keywords.INDEX_KEY, new Integer(3), UserData.SHARED);
-		edge.setUserDatum(Keywords.LABEL_KEY, "E1", UserData.SHARED);
-		graph.addEdge(edge);
+		Edge edge = new Edge();
+		graph.addEdge( edge, v1, v2 );
+		edge.setIndexKey( new Integer(3) );
+		edge.setLabelKey( "E1" );
 		
 		FiniteStateMachine FSM = new FiniteStateMachine(graph);
 		
@@ -42,6 +40,37 @@ public class CodeGeneratorTest extends TestCase {
 		assertEquals("Edge: E1", generator.getNext()[0]);
 		assertEquals("Vertex: V2", generator.getNext()[0]);
 		assertFalse(generator.hasNext());
+	}
+
+	public void testHeaderFooter() {
+		Graph graph = new Graph();
+		
+		Vertex v1 = new Vertex();
+		v1.setIndexKey( new Integer(1) );
+		v1.setLabelKey( "Start" );
+		graph.addVertex(v1);
+		
+		Vertex v2 = new Vertex();
+		v2.setIndexKey( new Integer(2) );
+		v2.setLabelKey( "V2" );
+		graph.addVertex(v2);
+		
+		Edge edge = new Edge();
+		graph.addEdge( edge, v1, v2 );
+		edge.setIndexKey( new Integer(3) );
+		edge.setLabelKey( "E1" );
+		
+		FiniteStateMachine FSM = new FiniteStateMachine(graph);
+		
+		String[] template = {"This is the HEADER", "{EDGE_VERTEX}: {LABEL}", "This is the FOOTER"};
+		CodeGenerator generator = new CodeGenerator(template);
+		generator.setMachine(FSM);
+
+		StringBuffer str = new StringBuffer();
+		while( generator.hasNext()) {
+			str.append(generator.getNext()[0]); 
+		}
+		System.out.println( str.toString());
 	}
 
 }

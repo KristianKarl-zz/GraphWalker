@@ -4,13 +4,13 @@
 package test.org.tigris.mbt.generators;
 
 import org.tigris.mbt.FiniteStateMachine;
+import org.tigris.mbt.Graph;
 import org.tigris.mbt.Util;
+import org.tigris.mbt.Vertex;
 import org.tigris.mbt.generators.CodeGenerator;
 import org.tigris.mbt.generators.CombinedPathGenerator;
 import org.tigris.mbt.generators.ListGenerator;
 
-import edu.uci.ics.jung.graph.impl.DirectedSparseVertex;
-import edu.uci.ics.jung.graph.impl.SparseGraph;
 import junit.framework.TestCase;
 
 /**
@@ -19,17 +19,17 @@ import junit.framework.TestCase;
  */
 public class CombinedPathGeneratorTest extends TestCase {
 
-	SparseGraph graph;
+	Graph graph;
 	/* (non-Javadoc)
 	 * @see junit.framework.TestCase#setUp()
 	 */
 	protected void setUp() throws Exception {
 		super.setUp();
 
-		graph = new SparseGraph();
+		graph = new Graph();
 		
-		DirectedSparseVertex v1 = Util.addVertexToGraph(graph, "Start");
-		DirectedSparseVertex v2 = Util.addVertexToGraph(graph, "V1");
+		Vertex v1 = Util.addVertexToGraph(graph, "Start");
+		Vertex v2 = Util.addVertexToGraph(graph, "V1");
 		Util.addEdgeToGraph(graph, v1, v2, "E1", null, null, null);
 	}
 

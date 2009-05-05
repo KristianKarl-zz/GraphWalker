@@ -8,6 +8,7 @@ import java.util.Vector;
 import javax.jws.WebService;
 
 import org.apache.log4j.Logger;
+import org.tigris.mbt.GUI.App;
 import org.tigris.mbt.exceptions.InvalidDataException;
 
 @WebService
@@ -16,9 +17,10 @@ public class SoapServices {
 
 	private ModelBasedTesting mbt = null;
 	static Logger logger = Util.setupLogger( ModelBasedTesting.class );
-	private Vector stepPair = new Vector();
+	private Vector<String> stepPair = new Vector<String>();
 	private String xmlFile = "";
 	private boolean hardStop = false;
+	private App app;
 
 	public SoapServices() {
 	}
@@ -29,6 +31,16 @@ public class SoapServices {
 			this.xmlFile = xmlFile; 
 			mbt = Util.loadMbtAsWSFromXml( this.xmlFile );
 		}
+	}
+
+	public SoapServices( ModelBasedTesting mbt, App app, String xmlFile ) {
+		this.app = app;
+		this.xmlFile = xmlFile; 
+		this.mbt = mbt;
+	}
+
+	public ModelBasedTesting getMbt() {
+		return mbt;
 	}
 
 	public String GetDataValue( String data ) {
@@ -82,7 +94,7 @@ public class SoapServices {
 		if( stepPair.size() == 0 )
 		{
 			try {
-				stepPair = new Vector( Arrays.asList( mbt.getNextStep() ) );
+				stepPair = new Vector<String>( Arrays.asList( mbt.getNextStep() ) );
 			} catch (Exception e) {
 				hardStop = true;
 				return "";
@@ -135,6 +147,7 @@ public class SoapServices {
 		try
 		{
 			mbt = Util.loadMbtAsWSFromXml( this.xmlFile );
+			mbt.setUseGUI( app, this.xmlFile );
 		}
 		catch ( Exception e )
 		{			
@@ -159,6 +172,7 @@ public class SoapServices {
 		try
 		{
 			mbt = Util.loadMbtAsWSFromXml( this.xmlFile );
+			mbt.setUseGUI( app, this.xmlFile );
 		}
 		catch ( Exception e )
 		{			

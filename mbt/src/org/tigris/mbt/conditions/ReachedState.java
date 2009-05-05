@@ -5,13 +5,12 @@ import java.util.ArrayList;
 import org.tigris.mbt.ExtendedFiniteStateMachine;
 import org.tigris.mbt.FiniteStateMachine;
 import org.tigris.mbt.Util;
-
-import edu.uci.ics.jung.graph.impl.DirectedSparseVertex;
+import org.tigris.mbt.Vertex;
 
 public class ReachedState extends StopCondition {
 
-	private ArrayList allStates;
-	private DirectedSparseVertex endState;
+	private ArrayList<Vertex> allStates;
+	private Vertex endState;
 	private int[] proximity;
 	private int maxDistance;
 	private String stateName;
@@ -31,7 +30,7 @@ public class ReachedState extends StopCondition {
 		this.maxDistance = max(this.proximity);
 	}
 
-	public ReachedState(DirectedSparseVertex endState)
+	public ReachedState(Vertex endState)
 	{
 		this.endState = endState;
 		this.subState = "";
@@ -74,7 +73,7 @@ public class ReachedState extends StopCondition {
 	
 	private int[][] getFloydWarshallMatrix()
 	{
-		allStates = new ArrayList(getMachine().getAllStates());
+		allStates = new ArrayList<Vertex>(getMachine().getAllStates());
 		int n = allStates.size();
 		int[][] retur = new int[n][n];
 		for(int i = 0; i<n;i++)
@@ -85,7 +84,7 @@ public class ReachedState extends StopCondition {
 				{
 					x = 0;
 				}
-				else if(((DirectedSparseVertex)allStates.get(j)).isPredecessorOf((DirectedSparseVertex)allStates.get(i)))
+				else if ( getMachine().getModel().isPredecessor( allStates.get( i ), allStates.get( j ) ) )
 				{
 					x = 1;
 				}

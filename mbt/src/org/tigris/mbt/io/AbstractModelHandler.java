@@ -2,22 +2,22 @@ package org.tigris.mbt.io;
 
 import java.io.PrintStream;
 
-import edu.uci.ics.jung.graph.impl.SparseGraph;
+import org.tigris.mbt.Graph;
 
 public abstract class AbstractModelHandler {
 
-	protected SparseGraph graph;
+	protected Graph graph;
 	
 	public abstract void load(String fileName);
 	
 	public abstract void save(PrintStream ps);
 	
-	public SparseGraph getModel()
+	public Graph getModel()
 	{
 		return graph;
 	}
 	
-	public void setModel(SparseGraph graph)
+	public void setModel(Graph graph)
 	{
 		this.graph=graph;
 	}

@@ -1,13 +1,10 @@
 package test.org.tigris.mbt;
 
 import org.apache.log4j.Logger;
-import org.tigris.mbt.Keywords;
+import org.tigris.mbt.Edge;
+import org.tigris.mbt.Graph;
 import org.tigris.mbt.Util;
-
-import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
-import edu.uci.ics.jung.graph.impl.DirectedSparseVertex;
-import edu.uci.ics.jung.graph.impl.SparseGraph;
-import edu.uci.ics.jung.utils.UserData;
+import org.tigris.mbt.Vertex;
 
 import junit.framework.TestCase;
 
@@ -31,32 +28,32 @@ public class UtilTest extends TestCase {
 
 	public void testGetCompleteEdgeName()
     {
-		SparseGraph graph = new SparseGraph();
-		DirectedSparseVertex v1 = new DirectedSparseVertex();
-		v1.setUserDatum(Keywords.INDEX_KEY, new Integer(1), UserData.SHARED);
-		v1.setUserDatum(Keywords.LABEL_KEY, "V1", UserData.SHARED);
+		Graph graph = new Graph();
+		Vertex v1 = new Vertex();
+		v1.setIndexKey( new Integer(1) );
+		v1.setLabelKey( "V1" );
 		graph.addVertex(v1);
-		DirectedSparseVertex v2 = new DirectedSparseVertex();
-		v2.addUserDatum(Keywords.INDEX_KEY, new Integer(2), UserData.SHARED);
-		v2.setUserDatum(Keywords.LABEL_KEY, "V2", UserData.SHARED);
+		Vertex v2 = new Vertex();
+		v2.setIndexKey( new Integer(2) );
+		v2.setLabelKey( "V2" );
 		graph.addVertex(v2);
-		DirectedSparseEdge edge = new DirectedSparseEdge(v1, v2);
-		edge.setUserDatum(Keywords.INDEX_KEY, new Integer(3), UserData.SHARED);
-		edge.setUserDatum(Keywords.LABEL_KEY, "E1", UserData.SHARED);
-		graph.addEdge(edge);
+		Edge edge = new Edge();
+		edge.setIndexKey( new Integer(3) );
+		edge.setLabelKey( "E1" );
+		graph.addEdge( edge, v1, v2 );
 
-		assertEquals("'E1', INDEX=3 ('V1', INDEX=1 -> 'V2', INDEX=2)", Util.getCompleteName(edge));
+		assertEquals("Edge: 'E1', INDEX=3", edge.toString());
     }
 
 	public void testGetCompleteVertexName()
     {
-		SparseGraph graph = new SparseGraph();
-		DirectedSparseVertex v1 = new DirectedSparseVertex();
-		v1.setUserDatum(Keywords.INDEX_KEY, new Integer(1), UserData.SHARED);
-		v1.setUserDatum(Keywords.LABEL_KEY, "V1", UserData.SHARED);
+		Graph graph = new Graph();
+		Vertex v1 = new Vertex();
+		v1.setIndexKey( new Integer(1) );
+		v1.setLabelKey( "V1" );
 		graph.addVertex(v1);
 		
-		assertEquals("'V1', INDEX=1", Util.getCompleteName(v1));
+		assertEquals("Vertex: 'V1', INDEX=1", v1.toString());
     }
 	public void testSetupLogger()
     {

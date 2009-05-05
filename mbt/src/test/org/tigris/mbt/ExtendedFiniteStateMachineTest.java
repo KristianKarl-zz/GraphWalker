@@ -1,44 +1,41 @@
 package test.org.tigris.mbt;
 
+import org.tigris.mbt.Edge;
 import org.tigris.mbt.ExtendedFiniteStateMachine;
-import org.tigris.mbt.Keywords;
+import org.tigris.mbt.Graph;
 import org.tigris.mbt.Util;
-
-import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
-import edu.uci.ics.jung.graph.impl.DirectedSparseVertex;
-import edu.uci.ics.jung.graph.impl.SparseGraph;
-import edu.uci.ics.jung.utils.UserData;
+import org.tigris.mbt.Vertex;
 
 import junit.framework.TestCase;
 
 public class ExtendedFiniteStateMachineTest extends TestCase {
 
-	SparseGraph graph;
-	DirectedSparseVertex start;
-	DirectedSparseVertex v1;
-	DirectedSparseVertex v2;
-	DirectedSparseEdge e1;
-	DirectedSparseEdge e2;
-	DirectedSparseEdge e3;
-	DirectedSparseEdge e4;
+	Graph graph;
+	Vertex start;
+	Vertex v1;
+	Vertex v2;
+	Edge e1;
+	Edge e2;
+	Edge e3;
+	Edge e4;
 	
 	protected void setUp() throws Exception {
 		super.setUp();
-		graph = new SparseGraph();
+		graph = new Graph();
 		
 		start = Util.addVertexToGraph(graph, "Start");
 		
 		v1 = Util.addVertexToGraph(graph, "V1");
-		v1.setUserDatum(Keywords.REQTAG_KEY, "REQ002", UserData.SHARED);
+		v1.setReqTagKey( "REQ002" );
 
 		v2 = Util.addVertexToGraph(graph, "V2");
-		v2.setUserDatum(Keywords.REQTAG_KEY, "REQ004", UserData.SHARED);
+		v2.setReqTagKey( "REQ004" );
 
 		e1 = Util.addEdgeToGraph(graph, start, v1, "E1", null, null, "x=1;y=new Vector()");
-		e1.setUserDatum(Keywords.REQTAG_KEY, "REQ001,REQ002", UserData.SHARED);
+		e1.setReqTagKey( "REQ001,REQ002" );
 		
 		e2 = Util.addEdgeToGraph(graph, v1, v2, "E2", null, null, "x=2");
-		e2.setUserDatum(Keywords.REQTAG_KEY, "REQ003", UserData.SHARED);
+		e2.setReqTagKey( "REQ003" );
 
 		e3 = Util.addEdgeToGraph(graph, v2, v2, "E3", null, "x<6", "x++");
 

@@ -1,11 +1,9 @@
 package test.org.tigris.mbt.io;
 
-import org.tigris.mbt.Keywords;
+import org.tigris.mbt.Edge;
+import org.tigris.mbt.Graph;
 import org.tigris.mbt.ModelBasedTesting;
-
-import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
-import edu.uci.ics.jung.graph.impl.DirectedSparseVertex;
-import edu.uci.ics.jung.graph.impl.SparseGraph;
+import org.tigris.mbt.Vertex;
 
 import junit.framework.TestCase;
 
@@ -327,19 +325,19 @@ public class GraphMLTest extends TestCase {
     }
 
     // Verify that all vertices and edges has indexes, and that no duplicates exists.
-    private void verifyIds( SparseGraph g )
+    private void verifyIds( Graph g )
 	{
 		Object[] vertices1 = g.getVertices().toArray();
 		for ( int i = 0; i < vertices1.length; i++ )
 		{
-			DirectedSparseVertex v1 = (DirectedSparseVertex)vertices1[ i ];
+			Vertex v1 = (Vertex)vertices1[ i ];
 			int hits = 0;
-			Integer index1 = (Integer)v1.getUserDatum( Keywords.INDEX_KEY );
+			Integer index1 = (Integer)v1.getIndexKey();
 	    	Object[] vertices2 = g.getVertices().toArray();
 			for ( int j = 0; j < vertices1.length; j++ )
 			{
-				DirectedSparseVertex v2 = (DirectedSparseVertex)vertices2[ j ];
-				Integer index2 = (Integer)v2.getUserDatum( Keywords.INDEX_KEY );
+				Vertex v2 = (Vertex)vertices2[ j ];
+				Integer index2 = (Integer)v2.getIndexKey();
 				if ( index1.intValue() == index2.intValue() )
 				{
 					hits++;
@@ -350,8 +348,8 @@ public class GraphMLTest extends TestCase {
 	    	Object[] edges = g.getEdges().toArray();
 			for ( int j = 0; j < edges.length; j++ )
 			{
-				DirectedSparseEdge e = (DirectedSparseEdge)edges[ j ];
-				Integer index2 = (Integer)e.getUserDatum( Keywords.INDEX_KEY );
+				Edge e = (Edge)edges[ j ];
+				Integer index2 = (Integer)e.getIndexKey();
 				if ( index1.intValue() == index2.intValue() )
 				{
 					hits++;
@@ -363,14 +361,14 @@ public class GraphMLTest extends TestCase {
 		Object[] edges1 = g.getEdges().toArray();
 		for ( int i = 0; i < edges1.length; i++ )
 		{
-			DirectedSparseEdge e1 = (DirectedSparseEdge)edges1[ i ];
+			Edge e1 = (Edge)edges1[ i ];
 			int hits = 0;
-			Integer index1 = (Integer)e1.getUserDatum( Keywords.INDEX_KEY );
+			Integer index1 = (Integer)e1.getIndexKey();
 	    	Object[] edges2 = g.getEdges().toArray();
 			for ( int j = 0; j < edges2.length; j++ )
 			{
-				DirectedSparseEdge e2 = (DirectedSparseEdge)edges2[ j ];
-				Integer index2 = (Integer)e2.getUserDatum( Keywords.INDEX_KEY );
+				Edge e2 = (Edge)edges2[ j ];
+				Integer index2 = (Integer)e2.getIndexKey();
 				if ( index1.intValue() == index2.intValue() )
 				{
 					hits++;
@@ -381,8 +379,8 @@ public class GraphMLTest extends TestCase {
 	    	Object[] vertices2 = g.getVertices().toArray();
 			for ( int j = 0; j < vertices1.length; j++ )
 			{
-				DirectedSparseVertex v2 = (DirectedSparseVertex)vertices2[ j ];
-				Integer index2 = (Integer)v2.getUserDatum( Keywords.INDEX_KEY );
+				Vertex v2 = (Vertex)vertices2[ j ];
+				Integer index2 = (Integer)v2.getIndexKey();
 				if ( index1.intValue() == index2.intValue() )
 				{
 					hits++;

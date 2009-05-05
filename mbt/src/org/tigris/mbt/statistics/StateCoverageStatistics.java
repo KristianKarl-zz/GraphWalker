@@ -5,11 +5,9 @@ package org.tigris.mbt.statistics;
 
 import java.util.HashSet;
 
-import org.tigris.mbt.Util;
-
-import edu.uci.ics.jung.graph.impl.AbstractElement;
-import edu.uci.ics.jung.graph.impl.DirectedSparseVertex;
-import edu.uci.ics.jung.graph.impl.SparseGraph;
+import org.tigris.mbt.AbstractElement;
+import org.tigris.mbt.Graph;
+import org.tigris.mbt.Vertex;
 
 /**
  * @author Johan Tejle
@@ -18,21 +16,21 @@ import edu.uci.ics.jung.graph.impl.SparseGraph;
 public class StateCoverageStatistics extends Statistics {
 
 	private int max;
-	private HashSet usedStates;
+	private HashSet<String> usedStates;
 	/**
 	 * 
 	 */
-	public StateCoverageStatistics( SparseGraph model) {
+	public StateCoverageStatistics( Graph model) {
 		max = model.getVertices().size();
-		usedStates = new HashSet();
+		usedStates = new HashSet<String>();
 	}
 	
 	/* (non-Javadoc)
 	 * @see org.tigris.mbt.statistics.Statistics#addProgress(edu.uci.ics.jung.graph.impl.AbstractElement)
 	 */
 	public void addProgress(AbstractElement element) {
-		if(element instanceof DirectedSparseVertex)
-			usedStates.add(Util.getCompleteName(element));
+		if(element instanceof Vertex)
+			usedStates.add(element.toString());
 	}
 
 	/* (non-Javadoc)

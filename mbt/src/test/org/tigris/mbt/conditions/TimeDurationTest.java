@@ -1,27 +1,27 @@
 package test.org.tigris.mbt.conditions;
 
+import org.tigris.mbt.Edge;
+import org.tigris.mbt.Graph;
 import org.tigris.mbt.Keywords;
 import org.tigris.mbt.ModelBasedTesting;
 import org.tigris.mbt.Util;
+import org.tigris.mbt.Vertex;
 import org.tigris.mbt.conditions.TimeDuration;
 import org.tigris.mbt.conditions.StopCondition;
 
-import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
-import edu.uci.ics.jung.graph.impl.DirectedSparseVertex;
-import edu.uci.ics.jung.graph.impl.SparseGraph;
 import junit.framework.TestCase;
 
 public class TimeDurationTest extends TestCase {
-	SparseGraph graph;
-	DirectedSparseVertex start;
-	DirectedSparseVertex v1;
-	DirectedSparseVertex v2;
-	DirectedSparseEdge e0;
-	DirectedSparseEdge e1;
+	Graph graph;
+	Vertex start;
+	Vertex v1;
+	Vertex v2;
+	Edge e0;
+	Edge e1;
 	
 	protected void setUp() throws Exception {
 		super.setUp();
-		graph = new SparseGraph();
+		graph = new Graph();
 		
 		start = Util.addVertexToGraph(graph, "Start");
 		v1 = Util.addVertexToGraph(graph, "V1");
@@ -45,7 +45,7 @@ public class TimeDurationTest extends TestCase {
 		mbt.setCondition(new TimeDuration(1));
 	}
 	
-	public void testFulfillment()
+	public void testFulfillment() throws InterruptedException
 	{
 		ModelBasedTesting mbt = new ModelBasedTesting();
 		StopCondition condition = new TimeDuration(1);
@@ -55,15 +55,15 @@ public class TimeDurationTest extends TestCase {
 		mbt.setGenerator(Keywords.GENERATOR_RANDOM);
 		assertTrue(mbt.hasNextStep());
 
-		while((System.currentTimeMillis() - startTime) < 10);
+		while((System.currentTimeMillis() - startTime) < 10) Thread.sleep(1);
 		assertEquals((System.currentTimeMillis() - startTime) / 1000, condition.getFulfilment(), 0.1);
-		while((System.currentTimeMillis() - startTime) < 900);
+		while((System.currentTimeMillis() - startTime) < 900) Thread.sleep(1);
 		assertEquals((System.currentTimeMillis() - startTime) / 1000, condition.getFulfilment(), 0.1);
-		while((System.currentTimeMillis() - startTime) < 1000);
+		while((System.currentTimeMillis() - startTime) < 1000) Thread.sleep(1);
 		assertEquals((System.currentTimeMillis() - startTime) / 1000, condition.getFulfilment(), 0.1);
 	}
 
-	public void testIsFulfilled()
+	public void testIsFulfilled() throws InterruptedException
 	{
 		ModelBasedTesting mbt = new ModelBasedTesting();
 		StopCondition condition = new TimeDuration(1);
@@ -73,11 +73,11 @@ public class TimeDurationTest extends TestCase {
 		mbt.setGenerator(Keywords.GENERATOR_RANDOM);
 		assertTrue(mbt.hasNextStep());
 
-		while((System.currentTimeMillis() - startTime) < 10);
+		while((System.currentTimeMillis() - startTime) < 10) Thread.sleep(1);
 		assertEquals(false, condition.isFulfilled());
-		while((System.currentTimeMillis() - startTime) < 900);
+		while((System.currentTimeMillis() - startTime) < 900) Thread.sleep(1);
 		assertEquals(false, condition.isFulfilled());
-		while((System.currentTimeMillis() - startTime) < 1000);
+		while((System.currentTimeMillis() - startTime) < 1000) Thread.sleep(1);
 		System.out.println(condition.getFulfilment());
 		assertEquals(true, condition.isFulfilled());
 	}

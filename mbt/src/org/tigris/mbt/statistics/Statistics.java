@@ -3,7 +3,8 @@
  */
 package org.tigris.mbt.statistics;
 
-import edu.uci.ics.jung.graph.impl.AbstractElement;
+import org.tigris.mbt.AbstractElement;
+
 
 /**
  * @author Johan Tejle

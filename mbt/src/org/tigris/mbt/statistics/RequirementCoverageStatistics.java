@@ -7,10 +7,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Vector;
 
-import org.tigris.mbt.Keywords;
-
-import edu.uci.ics.jung.graph.impl.AbstractElement;
-import edu.uci.ics.jung.graph.impl.SparseGraph;
+import org.tigris.mbt.AbstractElement;
+import org.tigris.mbt.Graph;
 
 /**
  * @author Johan Tejle
@@ -18,29 +16,29 @@ import edu.uci.ics.jung.graph.impl.SparseGraph;
  */
 public class RequirementCoverageStatistics extends Statistics {
 
-	private HashSet usedRequirements;
-	private HashSet allRequirements;
+	private HashSet<String> usedRequirements;
+	private HashSet<String> allRequirements;
 	/**
 	 * 
 	 */
-	public RequirementCoverageStatistics( SparseGraph model) {
-		usedRequirements = new HashSet();
-		allRequirements = new HashSet();
+	public RequirementCoverageStatistics( Graph model) {
+		usedRequirements = new HashSet<String>();
+		allRequirements = new HashSet<String>();
 
-		Vector allElements = new Vector();
+		Vector<AbstractElement> allElements = new Vector<AbstractElement>();
 		allElements.addAll(model.getEdges());
 		allElements.addAll(model.getVertices());
-		for(Iterator i = allElements.iterator();i.hasNext();)
+		for(Iterator<AbstractElement> i = allElements.iterator();i.hasNext();)
 		{
-			AbstractElement e = (AbstractElement) i.next();
-			if(e.containsUserDatumKey(Keywords.REQTAG_KEY))
+			AbstractElement e = i.next();
+			if(!e.getReqTagKey().isEmpty())
 			{
-				appendRequirements(allRequirements, (String) e.getUserDatum(Keywords.REQTAG_KEY));
+				appendRequirements(allRequirements, e.getReqTagKey());
 			}
 		}
 	}
 
-	private void appendRequirements(HashSet set, String requirements)
+	private void appendRequirements(HashSet<String> set, String requirements)
 	{
 		String[] tags = requirements.split( "," );
 		for ( int i = 0; i < tags.length; i++ ) 
@@ -53,9 +51,9 @@ public class RequirementCoverageStatistics extends Statistics {
 	 * @see org.tigris.mbt.statistics.Statistics#addProgress(edu.uci.ics.jung.graph.impl.AbstractElement)
 	 */
 	public void addProgress(AbstractElement element) {
-		if(element != null && element.containsUserDatumKey(Keywords.REQTAG_KEY))
+		if(element != null && !element.getReqTagKey().isEmpty())
 		{
-			appendRequirements(usedRequirements, (String) element.getUserDatum(Keywords.REQTAG_KEY));
+			appendRequirements(usedRequirements, element.getReqTagKey());
 		}
 	}
 
