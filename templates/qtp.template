@@ -1,0 +1,7 @@
+'
+' This function implements the {EDGE_VERTEX} '{LABEL}'
+'
+Public function {LABEL}()
+ Reporter.ReportEvent micFail, "{LABEL}", "Not implemented yet!" 
+ {LABEL} = True
+End function
