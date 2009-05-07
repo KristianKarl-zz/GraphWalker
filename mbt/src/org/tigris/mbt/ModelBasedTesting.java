@@ -771,6 +771,10 @@ public class ModelBasedTesting
 		}
 		else
 		{
+			if ( isEdge && strMethod.isEmpty() )
+			{
+				return;
+			}
 			try {
 				Method m = clsClass.getMethod( strMethod, null );
 				m.invoke( objInstance, null  );
