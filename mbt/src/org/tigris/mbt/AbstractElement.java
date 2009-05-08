@@ -47,6 +47,53 @@ public class AbstractElement {
 		this.mergedMbtKey = ae.mergedMbtKey;
 	}
 
+	public AbstractElement( AbstractElement A, AbstractElement B ) {
+		if ( A.fullLabelKey.length() > B.fullLabelKey.length() )
+		{
+			this.labelKey = A.labelKey;
+			this.fullLabelKey = A.fullLabelKey;
+			this.reqTagKey = A.reqTagKey;
+			this.parameterKey = A.parameterKey;
+			this.visitedKey = A.visitedKey;
+			this.backtrackKey = A.backtrackKey;
+			this.actionsKey = A.actionsKey;
+			this.indexKey = A.indexKey;
+			this.idKey = A.idKey;
+			this.fileKey = A.fileKey;
+			this.mergeKey = A.mergeKey;
+			this.noMergeKey = A.noMergeKey;
+			this.blockedKey = A.blockedKey;
+			this.imageKey = A.imageKey;
+			this.widthKey = A.widthKey;
+			this.heightKey = A.heightKey;
+			this.xPosKey = A.xPosKey;
+			this.yPosKey = A.yPosKey;
+			this.mergedMbtKey = A.mergedMbtKey;
+		}
+		else
+		{
+			this.labelKey = B.labelKey;
+			this.fullLabelKey = B.fullLabelKey;
+			this.reqTagKey = B.reqTagKey;
+			this.parameterKey = B.parameterKey;
+			this.visitedKey = B.visitedKey;
+			this.backtrackKey = B.backtrackKey;
+			this.actionsKey = B.actionsKey;
+			this.indexKey = B.indexKey;
+			this.idKey = B.idKey;
+			this.fileKey = B.fileKey;
+			this.mergeKey = B.mergeKey;
+			this.noMergeKey = B.noMergeKey;
+			this.blockedKey = B.blockedKey;
+			this.imageKey = B.imageKey;
+			this.widthKey = B.widthKey;
+			this.heightKey = B.heightKey;
+			this.xPosKey = B.xPosKey;
+			this.yPosKey = B.yPosKey;
+			this.mergedMbtKey = B.mergedMbtKey;
+		}
+	}
+
 	public boolean isMergedMbtKey() {
 		return mergedMbtKey;
 	}

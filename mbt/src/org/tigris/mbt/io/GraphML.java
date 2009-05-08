@@ -1250,7 +1250,7 @@ public class GraphML extends AbstractModelHandler
 		logger.debug("  outEdge: " + outEdge);
 		logger.debug("  inEdge: " + inEdge);
 
-		Edge new_edge = new Edge();		
+		Edge new_edge = new Edge( inEdge, outEdge );
 		graph.addEdge(new_edge, graph.getSource(inEdge), graph.getDest(outEdge));
 
 		new_edge.setIndexKey( new Integer(getNewVertexAndEdgeIndex()));

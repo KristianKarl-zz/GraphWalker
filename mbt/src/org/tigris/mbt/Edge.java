@@ -15,6 +15,18 @@ public class Edge extends AbstractElement {
 		this.weightKey = edge.weightKey;
 	}
 
+	public Edge( Edge A, Edge B ) {
+		super( A, B );
+		if ( A.getFullLabelKey().length() > B.getFullLabelKey().length() ) {
+			this.guardKey = A.guardKey;
+			this.weightKey = A.weightKey;
+		}
+		else {
+			this.guardKey = B.guardKey;
+			this.weightKey = B.weightKey;
+		}
+	}
+
 	public float getWeightKey() {
 		return weightKey;
 	}
