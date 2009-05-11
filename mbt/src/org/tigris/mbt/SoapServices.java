@@ -131,7 +131,12 @@ public class SoapServices {
 		}
 		else
 		{
-			value = ModelBasedTesting.getInstance().hasNextStep();
+			if ( stepPair.size() != 0 ) {
+				value = true;
+			}
+			else {
+				value = ModelBasedTesting.getInstance().hasNextStep();
+			}
 		}
 		logger.debug( "SOAP service hasNextStep returning: " + value );
 		if ( value == false )
