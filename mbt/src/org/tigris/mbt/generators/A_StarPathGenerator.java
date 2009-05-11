@@ -8,12 +8,12 @@ import java.util.Stack;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
-import org.tigris.mbt.Edge;
-import org.tigris.mbt.FiniteStateMachine;
 import org.tigris.mbt.Util;
-import org.tigris.mbt.Vertex;
 import org.tigris.mbt.exceptions.FoundNoEdgeException;
 import org.tigris.mbt.generators.PathGenerator;
+import org.tigris.mbt.graph.Edge;
+import org.tigris.mbt.graph.Vertex;
+import org.tigris.mbt.machines.FiniteStateMachine;
 
 public class A_StarPathGenerator extends PathGenerator {
 

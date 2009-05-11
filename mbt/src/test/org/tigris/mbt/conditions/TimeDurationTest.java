@@ -1,13 +1,13 @@
 package test.org.tigris.mbt.conditions;
 
-import org.tigris.mbt.Edge;
-import org.tigris.mbt.Graph;
 import org.tigris.mbt.Keywords;
 import org.tigris.mbt.ModelBasedTesting;
 import org.tigris.mbt.Util;
-import org.tigris.mbt.Vertex;
 import org.tigris.mbt.conditions.TimeDuration;
 import org.tigris.mbt.conditions.StopCondition;
+import org.tigris.mbt.graph.Edge;
+import org.tigris.mbt.graph.Graph;
+import org.tigris.mbt.graph.Vertex;
 
 import junit.framework.TestCase;
 
@@ -41,13 +41,13 @@ public class TimeDurationTest extends TestCase {
 
 	public void testConstructor()
 	{
-		ModelBasedTesting mbt = new ModelBasedTesting();
+		ModelBasedTesting mbt = ModelBasedTesting.getInstance();
 		mbt.setCondition(new TimeDuration(1));
 	}
 	
 	public void testFulfillment() throws InterruptedException
 	{
-		ModelBasedTesting mbt = new ModelBasedTesting();
+		ModelBasedTesting mbt = ModelBasedTesting.getInstance();
 		StopCondition condition = new TimeDuration(1);
 		double startTime = (double)System.currentTimeMillis();
 		mbt.setCondition(condition);
@@ -65,7 +65,7 @@ public class TimeDurationTest extends TestCase {
 
 	public void testIsFulfilled() throws InterruptedException
 	{
-		ModelBasedTesting mbt = new ModelBasedTesting();
+		ModelBasedTesting mbt = ModelBasedTesting.getInstance();
 		StopCondition condition = new TimeDuration(1);
 		double startTime = (double)System.currentTimeMillis();
 		mbt.setCondition(condition);

@@ -14,11 +14,11 @@ import org.apache.log4j.Logger;
 import org.jdom.Document;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
-import org.tigris.mbt.Edge;
-import org.tigris.mbt.Graph;
 import org.tigris.mbt.Keywords;
 import org.tigris.mbt.Util;
-import org.tigris.mbt.Vertex;
+import org.tigris.mbt.graph.Edge;
+import org.tigris.mbt.graph.Graph;
+import org.tigris.mbt.graph.Vertex;
 
 import edu.uci.ics.jung.graph.util.Pair;
 

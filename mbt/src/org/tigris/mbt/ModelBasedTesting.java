@@ -17,7 +17,6 @@
 
 package org.tigris.mbt;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
@@ -40,8 +39,14 @@ import org.tigris.mbt.events.MbtEvent;
 import org.tigris.mbt.exceptions.InvalidDataException;
 import org.tigris.mbt.generators.CodeGenerator;
 import org.tigris.mbt.generators.PathGenerator;
+import org.tigris.mbt.graph.AbstractElement;
+import org.tigris.mbt.graph.Edge;
+import org.tigris.mbt.graph.Graph;
+import org.tigris.mbt.graph.Vertex;
 import org.tigris.mbt.io.AbstractModelHandler;
 import org.tigris.mbt.io.GraphML;
+import org.tigris.mbt.machines.ExtendedFiniteStateMachine;
+import org.tigris.mbt.machines.FiniteStateMachine;
 import org.tigris.mbt.statistics.EdgeCoverageStatistics;
 import org.tigris.mbt.statistics.EdgeSequenceCoverageStatistics;
 import org.tigris.mbt.statistics.RequirementCoverageStatistics;
@@ -69,32 +74,52 @@ public class ModelBasedTesting
 	private boolean runRandomGeneratorOnce = false;
 	private boolean dryRun = false;
 	private boolean useGUI = false;	
-	private MbtEvent mbtEvent = null;
-	private App appFrame = null;
+	private MbtEvent notifyApp = null;
+	private String javaExecutorClass = null;
+	
+
+	// Private constructor prevents instantiation from other classes
+	private ModelBasedTesting() {}
+
+	/**
+	 * ModelBasedTestingHolder is loaded on the first execution of ModelBasedTesting.getInstance() 
+	 * or the first access to ModelBasedTestingHolder.INSTANCE, not before.
+	 */
+	@SuppressWarnings("synthetic-access")
+	private static class ModelBasedTestingHolder { 
+		private static final ModelBasedTesting INSTANCE = new ModelBasedTesting();
+	}
+
+	@SuppressWarnings("synthetic-access")
+	public static ModelBasedTesting getInstance() {
+		return ModelBasedTestingHolder.INSTANCE;
+	}
+
+	
+	/**
+	 * Clears everything.
+	 * Removes any defined machine, generators, stop conditions etc.
+	 */
+	public void reset() {
+		modelHandler = null;
+		machine = null;
+		condition = null;
+		generator = null;
+		template = null;
+		backtracking = false;
+		runRandomGeneratorOnce = false;
+		dryRun = false;
+		javaExecutorClass = null;
+	}
 	
 	public boolean isUseGUI() {
 		return useGUI;
 	}
 
-	public void setUseGUI( App app, String fileName ) {
-		if ( app == null ){
-			appFrame = new App().Run();
-			appFrame.setMbt(this);
-			appFrame.setXmlFile( new File( fileName ) );
-		}
-		else {
-			appFrame = app;
-			appFrame.setMbt(this);
-			appFrame.setXmlFile( new File( fileName ) );
-		}
-		SetMbtEventNotifier(appFrame);
+	public void setUseGUI() {
+		useGUI = true;
+		notifyApp = App.getInstance(); 
 	}
-
-	public void SetMbtEventNotifier( MbtEvent event )
-    {
-		logger.debug( "Setting MbtEvent: " + event );
-		mbtEvent = event; 
-    } 
 
 	public boolean isDryRun() {
 		return dryRun;
@@ -344,9 +369,8 @@ public class ModelBasedTesting
 
 	public String[] getNextStep()
 	{		
-		if ( appFrame != null ) {
-			while ( appFrame.status.isPaused() ||
-					appFrame.status.isStopped() ) {
+		if ( isUseGUI() ) {
+			while ( App.getInstance().status.isPaused() ) {
 				try {
 					Thread.sleep(100);
 				} catch (InterruptedException e) {
@@ -355,9 +379,11 @@ public class ModelBasedTesting
 			}
 		}
 
-		if(this.machine == null) getMachine();
+		if ( this.machine == null ){
+			getMachine();
+		}
 		getStatisticsManager();
-		Util.AbortIf(getGenerator() == null, "No generator has been defined!");
+		Util.AbortIf( getGenerator() == null, "No generator has been defined!" );
 		
 		PathGenerator backupGenerator = null;
 		if ( runRandomGeneratorOnce )
@@ -370,7 +396,7 @@ public class ModelBasedTesting
 		{
 			return getGenerator().getNext();
 		}
-		catch(RuntimeException e)
+		catch ( RuntimeException e )
 		{
 			logger.fatal(e.toString());
 			throw new RuntimeException( "ERROR: "+e.getMessage(), e);
@@ -382,11 +408,11 @@ public class ModelBasedTesting
 				runRandomGeneratorOnce = false;
 				setGenerator(backupGenerator);
 			}
-			if ( mbtEvent != null )
-				mbtEvent.getNextEvent();
-			if ( appFrame != null ) {
-				if ( appFrame.status.isNext() ) {
-					appFrame.status.setPaused();
+			if ( notifyApp != null )
+				notifyApp.getNextEvent();
+			if ( isUseGUI() ) {
+				if ( App.getInstance().status.isNext() ) {
+					App.getInstance().status.setPaused();
 				}
 			}
 		}
@@ -408,18 +434,22 @@ public class ModelBasedTesting
 
 	public void readGraph( String graphmlFileName )
 	{
-		if(this.modelHandler == null)
-		{
+		if(this.modelHandler == null) {
 			this.modelHandler = new GraphML(); 
 		}
 		this.modelHandler.load( graphmlFileName );
 		
-		if(this.machine != null)
-			getMachine().setModel(getGraph());
+		if ( this.machine != null ) {
+			getMachine().setModel( getGraph() );
+		}
+		
+		if ( isUseGUI() ) {
+			App.getInstance().updateLayout();
+		}
 	}
 
-	public void writeModel(PrintStream ps) {
-		this.modelHandler.save(ps);
+	public void writeModel( PrintStream ps ) {
+		this.modelHandler.save( ps );
 	}
 
 	public boolean hasCurrentEdgeBackTracking() 
@@ -616,8 +646,43 @@ public class ModelBasedTesting
 		}
 	}
 
-	public void executePath(String strClassName) 
+	public void setJavaExecutorClass( String executorClass ) {
+		javaExecutorClass = executorClass;
+	}
+
+	public String getJavaExecutorClass() {
+		return javaExecutorClass;
+	}
+
+	public void executePath() {
+		if ( getJavaExecutorClass() != null ) {
+			executePath( getJavaExecutorClass() );
+			return;
+		}
+		
+		while( hasNextStep() )
+		{
+			String[] stepPair = getNextStep();
+			
+			if ( stepPair[0].trim()!= "" ) {
+				logExecution( getMachine().getLastEdge(), "" );
+				getStatisticsManager().addProgress(getMachine().getLastEdge());
+			}
+			if ( stepPair[1].trim()!="" ) {
+				logExecution( getMachine().getCurrentState(), "" );
+				getStatisticsManager().addProgress(getMachine().getCurrentState());
+			}
+
+		}
+
+	}
+	
+	public void executePath( String strClassName ) 
 	{
+		if ( getJavaExecutorClass() == null ) {
+			setJavaExecutorClass( strClassName );
+		}
+		
 		if ( isDryRun() )
 		{
 			logger.debug( "Executing a dry run" );
@@ -631,24 +696,24 @@ public class ModelBasedTesting
 		} catch (ClassNotFoundException e) {
 	        throw new RuntimeException("Cannot locate execution class: " + strClassName + ".\n Current class path is: " + System.getProperty("java.class.path"), e);
 		}
-		executePath(clsClass, null);
+		executePath( clsClass, null );
 	}
 
-	public void executePath(Class<?> clsClass) 
+	public void executePath( Class<?> clsClass ) 
 	{
 		if( clsClass == null )
 			throw new RuntimeException("Needed execution class is missing as parameter.");
-		executePath(clsClass, null);
+		executePath( clsClass, null );
 	}
 
-	public void executePath(Object objInstance) 
+	public void executePath( Object objInstance ) 
 	{
 		if( objInstance == null )
 			throw new RuntimeException("Needed execution instance is missing as parameter.");
-		executePath(null, objInstance);
+		executePath( null, objInstance );
 	}
 
-	public void executePath(Class<?> clsClass, Object objInstance)
+	public void executePath( Class<?> clsClass, Object objInstance )
 	{
 		if(this.machine == null) getMachine();
 		
@@ -729,41 +794,39 @@ public class ModelBasedTesting
 	
 	private void executeMethod(Class<?> clsClass, Object objInstance, String strMethod, boolean isEdge) throws IllegalArgumentException, SecurityException, IllegalAccessException 
 	{
-		if(strMethod.contains("/") ) 
+		if ( strMethod.contains( "/" ) ) { 
 			strMethod = strMethod.substring(0, strMethod.indexOf("/"));
+		}
 		
-		if(strMethod.contains("[") ) 
+		if ( strMethod.contains( "[" ) ) { 
 			strMethod = strMethod.substring(0, strMethod.indexOf("["));
+		}
 		
-		if(strMethod.contains(" "))
-		{
+		if ( strMethod.contains( " " ) ) {
 			String s1 = strMethod.substring(0, strMethod.indexOf(" "));
 			String s2 = strMethod.substring(strMethod.indexOf(" ")+1);
 			Class<?>[] paramTypes = { String.class };
 			Object[] paramValues = { s2 };
+			
 			try {
 				clsClass.getMethod( s1, paramTypes ).invoke( objInstance, paramValues );
 			} 
 			catch (InvocationTargetException e)
 			{
-				if ( isEdge )
-				{
+				if ( isEdge ) {
 					logger.error("InvocationTargetException for: " +  getMachine().getLastEdge() );
 				}
-				else
-				{
+				else {
 					logger.error("InvocationTargetException for: " + getMachine().getCurrentState() );
 				}
 				throw new RuntimeException("InvocationTargetException.", e);
 			} 
 			catch (NoSuchMethodException e) 
 			{
-				if ( isEdge )
-				{
+				if ( isEdge ) {
 					logger.error("NoSuchMethodException for: " +  getMachine().getLastEdge() );
 				}
-				else
-				{
+				else {
 					logger.error("NoSuchMethodException for: " + getMachine().getCurrentState() );
 				}
 				throw new RuntimeException("NoSuchMethodException.", e);
@@ -771,34 +834,27 @@ public class ModelBasedTesting
 		}
 		else
 		{
-			if ( isEdge && strMethod.isEmpty() )
-			{
+			if ( isEdge && strMethod.isEmpty() ) {
 				return;
 			}
 			try {
 				Method m = clsClass.getMethod( strMethod, null );
 				m.invoke( objInstance, null  );
 			} 
-			catch (InvocationTargetException e) 
-			{
-				if ( isEdge )
-				{
+			catch ( InvocationTargetException e ) {
+				if ( isEdge ) {
 					logger.error("InvocationTargetException for: " +  getMachine().getLastEdge() + " : " + e.getMessage() );
 				}
-				else
-				{
+				else {
 					logger.error("InvocationTargetException for: " + getMachine().getCurrentState() + " : " + e.getMessage() );
 				}
 				throw new RuntimeException("InvocationTargetException.", e);
 			} 
-			catch (NoSuchMethodException e) 
-			{
-				if ( isEdge )
-				{
+			catch ( NoSuchMethodException e ) {
+				if ( isEdge ) {
 					logger.error("NoSuchMethodException for: " +  getMachine().getLastEdge() );
 				}
-				else
-				{
+				else {
 					logger.error("NoSuchMethodException for: " + getMachine().getCurrentState() );
 				}
 				throw new RuntimeException("NoSuchMethodException.", e);
@@ -807,11 +863,13 @@ public class ModelBasedTesting
 	}
 
 	public void writePath() {
-		writePath(System.out);
+		writePath( System.out );
 	}
 
-	public void writePath(PrintStream out) {
-		if(this.machine == null) getMachine(); 
+	public void writePath( PrintStream out ) {
+		if ( this.machine == null ) {
+			getMachine(); 
+		}
 		while( hasNextStep() )
 		{
 			String[] stepPair = getNextStep();

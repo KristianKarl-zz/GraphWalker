@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 import org.tigris.mbt.CLI;
+import org.tigris.mbt.ModelBasedTesting;
 import org.tigris.mbt.Util;
 
 import junit.framework.TestCase;
@@ -25,6 +26,11 @@ public class CLITest extends TestCase {
 	String outMsg;
 	String errMsg;
 	static Logger logger = Util.setupLogger( CLITest.class );
+
+	protected void setUp() throws Exception {
+		super.setUp();
+		ModelBasedTesting.getInstance().reset();
+	}
 	
 	private OutputStream redirectOut()
 	{
@@ -444,7 +450,7 @@ public class CLITest extends TestCase {
     {
 		String args[] = { "soap", "-f", "graphml/reqtags/mbt_init9.xml" };
     	runCommand( args );
-    	assertEquals( true, errMsg.matches("Could not add: 'non-existing-path' to CLASSPATH") );
+    	assertEquals( true, errMsg.matches("(?s).*Could not add: 'non-existing-path' to CLASSPATH.*") );
     }
     
     /**

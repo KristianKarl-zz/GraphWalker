@@ -2,10 +2,10 @@ package org.tigris.mbt.generators;
 
 import java.util.Set;
 
-import org.tigris.mbt.Edge;
-import org.tigris.mbt.FiniteStateMachine;
 import org.tigris.mbt.conditions.StopCondition;
 import org.tigris.mbt.exceptions.FoundNoEdgeException;
+import org.tigris.mbt.graph.Edge;
+import org.tigris.mbt.machines.FiniteStateMachine;
 
 public abstract class PathGenerator {
     private FiniteStateMachine machine;

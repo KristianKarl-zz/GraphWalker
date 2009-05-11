@@ -28,7 +28,6 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
-import org.tigris.mbt.GUI.App;
 import org.tigris.mbt.conditions.AlternativeCondition;
 import org.tigris.mbt.conditions.CombinationalCondition;
 import org.tigris.mbt.conditions.EdgeCoverage;
@@ -49,6 +48,10 @@ import org.tigris.mbt.generators.PathGenerator;
 import org.tigris.mbt.generators.RandomPathGenerator;
 import org.tigris.mbt.generators.RequirementsGenerator;
 import org.tigris.mbt.generators.A_StarPathGenerator;
+import org.tigris.mbt.graph.AbstractElement;
+import org.tigris.mbt.graph.Edge;
+import org.tigris.mbt.graph.Graph;
+import org.tigris.mbt.graph.Vertex;
 
 /**
  * This class has some utility functionality used by org.tigris.mbt
@@ -62,7 +65,6 @@ public class Util {
 	static private Random random = new Random();
 	public static String newline = System.getProperty("line.separator");
 	static private Timer timer = null;
-	static App appFrame = null;
 	
 	public static String getCompleteName( AbstractElement element )
 	{
@@ -286,17 +288,6 @@ public class Util {
 	/**
 	 * Load MBT settings from a xml file
 	 * @param fileName The XML settings file
-	 * @return
-	 */
-	public static ModelBasedTesting loadMbtFromXmlUsingGUI( String fileName, App app )
-	{
-		appFrame = app;
-		return loadXml( fileName, false, false );
-	}
-
-	/**
-	 * Load MBT settings from a xml file
-	 * @param fileName The XML settings file
 	 * @param runningSoapServices Is mbt to run in Web Services mode?
 	 * @param dryRun Is mbt to be run in a dry run mode?
 	 * @return
@@ -304,7 +295,8 @@ public class Util {
 	@SuppressWarnings("unchecked")
 	private static ModelBasedTesting loadXml( String fileName, boolean runningSoapServices, boolean dryRun )
 	{
-		final ModelBasedTesting mbt = new ModelBasedTesting();
+		final ModelBasedTesting mbt = ModelBasedTesting.getInstance();
+		mbt.reset();
 		mbt.setDryRun( dryRun );
 		
 		SAXBuilder parser = new SAXBuilder( "org.apache.crimson.parser.XMLReaderImpl", false );		
@@ -421,62 +413,78 @@ public class Util {
 			timer.schedule(	logTask, 500, seconds * 1000 );
 		}
 
-		if(root.getAttributeValue("GUI") != null && root.getAttributeValue("GUI").equalsIgnoreCase("true"))
+		if ( root.getAttributeValue( "GUI" ) != null && 
+			 root.getAttributeValue( "GUI" ).equalsIgnoreCase( "true" ) )
 		{
-			mbt.setUseGUI( appFrame, fileName );
+			mbt.setUseGUI();
 		}
 
 		if ( runningSoapServices == false )
 		{
 			try {
 			
-				String executor = root.getAttributeValue("EXECUTOR");
+				String executor = root.getAttributeValue( "EXECUTOR" );
 				String executorParam = null;
-				if(executor.contains(":"))
+				if ( executor.contains( ":" ) )
 				{
 					executorParam = executor.substring(executor.indexOf(':')+1);
 					executor = executor.substring(0, executor.indexOf(':'));
 				}
 		
-				if(executor.equalsIgnoreCase("offline"))
+				if ( executor.equalsIgnoreCase( "offline" ) )
 				{
 					PrintStream out = System.out;
-					if(executorParam != null && !executorParam.equals(""))
+					if ( executorParam != null && !executorParam.equals( "" ) )
 					{
 						try {
-							out = new PrintStream(executorParam);
-						} catch (FileNotFoundException e) {
-							throw new RuntimeException("offline file '"+executorParam+"' could not be created or is writeprotected.", e);
+							out = new PrintStream( executorParam );
+						}
+						catch ( FileNotFoundException e ) {
+							throw new RuntimeException( "offline file '" + executorParam + "' could not be created or is writeprotected.", e );
 						}
 					}
-					mbt.writePath(out);
-					if(out != System.out)
-						out.close();
-				
-				} else if(executor.equalsIgnoreCase("java")){
-					if(executorParam == null || executorParam.equals(""))
-						throw new RuntimeException("No java class specified for execution");
-					mbt.executePath(executorParam);
-				
-				} else if(executor.equalsIgnoreCase("online")){
+					if ( mbt.isUseGUI() == false ) {
+						mbt.writePath( out );
+						if ( out != System.out ) {
+							out.close();
+						}
+					}				
+				} 
+				else if ( executor.equalsIgnoreCase( "java" ) ) {
+					if ( executorParam == null || executorParam.equals("") ) {
+						throw new RuntimeException( "No java class specified for execution" );
+					}					
+
+					if ( mbt.isUseGUI() == false ) {
+						mbt.executePath( executorParam );
+					}
+					else {
+						mbt.setJavaExecutorClass( executorParam );
+					}
+				} 
+				else if(executor.equalsIgnoreCase("online")){
 					if ( mbt.isDryRun() )
 					{
 						logger.debug( "Executing a dry run" );
 						mbt.executePath( null, null);
 					}
-					mbt.interractivePath();
+					if ( mbt.isUseGUI() == false ) {
+						mbt.interractivePath();
+					}
 				
-				} else if(executor.equalsIgnoreCase("none") || executor.equals("")){
-					// no execution (for debug purpose)
-				
-				} else {
-					throw new RuntimeException("Unknown executor '"+executor+"'");
+				}
+				else if(executor.equalsIgnoreCase("none") || executor.equals("")){
+					// no execution (for debug purpose)				
+				} 
+				else {
+					throw new RuntimeException( "Unknown executor '" + executor + "'" );
 				}
 				
-			} finally {
+			}
+			finally {
 				if(timer != null)
 					timer.cancel();
-				if(reportName != null && reportTemplate != null)
+				if ( reportName != null && reportTemplate != null && mbt.isUseGUI() == false )
 				{
 					mbt.getStatisticsManager().writeFullReport(reportName);
 				}

@@ -3,7 +3,7 @@
  */
 package org.tigris.mbt.statistics;
 
-import org.tigris.mbt.AbstractElement;
+import org.tigris.mbt.graph.AbstractElement;
 
 
 /**

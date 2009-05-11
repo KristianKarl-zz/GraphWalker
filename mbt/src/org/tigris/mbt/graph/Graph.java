@@ -1,4 +1,4 @@
-package org.tigris.mbt;
+package org.tigris.mbt.graph;
 
 import edu.uci.ics.jung.graph.SparseMultigraph;
 import edu.uci.ics.jung.graph.util.EdgeType;

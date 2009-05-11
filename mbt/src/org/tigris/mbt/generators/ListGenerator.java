@@ -6,9 +6,9 @@ import java.util.Stack;
 import java.util.TreeSet;
 import java.util.Vector;
 
-import org.tigris.mbt.AbstractElement;
-import org.tigris.mbt.Edge;
 import org.tigris.mbt.Keywords;
+import org.tigris.mbt.graph.AbstractElement;
+import org.tigris.mbt.graph.Edge;
 
 public class ListGenerator extends PathGenerator {
 

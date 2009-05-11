@@ -1,4 +1,4 @@
-package org.tigris.mbt;
+package org.tigris.mbt.machines;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -13,9 +13,12 @@ import java.util.Set;
 import java.util.Stack;
 
 import org.apache.log4j.Logger;
+import org.tigris.mbt.Util;
 import org.tigris.mbt.exceptions.FoundNoEdgeException;
 import org.tigris.mbt.exceptions.InvalidDataException;
 import org.tigris.mbt.filters.AccessableEdgeFilter;
+import org.tigris.mbt.graph.Edge;
+import org.tigris.mbt.graph.Graph;
 
 import bsh.EvalError;
 import bsh.Interpreter;

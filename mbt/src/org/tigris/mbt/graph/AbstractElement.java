@@ -1,4 +1,6 @@
-package org.tigris.mbt;
+package org.tigris.mbt.graph;
+
+import org.tigris.mbt.Util;
 
 public class AbstractElement {
 

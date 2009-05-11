@@ -8,6 +8,7 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.output.XMLOutputter;
 import org.jdom.transform.JDOMSource;
+import org.tigris.mbt.graph.AbstractElement;
 import org.tigris.mbt.statistics.*;
 
 import java.io.File;

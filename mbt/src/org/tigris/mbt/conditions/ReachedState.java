@@ -2,10 +2,10 @@ package org.tigris.mbt.conditions;
 
 import java.util.ArrayList;
 
-import org.tigris.mbt.ExtendedFiniteStateMachine;
-import org.tigris.mbt.FiniteStateMachine;
 import org.tigris.mbt.Util;
-import org.tigris.mbt.Vertex;
+import org.tigris.mbt.graph.Vertex;
+import org.tigris.mbt.machines.ExtendedFiniteStateMachine;
+import org.tigris.mbt.machines.FiniteStateMachine;
 
 public class ReachedState extends StopCondition {
 

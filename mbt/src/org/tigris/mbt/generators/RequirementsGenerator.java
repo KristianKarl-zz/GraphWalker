@@ -6,7 +6,7 @@ import java.util.Stack;
 import java.util.TreeSet;
 import java.util.Vector;
 
-import org.tigris.mbt.AbstractElement;
+import org.tigris.mbt.graph.AbstractElement;
 
 public class RequirementsGenerator extends PathGenerator {
 

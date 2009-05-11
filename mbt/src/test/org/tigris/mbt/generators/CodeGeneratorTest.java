@@ -1,11 +1,11 @@
 package test.org.tigris.mbt.generators;
 
 import org.apache.log4j.Logger;
-import org.tigris.mbt.Edge;
-import org.tigris.mbt.FiniteStateMachine;
-import org.tigris.mbt.Graph;
-import org.tigris.mbt.Vertex;
 import org.tigris.mbt.generators.CodeGenerator;
+import org.tigris.mbt.graph.Edge;
+import org.tigris.mbt.graph.Graph;
+import org.tigris.mbt.graph.Vertex;
+import org.tigris.mbt.machines.FiniteStateMachine;
 import org.tigris.mbt.Util;
 
 import junit.framework.TestCase;

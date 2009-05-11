@@ -15,12 +15,10 @@ import org.tigris.mbt.exceptions.InvalidDataException;
 
 public class SoapServices {
 
-	private ModelBasedTesting mbt = null;
-	static Logger logger = Util.setupLogger( ModelBasedTesting.class );
+	static Logger logger = Util.setupLogger( SoapServices.class );
 	private Vector<String> stepPair = new Vector<String>();
 	private String xmlFile = "";
 	private boolean hardStop = false;
-	private App app;
 
 	public SoapServices() {
 	}
@@ -29,26 +27,16 @@ public class SoapServices {
 		if ( xmlFile != null )
 		{
 			this.xmlFile = xmlFile; 
-			mbt = Util.loadMbtAsWSFromXml( this.xmlFile );
+			Util.loadMbtAsWSFromXml( this.xmlFile );
 		}
-	}
-
-	public SoapServices( ModelBasedTesting mbt, App app, String xmlFile ) {
-		this.app = app;
-		this.xmlFile = xmlFile; 
-		this.mbt = mbt;
-	}
-
-	public ModelBasedTesting getMbt() {
-		return mbt;
 	}
 
 	public String GetDataValue( String data ) {
 		logger.debug( "SOAP service getDataValue recieving: " + data );
 		String value = "";
 		try {
-			value = mbt.getDataValue( data );
-		} catch (InvalidDataException e) {
+			value = ModelBasedTesting.getInstance().getDataValue( data );
+		} catch ( InvalidDataException e ) {
 			logger.error( e );
 		}
 		catch (Exception e) {
@@ -62,7 +50,7 @@ public class SoapServices {
 		logger.debug( "SOAP service ExecAction recieving: " + action );
 		String value = "";
 		try {
-			value = mbt.execAction( action );
+			value = ModelBasedTesting.getInstance().execAction( action );
 		} catch (InvalidDataException e) {
 			logger.error( e );
 		}
@@ -76,51 +64,62 @@ public class SoapServices {
 	public void PassRequirement( String pass ) {
 		logger.debug( "SOAP service PassRequirement recieving: " + pass );
 		if ( pass.toUpperCase().equals("TRUE") )
-			mbt.passRequirement(true);
+			ModelBasedTesting.getInstance().passRequirement(true);
 		else if ( pass.toUpperCase().equals("FALSE") )
-			mbt.passRequirement(false);
+			ModelBasedTesting.getInstance().passRequirement(false);
 		else
 			logger.error( "SOAP service PassRequirement dont know how to handle: " + pass +
-					"\nOnly the strings true or false are permitted" );
-			
+					"\nOnly the strings true or false are permitted" );			
 	}
 
 	public String GetNextStep() {
 		logger.debug( "SOAP service getNextStep" );
-		String value = "";
-		
-		if( !mbt.hasNextStep() && ( stepPair.size() == 0 ) )
-			return value;
-		if( stepPair.size() == 0 )
+		try
 		{
-			try {
-				stepPair = new Vector<String>( Arrays.asList( mbt.getNextStep() ) );
-			} catch (Exception e) {
-				hardStop = true;
-				return "";
+			String value = "";
+			
+			if ( ModelBasedTesting.getInstance().isUseGUI() ) {
+				App.getInstance().status.setNext();
+			}
+			
+			if ( !ModelBasedTesting.getInstance().hasNextStep() && ( stepPair.size() == 0 ) ) {
+				return value;
+			}
+			
+			if ( stepPair.size() == 0 ) {
+				try {
+					stepPair = new Vector<String>( Arrays.asList( ModelBasedTesting.getInstance().getNextStep() ) );
+				}
+				catch ( Exception e ) {
+					hardStop = true;
+					return "";
+				}
+			}
+				
+			value = (String) stepPair.remove(0);
+			value = value.replaceAll( "/.*$", "");
+			String addInfo = "";
+			if ( ( stepPair.size() == 1 && ModelBasedTesting.getInstance().hasCurrentEdgeBackTracking() ) || 
+				 ( stepPair.size() == 0 && ModelBasedTesting.getInstance().hasCurrentVertexBackTracking() ) ) {
+				addInfo = " BACKTRACK";
+			}
+	
+			if ( stepPair.size() == 1 ) {
+				ModelBasedTesting.getInstance().logExecution( ModelBasedTesting.getInstance().getMachine().getLastEdge(), addInfo );
+				ModelBasedTesting.getInstance().getStatisticsManager().addProgress( ModelBasedTesting.getInstance().getMachine().getLastEdge() );
+			}
+			else {
+				ModelBasedTesting.getInstance().logExecution( ModelBasedTesting.getInstance().getMachine().getCurrentState(), addInfo );
+				ModelBasedTesting.getInstance().getStatisticsManager().addProgress( ModelBasedTesting.getInstance().getMachine().getCurrentState() );
+			}
+			return value;
+		}
+		finally
+		{
+			if ( ModelBasedTesting.getInstance().isUseGUI() ) {
+				App.getInstance().status.setPaused();
 			}
 		}
-			
-		value = (String) stepPair.remove(0);
-		value = value.replaceAll( "/.*$", "");
-		String addInfo = "";
-		if( ( stepPair.size() == 1 && mbt.hasCurrentEdgeBackTracking() ) || 
-			( stepPair.size() == 0 && mbt.hasCurrentVertexBackTracking() ) )
-		{
-			addInfo = " BACKTRACK";
-		}
-
-		if ( stepPair.size() == 1 )
-		{
-			mbt.logExecution( mbt.getMachine().getLastEdge(), addInfo );
-			mbt.getStatisticsManager().addProgress( mbt.getMachine().getLastEdge() );
-		}
-		else
-		{
-			mbt.logExecution( mbt.getMachine().getCurrentState(), addInfo );
-			mbt.getStatisticsManager().addProgress( mbt.getMachine().getCurrentState() );
-		}
-		return value;
 	}
 
 	public boolean HasNextStep() {
@@ -132,22 +131,20 @@ public class SoapServices {
 		}
 		else
 		{
-			value = mbt.hasNextStep();
+			value = ModelBasedTesting.getInstance().hasNextStep();
 		}
 		logger.debug( "SOAP service hasNextStep returning: " + value );
 		if ( value == false )
-			logger.info( mbt.getStatisticsString() );
+			logger.info( ModelBasedTesting.getInstance().getStatisticsString() );
 		return value;
 	}
 
 	public boolean Reload() {
 		logger.debug( "SOAP service reload" );
-		mbt = null;
 		boolean retValue = true;
 		try
 		{
-			mbt = Util.loadMbtAsWSFromXml( this.xmlFile );
-			mbt.setUseGUI( app, this.xmlFile );
+			Util.loadMbtAsWSFromXml( this.xmlFile );
 		}
 		catch ( Exception e )
 		{			
@@ -167,12 +164,10 @@ public class SoapServices {
 	public boolean Load( String xmlFile ) {
 		logger.debug( "SOAP service load recieving: " + xmlFile );
 		this.xmlFile = xmlFile; 
-		mbt = null;
 		boolean retValue = true;
 		try
 		{
-			mbt = Util.loadMbtAsWSFromXml( this.xmlFile );
-			mbt.setUseGUI( app, this.xmlFile );
+			Util.loadMbtAsWSFromXml( this.xmlFile );
 		}
 		catch ( Exception e )
 		{			
@@ -191,7 +186,7 @@ public class SoapServices {
 
 	public String GetStatistics() {
 		logger.debug( "SOAP service getStatistics" );
-		logger.debug( "SOAP service getStatistics returning: " + mbt.getStatisticsString() );
-		return mbt.getStatisticsString();
+		logger.debug( "SOAP service getStatistics returning: " + ModelBasedTesting.getInstance().getStatisticsString() );
+		return ModelBasedTesting.getInstance().getStatisticsString();
 	}
 }

@@ -15,7 +15,7 @@
 //along with this program; if not, write to the Free Software
 //Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-package org.tigris.mbt;
+package org.tigris.mbt.machines;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -27,7 +27,13 @@ import java.util.Stack;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
+import org.tigris.mbt.Keywords;
+import org.tigris.mbt.Util;
 import org.tigris.mbt.exceptions.FoundNoEdgeException;
+import org.tigris.mbt.graph.AbstractElement;
+import org.tigris.mbt.graph.Edge;
+import org.tigris.mbt.graph.Graph;
+import org.tigris.mbt.graph.Vertex;
 
 
 /**

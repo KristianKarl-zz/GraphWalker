@@ -19,8 +19,8 @@ package org.tigris.mbt.filters;
 
 
 import org.apache.log4j.Logger;
-import org.tigris.mbt.Edge;
 import org.tigris.mbt.Util;
+import org.tigris.mbt.graph.Edge;
 
 import bsh.EvalError;
 import bsh.Interpreter;
@@ -39,7 +39,7 @@ public class AccessableEdgeFilter
 		i = intepreter;
 	}
 
-	public boolean acceptEdge( org.tigris.mbt.Graph graph, Edge edge) 
+	public boolean acceptEdge( org.tigris.mbt.graph.Graph graph, Edge edge) 
 	{
 		if ( edge.getGuardKey().isEmpty() )
 		{

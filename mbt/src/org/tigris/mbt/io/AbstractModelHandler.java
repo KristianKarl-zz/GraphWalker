@@ -2,7 +2,7 @@ package org.tigris.mbt.io;
 
 import java.io.PrintStream;
 
-import org.tigris.mbt.Graph;
+import org.tigris.mbt.graph.Graph;
 
 public abstract class AbstractModelHandler {
 

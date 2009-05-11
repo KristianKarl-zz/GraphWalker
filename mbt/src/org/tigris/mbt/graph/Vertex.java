@@ -1,4 +1,4 @@
-package org.tigris.mbt;
+package org.tigris.mbt.graph;
 
 public class Vertex extends AbstractElement {
 	

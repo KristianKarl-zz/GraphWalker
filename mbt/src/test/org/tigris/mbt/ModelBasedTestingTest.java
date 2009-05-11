@@ -12,6 +12,7 @@ import java.io.PrintStream;
 import org.tigris.mbt.ModelBasedTesting;
 import org.tigris.mbt.Util;
 import org.tigris.mbt.exceptions.InvalidDataException;
+import org.tigris.mbt.graph.Graph;
 
 import junit.framework.TestCase;
 
@@ -20,6 +21,11 @@ import junit.framework.TestCase;
  *
  */
 public class ModelBasedTestingTest extends TestCase {
+
+	protected void setUp() throws Exception {
+		super.setUp();
+		ModelBasedTesting.getInstance().reset();
+	}
 
 	private InputStream redirectIn()
 	{

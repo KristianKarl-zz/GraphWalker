@@ -3,7 +3,7 @@ package org.tigris.mbt.conditions;
 import java.util.Iterator;
 import java.util.Vector;
 
-import org.tigris.mbt.FiniteStateMachine;
+import org.tigris.mbt.machines.FiniteStateMachine;
 
 public class AlternativeCondition extends StopCondition {
 

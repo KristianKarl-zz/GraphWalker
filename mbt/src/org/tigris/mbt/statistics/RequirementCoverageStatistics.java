@@ -7,8 +7,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Vector;
 
-import org.tigris.mbt.AbstractElement;
-import org.tigris.mbt.Graph;
+import org.tigris.mbt.graph.AbstractElement;
+import org.tigris.mbt.graph.Graph;
 
 /**
  * @author Johan Tejle

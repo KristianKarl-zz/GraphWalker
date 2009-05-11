@@ -5,9 +5,9 @@ package org.tigris.mbt.statistics;
 
 import java.util.HashSet;
 
-import org.tigris.mbt.AbstractElement;
-import org.tigris.mbt.Edge;
-import org.tigris.mbt.Graph;
+import org.tigris.mbt.graph.AbstractElement;
+import org.tigris.mbt.graph.Edge;
+import org.tigris.mbt.graph.Graph;
 
 
 /**

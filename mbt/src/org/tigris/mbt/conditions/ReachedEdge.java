@@ -2,8 +2,8 @@ package org.tigris.mbt.conditions;
 
 import java.util.ArrayList;
 
-import org.tigris.mbt.Edge;
-import org.tigris.mbt.FiniteStateMachine;
+import org.tigris.mbt.graph.Edge;
+import org.tigris.mbt.machines.FiniteStateMachine;
 
 public class ReachedEdge extends StopCondition {
 

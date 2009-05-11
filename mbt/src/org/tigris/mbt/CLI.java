@@ -19,6 +19,7 @@ import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.PosixParser;
 import org.apache.log4j.Logger;
+import org.tigris.mbt.GUI.App;
 
 /**
  * Command Line Interface object, to the org.tigris.mbt package.
@@ -69,7 +70,7 @@ public class CLI
 	ModelBasedTesting getMbt() 
 	{
 		if(mbt == null)
-			mbt = new ModelBasedTesting();
+			mbt = ModelBasedTesting.getInstance();
 		return mbt;
 	}
 
@@ -528,7 +529,7 @@ public class CLI
 	 */
 	private void printVersionInformation()
 	{
-		System.out.println( "org.tigris.mbt version 2.2 RC1\n" );
+		System.out.println( "org.tigris.mbt version 2.2 (revision 635)\n" );
 		System.out.println( "org.tigris.mbt is open source software licensed under GPL" );
 		System.out.println( "The software (and it's source) can be downloaded from http://mbt.tigris.org/\n" );
 		System.out.println( "This package contains following software packages:" );
@@ -848,7 +849,7 @@ public class CLI
 	 * @throws IOException 
 	 */
 	private void RunCommandGui(CommandLine cl) throws IOException {
-		new org.tigris.mbt.GUI.mbt();
+		App.getInstance().run();
 	}
 
 	private boolean helpNeeded(String module, boolean condition, String message)

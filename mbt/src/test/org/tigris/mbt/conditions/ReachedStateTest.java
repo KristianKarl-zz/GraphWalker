@@ -1,13 +1,13 @@
 package test.org.tigris.mbt.conditions;
 
-import org.tigris.mbt.Edge;
-import org.tigris.mbt.Graph;
 import org.tigris.mbt.Keywords;
 import org.tigris.mbt.ModelBasedTesting;
 import org.tigris.mbt.Util;
-import org.tigris.mbt.Vertex;
 import org.tigris.mbt.conditions.ReachedState;
 import org.tigris.mbt.conditions.StopCondition;
+import org.tigris.mbt.graph.Edge;
+import org.tigris.mbt.graph.Graph;
+import org.tigris.mbt.graph.Vertex;
 
 import junit.framework.TestCase;
 
@@ -21,6 +21,7 @@ public class ReachedStateTest extends TestCase {
 	
 	protected void setUp() throws Exception {
 		super.setUp();
+		ModelBasedTesting.getInstance().reset();
 		graph = new Graph();
 		
 		start = Util.addVertexToGraph(graph, "Start");
@@ -41,13 +42,13 @@ public class ReachedStateTest extends TestCase {
 
 	public void testConstructor()
 	{
-		ModelBasedTesting mbt = new ModelBasedTesting();
+		ModelBasedTesting mbt = ModelBasedTesting.getInstance();
 		mbt.setCondition(new ReachedState("V2"));
 	}
 	
 	public void testFulfillment()
 	{
-		ModelBasedTesting mbt = new ModelBasedTesting();
+		ModelBasedTesting mbt = ModelBasedTesting.getInstance();
 		StopCondition condition = new ReachedState("V2");
 		mbt.setCondition(condition);
 		mbt.setGraph(graph);
@@ -63,7 +64,7 @@ public class ReachedStateTest extends TestCase {
 
 	public void testIsFulfilled()
 	{
-		ModelBasedTesting mbt = new ModelBasedTesting();
+		ModelBasedTesting mbt = ModelBasedTesting.getInstance();
 		StopCondition condition = new ReachedState("V2");
 		mbt.setCondition(condition);
 		mbt.setGraph(graph);

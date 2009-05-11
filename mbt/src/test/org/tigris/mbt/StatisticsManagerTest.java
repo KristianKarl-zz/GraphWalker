@@ -6,11 +6,11 @@ package test.org.tigris.mbt;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
-import org.tigris.mbt.Edge;
-import org.tigris.mbt.Graph;
 import org.tigris.mbt.StatisticsManager;
 import org.tigris.mbt.Util;
-import org.tigris.mbt.Vertex;
+import org.tigris.mbt.graph.Edge;
+import org.tigris.mbt.graph.Graph;
+import org.tigris.mbt.graph.Vertex;
 import org.tigris.mbt.statistics.EdgeCoverageStatistics;
 import org.tigris.mbt.statistics.EdgeSequenceCoverageStatistics;
 import org.tigris.mbt.statistics.RequirementCoverageStatistics;

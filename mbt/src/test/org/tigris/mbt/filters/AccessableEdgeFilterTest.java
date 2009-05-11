@@ -1,9 +1,9 @@
 package test.org.tigris.mbt.filters;
 
 import org.tigris.mbt.filters.AccessableEdgeFilter;
-import org.tigris.mbt.Edge;
-import org.tigris.mbt.Graph;
-import org.tigris.mbt.Vertex;
+import org.tigris.mbt.graph.Edge;
+import org.tigris.mbt.graph.Graph;
+import org.tigris.mbt.graph.Vertex;
 
 import bsh.EvalError;
 import bsh.Interpreter;

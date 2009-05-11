@@ -23,20 +23,21 @@ import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 import javax.swing.JToolBar;
+import javax.swing.SwingWorker;
 import javax.swing.event.ChangeEvent;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.xml.ws.Endpoint;
 
 import org.apache.commons.collections15.Transformer;
 import org.apache.log4j.Logger;
-import org.tigris.mbt.Edge;
-import org.tigris.mbt.Graph;
 import org.tigris.mbt.ModelBasedTesting;
 import org.tigris.mbt.SoapServices;
 import org.tigris.mbt.Util;
-import org.tigris.mbt.Vertex;
 import org.tigris.mbt.events.AppEvent;
 import org.tigris.mbt.events.MbtEvent;
+import org.tigris.mbt.graph.Edge;
+import org.tigris.mbt.graph.Graph;
+import org.tigris.mbt.graph.Vertex;
 
 import edu.uci.ics.jung.algorithms.layout.KKLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;
@@ -64,6 +65,7 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 	private VisualizationViewer<Vertex, Edge> vv;
 	private Layout<Vertex, Edge> layout;
 	private File xmlFile;
+	private ExecuteMBT executeMBT = null;
 	
 	public File getXmlFile() {
 		return xmlFile;
@@ -73,14 +75,12 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 		this.xmlFile = xmlFile;
 	}
 
-	private ModelBasedTesting mbt = null;
 	static private Logger log;
 	private static Endpoint endpoint = null;
 	private SoapServices soapService = null;
 	
 	private JButton loadButton;
 	private JButton reloadButton;
-	private JButton stopButton;
 	private JButton runButton;
 	private JButton pauseButton;
 	private JButton nextButton;
@@ -91,7 +91,6 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 	protected String newline = "\n";
 	static final private String LOAD = "load";
     static final private String RELOAD = "reload";
-    static final private String STOP = "stop";
     static final private String RUN = "run";
     static final private String PAUSE = "pause";
     static final private String NEXT = "next";
@@ -115,7 +114,7 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 		}
 
 		String wsURL = "http://" + Util.getInternetAddr().getCanonicalHostName() + ":" + Util.readWSPort() + "/mbt-services";
-		soapService = new SoapServices( getMbt(), this, xmlFile.getAbsolutePath() );
+		soapService = new SoapServices( xmlFile.getAbsolutePath() );
 		endpoint = Endpoint.publish( wsURL, soapService );
 
 		log.info( "Now running as a SOAP server. For the WSDL file, see: " + wsURL + "?WSDL" );
@@ -135,8 +134,6 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
             load();
         } else if (RELOAD.equals(cmd)) { // second button clicked
             reload();
-        } else if (STOP.equals(cmd)) { // third button clicked
-            stop();
         } else if (RUN.equals(cmd)) { // third button clicked
             run();
         } else if (PAUSE.equals(cmd)) { // third button clicked
@@ -144,7 +141,7 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
         } else if (NEXT.equals(cmd)) { // third button clicked
             next();
 	    } else if (SOAP.equals(cmd)) { // soap checkbox clicked
-	    	if ( xmlFile.canRead() )
+	    	if ( xmlFile != null && xmlFile.canRead() )
 	    		reload();
 	    }
     }
@@ -165,18 +162,18 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 	}
 
 	private void outPut() {
-		statisticsTextArea.setText(getMbt().getStatisticsString());
+		statisticsTextArea.setText( ModelBasedTesting.getInstance().getStatisticsString() );
 		
-		variablesTextArea.setText(getMbt().getStatisticsString());
+		variablesTextArea.setText( ModelBasedTesting.getInstance().getStatisticsString());
 		String str = "Last edge: "
-				+ (getMbt().getMachine().getLastEdge() == null ? ""
-						: (String) getMbt().getMachine().getLastEdge()
+				+ (ModelBasedTesting.getInstance().getMachine().getLastEdge() == null ? ""
+						: (String) ModelBasedTesting.getInstance().getMachine().getLastEdge()
 								.getLabelKey())
 				+ "   Current state: "
-				+ getMbt().getMachine().getCurrentState().getLabelKey();
+				+ ModelBasedTesting.getInstance().getMachine().getCurrentState().getLabelKey();
 		latestStateLabel.setText( str );
 		
-		str = getMbt().getMachine().getCurrentDataString();
+		str = ModelBasedTesting.getInstance().getMachine().getCurrentDataString();
 		str = str.replaceAll(";", newline);
 		variablesTextArea.setText( str );
 	}
@@ -185,7 +182,6 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 		if ( status.isPaused() ) {
 			loadButton.setEnabled(true);
 			reloadButton.setEnabled(true);
-			stopButton.setEnabled(true);
 			runButton.setEnabled(true);
 			pauseButton.setEnabled(false);
 			nextButton.setEnabled(true);
@@ -194,44 +190,55 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 		else if ( status.isRunning() ) {
 			loadButton.setEnabled(false);
 			reloadButton.setEnabled(false);
-			stopButton.setEnabled(true);
 			runButton.setEnabled(false);
 			pauseButton.setEnabled(true);
 			nextButton.setEnabled(false);
-			soapButton.setEnabled(true);
+			soapButton.setEnabled(false);
 		}
-		else if ( status.isStopped() ) {
-			loadButton.setEnabled(true);
-			reloadButton.setEnabled(true);
-			stopButton.setEnabled(false);
-			runButton.setEnabled(true);
+		else if ( status.isNext() ) {
+			loadButton.setEnabled(false);
+			reloadButton.setEnabled(false);
+			runButton.setEnabled(false);
 			pauseButton.setEnabled(false);
-			nextButton.setEnabled(true);
-			soapButton.setEnabled(true);
+			nextButton.setEnabled(false);
+			soapButton.setEnabled(false);
 		}
 	}
 	
+	@SuppressWarnings("synthetic-access")
 	private void loadModel() {
+		if ( executeMBT != null ) {
+			executeMBT.cancel(true);
+			executeMBT = null;
+		}
+		status.setPaused();
+		setButtons();
 		if ( soapButton.isSelected() )
 			runSoap();
 		else
 		{
 			log.debug( "Loading model" );
-			setMbt( Util.loadMbtFromXmlUsingGUI( xmlFile.getAbsolutePath(), this ) );
+			Util.loadMbtFromXml( xmlFile.getAbsolutePath() );
 		}
-		setButtons();
-		status.setStopped();
-	}
-
-	public void stop() {
-		status.setStopped();
-		setButtons();
+		(executeMBT = new ExecuteMBT()).execute();
 	}
 
 	public void run() {
 		status.setRunning();
-		setButtons();
+		setButtons();		
 	}
+	
+    private class ExecuteMBT extends SwingWorker<Void, Void> {
+        protected Void doInBackground() {
+        	ModelBasedTesting.getInstance().executePath();
+            return null;
+        }
+
+        protected void done() {
+			super.done();
+			App.getInstance().pause();
+		}
+    }
 
 	public void pause() {
 		status.setPaused();
@@ -239,17 +246,19 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 	}
 
 	public void next() {
-		if ( getMbt().hasNextStep() == false )
+		if ( ModelBasedTesting.getInstance().hasNextStep() == false )
 			return;
-		if ( status.isPaused() || status.isStopped() ) {
-			status.setNext();			
+		if ( status.isNext() ) {
 			return;
 		}
 
+		setButtons();
 		status.setNext();
-		setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-		getMbt().getNextStep();
-		setCursor(Cursor.getDefaultCursor());
+		setCursor( Cursor.getPredefinedCursor( Cursor.WAIT_CURSOR ) );
+		ModelBasedTesting.getInstance().getNextStep();
+		setCursor( Cursor.getDefaultCursor() );
+		status.setPaused();
+		setButtons();
 	}
 
 	public void updateUI() {
@@ -269,26 +278,18 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 		return vv;
 	}
 
-
-	public void setMbt(ModelBasedTesting mbt) {
-		this.mbt = mbt;
-		this.mbt.SetMbtEventNotifier(this);
-		if ( this.mbt.getGraph() != null ) {
-			setButtons();
-			setLayout(new KKLayout<Vertex, Edge>(this.mbt.getGraph()));
-			getVv().setGraphLayout(layout);
+	public void updateLayout() {
+		if ( ModelBasedTesting.getInstance().getGraph() != null ) {
+			setLayout( new KKLayout<Vertex, Edge>( ModelBasedTesting.getInstance().getGraph() ) );
+			getVv().setGraphLayout( layout );
 			updateUI();
 		}
 	}
 
-	public ModelBasedTesting getMbt() {
-		return mbt;
-	}
-
 	public class MyEdgePaintFunction implements Transformer<Edge,Paint> { 
 		public Paint transform(Edge e) {
-			if (getMbt().getMachine().getLastEdge() != null
-					&& getMbt().getMachine().getLastEdge().equals(e))
+			if ( ModelBasedTesting.getInstance().getMachine().getLastEdge() != null && 
+				 ModelBasedTesting.getInstance().getMachine().getLastEdge().equals(e))
 				return Color.RED;
 			else if (e.getVisitedKey() > 0)
 				return Color.LIGHT_GRAY;
@@ -303,8 +304,8 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 		protected final Stroke CURRENT = new BasicStroke(3);
 
         public Stroke transform(Edge e) {
-			if (getMbt().getMachine().getLastEdge() != null
-					&& getMbt().getMachine().getLastEdge().equals(e))
+			if ( ModelBasedTesting.getInstance().getMachine().getLastEdge() != null	&&
+				 ModelBasedTesting.getInstance().getMachine().getLastEdge().equals(e))
 				return CURRENT;
 			else if (e.getVisitedKey() > 0)
 				return VISITED;
@@ -316,7 +317,7 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 	
 	public class MyVertexPaintFunction implements Transformer<Vertex,Paint> {
 		public Paint transform(Vertex v) {
-			if (getMbt().getMachine().isCurrentState(v))
+			if ( ModelBasedTesting.getInstance().getMachine().isCurrentState(v))
 				return Color.RED;
 			else if (v.getVisitedKey() > 0 )
 				return Color.LIGHT_GRAY;
@@ -327,7 +328,7 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 
 	public class MyVertexFillPaintFunction implements Transformer<Vertex,Paint> {
 		public Paint transform( Vertex v ) {
-			if (getMbt().getMachine().isCurrentState(v))
+			if ( ModelBasedTesting.getInstance().getMachine().isCurrentState(v))
 				return Color.RED;
 			else if ( v.getVisitedKey() > 0 )
 				return Color.LIGHT_GRAY;
@@ -337,10 +338,10 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 	}
 
 	private VisualizationViewer<Vertex, Edge> getGraphViewer() {		
-		if ( getMbt().getGraph() == null )
+		if ( ModelBasedTesting.getInstance().getGraph() == null )
 			layout = new KKLayout<Vertex, Edge>(new Graph() );
 		else
-			layout = new KKLayout<Vertex, Edge>(getMbt().getGraph());
+			layout = new KKLayout<Vertex, Edge>( ModelBasedTesting.getInstance().getGraph() );
 		
 		vv = new VisualizationViewer<Vertex, Edge>(layout);
 
@@ -355,14 +356,14 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 
         Transformer<Vertex,String> vertexStringer = new Transformer<Vertex,String>(){
             public String transform(Vertex v) {
-                return "<html><center>" + v.getLabelKey() + "<p>INDEX=" + v.getIndexKey();
+                return "<html><center>" + v.getFullLabelKey().replaceAll( "\\n", "<p>" ) + "<p>INDEX=" + v.getIndexKey();
             }
         };
 		vv.getRenderContext().setVertexLabelTransformer(vertexStringer);
 
         Transformer<Edge,String> edgeStringer = new Transformer<Edge,String>(){
             public String transform(Edge e) {
-                return "<html><center>" + e.getLabelKey() + "<p>INDEX=" + e.getIndexKey();
+                return "<html><center>" + e.getFullLabelKey().replaceAll( "\\n", "<p>" ) + "<p>INDEX=" + e.getIndexKey();
             }
         };
         vv.getRenderContext().setEdgeLabelTransformer(edgeStringer);
@@ -392,7 +393,7 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 			String actionCommand, String toolTipText, String altText, boolean enabled) {
 		
 		// Look for the image.
-		String imgLocation = "icons/" + imageName + ".png";
+		String imgLocation = "resources/icons/" + imageName + ".png";
 		URL imageURL = App.class.getResource(imgLocation);
 
 		// Create and initialize the button.
@@ -414,10 +415,6 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 
 	protected JCheckBox makeNavigationCheckBoxButton(String imageName,
 			String actionCommand, String toolTipText, String altText) {
-		
-		// Look for the image.
-		String imgLocation = "icons/" + imageName + ".png";
-		URL imageURL = App.class.getResource(imgLocation);
 
 		// Create and initialize the button.
 		JCheckBox button = new JCheckBox();
@@ -425,12 +422,7 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 		button.setToolTipText(toolTipText);
 		button.addActionListener(this);
 
-		if (imageURL != null) { // image found
-			button.setIcon(new ImageIcon(imageURL, altText));
-		} else { // no image found
-			button.setText(altText);
-			log.error("Resource not found: " + imgLocation);
-		}
+		button.setText(altText);
 
 		return button;
 	}
@@ -446,11 +438,6 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
                 "Reload already loaded Model",
         		"Reload", false);
 		toolBar.add(reloadButton);
-
-		stopButton = makeNavigationButton("stop", STOP,
-                "Stops the execution",
-        		"Stop", false);
-		toolBar.add(stopButton);
 
 		runButton = makeNavigationButton("run", RUN,
                 "Starts the execution",
@@ -484,7 +471,6 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 	public void init() {
 		setTitle("Split Pane Application");
 		setBackground(Color.gray);
-		setMbt( new ModelBasedTesting() );
 
 		JPanel topPanel = new JPanel();
 		topPanel.setLayout(new BorderLayout());
@@ -510,25 +496,32 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 		addButtons(toolBar);
 	}
 
-	public App(){
-		log = Util.setupLogger( App.class );		
-	}
-	
-	public static void main(String args[]) {
-		App mainFrame = new App();
-		mainFrame.init();
-		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		mainFrame.pack();
-		mainFrame.setLocationByPlatform(true);
-		mainFrame.setVisible(true);
-	}
-
-	public App Run() {
+	// Private constructor prevents instantiation from other classes
+	private App() {
+		log = Util.setupLogger( App.class );
 		init();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		pack();
 		setLocationByPlatform(true);
 		setVisible(true);
-		return this;
+	}
+
+	/**
+	 * AppHolder is loaded on the first execution of App.getInstance() 
+	 * or the first access to AppHolder.INSTANCE, not before.
+	 */
+	@SuppressWarnings("synthetic-access")
+	private static class AppHolder { 
+		private static final App INSTANCE = new App();
+	}
+
+	@SuppressWarnings("synthetic-access")
+	public static App getInstance() {
+		return AppHolder.INSTANCE;
+	}
+
+	public static void main(String args[]) {
+		getInstance();
+		ModelBasedTesting.getInstance().setUseGUI();
 	}
 }

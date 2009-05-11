@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
-import org.tigris.mbt.Edge;
 import org.tigris.mbt.Util;
-import org.tigris.mbt.Vertex;
+import org.tigris.mbt.graph.Edge;
+import org.tigris.mbt.graph.Vertex;
 
 import edu.uci.ics.jung.algorithms.shortestpath.DijkstraShortestPath;
 

@@ -1,15 +1,15 @@
 package test.org.tigris.mbt.generators;
 
-import org.tigris.mbt.Edge;
-import org.tigris.mbt.ExtendedFiniteStateMachine;
-import org.tigris.mbt.FiniteStateMachine;
-import org.tigris.mbt.Graph;
 import org.tigris.mbt.Util;
-import org.tigris.mbt.Vertex;
 import org.tigris.mbt.conditions.ReachedEdge;
 import org.tigris.mbt.conditions.ReachedState;
 import org.tigris.mbt.generators.PathGenerator;
 import org.tigris.mbt.generators.A_StarPathGenerator;
+import org.tigris.mbt.graph.Edge;
+import org.tigris.mbt.graph.Graph;
+import org.tigris.mbt.graph.Vertex;
+import org.tigris.mbt.machines.ExtendedFiniteStateMachine;
+import org.tigris.mbt.machines.FiniteStateMachine;
 
 import junit.framework.TestCase;
 
