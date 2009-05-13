@@ -11,7 +11,9 @@ import java.awt.Stroke;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.net.InetAddress;
 import java.net.URL;
+import java.net.UnknownHostException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -113,11 +115,16 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 			endpoint.stop();
 		}
 
-		String wsURL = "http://" + Util.getInternetAddr().getCanonicalHostName() + ":" + Util.readWSPort() + "/mbt-services";
+		String wsURL = "http://0.0.0.0:" + Util.readWSPort() + "/mbt-services";
 		soapService = new SoapServices( xmlFile.getAbsolutePath() );
 		endpoint = Endpoint.publish( wsURL, soapService );
-
-		log.info( "Now running as a SOAP server. For the WSDL file, see: " + wsURL + "?WSDL" );
+		
+		try {
+			log.info( "Now running as a SOAP server. For the WSDL file, see: " + wsURL.replace( "0.0.0.0", InetAddress.getLocalHost().getHostName() ) + "?WSDL" );
+		} catch (UnknownHostException e) {
+			log.info( "Now running as a SOAP server. For the WSDL file, see: " + wsURL + "?WSDL" );
+			log.error( e.getMessage() );
+		}
 	}
 
 	public void getNextEvent() {

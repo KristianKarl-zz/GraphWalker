@@ -680,25 +680,24 @@ public class Util {
 	  return p[n];
 	}
 	
-	public static InetAddress getInternetAddr() {
+	public static InetAddress getInternetAddr( String nic ) {
 		// Find the real network interface
 		NetworkInterface iface = null;
 		InetAddress ia = null;
 		boolean foundNIC = false;
 		try {
 			for( Enumeration<NetworkInterface> ifaces = NetworkInterface.getNetworkInterfaces();
-			     ifaces.hasMoreElements() && foundNIC == false; )
-			{
+			     ifaces.hasMoreElements() && foundNIC == false; ) {
 				iface = (NetworkInterface)ifaces.nextElement();
 				logger.debug( "Interface: "+ iface.getDisplayName() );
 				for ( Enumeration<InetAddress> ips = iface.getInetAddresses();
-				      ips.hasMoreElements() && foundNIC == false; )
-				{
+				      ips.hasMoreElements() && foundNIC == false; ) {
 					ia = (InetAddress)ips.nextElement();
 					logger.debug( ia.getCanonicalHostName() + " " + ia.getHostAddress() );
 					if( !ia.isLoopbackAddress() ){
 						logger.debug( "  Not a loopback address..." );
-						if( ia.getHostAddress().indexOf(":") == -1 ){							
+						if( ia.getHostAddress().indexOf(":") == -1 &&
+								nic.equals( iface.getDisplayName() ) ){							
 							logger.debug( "  Host address does not contain ':'" );
 							logger.debug( "  Interface: " + iface.getName() + " seems to be InternetInterface. I'll take it...");
 							foundNIC = true;
@@ -706,8 +705,19 @@ public class Util {
 					}
 				}
 			}
-		} catch (SocketException e) {
+		} 
+		catch (SocketException e) {
 			logger.error( e.getMessage() );
+		}
+		finally {
+			if ( foundNIC == false && nic != null ) {
+				logger.error( "Could not bind to network interface: " + nic );
+				throw new RuntimeException( "Could not bind to network interface: " + nic );
+			}
+			else if ( foundNIC == false && nic == null ) {
+				logger.error( "Could not bind to any network interface" );
+				throw new RuntimeException( "Could not bind to any network interface: " );
+			} 
 		}
 		return ia;
 	}	

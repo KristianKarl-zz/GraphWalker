@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.Timer;
@@ -19,7 +21,6 @@ import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.PosixParser;
 import org.apache.log4j.Logger;
-import org.tigris.mbt.GUI.App;
 
 /**
  * Command Line Interface object, to the org.tigris.mbt package.
@@ -513,9 +514,19 @@ public class CLI
 	 */
 	private void buildSoapCLI() {
 		opt.addOption( OptionBuilder.withArgName( "file" )
-                .withDescription( "The xml file containing the mbt settings." )
+                .withDescription( "The xml file containing the mbt model and settings." )
                 .hasArg()
                 .create( "f" ) );
+		opt.addOption( OptionBuilder.withArgName( "interface" )
+                .withDescription( "The network interface to which mbt should bind to. " +
+                		"If not given, the default is 0.0.0.0" )
+                .hasArg()
+                .create( "i" ) );
+		opt.addOption( OptionBuilder.withArgName( "port" )
+                .withDescription( "The port to which mbt should listen to. " +
+                		"If not given, the default is 9090" )
+                .hasArg()
+                .create( "p" ) );
 	}
 	
 	/**
@@ -529,7 +540,7 @@ public class CLI
 	 */
 	private void printVersionInformation()
 	{
-		System.out.println( "org.tigris.mbt version 2.2 (revision 640) Beta 1\n" );
+		System.out.println( "org.tigris.mbt version 2.2 (revision 643) Beta 1\n" );
 		System.out.println( "org.tigris.mbt is open source software licensed under GPL" );
 		System.out.println( "The software (and it's source) can be downloaded from http://mbt.tigris.org/\n" );
 		System.out.println( "This package contains following software packages:" );
@@ -833,12 +844,32 @@ public class CLI
 
 	/**
 	 * Run the soap command
+	 * @throws UnknownHostException 
 	 */
-	private void RunCommandSoap(CommandLine cl)  {
-
-		String wsURL = "http://" + Util.getInternetAddr().getCanonicalHostName() + ":" + Util.readWSPort() + "/mbt-services";
+	private void RunCommandSoap(CommandLine cl) throws UnknownHostException  {
+		String port = null;
+		String nicAddr = null;
+		if( cl.hasOption( "p" ) ) {
+			port = cl.getOptionValue( "p" );
+		}
+		else {
+			port =  Util.readWSPort();
+		}
+		
+		if( cl.hasOption( "i" ) ) {
+			nicAddr = Util.getInternetAddr( cl.getOptionValue( "i" ) ).getCanonicalHostName();
+		}
+		else {
+			nicAddr = "0.0.0.0";
+		}
+				
+		String wsURL = "http://" + nicAddr + ":" + port + "/mbt-services";
 		endpoint = Endpoint.publish( wsURL, new SoapServices( cl.getOptionValue( "f" ) ) );
 
+		if ( nicAddr.equals( "0.0.0.0" ) ) {
+			wsURL = wsURL.replace( "0.0.0.0", InetAddress.getLocalHost().getHostName() );
+		}
+		
 		System.out.println( "Now running as a SOAP server. For the WSDL file, see: " + wsURL + "?WSDL" );
 		System.out.println( "Press Ctrl+C to quit" );
 		System.out.println( "" );
