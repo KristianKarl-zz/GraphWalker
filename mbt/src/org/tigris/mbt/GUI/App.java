@@ -10,6 +10,7 @@ import java.awt.Stroke;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.geom.Point2D;
 import java.io.File;
 import java.net.InetAddress;
 import java.net.URL;
@@ -41,8 +42,9 @@ import org.tigris.mbt.graph.Edge;
 import org.tigris.mbt.graph.Graph;
 import org.tigris.mbt.graph.Vertex;
 
-import edu.uci.ics.jung.algorithms.layout.KKLayout;
+import edu.uci.ics.jung.algorithms.layout.StaticLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;
+import edu.uci.ics.jung.algorithms.layout.StaticLayout;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.DefaultModalGraphMouse;
 import edu.uci.ics.jung.visualization.picking.ShapePickSupport;
@@ -279,6 +281,14 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 
 	public void setLayout(Layout<Vertex, Edge> layout) {
 		this.layout = layout;
+
+		Transformer<Vertex,Point2D> vertexLocation = new Transformer<Vertex,Point2D>(){
+            public Point2D transform(Vertex v) {
+                return v.getLocation();
+            }
+        };
+
+		this.layout.setInitializer(vertexLocation);
 	}
 
 	public VisualizationViewer<Vertex, Edge> getVv() {
@@ -287,7 +297,7 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 
 	public void updateLayout() {
 		if ( ModelBasedTesting.getInstance().getGraph() != null ) {
-			setLayout( new KKLayout<Vertex, Edge>( ModelBasedTesting.getInstance().getGraph() ) );
+			setLayout( new StaticLayout<Vertex, Edge>( ModelBasedTesting.getInstance().getGraph() ) );
 			getVv().setGraphLayout( layout );
 			updateUI();
 		}
@@ -346,9 +356,10 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 
 	private VisualizationViewer<Vertex, Edge> getGraphViewer() {		
 		if ( ModelBasedTesting.getInstance().getGraph() == null )
-			layout = new KKLayout<Vertex, Edge>(new Graph() );
+			layout = new StaticLayout<Vertex, Edge>(new Graph() );
 		else
-			layout = new KKLayout<Vertex, Edge>( ModelBasedTesting.getInstance().getGraph() );
+			//layout = new StaticLayout<Vertex, Edge>( ModelBasedTesting.getInstance().getGraph() );
+			layout = new StaticLayout<Vertex, Edge>( ModelBasedTesting.getInstance().getGraph() );
 		
 		vv = new VisualizationViewer<Vertex, Edge>(layout);
 

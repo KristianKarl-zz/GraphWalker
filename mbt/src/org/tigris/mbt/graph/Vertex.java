@@ -1,5 +1,7 @@
 package org.tigris.mbt.graph;
 
+import java.awt.geom.Point2D;
+
 public class Vertex extends AbstractElement {
 	
 	private String motherStartVertexKey = new String();
@@ -29,6 +31,12 @@ public class Vertex extends AbstractElement {
 
 	public void setMotherStartVertexKey(String motherStartVertexKey) {
 		this.motherStartVertexKey = motherStartVertexKey;
+	}
+
+	public Point2D getLocation() {
+		// TODO Auto-generated method stub
+		return new Point2D.Double( Double.parseDouble( getXPosKey() ), 
+								   Double.parseDouble( getYPosKey() ) );
 	}
 
 }
