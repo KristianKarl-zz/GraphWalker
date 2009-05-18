@@ -1,5 +1,7 @@
 package org.tigris.mbt.io;
 
+import java.awt.Color;
+import java.awt.geom.Point2D;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -314,10 +316,19 @@ public class GraphML extends AbstractModelHandler
 							logger.debug( "  height: '" + geometry.getAttributeValue( "height" ) + "'" );
 							logger.debug( "  x position: '" + geometry.getAttributeValue( "x" ) + "'" );
 							logger.debug( "  y position: '" + geometry.getAttributeValue( "y" ) + "'" );
-							currentVertex.setWidthKey( geometry.getAttributeValue( "width" )  );							
-							currentVertex.setHeightKey( geometry.getAttributeValue( "height" ) );
-							currentVertex.setXPosKey( geometry.getAttributeValue( "x" ) );							
-							currentVertex.setYPosKey( geometry.getAttributeValue( "y" ) );
+							currentVertex.setWidth( Float.parseFloat( geometry.getAttributeValue( "width" ) ) );							
+							currentVertex.setHeight( Float.parseFloat( geometry.getAttributeValue( "height" ) ) );
+							currentVertex.setLocation( new Point2D.Float( Float.parseFloat( geometry.getAttributeValue( "x" ) ), 
+																		  Float.parseFloat( geometry.getAttributeValue( "y" ) ) ) );						
+						}
+					}
+					Iterator<Object> iterFill = element.getDescendants( new org.jdom.filter.ElementFilter( "Fill" ) );
+					while ( iterFill.hasNext() && currentVertex != null ) {
+						Object o2 = iterFill.next();
+						if ( o2 instanceof org.jdom.Element ) {
+							org.jdom.Element fill = (org.jdom.Element)o2;							
+							logger.debug( "  fill color: '" + fill.getAttributeValue( "color" ) + "'" );
+							currentVertex.setFillColor( new Color( Integer.parseInt(fill.getAttributeValue( "color" ).replace("#", ""), 16) ) );
 						}
 					}
 				}
@@ -1290,8 +1301,8 @@ public class GraphML extends AbstractModelHandler
 			{
 				ps.println( "        <y:ImageNode >" );
 				ps.println( "          <y:Geometry  x=\"241.875\" y=\"158.701171875\" width=\"" +
-						                        v.getWidthKey() + "\" height=\"" +
-						                        v.getHeightKey() + "\"/>" );
+						                        v.getWidth() + "\" height=\"" +
+						                        v.getHeight() + "\"/>" );
 			}
 			else
 			{

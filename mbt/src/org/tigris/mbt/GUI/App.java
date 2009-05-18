@@ -46,7 +46,6 @@ import org.tigris.mbt.graph.Vertex;
 
 import edu.uci.ics.jung.algorithms.layout.StaticLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;
-import edu.uci.ics.jung.algorithms.layout.StaticLayout;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.DefaultModalGraphMouse;
 import edu.uci.ics.jung.visualization.picking.ShapePickSupport;
@@ -353,7 +352,7 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 			else if ( v.getVisitedKey() > 0 )
 				return Color.LIGHT_GRAY;
 			else
-				return Color.BLUE;
+				return v.getFillColor();
 		}
 	}
 
@@ -377,7 +376,7 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 
         Transformer<Vertex,Shape> vertexShape = new Transformer<Vertex,Shape>(){
             public Shape transform(Vertex v) {
-            	Shape shape = new Rectangle2D.Float(0,0,Float.parseFloat(v.getWidthKey()),Float.parseFloat(v.getHeightKey()));
+            	Shape shape = new Rectangle2D.Float(0,0, v.getWidth(),v.getHeight());
                 return shape;
             }
         };

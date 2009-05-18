@@ -18,10 +18,6 @@ public class AbstractElement {
 	private boolean noMergeKey = false;
 	private boolean blockedKey = false;
 	private String imageKey = new String();
-	private String widthKey = new String();
-	private String heightKey = new String();
-	private String xPosKey = new String();
-	private String yPosKey = new String();
 	private boolean mergedMbtKey = false;
 
 	public AbstractElement() {
@@ -42,10 +38,6 @@ public class AbstractElement {
 		this.noMergeKey = ae.noMergeKey;
 		this.blockedKey = ae.blockedKey;
 		this.imageKey = ae.imageKey;
-		this.widthKey = ae.widthKey;
-		this.heightKey = ae.heightKey;
-		this.xPosKey = ae.xPosKey;
-		this.yPosKey = ae.yPosKey;
 		this.mergedMbtKey = ae.mergedMbtKey;
 	}
 
@@ -66,10 +58,6 @@ public class AbstractElement {
 			this.noMergeKey = A.noMergeKey;
 			this.blockedKey = A.blockedKey;
 			this.imageKey = A.imageKey;
-			this.widthKey = A.widthKey;
-			this.heightKey = A.heightKey;
-			this.xPosKey = A.xPosKey;
-			this.yPosKey = A.yPosKey;
 			this.mergedMbtKey = A.mergedMbtKey;
 		}
 		else
@@ -88,10 +76,6 @@ public class AbstractElement {
 			this.noMergeKey = B.noMergeKey;
 			this.blockedKey = B.blockedKey;
 			this.imageKey = B.imageKey;
-			this.widthKey = B.widthKey;
-			this.heightKey = B.heightKey;
-			this.xPosKey = B.xPosKey;
-			this.yPosKey = B.yPosKey;
 			this.mergedMbtKey = B.mergedMbtKey;
 		}
 	}
@@ -102,38 +86,6 @@ public class AbstractElement {
 
 	public void setMergedMbtKey(boolean mergedMbtKey) {
 		this.mergedMbtKey = mergedMbtKey;
-	}
-
-	public String getWidthKey() {
-		return widthKey;
-	}
-
-	public void setWidthKey(String widthKey) {
-		this.widthKey = widthKey;
-	}
-
-	public String getHeightKey() {
-		return heightKey;
-	}
-
-	public void setHeightKey(String heightKey) {
-		this.heightKey = heightKey;
-	}
-
-	public String getXPosKey() {
-		return xPosKey;
-	}
-
-	public void setXPosKey(String posKey) {
-		xPosKey = posKey;
-	}
-
-	public String getYPosKey() {
-		return yPosKey;
-	}
-
-	public void setYPosKey(String posKey) {
-		yPosKey = posKey;
 	}
 
 	public String getImageKey() {
