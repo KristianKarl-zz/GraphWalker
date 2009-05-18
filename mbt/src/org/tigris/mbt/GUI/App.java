@@ -229,6 +229,7 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 		else
 		{
 			log.debug( "Loading model" );
+			ModelBasedTesting.getInstance().setUseGUI();
 			Util.loadMbtFromXml( xmlFile.getAbsolutePath() );
 		}
 		(executeMBT = new ExecuteMBT()).execute();
