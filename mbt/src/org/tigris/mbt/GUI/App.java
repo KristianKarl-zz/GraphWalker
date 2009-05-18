@@ -6,11 +6,13 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Paint;
+import java.awt.Shape;
 import java.awt.Stroke;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.net.InetAddress;
 import java.net.URL;
@@ -48,6 +50,7 @@ import edu.uci.ics.jung.algorithms.layout.StaticLayout;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.DefaultModalGraphMouse;
 import edu.uci.ics.jung.visualization.picking.ShapePickSupport;
+import edu.uci.ics.jung.visualization.renderers.Renderer;
 
 
 public class App extends JFrame implements ActionListener, MbtEvent  {
@@ -316,7 +319,7 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 	}
 	
 	public class MyEdgeStrokeFunction implements Transformer<Edge,Stroke> {
-		protected final Stroke UNVISITED = new BasicStroke(1);
+		protected final Stroke UNVISITED = new BasicStroke(3);
 		protected final Stroke VISITED = new BasicStroke(1);
 		protected final Stroke CURRENT = new BasicStroke(3);
 
@@ -358,7 +361,6 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 		if ( ModelBasedTesting.getInstance().getGraph() == null )
 			layout = new StaticLayout<Vertex, Edge>(new Graph() );
 		else
-			//layout = new StaticLayout<Vertex, Edge>( ModelBasedTesting.getInstance().getGraph() );
 			layout = new StaticLayout<Vertex, Edge>( ModelBasedTesting.getInstance().getGraph() );
 		
 		vv = new VisualizationViewer<Vertex, Edge>(layout);
@@ -371,6 +373,15 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
         vv.getRenderContext().setVertexFillPaintTransformer(new MyVertexFillPaintFunction());
         vv.getRenderContext().setEdgeDrawPaintTransformer(new MyEdgePaintFunction());
         vv.getRenderContext().setEdgeStrokeTransformer(new MyEdgeStrokeFunction());
+        vv.getRenderer().getVertexLabelRenderer().setPosition(Renderer.VertexLabel.Position.CNTR);
+
+        Transformer<Vertex,Shape> vertexShape = new Transformer<Vertex,Shape>(){
+            public Shape transform(Vertex v) {
+            	Shape shape = new Rectangle2D.Float(0,0,Float.parseFloat(v.getWidthKey()),Float.parseFloat(v.getHeightKey()));
+                return shape;
+            }
+        };
+        vv.getRenderContext().setVertexShapeTransformer( vertexShape );
 
         Transformer<Vertex,String> vertexStringer = new Transformer<Vertex,String>(){
             public String transform(Vertex v) {
