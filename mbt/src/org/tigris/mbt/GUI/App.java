@@ -46,6 +46,7 @@ import org.tigris.mbt.graph.Vertex;
 
 import edu.uci.ics.jung.algorithms.layout.StaticLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;
+import edu.uci.ics.jung.visualization.Layer;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.DefaultModalGraphMouse;
 import edu.uci.ics.jung.visualization.picking.ShapePickSupport;
@@ -232,6 +233,7 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 			ModelBasedTesting.getInstance().setUseGUI();
 			Util.loadMbtFromXml( xmlFile.getAbsolutePath() );
 			setTitle( "Model-Based Testing - " + xmlFile.getName() );
+			centerOnVertex();
 		}
 		(executeMBT = new ExecuteMBT()).execute();
 	}
@@ -272,6 +274,21 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 		setCursor( Cursor.getDefaultCursor() );
 		status.setPaused();
 		setButtons();
+		centerOnVertex();
+	}
+	
+	public void centerOnVertex() {
+		Vertex v = ModelBasedTesting.getInstance().getCurrentVertex();
+		if ( v != null ) {
+			Point2D target = getVv().getGraphLayout().transform( v );
+			Point2D current = vv.getRenderContext()
+					.getMultiLayerTransformer().inverseTransform(
+							vv.getCenter());
+			double dx = current.getX() - target.getX();
+			double dy = current.getY() - target.getY();
+			vv.getRenderContext().getMultiLayerTransformer()
+					.getTransformer(Layer.LAYOUT).translate(dx, dy);
+		}
 	}
 
 	public void updateUI() {

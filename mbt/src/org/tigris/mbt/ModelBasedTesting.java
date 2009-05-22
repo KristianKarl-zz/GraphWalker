@@ -919,4 +919,12 @@ public class ModelBasedTesting
 	public void setWeighted(boolean b) {
 		getMachine().setWeighted(b);
 	}
+
+
+	public Vertex getCurrentVertex() {
+		if(this.machine != null)
+			return getMachine().getCurrentState();
+		logger.warn( "Trying to retrieve current state without specifying machine" );
+		return null;
+	}
 }
