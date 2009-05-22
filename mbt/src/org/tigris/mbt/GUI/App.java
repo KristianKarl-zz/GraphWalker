@@ -231,6 +231,7 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 			log.debug( "Loading model" );
 			ModelBasedTesting.getInstance().setUseGUI();
 			Util.loadMbtFromXml( xmlFile.getAbsolutePath() );
+			setTitle( "Model-Based Testing - " + xmlFile.getName() );
 		}
 		(executeMBT = new ExecuteMBT()).execute();
 	}
@@ -498,7 +499,7 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 	}
 
 	public void init() {
-		setTitle("Split Pane Application");
+		setTitle("Model-Based Testing");
 		setBackground(Color.gray);
 
 		JPanel topPanel = new JPanel();
