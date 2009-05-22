@@ -1,25 +1,22 @@
 package test.org.tigris.mbt.io;
 
+import org.tigris.mbt.Keywords;
 import org.tigris.mbt.ModelBasedTesting;
-import org.tigris.mbt.graph.Edge;
-import org.tigris.mbt.graph.Graph;
-import org.tigris.mbt.graph.Vertex;
+
+import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
+import edu.uci.ics.jung.graph.impl.DirectedSparseVertex;
+import edu.uci.ics.jung.graph.impl.SparseGraph;
 
 import junit.framework.TestCase;
 
 public class GraphMLTest extends TestCase {
 
-	protected void setUp() throws Exception {
-		super.setUp();
-		ModelBasedTesting.getInstance().reset();
-	}
-	
     // Test various types of efsm labels
     public void testMergeEFSM_Lables()
     {
     	try
     	{
-	    	ModelBasedTesting mbt = ModelBasedTesting.getInstance();
+	    	ModelBasedTesting mbt = new ModelBasedTesting();
 	    	mbt.readGraph( "graphml/efsm_lables/testMergeEFSM_Lables.graphml" );
     	} catch (Exception e) {
     		System.err.println(e.getMessage());
@@ -32,7 +29,7 @@ public class GraphMLTest extends TestCase {
     {
     	try
     	{
-	    	ModelBasedTesting mbt = ModelBasedTesting.getInstance();
+	    	ModelBasedTesting mbt = new ModelBasedTesting();
 	    	mbt.readGraph( "graphml/test23" );
 	    	verifyIds( mbt.getGraph() );
 		}
@@ -48,7 +45,7 @@ public class GraphMLTest extends TestCase {
     {
     	try
     	{
-	    	ModelBasedTesting mbt = ModelBasedTesting.getInstance();
+	    	ModelBasedTesting mbt = new ModelBasedTesting();
 	    	mbt.readGraph( "graphml/test09" );
 	    	fail( "Missing error message" );
     	}
@@ -64,7 +61,7 @@ public class GraphMLTest extends TestCase {
     {
     	try
     	{
-	    	ModelBasedTesting mbt = ModelBasedTesting.getInstance();
+	    	ModelBasedTesting mbt = new ModelBasedTesting();
 	    	mbt.readGraph( "graphml/test10" );
 	    	fail( "Missing error message" );
     	}
@@ -80,7 +77,7 @@ public class GraphMLTest extends TestCase {
     {
     	try
     	{
-	    	ModelBasedTesting mbt = ModelBasedTesting.getInstance();
+	    	ModelBasedTesting mbt = new ModelBasedTesting();
 	    	mbt.readGraph( "graphml/test11" );
 	    	fail( "Missing error message" );
     	}
@@ -97,7 +94,7 @@ public class GraphMLTest extends TestCase {
     {
     	try
     	{
-	    	ModelBasedTesting mbt = ModelBasedTesting.getInstance();
+	    	ModelBasedTesting mbt = new ModelBasedTesting();
 	    	mbt.readGraph( "graphml/test13" );
     	}
     	catch ( RuntimeException e)
@@ -112,7 +109,7 @@ public class GraphMLTest extends TestCase {
     {
     	try
     	{
-	    	ModelBasedTesting mbt = ModelBasedTesting.getInstance();
+	    	ModelBasedTesting mbt = new ModelBasedTesting();
 	    	mbt.readGraph( "graphml/test14" );
 	    	fail( "Missing error message" );
     	}
@@ -128,7 +125,7 @@ public class GraphMLTest extends TestCase {
     {
     	try
     	{
-	    	ModelBasedTesting mbt = ModelBasedTesting.getInstance();
+	    	ModelBasedTesting mbt = new ModelBasedTesting();
 	    	mbt.readGraph( "graphml/test15" );
 	    	fail( "Missing error message" );
     	}
@@ -144,7 +141,7 @@ public class GraphMLTest extends TestCase {
     {
     	try
     	{
-	    	ModelBasedTesting mbt = ModelBasedTesting.getInstance();
+	    	ModelBasedTesting mbt = new ModelBasedTesting();
 	    	mbt.readGraph( "graphml/test17/test17.graphml" );
 	    	fail( "Missing error message" );
     	}
@@ -160,7 +157,7 @@ public class GraphMLTest extends TestCase {
     {
     	try
     	{
-	    	ModelBasedTesting mbt = ModelBasedTesting.getInstance();
+	    	ModelBasedTesting mbt = new ModelBasedTesting();
 	    	mbt.readGraph( "graphml/test18/test18.graphml" );
 	    	fail( "Missing error message" );
     	}
@@ -176,7 +173,7 @@ public class GraphMLTest extends TestCase {
     {
     	try
     	{
-	    	ModelBasedTesting mbt = ModelBasedTesting.getInstance();
+	    	ModelBasedTesting mbt = new ModelBasedTesting();
 	    	mbt.readGraph( "graphml/test19/test19.graphml" );
 	    	fail( "Missing error message" );
     	}
@@ -192,7 +189,7 @@ public class GraphMLTest extends TestCase {
     {
     	try
     	{
-	    	ModelBasedTesting mbt = ModelBasedTesting.getInstance();
+	    	ModelBasedTesting mbt = new ModelBasedTesting();
 	    	mbt.readGraph( "graphml/test20/test20.graphml" );
 	    	fail( "Missing error message" );
     	}
@@ -208,7 +205,7 @@ public class GraphMLTest extends TestCase {
     {
     	try
     	{
-	    	ModelBasedTesting mbt = ModelBasedTesting.getInstance();
+	    	ModelBasedTesting mbt = new ModelBasedTesting();
 	    	mbt.readGraph( "graphml/mergeSubgraphs_01" );
 	    	assertTrue( mbt.getGraph().getVertices().size() == 6 );
 	    	assertTrue( mbt.getGraph().getEdges().size() == 16 );
@@ -226,7 +223,7 @@ public class GraphMLTest extends TestCase {
     {
     	try
     	{
-	    	ModelBasedTesting mbt = ModelBasedTesting.getInstance();
+	    	ModelBasedTesting mbt = new ModelBasedTesting();
 	    	mbt.readGraph( "graphml/mergeSubgraphs_02" );
 	    	assertTrue( mbt.getGraph().getVertices().size() == 16 );
 	    	assertTrue( mbt.getGraph().getEdges().size() == 55 );
@@ -244,7 +241,7 @@ public class GraphMLTest extends TestCase {
     {
     	try
     	{
-	    	ModelBasedTesting mbt = ModelBasedTesting.getInstance();
+	    	ModelBasedTesting mbt = new ModelBasedTesting();
 	    	mbt.readGraph( "graphml/test01" );
 	    	assertTrue( mbt.getGraph().getEdges().size() == 9 );
 	    	assertTrue( mbt.getGraph().getVertices().size() == 7 );
@@ -262,7 +259,7 @@ public class GraphMLTest extends TestCase {
     {
     	try
     	{
-	    	ModelBasedTesting mbt = ModelBasedTesting.getInstance();
+	    	ModelBasedTesting mbt = new ModelBasedTesting();
 	    	mbt.readGraph( "graphml/test02" );
 	    	assertTrue( mbt.getGraph().getEdges().size() == 11 );
 	    	assertTrue( mbt.getGraph().getVertices().size() == 8 );
@@ -280,7 +277,7 @@ public class GraphMLTest extends TestCase {
     {
     	try
     	{
-	    	ModelBasedTesting mbt = ModelBasedTesting.getInstance();
+	    	ModelBasedTesting mbt = new ModelBasedTesting();
 	    	mbt.readGraph( "graphml/test03" );
 	    	assertTrue( mbt.getGraph().getEdges().size() == 1550 );
 	    	assertTrue( mbt.getGraph().getVertices().size() == 788 );
@@ -298,7 +295,7 @@ public class GraphMLTest extends TestCase {
     {
     	try
     	{
-	    	ModelBasedTesting mbt = ModelBasedTesting.getInstance();
+	    	ModelBasedTesting mbt = new ModelBasedTesting();
 	    	mbt.readGraph( "graphml/test22" );
 	    	assertTrue( mbt.getGraph().getEdges().size() == 8 );
 	    	assertTrue( mbt.getGraph().getVertices().size() == 8 );
@@ -316,7 +313,7 @@ public class GraphMLTest extends TestCase {
     {
     	try
     	{
-	    	ModelBasedTesting mbt = ModelBasedTesting.getInstance();
+	    	ModelBasedTesting mbt = new ModelBasedTesting();
 	    	mbt.readGraph( "graphml/test23" );
 	    	assertTrue( mbt.getGraph().getEdges().size() == 14 );
 	    	assertTrue( mbt.getGraph().getVertices().size() == 9 );
@@ -330,19 +327,19 @@ public class GraphMLTest extends TestCase {
     }
 
     // Verify that all vertices and edges has indexes, and that no duplicates exists.
-    private void verifyIds( Graph g )
+    private void verifyIds( SparseGraph g )
 	{
 		Object[] vertices1 = g.getVertices().toArray();
 		for ( int i = 0; i < vertices1.length; i++ )
 		{
-			Vertex v1 = (Vertex)vertices1[ i ];
+			DirectedSparseVertex v1 = (DirectedSparseVertex)vertices1[ i ];
 			int hits = 0;
-			Integer index1 = (Integer)v1.getIndexKey();
+			Integer index1 = (Integer)v1.getUserDatum( Keywords.INDEX_KEY );
 	    	Object[] vertices2 = g.getVertices().toArray();
 			for ( int j = 0; j < vertices1.length; j++ )
 			{
-				Vertex v2 = (Vertex)vertices2[ j ];
-				Integer index2 = (Integer)v2.getIndexKey();
+				DirectedSparseVertex v2 = (DirectedSparseVertex)vertices2[ j ];
+				Integer index2 = (Integer)v2.getUserDatum( Keywords.INDEX_KEY );
 				if ( index1.intValue() == index2.intValue() )
 				{
 					hits++;
@@ -353,8 +350,8 @@ public class GraphMLTest extends TestCase {
 	    	Object[] edges = g.getEdges().toArray();
 			for ( int j = 0; j < edges.length; j++ )
 			{
-				Edge e = (Edge)edges[ j ];
-				Integer index2 = (Integer)e.getIndexKey();
+				DirectedSparseEdge e = (DirectedSparseEdge)edges[ j ];
+				Integer index2 = (Integer)e.getUserDatum( Keywords.INDEX_KEY );
 				if ( index1.intValue() == index2.intValue() )
 				{
 					hits++;
@@ -366,14 +363,14 @@ public class GraphMLTest extends TestCase {
 		Object[] edges1 = g.getEdges().toArray();
 		for ( int i = 0; i < edges1.length; i++ )
 		{
-			Edge e1 = (Edge)edges1[ i ];
+			DirectedSparseEdge e1 = (DirectedSparseEdge)edges1[ i ];
 			int hits = 0;
-			Integer index1 = (Integer)e1.getIndexKey();
+			Integer index1 = (Integer)e1.getUserDatum( Keywords.INDEX_KEY );
 	    	Object[] edges2 = g.getEdges().toArray();
 			for ( int j = 0; j < edges2.length; j++ )
 			{
-				Edge e2 = (Edge)edges2[ j ];
-				Integer index2 = (Integer)e2.getIndexKey();
+				DirectedSparseEdge e2 = (DirectedSparseEdge)edges2[ j ];
+				Integer index2 = (Integer)e2.getUserDatum( Keywords.INDEX_KEY );
 				if ( index1.intValue() == index2.intValue() )
 				{
 					hits++;
@@ -384,8 +381,8 @@ public class GraphMLTest extends TestCase {
 	    	Object[] vertices2 = g.getVertices().toArray();
 			for ( int j = 0; j < vertices1.length; j++ )
 			{
-				Vertex v2 = (Vertex)vertices2[ j ];
-				Integer index2 = (Integer)v2.getIndexKey();
+				DirectedSparseVertex v2 = (DirectedSparseVertex)vertices2[ j ];
+				Integer index2 = (Integer)v2.getUserDatum( Keywords.INDEX_KEY );
 				if ( index1.intValue() == index2.intValue() )
 				{
 					hits++;

@@ -17,10 +17,14 @@
 
 package org.tigris.mbt.filters;
 
+import edu.uci.ics.jung.graph.Edge;
+import edu.uci.ics.jung.graph.filters.EfficientFilter;
+import edu.uci.ics.jung.graph.filters.GeneralEdgeAcceptFilter;
+import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
 
 import org.apache.log4j.Logger;
+import org.tigris.mbt.Keywords;
 import org.tigris.mbt.Util;
-import org.tigris.mbt.graph.Edge;
 
 import bsh.EvalError;
 import bsh.Interpreter;
@@ -29,7 +33,7 @@ import bsh.Interpreter;
  * @author Johan Tejle
  *
  */
-public class AccessableEdgeFilter
+public class AccessableEdgeFilter extends GeneralEdgeAcceptFilter implements EfficientFilter
 {
 	static Logger logger = Util.setupLogger(AccessableEdgeFilter.class);
 	
@@ -39,20 +43,20 @@ public class AccessableEdgeFilter
 		i = intepreter;
 	}
 
-	public boolean acceptEdge( org.tigris.mbt.graph.Graph graph, Edge edge) 
+	public boolean acceptEdge(Edge edge) 
 	{
-		if ( edge.getGuardKey().isEmpty() )
+		if ( !edge.containsUserDatumKey(Keywords.GUARD_KEY) )
 		{
 			return true;
 		}
 
 		try 
 		{
-			return ((Boolean)i.eval((String)edge.getGuardKey())).booleanValue();
+			return ((Boolean)i.eval((String)edge.getUserDatum( Keywords.GUARD_KEY ))).booleanValue();
 		} 
 		catch (EvalError e) 
 		{
-			throw new RuntimeException( "Malformed Edge guard: " + edge + " " + e.getMessage() );
+			throw new RuntimeException( "Malformed Edge guard: " + Util.getCompleteName( (DirectedSparseEdge)edge )+ " " + e.getMessage() );
 		}
 	}
 

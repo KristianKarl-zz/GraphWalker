@@ -54,16 +54,6 @@ public class Keywords {
 	public static final String  HEIGHT_KEY = "height";
 	
 	/**
-	* The x position of the node, as saved by the yEd editor.
-	*/
-	public static final String  X_POS = "x_pos";
-	
-	/**
-	* The y position of the node, as saved by the yEd editor.
-	*/
-	public static final String  Y_POS = "y_pos";
-	
-	/**
 	* When merging graphs, the source file of each graph is noted, so that in the event
 	* of an error, the correct graph file can be used in meaningful error messages to
 	* the end user.
@@ -216,7 +206,7 @@ public class Keywords {
 	/**
 	* Holds the pre-defined key words
 	*/
-	private static Vector<String> reservedKeyWords = new Vector<String>();
+	private static Vector reservedKeyWords = new Vector();
 
 	/**
 	* Defines the key words
@@ -240,7 +230,7 @@ public class Keywords {
 	/**
 	* Holds the pre-defined list of stop-condition.
 	*/
-	private static Hashtable<String, Integer> stopConditions = new Hashtable<String, Integer>();
+	private static Hashtable stopConditions = new Hashtable();
 
 	/**
 	* Defines the stop-condition strings
@@ -258,7 +248,7 @@ public class Keywords {
 		stopConditions.put( "NEVER", new Integer(CONDITION_NEVER) );
 	}
 
-	static public Set<String> getStopConditions()
+	static public Set getStopConditions()
 	{
 		return stopConditions.keySet();
 	}
@@ -283,7 +273,7 @@ public class Keywords {
 	/**
 	* Holds the pre-defined list of generators
 	*/
-	private static Hashtable<String, Integer> generators = new Hashtable<String, Integer>();
+	private static Hashtable generators = new Hashtable();
 
 	/**
 	* Defines the generators strings
@@ -298,7 +288,7 @@ public class Keywords {
 		generators.put( "SHORTEST_NON_OPTIMIZED", new Integer(GENERATOR_SHORTEST_NON_OPTIMIZED) );
 	}
 
-	static public Set<String> getGenerators()
+	static public Set getGenerators()
 	{
 		return generators.keySet();
 	}

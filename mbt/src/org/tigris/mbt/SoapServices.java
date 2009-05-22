@@ -8,15 +8,15 @@ import java.util.Vector;
 import javax.jws.WebService;
 
 import org.apache.log4j.Logger;
-import org.tigris.mbt.GUI.App;
 import org.tigris.mbt.exceptions.InvalidDataException;
 
 @WebService
 
 public class SoapServices {
 
-	static Logger logger = Util.setupLogger( SoapServices.class );
-	private Vector<String> stepPair = new Vector<String>();
+	private ModelBasedTesting mbt = null;
+	static Logger logger = Util.setupLogger( ModelBasedTesting.class );
+	private Vector stepPair = new Vector();
 	private String xmlFile = "";
 	private boolean hardStop = false;
 
@@ -27,7 +27,7 @@ public class SoapServices {
 		if ( xmlFile != null )
 		{
 			this.xmlFile = xmlFile; 
-			Util.loadMbtAsWSFromXml( this.xmlFile );
+			mbt = Util.loadMbtAsWSFromXml( this.xmlFile );
 		}
 	}
 
@@ -35,8 +35,8 @@ public class SoapServices {
 		logger.debug( "SOAP service getDataValue recieving: " + data );
 		String value = "";
 		try {
-			value = ModelBasedTesting.getInstance().getDataValue( data );
-		} catch ( InvalidDataException e ) {
+			value = mbt.getDataValue( data );
+		} catch (InvalidDataException e) {
 			logger.error( e );
 		}
 		catch (Exception e) {
@@ -50,7 +50,7 @@ public class SoapServices {
 		logger.debug( "SOAP service ExecAction recieving: " + action );
 		String value = "";
 		try {
-			value = ModelBasedTesting.getInstance().execAction( action );
+			value = mbt.execAction( action );
 		} catch (InvalidDataException e) {
 			logger.error( e );
 		}
@@ -64,62 +64,51 @@ public class SoapServices {
 	public void PassRequirement( String pass ) {
 		logger.debug( "SOAP service PassRequirement recieving: " + pass );
 		if ( pass.toUpperCase().equals("TRUE") )
-			ModelBasedTesting.getInstance().passRequirement(true);
+			mbt.passRequirement(true);
 		else if ( pass.toUpperCase().equals("FALSE") )
-			ModelBasedTesting.getInstance().passRequirement(false);
+			mbt.passRequirement(false);
 		else
 			logger.error( "SOAP service PassRequirement dont know how to handle: " + pass +
-					"\nOnly the strings true or false are permitted" );			
+					"\nOnly the strings true or false are permitted" );
+			
 	}
 
 	public String GetNextStep() {
 		logger.debug( "SOAP service getNextStep" );
-		try
-		{
-			String value = "";
-			
-			if ( ModelBasedTesting.getInstance().isUseGUI() ) {
-				App.getInstance().status.setNext();
-			}
-			
-			if ( !ModelBasedTesting.getInstance().hasNextStep() && ( stepPair.size() == 0 ) ) {
-				return value;
-			}
-			
-			if ( stepPair.size() == 0 ) {
-				try {
-					stepPair = new Vector<String>( Arrays.asList( ModelBasedTesting.getInstance().getNextStep() ) );
-				}
-				catch ( Exception e ) {
-					hardStop = true;
-					return "";
-				}
-			}
-				
-			value = (String) stepPair.remove(0);
-			value = value.replaceAll( "/.*$", "");
-			String addInfo = "";
-			if ( ( stepPair.size() == 1 && ModelBasedTesting.getInstance().hasCurrentEdgeBackTracking() ) || 
-				 ( stepPair.size() == 0 && ModelBasedTesting.getInstance().hasCurrentVertexBackTracking() ) ) {
-				addInfo = " BACKTRACK";
-			}
-	
-			if ( stepPair.size() == 1 ) {
-				ModelBasedTesting.getInstance().logExecution( ModelBasedTesting.getInstance().getMachine().getLastEdge(), addInfo );
-				ModelBasedTesting.getInstance().getStatisticsManager().addProgress( ModelBasedTesting.getInstance().getMachine().getLastEdge() );
-			}
-			else {
-				ModelBasedTesting.getInstance().logExecution( ModelBasedTesting.getInstance().getMachine().getCurrentState(), addInfo );
-				ModelBasedTesting.getInstance().getStatisticsManager().addProgress( ModelBasedTesting.getInstance().getMachine().getCurrentState() );
-			}
+		String value = "";
+		
+		if( !mbt.hasNextStep() && ( stepPair.size() == 0 ) )
 			return value;
-		}
-		finally
+		if( stepPair.size() == 0 )
 		{
-			if ( ModelBasedTesting.getInstance().isUseGUI() ) {
-				App.getInstance().status.setPaused();
+			try {
+				stepPair = new Vector( Arrays.asList( mbt.getNextStep() ) );
+			} catch (Exception e) {
+				hardStop = true;
+				return "";
 			}
 		}
+			
+		value = (String) stepPair.remove(0);
+		value = value.replaceAll( "/.*$", "");
+		String addInfo = "";
+		if( ( stepPair.size() == 1 && mbt.hasCurrentEdgeBackTracking() ) || 
+			( stepPair.size() == 0 && mbt.hasCurrentVertexBackTracking() ) )
+		{
+			addInfo = " BACKTRACK";
+		}
+
+		if ( stepPair.size() == 1 )
+		{
+			mbt.logExecution( mbt.getMachine().getLastEdge(), addInfo );
+			mbt.getStatisticsManager().addProgress( mbt.getMachine().getLastEdge() );
+		}
+		else
+		{
+			mbt.logExecution( mbt.getMachine().getCurrentState(), addInfo );
+			mbt.getStatisticsManager().addProgress( mbt.getMachine().getCurrentState() );
+		}
+		return value;
 	}
 
 	public boolean HasNextStep() {
@@ -131,25 +120,21 @@ public class SoapServices {
 		}
 		else
 		{
-			if ( stepPair.size() != 0 ) {
-				value = true;
-			}
-			else {
-				value = ModelBasedTesting.getInstance().hasNextStep();
-			}
+			value = mbt.hasNextStep();
 		}
 		logger.debug( "SOAP service hasNextStep returning: " + value );
 		if ( value == false )
-			logger.info( ModelBasedTesting.getInstance().getStatisticsString() );
+			logger.info( mbt.getStatisticsString() );
 		return value;
 	}
 
 	public boolean Reload() {
 		logger.debug( "SOAP service reload" );
+		mbt = null;
 		boolean retValue = true;
 		try
 		{
-			Util.loadMbtAsWSFromXml( this.xmlFile );
+			mbt = Util.loadMbtAsWSFromXml( this.xmlFile );
 		}
 		catch ( Exception e )
 		{			
@@ -169,10 +154,11 @@ public class SoapServices {
 	public boolean Load( String xmlFile ) {
 		logger.debug( "SOAP service load recieving: " + xmlFile );
 		this.xmlFile = xmlFile; 
+		mbt = null;
 		boolean retValue = true;
 		try
 		{
-			Util.loadMbtAsWSFromXml( this.xmlFile );
+			mbt = Util.loadMbtAsWSFromXml( this.xmlFile );
 		}
 		catch ( Exception e )
 		{			
@@ -191,7 +177,7 @@ public class SoapServices {
 
 	public String GetStatistics() {
 		logger.debug( "SOAP service getStatistics" );
-		logger.debug( "SOAP service getStatistics returning: " + ModelBasedTesting.getInstance().getStatisticsString() );
-		return ModelBasedTesting.getInstance().getStatisticsString();
+		logger.debug( "SOAP service getStatistics returning: " + mbt.getStatisticsString() );
+		return mbt.getStatisticsString();
 	}
 }

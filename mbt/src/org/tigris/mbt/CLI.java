@@ -6,7 +6,8 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
+import java.net.NetworkInterface;
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.Timer;
@@ -20,6 +21,8 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.PosixParser;
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.log4j.Logger;
 
 /**
@@ -64,14 +67,15 @@ public class CLI
 	private ModelBasedTesting mbt = null;
 	private Timer timer = null;
 	private Options opt = new Options();
+	private String port = null; 
 	private static Endpoint endpoint = null;
 
 	public CLI(){}
 	
-	ModelBasedTesting getMbt() 
+	private ModelBasedTesting getMbt() 
 	{
 		if(mbt == null)
-			mbt = ModelBasedTesting.getInstance();
+			mbt = new ModelBasedTesting();
 		return mbt;
 	}
 
@@ -359,9 +363,9 @@ public class CLI
 	private String generateListOfValidStopConditions()
 	{
 		String list = "";
-		Set<String> stopConditions = Keywords.getStopConditions();
-		for (Iterator<String> i = stopConditions.iterator(); i.hasNext();) {
-			list += i.next() + "\n";
+		Set stopConditions = Keywords.getStopConditions();
+		for (Iterator i = stopConditions.iterator(); i.hasNext();) {
+			list += (String)i.next() + "\n";
 		}
 		return list;
 	}
@@ -369,9 +373,9 @@ public class CLI
 	private String generateListOfValidGenerators()
 	{
 		String list = "";
-		Set<String> generators = Keywords.getGenerators();
-		for (Iterator<String> i = generators.iterator(); i.hasNext();) {
-			list += i.next() + "\n";
+		Set generators = Keywords.getGenerators();
+		for (Iterator i = generators.iterator(); i.hasNext();) {
+			list += (String)i.next() + "\n";
 		}
 		return list;
 	}
@@ -514,19 +518,9 @@ public class CLI
 	 */
 	private void buildSoapCLI() {
 		opt.addOption( OptionBuilder.withArgName( "file" )
-                .withDescription( "The xml file containing the mbt model and settings." )
+                .withDescription( "The xml file containing the mbt settings." )
                 .hasArg()
                 .create( "f" ) );
-		opt.addOption( OptionBuilder.withArgName( "interface" )
-                .withDescription( "The network interface to which mbt should bind to. " +
-                		"If not given, the default is 0.0.0.0" )
-                .hasArg()
-                .create( "i" ) );
-		opt.addOption( OptionBuilder.withArgName( "port" )
-                .withDescription( "The port to which mbt should listen to. " +
-                		"If not given, the default is 9090" )
-                .hasArg()
-                .create( "p" ) );
 	}
 	
 	/**
@@ -540,7 +534,7 @@ public class CLI
 	 */
 	private void printVersionInformation()
 	{
-		System.out.println( "org.tigris.mbt version 2.2 (revision 652) Beta 2\n" );
+		System.out.println( "org.tigris.mbt version 2.1 (revision 629)\n" );
 		System.out.println( "org.tigris.mbt is open source software licensed under GPL" );
 		System.out.println( "The software (and it's source) can be downloaded from http://mbt.tigris.org/\n" );
 		System.out.println( "This package contains following software packages:" );
@@ -550,7 +544,7 @@ public class CLI
 		System.out.println( "  log4j-1.2.15.jar               http://logging.apache.org/log4j/" );
 		System.out.println( "  commons-cli-1.1.jar            http://commons.apache.org/cli/" );
 		System.out.println( "  colt-1.2.jar                   http://dsd.lbl.gov/~hoschek/colt/" );
-		System.out.println( "  jung-XXX-2.0.jar                 http://jung.sourceforge.net/" );
+		System.out.println( "  jung-1.7.6.jar                 http://jung.sourceforge.net/" );
 		System.out.println( "  bsh-2.0b4.jar                  http://www.beanshell.org/" );
 		System.out.println( "  commons-configuration-1.5.jar  http://commons.apache.org/configuration/" );
 		System.out.println( "  commons-lang-2.4.jar           http://commons.apache.org/lang/" );
@@ -622,7 +616,7 @@ public class CLI
 				{
 					public void run() 
 					{
-						logger.info( getMbt().getStatisticsCompact() );
+						logger.info( mbt.getStatisticsCompact() );
 					}
 				};
 			}
@@ -728,7 +722,7 @@ public class CLI
 				{
 					public void run() 
 					{
-						logger.info( getMbt().getStatisticsCompact() );
+						logger.info( mbt.getStatisticsCompact() );
 					}
 				};
 			}
@@ -844,32 +838,39 @@ public class CLI
 
 	/**
 	 * Run the soap command
-	 * @throws UnknownHostException 
+	 * @throws ConfigurationException 
+	 * @throws IOException 
 	 */
-	private void RunCommandSoap(CommandLine cl) throws UnknownHostException  {
-		String port = null;
-		String nicAddr = null;
-		if( cl.hasOption( "p" ) ) {
-			port = cl.getOptionValue( "p" );
+	private void RunCommandSoap(CommandLine cl) throws ConfigurationException, IOException {
+		// Find the real network interface
+		NetworkInterface iface = null;
+		InetAddress ia = null;
+		boolean foundNIC = false;
+		for( Enumeration<NetworkInterface> ifaces = NetworkInterface.getNetworkInterfaces();
+		     ifaces.hasMoreElements() && foundNIC == false; )
+		{
+			iface = (NetworkInterface)ifaces.nextElement();
+			logger.debug( "Interface: "+ iface.getDisplayName() );
+			for ( Enumeration<InetAddress> ips = iface.getInetAddresses();
+			      ips.hasMoreElements() && foundNIC == false; )
+			{
+				ia = (InetAddress)ips.nextElement();
+				logger.debug( ia.getCanonicalHostName() + " " + ia.getHostAddress() );
+				if( !ia.isLoopbackAddress() ){
+					logger.debug( "  Not a loopback address..." );
+					if( ia.getHostAddress().indexOf(":") == -1 ){							
+						logger.debug( "  Host address does not contain ':'" );
+						logger.debug( "  Interface: " + iface.getName() + " seems to be InternetInterface. I'll take it...");
+						foundNIC = true;
+					}
+				}
+			}
 		}
-		else {
-			port =  Util.readWSPort();
-		}
-		
-		if( cl.hasOption( "i" ) ) {
-			nicAddr = Util.getInternetAddr( cl.getOptionValue( "i" ) ).getCanonicalHostName();
-		}
-		else {
-			nicAddr = "0.0.0.0";
-		}
-				
-		String wsURL = "http://" + nicAddr + ":" + port + "/mbt-services";
+
+		readProperties();
+		String wsURL = "http://" + ia.getCanonicalHostName() + ":" + port + "/mbt-services";
 		endpoint = Endpoint.publish( wsURL, new SoapServices( cl.getOptionValue( "f" ) ) );
 
-		if ( nicAddr.equals( "0.0.0.0" ) ) {
-			wsURL = wsURL.replace( "0.0.0.0", InetAddress.getLocalHost().getHostName() );
-		}
-		
 		System.out.println( "Now running as a SOAP server. For the WSDL file, see: " + wsURL + "?WSDL" );
 		System.out.println( "Press Ctrl+C to quit" );
 		System.out.println( "" );
@@ -891,6 +892,19 @@ public class CLI
 			System.out.println( "Type 'java -jar mbt.jar help "+module+"' for help." );
 		}
 		return condition;
+	}
+	
+	private void readProperties() throws ConfigurationException
+	{
+		PropertiesConfiguration conf;
+		conf = new PropertiesConfiguration("mbt.properties");
+	    port = conf.getString( "mbt.ws.port" );
+	    logger.debug("Read port from mbt.properties: " + port);
+	    if (port==null)
+	    {
+	    	port = "9090";
+		    logger.debug("Setting port to: 9090");
+	    }
 	}
 	
 	public Endpoint GetEndpoint()

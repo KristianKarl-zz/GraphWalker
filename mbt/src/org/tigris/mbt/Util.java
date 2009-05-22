@@ -7,18 +7,12 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
-import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 import org.apache.log4j.PropertyConfigurator;
@@ -48,10 +42,12 @@ import org.tigris.mbt.generators.PathGenerator;
 import org.tigris.mbt.generators.RandomPathGenerator;
 import org.tigris.mbt.generators.RequirementsGenerator;
 import org.tigris.mbt.generators.A_StarPathGenerator;
-import org.tigris.mbt.graph.AbstractElement;
-import org.tigris.mbt.graph.Edge;
-import org.tigris.mbt.graph.Graph;
-import org.tigris.mbt.graph.Vertex;
+
+import edu.uci.ics.jung.graph.impl.AbstractElement;
+import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
+import edu.uci.ics.jung.graph.impl.DirectedSparseVertex;
+import edu.uci.ics.jung.graph.impl.SparseGraph;
+import edu.uci.ics.jung.utils.UserData;
 
 /**
  * This class has some utility functionality used by org.tigris.mbt
@@ -68,11 +64,11 @@ public class Util {
 	
 	public static String getCompleteName( AbstractElement element )
 	{
-		if(element instanceof Edge)
-			return getCompleteEdgeName( (Edge) element );
-		if(element instanceof Vertex)
-			return getCompleteVertexName( (Vertex) element );
-		throw new RuntimeException( "Element type not supported: '" + element.getClass().getName() + "'" );
+		if(element instanceof DirectedSparseEdge)
+			return getCompleteEdgeName((DirectedSparseEdge) element);
+		if(element instanceof DirectedSparseVertex)
+			return getCompleteVertexName((DirectedSparseVertex) element);
+		throw new RuntimeException("Element type not supported '"+element.getClass().getName()+"'");
 	}
 	
     /**
@@ -86,10 +82,14 @@ public class Util {
      *  Where x, y and n are the unique indexes for the edge, the source vertex and the destination vertex.<br>
      *  Please note that the label of an edge can be either null, or empty ("");
      */
-    private static String getCompleteEdgeName( Edge edge )
+    private static String getCompleteEdgeName( DirectedSparseEdge edge )
     {
-            String str = "Edge: '" + edge.getLabelKey() + 
-                         "', INDEX=" + edge.getIndexKey();
+            String str = "'" + (String)edge.getUserDatum( Keywords.LABEL_KEY ) + 
+                         "', INDEX=" + edge.getUserDatum( Keywords.INDEX_KEY ) + 
+                         " ('" + (String)edge.getSource().getUserDatum( Keywords.LABEL_KEY ) + 
+                         "', INDEX=" + edge.getSource().getUserDatum( Keywords.INDEX_KEY ) + 
+                         " -> '" + (String)edge.getDest().getUserDatum( Keywords.LABEL_KEY ) + 
+                         "', INDEX=" + edge.getDest().getUserDatum( Keywords.INDEX_KEY ) +  ")";
             return str;
     }
 
@@ -102,10 +102,10 @@ public class Util {
      *  <pre>'&lt;VERTEX LABEL&gt;', INDEX=n</pre>
      *  Where is the unique index for the vertex.
      */
-    private static String getCompleteVertexName( Vertex vertex )
+    private static String getCompleteVertexName( DirectedSparseVertex vertex )
     {
-            String str = "Vertex: '" + vertex.getLabelKey() + 
-                         "', INDEX=" + vertex.getIndexKey();
+            String str = "'" + (String)vertex.getUserDatum( Keywords.LABEL_KEY ) + 
+                         "', INDEX=" + vertex.getUserDatum( Keywords.INDEX_KEY );
             return str;
     }
 
@@ -117,7 +117,6 @@ public class Util {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	public static Logger setupLogger( Class classParam ) 
 	{
 		Logger logger = Logger.getLogger( classParam  );
@@ -144,39 +143,32 @@ public class Util {
 		return logger;
 	}
 
-	public static Vertex addVertexToGraph(
-			Graph graph, 
+	public static DirectedSparseVertex addVertexToGraph(
+			SparseGraph graph, 
 			String strLabel)
 	{
-		Vertex retur = new Vertex();
-		retur.setIndexKey( new Integer( graph.getEdgeCount() + graph.getVertexCount() + 1 ) );
-		if ( strLabel != null )
-			retur.setLabelKey( strLabel );
-		graph.addVertex( retur );
-		return retur;
+		DirectedSparseVertex retur = new DirectedSparseVertex();
+		retur.setUserDatum(Keywords.INDEX_KEY, new Integer(graph.numEdges()+graph.numVertices()+1), UserData.SHARED);
+		if(strLabel != null) retur.setUserDatum(Keywords.LABEL_KEY, strLabel, UserData.SHARED);
+		return (DirectedSparseVertex) graph.addVertex(retur);
 	}
 	
-	public static Edge addEdgeToGraph(
-			Graph graph, 
-			Vertex vertexFrom, 
-			Vertex vertexTo, 
+	public static DirectedSparseEdge addEdgeToGraph(
+			SparseGraph graph, 
+			DirectedSparseVertex vertexFrom, 
+			DirectedSparseVertex vertexTo, 
 			String strLabel,
 			String strParameter,
 			String strGuard,
 			String strAction)
 	{
-		Edge retur = new Edge();
-		retur.setIndexKey( new Integer( graph.getEdgeCount() + graph.getVertexCount() + 1 ) );
-		if ( strLabel != null )
-			retur.setLabelKey( strLabel );
-		if ( strParameter != null )
-			retur.setParameterKey( strParameter );
-		if ( strGuard != null ) 
-			retur.setGuardKey(  strGuard );
-		if ( strAction != null ) 
-			retur.setActionsKey( strAction );
-		graph.addEdge( retur, vertexFrom, vertexTo );
-		return retur; 
+		DirectedSparseEdge retur = new DirectedSparseEdge(vertexFrom, vertexTo);
+		retur.setUserDatum(Keywords.INDEX_KEY, new Integer(graph.numEdges()+graph.numVertices()+1), UserData.SHARED);
+		if(strLabel != null) retur.setUserDatum(Keywords.LABEL_KEY, strLabel, UserData.SHARED);
+		if(strParameter != null) retur.setUserDatum(Keywords.PARAMETER_KEY, strParameter, UserData.SHARED);
+		if(strGuard != null) retur.setUserDatum(Keywords.GUARD_KEY, strGuard, UserData.SHARED);
+		if(strAction != null) retur.setUserDatum(Keywords.ACTIONS_KEY, strAction, UserData.SHARED);
+		return (DirectedSparseEdge) graph.addEdge(retur);
 	}
 	
 	public static StopCondition getCondition(int conditionType, String conditionValue)
@@ -292,11 +284,9 @@ public class Util {
 	 * @param dryRun Is mbt to be run in a dry run mode?
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
 	private static ModelBasedTesting loadXml( String fileName, boolean runningSoapServices, boolean dryRun )
 	{
-		final ModelBasedTesting mbt = ModelBasedTesting.getInstance();
-		mbt.reset();
+		final ModelBasedTesting mbt = new ModelBasedTesting();
 		mbt.setDryRun( dryRun );
 		
 		SAXBuilder parser = new SAXBuilder( "org.apache.crimson.parser.XMLReaderImpl", false );		
@@ -309,26 +299,25 @@ public class Util {
 			throw new RuntimeException("Error reading XML file.",e);
 		}
 		Element root = doc.getRootElement();
-		List<Element> models = root.getChildren("MODEL");
+		List models = root.getChildren("MODEL");
 		
 		if(models.size()==0)
 			throw new RuntimeException("Model is missing from XML");
 			
-		for ( Iterator<Element> i = models.iterator(); i.hasNext(); )
+		for(Iterator i=models.iterator();i.hasNext();)
 		{
-			mbt.readGraph(( i.next() ).getAttributeValue("PATH"));
+			mbt.readGraph(((Element) i.next()).getAttributeValue("PATH"));
 		}
 		
-		List<Element> classPath = root.getChildren("CLASS");
-		for ( Iterator<Element> i = classPath.iterator(); i.hasNext(); )
+		List classPath = root.getChildren("CLASS");
+		for(Iterator i=classPath.iterator();i.hasNext();)
 		{
-			String classPaths[] = i.next().getAttributeValue("PATH").split(":");
+			String classPaths[] = ((Element) i.next()).getAttributeValue("PATH").split(":");
 			for (int j = 0; j < classPaths.length; j++) {
 				try {
 					ClassPathHack.addFile(classPaths[j]);
-					logger.debug( "Added to classpath: " + classPaths[j] );
 				} catch (Exception e) {					
-					throw new RuntimeException(e.getMessage() + "\nCould not add: '" + classPaths[j] + "' to CLASSPATH\n" +
+					throw new RuntimeException("Could not add: '" + classPaths[j] + "' to CLASSPATH\n" +
 							"Please review your xml file: '" + fileName + "' at CLASS PATH" ,e);
 				}
 			}			
@@ -352,8 +341,8 @@ public class Util {
 		{
 			mbt.setWeighted(false);
 		}
-				
-		List<Element> generators = root.getChildren("GENERATOR");
+		
+		List generators = root.getChildren("GENERATOR");
 
 		if(generators.size()==0)
 			throw new RuntimeException("Generator is missing from XML");
@@ -362,9 +351,9 @@ public class Util {
 		if(generators.size() > 1)
 		{
 			generator = new CombinedPathGenerator();
-			for(Iterator<Element> i=generators.iterator();i.hasNext();)
+			for(Iterator i=generators.iterator();i.hasNext();)
 			{
-				((CombinedPathGenerator)generator).addPathGenerator(getGenerator( i.next() ));
+				((CombinedPathGenerator)generator).addPathGenerator(getGenerator((Element) i.next()));
 			}
 		} else {
 			generator = getGenerator((Element) generators.get(0));
@@ -413,78 +402,57 @@ public class Util {
 			timer.schedule(	logTask, 500, seconds * 1000 );
 		}
 
-		if ( root.getAttributeValue( "GUI" ) != null && 
-			 root.getAttributeValue( "GUI" ).equalsIgnoreCase( "true" ) )
-		{
-			mbt.setUseGUI();
-		}
-
 		if ( runningSoapServices == false )
 		{
 			try {
 			
-				String executor = root.getAttributeValue( "EXECUTOR" );
+				String executor = root.getAttributeValue("EXECUTOR");
 				String executorParam = null;
-				if ( executor.contains( ":" ) )
+				if(executor.contains(":"))
 				{
 					executorParam = executor.substring(executor.indexOf(':')+1);
 					executor = executor.substring(0, executor.indexOf(':'));
 				}
 		
-				if ( executor.equalsIgnoreCase( "offline" ) )
+				if(executor.equalsIgnoreCase("offline"))
 				{
 					PrintStream out = System.out;
-					if ( executorParam != null && !executorParam.equals( "" ) )
+					if(executorParam != null && !executorParam.equals(""))
 					{
 						try {
-							out = new PrintStream( executorParam );
-						}
-						catch ( FileNotFoundException e ) {
-							throw new RuntimeException( "offline file '" + executorParam + "' could not be created or is writeprotected.", e );
+							out = new PrintStream(executorParam);
+						} catch (FileNotFoundException e) {
+							throw new RuntimeException("offline file '"+executorParam+"' could not be created or is writeprotected.", e);
 						}
 					}
-					if ( mbt.isUseGUI() == false ) {
-						mbt.writePath( out );
-						if ( out != System.out ) {
-							out.close();
-						}
-					}				
-				} 
-				else if ( executor.equalsIgnoreCase( "java" ) ) {
-					if ( executorParam == null || executorParam.equals("") ) {
-						throw new RuntimeException( "No java class specified for execution" );
-					}					
-
-					if ( mbt.isUseGUI() == false ) {
-						mbt.executePath( executorParam );
-					}
-					else {
-						mbt.setJavaExecutorClass( executorParam );
-					}
-				} 
-				else if(executor.equalsIgnoreCase("online")){
+					mbt.writePath(out);
+					if(out != System.out)
+						out.close();
+				
+				} else if(executor.equalsIgnoreCase("java")){
+					if(executorParam == null || executorParam.equals(""))
+						throw new RuntimeException("No java class specified for execution");
+					mbt.executePath(executorParam);
+				
+				} else if(executor.equalsIgnoreCase("online")){
 					if ( mbt.isDryRun() )
 					{
 						logger.debug( "Executing a dry run" );
 						mbt.executePath( null, null);
 					}
-					if ( mbt.isUseGUI() == false ) {
-						mbt.interractivePath();
-					}
+					mbt.interractivePath();
 				
-				}
-				else if(executor.equalsIgnoreCase("none") || executor.equals("")){
-					// no execution (for debug purpose)				
-				} 
-				else {
-					throw new RuntimeException( "Unknown executor '" + executor + "'" );
+				} else if(executor.equalsIgnoreCase("none") || executor.equals("")){
+					// no execution (for debug purpose)
+				
+				} else {
+					throw new RuntimeException("Unknown executor '"+executor+"'");
 				}
 				
-			}
-			finally {
+			} finally {
 				if(timer != null)
 					timer.cancel();
-				if ( reportName != null && reportTemplate != null && mbt.isUseGUI() == false )
+				if(reportName != null && reportTemplate != null)
 				{
 					mbt.getStatisticsManager().writeFullReport(reportName);
 				}
@@ -500,9 +468,9 @@ public class Util {
 		}
 	}
 
-	private static String getScriptContent(List<Element> scripts) {
+	private static String getScriptContent(List scripts) {
 		String retur = "";
-		for( Iterator<Element> i = scripts.iterator(); i.hasNext(); )
+		for(Iterator i=scripts.iterator();i.hasNext();)
 		{
 			Element script = (Element) i.next();
 			String internal = script.getTextTrim();
@@ -515,7 +483,6 @@ public class Util {
 		return retur;
 	}
 
-	@SuppressWarnings("unchecked")
 	private static PathGenerator getGenerator(Element generator) {
 		int generatorType = Keywords.getGenerator(generator.getAttributeValue("TYPE"));
 		PathGenerator generatorObject = getGenerator(generatorType);
@@ -548,13 +515,13 @@ public class Util {
 		return generatorObject;
 	}
 
-	private static StopCondition getCondition( List<Element> conditions )
+	private static StopCondition getCondition(List conditions)
 	{
 		StopCondition condition = null;
-		if ( conditions.size() > 1 )
+		if(conditions.size()>1)
 		{
 			condition = new CombinationalCondition();
-			for ( Iterator<Element> i = conditions.iterator(); i.hasNext(); )
+			for(Iterator i = conditions.iterator(); i.hasNext();)
 				((CombinationalCondition)condition).add(getCondition((Element) i.next()));
 		} else if(conditions.size() == 1){
 			condition = getCondition((Element) conditions.get(0));
@@ -562,18 +529,17 @@ public class Util {
 		return condition;
 	}
 
-	@SuppressWarnings("unchecked")
-	private static StopCondition getCondition( Element condition )
+	private static StopCondition getCondition(Element condition)
 	{
 		StopCondition stopCondition = null;
-		if ( condition.getName().equalsIgnoreCase("AND") ) {
+		if(condition.getName().equalsIgnoreCase("AND")) {
 			stopCondition = new CombinationalCondition();
-			for ( Iterator<Element> i = condition.getChildren().iterator(); i.hasNext(); )
-				((CombinationalCondition)stopCondition).add(getCondition( i.next() ));
+			for(Iterator i = condition.getChildren().iterator(); i.hasNext();)
+				((CombinationalCondition)stopCondition).add(getCondition((Element) i.next()));
 		} else if(condition.getName().equalsIgnoreCase("OR")) {
 			stopCondition = new AlternativeCondition();
-			for(Iterator<Element> i = condition.getChildren().iterator(); i.hasNext();)
-				((AlternativeCondition)stopCondition).add(getCondition( i.next() ));
+			for(Iterator i = condition.getChildren().iterator(); i.hasNext();)
+				((AlternativeCondition)stopCondition).add(getCondition((Element) i.next()));
 		} else if(condition.getName().equalsIgnoreCase("CONDITION")){
 			int type = Keywords.getStopCondition(condition.getAttributeValue("TYPE"));
 			String value = condition.getAttributeValue("VALUE");
@@ -678,66 +644,5 @@ public class Util {
 	  // our last action in the above loop was to switch d and p, so p now 
 	  // actually has the most recent cost counts
 	  return p[n];
-	}
-	
-	public static InetAddress getInternetAddr( String nic ) {
-		// Find the real network interface
-		NetworkInterface iface = null;
-		InetAddress ia = null;
-		boolean foundNIC = false;
-		try {
-			for( Enumeration<NetworkInterface> ifaces = NetworkInterface.getNetworkInterfaces();
-			     ifaces.hasMoreElements() && foundNIC == false; ) {
-				iface = (NetworkInterface)ifaces.nextElement();
-				logger.debug( "Interface: "+ iface.getDisplayName() );
-				for ( Enumeration<InetAddress> ips = iface.getInetAddresses();
-				      ips.hasMoreElements() && foundNIC == false; ) {
-					ia = (InetAddress)ips.nextElement();
-					logger.debug( ia.getCanonicalHostName() + " " + ia.getHostAddress() );
-					if( !ia.isLoopbackAddress() ){
-						logger.debug( "  Not a loopback address..." );
-						if( ia.getHostAddress().indexOf(":") == -1 &&
-								nic.equals( iface.getDisplayName() ) ){							
-							logger.debug( "  Host address does not contain ':'" );
-							logger.debug( "  Interface: " + iface.getName() + " seems to be InternetInterface. I'll take it...");
-							foundNIC = true;
-						}
-					}
-				}
-			}
-		} 
-		catch (SocketException e) {
-			logger.error( e.getMessage() );
-		}
-		finally {
-			if ( foundNIC == false && nic != null ) {
-				logger.error( "Could not bind to network interface: " + nic );
-				throw new RuntimeException( "Could not bind to network interface: " + nic );
-			}
-			else if ( foundNIC == false && nic == null ) {
-				logger.error( "Could not bind to any network interface" );
-				throw new RuntimeException( "Could not bind to any network interface: " );
-			} 
-		}
-		return ia;
-	}	
-
-	public static String readWSPort()
-	{
-		PropertiesConfiguration conf = null;
-		try {
-			conf = new PropertiesConfiguration("mbt.properties");
-		}
-		catch ( ConfigurationException e ) {
-			logger.error( e.getMessage() );
-		}
-	    String port = conf.getString( "mbt.ws.port" );
-	    logger.debug("Read port from mbt.properties: " + port);
-	    if (port==null)
-	    {
-	    	port = "9090";
-		    logger.debug("Setting port to: 9090");
-	    }
-	    return port;
 	}
 }

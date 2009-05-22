@@ -9,10 +9,19 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 
+import org.tigris.mbt.FiniteStateMachine;
+import org.tigris.mbt.Keywords;
 import org.tigris.mbt.ModelBasedTesting;
 import org.tigris.mbt.Util;
+import org.tigris.mbt.conditions.ReachedState;
 import org.tigris.mbt.exceptions.InvalidDataException;
-import org.tigris.mbt.graph.Graph;
+import org.tigris.mbt.generators.A_StarPathGenerator;
+import org.tigris.mbt.generators.PathGenerator;
+
+import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
+import edu.uci.ics.jung.graph.impl.DirectedSparseVertex;
+import edu.uci.ics.jung.graph.impl.SparseGraph;
+import edu.uci.ics.jung.utils.UserData;
 
 import junit.framework.TestCase;
 
@@ -21,11 +30,6 @@ import junit.framework.TestCase;
  *
  */
 public class ModelBasedTestingTest extends TestCase {
-
-	protected void setUp() throws Exception {
-		super.setUp();
-		ModelBasedTesting.getInstance().reset();
-	}
 
 	private InputStream redirectIn()
 	{
@@ -144,7 +148,10 @@ public class ModelBasedTestingTest extends TestCase {
 	{
 		ModelBasedTesting mbt;
 		mbt = Util.loadMbtFromXml( "xml/reqCoverage.xml" );
+		String pair[] = mbt.getNextStep();
+		pair = mbt.getNextStep();
 		mbt.passRequirement(true);
+		pair = mbt.getNextStep();
 		mbt.passRequirement(false);
 		mbt.passRequirement(true);
 	}

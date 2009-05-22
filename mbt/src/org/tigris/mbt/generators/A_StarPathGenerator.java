@@ -8,19 +8,20 @@ import java.util.Stack;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
+import org.tigris.mbt.FiniteStateMachine;
 import org.tigris.mbt.Util;
 import org.tigris.mbt.exceptions.FoundNoEdgeException;
 import org.tigris.mbt.generators.PathGenerator;
-import org.tigris.mbt.graph.Edge;
-import org.tigris.mbt.graph.Vertex;
-import org.tigris.mbt.machines.FiniteStateMachine;
+
+import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
+import edu.uci.ics.jung.graph.impl.DirectedSparseVertex;
 
 public class A_StarPathGenerator extends PathGenerator {
 
 	static Logger logger = Util.setupLogger(A_StarPathGenerator.class);
 
-	private Stack<Edge> preCalculatedPath = null;
-	private Vertex lastState;
+	private Stack preCalculatedPath = null;
+	private DirectedSparseVertex lastState;
 
 	public void setMachine(FiniteStateMachine machine) {
 		super.setMachine(machine);
@@ -43,7 +44,7 @@ public class A_StarPathGenerator extends PathGenerator {
 			}
 			
 			// reverse path
-			Stack<Edge> temp = new Stack<Edge>();
+			Stack temp = new Stack();
 			while( preCalculatedPath.size() > 0 )
 			{
 				temp.push(preCalculatedPath.pop());
@@ -51,7 +52,7 @@ public class A_StarPathGenerator extends PathGenerator {
 			preCalculatedPath = temp;
 		}
 
-		Edge edge = (Edge) preCalculatedPath.pop();
+		DirectedSparseEdge edge = (DirectedSparseEdge) preCalculatedPath.pop();
 		getMachine().walkEdge(edge);
 		lastState = getMachine().getCurrentState();
 		String[] retur = {getMachine().getEdgeName(edge), getMachine().getCurrentStateName()};
@@ -59,30 +60,33 @@ public class A_StarPathGenerator extends PathGenerator {
 	}
 
 	
-	@SuppressWarnings("unchecked")
-	private Stack<Edge> a_star()
+	private Stack a_star()
 	{
-		Vector<String> closed = new Vector<String>();
+		Vector closed = new Vector();
 
-		PriorityQueue<weightedPath> q = new PriorityQueue<weightedPath>(10, new Comparator<weightedPath>(){
-			public int compare(weightedPath arg0, weightedPath arg1) {
-				int retur = Double.compare(arg0.getWeight(), arg1.getWeight());
-				if(retur == 0)
-					retur = arg0.getPath().size() - arg1.getPath().size();
-				return retur;
+		PriorityQueue q = new PriorityQueue(10, new Comparator(){
+			public int compare(Object arg0, Object arg1) {
+				if(arg0 instanceof weightedPath && arg1 instanceof weightedPath)
+				{
+					int retur = Double.compare(((weightedPath)arg0).getWeight(), ((weightedPath)arg1).getWeight());
+					if(retur == 0)
+						retur = ((weightedPath)arg0).getPath().size() - ((weightedPath)arg1).getPath().size();
+					return retur;
+				}
+				throw new RuntimeException("Could not compare '"+arg0.getClass().getName()+"' with '"+arg1.getClass().getName()+"' as they are not both instances of 'weightedPath'");
 			}
 		});
 
-		Set<Edge> availableOutEdges;
+		Set availableOutEdges;
 		try {
 			availableOutEdges = getMachine().getCurrentOutEdges();
 		} catch (FoundNoEdgeException e) {
 			throw new RuntimeException("No available edges found at "+ getMachine().getCurrentStateName(), e );
 		}
-		for(Iterator<Edge> i=availableOutEdges.iterator(); i.hasNext();)
+		for(Iterator i=availableOutEdges.iterator(); i.hasNext();)
 		{
-			Edge y = i.next();
-			Stack<Edge> s = new Stack<Edge>();
+			DirectedSparseEdge y = (DirectedSparseEdge) i.next();
+			Stack s = new Stack();
 			s.push(y);
 			q.add(getWeightedPath(s));
 		}
@@ -94,7 +98,7 @@ public class A_StarPathGenerator extends PathGenerator {
 			if( p.getWeight() > 0.99999) // are we done yet?
 				return p.getPath();
 
-			Edge x = (Edge) p.getPath().peek();
+			DirectedSparseEdge x = (DirectedSparseEdge) p.getPath().peek();
 			
 			// have we been here before?
 			if(closed.contains(x.hashCode()+"."+p.getSubState().hashCode()+"."+p.getWeight()))
@@ -108,10 +112,10 @@ public class A_StarPathGenerator extends PathGenerator {
 			availableOutEdges = getPathOutEdges(p.getPath());
 			if(availableOutEdges != null && availableOutEdges.size()>0)
 			{
-				for(Iterator<Edge> i = availableOutEdges.iterator(); i.hasNext();)
+				for(Iterator i=availableOutEdges.iterator(); i.hasNext();)
 				{
-					Edge y = i.next();					
-					Stack<Edge> newStack = (Stack<Edge>) p.getPath().clone();
+					DirectedSparseEdge y = (DirectedSparseEdge) i.next();
+					Stack newStack = (Stack)p.getPath().clone();
 					newStack.push(y);
 					q.add(getWeightedPath(newStack));
 				}
@@ -120,7 +124,7 @@ public class A_StarPathGenerator extends PathGenerator {
 		throw new RuntimeException("No path found to satisfy stop condition "+getStopCondition() +", best path satified only "+ (int)(maxWeight*100) +"% of condition."); 
 	}
 	
-	private weightedPath getWeightedPath(Stack<Edge> path)
+	private weightedPath getWeightedPath(Stack path)
 	{
 		double weight = 0;
 		String subState = ""; 
@@ -138,9 +142,9 @@ public class A_StarPathGenerator extends PathGenerator {
 		return new weightedPath(path, weight, subState);
 	}
     
-	private Set<Edge> getPathOutEdges(Stack<Edge> path)
+	private Set getPathOutEdges(Stack path)
 	{
-		Set<Edge> retur = null;
+		Set retur = null;
 		getMachine().storeState();
 		getMachine().walkEdge(path);
 		try {
@@ -166,7 +170,7 @@ public class A_StarPathGenerator extends PathGenerator {
 
 	private class weightedPath{
 		private double weight;
-		private Stack<Edge> path;
+		private Stack path;
 		private String subState;
 		
 		public String getSubState() {
@@ -177,11 +181,11 @@ public class A_StarPathGenerator extends PathGenerator {
 			this.subState = subState;
 		}
 		
-		public Stack<Edge> getPath() {
+		public Stack getPath() {
 			return path;
 		}
 		
-		public void setPath(Stack<Edge> path) {
+		public void setPath(Stack path) {
 			this.path = path;
 		}
 		
@@ -193,7 +197,7 @@ public class A_StarPathGenerator extends PathGenerator {
 			this.weight = weight;
 		}
 		
-		public weightedPath(Stack<Edge> path, double weight, String subState) {
+		public weightedPath(Stack path, double weight, String subState) {
 			setPath(path);
 			setWeight(weight);
 			setSubState(subState);

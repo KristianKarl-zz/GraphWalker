@@ -1,32 +1,33 @@
 package test.org.tigris.mbt.generators;
 
+import org.tigris.mbt.ExtendedFiniteStateMachine;
+import org.tigris.mbt.FiniteStateMachine;
 import org.tigris.mbt.Util;
 import org.tigris.mbt.conditions.ReachedEdge;
 import org.tigris.mbt.conditions.ReachedState;
 import org.tigris.mbt.generators.PathGenerator;
 import org.tigris.mbt.generators.A_StarPathGenerator;
-import org.tigris.mbt.graph.Edge;
-import org.tigris.mbt.graph.Graph;
-import org.tigris.mbt.graph.Vertex;
-import org.tigris.mbt.machines.ExtendedFiniteStateMachine;
-import org.tigris.mbt.machines.FiniteStateMachine;
+
+import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
+import edu.uci.ics.jung.graph.impl.DirectedSparseVertex;
+import edu.uci.ics.jung.graph.impl.SparseGraph;
 
 import junit.framework.TestCase;
 
 public class A_StarPathGeneratorTest extends TestCase {
 
-	Graph graph;
-	Vertex start;
-	Vertex v1;
-	Vertex v2;
-	Edge e0;
-	Edge e1;
-	Edge e2;
-	Edge e3;
+	SparseGraph graph;
+	DirectedSparseVertex start;
+	DirectedSparseVertex v1;
+	DirectedSparseVertex v2;
+	DirectedSparseEdge e0;
+	DirectedSparseEdge e1;
+	DirectedSparseEdge e2;
+	DirectedSparseEdge e3;
 	
 	protected void setUp() throws Exception {
 		super.setUp();
-		graph = new Graph();
+		graph = new SparseGraph();
 		
 		start = Util.addVertexToGraph(graph, "Start");
 		v1 = Util.addVertexToGraph(graph, "V1");

@@ -7,12 +7,13 @@ import java.util.TreeSet;
 import java.util.Vector;
 
 import org.tigris.mbt.Keywords;
-import org.tigris.mbt.graph.AbstractElement;
-import org.tigris.mbt.graph.Edge;
+
+import edu.uci.ics.jung.graph.Edge;
+import edu.uci.ics.jung.graph.impl.AbstractElement;
 
 public class ListGenerator extends PathGenerator {
 
-	private Stack<String[]> list = null;
+	private Stack list = null;
 
     public boolean hasNext()
     {
@@ -30,23 +31,24 @@ public class ListGenerator extends PathGenerator {
     
 	private void generateList()
 	{
-		list = new Stack<String[]>();
-		TreeSet<String[]> tempList = new TreeSet<String[]>(new Comparator<String[]>(){
-			public int compare(String[] arg0, String[] arg1) {
+		list = new Stack();
+		TreeSet tempList = new TreeSet(new Comparator(){
+			public int compare(Object arg0, Object arg1) {
 				return ((String[])arg1)[0].compareTo(((String[])arg0)[0]);
 			}});
 		
-		Vector<AbstractElement> abstractElements = new Vector<AbstractElement>();
+		Vector abstractElements = new Vector();
 		abstractElements.addAll(getMachine().getAllStates());
 		abstractElements.addAll(getMachine().getAllEdges());
 		
-		for(Iterator<AbstractElement> i = abstractElements.iterator();i.hasNext();)
+		for(Iterator i = abstractElements.iterator();i.hasNext();)
 		{
-			AbstractElement ae = i.next();
-			if( !ae.getLabelKey().equals(Keywords.START_NODE) )
+			AbstractElement ae = (AbstractElement) i.next();
+			Object label = ae.getUserDatum(Keywords.LABEL_KEY);
+			if(label != null && !label.equals(Keywords.START_NODE))
 			{
 				String[] value = { 
-						(String) ae.getLabelKey(), 
+						(String) label, 
 						(ae instanceof Edge ? "Edge" : "Vertex")}; 
 				tempList.add(value);
 			}

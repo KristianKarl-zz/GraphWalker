@@ -1,7 +1,5 @@
 package org.tigris.mbt.io;
 
-import java.awt.Color;
-import java.awt.geom.Point2D;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -18,23 +16,26 @@ import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 import org.tigris.mbt.Keywords;
 import org.tigris.mbt.Util;
-import org.tigris.mbt.graph.Edge;
-import org.tigris.mbt.graph.Graph;
-import org.tigris.mbt.graph.Vertex;
 
-import edu.uci.ics.jung.graph.util.Pair;
+import edu.uci.ics.jung.graph.Edge;
+import edu.uci.ics.jung.graph.Vertex;
+import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
+import edu.uci.ics.jung.graph.impl.SparseGraph;
+import edu.uci.ics.jung.graph.impl.DirectedSparseVertex;
+import edu.uci.ics.jung.utils.Pair;
+import edu.uci.ics.jung.utils.UserData;
 
 /**
  * A file reader for GraphML files. The reader can read one single graphml file
  * or several in a single folder. When several files are read, they will be
  * merged. Regardless if one or several files are read, they all end up into
- * one single Graph object.<br><br>
+ * one single SparseGraph object.<br><br>
  * <strong>Example: Single graphml file</strong><br>
  * GraphML graphML = new GraphML();<br>
- * Graph graph = graphML.load( "graph.graphml" );<br><br>
+ * SparseGraph graph = graphML.load( "graph.graphml" );<br><br>
  * <strong>Example: Folder containing several graphml files</strong><br>
  * GraphML graphML = new GraphML();<br>
- * Graph graph = graphML.load( "/home/user/graphml_folder/" );<br>
+ * SparseGraph graph = graphML.load( "/home/user/graphml_folder/" );<br>
  *
  */
 public class GraphML extends AbstractModelHandler
@@ -47,7 +48,7 @@ public class GraphML extends AbstractModelHandler
 	/**
 	* List of parsed graphs
 	*/
-	private Vector<Graph> parsedGraphList;
+	private java.util.Vector parsedGraphList;
 	
 	/**
 	* A counter for creating unique indexes for edges and vertices.
@@ -66,7 +67,7 @@ public class GraphML extends AbstractModelHandler
 	{	
 		logger = Util.setupLogger( GraphML.class );
 		
-		parsedGraphList = new Vector<Graph>();
+		parsedGraphList = new Vector();
 		vertexAndEdgeIndex = 0;
 	}
 	
@@ -113,16 +114,15 @@ public class GraphML extends AbstractModelHandler
 	}
 	
 	/**
-	 * Parses the graphml file, and returns the model as a edu.uci.ics.jung.graph.impl.Graph  
+	 * Parses the graphml file, and returns the model as a edu.uci.ics.jung.graph.impl.SparseGraph  
 	 *
 	 * @param fileName The graphml file
 	 * @return The graph
 	 */
-	@SuppressWarnings("unchecked")
-	private Graph parseFile( String fileName )
+	private SparseGraph parseFile( String fileName )
 	{
-		Graph graph = new Graph();
-		graph.setFileKey( fileName );
+		SparseGraph graph = new SparseGraph();
+		graph.addUserDatum( Keywords.FILE_KEY, fileName, UserData.SHARED );
 		SAXBuilder parser = new SAXBuilder( "org.apache.crimson.parser.XMLReaderImpl", false );		
 				
 		try
@@ -131,7 +131,7 @@ public class GraphML extends AbstractModelHandler
 			Document doc = parser.build( fileName );
 
 			// Parse all vertices (nodes)
-			Iterator<Object> iter_node = doc.getDescendants( new org.jdom.filter.ElementFilter( "node" ) );
+			Iterator iter_node = doc.getDescendants( new org.jdom.filter.ElementFilter( "node" ) );
 			while ( iter_node.hasNext() )
 			{
 				Object o = iter_node.next();
@@ -143,7 +143,7 @@ public class GraphML extends AbstractModelHandler
 						logger.debug( "  Excluded node: " + element.getAttributeValue( "yfiles.foldertype" ) );
 						continue;
 					}
-					Iterator<Object> iterUMLNoteIter = element.getDescendants( new org.jdom.filter.ElementFilter( "UMLNoteNode" ) );
+					Iterator iterUMLNoteIter = element.getDescendants( new org.jdom.filter.ElementFilter( "UMLNoteNode" ) );
 					if ( iterUMLNoteIter.hasNext() )
 					{
 						logger.debug( "  Excluded node: UMLNoteNode" );
@@ -152,9 +152,9 @@ public class GraphML extends AbstractModelHandler
 					logger.debug( "  id: " + element.getAttributeValue( "id" ) );
 
 					// Used to remember which vertex to store the image location.
-					Vertex currentVertex = null;
+					DirectedSparseVertex currentVertex = null;
 					
-					Iterator<Object> iterNodeLabel = element.getDescendants( new org.jdom.filter.ElementFilter( "NodeLabel" ) );
+					Iterator iterNodeLabel = element.getDescendants( new org.jdom.filter.ElementFilter( "NodeLabel" ) );
 					while ( iterNodeLabel.hasNext() )
 					{
 						Object o2 = iterNodeLabel.next();
@@ -164,15 +164,14 @@ public class GraphML extends AbstractModelHandler
 							logger.debug( "  Full name: '" + nodeLabel.getQualifiedName() + "'" );
 							logger.debug( "  Name: '" + nodeLabel.getTextTrim() + "'" );
 
-							Vertex v = new Vertex();
-							graph.addVertex( v );
+							DirectedSparseVertex v = (DirectedSparseVertex) graph.addVertex( new DirectedSparseVertex() );
 							currentVertex = v;
 
-							v.setIdKey( element.getAttributeValue( "id" ) );
-							v.setVisitedKey( new Integer( 0 )  );
-							v.setFileKey( fileName );
-							v.setFullLabelKey( nodeLabel.getTextTrim() );
-							v.setIndexKey( new Integer( getNewVertexAndEdgeIndex() ) );
+							v.addUserDatum( Keywords.ID_KEY, 	 	element.getAttributeValue( "id" ),         UserData.SHARED );
+							v.addUserDatum( Keywords.VISITED_KEY, 	new Integer( 0 ), 				           UserData.SHARED );
+							v.addUserDatum( Keywords.FILE_KEY, 	 	fileName, 						   		   UserData.SHARED );
+							v.addUserDatum( Keywords.FULL_LABEL_KEY, nodeLabel.getTextTrim(), 		           UserData.SHARED );
+							v.addUserDatum( Keywords.INDEX_KEY,      new Integer( getNewVertexAndEdgeIndex() ), UserData.SHARED );
 
 							String str = nodeLabel.getTextTrim();
 							Pattern p = Pattern.compile( "(.*)", Pattern.MULTILINE );
@@ -193,13 +192,13 @@ public class GraphML extends AbstractModelHandler
 								{
 									throw new RuntimeException( "Vertex has a label '" + label  + "', which is a reserved keyword, in file: '" + fileName + "'" );
 								}
-								v.setLabelKey( label );
+								v.addUserDatum( Keywords.LABEL_KEY, label, UserData.SHARED );
 							}
 							else
 							{
 								throw new RuntimeException( "Label must be defined in file: '" + fileName + "'" );
 							}
-							logger.debug( "  Added vertex: '" + v.getLabelKey() + "', with id: " + v.getIndexKey() );
+							logger.debug( "  Added vertex: '" + v.getUserDatum( Keywords.LABEL_KEY ) + "', with id: " + v.getUserDatum( Keywords.INDEX_KEY ) );
 
 
 
@@ -212,7 +211,7 @@ public class GraphML extends AbstractModelHandler
 							m = p.matcher( str );
 							if ( m.find() )
 							{
-								v.setMergeKey( true );
+								v.addUserDatum( Keywords.MERGE, m.group( 1 ), UserData.SHARED );
 								logger.debug( "  Found MERGE for vertex: " + label );
 							}
 
@@ -225,7 +224,7 @@ public class GraphML extends AbstractModelHandler
 							m = p.matcher( str );
 							if ( m.find() )
 							{
-								v.setNoMergeKey( true );
+								v.addUserDatum( Keywords.NO_MERGE, m.group( 1 ), UserData.SHARED );
 								logger.debug( "  Found NO_MERGE for vertex: " + label );
 							}
 
@@ -241,7 +240,7 @@ public class GraphML extends AbstractModelHandler
 							if ( m.find() )
 							{
 								logger.debug( "  Found BLOCKED. This vetex will be removed from the graph: " + label );
-								v.setBlockedKey( true );
+								v.addUserDatum( Keywords.BLOCKED, Keywords.BLOCKED, UserData.SHARED );
 							}
 
 
@@ -255,7 +254,7 @@ public class GraphML extends AbstractModelHandler
 							{
 								String index_key = m.group( 2 );
 								logger.debug( "  Found INDEX. This vertex will use the INDEX key: " + index_key );
-								v.setIndexKey( new Integer( index_key ) );
+								v.setUserDatum( Keywords.INDEX_KEY, new Integer( index_key ), UserData.SHARED );
 							}
 
 
@@ -283,7 +282,7 @@ public class GraphML extends AbstractModelHandler
 										reqtags += "," + reqtag;
 									}
 								}
-								v.setReqTagKey( reqtags );
+								v.addUserDatum( Keywords.REQTAG_KEY, reqtags, UserData.SHARED );
 							}
 						}
 					}
@@ -291,7 +290,7 @@ public class GraphML extends AbstractModelHandler
 					// Using the yEd editor, an image can be used to depict the vertex. When merging multiple
 					// graphs into one, the code below, stores the image location, which will be used when
 					// writing that merged graphml file.
-					Iterator<Object> iterImage = element.getDescendants( new org.jdom.filter.ElementFilter( "Image" ) );
+					Iterator iterImage = element.getDescendants( new org.jdom.filter.ElementFilter( "Image" ) );
 					while ( iterImage.hasNext() && currentVertex != null)
 					{
 						Object o2 = iterImage.next();
@@ -301,11 +300,11 @@ public class GraphML extends AbstractModelHandler
 							if ( image.getAttributeValue( "href" ) != null )
 							{
 								logger.debug( "  Image: '" + image.getAttributeValue( "href" ) + "'" );
-								currentVertex.setImageKey( image.getAttributeValue( "href" ) );
+								currentVertex.addUserDatum( Keywords.IMAGE_KEY, image.getAttributeValue( "href" ), UserData.SHARED );
 							}
 						}
 					}
-					Iterator<Object> iterGeometry = element.getDescendants( new org.jdom.filter.ElementFilter( "Geometry" ) );
+					Iterator iterGeometry = element.getDescendants( new org.jdom.filter.ElementFilter( "Geometry" ) );
 					while ( iterGeometry.hasNext() && currentVertex != null)
 					{
 						Object o2 = iterGeometry.next();
@@ -314,21 +313,8 @@ public class GraphML extends AbstractModelHandler
 							org.jdom.Element geometry = (org.jdom.Element)o2;
 							logger.debug( "  width: '" + geometry.getAttributeValue( "width" ) + "'" );
 							logger.debug( "  height: '" + geometry.getAttributeValue( "height" ) + "'" );
-							logger.debug( "  x position: '" + geometry.getAttributeValue( "x" ) + "'" );
-							logger.debug( "  y position: '" + geometry.getAttributeValue( "y" ) + "'" );
-							currentVertex.setWidth( Float.parseFloat( geometry.getAttributeValue( "width" ) ) );							
-							currentVertex.setHeight( Float.parseFloat( geometry.getAttributeValue( "height" ) ) );
-							currentVertex.setLocation( new Point2D.Float( Float.parseFloat( geometry.getAttributeValue( "x" ) ), 
-																		  Float.parseFloat( geometry.getAttributeValue( "y" ) ) ) );						
-						}
-					}
-					Iterator<Object> iterFill = element.getDescendants( new org.jdom.filter.ElementFilter( "Fill" ) );
-					while ( iterFill.hasNext() && currentVertex != null ) {
-						Object o2 = iterFill.next();
-						if ( o2 instanceof org.jdom.Element ) {
-							org.jdom.Element fill = (org.jdom.Element)o2;							
-							logger.debug( "  fill color: '" + fill.getAttributeValue( "color" ) + "'" );
-							currentVertex.setFillColor( new Color( Integer.parseInt(fill.getAttributeValue( "color" ).replace("#", ""), 16) ) );
+							currentVertex.addUserDatum( Keywords.WIDTH_KEY, geometry.getAttributeValue( "width" ), UserData.SHARED );							
+							currentVertex.addUserDatum( Keywords.HEIGHT_KEY, geometry.getAttributeValue( "height" ), UserData.SHARED );
 						}
 					}
 				}
@@ -337,7 +323,7 @@ public class GraphML extends AbstractModelHandler
 			Object[] vertices = graph.getVertices().toArray();
 
 			// Parse all edges (arrows or transitions)
-			Iterator<Object> iter_edge = doc.getDescendants( new org.jdom.filter.ElementFilter( "edge" ) );
+			Iterator iter_edge = doc.getDescendants( new org.jdom.filter.ElementFilter( "edge" ) );
 			while ( iter_edge.hasNext() )
 			{
 				Object o = iter_edge.next();
@@ -346,7 +332,7 @@ public class GraphML extends AbstractModelHandler
 					org.jdom.Element element = (org.jdom.Element)o;
 					logger.debug( "  id: " + element.getAttributeValue( "id" ) );
 
-					Iterator<Object> iter2 = element.getDescendants( new org.jdom.filter.ElementFilter( "EdgeLabel" ) );
+					Iterator iter2 = element.getDescendants( new org.jdom.filter.ElementFilter( "EdgeLabel" ) );
 					org.jdom.Element edgeLabel = null;
 					if ( iter2.hasNext() )
 					{
@@ -361,21 +347,21 @@ public class GraphML extends AbstractModelHandler
 					logger.debug( "  source: " + element.getAttributeValue( "source" ) );
 					logger.debug( "  target: " + element.getAttributeValue( "target" ) );
 
-					Vertex source = null;
-					Vertex dest = null;
+					DirectedSparseVertex source = null;
+					DirectedSparseVertex dest = null;
 
 					for ( int i = 0; i < vertices.length; i++ )
 					{
-						Vertex vertex = (Vertex)vertices[ i ];
+						DirectedSparseVertex vertex = (DirectedSparseVertex)vertices[ i ];
 
 						// Find source vertex
-						if ( vertex.getIdKey().equals( element.getAttributeValue( "source" ) ) &&
-							 vertex.getFileKey().equals( fileName ) )
+						if ( vertex.getUserDatum( Keywords.ID_KEY ).equals( element.getAttributeValue( "source" ) ) &&
+							 vertex.getUserDatum( Keywords.FILE_KEY ).equals( fileName ) )
 						{
 							source = vertex;
 						}
-						if ( vertex.getIdKey().equals( element.getAttributeValue( "target" ) ) &&
-							 vertex.getFileKey().equals( fileName ) )
+						if ( vertex.getUserDatum( Keywords.ID_KEY ).equals( element.getAttributeValue( "target" ) ) &&
+							 vertex.getUserDatum( Keywords.FILE_KEY ).equals( fileName ) )
 						{
 							dest = vertex;
 						}
@@ -394,15 +380,12 @@ public class GraphML extends AbstractModelHandler
 					}
 
 
-					Edge e = new Edge();
-					e.setIdKey( element.getAttributeValue( "id" ) );
-					e.setFileKey( fileName );
-					e.setIndexKey( new Integer( getNewVertexAndEdgeIndex() ) );
-					if ( !graph.addEdge( e, source, dest ) ) {
-						String msg = "Failed adding edge: " + e + ", to graph: " + graph;
-						logger.error( msg );
-						throw new RuntimeException( msg );
-					}					
+					DirectedSparseEdge e = new DirectedSparseEdge( source, dest );
+					graph.addEdge( e );
+					e.addUserDatum( Keywords.ID_KEY,    element.getAttributeValue( "id" ),         UserData.SHARED );
+					e.addUserDatum( Keywords.FILE_KEY,  fileName, 						          UserData.SHARED );
+					e.addUserDatum( Keywords.INDEX_KEY, new Integer( getNewVertexAndEdgeIndex() ), UserData.SHARED );
+
 
 					if ( edgeLabel != null )
 					{
@@ -412,7 +395,7 @@ public class GraphML extends AbstractModelHandler
 						// Where the Label, Parameter. Guard, Actions and Keyword are optional.
 						
 						String str = edgeLabel.getText();
-						e.setFullLabelKey( str );
+						e.addUserDatum( Keywords.FULL_LABEL_KEY, str, UserData.SHARED );
 						Pattern p = Pattern.compile( "(.*)", Pattern.MULTILINE );
 						Matcher m = p.matcher( str );
 						String label = null;
@@ -426,7 +409,7 @@ public class GraphML extends AbstractModelHandler
 							if ( firstLineMatcher.find() )
 							{
 								String guard = firstLineMatcher.group( 1 );
-								e.setGuardKey( guard );
+								e.addUserDatum( Keywords.GUARD_KEY, guard, UserData.SHARED );
 								logger.debug( " Found guard = '" + guard + "' for edge id: " + edgeLabel.getQualifiedName() );
 							}							
 
@@ -439,7 +422,7 @@ public class GraphML extends AbstractModelHandler
 								if ( firstLineMatcher.find() )
 								{
 									String actions = firstLineMatcher.group( 0 ).trim();
-									e.setActionsKey( actions );
+									e.addUserDatum( Keywords.ACTIONS_KEY, actions, UserData.SHARED );
 									logger.debug( " Found actions: '" + actions + "' for edge id: " + edgeLabel.getQualifiedName() );
 								}
 							}
@@ -454,14 +437,14 @@ public class GraphML extends AbstractModelHandler
 								{
 									throw new RuntimeException( "Edge has a label '" + label  + "', which is a reserved keyword, in file: '" + fileName + "'" );
 								}
-								e.setLabelKey( label_key );
+								e.addUserDatum( Keywords.LABEL_KEY, label_key, UserData.SHARED );
 								logger.debug( " Found label = '" + label_key + "' for edge id: " + edgeLabel.getQualifiedName() );
 								
 								String parameter = firstLineMatcher.group( 2 );
 								if ( parameter != null )
 								{
 									parameter = parameter.trim();
-									e.setParameterKey( parameter );
+									e.addUserDatum( Keywords.PARAMETER_KEY, parameter, UserData.SHARED );
 									logger.debug( " Found parameter = '" + parameter + "' for edge id: " + edgeLabel.getQualifiedName() );
 								}
 							}							
@@ -492,7 +475,7 @@ public class GraphML extends AbstractModelHandler
 							{
 								throw new RuntimeException( "For label: " + label + ", weight is not a correct float value: " + error.toString() + " In file '" + fileName + "'" );
 							}
-							e.setWeightKey( weight );
+							e.addUserDatum( Keywords.WEIGHT_KEY, weight, UserData.SHARED );
 						}
 
 
@@ -507,7 +490,7 @@ public class GraphML extends AbstractModelHandler
 						if ( m.find() )
 						{
 							logger.debug( "  Found BLOCKED. This edge will be removed from the graph: " + label );
-							e.setBlockedKey( true );
+							e.addUserDatum( Keywords.BLOCKED, Keywords.BLOCKED, UserData.SHARED );
 						}
 
 
@@ -522,7 +505,7 @@ public class GraphML extends AbstractModelHandler
 						if ( m.find() )
 						{
 							logger.debug( "  Found BACKTRACK for edge: " + label );
-							e.setBacktrackKey( true );
+							e.addUserDatum( Keywords.BACKTRACK, Keywords.BACKTRACK, UserData.SHARED );
 						}
 
 
@@ -536,7 +519,7 @@ public class GraphML extends AbstractModelHandler
 						{
 							String index_key = m.group( 2 );
 							logger.debug( "  Found INDEX. This edge will use the INDEX key: " + index_key );
-							e.setIndexKey( new Integer( index_key ) );
+							e.setUserDatum( Keywords.INDEX_KEY, new Integer( index_key ), UserData.SHARED );
 						}
 
 
@@ -564,11 +547,11 @@ public class GraphML extends AbstractModelHandler
 									reqtags += "," + reqtag;
 								}
 							}
-							e.setReqTagKey( reqtags );
+							e.addUserDatum( Keywords.REQTAG_KEY, reqtags, UserData.SHARED );
 						}
 					}
-					e.setVisitedKey( new Integer( 0 ) );
-					logger.debug( "  Added edge: '" + e.getLabelKey() + "', with id: " + e.getIndexKey() );
+					e.addUserDatum( Keywords.VISITED_KEY, new Integer( 0 ), UserData.SHARED );
+					logger.debug( "  Added edge: '" + e.getUserDatum( Keywords.LABEL_KEY ) + "', with id: " + e.getUserDatum( Keywords.INDEX_KEY ) );
 				}
 			}
 		}
@@ -583,9 +566,7 @@ public class GraphML extends AbstractModelHandler
 			throw new RuntimeException( "Could not parse file: '" + fileName + "'" );
 		}
 
-		logger.debug( "Finished parsing graph: " + graph );
 		removeBlockedEntities( graph );
-		logger.debug( "Graph after removing BLOCKED entities: " + graph );
 
 		return graph;
 	}
@@ -601,25 +582,25 @@ public class GraphML extends AbstractModelHandler
 	/**
 	 *  Removes any edges, and any vertices that contains the key word BLOCKED
 	 */
-	private void removeBlockedEntities( Graph graph )
+	private void removeBlockedEntities( SparseGraph graph )
 	{
 		Object[] vertices = graph.getVertices().toArray();
 		for ( int i = 0; i < vertices.length; i++ )
 		{
-			Vertex v = (Vertex)vertices[ i ];
-			if ( v.isBlockedKey() )
+			DirectedSparseVertex v = (DirectedSparseVertex)vertices[ i ];
+			if ( v.containsUserDatumKey( Keywords.BLOCKED ) )
 			{
-				logger.debug( "Removing this vertex because it is BLOCKED: '" + v.getLabelKey() + "'" );
+				logger.debug( "Removing this vertex because it is BLOCKED: '" + v.getUserDatum( Keywords.LABEL_KEY ) + "'" );
 				graph.removeVertex( v );
 			}
 		}
 		Object[] edges = graph.getEdges().toArray();
 		for ( int i = 0; i < edges.length; i++ )
 		{
-			Edge e = (Edge)edges[ i ];
-			if ( e.isBlockedKey() )
+			DirectedSparseEdge e = (DirectedSparseEdge)edges[ i ];
+			if ( e.containsUserDatumKey( Keywords.BLOCKED ) )
 			{
-				logger.debug( "Removing this edge because it is BLOCKED: '" + e.getLabelKey() + "'" );
+				logger.debug( "Removing this edge because it is BLOCKED: '" + e.getUserDatum( Keywords.LABEL_KEY ) + "'" );
 				graph.removeEdge( e );
 			}
 		}
@@ -662,99 +643,100 @@ public class GraphML extends AbstractModelHandler
 		boolean foundSubStartGraph = false;
 		graph = null;
 		
-		for ( Iterator<Graph> iter = parsedGraphList.iterator(); iter.hasNext(); )
+		for ( Iterator iter = parsedGraphList.iterator(); iter.hasNext(); )
 		{
-			Graph g = iter.next();
+			SparseGraph g = (SparseGraph) iter.next();
 			foundSubStartGraph = false;
 	
-			logger.debug( "Analyzing graph: " + g.getFileKey() );
+			logger.debug( "Analyzing graph: " + g.getUserDatum( Keywords.FILE_KEY ) );
 	
 			Object[] vertices = g.getVertices().toArray();
 			for ( int i = 0; i < vertices.length; i++ )
 			{
-				Vertex v = (Vertex)vertices[ i ];
+				DirectedSparseVertex v = (DirectedSparseVertex)vertices[ i ];
 	
 				// Find all vertices that are start nodes (START_NODE)
-				if ( v.getLabelKey().equals( Keywords.START_NODE ) )
+				if ( v.getUserDatum( Keywords.LABEL_KEY ).equals( Keywords.START_NODE ) )
 				{
-					if ( g.getOutEdges(v).size() != 1 )
+					Object[] edges = v.getOutEdges().toArray();
+					if ( edges.length != 1 )
 					{
-						throw new RuntimeException( "A Start vertex can only have one out edge, look in file: " + g.getFileKey() );
+						throw new RuntimeException( "A Start vertex can only have one out edge, look in file: " + g.getUserDatum( Keywords.FILE_KEY ) );
 					}
-					Edge edge = (Edge)g.getOutEdges(v).toArray()[0];
-					if ( !edge.getLabelKey().isEmpty() )
+					DirectedSparseEdge edge = (DirectedSparseEdge)edges[ 0 ];
+					if ( edge.containsUserDatumKey( Keywords.LABEL_KEY ) )
 					{
 						if ( foundMotherStartGraph )
 						{
-							if ( graph.getFileKey().equals( g.getFileKey() ) )
+							if ( graph.getUserDatum( Keywords.FILE_KEY ).equals( g.getUserDatum( Keywords.FILE_KEY ) ) )
 							{
 								throw new RuntimeException( "Only one Start vertex can exist in one file, see file '" +
-					                    graph.getFileKey()+ "'" );
+					                    graph.getUserDatum( Keywords.FILE_KEY )+ "'" );
 							}
 							else
 							{
 								throw new RuntimeException( "Only one Start vertex can exist in one file, see files " +
-					                    graph.getFileKey()+ ", and " + g.getFileKey() );								
+					                    graph.getUserDatum( Keywords.FILE_KEY )+ ", and " + g.getUserDatum( Keywords.FILE_KEY ) );								
 							}
 						}
 						if ( foundSubStartGraph == true )
 						{
 							throw new RuntimeException( "Only one Start vertex can exist in one file, see file '" +
-				                    g.getFileKey()+ "'" );		
+				                    g.getUserDatum( Keywords.FILE_KEY )+ "'" );		
 						}
 	
 						foundMotherStartGraph = true;
 						graph = g;
-						g.getDest(edge).setMotherStartVertexKey( Keywords.MOTHER_GRAPH_START_VERTEX );
-						logger.debug( "Found the mother graph in the file: " +  graph.getFileKey() );
+						edge.getDest().addUserDatum( Keywords.MOTHER_GRAPH_START_VERTEX, Keywords.MOTHER_GRAPH_START_VERTEX, UserData.SHARED );
+						logger.debug( "Found the mother graph in the file: " +  graph.getUserDatum( Keywords.FILE_KEY ) );
 					}
 					else
 					{
 						if ( foundSubStartGraph == true )
 						{
 							throw new RuntimeException( "Only one Start vertex can exist in one file, see file '" +
-				                    g.getFileKey()+ "'" );		
+				                    g.getUserDatum( Keywords.FILE_KEY )+ "'" );		
 						}
 						
 						// Verify that current subgraph is not already defined
-						for ( Iterator<Graph> iter_g = parsedGraphList.iterator(); iter_g.hasNext(); )
+						for ( Iterator iter_g = parsedGraphList.iterator(); iter_g.hasNext(); )
 						{
 							if ( iter.hashCode() == iter_g.hashCode() )
 							{
 								continue;
 							}
 							
-							Graph tmp_graph = iter_g.next();
-							if ( !tmp_graph.getLabelKey().isEmpty() )
+							SparseGraph tmp_graph = (SparseGraph) iter_g.next();
+							if ( tmp_graph.containsUserDatumKey( Keywords.LABEL_KEY ) )
 							{
-								String name = tmp_graph.getLabelKey();
-								if ( name.equals( g.getDest(edge).getLabelKey() ) )
+								String name = (String) tmp_graph.getUserDatum( Keywords.LABEL_KEY );
+								if ( name.equals( (String)edge.getDest().getUserDatum( Keywords.LABEL_KEY ) ) )
 								{
 									throw new RuntimeException( "Found 2 subgraphs using the same name: '" + 
-															    g.getDest(edge).getLabelKey() + 
+											                    edge.getDest().getUserDatum( Keywords.LABEL_KEY ) + 
 											                    "', they are defined in files: '" + 
-											                    g.getFileKey() + "', and :'"+
-											                    tmp_graph.getFileKey() + "'" );
+											                    g.getUserDatum( Keywords.FILE_KEY ) + "', and :'"+
+											                    tmp_graph.getUserDatum( Keywords.FILE_KEY ) + "'" );
 								}
 							}
 						}
 						
 						if ( foundMotherStartGraph == true )
 						{
-							if ( graph.getFileKey().equals( g.getFileKey() ) )
+							if ( graph.getUserDatum( Keywords.FILE_KEY ).equals( g.getUserDatum( Keywords.FILE_KEY ) ) )
 							{
 								throw new RuntimeException( "Only one Start vertex can exist in one file, see file '" +
-					                    graph.getFileKey()+ "'" );
+					                    graph.getUserDatum( Keywords.FILE_KEY )+ "'" );
 							}
 						}
 	
 						// Since the edge does not contain a label, this is a subgraph
 						// Mark the destination node of the edge to a subgraph starting node
 						foundSubStartGraph = true;
-						g.getDest(edge).setSubGraphStartVertexKey( Keywords.SUBGRAPH_START_VERTEX );
-						g.setLabelKey( g.getDest(edge).getLabelKey() );
-						logger.debug( "Found sub-graph: '" + g.getLabelKey() + "', in file '" + g.getFileKey() + "'" );
-						logger.debug( "Added SUBGRAPH_START_VERTEX to vertex: " + g.getDest(edge).getIndexKey() );
+						edge.getDest().addUserDatum( Keywords.SUBGRAPH_START_VERTEX, Keywords.SUBGRAPH_START_VERTEX, UserData.SHARED );
+						g.addUserDatum( Keywords.LABEL_KEY, edge.getDest().getUserDatum( Keywords.LABEL_KEY ), UserData.SHARED );
+						logger.debug( "Found sub-graph: '" + g.getUserDatum( Keywords.LABEL_KEY ) + "', in file '" + g.getUserDatum( Keywords.FILE_KEY ) + "'" );
+						logger.debug( "Added SUBGRAPH_START_VERTEX to vertex: " + edge.getDest().getUserDatum( Keywords.INDEX_KEY ) );
 					}
 				}
 			}
@@ -775,7 +757,7 @@ public class GraphML extends AbstractModelHandler
 	{
 		for ( int i = 0; i < parsedGraphList.size(); i++ )
 		{
-			Graph g = (Graph)parsedGraphList.elementAt( i );
+			SparseGraph g = (SparseGraph)parsedGraphList.elementAt( i );
 
 			// Exclude the mother graph
 			if ( graph.hashCode() == g.hashCode() )
@@ -783,30 +765,30 @@ public class GraphML extends AbstractModelHandler
 				continue;
 			}
 
-			logger.debug( "Looking for infinit recursive loop in file: " + g.getFileKey() );
+			logger.debug( "Looking for infinit recursive loop in file: " + g.getUserDatum( Keywords.FILE_KEY ) );
 
-			String subgraph_label = (String)g.getLabelKey();
+			String subgraph_label = (String)g.getUserDatum( Keywords.LABEL_KEY );
 			Object[] vertices = g.getVertices().toArray();
 			for ( int j = 0; j < vertices.length; j++ )
 			{
-				Vertex v = (Vertex)vertices[ j ];
-				String label = (String)v.getLabelKey();
+				DirectedSparseVertex v = (DirectedSparseVertex)vertices[ j ];
+				String label = (String)v.getUserDatum( Keywords.LABEL_KEY );
 				if ( label.equals( subgraph_label ) )
 				{
-					if ( !v.getSubGraphStartVertexKey().isEmpty() )
+					if ( v.containsUserDatumKey( Keywords.SUBGRAPH_START_VERTEX ) )
 					{
 						continue;
 					}
-					if ( v.isNoMergeKey() )
+					if ( v.containsUserDatumKey( Keywords.NO_MERGE ) )
 					{
 						continue;
 					}
 					
-					logger.error( "Vertex: " + label + ", with id: " + v.getIndexKey() + ", is a duplicate in a subgraph" );
+					logger.error( "Vertex: " + label + ", with id: " + v.getUserDatum( Keywords.INDEX_KEY ) + ", is a duplicate in a subgraph" );
 					throw new RuntimeException( "Found a subgraph containing a duplicate vertex with name: '" + 
-		                    					v.getLabelKey() + 
+		                    					v.getUserDatum( Keywords.LABEL_KEY ) + 
 		                    					"', in file: '" + 
-		                    					g.getFileKey() + "'" );
+		                    					g.getUserDatum( Keywords.FILE_KEY ) + "'" );
 					
 				}
 			}
@@ -817,42 +799,42 @@ public class GraphML extends AbstractModelHandler
 	{
 		for ( int i = 0; i < parsedGraphList.size(); i++ )
 		{
-			Graph g = (Graph)parsedGraphList.elementAt( i );
+			SparseGraph g = (SparseGraph)parsedGraphList.elementAt( i );
 
 			if ( graph.hashCode() == g.hashCode() )
 			{
 				continue;
 			}
-			logger.debug( "Analysing graph in file: " + g.getFileKey() );
+			logger.debug( "Analysing graph in file: " + g.getUserDatum( Keywords.FILE_KEY ) );
 
 			Object[] vertices = graph.getVertices().toArray();
 			for ( int j = 0; j < vertices.length; j++ )
 			{
-				Vertex v1 = (Vertex)vertices[ j ];
-				logger.debug( "Investigating vertex(" + v1.getIndexKey() + "): '" + v1.getLabelKey() + "'" );
+				DirectedSparseVertex v1 = (DirectedSparseVertex)vertices[ j ];
+				logger.debug( "Investigating vertex(" + v1.getUserDatum( Keywords.INDEX_KEY ) + "): '" + v1.getUserDatum( Keywords.LABEL_KEY ) + "'" );
 
-				if ( v1.getLabelKey().equals( g.getLabelKey() ) )
+				if ( v1.getUserDatum( Keywords.LABEL_KEY ).equals( g.getUserDatum( Keywords.LABEL_KEY ) ) )
 				{
-					if ( v1.isMergeKey() )
+					if ( v1.containsUserDatumKey( Keywords.MERGE ) )
 					{
 						logger.debug( "The vertex is marked MERGE, and will not be replaced by a subgraph.");
 						continue;
 					}
-					if ( v1.isNoMergeKey() )
+					if ( v1.containsUserDatumKey( Keywords.NO_MERGE ) )
 					{
 						logger.debug( "The vertex is marked NO_MERGE, and will not be replaced by a subgraph.");
 						continue;
 					}
-					if ( v1.isMergedMbtKey() )
+					if ( v1.containsUserDatumKey( Keywords.MERGED_BY_MBT ) )
 					{
 						logger.debug( "The vertex is marked MERGED_BY_MBT, and will not be replaced by a subgraph.");
 						continue;
 					}
 
-					logger.debug( "A subgraph'ed vertex: '" + v1.getLabelKey() +
-							       "' in graph: " + g.getFileKey()  +
+					logger.debug( "A subgraph'ed vertex: '" + v1.getUserDatum( Keywords.LABEL_KEY ) +
+							       "' in graph: " + g.getUserDatum( Keywords.FILE_KEY )  +
 							       ", equals a node in the graph in file: '" +
-							       graph.getFileKey() + "'" );
+							       graph.getUserDatum( Keywords.FILE_KEY ) + "'" );
 
 					appendGraph( graph, g );
 					copySubGraphs( graph, g, v1 );
@@ -873,28 +855,28 @@ public class GraphML extends AbstractModelHandler
 		Object[] list1 = graph.getVertices().toArray();
 		for ( int i = 0; i < list1.length; i++ )
 		{
-			Vertex v1 = (Vertex)list1[ i ];
+			DirectedSparseVertex v1 = (DirectedSparseVertex)list1[ i ];
 
-			if ( v1.isMergeKey() == false )
+			if ( v1.containsUserDatumKey( Keywords.MERGE ) == false )
 			{
 				continue;
 			}
 
 			Object[] list2 = graph.getVertices().toArray();
-			Vector<Vertex> mergedVertices = new Vector<Vertex>();
+			Vector mergedVertices = new Vector();
 			for ( int j = 0; j < list2.length; j++ )
 			{
-				Vertex v2 = (Vertex)list2[ j ];
+				DirectedSparseVertex v2 = (DirectedSparseVertex)list2[ j ];
 
-				if ( v1.getLabelKey().equals( v2.getLabelKey() ) == false )
+				if ( v1.getUserDatum( Keywords.LABEL_KEY ).equals( v2.getUserDatum( Keywords.LABEL_KEY ) ) == false )
 				{
 					continue;
 				}
-				if ( v2.isNoMergeKey() )
+				if ( v2.containsUserDatumKey( Keywords.NO_MERGE ) )
 				{
 					continue;
 				}
-				if ( v1.getIndexKey() == v2.getIndexKey() )
+				if ( v1.getUserDatum( Keywords.INDEX_KEY ) == v2.getUserDatum( Keywords.INDEX_KEY ) )
 				{
 					continue;
 				}
@@ -903,31 +885,31 @@ public class GraphML extends AbstractModelHandler
 					continue;
 				}
 
-				logger.debug( "Merging vertex(" + v1.getIndexKey() + "): '" + v1.getLabelKey() +
-						       "' with vertex (" + v2.getIndexKey() + ")" );
+				logger.debug( "Merging vertex(" + v1.getUserDatum( Keywords.INDEX_KEY ) + "): '" + v1.getUserDatum( Keywords.LABEL_KEY ) +
+						       "' with vertex (" + v2.getUserDatum( Keywords.INDEX_KEY ) + ")" );
 
-				Object[] inEdges = graph.getInEdges(v1).toArray();
+				Object[] inEdges = v1.getInEdges().toArray();
 				for (int x = 0; x < inEdges.length; x++)
 				{
-					Edge edge = (Edge)inEdges[ x ];				
-					Edge new_edge = new Edge( edge ); 
-					new_edge.setIndexKey( new Integer( getNewVertexAndEdgeIndex() ) );
-					graph.addEdge( new_edge, graph.getSource(edge), v2 );
+					DirectedSparseEdge edge = (DirectedSparseEdge)inEdges[ x ];
+					DirectedSparseEdge new_edge = (DirectedSparseEdge)graph.addEdge( new DirectedSparseEdge( edge.getSource(), v2 ) );
+					new_edge.importUserData( edge );
+					new_edge.setUserDatum( Keywords.INDEX_KEY, new Integer( getNewVertexAndEdgeIndex() ), UserData.SHARED );
 				}
-				Object[] outEdges = graph.getOutEdges(v1).toArray();
+				Object[] outEdges = v1.getOutEdges().toArray();
 				for (int x = 0; x < outEdges.length; x++)
 				{
-					Edge edge = (Edge)outEdges[ x ];
-					Edge new_edge = new Edge( edge ); 
-					new_edge.setIndexKey( new Integer( getNewVertexAndEdgeIndex() ) );
-					graph.addEdge( new_edge, v2, graph.getDest( edge ) );
+					DirectedSparseEdge edge = (DirectedSparseEdge)outEdges[ x ];
+					DirectedSparseEdge new_edge = (DirectedSparseEdge)graph.addEdge( new DirectedSparseEdge( v2, edge.getDest() ) );
+					new_edge.importUserData( edge );
+					new_edge.setUserDatum( Keywords.INDEX_KEY, new Integer( getNewVertexAndEdgeIndex() ), UserData.SHARED );
 				}
 				mergedVertices.add( v1 );
 			}
 
 			if ( mergedVertices.isEmpty() == false )
 			{
-				logger.debug( "Remvoing merged vertex(" + v1.getIndexKey() + ")" );
+				logger.debug( "Remvoing merged vertex(" + v1.getUserDatum( Keywords.INDEX_KEY ) + ")" );
 				graph.removeVertex( v1 );
 			}
 		}		
@@ -941,13 +923,13 @@ public class GraphML extends AbstractModelHandler
 		Object[] vs = graph.getVertices().toArray();
 		for ( int i = 0; i < vs.length; i++ )
 		{
-			Vertex v = (Vertex)vs[ i ];
-			if ( !v.getLabelKey().equals( Keywords.START_NODE ) )
+			DirectedSparseVertex v = (DirectedSparseVertex)vs[ i ];
+			if ( !v.getUserDatum( Keywords.LABEL_KEY ).equals( Keywords.START_NODE ) )
 			{
-				if ( graph.getInEdges(v).toArray().length == 0 )
+				if ( v.getInEdges().toArray().length == 0 )
 				{
-					String msg = "No in-edges! " + v + " is not reachable," +
-							     " from file: '" + v.getFileKey() + "'";
+					String msg = "No in-edges! The vertex: " + Util.getCompleteName( v ) + " is not reachable," +
+							     " from file: '" + v.getUserDatum( Keywords.FILE_KEY ) + "'";
 					logger.error( msg );
 					throw new RuntimeException( msg );
 				}
@@ -960,36 +942,38 @@ public class GraphML extends AbstractModelHandler
 	 * @param dst
 	 * @param src
 	 */
-	private void appendGraph( Graph dst, Graph src )
+	private void appendGraph( SparseGraph dst, SparseGraph src )
 	{
-		HashMap<Integer, Vertex> map = new HashMap<Integer, Vertex>();
+		HashMap map = new HashMap();
 		Object[] vertices = src.getVertices().toArray();
 		for ( int i = 0; i < vertices.length; i++ )
 		{
-			Vertex v = (Vertex)vertices[ i ];
-			if ( v.getLabelKey().equals( Keywords.START_NODE ) )
+			DirectedSparseVertex v = (DirectedSparseVertex)vertices[ i ];
+			if ( v.getUserDatum( Keywords.LABEL_KEY ).equals( Keywords.START_NODE ) )
 			{
 				continue;
 			}
-			Vertex new_v = new Vertex(v);
-			new_v.setIndexKey( new Integer( getNewVertexAndEdgeIndex() ) );
+			DirectedSparseVertex new_v = new DirectedSparseVertex();
+			new_v.importUserData( v );
+			new_v.setUserDatum( Keywords.INDEX_KEY, new Integer( getNewVertexAndEdgeIndex() ), UserData.SHARED );
 			dst.addVertex( new_v );
 			logger.debug("Associated vertex: " + v + " to new vertex: " + new_v );
-			map.put( (Integer)v.getIndexKey(), new_v );
+			map.put( (Integer)v.getUserDatum( Keywords.INDEX_KEY ), new_v );
 		}
 		Object[] edges = src.getEdges().toArray();
 		for ( int i = 0; i < edges.length; i++ )
 		{
-			Edge e = (Edge)edges[ i ];
-			Vertex v1 = map.get( src.getSource(e).getIndexKey() );
-			Vertex v2 = map.get( src.getDest(e).getIndexKey() );
+			DirectedSparseEdge e = (DirectedSparseEdge)edges[ i ];
+			DirectedSparseVertex v1 = (DirectedSparseVertex)map.get( (Integer)e.getSource().getUserDatum( Keywords.INDEX_KEY ) );
+			DirectedSparseVertex v2 = (DirectedSparseVertex)map.get( (Integer)e.getDest().getUserDatum( Keywords.INDEX_KEY ) );
 			if ( v1 == null || v2 == null )
 			{
 				continue;
 			}
-			Edge new_e = new Edge( e );
-			dst.addEdge( new_e, v1, v2 );
-			new_e.setIndexKey( new Integer( getNewVertexAndEdgeIndex() ) );
+			DirectedSparseEdge new_e = new DirectedSparseEdge( v1, v2 );
+			new_e.importUserData( e );
+			new_e.setUserDatum( Keywords.INDEX_KEY, new Integer( getNewVertexAndEdgeIndex() ), UserData.SHARED );
+			dst.addEdge( new_e );
 		}
 	}
 	
@@ -1000,42 +984,42 @@ public class GraphML extends AbstractModelHandler
 	 * @param subGraph
 	 * @param targetVertex
 	 */
-	private void copySubGraphs( Graph mainGraph, Graph subGraph, Vertex targetVertex )
+	private void copySubGraphs( SparseGraph mainGraph, SparseGraph subGraph, DirectedSparseVertex targetVertex )
 	{
 		// Save the target vertex out-edge list
-		Vector<Edge> targetVertexOutEdgeList = new Vector<Edge>();
-		logger.debug( "Target vertex (" + targetVertex + ") out-edge list" );
-		for (Iterator<Edge> iter = mainGraph.getOutEdges(targetVertex).iterator(); iter.hasNext();)
+		Vector targetVertexOutEdgeList = new Vector();
+		logger.debug( "Target vertex (" + Util.getCompleteName( targetVertex ) + ") out-edge list" );
+		for (Iterator iter = targetVertex.getOutEdges().iterator(); iter.hasNext();)
 		{
-			Edge element = iter.next();
-			logger.debug( "  " + element );
+			DirectedSparseEdge element = (DirectedSparseEdge) iter.next();
+			logger.debug( "  " + Util.getCompleteName( element ) );
 			targetVertexOutEdgeList.add( element );
 		}
 
-		Vertex sourceVertex = null;
+		DirectedSparseVertex sourceVertex = null;
 		Object[] vertices = mainGraph.getVertices().toArray();
 		for ( int i = 0; i < vertices.length; i++ )
 		{
-			Vertex v = (Vertex)vertices[ i ];
-			if ( v.getLabelKey().equals( targetVertex.getLabelKey() ) )
+			DirectedSparseVertex v = (DirectedSparseVertex)vertices[ i ];
+			if ( v.getUserDatum( Keywords.LABEL_KEY ).equals( targetVertex.getUserDatum( Keywords.LABEL_KEY ) ) )
 			{
-				if ( v.getSubGraphStartVertexKey().isEmpty() )
+				if ( v.containsUserDatumKey( Keywords.SUBGRAPH_START_VERTEX ) == false )
 				{
 					continue;
 				}
-				if ( v.isMergeKey() )
+				if ( v.containsUserDatumKey( Keywords.MERGE ) )
 				{
 					continue;
 				}
-				if ( v.isNoMergeKey() )
+				if ( v.containsUserDatumKey( Keywords.NO_MERGE ) )
 				{
 					continue;
 				}
-				if ( v.isMergedMbtKey() )
+				if ( v.containsUserDatumKey( Keywords.MERGED_BY_MBT ) )
 				{
 					continue;
 				}
-				if ( v.getIndexKey() == targetVertex.getIndexKey() )
+				if ( v.getUserDatum( Keywords.INDEX_KEY ) == targetVertex.getUserDatum( Keywords.INDEX_KEY ) )
 				{
 					continue;
 				}
@@ -1050,42 +1034,42 @@ public class GraphML extends AbstractModelHandler
 			return;
 		}
 
-		logger.debug( "Start merging target vertex: " + targetVertex + " with source vertex: " + sourceVertex );
+		logger.debug( "Start merging target vertex: " + Util.getCompleteName( targetVertex ) + " with source vertex: " + Util.getCompleteName( sourceVertex ) );
 
-		Object[] inEdges = mainGraph.getInEdges(sourceVertex).toArray();
+		Object[] inEdges = sourceVertex.getInEdges().toArray();
 		for (int i = 0; i < inEdges.length; i++)
 		{
-			Edge edge = (Edge)inEdges[ i ];
-			Edge new_edge = new Edge( edge );
-			mainGraph.addEdge( new_edge, mainGraph.getSource(edge), targetVertex );
-			new_edge.setIndexKey( new Integer( getNewVertexAndEdgeIndex() ) );
+			DirectedSparseEdge edge = (DirectedSparseEdge)inEdges[ i ];
+			DirectedSparseEdge new_edge = (DirectedSparseEdge)mainGraph.addEdge( new DirectedSparseEdge( edge.getSource(), targetVertex ) );
+			new_edge.importUserData( edge );
+			new_edge.setUserDatum( Keywords.INDEX_KEY, new Integer( getNewVertexAndEdgeIndex() ), UserData.SHARED );
 		}
-		Object[] outEdges = mainGraph.getOutEdges(sourceVertex).toArray();
+		Object[] outEdges = sourceVertex.getOutEdges().toArray();
 		for (int i = 0; i < outEdges.length; i++)
 		{
-			Edge edge = (Edge)outEdges[ i ];
-			Edge new_edge = new Edge( edge );
-			mainGraph.addEdge( new_edge, targetVertex, mainGraph.getDest(edge) );
-			new_edge.setIndexKey( new Integer( getNewVertexAndEdgeIndex() ) );
+			DirectedSparseEdge edge = (DirectedSparseEdge)outEdges[ i ];
+			DirectedSparseEdge new_edge = (DirectedSparseEdge)mainGraph.addEdge( new DirectedSparseEdge( targetVertex, edge.getDest() ) );
+			new_edge.importUserData( edge );
+			new_edge.setUserDatum( Keywords.INDEX_KEY, new Integer( getNewVertexAndEdgeIndex() ), UserData.SHARED );
 		}
-		logger.debug( "Remvoing source vertex: " + sourceVertex );
+		logger.debug( "Remvoing source vertex: " + Util.getCompleteName( sourceVertex) );
 		mainGraph.removeVertex( sourceVertex );
-		targetVertex.setMergedMbtKey( true );
+		targetVertex.addUserDatum( Keywords.MERGED_BY_MBT, Keywords.MERGED_BY_MBT, UserData.SHARED );
 
 		
 		// Check if there exists a Stop vertex.
 		// Also check if there is only one.
-		Vertex stopVertex = null;
+		DirectedSparseVertex stopVertex = null;
 		vertices = mainGraph.getVertices().toArray();
 		for ( int i = 0; i < vertices.length; i++ )
 		{
-			Vertex v = (Vertex)vertices[ i ];
-			if ( v.getLabelKey().equals( Keywords.STOP_NODE ) )
+			DirectedSparseVertex v = (DirectedSparseVertex)vertices[ i ];
+			if ( v.getUserDatum( Keywords.LABEL_KEY ).equals( Keywords.STOP_NODE ) )
 			{
 				if ( stopVertex != null )
 				{
 					throw new RuntimeException( "Found more than 1 Stop vertex in file (Only one Stop vertex per file is allowed): '" + 
-							mainGraph.getFileKey() + "'" );					
+							mainGraph.getUserDatum( Keywords.FILE_KEY ) + "'" );					
 				}
 				stopVertex = v;
 			}
@@ -1096,61 +1080,62 @@ public class GraphML extends AbstractModelHandler
 		// The destination vertex, is pointed to by the vertex which is expanded by the sub graph.
 		if ( stopVertex != null )
 		{
-			Vector<Edge> edgesToBeRemoved = new Vector<Edge>();
-			inEdges = mainGraph.getInEdges(stopVertex).toArray();
+			Vector edgesToBeRemoved = new Vector();
+			inEdges = stopVertex.getInEdges().toArray();
 			
 			logger.debug( "Stop vertex in-edge list" );
-			for (Iterator<Edge> iter = mainGraph.getInEdges(stopVertex).iterator(); iter.hasNext();)
+			for (Iterator iter = stopVertex.getInEdges().iterator(); iter.hasNext();)
 			{
-				Edge element = iter.next();
-				logger.debug( "  " + element );
+				DirectedSparseEdge element = (DirectedSparseEdge) iter.next();
+				logger.debug( "  " + Util.getCompleteName( element ) );
 			}
-			logger.debug( "Target vertex (" + targetVertex + ") out-edge list" );
-			for (Iterator<Edge> iter = targetVertexOutEdgeList.iterator(); iter.hasNext();)
+			logger.debug( "Target vertex (" + Util.getCompleteName( targetVertex ) + ") out-edge list" );
+			for (Iterator iter = targetVertexOutEdgeList.iterator(); iter.hasNext();)
 			{
-				Edge element = iter.next();
-				logger.debug( "  " + element );
+				DirectedSparseEdge element = (DirectedSparseEdge) iter.next();
+				logger.debug( "  " + Util.getCompleteName( element ) );
 			}
 
-			Vector<Pair<Edge>> mergeList = MergeList( targetVertexOutEdgeList.toArray(), inEdges );
-			for (Iterator<Pair<Edge>> iterator = mergeList.iterator(); iterator.hasNext();) {
-				Pair<Edge> pair = iterator.next();
-				MergeOutEdgeAndInEdge( (Edge)pair.getFirst(), (Edge)pair.getSecond(), edgesToBeRemoved, mainGraph );				
-			}
+			Vector mergeList = MergeList( targetVertexOutEdgeList.toArray(), inEdges );
+			Object[] mergeListArray = mergeList.toArray();
+			
+			for ( int i = 0; i < mergeListArray.length; i++ )
+			{
+				Pair pair = (Pair)mergeListArray[ i ];
+				MergeOutEdgeAndInEdge( (DirectedSparseEdge)pair.getFirst(), (DirectedSparseEdge)pair.getSecond(), edgesToBeRemoved, mainGraph );
+			}									
 
 			
 			// Now remove the edges that has been copied.
-			Object[] list = edgesToBeRemoved.toArray();
-			for (int i = 0; i < list.length; i++) {
-				Edge element = (Edge)list[i];				
-				if ( mainGraph.containsEdge(element) ) {
-					try {
-						logger.debug( "Removing edge: " + element );
-						logger.debug( element + ", was found and removed from graph,: '" + mainGraph.getFileKey() + "'");
-						mainGraph.removeEdge( element );
-					} catch (java.lang.IllegalArgumentException e) {
-						logger.debug( element + ", was not found in graph: '" + mainGraph.getFileKey() + "', this is ok, since it probably been removed before. (I know, not ver good progamming practice here)");
-					}
+			for (Iterator iter = edgesToBeRemoved.iterator(); iter.hasNext();)
+			{
+				DirectedSparseEdge element = (DirectedSparseEdge) iter.next();
+				try {
+					mainGraph.removeEdge( element );
+					logger.debug( "Removing edge: " + Util.getCompleteName( element ) );
+					logger.debug( Util.getCompleteName( element ) + ", was found and removed from graph,: '" + mainGraph.getUserDatum( Keywords.FILE_KEY ) + "'");
+				} catch (java.lang.IllegalArgumentException e) {
+					logger.debug( Util.getCompleteName( element ) + ", was not found in graph: '" + mainGraph.getUserDatum( Keywords.FILE_KEY ) + "', this is ok, since it probably been removed before. (I know, not ver good progamming practice here)");
 				}
 			}
-			logger.debug( "Removing the Stop vertex: " + stopVertex.getIndexKey()  );
+			logger.debug( "Removing the Stop vertex: " + stopVertex.getUserDatum( Keywords.INDEX_KEY )  );
 			mainGraph.removeVertex( stopVertex );
 		}
 	}
 	
-	private Vector<Pair<Edge>> MergeList( Object[] array_A, Object[] array_B )
+	private Vector MergeList( Object[] array_A, Object[] array_B )
 	{
 		logger.debug( "Vector twoLists( Object[] array_A, Object[] array_B )" );
-		Vector<Pair<Edge>> matches = new Vector<Pair<Edge>>();
+		Vector matches = new Vector();
 		logger.debug( "  Looking for exact matches" );
 		for ( int i = 0; i < array_A.length; i++ )
 		{
-			Edge a = (Edge)array_A[ i ];			
-			String aLabel = (String)a.getLabelKey();
+			DirectedSparseEdge a = (DirectedSparseEdge)array_A[ i ];			
+			String aLabel = (String)a.getUserDatum( Keywords.LABEL_KEY );
 			for ( int j = 0; j < array_B.length; j++ )
 			{
-				Edge b = (Edge)array_B[ j ];
-				String bLabel = (String)b.getLabelKey();
+				DirectedSparseEdge b = (DirectedSparseEdge)array_B[ j ];
+				String bLabel = (String)b.getUserDatum( Keywords.LABEL_KEY );
 				if ( aLabel != null && aLabel.length() == 0 )
 				{
 					aLabel = null;
@@ -1161,15 +1146,15 @@ public class GraphML extends AbstractModelHandler
 				}
 				if ( aLabel == null && bLabel == null )
 				{
-					logger.debug( "    adding: " + a + " and " + b );
-					matches.add( new Pair<Edge>( a, b ) );
+					logger.debug( "    adding: " + Util.getCompleteName( a ) + " and " + Util.getCompleteName( b ) );
+					matches.add( new Pair( a, b ) );
 				}
 				else if ( aLabel != null && bLabel != null )
 				{
 					if ( aLabel.equals( bLabel ) )
 					{
-						logger.debug( "    adding: " + a + " and " + b );
-						matches.add( new Pair<Edge>( a, b ) );
+						logger.debug( "    adding: " + Util.getCompleteName( a ) + " and " + Util.getCompleteName( b ) );
+						matches.add( new Pair( a, b ) );
 					}
 				}
 			}		
@@ -1178,20 +1163,20 @@ public class GraphML extends AbstractModelHandler
 		logger.debug( "  Matching nulls from the first list with non-matched items in the second list" );
 		for ( int i = 0; i < array_A.length; i++ )
 		{
-			Edge a = (Edge)array_A[ i ];			
-			String aLabel = (String)a.getLabelKey();
+			DirectedSparseEdge a = (DirectedSparseEdge)array_A[ i ];			
+			String aLabel = (String)a.getUserDatum( Keywords.LABEL_KEY );
 			if ( aLabel == null || aLabel.length() == 0 )
 			{
 				for ( int j = 0; j < array_B.length; j++ )
 				{
-					Edge b = (Edge)array_B[ j ];
-					String bLabel = (String)b.getLabelKey();
+					DirectedSparseEdge b = (DirectedSparseEdge)array_B[ j ];
+					String bLabel = (String)b.getUserDatum( Keywords.LABEL_KEY );
 					if ( bLabel != null )
 					{
 						boolean alreadyMatched = false;
-						for (Iterator<Pair<Edge>> iter = matches.iterator(); iter.hasNext();)
+						for (Iterator iter = matches.iterator(); iter.hasNext();)
 						{
-							Pair<Edge> element = iter.next();
+							Pair element = (Pair) iter.next();
 							if ( b.equals( element.getSecond() ) )
 							{
 								alreadyMatched = true;
@@ -1201,8 +1186,8 @@ public class GraphML extends AbstractModelHandler
 			
 						if ( alreadyMatched == false )
 						{
-							logger.debug( "    adding: " + a + " and " + b );
-							matches.add( new Pair<Edge>( a, b ) );
+							logger.debug( "    adding: " + Util.getCompleteName( a ) + " and " + Util.getCompleteName( b ) );
+							matches.add( new Pair( a, b ) );
 						}
 					}
 				}
@@ -1212,20 +1197,20 @@ public class GraphML extends AbstractModelHandler
 		logger.debug( "  Matching nulls from the second list with non-matched items in the first list" );
 		for ( int i = 0; i < array_B.length; i++ )
 		{
-			Edge b = (Edge)array_B[ i ];			
-			String bLabel = (String)b.getLabelKey();
+			DirectedSparseEdge b = (DirectedSparseEdge)array_B[ i ];			
+			String bLabel = (String)b.getUserDatum( Keywords.LABEL_KEY );
 			if ( bLabel == null || bLabel.length() == 0 )
 			{
 				for ( int j = 0; j < array_A.length; j++ )
 				{
-					Edge a = (Edge)array_A[ j ];
-					String aLabel = a.getLabelKey();
+					DirectedSparseEdge a = (DirectedSparseEdge)array_A[ j ];
+					String aLabel = (String)a.getUserDatum( Keywords.LABEL_KEY );
 					if ( aLabel != null )
 					{
 						boolean alreadyMatched = false;
-						for (Iterator<Pair<Edge>> iter = matches.iterator(); iter.hasNext();)
+						for (Iterator iter = matches.iterator(); iter.hasNext();)
 						{
-							Pair<Edge> element = iter.next();
+							Pair element = (Pair) iter.next();
 							if ( a.equals( element.getFirst() ) )
 							{
 								alreadyMatched = true;
@@ -1235,8 +1220,8 @@ public class GraphML extends AbstractModelHandler
 			
 						if ( alreadyMatched == false )
 						{
-							logger.debug( "    adding: " + a + " and " + b );
-							matches.add( new Pair<Edge>( a, b ) );
+							logger.debug( "    adding: " + Util.getCompleteName( a ) + " and " + Util.getCompleteName( b ) );
+							matches.add( new Pair( a, b ) );
 						}
 					}
 				}
@@ -1246,9 +1231,58 @@ public class GraphML extends AbstractModelHandler
 	}
 	
 	
-	private void MergeOutEdgeAndInEdge(Edge outEdge,
-			Edge inEdge, Vector<Edge> edgesToBeRemoved,
-			Graph graph) {
+	private void merge_user_data( DirectedSparseEdge dst_edge, DirectedSparseEdge src_edge_A , DirectedSparseEdge src_edge_B )
+	{
+		logger.debug( "    merge_user_data" );
+		for (Iterator iter = src_edge_A.getUserDatumKeyIterator(); iter.hasNext();)
+		{
+			String element = (String) iter.next();
+			if ( dst_edge.containsUserDatumKey( element ) == false )
+			{
+				logger.debug( "      addUserDatum: " + element + " = " + src_edge_A.getUserDatum( element ) );
+				dst_edge.addUserDatum( element, src_edge_A.getUserDatum( element ), UserData.SHARED );
+			}
+		}
+		for (Iterator iter = src_edge_B.getUserDatumKeyIterator(); iter.hasNext();)
+		{
+			String element = (String) iter.next();
+			if ( dst_edge.containsUserDatumKey( element ) == false )
+			{
+				logger.debug( "      addUserDatum: " + element + " = " + src_edge_B.getUserDatum( element ) );
+				dst_edge.addUserDatum( element, src_edge_B.getUserDatum( element ), UserData.SHARED );
+			}
+		}
+		String fullLabel_A = (String)src_edge_A.getUserDatum( Keywords.FULL_LABEL_KEY ); 
+		String fullLabel_B = (String)src_edge_B.getUserDatum( Keywords.FULL_LABEL_KEY );
+		
+		if ( fullLabel_A != null && fullLabel_B != null )
+		{
+			if ( fullLabel_A.length() > fullLabel_B.length() )
+			{
+				logger.debug( "      full label: " +  src_edge_A.getUserDatum( Keywords.FULL_LABEL_KEY ) );
+				dst_edge.setUserDatum( Keywords.FULL_LABEL_KEY, src_edge_A.getUserDatum( Keywords.FULL_LABEL_KEY ), UserData.SHARED );
+			}
+			else
+			{
+				logger.debug( "      full label: " +  src_edge_B.getUserDatum( Keywords.FULL_LABEL_KEY ) );
+				dst_edge.setUserDatum( Keywords.FULL_LABEL_KEY, src_edge_B.getUserDatum( Keywords.FULL_LABEL_KEY ), UserData.SHARED );
+			}
+		}
+		else if ( fullLabel_A != null  && fullLabel_B == null )
+		{
+			logger.debug( "      full label: " +  src_edge_A.getUserDatum( Keywords.FULL_LABEL_KEY ) );
+			dst_edge.setUserDatum( Keywords.FULL_LABEL_KEY, src_edge_A.getUserDatum( Keywords.FULL_LABEL_KEY ), UserData.SHARED );
+		}
+		else if ( fullLabel_A == null  && fullLabel_B != null )
+		{
+			logger.debug( "      full label: " +  src_edge_B.getUserDatum( Keywords.FULL_LABEL_KEY ) );
+			dst_edge.setUserDatum( Keywords.FULL_LABEL_KEY, src_edge_B.getUserDatum( Keywords.FULL_LABEL_KEY ), UserData.SHARED );
+		}
+	}
+	
+	private void MergeOutEdgeAndInEdge(DirectedSparseEdge outEdge,
+			DirectedSparseEdge inEdge, Vector edgesToBeRemoved,
+			SparseGraph graph) {
 		logger.debug("MergeOutEdgeAndInEdge");
 
 		if (outEdge == null) {
@@ -1258,17 +1292,21 @@ public class GraphML extends AbstractModelHandler
 			throw new RuntimeException("Internal progamming error");
 		}
 
-		logger.debug("  outEdge: " + outEdge);
-		logger.debug("  inEdge: " + inEdge);
+		logger.debug("  outEdge: " + Util.getCompleteName(outEdge));
+		logger.debug("  inEdge: " + Util.getCompleteName(inEdge));
 
-		Edge new_edge = new Edge( inEdge, outEdge );
-		graph.addEdge(new_edge, graph.getSource(inEdge), graph.getDest(outEdge));
+		DirectedSparseEdge new_edge = (DirectedSparseEdge) graph
+				.addEdge(new DirectedSparseEdge((DirectedSparseVertex) inEdge
+						.getSource(), outEdge.getDest()));
 
-		new_edge.setIndexKey( new Integer(getNewVertexAndEdgeIndex()));
+		merge_user_data(new_edge, outEdge, inEdge);
+
+		new_edge.setUserDatum( Keywords.INDEX_KEY,
+				new Integer(getNewVertexAndEdgeIndex()), UserData.SHARED);
 		logger.debug("  Replacing the target vertex out-edge: "
-				+ outEdge + " (old) with: "
-				+ new_edge + "(new), using: "
-				+ inEdge);
+				+ Util.getCompleteName(outEdge) + " (old) with: "
+				+ Util.getCompleteName(new_edge) + "(new), using: "
+				+ Util.getCompleteName(inEdge));
 
 		edgesToBeRemoved.add(inEdge);
 		edgesToBeRemoved.add(outEdge);
@@ -1278,8 +1316,7 @@ public class GraphML extends AbstractModelHandler
 	 * Writes the graph to a PrintStream, using GraphML format.
 	 */
 	public void save(PrintStream ps) {
-		Graph g = getModel();
-
+		SparseGraph g = getModel();
 		ps.println( "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>" );
 		ps.println( "<graphml xmlns=\"http://graphml.graphdrawing.org/xmlns/graphml\"  " +
 				            "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" " +
@@ -1290,19 +1327,22 @@ public class GraphML extends AbstractModelHandler
 		ps.println( "  <key id=\"d1\" for=\"edge\" yfiles.type=\"edgegraphics\"/>" );
 		ps.println( "  <graph id=\"G\" edgedefault=\"directed\">" );
 
-        for ( Iterator<Vertex> vertexIterator = g.getVertices().iterator(); vertexIterator.hasNext(); )
+        int numVertices = g.getVertices().size();
+        edu.uci.ics.jung.graph.decorators.Indexer id = edu.uci.ics.jung.graph.decorators.Indexer.getAndUpdateIndexer( graph );
+        for ( int i = 0; i < numVertices; i++ )
         {
-            Vertex v = vertexIterator.next();
+            Vertex v = (Vertex) id.getVertex(i);
+            int vId = i+1;
 
-			ps.println( "    <node id=\"n" + v.getIndexKey() + "\">" );
+			ps.println( "    <node id=\"n" + vId + "\">" );
 			ps.println( "      <data key=\"d0\" >" );
 
-			if ( !v.getImageKey().isEmpty() )
+			if ( v.containsUserDatumKey( Keywords.IMAGE_KEY ) )
 			{
 				ps.println( "        <y:ImageNode >" );
 				ps.println( "          <y:Geometry  x=\"241.875\" y=\"158.701171875\" width=\"" +
-						                        v.getWidth() + "\" height=\"" +
-						                        v.getHeight() + "\"/>" );
+						                        v.getUserDatum( Keywords.WIDTH_KEY ) + "\" height=\"" +
+						                        v.getUserDatum( Keywords.HEIGHT_KEY ) + "\"/>" );
 			}
 			else
 			{
@@ -1315,12 +1355,12 @@ public class GraphML extends AbstractModelHandler
 			ps.println( "          <y:NodeLabel x=\"1.5\" y=\"5.6494140625\" width=\"92.0\" height=\"18.701171875\" " +
 					                         "visible=\"true\" alignment=\"center\" fontFamily=\"Dialog\" fontSize=\"12\" " +
 					                         "fontStyle=\"plain\" textColor=\"#000000\" modelName=\"internal\" modelPosition=\"c\" " +
-					                         "autoSizePolicy=\"content\">" + v.getFullLabelKey() + 
-					                         "&#xA;INDEX=" + v.getIndexKey() + "</y:NodeLabel>" );
+					                         "autoSizePolicy=\"content\">" + v.getUserDatum( Keywords.FULL_LABEL_KEY ) + 
+					                         "&#xA;INDEX=" + v.getUserDatum( Keywords.INDEX_KEY ) + "</y:NodeLabel>" );
 			
-			if ( !v.getImageKey().isEmpty() )
+			if ( v.containsUserDatumKey( Keywords.IMAGE_KEY ) )
 			{
-				ps.println( "          <y:Image href=\"" + v.getImageKey() + "\"/>" );
+				ps.println( "          <y:Image href=\"" + v.getUserDatum( Keywords.IMAGE_KEY ) + "\"/>" );
 				ps.println( "        </y:ImageNode>" );
 			}
 			else
@@ -1333,14 +1373,18 @@ public class GraphML extends AbstractModelHandler
 			ps.println( "    </node>" );
 		}
 
-        for ( Iterator<Edge> edgeIterator = g.getEdges().iterator(); edgeIterator.hasNext(); )
+        int i = 0;
+        for ( Iterator edgeIterator = g.getEdges().iterator(); edgeIterator.hasNext(); )
         {
-            Edge e = edgeIterator.next();
-            Pair<Vertex> p = graph.getEndpoints(e);
-            Vertex src = p.getFirst();
-            Vertex dest = p.getSecond();
+            Edge e = (Edge) edgeIterator.next();
+            Pair p = e.getEndpoints();
+            Vertex src = (Vertex) p.getFirst();
+            Vertex dest = (Vertex) p.getSecond();
+            int srcId = id.getIndex(src)+1;
+            int destId = id.getIndex(dest)+1;
+            int nId = ++i;
 
-            ps.println( "    <edge id=\"" + e.getIndexKey() + "\" source=\"n" + src.getIndexKey() + "\" target=\"n" + dest.getIndexKey() + "\">" );
+            ps.println( "    <edge id=\"" + nId + "\" source=\"n" + srcId + "\" target=\"n" + destId + "\">" );
             ps.println( "      <data key=\"d1\" >" );
             ps.println( "        <y:PolyLineEdge >" );
             ps.println( "          <y:Path sx=\"-23.75\" sy=\"15.0\" tx=\"-23.75\" ty=\"-15.0\">" );
@@ -1352,9 +1396,9 @@ public class GraphML extends AbstractModelHandler
             ps.println( "          <y:LineStyle type=\"line\" width=\"1.0\" color=\"#000000\" />" );
             ps.println( "          <y:Arrows source=\"none\" target=\"standard\"/>" );
             
-            if ( !e.getFullLabelKey().isEmpty() )
+            if ( e.containsUserDatumKey( Keywords.FULL_LABEL_KEY ) )
             {
-            	String label = e.getFullLabelKey();
+            	String label = (String)e.getUserDatum( Keywords.FULL_LABEL_KEY );
             	label = label.replaceAll( "&", "&amp;" );
             	label = label.replaceAll( "<", "&lt;" );
             	label = label.replaceAll( ">", "&gt;" );
@@ -1365,7 +1409,7 @@ public class GraphML extends AbstractModelHandler
             			                         "visible=\"true\" alignment=\"center\" fontFamily=\"Dialog\" fontSize=\"12\" " +
             			                         "fontStyle=\"plain\" textColor=\"#000000\" modelName=\"free\" modelPosition=\"anywhere\" " +
             			                         "preferredPlacement=\"on_edge\" distance=\"2.0\" ratio=\"0.5\">" + label + 
-            			                         "&#xA;INDEX=" + e.getIndexKey() + "</y:EdgeLabel>" );
+            			                         "&#xA;INDEX=" + e.getUserDatum( Keywords.INDEX_KEY ) + "</y:EdgeLabel>" );
             }
             
             ps.println( "          <y:BendStyle smoothed=\"false\"/>" );

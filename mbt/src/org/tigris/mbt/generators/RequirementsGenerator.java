@@ -6,11 +6,13 @@ import java.util.Stack;
 import java.util.TreeSet;
 import java.util.Vector;
 
-import org.tigris.mbt.graph.AbstractElement;
+import org.tigris.mbt.Keywords;
+
+import edu.uci.ics.jung.graph.impl.AbstractElement;
 
 public class RequirementsGenerator extends PathGenerator {
 
-	private Stack<String[]> list = null;
+	private Stack list = null;
 
     public boolean hasNext()
     {
@@ -28,22 +30,22 @@ public class RequirementsGenerator extends PathGenerator {
     
 	private void generateList()
 	{
-		list = new Stack<String[]>();
-		TreeSet<String[]> tempList = new TreeSet<String[]>(new Comparator<String[]>(){
-		public int compare(String[] arg0, String[] arg1) {
-			return arg1[0].compareTo(arg0[0]);
+		list = new Stack();
+		TreeSet tempList = new TreeSet(new Comparator(){
+		public int compare(Object arg0, Object arg1) {
+			return ((String[])arg1)[0].compareTo(((String[])arg0)[0]);
 		}});
 			
 		
-		Vector<AbstractElement> abstractElements = new Vector<AbstractElement>();
+		Vector abstractElements = new Vector();
 		abstractElements.addAll(getMachine().getAllStates());
 		abstractElements.addAll(getMachine().getAllEdges());
 		
-		for(Iterator<AbstractElement> i = abstractElements.iterator();i.hasNext();)
+		for(Iterator i = abstractElements.iterator();i.hasNext();)
 		{
-			AbstractElement ae = i.next();
-			String reqtags = ae.getReqTagKey();
-			if ( !reqtags.isEmpty() )
+			AbstractElement ae = (AbstractElement) i.next();
+			String reqtags = (String)ae.getUserDatum(Keywords.REQTAG_KEY);
+			if(reqtags != null )
 			{
 				String[] tags = reqtags.split( "," );
 				for ( int j = 0; j < tags.length; j++ ) 

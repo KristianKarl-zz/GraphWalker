@@ -1,6 +1,6 @@
 package org.tigris.mbt.conditions;
 
-import org.tigris.mbt.machines.FiniteStateMachine;
+import org.tigris.mbt.FiniteStateMachine;
 
 public abstract class StopCondition {
 	protected FiniteStateMachine machine;

@@ -1,5 +1,7 @@
 package org.tigris.mbt.GUI;
 
+import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -30,7 +32,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.ScrollPaneConstants;
 import javax.xml.ws.Endpoint;
 
 import org.tigris.mbt.CLI;
@@ -204,7 +205,7 @@ public class mbt extends JFrame implements ActionListener, ItemListener {
 		setMyConstraints(c, 0, 0, GridBagConstraints.EAST);
 		stopConditionPanel.add(stopConditionLabel, c);
 		stopConditionsComboBox = new JComboBox();
-		Set<String> list = Keywords.getStopConditions();
+		Set list = Keywords.getStopConditions();
 		for (Iterator<String> iterator = list.iterator(); iterator.hasNext();) {
 			String g = (String) iterator.next();
 			stopConditionsComboBox.addItem(g);
@@ -223,8 +224,8 @@ public class mbt extends JFrame implements ActionListener, ItemListener {
 		outputTextArea = new JTextArea(10, 35);
 		setMyConstraints(c, 0, 0, GridBagConstraints.EAST);
 		outputPanel.add(new JScrollPane(outputTextArea,
-				ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
-				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS), c);
+				JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+				JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS), c);
 
 		runPanel = new JPanel(new GridBagLayout());
 		runButton = new JButton("Run");
@@ -343,7 +344,7 @@ public class mbt extends JFrame implements ActionListener, ItemListener {
 		c.anchor = anchor;
 	}
 
-	static void reset() {
+	private static void reset() {
 		outputTextArea.setText("");
 	}
 
@@ -518,8 +519,8 @@ public class mbt extends JFrame implements ActionListener, ItemListener {
 					"-s",
 					(String) stopConditionsComboBox.getSelectedItem() + ":"
 							+ stopConditionValueTextField.getText() };
-			setCli(new CLI());
-			getCli().main(args);
+			cli = new CLI();
+			cli.main(args);
 			setGUIIdleMode();
 		}
 	}
@@ -537,8 +538,8 @@ public class mbt extends JFrame implements ActionListener, ItemListener {
 					"-s",
 					(String) stopConditionsComboBox.getSelectedItem() + ":"
 							+ stopConditionValueTextField.getText() };
-			setCli(new CLI());
-			getCli().main(args);
+			cli = new CLI();
+			cli.main(args);
 			setGUIIdleMode();
 		}
 	}
@@ -549,8 +550,8 @@ public class mbt extends JFrame implements ActionListener, ItemListener {
 			setGUIRunningMode();
 			String args[] = { "source", "-f", modelPathTextField.getText(),
 					"-t", templatePathTextField.getText() };
-			setCli(new CLI());
-			getCli().main(args);
+			cli = new CLI();
+			cli.main(args);
 			setGUIIdleMode();
 		}
 	}
@@ -560,8 +561,8 @@ public class mbt extends JFrame implements ActionListener, ItemListener {
 			reset();
 			setGUIRunningMode();
 			String args[] = { "xml", "-f", xmlTextField.getText() };
-			setCli(new CLI());
-			getCli().main(args);
+			cli = new CLI();
+			cli.main(args);
 			setGUIIdleMode();
 		}
 	}
@@ -594,14 +595,14 @@ public class mbt extends JFrame implements ActionListener, ItemListener {
 				e.printStackTrace();
 			}
 			String wsURL = "http://" + ia.getCanonicalHostName() + ":9090/mbt-services";
-			setEndpoint(Endpoint.publish( wsURL, new SoapServices( xmlTextField.getText() ) ));
+			endpoint = Endpoint.publish( wsURL, new SoapServices( xmlTextField.getText() ) );
 			System.out.println( "Now running as a SOAP server." );
 			System.out.println( "For the WSDL file, see: " + wsURL + "?WSDL" );
 		}
 		
 		public void stopService()
 		{
-			getEndpoint().stop();
+			endpoint.stop();
 			Util.killTimer();
 		}
 	}
@@ -611,8 +612,8 @@ public class mbt extends JFrame implements ActionListener, ItemListener {
 			reset();
 			setGUIRunningMode();
 			String args[] = { "merge", "-f", modelPathTextField.getText() };
-			setCli(new CLI());
-			getCli().main(args);
+			cli = new CLI();
+			cli.main(args);
 			setGUIIdleMode();
 		}
 	}
@@ -623,8 +624,8 @@ public class mbt extends JFrame implements ActionListener, ItemListener {
 			setGUIRunningMode();
 			String args[] = { "requirements", "-f",
 					modelPathTextField.getText() };
-			setCli(new CLI());
-			getCli().main(args);
+			cli = new CLI();
+			cli.main(args);
 			setGUIIdleMode();
 		}
 	}
@@ -634,33 +635,17 @@ public class mbt extends JFrame implements ActionListener, ItemListener {
 			reset();
 			setGUIRunningMode();
 			String args[] = { "methods", "-f", modelPathTextField.getText() };
-			setCli(new CLI());
-			getCli().main(args);
+			cli = new CLI();
+			cli.main(args);
 			setGUIIdleMode();
 		}
 	}
 
-	void setGUIRunningMode() {
+	private void setGUIRunningMode() {
 		runButton.setText("Stop");
 	}
 
-	void setGUIIdleMode() {
+	private void setGUIIdleMode() {
 		runButton.setText("Run");
-	}
-
-	public void setCli(CLI cli) {
-		this.cli = cli;
-	}
-
-	public CLI getCli() {
-		return cli;
-	}
-
-	public void setEndpoint(Endpoint endpoint) {
-		this.endpoint = endpoint;
-	}
-
-	public Endpoint getEndpoint() {
-		return endpoint;
 	}
 }

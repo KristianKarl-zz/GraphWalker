@@ -26,11 +26,6 @@ public class CLITest extends TestCase {
 	String outMsg;
 	String errMsg;
 	static Logger logger = Util.setupLogger( CLITest.class );
-
-	protected void setUp() throws Exception {
-		super.setUp();
-		ModelBasedTesting.getInstance().reset();
-	}
 	
 	private OutputStream redirectOut()
 	{
@@ -226,7 +221,7 @@ public class CLITest extends TestCase {
     {
 		String args[] = { "online", "-f", "graphml/backtrack/simpleGraph.graphml", "-g", "RANDOM", "-s", "EDGE_COVERAGE:100" };
 		runCommandWithInputFile( args, "graphml/backtrack/testOnlineBacktrackingIncorrect.stdin" );
-		assertEquals("Backtracking was asked for, but model does not suppport BACKTRACK at egde: Edge: 'e_Init', INDEX=4", errMsg.split("\r\n|\r|\n")[0]);
+		assertEquals("Backtracking was asked for, but model does not suppport BACKTRACK at egde: 'e_Init', INDEX=4 ('Start', INDEX=1 -> 'v_Main', INDEX=2)", errMsg.split("\r\n|\r|\n")[0]);
     }
 
     /**
@@ -309,19 +304,6 @@ public class CLITest extends TestCase {
     /**
      * Test command: java -jar mbt.jar source -f graphml/methods/Main.graphml -t templates/perl.template
      */
-    public void testGenerateCodeFromTemplateHeaderAndFooter()
-    {
-		String args[] = { "source", "-f", "graphml/methods/Main.graphml", "-t", "templates/junit.template" };
-    	runCommand( args );
-    	assertTrue( "No error messages should occur.", errMsg.isEmpty() );
-		pattern = Pattern.compile( " implements the ", Pattern.MULTILINE );
-		matcher = pattern.matcher( outMsg );
-		assertTrue( matcher.find() );
-    }
-
-    /**
-     * Test command: java -jar mbt.jar source -f graphml/methods/Main.graphml -t templates/perl.template
-     */
     public void testGenerateCodeFromTemplate()
     {
 		String args[] = { "source", "-f", "graphml/methods/Main.graphml", "-t", "templates/perl.template" };
@@ -339,7 +321,7 @@ public class CLITest extends TestCase {
     {
 		String args[] = { "offline", "-f", "graphml/misc/missing_inedges.graphml", "-g", "RANDOM", "-s", "EDGE_COVERAGE:100" };
     	runCommand( args );
-		pattern = Pattern.compile( "^No in-edges! Vertex: .* is not reachable, from file: 'graphml.misc.missing_inedges.graphml'$", Pattern.MULTILINE );
+		pattern = Pattern.compile( "^No in-edges! The vertex: .* is not reachable, from file: 'graphml.misc.missing_inedges.graphml'$", Pattern.MULTILINE );
 		matcher = pattern.matcher( errMsg );
 		assertTrue( matcher.find() );
     }
@@ -351,7 +333,7 @@ public class CLITest extends TestCase {
     {
 		String args[] = { "offline", "-f", "graphml/misc/missing_inedges.graphml", "-g", "RANDOM", "-s", "EDGE_COVERAGE:100" };
     	runCommand( args );
-		pattern = Pattern.compile( "No in-edges! Vertex: 'v_InvalidKey', INDEX=9 is not reachable.", Pattern.MULTILINE );
+		pattern = Pattern.compile( "No in-edges! The vertex: 'v_InvalidKey', INDEX=9 is not reachable.", Pattern.MULTILINE );
 		matcher = pattern.matcher( errMsg );
 		assertTrue( matcher.find() );
     }
@@ -450,7 +432,7 @@ public class CLITest extends TestCase {
     {
 		String args[] = { "soap", "-f", "graphml/reqtags/mbt_init9.xml" };
     	runCommand( args );
-    	assertEquals( true, errMsg.matches("(?s).*Could not add: 'non-existing-path' to CLASSPATH.*") );
+    	assertEquals( true, errMsg.matches("Could not add: 'non-existing-path' to CLASSPATH\\s+Please review your xml file: 'graphml/reqtags/mbt_init9.xml' at CLASS PATH\\s+Type 'java -jar mbt.jar help soap' for help.\\s+") );
     }
     
     /**

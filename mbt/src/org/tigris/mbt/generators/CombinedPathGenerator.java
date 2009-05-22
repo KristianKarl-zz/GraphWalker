@@ -4,14 +4,14 @@ import java.util.Iterator;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
+import org.tigris.mbt.FiniteStateMachine;
 import org.tigris.mbt.conditions.StopCondition;
-import org.tigris.mbt.machines.FiniteStateMachine;
 
 public class CombinedPathGenerator extends PathGenerator {
 
 	static Logger logger = Logger.getLogger(CombinedPathGenerator.class);
 
-	private Vector<PathGenerator> generatorList = new Vector<PathGenerator>();
+	private Vector paths = new Vector();
 	private int currentGenerator = 0;
 	
 	public CombinedPathGenerator() {
@@ -26,31 +26,31 @@ public class CombinedPathGenerator extends PathGenerator {
 	public void addPathGenerator(PathGenerator generator)
 	{
 		logger.debug("Adding PathGenerator: " + generator);
-		generatorList.add(generator);
+		paths.add(generator);
 	}
 
 	public void setMachine(FiniteStateMachine machine) {
-		for(Iterator<PathGenerator> i = generatorList.iterator();i.hasNext();)
+		for(Iterator i = paths.iterator();i.hasNext();)
 		{
-			i.next().setMachine(machine);
+			((PathGenerator)i.next()).setMachine(machine);
 		}
 	}
 	
 	public void setStopCondition(StopCondition stopCondition) {
-		for(Iterator<PathGenerator> i = generatorList.iterator();i.hasNext();)
+		for(Iterator i = paths.iterator();i.hasNext();)
 		{
-			i.next().setStopCondition(stopCondition);
+			((PathGenerator)i.next()).setStopCondition(stopCondition);
 		}
 	}
 	
 	private PathGenerator getActivePathGenerator()
 	{
-		return generatorList.get(currentGenerator);
+		return (PathGenerator) paths.get(currentGenerator);
 	}
 
 	private boolean hasPath()
 	{
-		return generatorList.size() > currentGenerator;
+		return paths.size() > currentGenerator;
 	}
 	
 	private void scrapActivePathGenerator()
@@ -86,9 +86,9 @@ public class CombinedPathGenerator extends PathGenerator {
 	
 	public String toString() {
 		String retur = "";
-		for(Iterator<PathGenerator> i = generatorList.iterator();i.hasNext();)
+		for(Iterator i = paths.iterator();i.hasNext();)
 		{
-			retur += i.next().toString() + "\n";
+			retur +=((PathGenerator)i.next()).toString() + "\n";
 		}
 		return retur.trim();
 	}
