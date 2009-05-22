@@ -6,18 +6,16 @@ package test.org.tigris.mbt;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
-import org.tigris.mbt.Keywords;
 import org.tigris.mbt.StatisticsManager;
 import org.tigris.mbt.Util;
+import org.tigris.mbt.graph.Edge;
+import org.tigris.mbt.graph.Graph;
+import org.tigris.mbt.graph.Vertex;
 import org.tigris.mbt.statistics.EdgeCoverageStatistics;
 import org.tigris.mbt.statistics.EdgeSequenceCoverageStatistics;
 import org.tigris.mbt.statistics.RequirementCoverageStatistics;
 import org.tigris.mbt.statistics.StateCoverageStatistics;
 
-import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
-import edu.uci.ics.jung.graph.impl.DirectedSparseVertex;
-import edu.uci.ics.jung.graph.impl.SparseGraph;
-import edu.uci.ics.jung.utils.UserData;
 import junit.framework.TestCase;
 
 /**
@@ -26,32 +24,32 @@ import junit.framework.TestCase;
  */
 public class StatisticsManagerTest extends TestCase {
 
-	SparseGraph graph;
-	DirectedSparseVertex start;
-	DirectedSparseVertex v1;
-	DirectedSparseVertex v2;
-	DirectedSparseEdge e1;
-	DirectedSparseEdge e2;
-	DirectedSparseEdge e3;
-	DirectedSparseEdge e4;
-	
+	Graph graph;
+	Vertex start;
+	Vertex v1;
+	Vertex v2;
+	Edge e1;
+	Edge e2;
+	Edge e3;
+	Edge e4;
+
 	protected void setUp() throws Exception {
 		super.setUp();
-		graph = new SparseGraph();
-		
+		graph = new Graph();
+
 		start = Util.addVertexToGraph(graph, "Start");
-		
+
 		v1 = Util.addVertexToGraph(graph, "V1");
-		v1.setUserDatum(Keywords.REQTAG_KEY, "REQ002", UserData.SHARED);
+		v1.setReqTagKey( "REQ002" );
 
 		v2 = Util.addVertexToGraph(graph, "V2");
-		v2.setUserDatum(Keywords.REQTAG_KEY, "REQ004", UserData.SHARED);
+		v2.setReqTagKey( "REQ004" );
 
 		e1 = Util.addEdgeToGraph(graph, start, v1, "E1", null, null, "x=1;y=new Vector()");
-		e1.setUserDatum(Keywords.REQTAG_KEY, "REQ001,REQ002", UserData.SHARED);
-		
+		e1.setReqTagKey( "REQ001,REQ002" );
+
 		e2 = Util.addEdgeToGraph(graph, v1, v2, "E2", null, null, "x=2");
-		e2.setUserDatum(Keywords.REQTAG_KEY, "REQ003", UserData.SHARED);
+		e2.setReqTagKey( "REQ003" );
 
 		e3 = Util.addEdgeToGraph(graph, v2, v2, "E3", null, "x<6", "x++");
 
@@ -83,75 +81,19 @@ public class StatisticsManagerTest extends TestCase {
 		statisticsManager.addStatisicsCounter("3-Edge Sequence Coverage", new EdgeSequenceCoverageStatistics( graph, 3 ));
 		statisticsManager.addStatisicsCounter("Requirements Coverage", new RequirementCoverageStatistics( graph ));
 		statisticsManager.addProgress(start);
-		assertEquals(
-				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + Util.newline +
-				"<Statistic>" +
-				"<Data type=\"Edge Coverage\" value=\"0\" max=\"4\" />"+
-				"<Data type=\"State Coverage\" value=\"1\" max=\"3\" />" +
-				"<Data type=\"3-Edge Sequence Coverage\" value=\"0\" max=\"10\" />" +
-				"<Data type=\"2-Edge Sequence Coverage\" value=\"0\" max=\"6\" />" +
-				"<Data type=\"Requirements Coverage\" value=\"0\" max=\"4\" />" +
-				"</Statistic>" + Util.newline, statisticsManager.getCurrentStatisticXml());
+		assertEquals( true, statisticsManager.getCurrentStatisticXml().matches("<\\?xml version=\\\"1.0\\\" encoding=\\\"UTF-8\\\"\\?>\\s+<Statistic><Data type=\"Edge Coverage\" value=\"0\" max=\"4\" /><Data type=\"State Coverage\" value=\"1\" max=\"3\" /><Data type=\"3-Edge Sequence Coverage\" value=\"0\" max=\"10\" /><Data type=\"2-Edge Sequence Coverage\" value=\"0\" max=\"6\" /><Data type=\"Requirements Coverage\" value=\"0\" max=\"4\" /></Statistic>\\s+"));
 		statisticsManager.addProgress(e1);
-		assertEquals(
-				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + Util.newline +
-				"<Statistic>" +
-				"<Data type=\"Edge Coverage\" value=\"1\" max=\"4\" />"+
-				"<Data type=\"State Coverage\" value=\"1\" max=\"3\" />" +
-				"<Data type=\"3-Edge Sequence Coverage\" value=\"0\" max=\"10\" />" +
-				"<Data type=\"2-Edge Sequence Coverage\" value=\"0\" max=\"6\" />" +
-				"<Data type=\"Requirements Coverage\" value=\"2\" max=\"4\" />" +
-				"</Statistic>" + Util.newline, statisticsManager.getCurrentStatisticXml());
+		assertEquals( true, statisticsManager.getCurrentStatisticXml().matches("<\\?xml version=\\\"1.0\\\" encoding=\\\"UTF-8\\\"\\?>\\s+<Statistic><Data type=\"Edge Coverage\" value=\"1\" max=\"4\" /><Data type=\"State Coverage\" value=\"1\" max=\"3\" /><Data type=\"3-Edge Sequence Coverage\" value=\"0\" max=\"10\" /><Data type=\"2-Edge Sequence Coverage\" value=\"0\" max=\"6\" /><Data type=\"Requirements Coverage\" value=\"2\" max=\"4\" /></Statistic>\\s+"));
 		statisticsManager.addProgress(v1);
-		assertEquals(
-				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + Util.newline +
-				"<Statistic>" +
-				"<Data type=\"Edge Coverage\" value=\"1\" max=\"4\" />"+
-				"<Data type=\"State Coverage\" value=\"2\" max=\"3\" />" +
-				"<Data type=\"3-Edge Sequence Coverage\" value=\"0\" max=\"10\" />" +
-				"<Data type=\"2-Edge Sequence Coverage\" value=\"0\" max=\"6\" />" +
-				"<Data type=\"Requirements Coverage\" value=\"2\" max=\"4\" />" +
-				"</Statistic>" + Util.newline, statisticsManager.getCurrentStatisticXml());
+		assertEquals( true, statisticsManager.getCurrentStatisticXml().matches("<\\?xml version=\\\"1.0\\\" encoding=\\\"UTF-8\\\"\\?>\\s+<Statistic><Data type=\"Edge Coverage\" value=\"1\" max=\"4\" /><Data type=\"State Coverage\" value=\"2\" max=\"3\" /><Data type=\"3-Edge Sequence Coverage\" value=\"0\" max=\"10\" /><Data type=\"2-Edge Sequence Coverage\" value=\"0\" max=\"6\" /><Data type=\"Requirements Coverage\" value=\"2\" max=\"4\" /></Statistic>\\s+"));
 		statisticsManager.addProgress(e2);
-		assertEquals(
-				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + Util.newline +
-				"<Statistic>" +
-				"<Data type=\"Edge Coverage\" value=\"2\" max=\"4\" />"+
-				"<Data type=\"State Coverage\" value=\"2\" max=\"3\" />" +
-				"<Data type=\"3-Edge Sequence Coverage\" value=\"0\" max=\"10\" />" +
-				"<Data type=\"2-Edge Sequence Coverage\" value=\"1\" max=\"6\" />" +
-				"<Data type=\"Requirements Coverage\" value=\"3\" max=\"4\" />" +
-				"</Statistic>" + Util.newline, statisticsManager.getCurrentStatisticXml());
+		assertEquals( true, statisticsManager.getCurrentStatisticXml().matches("<\\?xml version=\\\"1.0\\\" encoding=\\\"UTF-8\\\"\\?>\\s+<Statistic><Data type=\"Edge Coverage\" value=\"2\" max=\"4\" /><Data type=\"State Coverage\" value=\"2\" max=\"3\" /><Data type=\"3-Edge Sequence Coverage\" value=\"0\" max=\"10\" /><Data type=\"2-Edge Sequence Coverage\" value=\"1\" max=\"6\" /><Data type=\"Requirements Coverage\" value=\"3\" max=\"4\" /></Statistic>\\s+"));
 		statisticsManager.addProgress(v2);
-		assertEquals(
-				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + Util.newline +
-				"<Statistic>" +
-				"<Data type=\"Edge Coverage\" value=\"2\" max=\"4\" />"+
-				"<Data type=\"State Coverage\" value=\"3\" max=\"3\" />" +
-				"<Data type=\"3-Edge Sequence Coverage\" value=\"0\" max=\"10\" />" +
-				"<Data type=\"2-Edge Sequence Coverage\" value=\"1\" max=\"6\" />" +
-				"<Data type=\"Requirements Coverage\" value=\"4\" max=\"4\" />" +
-				"</Statistic>" + Util.newline, statisticsManager.getCurrentStatisticXml());
+		assertEquals( true, statisticsManager.getCurrentStatisticXml().matches("<\\?xml version=\\\"1.0\\\" encoding=\\\"UTF-8\\\"\\?>\\s+<Statistic><Data type=\"Edge Coverage\" value=\"2\" max=\"4\" /><Data type=\"State Coverage\" value=\"3\" max=\"3\" /><Data type=\"3-Edge Sequence Coverage\" value=\"0\" max=\"10\" /><Data type=\"2-Edge Sequence Coverage\" value=\"1\" max=\"6\" /><Data type=\"Requirements Coverage\" value=\"4\" max=\"4\" /></Statistic>\\s+"));
 		statisticsManager.addProgress(e3);
-		assertEquals(
-				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + Util.newline +
-				"<Statistic>" +
-				"<Data type=\"Edge Coverage\" value=\"3\" max=\"4\" />"+
-				"<Data type=\"State Coverage\" value=\"3\" max=\"3\" />" +
-				"<Data type=\"3-Edge Sequence Coverage\" value=\"1\" max=\"10\" />" +
-				"<Data type=\"2-Edge Sequence Coverage\" value=\"2\" max=\"6\" />" +
-				"<Data type=\"Requirements Coverage\" value=\"4\" max=\"4\" />" +
-				"</Statistic>" + Util.newline, statisticsManager.getCurrentStatisticXml());
+		assertEquals( true, statisticsManager.getCurrentStatisticXml().matches("<\\?xml version=\\\"1.0\\\" encoding=\\\"UTF-8\\\"\\?>\\s+<Statistic><Data type=\"Edge Coverage\" value=\"3\" max=\"4\" /><Data type=\"State Coverage\" value=\"3\" max=\"3\" /><Data type=\"3-Edge Sequence Coverage\" value=\"1\" max=\"10\" /><Data type=\"2-Edge Sequence Coverage\" value=\"2\" max=\"6\" /><Data type=\"Requirements Coverage\" value=\"4\" max=\"4\" /></Statistic>\\s+"));
 		statisticsManager.addProgress(e4);
-		assertEquals(
-				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + Util.newline +
-				"<Statistic>" +
-				"<Data type=\"Edge Coverage\" value=\"4\" max=\"4\" />"+
-				"<Data type=\"State Coverage\" value=\"3\" max=\"3\" />" +
-				"<Data type=\"3-Edge Sequence Coverage\" value=\"2\" max=\"10\" />" +
-				"<Data type=\"2-Edge Sequence Coverage\" value=\"3\" max=\"6\" />" +
-				"<Data type=\"Requirements Coverage\" value=\"4\" max=\"4\" />" +
-				"</Statistic>" + Util.newline, statisticsManager.getCurrentStatisticXml());
+		assertEquals( true, statisticsManager.getCurrentStatisticXml().matches("<\\?xml version=\\\"1.0\\\" encoding=\\\"UTF-8\\\"\\?>\\s+<Statistic><Data type=\"Edge Coverage\" value=\"4\" max=\"4\" /><Data type=\"State Coverage\" value=\"3\" max=\"3\" /><Data type=\"3-Edge Sequence Coverage\" value=\"2\" max=\"10\" /><Data type=\"2-Edge Sequence Coverage\" value=\"3\" max=\"6\" /><Data type=\"Requirements Coverage\" value=\"4\" max=\"4\" /></Statistic>\\s+"));
 	}
 
 	public void testFullProgress() 
@@ -169,59 +111,7 @@ public class StatisticsManagerTest extends TestCase {
 		statisticsManager.addProgress(v2);
 		statisticsManager.addProgress(e3);
 		statisticsManager.addProgress(e4);
-		assertEquals(
-				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + Util.newline +
-				"<Statistics>" +
-				"<Statistic>" +
-				"<Data type=\"Edge Coverage\" value=\"0\" max=\"4\" />"+
-				"<Data type=\"State Coverage\" value=\"1\" max=\"3\" />" +
-				"<Data type=\"3-Edge Sequence Coverage\" value=\"0\" max=\"10\" />" +
-				"<Data type=\"2-Edge Sequence Coverage\" value=\"0\" max=\"6\" />" +
-				"<Data type=\"Requirements Coverage\" value=\"0\" max=\"4\" />" +
-				"</Statistic>" + 
-				"<Statistic>" +
-				"<Data type=\"Edge Coverage\" value=\"1\" max=\"4\" />"+
-				"<Data type=\"State Coverage\" value=\"1\" max=\"3\" />" +
-				"<Data type=\"3-Edge Sequence Coverage\" value=\"0\" max=\"10\" />" +
-				"<Data type=\"2-Edge Sequence Coverage\" value=\"0\" max=\"6\" />" +
-				"<Data type=\"Requirements Coverage\" value=\"2\" max=\"4\" />" +
-				"</Statistic>" + 
-				"<Statistic>" +
-				"<Data type=\"Edge Coverage\" value=\"1\" max=\"4\" />"+
-				"<Data type=\"State Coverage\" value=\"2\" max=\"3\" />" +
-				"<Data type=\"3-Edge Sequence Coverage\" value=\"0\" max=\"10\" />" +
-				"<Data type=\"2-Edge Sequence Coverage\" value=\"0\" max=\"6\" />" +
-				"<Data type=\"Requirements Coverage\" value=\"2\" max=\"4\" />" +
-				"</Statistic>" + 
-				"<Statistic>" +
-				"<Data type=\"Edge Coverage\" value=\"2\" max=\"4\" />"+
-				"<Data type=\"State Coverage\" value=\"2\" max=\"3\" />" +
-				"<Data type=\"3-Edge Sequence Coverage\" value=\"0\" max=\"10\" />" +
-				"<Data type=\"2-Edge Sequence Coverage\" value=\"1\" max=\"6\" />" +
-				"<Data type=\"Requirements Coverage\" value=\"3\" max=\"4\" />" +
-				"</Statistic>" + 
-				"<Statistic>" +
-				"<Data type=\"Edge Coverage\" value=\"2\" max=\"4\" />"+
-				"<Data type=\"State Coverage\" value=\"3\" max=\"3\" />" +
-				"<Data type=\"3-Edge Sequence Coverage\" value=\"0\" max=\"10\" />" +
-				"<Data type=\"2-Edge Sequence Coverage\" value=\"1\" max=\"6\" />" +
-				"<Data type=\"Requirements Coverage\" value=\"4\" max=\"4\" />" +
-				"</Statistic>" + 
-				"<Statistic>" +
-				"<Data type=\"Edge Coverage\" value=\"3\" max=\"4\" />"+
-				"<Data type=\"State Coverage\" value=\"3\" max=\"3\" />" +
-				"<Data type=\"3-Edge Sequence Coverage\" value=\"1\" max=\"10\" />" +
-				"<Data type=\"2-Edge Sequence Coverage\" value=\"2\" max=\"6\" />" +
-				"<Data type=\"Requirements Coverage\" value=\"4\" max=\"4\" />" +
-				"</Statistic>" + 
-				"<Statistic>" +
-				"<Data type=\"Edge Coverage\" value=\"4\" max=\"4\" />"+
-				"<Data type=\"State Coverage\" value=\"3\" max=\"3\" />" +
-				"<Data type=\"3-Edge Sequence Coverage\" value=\"2\" max=\"10\" />" +
-				"<Data type=\"2-Edge Sequence Coverage\" value=\"3\" max=\"6\" />" +
-				"<Data type=\"Requirements Coverage\" value=\"4\" max=\"4\" />" +
-				"</Statistic>" + 
-				"</Statistics>" + Util.newline, statisticsManager.getFullProgressXml());
+		assertEquals( true, statisticsManager.getFullProgressXml().matches("<\\?xml version=\\\"1.0\\\" encoding=\\\"UTF-8\\\"\\?>\\s+<Statistics><Statistic><Data type=\"Edge Coverage\" value=\"0\" max=\"4\" /><Data type=\"State Coverage\" value=\"1\" max=\"3\" /><Data type=\"3-Edge Sequence Coverage\" value=\"0\" max=\"10\" /><Data type=\"2-Edge Sequence Coverage\" value=\"0\" max=\"6\" /><Data type=\"Requirements Coverage\" value=\"0\" max=\"4\" /></Statistic><Statistic><Data type=\"Edge Coverage\" value=\"1\" max=\"4\" /><Data type=\"State Coverage\" value=\"1\" max=\"3\" /><Data type=\"3-Edge Sequence Coverage\" value=\"0\" max=\"10\" /><Data type=\"2-Edge Sequence Coverage\" value=\"0\" max=\"6\" /><Data type=\"Requirements Coverage\" value=\"2\" max=\"4\" /></Statistic><Statistic><Data type=\"Edge Coverage\" value=\"1\" max=\"4\" /><Data type=\"State Coverage\" value=\"2\" max=\"3\" /><Data type=\"3-Edge Sequence Coverage\" value=\"0\" max=\"10\" /><Data type=\"2-Edge Sequence Coverage\" value=\"0\" max=\"6\" /><Data type=\"Requirements Coverage\" value=\"2\" max=\"4\" /></Statistic><Statistic><Data type=\"Edge Coverage\" value=\"2\" max=\"4\" /><Data type=\"State Coverage\" value=\"2\" max=\"3\" /><Data type=\"3-Edge Sequence Coverage\" value=\"0\" max=\"10\" /><Data type=\"2-Edge Sequence Coverage\" value=\"1\" max=\"6\" /><Data type=\"Requirements Coverage\" value=\"3\" max=\"4\" /></Statistic><Statistic><Data type=\"Edge Coverage\" value=\"2\" max=\"4\" /><Data type=\"State Coverage\" value=\"3\" max=\"3\" /><Data type=\"3-Edge Sequence Coverage\" value=\"0\" max=\"10\" /><Data type=\"2-Edge Sequence Coverage\" value=\"1\" max=\"6\" /><Data type=\"Requirements Coverage\" value=\"4\" max=\"4\" /></Statistic><Statistic><Data type=\"Edge Coverage\" value=\"3\" max=\"4\" /><Data type=\"State Coverage\" value=\"3\" max=\"3\" /><Data type=\"3-Edge Sequence Coverage\" value=\"1\" max=\"10\" /><Data type=\"2-Edge Sequence Coverage\" value=\"2\" max=\"6\" /><Data type=\"Requirements Coverage\" value=\"4\" max=\"4\" /></Statistic><Statistic><Data type=\"Edge Coverage\" value=\"4\" max=\"4\" /><Data type=\"State Coverage\" value=\"3\" max=\"3\" /><Data type=\"3-Edge Sequence Coverage\" value=\"2\" max=\"10\" /><Data type=\"2-Edge Sequence Coverage\" value=\"3\" max=\"6\" /><Data type=\"Requirements Coverage\" value=\"4\" max=\"4\" /></Statistic></Statistics>\\s+"));
 	}
 	public void testFullProgressReport() 
 	{
@@ -262,5 +152,5 @@ public class StatisticsManagerTest extends TestCase {
 				"</tr>" + Util.newline +
 				"</table>"+ Util.newline, out.toString());
 	}
-	
+
 }

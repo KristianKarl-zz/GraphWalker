@@ -1,5 +1,7 @@
 package org.tigris.mbt.conditions;
 
+import org.tigris.mbt.Util;
+
 public class StateCoverage extends StopCondition {
 	
 	private double limit;
@@ -10,6 +12,7 @@ public class StateCoverage extends StopCondition {
 
 	public StateCoverage(double limit)
 	{
+		Util.AbortIf( ( limit > 1 || limit < 0 ), "State coverage must be between 0 and 100" );
 		this.limit = limit;
 	}
 	

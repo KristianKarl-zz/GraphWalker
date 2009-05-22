@@ -3,11 +3,10 @@ package org.tigris.mbt.conditions;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 
 public class ReachedRequirement extends StopCondition {
 	
-	private Collection requirements;
+	private Collection<String> requirements;
 
 	public ReachedRequirement(String requirements)
 	{
@@ -15,7 +14,7 @@ public class ReachedRequirement extends StopCondition {
 		for (int i = 0; i < list.length; i++) {
 			list[i] = list[i].trim();
 		}
-		this.requirements = new HashSet(Arrays.asList( list ));
+		this.requirements = new HashSet<String>(Arrays.asList( list ));
 	}
 	
 	public boolean isFulfilled() {
@@ -23,7 +22,7 @@ public class ReachedRequirement extends StopCondition {
 	}
 
 	public double getFulfilment() {
-		Collection covered = machine.getCoveredRequirements();
+		Collection<String> covered = machine.getCoveredRequirements();
 		covered.retainAll(requirements);
 		return covered.size() / (double)requirements.size();
 	}
@@ -31,7 +30,7 @@ public class ReachedRequirement extends StopCondition {
 		return "RC="+ Arrays.deepToString(requirements.toArray());
 	}
 
-	public Collection getRequirements() {
+	public Collection<String> getRequirements() {
 		return requirements;
 	}
 

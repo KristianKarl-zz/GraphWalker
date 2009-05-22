@@ -6,9 +6,9 @@ package org.tigris.mbt.statistics;
 import java.util.HashSet;
 import java.util.Stack;
 
-import edu.uci.ics.jung.graph.impl.AbstractElement;
-import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
-import edu.uci.ics.jung.graph.impl.SparseGraph;
+import org.tigris.mbt.graph.AbstractElement;
+import org.tigris.mbt.graph.Edge;
+import org.tigris.mbt.graph.Graph;
 
 /**
  * @author Johan Tejle
@@ -16,22 +16,23 @@ import edu.uci.ics.jung.graph.impl.SparseGraph;
  */
 public class EdgeSequenceCoverageStatistics extends Statistics {
 
-	private HashSet usedSequences;
-	private HashSet allSequences;
-	private Stack pathHistory;
+	private HashSet<String> usedSequences;
+	private HashSet<String> allSequences;
+	private Stack<AbstractElement> pathHistory;
 	private int length;
 	/**
 	 * 
 	 */
-	public EdgeSequenceCoverageStatistics( SparseGraph model, int sequenceLength ) {
+	@SuppressWarnings("unchecked")
+	public EdgeSequenceCoverageStatistics( Graph model, int sequenceLength ) {
 		this.length = sequenceLength;
-		usedSequences = new HashSet();
-		allSequences = new HashSet();
-		pathHistory = new Stack();
+		usedSequences = new HashSet<String>();
+		allSequences = new HashSet<String>();
+		pathHistory = new Stack<AbstractElement>();
 		
-		Stack[] possibilities = new Stack[sequenceLength];
+		Stack<Edge>[] possibilities = new Stack[sequenceLength];
 		for(int i=0; i<sequenceLength; i++)
-			possibilities[i] = new Stack();
+			possibilities[i] = new Stack<Edge>();
 		possibilities[0].addAll(model.getEdges());
 		while(possibilities[0].size()>0)
 		{
@@ -40,7 +41,7 @@ public class EdgeSequenceCoverageStatistics extends Statistics {
 				if(possibilities[i].size()==0)
 					return;
 				if(possibilities[i+1].size()==0)
-					possibilities[i+1].addAll(((DirectedSparseEdge)possibilities[i].peek()).getDest().getOutEdges());
+					possibilities[i+1].addAll( model.getOutEdges(model.getDest(possibilities[i].peek())) );
 			}
 			while(possibilities[sequenceLength-1].size()>0)
 			{
@@ -57,10 +58,10 @@ public class EdgeSequenceCoverageStatistics extends Statistics {
 	 * @param possibilities
 	 * @return
 	 */
-	private String getSequenceName(Stack[] possibilities) {
+	private String getSequenceName(Stack<Edge>[] possibilities) {
 		String retur="";
 		for(int i=0;i<possibilities.length;i++)
-			retur += ((AbstractElement) possibilities[i].peek()).hashCode() +" ";
+			retur += possibilities[i].peek().hashCode() +" ";
 		return retur.trim();
 	}
 
@@ -71,7 +72,7 @@ public class EdgeSequenceCoverageStatistics extends Statistics {
 	private String getCurrentSequenceName() {
 		String retur="";
 		for(int i=0;i<pathHistory.size();i++)
-			retur += ((AbstractElement) pathHistory.elementAt(i)).hashCode() +" ";
+			retur += pathHistory.elementAt(i).hashCode() +" ";
 		return retur.trim();
 	}
 
@@ -79,7 +80,7 @@ public class EdgeSequenceCoverageStatistics extends Statistics {
 	 * @see org.tigris.mbt.statistics.Statistics#addProgress(edu.uci.ics.jung.graph.impl.AbstractElement)
 	 */
 	public void addProgress(AbstractElement element) {
-		if(element instanceof DirectedSparseEdge)
+		if(element instanceof Edge)
 			pathHistory.add(element);
 		if(pathHistory.size()>this.length)
 			pathHistory.remove(0);

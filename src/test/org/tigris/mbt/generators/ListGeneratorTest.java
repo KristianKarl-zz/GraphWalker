@@ -1,37 +1,35 @@
 package test.org.tigris.mbt.generators;
 
 import org.apache.log4j.Logger;
-import org.tigris.mbt.FiniteStateMachine;
-import org.tigris.mbt.Keywords;
 import org.tigris.mbt.Util;
 import org.tigris.mbt.generators.ListGenerator;
+import org.tigris.mbt.graph.Edge;
+import org.tigris.mbt.graph.Graph;
+import org.tigris.mbt.graph.Vertex;
+import org.tigris.mbt.machines.FiniteStateMachine;
 
-import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
-import edu.uci.ics.jung.graph.impl.DirectedSparseVertex;
-import edu.uci.ics.jung.graph.impl.SparseGraph;
-import edu.uci.ics.jung.utils.UserData;
 import junit.framework.TestCase;
 
 public class ListGeneratorTest extends TestCase {
 	Logger logger = Util.setupLogger(ListGeneratorTest.class);
 
 	public void testGetNext() {
-		SparseGraph graph = new SparseGraph();
+		Graph graph = new Graph();
 		
-		DirectedSparseVertex v1 = new DirectedSparseVertex();
-		v1.setUserDatum(Keywords.INDEX_KEY, new Integer(1), UserData.SHARED);
-		v1.setUserDatum(Keywords.LABEL_KEY, "Start", UserData.SHARED);
+		Vertex v1 = new Vertex();
+		v1.setIndexKey( new Integer(1) );
+		v1.setLabelKey( "Start" );
 		graph.addVertex(v1);
 		
-		DirectedSparseVertex v2 = new DirectedSparseVertex();
-		v2.addUserDatum(Keywords.INDEX_KEY, new Integer(2), UserData.SHARED);
-		v2.setUserDatum(Keywords.LABEL_KEY, "V2", UserData.SHARED);
+		Vertex v2 = new Vertex();
+		v2.setIndexKey( new Integer(2) );
+		v2.setLabelKey( "V2" );
 		graph.addVertex(v2);
 		
-		DirectedSparseEdge edge = new DirectedSparseEdge(v1, v2);
-		edge.setUserDatum(Keywords.INDEX_KEY, new Integer(3), UserData.SHARED);
-		edge.setUserDatum(Keywords.LABEL_KEY, "E1", UserData.SHARED);
-		graph.addEdge(edge);
+		Edge edge = new Edge();
+		edge.setIndexKey( new Integer(3) );
+		edge.setLabelKey( "E1" );
+		graph.addEdge(edge, v1, v2 );
 		
 		ListGenerator generator = new ListGenerator();
 		generator.setMachine(new FiniteStateMachine(graph));

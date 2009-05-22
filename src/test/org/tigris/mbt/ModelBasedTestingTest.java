@@ -11,6 +11,8 @@ import java.io.PrintStream;
 
 import org.tigris.mbt.ModelBasedTesting;
 import org.tigris.mbt.Util;
+import org.tigris.mbt.exceptions.InvalidDataException;
+import org.tigris.mbt.graph.Graph;
 
 import junit.framework.TestCase;
 
@@ -19,6 +21,11 @@ import junit.framework.TestCase;
  *
  */
 public class ModelBasedTestingTest extends TestCase {
+
+	protected void setUp() throws Exception {
+		super.setUp();
+		ModelBasedTesting.getInstance().reset();
+	}
 
 	private InputStream redirectIn()
 	{
@@ -36,7 +43,7 @@ public class ModelBasedTestingTest extends TestCase {
 	
 	public void testXmlLoading_Simple()
 	{
-		ModelBasedTesting mbt = Util.loadMbtFromXml("graphml/reqtags/mbt_init.xml");
+		ModelBasedTesting mbt = Util.loadMbtFromXml("graphml/reqtags/mbt_init.xml" );
 		assertEquals("RANDOM{EC>=100}", mbt.toString());
 	}
 
@@ -94,7 +101,51 @@ public class ModelBasedTestingTest extends TestCase {
 		System.setOut( oldOut );
 
 		assertEquals("REQUIREMENTS", mbt.toString());
-		assertEquals(11, innerOut.toString().trim().split("\r\n|\r|\n").length);
+		assertEquals(6, innerOut.toString().trim().split("\r\n|\r|\n").length);
 	}
 	
+	public void testGetdataValue() throws InvalidDataException
+	{
+		InputStream oldIn = System.in;
+		PrintStream oldOut = System.out;
+		ByteArrayOutputStream innerOut = new ByteArrayOutputStream();
+
+		System.setOut( new PrintStream(innerOut) );
+		System.setIn( redirectIn() );
+		ModelBasedTesting mbt = Util.loadMbtFromXml("graphml/reqtags/mbt_init10.xml");
+		System.setIn( oldIn );
+		System.setOut( oldOut );
+		
+		System.out.print(mbt.getDataValue("incorrect"));
+
+		assertEquals("0", mbt.getDataValue("incorrect"));
+	}
+	
+	
+	public void testExecAction() throws InvalidDataException
+	{
+		InputStream oldIn = System.in;
+		PrintStream oldOut = System.out;
+		ByteArrayOutputStream innerOut = new ByteArrayOutputStream();
+
+		System.setOut( new PrintStream(innerOut) );
+		System.setIn( redirectIn() );
+		ModelBasedTesting mbt = Util.loadMbtFromXml("graphml/reqtags/mbt_init11.xml");
+		System.setIn( oldIn );
+		System.setOut( oldOut );
+
+		System.out.print(mbt.execAction("str.toUpperCase()"));
+
+		assertEquals("ABC", mbt.execAction("str.toUpperCase()"));
+	}
+	
+	
+	public void testPassRequirement()
+	{
+		ModelBasedTesting mbt;
+		mbt = Util.loadMbtFromXml( "xml/reqCoverage.xml" );
+		mbt.passRequirement(true);
+		mbt.passRequirement(false);
+		mbt.passRequirement(true);
+	}
 }
