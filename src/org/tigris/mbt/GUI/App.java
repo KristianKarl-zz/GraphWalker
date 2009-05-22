@@ -116,7 +116,7 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 	{
 		if ( endpoint != null )
 		{
-			endpoint.stop();
+			endpoint = null;
 		}
 
 		String wsURL = "http://0.0.0.0:" + Util.readWSPort() + "/mbt-services";
