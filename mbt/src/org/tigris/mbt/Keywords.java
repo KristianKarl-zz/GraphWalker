@@ -54,6 +54,16 @@ public class Keywords {
 	public static final String  HEIGHT_KEY = "height";
 	
 	/**
+	* The x position of the node, as saved by the yEd editor.
+	*/
+	public static final String  X_POS = "x_pos";
+	
+	/**
+	* The y position of the node, as saved by the yEd editor.
+	*/
+	public static final String  Y_POS = "y_pos";
+	
+	/**
 	* When merging graphs, the source file of each graph is noted, so that in the event
 	* of an error, the correct graph file can be used in meaningful error messages to
 	* the end user.
@@ -206,7 +216,7 @@ public class Keywords {
 	/**
 	* Holds the pre-defined key words
 	*/
-	private static Vector reservedKeyWords = new Vector();
+	private static Vector<String> reservedKeyWords = new Vector<String>();
 
 	/**
 	* Defines the key words
@@ -224,13 +234,13 @@ public class Keywords {
 	*/
 	public static boolean isKeyWord( String wordToCheck )
 	{
-		return reservedKeyWords.contains(wordToCheck);
+		return reservedKeyWords.contains(wordToCheck.toUpperCase());
 	}
 	
 	/**
 	* Holds the pre-defined list of stop-condition.
 	*/
-	private static Hashtable stopConditions = new Hashtable();
+	private static Hashtable<String, Integer> stopConditions = new Hashtable<String, Integer>();
 
 	/**
 	* Defines the stop-condition strings
@@ -248,7 +258,7 @@ public class Keywords {
 		stopConditions.put( "NEVER", new Integer(CONDITION_NEVER) );
 	}
 
-	static public Set getStopConditions()
+	static public Set<String> getStopConditions()
 	{
 		return stopConditions.keySet();
 	}
@@ -257,7 +267,7 @@ public class Keywords {
 	{
 		if ( presumedCondition == null )
 			return false;
-		return stopConditions.containsKey(presumedCondition);
+		return stopConditions.containsKey(presumedCondition.toUpperCase());
 	}
 	
 	/**
@@ -267,13 +277,13 @@ public class Keywords {
 	static public int getStopCondition(String stopCondition)
 	{
 		if(!isStopCondition(stopCondition)) return -1;
-		return ((Integer)stopConditions.get(stopCondition)).intValue();
+		return ((Integer)stopConditions.get(stopCondition.toUpperCase())).intValue();
 	}
 	
 	/**
 	* Holds the pre-defined list of generators
 	*/
-	private static Hashtable generators = new Hashtable();
+	private static Hashtable<String, Integer> generators = new Hashtable<String, Integer>();
 
 	/**
 	* Defines the generators strings
@@ -288,7 +298,7 @@ public class Keywords {
 		generators.put( "SHORTEST_NON_OPTIMIZED", new Integer(GENERATOR_SHORTEST_NON_OPTIMIZED) );
 	}
 
-	static public Set getGenerators()
+	static public Set<String> getGenerators()
 	{
 		return generators.keySet();
 	}
@@ -297,7 +307,7 @@ public class Keywords {
 	{
 		if ( presumedGenerator == null )
 			return false;
-		return generators.containsKey(presumedGenerator);
+		return generators.containsKey(presumedGenerator.toUpperCase());
 	}
 	
 	/**
@@ -307,7 +317,7 @@ public class Keywords {
 	static public int getGenerator(String generator)
 	{
 		if(!isGenerator(generator)) return -1;
-		return ((Integer)generators.get(generator)).intValue();
+		return ((Integer)generators.get(generator.toUpperCase())).intValue();
 	}
 	
 }

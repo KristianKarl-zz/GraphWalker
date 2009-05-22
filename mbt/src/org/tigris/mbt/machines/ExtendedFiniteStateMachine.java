@@ -1,4 +1,4 @@
-package org.tigris.mbt;
+package org.tigris.mbt.machines;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -13,18 +13,17 @@ import java.util.Set;
 import java.util.Stack;
 
 import org.apache.log4j.Logger;
+import org.tigris.mbt.Util;
 import org.tigris.mbt.exceptions.FoundNoEdgeException;
 import org.tigris.mbt.exceptions.InvalidDataException;
 import org.tigris.mbt.filters.AccessableEdgeFilter;
+import org.tigris.mbt.graph.Edge;
+import org.tigris.mbt.graph.Graph;
 
 import bsh.EvalError;
 import bsh.Interpreter;
 import bsh.NameSpace;
 import bsh.UtilEvalError;
-
-import edu.uci.ics.jung.graph.Edge;
-import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
-import edu.uci.ics.jung.graph.impl.SparseGraph;
 
 public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 
@@ -35,11 +34,11 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 	private Interpreter interpreter = new Interpreter();
 	private AccessableEdgeFilter accessableFilter;
 
-	private Stack namespaceStack;
+	private Stack<CannedNameSpace> namespaceStack;
 
 	private PrintStream oldPrintStream;
 	
-	public ExtendedFiniteStateMachine(SparseGraph model)
+	public ExtendedFiniteStateMachine(Graph model)
 	{
 		this();
 		setModel(model);
@@ -47,7 +46,7 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 	
 	public ExtendedFiniteStateMachine() {
 		super();
-		namespaceStack = new Stack();
+		namespaceStack = new Stack<CannedNameSpace>();
 		accessableFilter = new AccessableEdgeFilter(interpreter);
 		Void = new VoidPrintStream();
 	}
@@ -62,25 +61,25 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 		return super.getCurrentStateName() + (hasInternalVariables()?"/" + getCurrentDataString():"");
 	}
 
-	public Set getCurrentOutEdges() throws FoundNoEdgeException
+	public Set<Edge> getCurrentOutEdges() throws FoundNoEdgeException
 	{
-		Set	retur = super.getCurrentOutEdges();
-		for(Iterator i = retur.iterator();i.hasNext();)
+		Set<Edge>	retur = super.getCurrentOutEdges();
+		for(Iterator<Edge> i = retur.iterator();i.hasNext();)
 		{
-			Edge e = (Edge) i.next();
-			if(!accessableFilter.acceptEdge( e ))
+			Edge e = i.next();
+			if ( !accessableFilter.acceptEdge( getModel(), e ) )
 			{
-				logger.debug("Not accessable: " + Util.getCompleteName((DirectedSparseEdge) e) + " from " + getCurrentStateName());
+				logger.debug("Not accessable: " + e + " from " + getCurrentStateName());
 				i.remove();
 			}
 			else
 			{
-				logger.debug("Accessable: " + Util.getCompleteName((DirectedSparseEdge) e) + " from " + getCurrentStateName());
+				logger.debug("Accessable: " + e + " from " + getCurrentStateName());
 			}
 		}
-		if(retur.size()==0)
+		if ( retur.size() == 0 )
 		{
-			throw new FoundNoEdgeException("Cul-De-Sac, dead end found in '" + Util.getCompleteName( getCurrentState() ) + "'");
+			throw new FoundNoEdgeException("Cul-De-Sac, dead end found in '" + getCurrentState() + "'");
 		}
 		return retur;
 	}
@@ -90,8 +89,8 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 		return interpreter.getNameSpace().getVariableNames().length > 1;
 	}
 	
-	public Hashtable getCurrentData() {
-		Hashtable retur = new Hashtable();
+	public Hashtable<String, Object> getCurrentData() {
+		Hashtable<String, Object> retur = new Hashtable<String, Object>();
 		if(!hasInternalVariables()) return retur;
 
 		try {
@@ -118,18 +117,35 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 	 */
 	public String getDataValue( String dataName ) throws InvalidDataException
 	{
-		Hashtable dataTable = getCurrentData();
+		Hashtable<String, Object> dataTable = getCurrentData();
 		if(dataTable.containsKey(dataName))
 			return dataTable.get(dataName).toString();
 		throw new InvalidDataException( "The data name: '" + dataName + "', does not exist in the namespace." );
+	}
+
+	/**
+	 * Executes an action, and returns any outcome as a string.
+	 * @param action
+	 * @return
+	 * @throws InvalidDataException is thrown if the data is not found in the data space
+	 */
+	public String execAction( String action ) throws InvalidDataException
+	{
+		Object res = null;
+		try {
+			res = interpreter.eval(action);
+		} catch (EvalError e) {
+			throw new InvalidDataException( "The action: '" + action + "', does not evaluate correctly. Detail: " + e.getMessage() );
+		}
+		return res.toString();
 	}
 
 	public String getCurrentDataString() 
 	{
 		String retur = "";
 		
-		Hashtable data = getCurrentData();
-		Enumeration e = data.keys();
+		Hashtable<String, Object> data = getCurrentData();
+		Enumeration<String> e = data.keys();
 		while(e.hasMoreElements())
 		{
 			String key = (String) e.nextElement();
@@ -138,7 +154,7 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 		return retur;
 	}
 	
-	public boolean walkEdge(DirectedSparseEdge edge)
+	public boolean walkEdge(Edge edge)
 	{
 		boolean hasWalkedEdge = super.walkEdge(edge);
 		if(hasWalkedEdge)
@@ -151,7 +167,7 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 					interpreter.eval(getAction(edge));
 					System.setOut(ps);
 				} catch (EvalError e) {
-					throw new RuntimeException( "Malformed action sequence: " + Util.getCompleteName(edge) +" : "+ e.getMessage() );
+					throw new RuntimeException( "Malformed action sequence: " + edge +" : "+ e.getMessage() );
 				}
 			}
 		}
@@ -159,11 +175,11 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 	}
 
 	private String getAction(Edge edge) {
-		return (edge==null?"":(String)edge.getUserDatum(Keywords.ACTIONS_KEY));
+		return (edge==null?"":edge.getActionsKey());
 	}
 
 	private boolean hasAction(Edge edge) {
-		return (edge==null?false:edge.containsUserDatumKey(Keywords.ACTIONS_KEY));
+		return (edge==null?false:!edge.getActionsKey().isEmpty());
 	}
 	protected void track()
 	{

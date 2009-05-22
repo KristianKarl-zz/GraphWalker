@@ -4,14 +4,14 @@ import java.util.Iterator;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
-import org.tigris.mbt.FiniteStateMachine;
 import org.tigris.mbt.conditions.StopCondition;
+import org.tigris.mbt.machines.FiniteStateMachine;
 
 public class CombinedPathGenerator extends PathGenerator {
 
 	static Logger logger = Logger.getLogger(CombinedPathGenerator.class);
 
-	private Vector paths = new Vector();
+	private Vector<PathGenerator> generatorList = new Vector<PathGenerator>();
 	private int currentGenerator = 0;
 	
 	public CombinedPathGenerator() {
@@ -26,31 +26,31 @@ public class CombinedPathGenerator extends PathGenerator {
 	public void addPathGenerator(PathGenerator generator)
 	{
 		logger.debug("Adding PathGenerator: " + generator);
-		paths.add(generator);
+		generatorList.add(generator);
 	}
 
 	public void setMachine(FiniteStateMachine machine) {
-		for(Iterator i = paths.iterator();i.hasNext();)
+		for(Iterator<PathGenerator> i = generatorList.iterator();i.hasNext();)
 		{
-			((PathGenerator)i.next()).setMachine(machine);
+			i.next().setMachine(machine);
 		}
 	}
 	
 	public void setStopCondition(StopCondition stopCondition) {
-		for(Iterator i = paths.iterator();i.hasNext();)
+		for(Iterator<PathGenerator> i = generatorList.iterator();i.hasNext();)
 		{
-			((PathGenerator)i.next()).setStopCondition(stopCondition);
+			i.next().setStopCondition(stopCondition);
 		}
 	}
 	
 	private PathGenerator getActivePathGenerator()
 	{
-		return (PathGenerator) paths.get(currentGenerator);
+		return generatorList.get(currentGenerator);
 	}
 
 	private boolean hasPath()
 	{
-		return paths.size() > currentGenerator;
+		return generatorList.size() > currentGenerator;
 	}
 	
 	private void scrapActivePathGenerator()
@@ -86,9 +86,9 @@ public class CombinedPathGenerator extends PathGenerator {
 	
 	public String toString() {
 		String retur = "";
-		for(Iterator i = paths.iterator();i.hasNext();)
+		for(Iterator<PathGenerator> i = generatorList.iterator();i.hasNext();)
 		{
-			retur +=((PathGenerator)i.next()).toString() + "\n";
+			retur += i.next().toString() + "\n";
 		}
 		return retur.trim();
 	}

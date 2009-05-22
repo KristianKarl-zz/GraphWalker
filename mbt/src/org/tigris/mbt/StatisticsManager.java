@@ -8,6 +8,7 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.output.XMLOutputter;
 import org.jdom.transform.JDOMSource;
+import org.tigris.mbt.graph.AbstractElement;
 import org.tigris.mbt.statistics.*;
 
 import java.io.File;
@@ -26,8 +27,6 @@ import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
-import edu.uci.ics.jung.graph.impl.AbstractElement;
-
 /**
  * @author Johan Tejle
  *
@@ -35,7 +34,7 @@ import edu.uci.ics.jung.graph.impl.AbstractElement;
 public class StatisticsManager {
 
 	static private Logger log = Util.setupLogger(StatisticsManager.class);
-	Hashtable counters;
+	Hashtable<String, Statistics> counters;
 	Document progress;
 	private Transformer styleTemplate;
 
@@ -43,7 +42,7 @@ public class StatisticsManager {
 	 * 
 	 */
 	public StatisticsManager() {
-		this.counters = new Hashtable();
+		this.counters = new Hashtable<String, Statistics>();
 		this.progress = new Document(new Element("Statistics"));
 	}
 	
@@ -54,9 +53,9 @@ public class StatisticsManager {
 	
 	public void addProgress(AbstractElement element)
 	{
-		for(Enumeration e=counters.keys();e.hasMoreElements();)
+		for ( Enumeration<String> e = counters.keys(); e.hasMoreElements(); )
 		{
-			String key = (String)e.nextElement();
+			String key = e.nextElement();
 			Statistics stats = (Statistics) counters.get(key);
 			stats.addProgress(element);
 		}
@@ -84,9 +83,9 @@ public class StatisticsManager {
 	{
 		Element root = new Element("Statistic");
 		Document doc = new Document(root);
-		for(Enumeration e=counters.keys();e.hasMoreElements();)
+		for ( Enumeration<String> e = counters.keys(); e.hasMoreElements(); )
 		{
-			String key = (String)e.nextElement();
+			String key = e.nextElement();
 			int[] stats = getStatistic(key);
 
 			Element child = new Element("Data");
@@ -135,7 +134,7 @@ public class StatisticsManager {
 	/**
 	 * @return the available Statistics counter names used by this manager
 	 */
-	public Set getCounterNames() {
-		return new HashSet(counters.keySet());
+	public Set<String> getCounterNames() {
+		return new HashSet<String>(counters.keySet());
 	}
 }

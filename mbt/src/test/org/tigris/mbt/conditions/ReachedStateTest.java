@@ -5,23 +5,24 @@ import org.tigris.mbt.ModelBasedTesting;
 import org.tigris.mbt.Util;
 import org.tigris.mbt.conditions.ReachedState;
 import org.tigris.mbt.conditions.StopCondition;
+import org.tigris.mbt.graph.Edge;
+import org.tigris.mbt.graph.Graph;
+import org.tigris.mbt.graph.Vertex;
 
-import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
-import edu.uci.ics.jung.graph.impl.DirectedSparseVertex;
-import edu.uci.ics.jung.graph.impl.SparseGraph;
 import junit.framework.TestCase;
 
 public class ReachedStateTest extends TestCase {
-	SparseGraph graph;
-	DirectedSparseVertex start;
-	DirectedSparseVertex v1;
-	DirectedSparseVertex v2;
-	DirectedSparseEdge e0;
-	DirectedSparseEdge e1;
+	Graph graph;
+	Vertex start;
+	Vertex v1;
+	Vertex v2;
+	Edge e0;
+	Edge e1;
 	
 	protected void setUp() throws Exception {
 		super.setUp();
-		graph = new SparseGraph();
+		ModelBasedTesting.getInstance().reset();
+		graph = new Graph();
 		
 		start = Util.addVertexToGraph(graph, "Start");
 		v1 = Util.addVertexToGraph(graph, "V1");
@@ -41,13 +42,13 @@ public class ReachedStateTest extends TestCase {
 
 	public void testConstructor()
 	{
-		ModelBasedTesting mbt = new ModelBasedTesting();
+		ModelBasedTesting mbt = ModelBasedTesting.getInstance();
 		mbt.setCondition(new ReachedState("V2"));
 	}
 	
 	public void testFulfillment()
 	{
-		ModelBasedTesting mbt = new ModelBasedTesting();
+		ModelBasedTesting mbt = ModelBasedTesting.getInstance();
 		StopCondition condition = new ReachedState("V2");
 		mbt.setCondition(condition);
 		mbt.setGraph(graph);
@@ -63,7 +64,7 @@ public class ReachedStateTest extends TestCase {
 
 	public void testIsFulfilled()
 	{
-		ModelBasedTesting mbt = new ModelBasedTesting();
+		ModelBasedTesting mbt = ModelBasedTesting.getInstance();
 		StopCondition condition = new ReachedState("V2");
 		mbt.setCondition(condition);
 		mbt.setGraph(graph);

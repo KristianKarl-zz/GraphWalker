@@ -5,37 +5,37 @@ import org.tigris.mbt.ModelBasedTesting;
 import org.tigris.mbt.Util;
 import org.tigris.mbt.conditions.ReachedRequirement;
 import org.tigris.mbt.conditions.StopCondition;
+import org.tigris.mbt.graph.Edge;
+import org.tigris.mbt.graph.Graph;
+import org.tigris.mbt.graph.Vertex;
 
-import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
-import edu.uci.ics.jung.graph.impl.DirectedSparseVertex;
-import edu.uci.ics.jung.graph.impl.SparseGraph;
-import edu.uci.ics.jung.utils.UserData;
 import junit.framework.TestCase;
 
 public class ReachedRequirementTest extends TestCase {
-	SparseGraph graph;
-	DirectedSparseVertex start;
-	DirectedSparseVertex v1;
-	DirectedSparseVertex v2;
-	DirectedSparseEdge e0;
-	DirectedSparseEdge e1;
+	Graph graph;
+	Vertex start;
+	Vertex v1;
+	Vertex v2;
+	Edge e0;
+	Edge e1;
 	
 	protected void setUp() throws Exception {
 		super.setUp();
-		graph = new SparseGraph();
+		ModelBasedTesting.getInstance().reset();
+		graph = new Graph();
 		
 		start = Util.addVertexToGraph(graph, "Start");
 		v1 = Util.addVertexToGraph(graph, "V1");
 		v2 = Util.addVertexToGraph(graph, "V2");
 
-		v1.setUserDatum(Keywords.REQTAG_KEY, "R1", UserData.SHARED);
-		v2.setUserDatum(Keywords.REQTAG_KEY, "R2", UserData.SHARED);
+		v1.setReqTagKey( "R1" );
+		v2.setReqTagKey( "R2" );
 
 		e0 = Util.addEdgeToGraph(graph, start, v1, "E0", null, null, null);
 		e1 = Util.addEdgeToGraph(graph, v1, v2, "E1", null, null, null);
 
-		e0.setUserDatum(Keywords.REQTAG_KEY, "R3", UserData.SHARED);
-		e1.setUserDatum(Keywords.REQTAG_KEY, "R4", UserData.SHARED);
+		e0.setReqTagKey( "R3" );
+		e1.setReqTagKey( "R4" );
 	}
 
 	protected void tearDown() throws Exception {
@@ -48,13 +48,13 @@ public class ReachedRequirementTest extends TestCase {
 
 	public void testConstructor()
 	{
-		ModelBasedTesting mbt = new ModelBasedTesting();
+		ModelBasedTesting mbt = ModelBasedTesting.getInstance();
 		mbt.setCondition(new ReachedRequirement("R4"));
 	}
 	
 	public void testFulfillment()
 	{
-		ModelBasedTesting mbt = new ModelBasedTesting();
+		ModelBasedTesting mbt = ModelBasedTesting.getInstance();
 		StopCondition condition = new ReachedRequirement("R4");
 		mbt.setCondition(condition);
 		mbt.setGraph(graph);
@@ -70,7 +70,7 @@ public class ReachedRequirementTest extends TestCase {
 
 	public void testIsFulfilled()
 	{
-		ModelBasedTesting mbt = new ModelBasedTesting();
+		ModelBasedTesting mbt = ModelBasedTesting.getInstance();
 		StopCondition condition = new ReachedRequirement("R4");
 		mbt.setCondition(condition);
 		mbt.setGraph(graph);
@@ -83,5 +83,4 @@ public class ReachedRequirementTest extends TestCase {
 		mbt.getNextStep();
 		assertEquals(true, condition.isFulfilled());
 	}
-
 }

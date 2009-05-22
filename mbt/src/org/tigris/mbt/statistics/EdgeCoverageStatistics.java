@@ -5,11 +5,10 @@ package org.tigris.mbt.statistics;
 
 import java.util.HashSet;
 
-import org.tigris.mbt.Util;
+import org.tigris.mbt.graph.AbstractElement;
+import org.tigris.mbt.graph.Edge;
+import org.tigris.mbt.graph.Graph;
 
-import edu.uci.ics.jung.graph.impl.AbstractElement;
-import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
-import edu.uci.ics.jung.graph.impl.SparseGraph;
 
 /**
  * @author Johan Tejle
@@ -18,21 +17,21 @@ import edu.uci.ics.jung.graph.impl.SparseGraph;
 public class EdgeCoverageStatistics extends Statistics {
 
 	private int max;
-	private HashSet usedEdges;
+	private HashSet<String> usedEdges;
 	/**
 	 * 
 	 */
-	public EdgeCoverageStatistics( SparseGraph model) {
+	public EdgeCoverageStatistics( Graph model) {
 		max = model.getEdges().size();
-		usedEdges = new HashSet();
+		usedEdges = new HashSet<String>();
 	}
 	
 	/* (non-Javadoc)
 	 * @see org.tigris.mbt.statistics.Statistics#addProgress(edu.uci.ics.jung.graph.impl.AbstractElement)
 	 */
 	public void addProgress(AbstractElement element) {
-		if(element instanceof DirectedSparseEdge)
-			usedEdges.add(Util.getCompleteName(element));
+		if(element instanceof Edge)
+			usedEdges.add( element.toString() );
 	}
 
 	/* (non-Javadoc)

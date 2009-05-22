@@ -1,13 +1,18 @@
 package org.tigris.mbt;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import javax.xml.ws.Endpoint;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -38,7 +43,7 @@ import org.apache.log4j.Logger;
  * <pre>java -jar mbt.jar xml -f testcase.xml</pre><br>
  *
  */
-public class CLI 
+public class CLI
 {
 	public static class VerboseStatisticsLogger extends Thread
 	{
@@ -59,13 +64,14 @@ public class CLI
 	private ModelBasedTesting mbt = null;
 	private Timer timer = null;
 	private Options opt = new Options();
+	private static Endpoint endpoint = null;
 
 	public CLI(){}
 	
-	private ModelBasedTesting getMbt() 
+	ModelBasedTesting getMbt() 
 	{
 		if(mbt == null)
-			mbt = new ModelBasedTesting();
+			mbt = ModelBasedTesting.getInstance();
 		return mbt;
 	}
 
@@ -79,7 +85,6 @@ public class CLI
 	public static void main(String[] args)
 	{
 		CLI cli = new CLI();
-		//if(args.length >= 0)return;
 		Thread shutDownThread = new CLI.VerboseStatisticsLogger(cli.getMbt());
 		try 
 		{
@@ -92,6 +97,7 @@ public class CLI
 		try
 		{
 			cli.run( args );
+			endpoint = cli.GetEndpoint();
 		}
 		catch ( Exception e )
 		{
@@ -151,6 +157,14 @@ public class CLI
 			else if ( args[ 0 ].equals( "xml" ) )
 			{
 				buildXmlCLI();
+			}
+			else if ( args[ 0 ].equals( "soap" ) )
+			{
+				buildSoapCLI();
+			}
+			else if ( args[ 0 ].equals( "gui" ) )
+			{
+				buildGuiCLI();
 			}
 			else if ( args[ 0 ].equals( "-v" ) || args[ 0 ].equals( "--version" ) )
 			{
@@ -220,6 +234,20 @@ public class CLI
 			{
 				RunCommandXml( cl );
 			}
+			/**
+			 *  Command: soap
+			 */
+			else if ( args[ 0 ].equals( "soap" ) )
+			{
+				RunCommandSoap( cl );
+			}
+			/**
+			 *  Command: gui
+			 */
+			else if ( args[ 0 ].equals( "gui" ) )
+			{
+				RunCommandGui( cl );
+			}
         }		
 		catch ( ArrayIndexOutOfBoundsException e )
         {
@@ -255,6 +283,8 @@ public class CLI
 		System.out.println( "    methods" );
 		System.out.println( "    merge" );
 		System.out.println( "    xml" );
+		System.out.println( "    soap" );
+		System.out.println( "    gui" );
 		System.out.println( "    source\n" );
 		System.out.println( "Type 'java -jar mbt.jar -v (--version)' for version information." );
 	}
@@ -300,6 +330,14 @@ public class CLI
 			buildXmlCLI();
 			header = "Setup mbt engine from xml.\n" +
 					"Will setup and execute an engine based on xml specified criterias.";
+		} else if(helpSection.equalsIgnoreCase("soap")){
+			buildSoapCLI();
+			header = "Run MBT as a Web Services (SOAP) server.\n" +
+					"To see the services, see the WSDL file at: http://localhost:8080/mbt-services?WSDL";
+		} else if(helpSection.equalsIgnoreCase("gui")){
+			buildGuiCLI();
+			header = "Run MBT in a GUI mode.\n" +
+					"All other commands are available in this mode.";
 		} else {
 			System.err.println( "Type 'java -jar mbt.jar help' for usage." );
 			return;
@@ -321,9 +359,9 @@ public class CLI
 	private String generateListOfValidStopConditions()
 	{
 		String list = "";
-		Set stopConditions = Keywords.getStopConditions();
-		for (Iterator i = stopConditions.iterator(); i.hasNext();) {
-			list += (String)i.next() + "\n";
+		Set<String> stopConditions = Keywords.getStopConditions();
+		for (Iterator<String> i = stopConditions.iterator(); i.hasNext();) {
+			list += i.next() + "\n";
 		}
 		return list;
 	}
@@ -331,9 +369,9 @@ public class CLI
 	private String generateListOfValidGenerators()
 	{
 		String list = "";
-		Set generators = Keywords.getGenerators();
-		for (Iterator i = generators.iterator(); i.hasNext();) {
-			list += (String)i.next() + "\n";
+		Set<String> generators = Keywords.getGenerators();
+		for (Iterator<String> i = generators.iterator(); i.hasNext();) {
+			list += i.next() + "\n";
 		}
 		return list;
 	}
@@ -374,6 +412,7 @@ public class CLI
 		opt.addOption( "t", "report-template", true, "Optional report template to use." );
 		opt.addOption( "r", "report-output", true, "Optional report filename to save report to." );
 		opt.addOption( "w", "weighted", false, "Use weighted values if they exists in the model, and the generator is RANDOM." );
+		opt.addOption( "d", "dry-run", false, "Will execute a dry-run of the model. Dialog will pop up for every edge and vertex." );
 	}
 
 	/**
@@ -467,6 +506,33 @@ public class CLI
 			              "that same file." )
                 .hasArg()
                 .create( "o" ) );
+		opt.addOption( "d", "dry-run", false, "Will execute a dry-run of the model. Dialog will pop up for every edge and vertex." );
+	}
+	
+	/**
+	 * Build the command soap command line parser
+	 */
+	private void buildSoapCLI() {
+		opt.addOption( OptionBuilder.withArgName( "file" )
+                .withDescription( "The xml file containing the mbt model and settings." )
+                .hasArg()
+                .create( "f" ) );
+		opt.addOption( OptionBuilder.withArgName( "interface" )
+                .withDescription( "The network interface to which mbt should bind to. " +
+                		"If not given, the default is 0.0.0.0" )
+                .hasArg()
+                .create( "i" ) );
+		opt.addOption( OptionBuilder.withArgName( "port" )
+                .withDescription( "The port to which mbt should listen to. " +
+                		"If not given, the default is 9090" )
+                .hasArg()
+                .create( "p" ) );
+	}
+	
+	/**
+	 * Build the command gui command line parser
+	 */
+	private void buildGuiCLI() {
 	}
 	
 	/**
@@ -474,18 +540,21 @@ public class CLI
 	 */
 	private void printVersionInformation()
 	{
-		System.out.println( "org.tigris.mbt version 2.0 (revision 573)\n" );
+		System.out.println( "org.tigris.mbt version 2.2 (revision 652) Beta 2\n" );
 		System.out.println( "org.tigris.mbt is open source software licensed under GPL" );
 		System.out.println( "The software (and it's source) can be downloaded from http://mbt.tigris.org/\n" );
 		System.out.println( "This package contains following software packages:" );
-		System.out.println( "  crimson-1.1.3.jar            http://xml.apache.org/crimson/" );
-		System.out.println( "  commons-collections-3.1.jar  http://jakarta.apache.org/commons/collections/" );
-		System.out.println( "  jdom-1.0.jar                 http://www.jdom.org/" );
-		System.out.println( "  log4j-1.2.8.jar              http://logging.apache.org/log4j/" );
-		System.out.println( "  commons-cli-1.1.jar          http://commons.apache.org/cli/" );
-		System.out.println( "  colt-1.2.jar                 http://dsd.lbl.gov/~hoschek/colt/" );
-		System.out.println( "  jung-1.7.6.jar               http://jung.sourceforge.net/" );
-		System.out.println( "  bsh-2.0b4.jar                http://www.beanshell.org/" );
+		System.out.println( "  crimson-1.1.3.jar              http://xml.apache.org/crimson/" );
+		System.out.println( "  commons-collections-3.2.1.jar  http://jakarta.apache.org/commons/collections/" );
+		System.out.println( "  jdom-1.0.jar                   http://www.jdom.org/" );
+		System.out.println( "  log4j-1.2.15.jar               http://logging.apache.org/log4j/" );
+		System.out.println( "  commons-cli-1.1.jar            http://commons.apache.org/cli/" );
+		System.out.println( "  colt-1.2.jar                   http://dsd.lbl.gov/~hoschek/colt/" );
+		System.out.println( "  jung-XXX-2.0.jar                 http://jung.sourceforge.net/" );
+		System.out.println( "  bsh-2.0b4.jar                  http://www.beanshell.org/" );
+		System.out.println( "  commons-configuration-1.5.jar  http://commons.apache.org/configuration/" );
+		System.out.println( "  commons-lang-2.4.jar           http://commons.apache.org/lang/" );
+		System.out.println( "  commons-logging-1.1.1.jar      http://commons.apache.org/logging/" );
 	}
 	
 	/**
@@ -496,7 +565,7 @@ public class CLI
 		/**
 		 * Get the model from the graphml file (or folder)
 		 */
-		if( helpNeeded("offline", !cl.hasOption( "f" ), "Missing the input graphml file (folder), See -f (--intput_graphml)") || 
+		if( helpNeeded("offline", !cl.hasOption( "f" ), "Missing the input graphml file (folder), See -f (--input_graphml)") || 
 			helpNeeded("offline", !cl.hasOption( "s" ), "A stop condition must be supplied, See option -s") || 
 			helpNeeded("offline", cl.hasOption( "t" ) && !cl.hasOption( "r" ), "A report output file must be set, See -t, when using a report template") || 
 			helpNeeded("offline", !cl.hasOption( "t" ) && cl.hasOption( "r" ), "A report template must be set, See -r, when using a report output file") || 
@@ -553,7 +622,7 @@ public class CLI
 				{
 					public void run() 
 					{
-						logger.info( mbt.getStatisticsCompact() );
+						logger.info( getMbt().getStatisticsCompact() );
 					}
 				};
 			}
@@ -587,7 +656,7 @@ public class CLI
 		/**
 		 * Get the model from the graphml file (or folder)
 		 */
-		if( helpNeeded("online", !cl.hasOption( "f" ), "Missing the input graphml file (folder), See -f (--intput_graphml)") || 
+		if( helpNeeded("online", !cl.hasOption( "f" ), "Missing the input graphml file (folder), See -f (--input_graphml)") || 
 				helpNeeded("online", !cl.hasOption( "s" ), "A stop condition must be supplied, See option -s") || 
 				helpNeeded("online", cl.hasOption( "t" ) && !cl.hasOption( "r" ), "A report output file must be set, See -t, when using a report template") || 
 				helpNeeded("online", !cl.hasOption( "t" ) && cl.hasOption( "r" ), "A report template must be set, See -r, when using a report output file") || 
@@ -627,6 +696,11 @@ public class CLI
 		 */
         getMbt().enableBacktrack( cl.hasOption( "b" ) );
 
+        /**
+		 * Set dry-run
+		 */
+        getMbt().setDryRun( cl.hasOption( "d" ) );
+
 		if( cl.hasOption( "o" ) )
 		{
 			long seconds = Integer.valueOf( cl.getOptionValue( "o" ) ).longValue();
@@ -654,7 +728,7 @@ public class CLI
 				{
 					public void run() 
 					{
-						logger.info( mbt.getStatisticsCompact() );
+						logger.info( getMbt().getStatisticsCompact() );
 					}
 				};
 			}
@@ -665,6 +739,10 @@ public class CLI
 		if( cl.hasOption( "c" ) )
 		{
 			getMbt().executePath( cl.getOptionValue( "c" ) );
+		}
+		else if( cl.hasOption( "d" ) )
+		{
+			getMbt().executePath( (String)null );
 		}
 		else
 		{
@@ -696,7 +774,7 @@ public class CLI
 	 */
 	private void RunCommandSource( CommandLine cl )
 	{
-		if( helpNeeded("source", !cl.hasOption( "f" ), "Missing the input graphml file (folder), See -f (--intput_graphml)") || 
+		if( helpNeeded("source", !cl.hasOption( "f" ), "Missing the input graphml file (folder), See -f (--input_graphml)") || 
 			helpNeeded("source", !cl.hasOption( "t" ), "Missing the template file. See -t (--template)") ) 
 			return;
 
@@ -712,7 +790,7 @@ public class CLI
 	private void RunCommandRequirements( CommandLine cl )
 	{
 		if ( helpNeeded("requirements", !cl.hasOption( "f" ), 
-				"Missing the input graphml file (folder), See -f (--intput_graphml)") ) 
+				"Missing the input graphml file (folder), See -f (--input_graphml)") ) 
 			return;
 
 		getMbt().readGraph( cl.getOptionValue( "f" ) );
@@ -726,7 +804,7 @@ public class CLI
 	private void RunCommandMethods( CommandLine cl )
 	{
 		if ( helpNeeded("methods", !cl.hasOption( "f" ), 
-				"Missing the input graphml file (folder), See -f (--intput_graphml)") ) 
+				"Missing the input graphml file (folder), See -f (--input_graphml)") ) 
 			return;
 
 		getMbt().readGraph( cl.getOptionValue( "f" ) );
@@ -741,7 +819,7 @@ public class CLI
 	private void RunCommandMerge( CommandLine cl )
 	{
 		if ( helpNeeded("merge", !cl.hasOption( "f" ), 
-				"Missing the input graphml file (folder), See -f (--intput_graphml)") ) 
+				"Missing the input graphml file (folder), See -f (--input_graphml)") ) 
 			return;
 		
 		getMbt().readGraph( cl.getOptionValue( "f" ) );
@@ -755,9 +833,54 @@ public class CLI
 		if( helpNeeded("xml", !cl.hasOption( "f" ), "Missing the input xml file, See  option -f") ) 
 			return;
 
-		setMbt(Util.loadMbtFromXml( cl.getOptionValue( "f" ) ));
+        setMbt( Util.loadMbtFromXml( cl.getOptionValue( "f" ), cl.hasOption( "d" ) ) );
 		
-		if( cl.hasOption( "a" ) ) writeStatisticsVerbose( System.out );
+		if( cl.hasOption( "a" ) )
+		{
+			logger.info( getMbt().getStatisticsString() );
+			writeStatisticsVerbose( System.out );
+		}
+	}
+
+	/**
+	 * Run the soap command
+	 * @throws UnknownHostException 
+	 */
+	private void RunCommandSoap(CommandLine cl) throws UnknownHostException  {
+		String port = null;
+		String nicAddr = null;
+		if( cl.hasOption( "p" ) ) {
+			port = cl.getOptionValue( "p" );
+		}
+		else {
+			port =  Util.readWSPort();
+		}
+		
+		if( cl.hasOption( "i" ) ) {
+			nicAddr = Util.getInternetAddr( cl.getOptionValue( "i" ) ).getCanonicalHostName();
+		}
+		else {
+			nicAddr = "0.0.0.0";
+		}
+				
+		String wsURL = "http://" + nicAddr + ":" + port + "/mbt-services";
+		endpoint = Endpoint.publish( wsURL, new SoapServices( cl.getOptionValue( "f" ) ) );
+
+		if ( nicAddr.equals( "0.0.0.0" ) ) {
+			wsURL = wsURL.replace( "0.0.0.0", InetAddress.getLocalHost().getHostName() );
+		}
+		
+		System.out.println( "Now running as a SOAP server. For the WSDL file, see: " + wsURL + "?WSDL" );
+		System.out.println( "Press Ctrl+C to quit" );
+		System.out.println( "" );
+	}
+
+	/**
+	 * Run the gui command
+	 * @throws IOException 
+	 */
+	private void RunCommandGui(CommandLine cl) throws IOException {
+		new org.tigris.mbt.GUI.mbt();
 	}
 
 	private boolean helpNeeded(String module, boolean condition, String message)
@@ -769,5 +892,18 @@ public class CLI
 		}
 		return condition;
 	}
-}
 	
+	public Endpoint GetEndpoint()
+	{
+		return endpoint;
+	}
+	
+	public void StopSOAP()
+	{
+		if ( endpoint != null )
+		{
+		    logger.debug("Stopping the SOAP service");
+			endpoint.stop();
+		}
+	}
+}

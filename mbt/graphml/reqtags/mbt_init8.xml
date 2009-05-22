@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE MBTINIT SYSTEM "../../templates/mbt_setup.dtd" >
-<MBTINIT LOG-INTERVAL="1" >
+<MBTINIT LOG-INTERVAL="1" EXECUTOR="none">
   <MODEL PATH="graphml/reqtags/ExtendedMain.graphml"/>
   <CLASS PATH="lib/colt-1.2.jar"/>
   <GENERATOR TYPE="RANDOM">
