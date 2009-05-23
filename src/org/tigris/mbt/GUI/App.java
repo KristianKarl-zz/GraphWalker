@@ -598,8 +598,8 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 		toolBar.add(soapButton);
 		
 		centerOnVertexButton = makeNavigationCheckBoxButton("centerOnVertex", CENTERONVERTEX,
-                "Center the layouu on the current vertex",
-        		"Center on current state");
+                "Center the layout on the current vertex",
+        		"Center on current vertex");
 		toolBar.add(centerOnVertexButton);
 		
 		
