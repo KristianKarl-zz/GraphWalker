@@ -3,6 +3,7 @@ package org.tigris.mbt.GUI;
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Paint;
@@ -14,16 +15,22 @@ import java.awt.event.ActionListener;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.io.File;
+import java.lang.reflect.Constructor;
 import java.net.InetAddress;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
@@ -44,13 +51,21 @@ import org.tigris.mbt.graph.Edge;
 import org.tigris.mbt.graph.Graph;
 import org.tigris.mbt.graph.Vertex;
 
+import edu.uci.ics.jung.algorithms.layout.CircleLayout;
+import edu.uci.ics.jung.algorithms.layout.FRLayout;
+import edu.uci.ics.jung.algorithms.layout.ISOMLayout;
+import edu.uci.ics.jung.algorithms.layout.KKLayout;
+import edu.uci.ics.jung.algorithms.layout.SpringLayout;
+import edu.uci.ics.jung.algorithms.layout.SpringLayout2;
 import edu.uci.ics.jung.algorithms.layout.StaticLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.visualization.Layer;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.DefaultModalGraphMouse;
+import edu.uci.ics.jung.visualization.layout.LayoutTransition;
 import edu.uci.ics.jung.visualization.picking.ShapePickSupport;
 import edu.uci.ics.jung.visualization.renderers.Renderer;
+import edu.uci.ics.jung.visualization.util.Animator;
 
 
 public class App extends JFrame implements ActionListener, MbtEvent  {
@@ -73,7 +88,7 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 	private Layout<Vertex, Edge> layout;
 	private File xmlFile;
 	private ExecuteMBT executeMBT = null;
-	
+
 	public File getXmlFile() {
 		return xmlFile;
 	}
@@ -106,7 +121,21 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 	static private AppEvent appEvent = null;
 	static private ChangeEvent changeEvent = null;
 	
-	public static void SetAppEventNotifier( AppEvent event )
+    @SuppressWarnings("unchecked")
+	private static Class<? extends Layout>[] getCombos()
+    {
+        List<Class<? extends Layout>> layouts = new ArrayList<Class<? extends Layout>>();
+        layouts.add(StaticLayout.class);
+        layouts.add(KKLayout.class);
+        layouts.add(FRLayout.class);
+        layouts.add(CircleLayout.class);
+        layouts.add(SpringLayout.class);
+        layouts.add(SpringLayout2.class);
+        layouts.add(ISOMLayout.class);
+        return layouts.toArray(new Class[0]);
+    }
+
+    public static void SetAppEventNotifier( AppEvent event )
     {
 		log.debug( "AppEvent is set using: " + event );
 		appEvent = event;
@@ -474,6 +503,57 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 		return button;
 	}
 
+	private static final class LayoutChooser implements ActionListener
+    {
+        private final JComboBox jcb;
+        private final VisualizationViewer<Vertex,Edge> vv;
+
+        private LayoutChooser(JComboBox jcb, VisualizationViewer<Vertex,Edge> vv)
+        {
+            super();
+            this.jcb = jcb;
+            this.vv = vv;
+        }
+
+        @SuppressWarnings("unchecked")
+		public void actionPerformed(ActionEvent arg0)
+        {
+        	Graph graph = null;
+    		if ( ModelBasedTesting.getInstance().getGraph() == null )
+    			graph = new Graph();
+    		else
+    			graph = ModelBasedTesting.getInstance().getGraph();
+
+            Object[] constructorArgs = 
+                { graph };
+
+            Class<? extends Layout<Vertex,Edge>> layoutC = 
+                (Class<? extends Layout<Vertex,Edge>>) jcb.getSelectedItem();
+            try
+            {
+                Constructor<? extends Layout<Vertex, Edge>> constructor = layoutC
+                        .getConstructor(new Class[] {edu.uci.ics.jung.graph.Graph.class});
+                Object o = constructor.newInstance(constructorArgs);
+                Layout<Vertex,Edge> l = (Layout<Vertex,Edge>) o;
+                l.setInitializer(vv.getGraphLayout());
+                l.setSize(vv.getSize());
+                
+				LayoutTransition<Vertex,Edge> lt =
+					new LayoutTransition<Vertex,Edge>(vv, vv.getGraphLayout(), l);
+				Animator animator = new Animator(lt);
+				animator.start();
+				vv.getRenderContext().getMultiLayerTransformer().setToIdentity();
+				vv.repaint();
+                
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+        }
+    }
+	 
+	@SuppressWarnings({ "unchecked", "serial", "synthetic-access" })
 	public void addButtons(JToolBar toolBar) {
 
 		loadButton = makeNavigationButton("open", LOAD,
@@ -505,6 +585,22 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
                 "Run MBT in SOAP(Web Services) mode",
         		"Soap");
 		toolBar.add(soapButton);
+		
+        Class[] combos = getCombos();
+        final JComboBox jcb = new JComboBox(combos);
+        // use a renderer to shorten the layout name presentation
+        jcb.setRenderer(new DefaultListCellRenderer() {
+            public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                String valueString = value.toString();
+                valueString = valueString.substring(valueString.lastIndexOf('.')+1);
+                return super.getListCellRendererComponent(list, valueString, index, isSelected,
+                        cellHasFocus);
+            }
+        });
+        jcb.addActionListener(new LayoutChooser(jcb, getVv()));
+        jcb.setSelectedItem(StaticLayout.class);
+
+        toolBar.add( jcb );
 	}
 
 	public void createPanelGraph() {
