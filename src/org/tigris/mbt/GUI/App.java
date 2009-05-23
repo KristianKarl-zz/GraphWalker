@@ -107,6 +107,7 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 	private JButton pauseButton;
 	private JButton nextButton;
 	private JCheckBox soapButton;
+	private JCheckBox centerOnVertexButton;
 	
 	public Status status = new Status();
 
@@ -117,6 +118,7 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
     static final private String PAUSE = "pause";
     static final private String NEXT = "next";
     static final private String SOAP = "soap";
+    static final private String CENTERONVERTEX = "centerOnVertex";
 
 	static private AppEvent appEvent = null;
 	static private ChangeEvent changeEvent = null;
@@ -162,8 +164,12 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 	}
 
 	public void getNextEvent() {
-		updateUI();
-		getVv().stateChanged(changeEvent);
+		if ( centerOnVertexButton.isSelected() )
+			centerOnVertex();
+		else {
+			updateUI();
+			getVv().stateChanged(changeEvent);
+		}
 	}
 	
     public void actionPerformed(ActionEvent e) {
@@ -184,6 +190,9 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 	    } else if (SOAP.equals(cmd)) { // soap checkbox clicked
 	    	if ( xmlFile != null && xmlFile.canRead() )
 	    		reload();
+	    } else if (CENTERONVERTEX.equals(cmd)) { // ceneter on vertex checkbox clicked
+	    	if ( centerOnVertexButton.isSelected() )
+	    		centerOnVertex();
 	    }
     }
 
@@ -262,7 +271,8 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 			ModelBasedTesting.getInstance().setUseGUI();
 			Util.loadMbtFromXml( xmlFile.getAbsolutePath() );
 			setTitle( "Model-Based Testing - " + xmlFile.getName() );
-			centerOnVertex();
+			if ( centerOnVertexButton.isSelected() )
+				centerOnVertex();
 		}
 		(executeMBT = new ExecuteMBT()).execute();
 	}
@@ -303,7 +313,8 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 		setCursor( Cursor.getDefaultCursor() );
 		status.setPaused();
 		setButtons();
-		centerOnVertex();
+		if ( centerOnVertexButton.isSelected() )
+			centerOnVertex();
 	}
 	
 	public void centerOnVertex() {
@@ -585,6 +596,12 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
                 "Run MBT in SOAP(Web Services) mode",
         		"Soap");
 		toolBar.add(soapButton);
+		
+		centerOnVertexButton = makeNavigationCheckBoxButton("centerOnVertex", CENTERONVERTEX,
+                "Center the layouu on the current vertex",
+        		"Center on current state");
+		toolBar.add(centerOnVertexButton);
+		
 		
         Class[] combos = getCombos();
         final JComboBox jcb = new JComboBox(combos);
