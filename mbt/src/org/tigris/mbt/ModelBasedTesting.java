@@ -694,7 +694,7 @@ public class ModelBasedTesting
 		try {
 			clsClass = Class.forName(strClassName);
 		} catch (ClassNotFoundException e) {
-			String str = e.getMessage() + "\nProblem occured when loading class: " + strClassName + ".\n Current class path is: " + System.getProperty("java.class.path");
+			String str = "Could not load class: " + strClassName + ".\n Current class path is: " + System.getProperty("java.class.path");
 			logger.error( str );
 			throw new RuntimeException( str, e);
 		} catch (NoClassDefFoundError e) {
