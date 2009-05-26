@@ -694,7 +694,17 @@ public class ModelBasedTesting
 		try {
 			clsClass = Class.forName(strClassName);
 		} catch (ClassNotFoundException e) {
-	        throw new RuntimeException("Cannot locate execution class: " + strClassName + ".\n Current class path is: " + System.getProperty("java.class.path"), e);
+			String str = e.getMessage() + "\nProblem occured when loading class: " + strClassName + ".\n Current class path is: " + System.getProperty("java.class.path");
+			logger.error( str );
+			throw new RuntimeException( str, e);
+		} catch (NoClassDefFoundError e) {
+			String str = "Could not load class: " + e.getMessage() + "\nProblem occured when loading class: " + strClassName + ".\n Current class path is: " + System.getProperty("java.class.path");
+			logger.error( str );
+			throw new RuntimeException( str, e);
+		} catch (Exception e) {
+			String str = "Exception: " + e.getMessage() + "\nProblem occured when loading class: " + strClassName + ".\n Current class path is: " + System.getProperty("java.class.path");
+			logger.error( str );
+			throw new RuntimeException( str, e);
 		}
 		executePath( clsClass, null );
 	}
