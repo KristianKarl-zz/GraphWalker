@@ -29,6 +29,7 @@ public class SoapServices {
 			this.xmlFile = xmlFile; 
 			Util.loadMbtAsWSFromXml( this.xmlFile );
 		}
+		Reset();
 	}
 
 	public String GetDataValue( String data ) {
@@ -161,7 +162,7 @@ public class SoapServices {
     		System.err.println( e.getMessage() );
     		retValue = false;	
 		}
-		hardStop = false;
+		Reset();
 		logger.debug( "SOAP service reload returning: " + retValue );
 		return retValue;
 	}
@@ -184,7 +185,7 @@ public class SoapServices {
     		System.err.println( e.getMessage() );
     		retValue = false;	
 		}
-		hardStop = false;
+		Reset();
 		logger.debug( "SOAP service load returning: " + retValue );
 		return retValue;
 	}
@@ -193,5 +194,10 @@ public class SoapServices {
 		logger.debug( "SOAP service getStatistics" );
 		logger.debug( "SOAP service getStatistics returning: " + ModelBasedTesting.getInstance().getStatisticsString() );
 		return ModelBasedTesting.getInstance().getStatisticsString();
+	}
+	
+	private void Reset() {
+		hardStop = false;
+		stepPair.clear();		
 	}
 }
