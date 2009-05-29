@@ -20,6 +20,8 @@ package org.tigris.mbt;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -875,6 +877,13 @@ public class ModelBasedTesting
 				else {
 					logger.error("InvocationTargetException for: " + getMachine().getCurrentState() + " : " + e.getMessage() );
 				}
+				
+				StringWriter sw = new StringWriter();
+			    PrintWriter pw = new PrintWriter( sw );
+			    e.printStackTrace( pw );
+			    pw.close();	    		    
+				logger.error( sw.toString() );
+
 				throw new RuntimeException("InvocationTargetException.", e);
 			} 
 			catch ( NoSuchMethodException e ) {
