@@ -164,11 +164,10 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 	}
 
 	public void getNextEvent() {
-		if ( centerOnVertexButton.isSelected() )
+		updateUI();
+		getVv().stateChanged(changeEvent);
+		if ( centerOnVertexButton.isSelected() ) {
 			centerOnVertex();
-		else {
-			updateUI();
-			getVv().stateChanged(changeEvent);
 		}
 	}
 	
