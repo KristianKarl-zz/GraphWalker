@@ -70,6 +70,7 @@ public class ModelBasedTesting
 	private StopCondition condition;
 	private PathGenerator generator;
 	private String[] template;
+	private boolean useStatisticsManager = false;
 	private boolean backtracking = false;
 	private boolean runRandomGeneratorOnce = false;
 	private boolean dryRun = false;
@@ -590,13 +591,17 @@ public class ModelBasedTesting
 				
 				if ( stepPair.size() == 1 )
 				{
-					logExecution( getMachine().getLastEdge(), addInfo );
-					getStatisticsManager().addProgress( getMachine().getLastEdge() );
+					logExecution( getMachine().getLastEdge(), addInfo );			
+					if ( isUseStatisticsManager() ) {
+						getStatisticsManager().addProgress( getMachine().getLastEdge() );
+					}
 				}
 				else
 				{
 					logExecution( getMachine().getCurrentState(), addInfo );
-					getStatisticsManager().addProgress( getMachine().getCurrentState() );
+					if ( isUseStatisticsManager() ) {
+						getStatisticsManager().addProgress( getMachine().getCurrentState() );
+					}
 				}
 
 				break;
@@ -666,11 +671,15 @@ public class ModelBasedTesting
 			
 			if ( stepPair[0].trim()!= "" ) {
 				logExecution( getMachine().getLastEdge(), "" );
-				getStatisticsManager().addProgress(getMachine().getLastEdge());
+				if ( isUseStatisticsManager() ) {
+					getStatisticsManager().addProgress(getMachine().getLastEdge());
+				}
 			}
 			if ( stepPair[1].trim()!="" ) {
 				logExecution( getMachine().getCurrentState(), "" );
-				getStatisticsManager().addProgress(getMachine().getCurrentState());
+				if ( isUseStatisticsManager() ) {
+					getStatisticsManager().addProgress(getMachine().getCurrentState());
+				}
 			}
 
 		}
@@ -740,7 +749,9 @@ public class ModelBasedTesting
 				try {
 					System.in.read();
 				} catch (IOException e) {}
-				getStatisticsManager().addProgress(getMachine().getLastEdge());
+				if ( isUseStatisticsManager() ) {
+					getStatisticsManager().addProgress(getMachine().getLastEdge());
+				}
 				
 				logExecution( getMachine().getCurrentState(), "" );
 				System.out.println( "Do vertex: " + getMachine().getCurrentState() );
@@ -748,7 +759,9 @@ public class ModelBasedTesting
 				try {
 					System.in.read();
 				} catch (IOException e) {}
-				getStatisticsManager().addProgress(getMachine().getCurrentState());
+				if ( isUseStatisticsManager() ) {
+					getStatisticsManager().addProgress(getMachine().getCurrentState());
+				}
 			}	
 			return;
 		}
@@ -787,11 +800,15 @@ public class ModelBasedTesting
 			try {				
 				logExecution( getMachine().getLastEdge(), "" );
 				executeMethod(clsClass, objInstance, stepPair[ 0 ], true );
-				getStatisticsManager().addProgress(getMachine().getLastEdge());
+				if ( isUseStatisticsManager() ) {
+					getStatisticsManager().addProgress(getMachine().getLastEdge());
+				}
 				
 				logExecution( getMachine().getCurrentState(), "" );
 				executeMethod(clsClass, objInstance, stepPair[ 1 ], false );
-				getStatisticsManager().addProgress(getMachine().getCurrentState());
+				if ( isUseStatisticsManager() ) {
+					getStatisticsManager().addProgress(getMachine().getCurrentState());
+				}
 			} catch (IllegalArgumentException e) {
 				throw new RuntimeException("Illegal argument used.", e);
 			} catch (SecurityException e) {
@@ -888,13 +905,17 @@ public class ModelBasedTesting
 			{
 				out.println( stepPair[0] );
 				logExecution( getMachine().getLastEdge(), "" );
-				getStatisticsManager().addProgress(getMachine().getLastEdge());
+				if ( isUseStatisticsManager() ) {
+					getStatisticsManager().addProgress(getMachine().getLastEdge());
+				}
 			}
 			if(stepPair[1].trim()!="")
 			{
 				out.println( stepPair[1] );
 				logExecution( getMachine().getCurrentState(), "" );
-				getStatisticsManager().addProgress(getMachine().getCurrentState());
+				if ( isUseStatisticsManager() ) {
+					getStatisticsManager().addProgress(getMachine().getCurrentState());
+				}
 			}
 
 		}
@@ -936,5 +957,15 @@ public class ModelBasedTesting
 			return getMachine().getCurrentState();
 		logger.warn( "Trying to retrieve current state without specifying machine" );
 		return null;
+	}
+
+
+	public boolean isUseStatisticsManager() {
+		return useStatisticsManager;
+	}
+
+
+	public void setUseStatisticsManager(boolean useStatisticsManager) {
+		this.useStatisticsManager = useStatisticsManager;
 	}
 }
