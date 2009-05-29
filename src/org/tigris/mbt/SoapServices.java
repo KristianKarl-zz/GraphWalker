@@ -107,11 +107,15 @@ public class SoapServices {
 	
 			if ( stepPair.size() == 1 ) {
 				ModelBasedTesting.getInstance().logExecution( ModelBasedTesting.getInstance().getMachine().getLastEdge(), addInfo );
-				ModelBasedTesting.getInstance().getStatisticsManager().addProgress( ModelBasedTesting.getInstance().getMachine().getLastEdge() );
+				if ( ModelBasedTesting.getInstance().isUseStatisticsManager() ) {
+					ModelBasedTesting.getInstance().getStatisticsManager().addProgress( ModelBasedTesting.getInstance().getMachine().getLastEdge() );
+				}
 			}
 			else {
 				ModelBasedTesting.getInstance().logExecution( ModelBasedTesting.getInstance().getMachine().getCurrentState(), addInfo );
-				ModelBasedTesting.getInstance().getStatisticsManager().addProgress( ModelBasedTesting.getInstance().getMachine().getCurrentState() );
+				if ( ModelBasedTesting.getInstance().isUseStatisticsManager() ) {
+					ModelBasedTesting.getInstance().getStatisticsManager().addProgress( ModelBasedTesting.getInstance().getMachine().getCurrentState() );
+				}
 			}
 			return value;
 		}

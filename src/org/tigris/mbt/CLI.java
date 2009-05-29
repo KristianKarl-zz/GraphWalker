@@ -604,6 +604,7 @@ public class CLI
 			TimerTask logTask;
 			if(cl.hasOption( "t" ) && cl.hasOption( "r" ))
 			{
+				getMbt().setUseStatisticsManager( true );
 				getMbt().getStatisticsManager().setReportTemplate(cl.getOptionValue('t'));
 				final String reportName = cl.getOptionValue('r');
 				logTask = new TimerTask()	
@@ -710,6 +711,7 @@ public class CLI
 			TimerTask logTask;
 			if(cl.hasOption( "t" ) && cl.hasOption( "r" ))
 			{
+				getMbt().setUseStatisticsManager( true );
 				getMbt().getStatisticsManager().setReportTemplate(cl.getOptionValue('t'));
 				final String reportName = cl.getOptionValue('r');
 				logTask = new TimerTask()	
