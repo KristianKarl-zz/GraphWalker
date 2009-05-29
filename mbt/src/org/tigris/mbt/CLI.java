@@ -261,7 +261,7 @@ public class CLI
 		    PrintWriter pw = new PrintWriter( sw );
 		    e.printStackTrace( pw );
 		    pw.close();	    		    
-			logger.debug( sw.toString() );
+			logger.error( sw.toString() );
 			System.err.println( e.getMessage() );
         	System.err.println( "Type 'java -jar mbt.jar help " + args[ 0 ] + "' for help." );
         }
