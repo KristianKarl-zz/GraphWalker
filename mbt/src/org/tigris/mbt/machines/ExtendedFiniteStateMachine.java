@@ -23,6 +23,7 @@ import org.tigris.mbt.graph.Graph;
 import bsh.EvalError;
 import bsh.Interpreter;
 import bsh.NameSpace;
+import bsh.Primitive;
 import bsh.UtilEvalError;
 
 public class ExtendedFiniteStateMachine extends FiniteStateMachine {
@@ -93,18 +94,19 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 		Hashtable<String, Object> retur = new Hashtable<String, Object>();
 		if(!hasInternalVariables()) return retur;
 
+		int i = 0;
+		NameSpace ns = interpreter.getNameSpace();
+		String[] variableNames = interpreter.getNameSpace().getVariableNames();
 		try {
-			NameSpace ns = interpreter.getNameSpace();
-			String[] variableNames = interpreter.getNameSpace().getVariableNames();
-			for(int  i=0; i<variableNames.length; i++)
+			for ( ; i < variableNames.length; i++ )
 			{
-				if(!variableNames[i].equals("bsh"))
+				if ( !variableNames[i].equals( "bsh" ) )
 				{
-					retur.put(variableNames[i], ns.getVariable(variableNames[i]));
+					retur.put(variableNames[i], Primitive.unwrap( ns.getVariable(variableNames[i])));
 				}
 			}
-		} catch (UtilEvalError e) {
-			throw new RuntimeException( "Malformed model data: " + e.getMessage() );
+		} catch ( UtilEvalError e ) {
+			throw new RuntimeException( "Malformed model data: " + variableNames[i] + "\nBeanShell error message: '" + e.getMessage() + "'" ); 
 		}
 		return retur;
 	}
@@ -167,7 +169,7 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 					interpreter.eval(getAction(edge));
 					System.setOut(ps);
 				} catch (EvalError e) {
-					throw new RuntimeException( "Malformed action sequence: " + edge +" : "+ e.getMessage() );
+					throw new RuntimeException( "Malformed action sequence\n\t" + edge + "\n\tAction sequence: " + edge.getActionsKey() + "\n\tBeanShell error message: '" + e.getMessage() + "'" );
 				}
 			}
 		}

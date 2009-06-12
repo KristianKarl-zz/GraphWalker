@@ -52,7 +52,7 @@ public class AccessableEdgeFilter
 		} 
 		catch (EvalError e) 
 		{
-			throw new RuntimeException( "Malformed Edge guard: " + edge + " " + e.getMessage() );
+			throw new RuntimeException( "Malformed Edge guard\n\t" + edge + "\n\tGuard: " + edge.getGuardKey() + "\n\tBeanShell error message: '" + e.getMessage() + "'" );
 		}
 	}
 
