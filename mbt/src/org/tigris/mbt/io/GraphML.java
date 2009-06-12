@@ -421,11 +421,15 @@ public class GraphML extends AbstractModelHandler
 							label = m.group( 1 );
 							
 							// Look for a Guard
-							Pattern firstLinePattern = Pattern.compile( "\\[(.*)\\]", Pattern.MULTILINE );
+							Pattern firstLinePattern = Pattern.compile( "\\[(.*)\\]\\s*/|\\[(.*)\\]\\s*$", Pattern.MULTILINE );
 							Matcher firstLineMatcher = firstLinePattern.matcher( label );
 							if ( firstLineMatcher.find() )
 							{
+								// Since we have 2 groups in the pattern, we have to check which one is valid.
 								String guard = firstLineMatcher.group( 1 );
+								if ( guard == null ) {
+									guard = firstLineMatcher.group( 2 );
+								}
 								e.setGuardKey( guard );
 								logger.debug( " Found guard = '" + guard + "' for edge id: " + edgeLabel.getQualifiedName() );
 							}							
