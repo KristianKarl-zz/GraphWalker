@@ -211,6 +211,9 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 	}
 
 	private void outPut() {
+		if ( ModelBasedTesting.getInstance().getMachine() == null ) {
+			return;
+		}
 		statisticsTextArea.setText( ModelBasedTesting.getInstance().getStatisticsString() );
 		
 		variablesTextArea.setText( ModelBasedTesting.getInstance().getStatisticsString());
