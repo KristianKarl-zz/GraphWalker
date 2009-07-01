@@ -435,17 +435,13 @@ public class GraphML extends AbstractModelHandler
 							}							
 
 							// Look for Actions
-							if(label.indexOf("/")>0)
+							Pattern actionPattern = Pattern.compile( "/\\s*(.*)\\s*$", Pattern.MULTILINE );
+							Matcher actionMatcher = actionPattern.matcher( label );
+							if ( actionMatcher.find() )
 							{
-								String actionPart = label.substring(label.indexOf("/")+1);
-								firstLinePattern = Pattern.compile( ".*$", Pattern.MULTILINE );
-								firstLineMatcher = firstLinePattern.matcher( actionPart );
-								if ( firstLineMatcher.find() )
-								{
-									String actions = firstLineMatcher.group( 0 ).trim();
-									e.setActionsKey( actions );
-									logger.debug( " Found actions: '" + actions + "' for edge id: " + edgeLabel.getQualifiedName() );
-								}
+								String actions = actionMatcher.group( 1 );
+								e.setActionsKey( actions );
+								logger.debug( " Found actions: '" + actions + "' for edge id: " + edgeLabel.getQualifiedName() );
 							}
 							
 							// Look for the Label and Parameter
