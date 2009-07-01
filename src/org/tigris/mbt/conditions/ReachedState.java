@@ -1,6 +1,8 @@
 package org.tigris.mbt.conditions;
 
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.tigris.mbt.Util;
 import org.tigris.mbt.graph.Vertex;
@@ -52,10 +54,14 @@ public class ReachedState extends StopCondition {
 			if(currentState.contains("/"))
 			{
 				currentSubState = currentState.split("/",2)[1];
+				Pattern actionPattern = Pattern.compile( this.subState );
+				Matcher actionMatcher = actionPattern.matcher( currentSubState );
+				if ( actionMatcher.find() )
+				{
+					return 1;
+				}
 			} 
-			double maxDiff = Math.max(currentSubState.length(), this.subState.length());
-			double substateFulfilment = (double)1 - ((double)Util.getLevenshteinDistance(currentSubState, this.subState)) / maxDiff;
-			return (substateFulfilment + ((double)1)-( (double)distance / (double)maxDistance))/2;
+			return 0;
 		}
 		
 		return ((double)1)-( (double)distance / (double)maxDistance);
