@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintStream;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -120,8 +121,14 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 	public String getDataValue( String dataName ) throws InvalidDataException
 	{
 		Hashtable<String, Object> dataTable = getCurrentData();
-		if(dataTable.containsKey(dataName))
-			return dataTable.get(dataName).toString();
+		if( dataTable.containsKey( dataName ) ) {
+			if( dataTable.get(dataName) instanceof Object[] ) {
+				return Arrays.deepToString( (Object[]) dataTable.get(dataName) );				
+			}
+			else {
+				return dataTable.get(dataName).toString();
+			}
+		}
 		throw new InvalidDataException( "The data name: '" + dataName + "', does not exist in the namespace." );
 	}
 
@@ -146,12 +153,19 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 	{
 		String retur = "";
 		
-		Hashtable<String, Object> data = getCurrentData();
-		Enumeration<String> e = data.keys();
+		Hashtable<String, Object> dataTable = getCurrentData();
+		Enumeration<String> e = dataTable.keys();
 		while(e.hasMoreElements())
 		{
 			String key = (String) e.nextElement();
-			retur +=  key + "=" + data.get(key) + ";";
+			String data = "";
+			if( dataTable.get(key) instanceof Object[] ) {
+				data = Arrays.deepToString( (Object[]) dataTable.get(key) );				
+			}
+			else {
+				data = dataTable.get(key).toString();
+			}
+			retur +=  key + "=" + data + ";";
 		}
 		return retur;
 	}
