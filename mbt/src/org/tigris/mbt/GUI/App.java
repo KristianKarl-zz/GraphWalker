@@ -272,7 +272,7 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 			log.debug( "Loading model" );
 			ModelBasedTesting.getInstance().setUseGUI();
 			Util.loadMbtFromXml( xmlFile.getAbsolutePath() );
-			setTitle( "Model-Based Testing - " + xmlFile.getName() );
+			setTitle( "Model-Based Testing 2.2 Beta 8 - " + xmlFile.getName() );
 			if ( centerOnVertexButton.isSelected() )
 				centerOnVertex();
 		}
@@ -631,7 +631,7 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 	}
 
 	public void init() {
-		setTitle("Model-Based Testing");
+		setTitle("Model-Based Testing 2.2 Beta 8");
 		setBackground(Color.gray);
 
 		JPanel topPanel = new JPanel();
