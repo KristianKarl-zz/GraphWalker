@@ -80,7 +80,7 @@ public class SoapServices {
 			String value = "";
 			
 			if ( ModelBasedTesting.getInstance().isUseGUI() ) {
-				App.getInstance().status.setNext();
+				App.getInstance().run();					
 			}
 			
 			if ( !ModelBasedTesting.getInstance().hasNextStep() && ( stepPair.size() == 0 ) ) {
@@ -122,7 +122,7 @@ public class SoapServices {
 		finally
 		{
 			if ( ModelBasedTesting.getInstance().isUseGUI() ) {
-				App.getInstance().status.setPaused();
+				App.getInstance().pause();					
 			}
 		}
 	}
