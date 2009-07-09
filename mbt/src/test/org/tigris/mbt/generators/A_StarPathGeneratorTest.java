@@ -85,7 +85,7 @@ public class A_StarPathGeneratorTest extends TestCase {
 	public void test_EFSM_StateStop()
     {
 		PathGenerator pathGenerator = new A_StarPathGenerator();
-		pathGenerator.setStopCondition(new ReachedState("V1/x=3;y=[2, 3, 3];") );
+		pathGenerator.setStopCondition(new ReachedState("V1/x=3;y=\\[2, 3, 3\\];") );
 		pathGenerator.setMachine(new ExtendedFiniteStateMachine(graph));
 		
 		String[] stepPair;
