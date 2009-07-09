@@ -9,6 +9,7 @@ import javax.jws.WebService;
 
 import org.apache.log4j.Logger;
 import org.tigris.mbt.GUI.App;
+import org.tigris.mbt.GUI.Status;
 import org.tigris.mbt.exceptions.InvalidDataException;
 
 @WebService
@@ -79,10 +80,6 @@ public class SoapServices {
 		{
 			String value = "";
 			
-			if ( ModelBasedTesting.getInstance().isUseGUI() ) {
-				App.getInstance().run();					
-			}
-			
 			if ( !ModelBasedTesting.getInstance().hasNextStep() && ( stepPair.size() == 0 ) ) {
 				return value;
 			}
@@ -122,7 +119,7 @@ public class SoapServices {
 		finally
 		{
 			if ( ModelBasedTesting.getInstance().isUseGUI() ) {
-				App.getInstance().pause();					
+				App.getInstance().setButtons();					
 			}
 		}
 	}

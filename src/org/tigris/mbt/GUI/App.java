@@ -266,7 +266,8 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 		}
 		else if ( status.isRunning() || 
 				  status.isNext() ||
-				  status.isExecutingJavaTest() ) {
+				  status.isExecutingJavaTest() ||
+				  status.isExecutingSoapTest() ) {
 			loadButton.setEnabled(false);
 			reloadButton.setEnabled(false);
 			runButton.setEnabled(false);
@@ -279,16 +280,19 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 	@SuppressWarnings("synthetic-access")
 	private void loadModel() {
 		setWaitCursor();
-		status.unsetState( Status.stopped );
-		status.setState( Status.paused );
+		status.reset();
 		if ( executeMBT != null ) {
 			executeMBT.cancel(true);
 		}
 		if ( soapButton.isSelected() ) {
+			status.unsetState( Status.stopped );
+			status.setState( Status.executingSoapTest );
 			runSoap();
 		}
 		else {
 			log.debug( "Loading model" );
+			status.unsetState( Status.stopped );
+			status.setState( Status.paused );
 			ModelBasedTesting.getInstance().setUseGUI();
 			try {
 				Util.loadMbtFromXml( xmlFile.getAbsolutePath() );				
@@ -310,7 +314,12 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 	}
 
 	public void run() {
-		status.setState( Status.running );
+		if ( status.isExecutingSoapTest() ) {
+			status.unsetState( Status.paused );
+		}
+		else {
+			status.setState( Status.running );
+		}
 		setButtons();		
 	}
 	
@@ -390,7 +399,6 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 	}
 
 	public void reload() {
-		status.reset();
 		loadModel();
 	}
 
@@ -731,8 +739,8 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 		add(toolBar, BorderLayout.PAGE_START);
 		addButtons(toolBar);		
 		
-	    int delay = 1000;   // delay for 5 sec.
-	    int period = 1000;  // repeat every sec.
+	    int delay = 1000;   // delay for 1 sec.
+	    int period = 500;  // repeat every 0.5 sec.
 	    updateColorLatestStateLabel = new Timer();
 	    
 	    updateColorLatestStateLabel.scheduleAtFixedRate(new TimerTask() {
@@ -742,20 +750,21 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 	        			if ( getLatestStateLabel().getBackground().equals( Color.GRAY  ) ) {
 	        				return;
 	        			}    			
+    	    			getLatestStateLabel().setBackground( Color.GRAY );	    			
 	        		}
 	        		    		
 	        		if ( toogle ) {
-	    	    		if ( getStatus().isRunning() ||
-	    	    			 getStatus().isNext() ||
-	    	    			 getStatus().isExecutingJavaTest() ) {
-	    	    			getLatestStateLabel().setBackground( Color.GREEN );
-	    	    		}
-	    	    		else if ( getStatus().isPaused() ) {
+	        			if ( getStatus().isPaused() && 
+	        					!( getStatus().isNext() ||
+	        					   getStatus().isExecutingJavaTest() ) ) {
 	    	    			getLatestStateLabel().setBackground( Color.RED );
-	    	    		}
-	    	    		else {
-	    	    			getLatestStateLabel().setBackground( Color.GRAY );	    			
-	    	    		}
+	        			}
+	        			else if ( getStatus().isRunning() || 
+	        					  getStatus().isNext() ||
+	        					  getStatus().isExecutingJavaTest() ||
+	        					  getStatus().isExecutingSoapTest() ) {
+	    	    			getLatestStateLabel().setBackground( Color.GREEN );
+	        			}
 	    				toogle = false;
 	        		}
 	        		else {

@@ -381,7 +381,9 @@ public class ModelBasedTesting
 
 				if ( App.getInstance().getStatus().isNext() || 
 					 App.getInstance().getStatus().isRunning() ||
-					 App.getInstance().getStatus().isExecutingJavaTest() ) {
+					 App.getInstance().getStatus().isExecutingJavaTest() ||
+					 App.getInstance().getStatus().isExecutingSoapTest() &&
+					 App.getInstance().getStatus().isPaused() == false ) {
 					break;
 				}
 				try {
