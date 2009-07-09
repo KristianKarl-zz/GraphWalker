@@ -33,6 +33,7 @@ import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 import org.tigris.mbt.GUI.App;
+import org.tigris.mbt.GUI.Status;
 import org.tigris.mbt.conditions.AlternativeCondition;
 import org.tigris.mbt.conditions.CombinationalCondition;
 import org.tigris.mbt.conditions.ReachedRequirement;
@@ -97,6 +98,7 @@ public class ModelBasedTesting
 	public static ModelBasedTesting getInstance() {
 		return ModelBasedTestingHolder.INSTANCE;
 	}
+
 
 	
 	/**
@@ -373,9 +375,17 @@ public class ModelBasedTesting
 	public String[] getNextStep()
 	{		
 		if ( isUseGUI() ) {
-			while ( App.getInstance().status.isPaused() ) {
+
+			while ( true ) {
+				Util.AbortIf( App.getInstance().getStatus().isStopped(), "GUI has stopped execution." );
+
+				if ( App.getInstance().getStatus().isNext() || 
+					 App.getInstance().getStatus().isRunning() ||
+					 App.getInstance().getStatus().isExecutingJavaTest() ) {
+					break;
+				}
 				try {
-					Thread.sleep(100);
+					Thread.sleep( 500 );
 				} catch (InterruptedException e) {
 					break;
 				}
@@ -389,33 +399,31 @@ public class ModelBasedTesting
 		Util.AbortIf( getGenerator() == null, "No generator has been defined!" );
 		
 		PathGenerator backupGenerator = null;
-		if ( runRandomGeneratorOnce )
-		{
+		if ( runRandomGeneratorOnce ) {
 			backupGenerator = getGenerator();				
 			setGenerator(Keywords.GENERATOR_RANDOM);
 		}
 
-		try
-		{
+		try {
 			return getGenerator().getNext();
 		}
-		catch ( RuntimeException e )
-		{
-			logger.fatal(e.toString());
-			throw new RuntimeException( "ERROR: "+e.getMessage(), e);
+		catch ( RuntimeException e ) {
+			logger.fatal( e.toString() );
+			throw new RuntimeException( "ERROR: " + e.getMessage(), e);
 		}
-		finally
-		{
-			if ( runRandomGeneratorOnce )
-			{
+		finally {
+			if ( runRandomGeneratorOnce ) {
 				runRandomGeneratorOnce = false;
 				setGenerator(backupGenerator);
 			}
-			if ( notifyApp != null )
+			if ( notifyApp != null ) {
 				notifyApp.getNextEvent();
+			}
 			if ( isUseGUI() ) {
-				if ( App.getInstance().status.isNext() ) {
-					App.getInstance().status.setPaused();
+				Util.AbortIf( App.getInstance().getStatus().isStopped(), "GUI has stopped execution." );
+
+				if ( App.getInstance().getStatus().isNext() ) {
+					App.getInstance().getStatus().unsetState(Status.next);						
 				}
 			}
 		}
@@ -863,19 +871,23 @@ public class ModelBasedTesting
 		}
 		else
 		{
+			Status tmpStatus = null;
 			if ( isEdge && strMethod.isEmpty() ) {
 				return;
 			}
 			try {
+				if ( isUseGUI() ) {
+					App.getInstance().executingJavaTest( true );				
+				}
 				Method m = clsClass.getMethod( strMethod, null );
 				m.invoke( objInstance, null  );
 			} 
 			catch ( InvocationTargetException e ) {
 				if ( isEdge ) {
-					logger.error("InvocationTargetException for: " +  getMachine().getLastEdge() + " : " + e.getMessage() );
+					logger.error("InvocationTargetException for: " +  getMachine().getLastEdge() + " : " + e.getCause().getMessage() );
 				}
 				else {
-					logger.error("InvocationTargetException for: " + getMachine().getCurrentState() + " : " + e.getMessage() );
+					logger.error("InvocationTargetException for: " + getMachine().getCurrentState() + " : " + e.getCause().getMessage() );
 				}
 				
 				StringWriter sw = new StringWriter();
@@ -884,7 +896,7 @@ public class ModelBasedTesting
 			    pw.close();	    		    
 				logger.error( sw.toString() );
 
-				throw new RuntimeException("InvocationTargetException.", e);
+				throw new RuntimeException("InvocationTargetException.", e.getCause());
 			} 
 			catch ( NoSuchMethodException e ) {
 				if ( isEdge ) {
@@ -894,6 +906,11 @@ public class ModelBasedTesting
 					logger.error("NoSuchMethodException for: " + getMachine().getCurrentState() );
 				}
 				throw new RuntimeException("NoSuchMethodException.", e);
+			}
+			finally {
+				if ( isUseGUI() ) {
+					App.getInstance().executingJavaTest( false );				
+				}
 			}
 		}
 	}

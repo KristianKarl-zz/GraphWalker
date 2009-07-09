@@ -21,6 +21,8 @@ import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.ImageIcon;
@@ -31,10 +33,12 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 import javax.swing.JToolBar;
+import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
 import javax.swing.event.ChangeEvent;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -74,20 +78,21 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 	 */
 	private static final long serialVersionUID = -8605452811238545133L;
 	
-	private JSplitPane splitPaneMessages;
-	private JSplitPane splitPaneGraph;
-	private JPanel panelStatistics;
-	private JPanel panelVariables;
-	private JPanel panelGraph;
-	private JTextArea statisticsTextArea;
-	private JTextArea variablesTextArea;
-	private JLabel latestStateLabel;
+	private JSplitPane splitPaneMessages = null;
+	private JSplitPane splitPaneGraph = null;
+	private JPanel panelStatistics = null;
+	private JPanel panelVariables = null;
+	private JPanel panelGraph = null;
+	private JTextArea statisticsTextArea = null;
+	private JTextArea variablesTextArea = null;
+	private JLabel latestStateLabel = null;
 	private JFileChooser fileChooser = new JFileChooser(System
 			.getProperty("user.dir"));
 	private VisualizationViewer<Vertex, Edge> vv;
 	private Layout<Vertex, Edge> layout;
 	private File xmlFile;
 	private ExecuteMBT executeMBT = null;
+    private Timer updateColorLatestStateLabel = new Timer();
 
 	public File getXmlFile() {
 		return xmlFile;
@@ -109,7 +114,16 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 	private JCheckBox soapButton;
 	private JCheckBox centerOnVertexButton;
 	
-	public Status status = new Status();
+	private Status status = new Status();
+
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
+		setButtons();
+	}
 
 	protected String newline = "\n";
 	static final private String LOAD = "load";
@@ -146,8 +160,7 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 
 	private void runSoap()
 	{
-		if ( endpoint != null )
-		{
+		if ( endpoint != null ) {
 			endpoint = null;
 		}
 
@@ -157,8 +170,10 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 		
 		try {
 			log.info( "Now running as a SOAP server. For the WSDL file, see: " + wsURL.replace( "0.0.0.0", InetAddress.getLocalHost().getHostName() ) + "?WSDL" );
+			JOptionPane.showMessageDialog( App.getInstance(), "Now running as a SOAP server. For the WSDL file, see: " + wsURL.replace( "0.0.0.0", InetAddress.getLocalHost().getHostName() ) + "?WSDL" );
 		} catch (UnknownHostException e) {
 			log.info( "Now running as a SOAP server. For the WSDL file, see: " + wsURL + "?WSDL" );
+			JOptionPane.showMessageDialog( App.getInstance(), "Now running as a SOAP server. For the WSDL file, see: " + wsURL + "?WSDL" );
 			log.error( e.getMessage() );
 		}
 	}
@@ -189,7 +204,7 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 	    } else if (SOAP.equals(cmd)) { // soap checkbox clicked
 	    	if ( xmlFile != null && xmlFile.canRead() )
 	    		reload();
-	    } else if (CENTERONVERTEX.equals(cmd)) { // ceneter on vertex checkbox clicked
+	    } else if (CENTERONVERTEX.equals(cmd)) { // center on vertex checkbox clicked
 	    	if ( centerOnVertexButton.isSelected() )
 	    		centerOnVertex();
 	    }
@@ -217,21 +232,31 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 		statisticsTextArea.setText( ModelBasedTesting.getInstance().getStatisticsString() );
 		
 		variablesTextArea.setText( ModelBasedTesting.getInstance().getStatisticsString());
-		String str = "Last edge: "
+		String str = "Edge: "
 				+ (ModelBasedTesting.getInstance().getMachine().getLastEdge() == null ? ""
 						: (String) ModelBasedTesting.getInstance().getMachine().getLastEdge()
 								.getLabelKey())
-				+ "   Current state: "
+				+ "   Vertex: "
 				+ ModelBasedTesting.getInstance().getMachine().getCurrentState().getLabelKey();
-		latestStateLabel.setText( str );
+		getLatestStateLabel().setText( str );
 		
 		str = ModelBasedTesting.getInstance().getMachine().getCurrentDataString();
 		str = str.replaceAll(";", newline);
 		variablesTextArea.setText( str );
 	}
 
-	private void setButtons() {
-		if ( status.isPaused() ) {
+	public void setButtons() {
+		if ( status.isStopped() ) {
+			loadButton.setEnabled(true);
+			reloadButton.setEnabled(true);
+			runButton.setEnabled(false);
+			pauseButton.setEnabled(false);
+			nextButton.setEnabled(false);
+			soapButton.setEnabled(false);
+		}
+		else if ( status.isPaused() && 
+				!( status.isNext() ||
+				   status.isExecutingJavaTest() ) ) {
 			loadButton.setEnabled(true);
 			reloadButton.setEnabled(true);
 			runButton.setEnabled(true);
@@ -239,7 +264,9 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 			nextButton.setEnabled(true);
 			soapButton.setEnabled(true);
 		}
-		else if ( status.isRunning() ) {
+		else if ( status.isRunning() || 
+				  status.isNext() ||
+				  status.isExecutingJavaTest() ) {
 			loadButton.setEnabled(false);
 			reloadButton.setEnabled(false);
 			runButton.setEnabled(false);
@@ -247,76 +274,100 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 			nextButton.setEnabled(false);
 			soapButton.setEnabled(false);
 		}
-		else if ( status.isNext() ) {
-			loadButton.setEnabled(false);
-			reloadButton.setEnabled(false);
-			runButton.setEnabled(false);
-			pauseButton.setEnabled(false);
-			nextButton.setEnabled(false);
-			soapButton.setEnabled(false);
-		}
 	}
 	
 	@SuppressWarnings("synthetic-access")
 	private void loadModel() {
+		setWaitCursor();
+		status.unsetState( Status.stopped );
+		status.setState( Status.paused );
 		if ( executeMBT != null ) {
 			executeMBT.cancel(true);
-			executeMBT = null;
 		}
-		status.setPaused();
-		setButtons();
-		if ( soapButton.isSelected() )
+		if ( soapButton.isSelected() ) {
 			runSoap();
-		else
-		{
+		}
+		else {
 			log.debug( "Loading model" );
 			ModelBasedTesting.getInstance().setUseGUI();
-			Util.loadMbtFromXml( xmlFile.getAbsolutePath() );
-			setTitle( "Model-Based Testing 2.2 Beta 8 - " + xmlFile.getName() );
-			if ( centerOnVertexButton.isSelected() )
-				centerOnVertex();
+			try {
+				Util.loadMbtFromXml( xmlFile.getAbsolutePath() );				
+				setTitle( "Model-Based Testing 2.2 Beta 8 - " + xmlFile.getName() );
+			} catch (Exception e) {
+				JOptionPane.showMessageDialog( App.getInstance(), e.getMessage() );
+				log.error( e.getMessage() );
+			}
+
+			centerOnVertex();
+
+			if ( executeMBT != null ) {
+				executeMBT = null;
+			}
+			(executeMBT = new ExecuteMBT()).execute();
 		}
-		(executeMBT = new ExecuteMBT()).execute();
+		setButtons();
+		setDefaultCursor();
 	}
 
 	public void run() {
-		status.setRunning();
+		status.setState( Status.running );
+		setButtons();		
+	}
+	
+	public void executingJavaTest( boolean executingJavaTest ) {
+		if ( executingJavaTest == true ) {
+			status.setState( Status.executingJavaTest );
+		}
+		else {
+			status.unsetState( Status.executingJavaTest );
+		}
 		setButtons();		
 	}
 	
     private class ExecuteMBT extends SwingWorker<Void, Void> {
+    	private Logger log = Util.setupLogger( ExecuteMBT.class );
         protected Void doInBackground() {
-        	ModelBasedTesting.getInstance().executePath();
+        	try {
+				log.debug( "doInBackground" );
+       			ModelBasedTesting.getInstance().executePath();        			
+			} catch (Exception e) {
+				log.error( e.getMessage() );
+				JOptionPane.showMessageDialog( App.getInstance(), e.getCause().getMessage() );				
+			}
             return null;
         }
 
         protected void done() {
 			super.done();
-			App.getInstance().pause();
+			log.debug( "done" );
+			App.getInstance().stop();
 		}
     }
 
+	public void stop() {
+		status.setState( Status.stopped );
+		setButtons();
+	}
+
 	public void pause() {
-		status.setPaused();
+		status.unsetState( Status.running );
+		status.setState( Status.paused );
 		setButtons();
 	}
 
 	public void next() {
-		if ( ModelBasedTesting.getInstance().hasNextStep() == false )
+		if ( ModelBasedTesting.getInstance().hasNextStep() == false ) {
+			status.setState( Status.stopped );
+			setButtons();
 			return;
+		}
 		if ( status.isNext() ) {
 			return;
 		}
-
-		setButtons();
-		status.setNext();
-		setCursor( Cursor.getPredefinedCursor( Cursor.WAIT_CURSOR ) );
-		ModelBasedTesting.getInstance().getNextStep();
-		setCursor( Cursor.getDefaultCursor() );
-		status.setPaused();
+		status.setState( Status.next );
 		setButtons();
 		if ( centerOnVertexButton.isSelected() )
-			centerOnVertex();
+		  centerOnVertex();
 	}
 	
 	public void centerOnVertex() {
@@ -339,6 +390,7 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 	}
 
 	public void reload() {
+		status.reset();
 		loadModel();
 	}
 
@@ -357,12 +409,32 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 	public VisualizationViewer<Vertex, Edge> getVv() {
 		return vv;
 	}
-
+	
+	public void disableToolBarExceptPauseButton() {
+		loadButton.setEnabled(false);
+		reloadButton.setEnabled(false);
+		runButton.setEnabled(false);
+		pauseButton.setEnabled(true);
+		nextButton.setEnabled(false);
+		soapButton.setEnabled(false);
+		centerOnVertexButton.setEnabled(false);		
+	}
+	
+	public void setWaitCursor() {
+		setCursor( Cursor.getPredefinedCursor( Cursor.WAIT_CURSOR ) );
+	}
+	
+	public void setDefaultCursor() {
+		setCursor( Cursor.getPredefinedCursor( Cursor.DEFAULT_CURSOR ) );
+	}
+	
 	public void updateLayout() {
 		if ( ModelBasedTesting.getInstance().getGraph() != null ) {
+			setWaitCursor();
 			setLayout( new StaticLayout<Vertex, Edge>( ModelBasedTesting.getInstance().getGraph() ) );
 			getVv().setGraphLayout( layout );
 			updateUI();
+			setDefaultCursor();
 		}
 	}
 
@@ -575,7 +647,7 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 		toolBar.add(loadButton);
 
 		reloadButton = makeNavigationButton("reload", RELOAD,
-                "Reload already loaded Model",
+                "Reload/Restart already loaded Model",
         		"Reload", false);
 		toolBar.add(reloadButton);
 
@@ -625,8 +697,10 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 	public void createPanelGraph() {
 		panelGraph = new JPanel();
 		panelGraph.setLayout(new BorderLayout());
-		latestStateLabel = new JLabel(" ");
-		panelGraph.add(latestStateLabel, BorderLayout.NORTH);
+		setLatestStateLabel(new JLabel(" "));
+		getLatestStateLabel().setHorizontalAlignment( SwingConstants.CENTER );
+		getLatestStateLabel().setOpaque( true );
+		panelGraph.add(getLatestStateLabel(), BorderLayout.NORTH);
 		panelGraph.add(getGraphViewer(), BorderLayout.CENTER);
 	}
 
@@ -655,7 +729,42 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 
 		JToolBar toolBar = new JToolBar("Toolbar");
 		add(toolBar, BorderLayout.PAGE_START);
-		addButtons(toolBar);
+		addButtons(toolBar);		
+		
+	    int delay = 1000;   // delay for 5 sec.
+	    int period = 1000;  // repeat every sec.
+	    updateColorLatestStateLabel = new Timer();
+	    
+	    updateColorLatestStateLabel.scheduleAtFixedRate(new TimerTask() {
+	    	    boolean toogle = false;
+	            public void run() {
+	        		if ( getStatus().isStopped() ) {
+	        			if ( getLatestStateLabel().getBackground().equals( Color.GRAY  ) ) {
+	        				return;
+	        			}    			
+	        		}
+	        		    		
+	        		if ( toogle ) {
+	    	    		if ( getStatus().isRunning() ||
+	    	    			 getStatus().isNext() ||
+	    	    			 getStatus().isExecutingJavaTest() ) {
+	    	    			getLatestStateLabel().setBackground( Color.GREEN );
+	    	    		}
+	    	    		else if ( getStatus().isPaused() ) {
+	    	    			getLatestStateLabel().setBackground( Color.RED );
+	    	    		}
+	    	    		else {
+	    	    			getLatestStateLabel().setBackground( Color.GRAY );	    			
+	    	    		}
+	    				toogle = false;
+	        		}
+	        		else {
+	        			getLatestStateLabel().setBackground( Color.GRAY );
+	        			toogle = true;
+	        		}
+	            }
+	        }, delay, period);
+
 	}
 
 	// Private constructor prevents instantiation from other classes
@@ -685,5 +794,13 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 	public static void main(String args[]) {
 		getInstance();
 		ModelBasedTesting.getInstance().setUseGUI();
+	}
+
+	public void setLatestStateLabel(JLabel latestStateLabel) {
+		this.latestStateLabel = latestStateLabel;
+	}
+
+	public JLabel getLatestStateLabel() {
+		return latestStateLabel;
 	}
 }
