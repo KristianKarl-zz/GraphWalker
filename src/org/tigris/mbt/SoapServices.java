@@ -9,7 +9,6 @@ import javax.jws.WebService;
 
 import org.apache.log4j.Logger;
 import org.tigris.mbt.GUI.App;
-import org.tigris.mbt.GUI.Status;
 import org.tigris.mbt.exceptions.InvalidDataException;
 
 @WebService

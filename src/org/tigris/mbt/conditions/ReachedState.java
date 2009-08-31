@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.tigris.mbt.Util;
 import org.tigris.mbt.graph.Vertex;
 import org.tigris.mbt.machines.ExtendedFiniteStateMachine;
 import org.tigris.mbt.machines.FiniteStateMachine;
