@@ -14,7 +14,7 @@ import edu.uci.ics.jung.algorithms.shortestpath.DijkstraShortestPath;
 
 
 
-public class NonOptimizedShortestPath extends PathGenerator
+public class NonOptimizedShortestPath extends RandomPathGenerator
 {
 	static Logger logger = Util.setupLogger(NonOptimizedShortestPath.class);
 	private List<Edge> dijkstraShortestPath;
@@ -25,7 +25,9 @@ public class NonOptimizedShortestPath extends PathGenerator
 	
 		Edge edge = null;			
 		do {
-			getDijkstraPath();
+			if ( setDijkstraPath() == false ) {
+				return super.getNext();
+			}
 			edge = dijkstraShortestPath.remove( 0 );			
 		} while ( !isEdgeAvailable( edge ) );
 		
@@ -35,16 +37,23 @@ public class NonOptimizedShortestPath extends PathGenerator
 		return retur;			
 	}
 	
-	private void getDijkstraPath()
+	private boolean setDijkstraPath()
 	{
 		// Is there a path to walk, given from DijkstraShortestPath?
 		if ( dijkstraShortestPath == null || dijkstraShortestPath.size() == 0 )
 		{
 			Vector<Edge> unvisitedEdges = getMachine().getUncoveredEdges();
 			logger.debug( "Number of unvisited edges: " + unvisitedEdges.size() );
-			Object[] shuffledList = Util.shuffle( unvisitedEdges.toArray() );
-			Edge e = (Edge)shuffledList[ 0 ];
 			
+			Edge e = null ;
+			if ( unvisitedEdges.size() == 0 ) {
+				return false;
+			}
+			else {
+				Object[] shuffledList = Util.shuffle( unvisitedEdges.toArray() );
+				e = (Edge)shuffledList[ 0 ];
+			}
+						
 			logger.debug( "Current state: " + getMachine().getCurrentState() );
 			logger.debug( "Will try to reach unvisited edge: " + e );
 			
@@ -74,5 +83,6 @@ public class NonOptimizedShortestPath extends PathGenerator
 				logger.debug( "  " + object);				
 			}
 		}		
+		return true;
 	}
 }
