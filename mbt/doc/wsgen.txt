@@ -1,0 +1,1 @@
+wsgen -cp bin org.tigris.mbt.SoapServices -d bin

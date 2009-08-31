@@ -12,7 +12,6 @@ import java.io.PrintStream;
 import org.tigris.mbt.ModelBasedTesting;
 import org.tigris.mbt.Util;
 import org.tigris.mbt.exceptions.InvalidDataException;
-import org.tigris.mbt.graph.Graph;
 
 import junit.framework.TestCase;
 
