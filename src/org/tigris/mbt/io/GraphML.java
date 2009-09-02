@@ -435,8 +435,11 @@ public class GraphML extends AbstractModelHandler
 							}							
 
 							// Look for Actions
+							// To simplify this we wash the string by removing the guard
+							// from a temporary string and make the search.
+							String washedLabel = label.replace( e.getGuardKey(), "" );
 							Pattern actionPattern = Pattern.compile( "/\\s*(.*)\\s*$", Pattern.MULTILINE );
-							Matcher actionMatcher = actionPattern.matcher( label );
+							Matcher actionMatcher = actionPattern.matcher( washedLabel );
 							if ( actionMatcher.find() )
 							{
 								String actions = actionMatcher.group( 1 );
