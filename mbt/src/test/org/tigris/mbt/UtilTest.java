@@ -60,4 +60,10 @@ public class UtilTest extends TestCase {
     	Logger logger = Util.setupLogger(UtilTest.class);
     	logger.debug("Working");
     }
+	
+	public void testPrintClassPath()
+    {
+		assertEquals( true, Util.printClassPath().length() > 0 );
+    }
+	
 }
