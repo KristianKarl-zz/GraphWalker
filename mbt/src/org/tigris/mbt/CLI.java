@@ -49,13 +49,11 @@ public class CLI
 	{
 		private ModelBasedTesting modelBasedTesting;
 		
-		VerboseStatisticsLogger( ModelBasedTesting modelBasedTesting )
-		{
+		VerboseStatisticsLogger( ModelBasedTesting modelBasedTesting ) {
 			this.modelBasedTesting = modelBasedTesting;
 		}
 		
 		public void run() {
-
 			logger.info( modelBasedTesting.getStatisticsVerbose() );
 		}
 	}
@@ -108,7 +106,6 @@ public class CLI
 			logger.error( sw.toString() );
     		System.err.println( e.getMessage() );
 		}
-		Runtime.getRuntime().removeShutdownHook( shutDownThread );
 	}
 
 	private void run(String[] args)
@@ -540,7 +537,7 @@ public class CLI
 	 */
 	private void printVersionInformation()
 	{
-		System.out.println( "org.tigris.mbt version 2.2 (revision 697) Beta 9\n" );
+		System.out.println( "org.tigris.mbt version 2.2 (revision 699) Beta 10\n" );
 		System.out.println( "org.tigris.mbt is open source software licensed under GPL" );
 		System.out.println( "The software (and it's source) can be downloaded from http://mbt.tigris.org/\n" );
 		System.out.println( "This package contains following software packages:" );
