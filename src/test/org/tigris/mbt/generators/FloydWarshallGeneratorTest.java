@@ -1,7 +1,5 @@
 package test.org.tigris.mbt.generators;
 
-import org.apache.log4j.Logger;
-import org.tigris.mbt.Util;
 import org.tigris.mbt.conditions.EdgeCoverage;
 import org.tigris.mbt.conditions.StopCondition;
 import org.tigris.mbt.generators.FloydWarshallGenerator;
@@ -11,7 +9,7 @@ import org.tigris.mbt.machines.FiniteStateMachine;
 import junit.framework.TestCase;
 
 public class FloydWarshallGeneratorTest extends TestCase {
-	private Logger logger = Util.setupLogger(FloydWarshallGeneratorTest.class);
+	//private Logger logger = Util.setupLogger(FloydWarshallGeneratorTest.class);
 	
 	public void test_RandomGeneration()
     {
