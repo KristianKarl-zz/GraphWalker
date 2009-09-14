@@ -10,6 +10,8 @@ import java.io.PrintStream;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
@@ -336,20 +338,24 @@ public class Util {
 
 		if( root.getAttributeValue("EXTENDED") != null && root.getAttributeValue("EXTENDED").equalsIgnoreCase("true") )
 		{
+			logger.debug( "Enabling extended FSM" );
 			mbt.enableExtended(true);
 			mbt.setStartupScript(getScriptContent(root.getChildren("SCRIPT")));
 		}
 		else
 		{
+			logger.debug( "Disabling extended FSM" );
 			mbt.enableExtended(false);
 		}
 		
 		if(root.getAttributeValue("WEIGHT") != null && root.getAttributeValue("WEIGHT").equalsIgnoreCase("true"))
 		{
+			logger.debug( "Using weighted edges" );
 			mbt.setWeighted(true);
 		}
 		else
 		{
+			logger.debug( "Will not use weighted edges" );
 			mbt.setWeighted(false);
 		}
 				
@@ -378,6 +384,7 @@ public class Util {
 
 		if(reportName != null && reportTemplate != null)
 		{
+			logger.debug( "Will use report template: " +  reportTemplate );
 			mbt.getStatisticsManager().setReportTemplate(reportTemplate);
 		}
 
@@ -424,6 +431,7 @@ public class Util {
 			try {
 			
 				String executor = root.getAttributeValue( "EXECUTOR" );
+				logger.debug( "Executor is: " + executor );
 				String executorParam = null;
 				if ( executor.contains( ":" ) )
 				{
@@ -739,5 +747,21 @@ public class Util {
 		    logger.debug("Setting port to: 9090");
 	    }
 	    return port;
+	}
+	
+	public static String printClassPath()
+	{
+		String classPath = "";
+		
+		//Get the System Classloader
+        ClassLoader sysClassLoader = ClassLoader.getSystemClassLoader();
+
+        //Get the URLs
+        URL[] urls = ((URLClassLoader)sysClassLoader).getURLs();
+
+        for ( int i=0; i< urls.length; i++ ) {
+            classPath += urls[i].getFile() + "\n";
+        }       
+        return classPath;
 	}
 }

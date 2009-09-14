@@ -55,8 +55,6 @@ import org.tigris.mbt.statistics.EdgeSequenceCoverageStatistics;
 import org.tigris.mbt.statistics.RequirementCoverageStatistics;
 import org.tigris.mbt.statistics.StateCoverageStatistics;
 
-import bsh.EvalError;
-
 
 /**
  * The object handles the test case generation, both online and offline.
@@ -333,11 +331,9 @@ public class ModelBasedTesting
 		if(extended)
 		{
 			setMachine(new ExtendedFiniteStateMachine());
-			if(!getStartupScript().equals(""))
-			try {
+			if(!getStartupScript().equals("")) {
+				logger.debug( "Will now try to run script: " + getStartupScript() );
 				((ExtendedFiniteStateMachine)getMachine()).eval(getStartupScript());
-			} catch (EvalError e) {
-				throw new RuntimeException("Execution of startup script generated an error.",e);
 			}
 		} else {
 			setMachine( new FiniteStateMachine() );
@@ -873,7 +869,6 @@ public class ModelBasedTesting
 		}
 		else
 		{
-			Status tmpStatus = null;
 			if ( isEdge && strMethod.isEmpty() ) {
 				return;
 			}
@@ -956,11 +951,12 @@ public class ModelBasedTesting
 		this.startupScript = script;
 		if(this.machine != null && this.machine instanceof ExtendedFiniteStateMachine)
 		{
-			try {
-				((ExtendedFiniteStateMachine)this.machine).eval(script);
-			} catch (EvalError e) {
-				throw new RuntimeException("Execution of startup script generated an error.",e);
-			}
+			logger.debug( "Will now try to run script: " + script );
+			((ExtendedFiniteStateMachine)this.machine).eval(script);
+		}
+		else {
+			logger.warn( "Could not run script: " + script );			
+			logger.warn( "The machine is not an Extended FSM" );			
 		}
 	}
 	

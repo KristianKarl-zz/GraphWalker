@@ -53,9 +53,16 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 		Void = new VoidPrintStream();
 	}
 
-	public void eval(String script) throws EvalError
+	public void eval( String script )
 	{
-		interpreter.eval(script);
+		try {
+			interpreter.eval(script);
+		} catch ( EvalError e ) {
+			logger.error( "Problem when running: '" + script + "' in BeanShell" );
+			logger.error( "EvalError: "  + e );
+			logger.error( e.getCause() );
+			throw new RuntimeException("Execution of startup script generated an error.",e);
+		}
 	}
 	
 	public String getCurrentStateName()
@@ -173,17 +180,23 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 	public boolean walkEdge(Edge edge)
 	{
 		boolean hasWalkedEdge = super.walkEdge(edge);
-		if(hasWalkedEdge)
-		{
-			if(hasAction(edge))
-			{
+		if ( hasWalkedEdge ) {
+			if ( hasAction( edge ) ) {
+				PrintStream ps = System.out;
+				System.setOut(Void);
+				
+				logger.debug( "The classpath is: " + Util.printClassPath() );
+				
 				try {
-					PrintStream ps = System.out;
-					System.setOut(Void);
-					interpreter.eval(getAction(edge));
+					interpreter.eval( getAction( edge ) );
+				} catch ( EvalError e ) {
+					logger.error( "Problem when running: '" + getAction( edge ) + "' in BeanShell" );
+					logger.error( "EvalError: "  + e );
+					logger.error( e.getCause() );
+					throw new RuntimeException( "Malformed action sequence\n\t" + edge + "\n\tAction sequence: " + edge.getActionsKey() + "\n\tBeanShell error message: '" + e.getMessage() + "'\nDetails: " + e.getCause() );
+				}
+				finally {
 					System.setOut(ps);
-				} catch (EvalError e) {
-					throw new RuntimeException( "Malformed action sequence\n\t" + edge + "\n\tAction sequence: " + edge.getActionsKey() + "\n\tBeanShell error message: '" + e.getMessage() + "'" );
 				}
 			}
 		}
