@@ -85,4 +85,13 @@ public class NonOptimizedShortestPath extends RandomPathGenerator
 		}		
 		return true;
 	}
+	
+	public void emptyCurrentPath()
+	{
+		if ( dijkstraShortestPath == null || dijkstraShortestPath.size() == 0 )
+		{
+			return;
+		}
+		dijkstraShortestPath = null;
+	}
 }
