@@ -32,6 +32,13 @@ public class SoapServices {
 		Reset();
 	}
 
+	public boolean SetCurrentVertex( String newState ) {
+		logger.debug( "SOAP service SetCurrentVertex recieving: " + newState );
+		boolean value = ModelBasedTesting.getInstance().setCurrentVertex( newState );
+		logger.debug( "SOAP service SetCurrentVertex returning: " + value );
+		return value;
+	}
+
 	public String GetDataValue( String data ) {
 		logger.debug( "SOAP service getDataValue recieving: " + data );
 		String value = "";

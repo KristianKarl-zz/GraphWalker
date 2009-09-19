@@ -58,7 +58,7 @@ public class FiniteStateMachine{
 
 	private Hashtable<String, Integer> associatedRequirements;
 
-	protected void setState(String stateName)
+	public void setState(String stateName)
 	{
 		logger.debug("Setting state to: '" + stateName + "'");
 		Vertex e = findState(stateName);
@@ -79,6 +79,14 @@ public class FiniteStateMachine{
 			}
 		}
 		return null;
+	}
+
+	public boolean hasState( String stateName )
+	{
+		if ( findState( stateName ) != null ) {
+			return true;
+		}
+		return false;
 	}
 
 	public Edge findEdge(String edgeName) 
@@ -246,13 +254,19 @@ public class FiniteStateMachine{
 		int req = stats[5];
 		int reqc= stats[6];
 		
-		return 
-		(req>0?"Coverage Requirements: " + reqc + "/" + req + " => " +  (100*reqc)/req + "%\n":"") +
-		"Coverage Edges: " + ec + "/" + e + " => " +  (100*ec)/e + "%\n" + 
-		"Coverage States: " + vc + "/" + v + " => " + (100*vc)/v  + "%\n" + 
-		"Unvisited Edges:  " + (e-ec) + "\n" + 
-		"Unvisited States: " + (v-vc) + "\n" +
-		"Test sequence length:  " + len; 
+		String str = "";
+		if ( e > 0 && v > 0 )
+			str = "Coverage Edges: " + ec + "/" + e + " => " +  (100*ec)/e + "%\n" + 
+			"Coverage States: " + vc + "/" + v + " => " + (100*vc)/v  + "%\n" + 
+			"Unvisited Edges:  " + (e-ec) + "\n" + 
+			"Unvisited States: " + (v-vc) + "\n" +
+			"Test sequence length:  " + len;
+		else if ( req > 0 )
+			str = "Coverage Requirements: " + reqc + "/" + req + " => " +  (100*reqc)/req + "%\n";
+		else
+			str = "No statistics available. Probably no run made?";
+			
+		return str;
 	}
 	
 	public int[] getStatistics()

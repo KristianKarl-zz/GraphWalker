@@ -41,6 +41,7 @@ import org.tigris.mbt.conditions.StopCondition;
 import org.tigris.mbt.events.MbtEvent;
 import org.tigris.mbt.exceptions.InvalidDataException;
 import org.tigris.mbt.generators.CodeGenerator;
+import org.tigris.mbt.generators.NonOptimizedShortestPath;
 import org.tigris.mbt.generators.PathGenerator;
 import org.tigris.mbt.graph.AbstractElement;
 import org.tigris.mbt.graph.Edge;
@@ -981,6 +982,40 @@ public class ModelBasedTesting
 			return getMachine().getCurrentState();
 		logger.warn( "Trying to retrieve current state without specifying machine" );
 		return null;
+	}
+
+
+	/**
+	 * Changes the current state in the model.
+	 * @param newState The name ({@link Keywords.LABEL_KEY}) of the new current state of the model.
+	 * If null is given, or newState is empty, then the default value will be the START vertex in the model.
+	 * If newState does not exist in the model, the method does nothing, and the current vertex is unaffected.
+	 * @return True if the operation succeeds, false if not.
+	 */
+	public boolean setCurrentVertex( String newState ) {
+		if( this.machine != null ) {
+			if ( newState == null || newState.isEmpty() ) {
+				newState = Keywords.START_NODE;
+			}
+			if ( getMachine().hasState( newState ) == false ) {
+				logger.error( "Could not manually change the state from: " + getMachine().getCurrentStateName() +
+					     " to: " + newState + " beacuse it does not exist in the model."  );
+				return false;
+			}
+			logger.info( "Manually changing state from: " + getMachine().getCurrentStateName() +
+					     " to: " + newState  );
+			getMachine().setState( newState );
+			
+			// We have to empty current Dijkstra path, if it exists.
+			if ( getGenerator() instanceof NonOptimizedShortestPath ) {
+				((NonOptimizedShortestPath)getGenerator()).emptyCurrentPath();
+			}
+			return true;
+		}
+		else {
+			logger.warn( "Trying to set current state without specifying machine" );
+		}
+		return false;
 	}
 
 
