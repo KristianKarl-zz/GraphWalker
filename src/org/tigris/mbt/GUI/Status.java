@@ -16,27 +16,21 @@ public class Status {
 	
 	
 	public boolean isExecutingSoapTest() {
-		log.debug( "State: " + state );
 		return (state & executingSoapTest) == executingSoapTest;
 	}
 	public boolean isExecutingJavaTest() {
-		log.debug( "State: " + state );
 		return (state & executingJavaTest) == executingJavaTest;
 	}
 	public boolean isStopped() {
-		log.debug( "State: " + state );
 		return (state & stopped) == stopped;
 	}
 	public boolean isNext() {
-		log.debug( "State: " + state );
 		return (state & next) == next;
 	}
 	public boolean isRunning() {
-		log.debug( "State: " + state );
 		return (state & running) == running;
 	}
 	public boolean isPaused() {
-		log.debug( "State: " + state );
 		return (state & paused) == paused;
 	}
 	public void setState( int state ) {
