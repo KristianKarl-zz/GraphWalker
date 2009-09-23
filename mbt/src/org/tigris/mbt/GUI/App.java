@@ -314,6 +314,7 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 	}
 
 	public void run() {
+		log.debug( "run" );
 		if ( status.isExecutingSoapTest() ) {
 			status.unsetState( Status.paused );
 		}
@@ -354,17 +355,20 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
     }
 
 	public void stop() {
+		log.debug( "stop" );
 		status.setState( Status.stopped );
 		setButtons();
 	}
 
 	public void pause() {
+		log.debug( "pause" );
 		status.unsetState( Status.running );
 		status.setState( Status.paused );
 		setButtons();
 	}
 
 	public void next() {
+		log.debug( "next" );
 		if ( ModelBasedTesting.getInstance().hasNextStep() == false ) {
 			status.setState( Status.stopped );
 			setButtons();
@@ -399,6 +403,7 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 	}
 
 	public void reload() {
+		log.debug( "reload" );
 		loadModel();
 	}
 
@@ -438,6 +443,7 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 	
 	public void updateLayout() {
 		if ( ModelBasedTesting.getInstance().getGraph() != null ) {
+			log.debug( "updateLayout" );
 			setWaitCursor();
 			setLayout( new StaticLayout<Vertex, Edge>( ModelBasedTesting.getInstance().getGraph() ) );
 			getVv().setGraphLayout( layout );
