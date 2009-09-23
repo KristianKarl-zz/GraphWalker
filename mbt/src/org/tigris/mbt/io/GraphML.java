@@ -74,7 +74,7 @@ public class GraphML extends AbstractModelHandler
 	* Reads one single graph, or a folder containing several graphs to be merged into one
 	* graph.
 	* @see org.tigris.mbt.io.AbstractModelHandler#load(java.lang.String)
-    * @param fileName The gramphml file or folder.
+    * @param fileOrfolder The gramphml file or folder.
 	*/
 	public void load( String fileOrfolder )
 	{

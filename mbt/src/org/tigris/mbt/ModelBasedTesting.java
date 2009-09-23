@@ -289,7 +289,7 @@ public class ModelBasedTesting
 	
 	/**
 	 * Executes an action, and returns any outcome as a string.
-	 * @param data The name of the data object and the method, which value is to be retrieved.
+	 * @param action The name of the data object and the method, which value is to be retrieved.
 	 * @return The value of the data object's method. The value is always returned a s string. It is
 	 * the calling parties task to parse the string and convert it to correct type.
 	 * @throws InvalidDataException If the retrieval of the data fails, the InvalidDataException is thrown. For example
@@ -946,7 +946,7 @@ public class ModelBasedTesting
 	}
 	
 	/**
-	 * @param childText
+	 * @param script
 	 */
 	public void setStartupScript(String script) {
 		this.startupScript = script;
