@@ -21,6 +21,7 @@ import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.PosixParser;
 import org.apache.log4j.Logger;
+import org.tigris.mbt.GUI.App;
 
 /**
  * Command Line Interface object, to the org.tigris.mbt package.
@@ -99,12 +100,7 @@ public class CLI
 		}
 		catch ( Exception e )
 		{
-			StringWriter sw = new StringWriter();
-		    PrintWriter pw = new PrintWriter( sw );
-		    e.printStackTrace( pw );
-		    pw.close();	    		    
-			logger.error( sw.toString() );
-    		System.err.println( e.getMessage() );
+			Util.printStackTrace( e );
 		}
 	}
 
@@ -334,7 +330,7 @@ public class CLI
 		} else if(helpSection.equalsIgnoreCase("gui")){
 			buildGuiCLI();
 			header = "Run MBT in a GUI mode.\n" +
-					"All other commands are available in this mode.";
+					 "Also an mbt xml file can be supplied.";
 		} else {
 			System.err.println( "Type 'java -jar mbt.jar help' for usage." );
 			return;
@@ -530,6 +526,10 @@ public class CLI
 	 * Build the command gui command line parser
 	 */
 	private void buildGuiCLI() {
+		opt.addOption( OptionBuilder.withArgName( "file" )
+                .withDescription( "The xml file containing the mbt settings." )
+                .hasArg()
+                .create( "f" ) );
 	}
 	
 	/**
@@ -879,7 +879,10 @@ public class CLI
 	 * @throws IOException 
 	 */
 	private void RunCommandGui(CommandLine cl) throws IOException {
-		new org.tigris.mbt.GUI.mbt();
+		if( cl.hasOption( "f" ) ) 
+			App.main( new String[]{ cl.getOptionValue( "f" ) } );
+		else
+			App.main( null );
 	}
 
 	private boolean helpNeeded(String module, boolean condition, String message)
