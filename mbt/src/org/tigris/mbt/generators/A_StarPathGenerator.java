@@ -27,7 +27,7 @@ public class A_StarPathGenerator extends PathGenerator {
 	}
 
 	public String[] getNext() {
-		Util.AbortIf(!hasNext(), "No more lines available");
+		Util.AbortIf(!hasNext(), "Finished");
 		if(lastState == null || lastState != getMachine().getCurrentState() || preCalculatedPath == null || preCalculatedPath.size() == 0)
 		{
 			boolean oldCalculatingPathValue = getMachine().isCalculatingPath();
