@@ -7,6 +7,8 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
@@ -252,6 +254,8 @@ public class Util {
 			default:
 				throw new RuntimeException("Generator not implemented yet!");
 		}
+		
+		logger.debug("Added generator: " + generator );
 
 		return generator;
 	}
@@ -359,6 +363,13 @@ public class Util {
 			mbt.setWeighted(false);
 		}
 				
+		if ( root.getAttributeValue( "GUI" ) != null && 
+			 root.getAttributeValue( "GUI" ).equalsIgnoreCase( "true" ) )
+		{
+			logger.debug( "Will use GUI mode" );
+			mbt.setUseGUI();
+		}
+
 		List<Element> generators = root.getChildren("GENERATOR");
 
 		if(generators.size()==0)
@@ -418,12 +429,6 @@ public class Util {
 			}
 			timer = new Timer();
 			timer.schedule(	logTask, 500, seconds * 1000 );
-		}
-
-		if ( root.getAttributeValue( "GUI" ) != null && 
-			 root.getAttributeValue( "GUI" ).equalsIgnoreCase( "true" ) )
-		{
-			mbt.setUseGUI();
 		}
 
 		if ( runningSoapServices == false )
@@ -763,5 +768,14 @@ public class Util {
             classPath += urls[i].getFile() + "\n";
         }       
         return classPath;
+	}
+	
+	public static void printStackTrace( Exception e )
+	{
+		StringWriter sw = new StringWriter();
+	    PrintWriter pw = new PrintWriter( sw );
+	    e.printStackTrace( pw );
+	    pw.close();	    		    
+		logger.error( sw.toString() );
 	}
 }
