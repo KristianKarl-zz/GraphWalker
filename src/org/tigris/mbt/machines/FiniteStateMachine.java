@@ -257,9 +257,9 @@ public class FiniteStateMachine{
 		String str = "";
 		if ( e > 0 && v > 0 )
 			str = "Coverage Edges: " + ec + "/" + e + " => " +  (100*ec)/e + "%\n" + 
-			"Coverage States: " + vc + "/" + v + " => " + (100*vc)/v  + "%\n" + 
+			"Coverage Vertices: " + vc + "/" + v + " => " + (100*vc)/v  + "%\n" + 
 			"Unvisited Edges:  " + (e-ec) + "\n" + 
-			"Unvisited States: " + (v-vc) + "\n" +
+			"Unvisited Vertices: " + (v-vc) + "\n" +
 			"Test sequence length:  " + len;
 		else if ( req > 0 )
 			str = "Coverage Requirements: " + reqc + "/" + req + " => " +  (100*reqc)/req + "%\n";
