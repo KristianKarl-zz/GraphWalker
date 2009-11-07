@@ -62,7 +62,9 @@ public abstract class PathGenerator {
     }
     
     public String toString() {
-    	return getStopCondition().toString();
+    	if ( getStopCondition() != null )
+    		return getStopCondition().toString();
+    	return "";
     }
 
     public boolean isEdgeAvailable( Edge edge )
