@@ -89,18 +89,11 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 	private JFileChooser fileChooser = new JFileChooser(System
 			.getProperty("user.dir"));
 	private VisualizationViewer<Vertex, Edge> vv;
-	private Layout<Vertex, Edge> layout;
-	private File xmlFile;
+	private Layout<Vertex, Edge> graphLayout;
+
+	static private File xmlFile;
 	private ExecuteMBT executeMBT = null;
     private Timer updateColorLatestStateLabel = new Timer();
-
-	public File getXmlFile() {
-		return xmlFile;
-	}
-
-	public void setXmlFile(File xmlFile) {
-		this.xmlFile = xmlFile;
-	}
 
 	static private Logger log;
 	private static Endpoint endpoint = null;
@@ -140,6 +133,8 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
     @SuppressWarnings("unchecked")
 	private static Class<? extends Layout>[] getCombos()
     {
+		log.debug( "Entry" );
+
         List<Class<? extends Layout>> layouts = new ArrayList<Class<? extends Layout>>();
         layouts.add(StaticLayout.class);
         layouts.add(KKLayout.class);
@@ -153,6 +148,7 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 
     public static void SetAppEventNotifier( AppEvent event )
     {
+		log.debug( "Entry" );
 		log.debug( "AppEvent is set using: " + event );
 		appEvent = event;
 		changeEvent = new ChangeEvent(event);
@@ -160,6 +156,8 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 
 	private void runSoap()
 	{
+		log.debug( "Entry" );
+
 		if ( endpoint != null ) {
 			endpoint = null;
 		}
@@ -179,6 +177,8 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 	}
 
 	public void getNextEvent() {
+		log.debug( "Entry" );
+
 		updateUI();
 		getVv().stateChanged(changeEvent);
 		if ( centerOnVertexButton.isSelected() ) {
@@ -187,6 +187,8 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 	}
 	
     public void actionPerformed(ActionEvent e) {
+		log.debug( "Entry" );
+
         String cmd = e.getActionCommand();
 		log.debug( "Got action: " + cmd );
 
@@ -211,6 +213,8 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
     }
 
     public void load() {
+		log.debug( "Entry" );
+
 		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		FileNameExtensionFilter filter = new FileNameExtensionFilter(
 				"XML files", "xml");
@@ -226,6 +230,8 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 	}
 
 	private void outPut() {
+		log.debug( "Entry" );
+
 		if ( ModelBasedTesting.getInstance().getMachine() == null ) {
 			return;
 		}
@@ -246,6 +252,7 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 	}
 
 	public void setButtons() {
+		log.debug( "Entry" );
 		if ( status.isStopped() ) {
 			loadButton.setEnabled(true);
 			reloadButton.setEnabled(true);
@@ -279,6 +286,7 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 	
 	@SuppressWarnings("synthetic-access")
 	private void loadModel() {
+		log.debug( "Entry" );
 		setWaitCursor();
 		status.reset();
 		if ( executeMBT != null ) {
@@ -298,6 +306,7 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 				Util.loadMbtFromXml( xmlFile.getAbsolutePath() );				
 				setTitle( "Model-Based Testing 2.2 Beta 11 - " + xmlFile.getName() );
 			} catch (Exception e) {
+				Util.printStackTrace( e );
 				JOptionPane.showMessageDialog( App.getInstance(), e.getMessage() );
 				log.error( e.getMessage() );
 			}
@@ -314,7 +323,8 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 	}
 
 	public void run() {
-		log.debug( "run" );
+		log.debug( "Entry" );
+		status.unsetState( Status.stopped );
 		if ( status.isExecutingSoapTest() ) {
 			status.unsetState( Status.paused );
 		}
@@ -325,6 +335,7 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 	}
 	
 	public void executingJavaTest( boolean executingJavaTest ) {
+		log.debug( "Entry" );
 		if ( executingJavaTest == true ) {
 			status.setState( Status.executingJavaTest );
 		}
@@ -337,38 +348,42 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
     private class ExecuteMBT extends SwingWorker<Void, Void> {
     	private Logger log = Util.setupLogger( ExecuteMBT.class );
         protected Void doInBackground() {
+    		log.debug( "Entry" );
         	try {
-				log.debug( "doInBackground" );
+				log.debug( "GUI is starting to traverse the model" );
        			ModelBasedTesting.getInstance().executePath();        			
 			} catch (Exception e) {
 				log.error( e.getMessage() );
+				log.error( e.getCause() );
 				JOptionPane.showMessageDialog( App.getInstance(), e.getCause().getMessage() );				
 			}
             return null;
         }
 
         protected void done() {
+    		log.debug( "Entry" );
 			super.done();
-			log.debug( "done" );
+			log.debug( "GUI is finished traversing the model" );
 			App.getInstance().stop();
 		}
     }
 
 	public void stop() {
-		log.debug( "stop" );
+		log.debug( "Entry" );
 		status.setState( Status.stopped );
 		setButtons();
 	}
 
 	public void pause() {
-		log.debug( "pause" );
+		log.debug( "Entry" );
+		status.unsetState( Status.stopped );
 		status.unsetState( Status.running );
 		status.setState( Status.paused );
 		setButtons();
 	}
 
 	public void next() {
-		log.debug( "next" );
+		log.debug( "Entry" );
 		if ( ModelBasedTesting.getInstance().hasNextStep() == false ) {
 			status.setState( Status.stopped );
 			setButtons();
@@ -384,6 +399,7 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 	}
 	
 	public void centerOnVertex() {
+		log.debug( "Entry" );
 		Vertex v = ModelBasedTesting.getInstance().getCurrentVertex();
 		if ( v != null ) {
 			Point2D target = getVv().getGraphLayout().transform( v );
@@ -407,8 +423,10 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 		loadModel();
 	}
 
-	public void setLayout(Layout<Vertex, Edge> layout) {
-		this.layout = layout;
+	public void setGraphLayout(Layout<Vertex, Edge> graphLayout) {
+		log.debug( "Entry" );
+		log.debug("setLayout using: " + graphLayout.toString() );
+		this.graphLayout = graphLayout;
 
 		Transformer<Vertex,Point2D> vertexLocation = new Transformer<Vertex,Point2D>(){
             public Point2D transform(Vertex v) {
@@ -416,7 +434,7 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
             }
         };
 
-		this.layout.setInitializer(vertexLocation);
+		this.graphLayout.setInitializer(vertexLocation);
 	}
 
 	public VisualizationViewer<Vertex, Edge> getVv() {
@@ -424,6 +442,7 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 	}
 	
 	public void disableToolBarExceptPauseButton() {
+		log.debug( "Entry" );
 		loadButton.setEnabled(false);
 		reloadButton.setEnabled(false);
 		runButton.setEnabled(false);
@@ -434,19 +453,23 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 	}
 	
 	public void setWaitCursor() {
+		log.debug( "Entry" );
 		setCursor( Cursor.getPredefinedCursor( Cursor.WAIT_CURSOR ) );
 	}
 	
 	public void setDefaultCursor() {
+		log.debug( "Entry" );
 		setCursor( Cursor.getPredefinedCursor( Cursor.DEFAULT_CURSOR ) );
 	}
 	
 	public void updateLayout() {
-		if ( ModelBasedTesting.getInstance().getGraph() != null ) {
+		log.debug( "Entry" );
+
+		if ( isVisible() && ModelBasedTesting.getInstance().getGraph() != null ) {
 			log.debug( "updateLayout" );
 			setWaitCursor();
-			setLayout( new StaticLayout<Vertex, Edge>( ModelBasedTesting.getInstance().getGraph() ) );
-			getVv().setGraphLayout( layout );
+			setGraphLayout( new StaticLayout<Vertex, Edge>( ModelBasedTesting.getInstance().getGraph() ) );
+			getVv().setGraphLayout( getGraphLayout() );
 			updateUI();
 			setDefaultCursor();
 		}
@@ -503,13 +526,15 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 		}
 	}
 
-	private VisualizationViewer<Vertex, Edge> getGraphViewer() {		
+	private VisualizationViewer<Vertex, Edge> getGraphViewer() {
+		log.debug( "Entry" );
+
 		if ( ModelBasedTesting.getInstance().getGraph() == null )
-			layout = new StaticLayout<Vertex, Edge>(new Graph() );
+			setGraphLayout( new StaticLayout<Vertex, Edge>(new Graph() ) );
 		else
-			layout = new StaticLayout<Vertex, Edge>( ModelBasedTesting.getInstance().getGraph() );
+			setGraphLayout( new StaticLayout<Vertex, Edge>( ModelBasedTesting.getInstance().getGraph() ) );
 		
-		vv = new VisualizationViewer<Vertex, Edge>(layout);
+		vv = new VisualizationViewer<Vertex, Edge>(getGraphLayout());
 
 		DefaultModalGraphMouse<Vertex, Edge> graphMouse = new DefaultModalGraphMouse<Vertex, Edge>();
 		vv.setGraphMouse(graphMouse);
@@ -547,6 +572,7 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 	}
 
 	public void createPanelStatistics() {
+		log.debug( "Entry" );
 		panelStatistics = new JPanel();
 		panelStatistics.setLayout(new BorderLayout());
 
@@ -556,6 +582,8 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 	}
 
 	public void createPanelVariables() {
+		log.debug( "Entry" );
+
 		panelVariables = new JPanel();
 		panelVariables.setLayout(new BorderLayout());
 
@@ -566,7 +594,8 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 
 	protected JButton makeNavigationButton(String imageName,
 			String actionCommand, String toolTipText, String altText, boolean enabled) {
-		
+		log.debug( "Entry" );
+
 		// Look for the image.
 		String imgLocation = "resources/icons/" + imageName + ".png";
 		URL imageURL = App.class.getResource(imgLocation);
@@ -590,6 +619,7 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 
 	protected JCheckBox makeNavigationCheckBoxButton(String imageName,
 			String actionCommand, String toolTipText, String altText) {
+		log.debug( "Entry" );
 
 		// Create and initialize the button.
 		JCheckBox button = new JCheckBox();
@@ -654,6 +684,7 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 	 
 	@SuppressWarnings({ "unchecked", "serial", "synthetic-access" })
 	public void addButtons(JToolBar toolBar) {
+		log.debug( "Entry" );
 
 		loadButton = makeNavigationButton("open", LOAD,
                 "Load a model (graphml file)",
@@ -709,6 +740,7 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 	}
 
 	public void createPanelGraph() {
+		log.debug( "Entry" );
 		panelGraph = new JPanel();
 		panelGraph.setLayout(new BorderLayout());
 		setLatestStateLabel(new JLabel(" "));
@@ -719,6 +751,7 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 	}
 
 	public void init() {
+		log.debug( "Entry" );
 		setTitle("Model-Based Testing 2.2 Beta 11");
 		setBackground(Color.gray);
 
@@ -750,7 +783,6 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 	    updateColorLatestStateLabel = new Timer();
 	    
 	    updateColorLatestStateLabel.scheduleAtFixedRate(new TimerTask() {
-	    	    boolean toogle = false;
 	            public void run() {
 	        		if ( getStatus().isStopped() ) {
 	        			if ( getLatestStateLabel().getBackground().equals( Color.GRAY  ) ) {
@@ -759,37 +791,34 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
     	    			getLatestStateLabel().setBackground( Color.GRAY );	    			
 	        		}
 	        		    		
-	        		if ( toogle ) {
-	        			if ( getStatus().isPaused() && 
-	        					!( getStatus().isNext() ||
-	        					   getStatus().isExecutingJavaTest() ) ) {
-	    	    			getLatestStateLabel().setBackground( Color.RED );
-	        			}
-	        			else if ( getStatus().isRunning() || 
-	        					  getStatus().isNext() ||
-	        					  getStatus().isExecutingJavaTest() ||
-	        					  getStatus().isExecutingSoapTest() ) {
-	    	    			getLatestStateLabel().setBackground( Color.GREEN );
-	        			}
-	    				toogle = false;
-	        		}
-	        		else {
-	        			getLatestStateLabel().setBackground( Color.GRAY );
-	        			toogle = true;
-	        		}
+        			if ( getStatus().isPaused() && 
+        					!( getStatus().isNext() ||
+        					   getStatus().isExecutingJavaTest() ) ) {
+    	    			getLatestStateLabel().setBackground( Color.RED );
+        			}
+        			else if ( getStatus().isRunning() || 
+        					  getStatus().isNext() ||
+        					  getStatus().isExecutingJavaTest() ||
+        					  getStatus().isExecutingSoapTest() ) {
+    	    			getLatestStateLabel().setBackground( Color.GREEN );
+        			}
 	            }
 	        }, delay, period);
 
+	    if ( xmlFile != null )
+	    	loadModel();
 	}
 
 	// Private constructor prevents instantiation from other classes
 	private App() {
 		log = Util.setupLogger( App.class );
+		log.debug( "Entry" );
 		init();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		pack();
 		setLocationByPlatform(true);
 		setVisible(true);
+		updateLayout();
 	}
 
 	/**
@@ -807,6 +836,12 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 	}
 
 	public static void main(String args[]) {
+		
+		if ( args != null && args.length == 1 )
+		{			 
+			xmlFile = new File( (String)args[0] );
+		}
+		
 		getInstance();
 		ModelBasedTesting.getInstance().setUseGUI();
 	}
@@ -817,5 +852,17 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 
 	public JLabel getLatestStateLabel() {
 		return latestStateLabel;
+	}
+
+	public File getXmlFile() {
+		return xmlFile;
+	}
+
+	public Layout<Vertex, Edge> getGraphLayout() {
+		return graphLayout;
+	}
+
+	public void setXmlFile(File xmlFile) {
+		this.xmlFile = xmlFile;
 	}
 }
