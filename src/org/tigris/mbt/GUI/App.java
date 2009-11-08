@@ -263,8 +263,7 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 			soapButton.setEnabled(false);
 		}
 		else if ( status.isPaused() && 
-				!( status.isNext() ||
-				   status.isExecutingJavaTest() ) ) {
+				  status.isExecutingSoapTest() ) {
 			loadButton.setEnabled(true);
 			reloadButton.setEnabled(true);
 			runButton.setEnabled(true);
@@ -282,6 +281,16 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 			pauseButton.setEnabled(true);
 			nextButton.setEnabled(false);
 			soapButton.setEnabled(false);
+		}
+		else if ( status.isPaused() && 
+				!( status.isNext() ||
+				   status.isExecutingJavaTest() ) ) {
+			loadButton.setEnabled(true);
+			reloadButton.setEnabled(true);
+			runButton.setEnabled(true);
+			pauseButton.setEnabled(false);
+			nextButton.setEnabled(true);
+			soapButton.setEnabled(true);
 		}
 	}
 	
