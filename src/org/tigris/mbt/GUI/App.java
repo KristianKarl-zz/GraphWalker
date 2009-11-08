@@ -353,9 +353,16 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
 				log.debug( "GUI is starting to traverse the model" );
        			ModelBasedTesting.getInstance().executePath();        			
 			} catch (Exception e) {
-				log.error( e.getMessage() );
-				log.error( e.getCause() );
-				JOptionPane.showMessageDialog( App.getInstance(), e.getCause().getMessage() );				
+				if ( e.getMessage() != null && 
+					 e.getMessage().equals( "GUI has stopped execution" ) ) {
+						;
+				}
+				else {
+					Util.printStackTrace(e);				
+					log.error( e.getMessage() );
+					log.error( e.getCause() );
+					JOptionPane.showMessageDialog( App.getInstance(), e.getCause().getMessage() );
+				}
 			}
             return null;
         }
