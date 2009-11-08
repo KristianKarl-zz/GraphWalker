@@ -51,6 +51,7 @@ import org.tigris.mbt.SoapServices;
 import org.tigris.mbt.Util;
 import org.tigris.mbt.events.AppEvent;
 import org.tigris.mbt.events.MbtEvent;
+import org.tigris.mbt.exceptions.GuiStoppedExecution;
 import org.tigris.mbt.graph.Edge;
 import org.tigris.mbt.graph.Graph;
 import org.tigris.mbt.graph.Vertex;
@@ -352,16 +353,12 @@ public class App extends JFrame implements ActionListener, MbtEvent  {
         	try {
 				log.debug( "GUI is starting to traverse the model" );
        			ModelBasedTesting.getInstance().executePath();        			
+			} catch (GuiStoppedExecution e) {
 			} catch (Exception e) {
-				if ( e.getMessage() != null && 
-					 e.getMessage().equals( "GUI has stopped execution" ) ) {					
-				}
-				else {
-					Util.printStackTrace(e);				
-					log.error( e.getMessage() );
-					log.error( e.getCause() );
-					JOptionPane.showMessageDialog( App.getInstance(), e.getCause().getMessage() );
-				}
+				Util.printStackTrace(e);				
+				log.error( e.getMessage() );
+				log.error( e.getCause() );
+				JOptionPane.showMessageDialog( App.getInstance(), e.getCause().getMessage() );
 			}
             return null;
         }

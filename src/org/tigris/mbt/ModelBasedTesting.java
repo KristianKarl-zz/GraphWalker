@@ -39,6 +39,7 @@ import org.tigris.mbt.conditions.CombinationalCondition;
 import org.tigris.mbt.conditions.ReachedRequirement;
 import org.tigris.mbt.conditions.StopCondition;
 import org.tigris.mbt.events.MbtEvent;
+import org.tigris.mbt.exceptions.GuiStoppedExecution;
 import org.tigris.mbt.exceptions.InvalidDataException;
 import org.tigris.mbt.generators.CodeGenerator;
 import org.tigris.mbt.generators.NonOptimizedShortestPath;
@@ -371,8 +372,8 @@ public class ModelBasedTesting {
 		if (isUseGUI()) {
 
 			while (true) {
-				Util.AbortIf(App.getInstance().getStatus().isStopped(),
-						"GUI has stopped execution.");
+				if ( App.getInstance().getStatus().isStopped() )
+					new GuiStoppedExecution();
 
 				if (App.getInstance().getStatus().isNext()
 						|| App.getInstance().getStatus().isRunning()
@@ -415,8 +416,8 @@ public class ModelBasedTesting {
 				notifyApp.getNextEvent();
 			}
 			if (isUseGUI()) {
-				Util.AbortIf(App.getInstance().getStatus().isStopped(),
-						"GUI has stopped execution.");
+				if ( App.getInstance().getStatus().isStopped() )
+					new GuiStoppedExecution();
 
 				if (App.getInstance().getStatus().isNext()) {
 					App.getInstance().getStatus().unsetState(Status.next);
