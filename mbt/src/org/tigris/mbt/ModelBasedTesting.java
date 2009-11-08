@@ -420,6 +420,7 @@ public class ModelBasedTesting {
 
 				if (App.getInstance().getStatus().isNext()) {
 					App.getInstance().getStatus().unsetState(Status.next);
+					App.getInstance().setButtons();
 				}
 			}
 		}
