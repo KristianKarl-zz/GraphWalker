@@ -185,8 +185,6 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 				PrintStream ps = System.out;
 				System.setOut(Void);
 				
-				logger.debug( "The classpath is: " + Util.printClassPath() );
-				
 				try {
 					interpreter.eval( getAction( edge ) );
 				} catch ( EvalError e ) {
