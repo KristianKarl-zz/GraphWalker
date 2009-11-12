@@ -214,6 +214,8 @@ public class Keywords {
 
 	public static final int GENERATOR_SHORTEST_NON_OPTIMIZED = 2006;
 
+	public static final int GENERATOR_MANUAL_HTML = 2007;
+
 	/**
 	 * Holds the pre-defined key words
 	 */

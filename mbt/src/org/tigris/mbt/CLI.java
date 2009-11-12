@@ -11,6 +11,7 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.Vector;
 
 import javax.xml.ws.Endpoint;
 
@@ -22,6 +23,9 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.PosixParser;
 import org.apache.log4j.Logger;
 import org.tigris.mbt.GUI.App;
+import org.tigris.mbt.io.PrintHTMLTestSequence;
+
+import edu.uci.ics.jung.graph.util.Pair;
 
 /**
  * Command Line Interface object, to the org.tigris.mbt package. The object
@@ -160,6 +164,8 @@ public class CLI {
 				buildMergeCLI();
 			} else if (args[0].equals("source")) {
 				buildSourceCLI();
+			} else if (args[0].equals("manual")) {
+				buildManualCLI();
 			} else if (args[0].equals("xml")) {
 				buildXmlCLI();
 			} else if (args[0].equals("soap")) {
@@ -235,6 +241,12 @@ public class CLI {
 			else if (args[0].equals("gui")) {
 				RunCommandGui(cl);
 			}
+			/**
+			 * Command: manual
+			 */
+			else if (args[0].equals("manual")) {
+				RunCommandManual(cl);
+			}
 		} catch (ArrayIndexOutOfBoundsException e) {
 			System.err.println("The arguments for either the generator, or the stop-condition, is incorrect.");
 			System.err.println("Example: java -jar mbt.jar offline -f ../demo/model/UC01.graphml -s EDGE_COVERAGE:100 -g A_STAR");
@@ -256,16 +268,17 @@ public class CLI {
 		System.out.println("usage: 'java -jar mbt.jar <COMMAND> [OPTION] [ARGUMENT]'\n");
 		System.out.println("Type 'java -jar mbt.jar help <COMMAND>' to get specific help about a command.");
 		System.out.println("Valid commands are:");
-		System.out.println("    help");
-		System.out.println("    online");
-		System.out.println("    offline");
-		System.out.println("    requirements");
-		System.out.println("    methods");
-		System.out.println("    merge");
-		System.out.println("    xml");
-		System.out.println("    soap");
 		System.out.println("    gui");
-		System.out.println("    source\n");
+		System.out.println("    help");
+		System.out.println("    manual");
+		System.out.println("    merge");
+		System.out.println("    methods");
+		System.out.println("    offline");
+		System.out.println("    online");
+		System.out.println("    requirements");
+		System.out.println("    soap");
+		System.out.println("    source");
+		System.out.println("    xml\n");
 		System.out.println("Type 'java -jar mbt.jar -v (--version)' for version information.");
 	}
 
@@ -283,6 +296,9 @@ public class CLI {
 		} else if (helpSection.equalsIgnoreCase("offline")) {
 			buildOfflineCLI();
 			header = "Generate a test sequence offline. The sequence is printed to the standard output\n";
+		} else if (helpSection.equalsIgnoreCase("manual")) {
+			buildManualCLI();
+			header = "Generate a test sequence (offline), the output will be a HTML formatted test case document\n";
 		} else if (helpSection.equalsIgnoreCase("methods")) {
 			buildMethodsCLI();
 			header = "Generate all methods, or tests existing in the model.\n"
@@ -399,6 +415,28 @@ public class CLI {
 		opt.addOption("w", "weighted", false, "Use weighted values if they exists in the model, and the generator is RANDOM.");
 	}
 
+	/**
+	 * Build the command manual command line parser
+	 */
+	private void buildManualCLI() {
+		opt.addOption("x", false, "Use an extended finite state machine to handle the model.");
+		opt.addOption("j", false, "Enable JavaScript engine");
+		opt.addOption(OptionBuilder.withArgName("stop-condition").withDescription(
+		    "Stop condition. Halts generation after the specified stop-conditon(s) has been met. "
+		        + "At least 1 condition can be given. If more are given, the condition that meets"
+		        + "it's stop-condition first, will cause the generation to halt.\n"
+		        + "Each stop condition must be followed with a : and then an integer between 1-100, representing the"
+		        + " percentage that the stop-condition should reach. Every stop-condition is seperated with a |. "
+		        + "A list of valid stop-conditions are:\n" + generateListOfValidStopConditions()).hasArg().create("s"));
+		opt.addOption(OptionBuilder.withArgName("generator").withDescription(
+		    "The generator to be used when traversing the model. At least 1 generator must be given. "
+		        + "Every generator is seperated with a |.\nA list of valid generators are:\n" + generateListOfValidGenerators()).hasArg()
+		    .create("g"));
+		opt.addOption(OptionBuilder.withArgName("file").withDescription("The file (or folder) containing graphml formatted files.").hasArg()
+		    .create("f"));
+		opt.addOption("w", "weighted", false, "Use weighted values if they exists in the model, and the generator is RANDOM.");
+	}
+
 	private void buildMethodsCLI() {
 		opt.addOption(OptionBuilder.withArgName("file").withDescription("The file (or folder) containing graphml formatted files.").hasArg()
 		    .withLongOpt("input_graphml").create("f"));
@@ -456,7 +494,7 @@ public class CLI {
 	 * Print version information
 	 */
 	private void printVersionInformation() {
-		System.out.println("org.tigris.mbt version 2.2 (revision 701) Beta 11\n");
+		System.out.println("org.tigris.mbt version 2.2 (revision 701) Beta 12\n");
 		System.out.println("org.tigris.mbt is open source software licensed under GPL");
 		System.out.println("The software (and it's source) can be downloaded from http://mbt.tigris.org/\n");
 		System.out.println("This package contains following software packages:");
@@ -555,6 +593,50 @@ public class CLI {
 			getMbt().getStatisticsManager().setReportTemplate(cl.getOptionValue('t'));
 			getMbt().getStatisticsManager().writeFullReport(cl.getOptionValue('r'));
 		}
+
+	}
+
+	/**
+	 * Run the manual command
+	 */
+	private void RunCommandManual(CommandLine cl) {
+		/**
+		 * Get the model from the graphml file (or folder)
+		 */
+		if (helpNeeded("manual", !cl.hasOption("f"), "Missing the input graphml file (folder), See -f (--input_graphml)")
+		    || helpNeeded("manual", !cl.hasOption("s"), "A stop condition must be supplied, See option -s")
+		    || helpNeeded("manual", !cl.hasOption("g"), "Missing the generator, See option -g"))
+			return;
+
+		getMbt().setManualTestSequence(true);
+		getMbt().readGraph(cl.getOptionValue("f"));
+		getMbt().enableJsScriptEngine(cl.hasOption("j"));
+		getMbt().enableExtended(cl.hasOption("x"));
+		getMbt().setWeighted(cl.hasOption("w"));
+
+		/*
+		 * Set the stop-conditions(s)
+		 */
+		String[] stopConditions = cl.getOptionValue("s").split("\\|");
+		for (int i = 0; i < stopConditions.length; i++) {
+			String[] sc = stopConditions[i].trim().split(":");
+			getMbt().addAlternativeCondition(Keywords.getStopCondition(sc[0].trim()), // Stop
+			    // condition
+			    (sc.length == 1 ? "" : sc[1].trim())); // Optional condition parameter
+		}
+
+		/*
+		 * Set the generators(s)
+		 */
+		String[] genrators = cl.getOptionValue("g").split("\\|");
+		for (int i = 0; i < genrators.length; i++) {
+			getMbt().setGenerator(Keywords.getGenerator(genrators[0].trim()));
+		}
+
+		Vector<Pair<String>> testSequence = new Vector<Pair<String>>();
+		getMbt().writePath(testSequence);
+
+		new PrintHTMLTestSequence(testSequence, System.out);
 
 	}
 
