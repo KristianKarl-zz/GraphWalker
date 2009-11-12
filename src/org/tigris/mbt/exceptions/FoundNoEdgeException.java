@@ -18,13 +18,12 @@
 package org.tigris.mbt.exceptions;
 
 /**
- * This exception is thrown during test sequence generation, when no out edge
- * is found from a given vertex. This could be due to a cul-de-sac, which may
- * or may not be perfectly all right.
- *
+ * This exception is thrown during test sequence generation, when no out edge is
+ * found from a given vertex. This could be due to a cul-de-sac, which may or
+ * may not be perfectly all right.
+ * 
  */
-public class FoundNoEdgeException extends Exception
-{
+public class FoundNoEdgeException extends Exception {
 	/**
 	 * @param string
 	 */

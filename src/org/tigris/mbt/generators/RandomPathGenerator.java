@@ -8,7 +8,6 @@ import org.tigris.mbt.Util;
 import org.tigris.mbt.exceptions.FoundNoEdgeException;
 import org.tigris.mbt.graph.Edge;
 
-
 public class RandomPathGenerator extends PathGenerator {
 
 	static Logger logger = Util.setupLogger(RandomPathGenerator.class);
@@ -24,74 +23,66 @@ public class RandomPathGenerator extends PathGenerator {
 		}
 		Edge edge = (getMachine().isWeighted() ? getWeightedEdge(availableEdges) : getRandomEdge(availableEdges));
 		getMachine().walkEdge(edge);
-		logger.debug( edge.getFullLabelKey() );
-		logger.debug( edge );
-		String[] retur = {getMachine().getEdgeName(edge), getMachine().getCurrentStateName()};
+		logger.debug(edge.getFullLabelKey());
+		logger.debug(edge);
+		String[] retur = { getMachine().getEdgeName(edge), getMachine().getCurrentStateName() };
 		return retur;
 	}
-	
-    private Edge getWeightedEdge(Set<Edge> availableEdges)
-    {
-        Object[] edges = availableEdges.toArray();
-        Edge edge = null;
-        float probabilities[]   = new float[ availableEdges.size() ];
-        int   numberOfZeros     = 0;
-        float sum               = 0;
 
-        for ( int i = 0; i < edges.length; i++ )
-        {
-            edge = (Edge)edges[ i ];
+	private Edge getWeightedEdge(Set<Edge> availableEdges) {
+		Object[] edges = availableEdges.toArray();
+		Edge edge = null;
+		float probabilities[] = new float[availableEdges.size()];
+		int numberOfZeros = 0;
+		float sum = 0;
 
-            if ( edge.getWeightKey() > 0 )
-            {
-                Float weight = edge.getWeightKey();
-                probabilities[ i ] = weight.floatValue();
-                sum += probabilities[ i ];
-            }
-            else
-            {
-                numberOfZeros++;
-                probabilities[ i ] = 0;
-            }
-        }
+		for (int i = 0; i < edges.length; i++) {
+			edge = (Edge) edges[i];
 
-        if ( sum > 1 )
-        {
-            throw new RuntimeException( "The sum of all weights in edges from vertex: '" + getMachine().getModel().getSource(edge).getLabelKey() + "', adds up to more than 1.00" );
-        }
+			if (edge.getWeightKey() > 0) {
+				Float weight = edge.getWeightKey();
+				probabilities[i] = weight.floatValue();
+				sum += probabilities[i];
+			} else {
+				numberOfZeros++;
+				probabilities[i] = 0;
+			}
+		}
 
-        float rest = ( 1 - sum ) / numberOfZeros;
-        int index = random.nextInt( 100 );
-        logger.debug( "Randomized integer index = " + index );
+		if (sum > 1) {
+			throw new RuntimeException("The sum of all weights in edges from vertex: '" + getMachine().getModel().getSource(edge).getLabelKey()
+			    + "', adds up to more than 1.00");
+		}
 
-        float weight = 0;
-        for ( int i = 0; i < edges.length; i++ )
-        {
-            if ( probabilities[ i ] == 0 )
-            {
-                probabilities[ i ] = rest;
-            }
-            logger.debug( "The edge: '" + (String)((Edge)edges[ i ]).getLabelKey() + "' is given the probability of " + probabilities[ i ] * 100 + "%"  );
+		float rest = (1 - sum) / numberOfZeros;
+		int index = random.nextInt(100);
+		logger.debug("Randomized integer index = " + index);
 
-            weight = weight + probabilities[ i ] * 100;
-            logger.debug( "Current weight is: " + weight  );
-            if ( index < weight )
-            {
-                edge = (Edge)edges[ i ];
-                logger.debug( "Selected edge is: " + edge );
-                break;
-            }
-        }
+		float weight = 0;
+		for (int i = 0; i < edges.length; i++) {
+			if (probabilities[i] == 0) {
+				probabilities[i] = rest;
+			}
+			logger.debug("The edge: '" + (String) ((Edge) edges[i]).getLabelKey() + "' is given the probability of " + probabilities[i] * 100
+			    + "%");
 
-        return edge;
-    }
-	
-	private Edge getRandomEdge(Set<Edge> availableEdges)
-	{
+			weight = weight + probabilities[i] * 100;
+			logger.debug("Current weight is: " + weight);
+			if (index < weight) {
+				edge = (Edge) edges[i];
+				logger.debug("Selected edge is: " + edge);
+				break;
+			}
+		}
+
+		return edge;
+	}
+
+	private Edge getRandomEdge(Set<Edge> availableEdges) {
 		return (Edge) availableEdges.toArray()[random.nextInt(availableEdges.size())];
 	}
-	
+
 	public String toString() {
-		return "RANDOM{"+ super.toString() +"}";
+		return "RANDOM{" + super.toString() + "}";
 	}
 }

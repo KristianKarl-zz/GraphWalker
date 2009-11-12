@@ -22,8 +22,8 @@ public class AbstractElement {
 
 	public AbstractElement() {
 	}
-	
-	public AbstractElement( AbstractElement ae ) {
+
+	public AbstractElement(AbstractElement ae) {
 		this.labelKey = ae.labelKey;
 		this.fullLabelKey = ae.fullLabelKey;
 		this.reqTagKey = ae.reqTagKey;
@@ -41,9 +41,8 @@ public class AbstractElement {
 		this.mergedMbtKey = ae.mergedMbtKey;
 	}
 
-	public AbstractElement( AbstractElement A, AbstractElement B ) {
-		if ( A.fullLabelKey.length() > B.fullLabelKey.length() )
-		{
+	public AbstractElement(AbstractElement A, AbstractElement B) {
+		if (A.fullLabelKey.length() > B.fullLabelKey.length()) {
 			this.labelKey = A.labelKey;
 			this.fullLabelKey = A.fullLabelKey;
 			this.reqTagKey = A.reqTagKey;
@@ -59,9 +58,7 @@ public class AbstractElement {
 			this.blockedKey = A.blockedKey;
 			this.imageKey = A.imageKey;
 			this.mergedMbtKey = A.mergedMbtKey;
-		}
-		else
-		{
+		} else {
 			this.labelKey = B.labelKey;
 			this.fullLabelKey = B.fullLabelKey;
 			this.reqTagKey = B.reqTagKey;
@@ -199,7 +196,7 @@ public class AbstractElement {
 	public void setLabelKey(String labelKey) {
 		this.labelKey = labelKey;
 	}
-	
+
 	public String toString() {
 		return Util.getCompleteName(this);
 	}
