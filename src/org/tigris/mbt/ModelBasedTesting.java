@@ -57,6 +57,8 @@ import org.tigris.mbt.statistics.EdgeSequenceCoverageStatistics;
 import org.tigris.mbt.statistics.RequirementCoverageStatistics;
 import org.tigris.mbt.statistics.StateCoverageStatistics;
 
+import edu.uci.ics.jung.graph.util.Pair;
+
 /**
  * The object handles the test case generation, both online and offline.
  * 
@@ -80,6 +82,20 @@ public class ModelBasedTesting {
 	private MbtEvent notifyApp = null;
 	private String javaExecutorClass = null;
 
+	/**
+	 * Do not verify labels for edges and vertices. This is used when creating
+	 * manual test sequences.
+	 */
+	private boolean manualTestSequence = false;
+
+	public boolean isManualTestSequence() {
+		return manualTestSequence;
+	}
+
+	public void setManualTestSequence(boolean manualTestSequence) {
+		this.manualTestSequence = manualTestSequence;
+	}
+
 	// Private constructor prevents instantiation from other classes
 	private ModelBasedTesting() {
 	}
@@ -100,8 +116,8 @@ public class ModelBasedTesting {
 	}
 
 	/**
-	 * Clears everything. Removes any defined machine, generators, stop
-	 * conditions etc.
+	 * Clears everything. Removes any defined machine, generators, stop conditions
+	 * etc.
 	 */
 	public void reset() {
 		modelHandler = null;
@@ -139,16 +155,11 @@ public class ModelBasedTesting {
 	private void setupStatisticsManager() {
 		if (this.statisticsManager == null)
 			this.statisticsManager = new StatisticsManager();
-		this.statisticsManager.addStatisicsCounter("State Coverage",
-				new StateCoverageStatistics(getGraph()));
-		this.statisticsManager.addStatisicsCounter("Edge Coverage",
-				new EdgeCoverageStatistics(getGraph()));
-		this.statisticsManager.addStatisicsCounter("2-Edge Sequence Coverage",
-				new EdgeSequenceCoverageStatistics(getGraph(), 2));
-		this.statisticsManager.addStatisicsCounter("3-Edge Sequence Coverage",
-				new EdgeSequenceCoverageStatistics(getGraph(), 3));
-		this.statisticsManager.addStatisicsCounter("Requirements Coverage",
-				new RequirementCoverageStatistics(getGraph()));
+		this.statisticsManager.addStatisicsCounter("State Coverage", new StateCoverageStatistics(getGraph()));
+		this.statisticsManager.addStatisicsCounter("Edge Coverage", new EdgeCoverageStatistics(getGraph()));
+		this.statisticsManager.addStatisicsCounter("2-Edge Sequence Coverage", new EdgeSequenceCoverageStatistics(getGraph(), 2));
+		this.statisticsManager.addStatisicsCounter("3-Edge Sequence Coverage", new EdgeSequenceCoverageStatistics(getGraph(), 3));
+		this.statisticsManager.addStatisicsCounter("Requirements Coverage", new RequirementCoverageStatistics(getGraph()));
 		this.statisticsManager.addProgress(getMachine().getCurrentState());
 	}
 
@@ -165,20 +176,14 @@ public class ModelBasedTesting {
 	}
 
 	public void addAlternativeCondition(int conditionType, String conditionValue) {
-		StopCondition condition = Util.getCondition(conditionType,
-				conditionValue);
+		StopCondition condition = Util.getCondition(conditionType, conditionValue);
 
 		// If requirement stop condition, check if requirement exists in model
 		if (condition instanceof ReachedRequirement) {
-			Collection<String> reqs = ((ReachedRequirement) condition)
-					.getRequirements();
-			for (Iterator<String> iterator = reqs.iterator(); iterator
-					.hasNext();) {
+			Collection<String> reqs = ((ReachedRequirement) condition).getRequirements();
+			for (Iterator<String> iterator = reqs.iterator(); iterator.hasNext();) {
 				String req = iterator.next();
-				Util
-						.AbortIf(getMachine().getAllRequirements().containsKey(
-								req) == false, "Requirement: '" + req
-								+ "' do not exist in the model");
+				Util.AbortIf(getMachine().getAllRequirements().containsKey(req) == false, "Requirement: '" + req + "' do not exist in the model");
 			}
 		}
 
@@ -196,8 +201,7 @@ public class ModelBasedTesting {
 	}
 
 	public void addCondition(int conditionType, String conditionValue) {
-		StopCondition condition = Util.getCondition(conditionType,
-				conditionValue);
+		StopCondition condition = Util.getCondition(conditionType, conditionValue);
 
 		if (getCondition() == null) {
 			setCondition(condition);
@@ -263,58 +267,53 @@ public class ModelBasedTesting {
 	 * Returns the value of an data object within the data space of the model.
 	 * 
 	 * @param data
-	 *            The name of the data object, which value is to be retrieved.
+	 *          The name of the data object, which value is to be retrieved.
 	 * @return The value of the data object. The value is always returned a s
 	 *         string. It is the calling parties task to parse the string and
 	 *         convert it to correct type.
 	 * @throws InvalidDataException
-	 *             If the retrieval of the data fails, the InvalidDataException
-	 *             is thrown. For example if a FiniteStateMachine is used, which
-	 *             has no data space, the exception is thrown.
+	 *           If the retrieval of the data fails, the InvalidDataException is
+	 *           thrown. For example if a FiniteStateMachine is used, which has no
+	 *           data space, the exception is thrown.
 	 */
 	public String getDataValue(String data) throws InvalidDataException {
 		Util.AbortIf(this.machine == null, "No machine has been defined!");
 		if (this.machine instanceof ExtendedFiniteStateMachine) {
-			return ((ExtendedFiniteStateMachine) this.machine)
-					.getDataValue(data);
+			return ((ExtendedFiniteStateMachine) this.machine).getDataValue(data);
 		}
-		throw new InvalidDataException(
-				"Data can only be fetched from a ExtendedFiniteStateMachine. Please enable EFSM.");
+		throw new InvalidDataException("Data can only be fetched from a ExtendedFiniteStateMachine. Please enable EFSM.");
 	}
 
 	/**
 	 * Executes an action, and returns any outcome as a string.
 	 * 
 	 * @param action
-	 *            The name of the data object and the method, which value is to
-	 *            be retrieved.
-	 * @return The value of the data object's method. The value is always
-	 *         returned a s string. It is the calling parties task to parse the
-	 *         string and convert it to correct type.
+	 *          The name of the data object and the method, which value is to be
+	 *          retrieved.
+	 * @return The value of the data object's method. The value is always returned
+	 *         a s string. It is the calling parties task to parse the string and
+	 *         convert it to correct type.
 	 * @throws InvalidDataException
-	 *             If the retrieval of the data fails, the InvalidDataException
-	 *             is thrown. For example if a FiniteStateMachine is used, which
-	 *             has no data space, the exception is thrown.
+	 *           If the retrieval of the data fails, the InvalidDataException is
+	 *           thrown. For example if a FiniteStateMachine is used, which has no
+	 *           data space, the exception is thrown.
 	 */
 	public String execAction(String action) throws InvalidDataException {
 		Util.AbortIf(this.machine == null, "No machine has been defined!");
 		if (this.machine instanceof ExtendedFiniteStateMachine) {
-			return ((ExtendedFiniteStateMachine) this.machine)
-					.execAction(action);
+			return ((ExtendedFiniteStateMachine) this.machine).execAction(action);
 		}
-		throw new InvalidDataException(
-				"Data can only be fetched from a ExtendedFiniteStateMachine. Please enable EFSM.");
+		throw new InvalidDataException("Data can only be fetched from a ExtendedFiniteStateMachine. Please enable EFSM.");
 	}
 
 	/**
-	 * Tells mbt that a requirement (if any), has passed or failed. MBT will
-	 * look at the most recent edge or vertex and check if they have
-	 * requirement. If none is found, then no action is taken. If req. is found
-	 * mbt will log the information using the logger.
+	 * Tells mbt that a requirement (if any), has passed or failed. MBT will look
+	 * at the most recent edge or vertex and check if they have requirement. If
+	 * none is found, then no action is taken. If req. is found mbt will log the
+	 * information using the logger.
 	 * 
 	 * @param pass
-	 *            Tells mbt if the requirement has pass (true), or failed
-	 *            (false).
+	 *          Tells mbt if the requirement has pass (true), or failed (false).
 	 */
 	public void passRequirement(boolean pass) {
 		Util.AbortIf(this.machine == null, "No machine has been defined!");
@@ -328,22 +327,20 @@ public class ModelBasedTesting {
 			logger.info(str);
 		}
 	}
-	
+
 	public void enableJsScriptEngine(boolean enableJs) {
-		if ( enableJs )
-		  useJsScriptEngine = true;
+		if (enableJs)
+			useJsScriptEngine = true;
 		else
 			useJsScriptEngine = false;
 	}
-	 
+
 	public void enableExtended(boolean extended) {
 		if (extended) {
 			setMachine(new ExtendedFiniteStateMachine(useJsScriptEngine));
 			if (!getStartupScript().equals("")) {
-				logger.debug("Will now try to run script: "
-						+ getStartupScript());
-				((ExtendedFiniteStateMachine) getMachine())
-						.eval(getStartupScript());
+				logger.debug("Will now try to run script: " + getStartupScript());
+				((ExtendedFiniteStateMachine) getMachine()).eval(getStartupScript());
 			}
 		} else {
 			setMachine(new FiniteStateMachine());
@@ -380,14 +377,12 @@ public class ModelBasedTesting {
 		if (isUseGUI()) {
 
 			while (true) {
-				if ( App.getInstance().getStatus().isStopped() )
+				if (App.getInstance().getStatus().isStopped())
 					new GuiStoppedExecution();
 
-				if (App.getInstance().getStatus().isNext()
-						|| App.getInstance().getStatus().isRunning()
-						|| App.getInstance().getStatus().isExecutingJavaTest()
-						|| App.getInstance().getStatus().isExecutingSoapTest()
-						&& App.getInstance().getStatus().isPaused() == false) {
+				if (App.getInstance().getStatus().isNext() || App.getInstance().getStatus().isRunning()
+				    || App.getInstance().getStatus().isExecutingJavaTest() || App.getInstance().getStatus().isExecutingSoapTest()
+				    && App.getInstance().getStatus().isPaused() == false) {
 					break;
 				}
 				try {
@@ -424,7 +419,7 @@ public class ModelBasedTesting {
 				notifyApp.getNextEvent();
 			}
 			if (isUseGUI()) {
-				if ( App.getInstance().getStatus().isStopped() )
+				if (App.getInstance().getStatus().isStopped())
 					new GuiStoppedExecution();
 
 				if (App.getInstance().getStatus().isNext()) {
@@ -438,8 +433,7 @@ public class ModelBasedTesting {
 	public String getCurrentState() {
 		if (this.machine != null)
 			return getMachine().getCurrentStateName();
-		logger
-				.warn("Trying to retrieve current state without specifying machine");
+		logger.warn("Trying to retrieve current state without specifying machine");
 		return "";
 	}
 
@@ -453,6 +447,7 @@ public class ModelBasedTesting {
 		if (this.modelHandler == null) {
 			this.modelHandler = new GraphML();
 		}
+		this.modelHandler.setManualTestSequence(isManualTestSequence());
 		this.modelHandler.load(graphmlFileName);
 
 		if (this.machine != null) {
@@ -501,8 +496,7 @@ public class ModelBasedTesting {
 		if (this.machine != null) {
 			return getMachine().getStatisticsStringCompact();
 		}
-		logger
-				.warn("Trying to retrieve compact statistics without specifying machine");
+		logger.warn("Trying to retrieve compact statistics without specifying machine");
 		return "";
 	}
 
@@ -510,8 +504,7 @@ public class ModelBasedTesting {
 		if (this.machine != null) {
 			return getMachine().getStatisticsVerbose();
 		}
-		logger
-				.warn("Trying to retrieve verbose statistics without specifying machine");
+		logger.warn("Trying to retrieve verbose statistics without specifying machine");
 		return "";
 	}
 
@@ -526,8 +519,7 @@ public class ModelBasedTesting {
 	public void setTemplate(String templateFile) {
 		String template = Util.readFile(templateFile);
 		String header = "", body = "", footer = "";
-		Pattern p = Pattern
-				.compile("HEADER<\\{\\{([.\\s\\S]+)\\}\\}>HEADER([.\\s\\S]+)FOOTER<\\{\\{([.\\s\\S]+)\\}\\}>FOOTER");
+		Pattern p = Pattern.compile("HEADER<\\{\\{([.\\s\\S]+)\\}\\}>HEADER([.\\s\\S]+)FOOTER<\\{\\{([.\\s\\S]+)\\}\\}>FOOTER");
 		Matcher m = p.matcher(template);
 		if (m.find()) {
 			header = m.group(1);
@@ -576,8 +568,7 @@ public class ModelBasedTesting {
 				System.out.print((String) stepPair.remove(0) + req);
 
 				String addInfo = "";
-				if ((stepPair.size() == 1 && hasCurrentEdgeBackTracking())
-						|| (stepPair.size() == 0 && hasCurrentVertexBackTracking())) {
+				if ((stepPair.size() == 1 && hasCurrentEdgeBackTracking()) || (stepPair.size() == 0 && hasCurrentVertexBackTracking())) {
 					System.out.println(" BACKTRACK");
 					addInfo = " BACKTRACK";
 				} else
@@ -586,14 +577,12 @@ public class ModelBasedTesting {
 				if (stepPair.size() == 1) {
 					logExecution(getMachine().getLastEdge(), addInfo);
 					if (isUseStatisticsManager()) {
-						getStatisticsManager().addProgress(
-								getMachine().getLastEdge());
+						getStatisticsManager().addProgress(getMachine().getLastEdge());
 					}
 				} else {
 					logExecution(getMachine().getCurrentState(), addInfo);
 					if (isUseStatisticsManager()) {
-						getStatisticsManager().addProgress(
-								getMachine().getCurrentState());
+						getStatisticsManager().addProgress(getMachine().getCurrentState());
 					}
 				}
 
@@ -609,14 +598,12 @@ public class ModelBasedTesting {
 		String req = "";
 		if (element instanceof Edge) {
 			if (!getMachine().getLastEdge().getReqTagKey().isEmpty()) {
-				req = "REQUIREMENT: '"
-						+ getMachine().getLastEdge().getReqTagKey() + "'";
+				req = "REQUIREMENT: '" + getMachine().getLastEdge().getReqTagKey() + "'";
 			}
 			return req;
 		} else if (element instanceof Vertex) {
 			if (!getMachine().getCurrentState().getReqTagKey().isEmpty()) {
-				req = "REQUIREMENT: '"
-						+ getMachine().getCurrentState().getReqTagKey() + "'";
+				req = "REQUIREMENT: '" + getMachine().getCurrentState().getReqTagKey() + "'";
 			}
 			return req;
 		}
@@ -626,16 +613,11 @@ public class ModelBasedTesting {
 	public void logExecution(AbstractElement element, String additionalInfo) {
 		String req = " " + getRequirement(element);
 		if (element instanceof Edge) {
-			logger.info("Edge: " + getMachine().getLastEdge() + req
-					+ additionalInfo);
+			logger.info("Edge: " + getMachine().getLastEdge() + req + additionalInfo);
 			return;
 		} else if (element instanceof Vertex) {
-			logger.info("Vertex: "
-					+ getMachine().getCurrentState()
-					+ req
-					+ (getMachine().hasInternalVariables() ? " DATA: "
-							+ getMachine().getCurrentDataString() : "")
-					+ additionalInfo);
+			logger.info("Vertex: " + getMachine().getCurrentState() + req
+			    + (getMachine().hasInternalVariables() ? " DATA: " + getMachine().getCurrentDataString() : "") + additionalInfo);
 			return;
 		}
 	}
@@ -650,8 +632,7 @@ public class ModelBasedTesting {
 
 	public void executePath() {
 		if (getJavaExecutorClass() != null) {
-			logger.debug("Start executing, using the java class: "
-					+ getJavaExecutorClass());
+			logger.debug("Start executing, using the java class: " + getJavaExecutorClass());
 			executePath(getJavaExecutorClass());
 			return;
 		}
@@ -662,15 +643,13 @@ public class ModelBasedTesting {
 			if (stepPair[0].trim() != "") {
 				logExecution(getMachine().getLastEdge(), "");
 				if (isUseStatisticsManager()) {
-					getStatisticsManager().addProgress(
-							getMachine().getLastEdge());
+					getStatisticsManager().addProgress(getMachine().getLastEdge());
 				}
 			}
 			if (stepPair[1].trim() != "") {
 				logExecution(getMachine().getCurrentState(), "");
 				if (isUseStatisticsManager()) {
-					getStatisticsManager().addProgress(
-							getMachine().getCurrentState());
+					getStatisticsManager().addProgress(getMachine().getCurrentState());
 				}
 			}
 
@@ -686,32 +665,26 @@ public class ModelBasedTesting {
 		if (isDryRun()) {
 			logger.debug("Executing a dry run");
 			executePath(null, null);
+		} else {
+			logger.debug("Executing a non-dry run");
 		}
-		else {
-			logger.debug("Executing a non-dry run");			
-		}
-			
+
 		if (strClassName == null || strClassName.trim().equals(""))
-			throw new RuntimeException(
-					"Needed execution class name is missing as parameter.");
+			throw new RuntimeException("Needed execution class name is missing as parameter.");
 		Class<?> clsClass = null;
 
-		logger.debug("Trying to get a class for name: " + strClassName);			
+		logger.debug("Trying to get a class for name: " + strClassName);
 		try {
 			clsClass = Class.forName(strClassName);
 			logger.debug("Got class for name: " + strClassName);
 		} catch (LinkageError e) {
-			String str = "Could not load class: " + e.getMessage()
-					+ "\nProblem occured when loading class: " + strClassName
-					+ ".\n Current class path is: "
-					+ System.getProperty("java.class.path");
+			String str = "Could not load class: " + e.getMessage() + "\nProblem occured when loading class: " + strClassName
+			    + ".\n Current class path is: " + System.getProperty("java.class.path");
 			logger.error(str);
 			e.printStackTrace();
 			throw new RuntimeException(str, e);
 		} catch (ClassNotFoundException e) {
-			String str = "Could not load class: " + strClassName
-					+ ".\n Current class path is: "
-					+ System.getProperty("java.class.path");
+			String str = "Could not load class: " + strClassName + ".\n Current class path is: " + System.getProperty("java.class.path");
 			logger.error(str);
 			throw new RuntimeException(str, e);
 		}
@@ -720,16 +693,14 @@ public class ModelBasedTesting {
 
 	public void executePath(Class<?> clsClass) {
 		if (clsClass == null)
-			throw new RuntimeException(
-					"Needed execution class is missing as parameter.");
+			throw new RuntimeException("Needed execution class is missing as parameter.");
 		executePath(clsClass, null);
 	}
 
 	public void executePath(Object objInstance) {
 		if (objInstance == null)
-			throw new RuntimeException(
-					"Needed execution instance is missing as parameter.");
-		if ( isUseGUI() ) {
+			throw new RuntimeException("Needed execution instance is missing as parameter.");
+		if (isUseGUI()) {
 			App.getInstance().pause();
 			App.getInstance().updateLayout();
 		}
@@ -753,21 +724,18 @@ public class ModelBasedTesting {
 				} catch (IOException e) {
 				}
 				if (isUseStatisticsManager()) {
-					getStatisticsManager().addProgress(
-							getMachine().getLastEdge());
+					getStatisticsManager().addProgress(getMachine().getLastEdge());
 				}
 
 				logExecution(getMachine().getCurrentState(), "");
-				System.out.println("Do vertex: "
-						+ getMachine().getCurrentState());
+				System.out.println("Do vertex: " + getMachine().getCurrentState());
 				System.out.println("Data: " + stepPair[1]);
 				try {
 					System.in.read();
 				} catch (IOException e) {
 				}
 				if (isUseStatisticsManager()) {
-					getStatisticsManager().addProgress(
-							getMachine().getCurrentState());
+					getStatisticsManager().addProgress(getMachine().getCurrentState());
 				}
 			}
 			return;
@@ -776,36 +744,28 @@ public class ModelBasedTesting {
 		}
 
 		if (clsClass == null && objInstance == null)
-			throw new RuntimeException(
-					"Execution instance or class is missing as parameters.");
+			throw new RuntimeException("Execution instance or class is missing as parameters.");
 		if (clsClass == null) {
-			logger.debug("Class is null, but object instance is: " + objInstance.toString() );
+			logger.debug("Class is null, but object instance is: " + objInstance.toString());
 			clsClass = objInstance.getClass();
 		}
 		if (objInstance == null) {
-			logger.debug("Got class: " + clsClass.getName() + ", but object instance null" );
+			logger.debug("Got class: " + clsClass.getName() + ", but object instance null");
 			try {
-				objInstance = clsClass.getConstructor(
-						new Class[] { ModelBasedTesting.class }).newInstance(
-						new Object[] { this });
+				objInstance = clsClass.getConstructor(new Class[] { ModelBasedTesting.class }).newInstance(new Object[] { this });
 			} catch (SecurityException e) {
-				throw new RuntimeException(
-						"SecurityException: " + e.getMessage(), e);
+				throw new RuntimeException("SecurityException: " + e.getMessage(), e);
 			} catch (NoSuchMethodException e) {
-				//throw new RuntimeException(
-				//		"NoSuchMethodException: " + e.getMessage(), e);
+				// throw new RuntimeException(
+				// "NoSuchMethodException: " + e.getMessage(), e);
 			} catch (IllegalArgumentException e) {
-				throw new RuntimeException(
-						"IllegalArgumentException: " + e.getMessage(), e);
+				throw new RuntimeException("IllegalArgumentException: " + e.getMessage(), e);
 			} catch (InstantiationException e) {
-				throw new RuntimeException("InstantiationException: " + e.getMessage(),
-						e);
+				throw new RuntimeException("InstantiationException: " + e.getMessage(), e);
 			} catch (IllegalAccessException e) {
-				throw new RuntimeException("IllegalAccessException: " + e.getMessage(),
-						e);
+				throw new RuntimeException("IllegalAccessException: " + e.getMessage(), e);
 			} catch (InvocationTargetException e) {
-				throw new RuntimeException(
-						"InvocationTargetException: " + e.getMessage(), e);
+				throw new RuntimeException("InvocationTargetException: " + e.getMessage(), e);
 			}
 		}
 		try {
@@ -823,15 +783,13 @@ public class ModelBasedTesting {
 				logExecution(getMachine().getLastEdge(), "");
 				executeMethod(clsClass, objInstance, stepPair[0], true);
 				if (isUseStatisticsManager()) {
-					getStatisticsManager().addProgress(
-							getMachine().getLastEdge());
+					getStatisticsManager().addProgress(getMachine().getLastEdge());
 				}
 
 				logExecution(getMachine().getCurrentState(), "");
 				executeMethod(clsClass, objInstance, stepPair[1], false);
 				if (isUseStatisticsManager()) {
-					getStatisticsManager().addProgress(
-							getMachine().getCurrentState());
+					getStatisticsManager().addProgress(getMachine().getCurrentState());
 				}
 			} catch (IllegalArgumentException e) {
 				throw new RuntimeException("Illegal argument used.", e);
@@ -843,9 +801,8 @@ public class ModelBasedTesting {
 		}
 	}
 
-	private void executeMethod(Class<?> clsClass, Object objInstance,
-			String strMethod, boolean isEdge) throws IllegalArgumentException,
-			SecurityException, IllegalAccessException {
+	private void executeMethod(Class<?> clsClass, Object objInstance, String strMethod, boolean isEdge) throws IllegalArgumentException,
+	    SecurityException, IllegalAccessException {
 		if (strMethod.contains("/")) {
 			strMethod = strMethod.substring(0, strMethod.indexOf("/"));
 		}
@@ -861,24 +818,19 @@ public class ModelBasedTesting {
 			Object[] paramValues = { s2 };
 
 			try {
-				clsClass.getMethod(s1, paramTypes).invoke(objInstance,
-						paramValues);
+				clsClass.getMethod(s1, paramTypes).invoke(objInstance, paramValues);
 			} catch (InvocationTargetException e) {
 				if (isEdge) {
-					logger.error("InvocationTargetException for: "
-							+ getMachine().getLastEdge());
+					logger.error("InvocationTargetException for: " + getMachine().getLastEdge());
 				} else {
-					logger.error("InvocationTargetException for: "
-							+ getMachine().getCurrentState());
+					logger.error("InvocationTargetException for: " + getMachine().getCurrentState());
 				}
 				throw new RuntimeException("InvocationTargetException.", e);
 			} catch (NoSuchMethodException e) {
 				if (isEdge) {
-					logger.error("NoSuchMethodException for: "
-							+ getMachine().getLastEdge());
+					logger.error("NoSuchMethodException for: " + getMachine().getLastEdge());
 				} else {
-					logger.error("NoSuchMethodException for: "
-							+ getMachine().getCurrentState());
+					logger.error("NoSuchMethodException for: " + getMachine().getCurrentState());
 				}
 				throw new RuntimeException("NoSuchMethodException.", e);
 			}
@@ -894,13 +846,9 @@ public class ModelBasedTesting {
 				m.invoke(objInstance, null);
 			} catch (InvocationTargetException e) {
 				if (isEdge) {
-					logger.error("InvocationTargetException for: "
-							+ getMachine().getLastEdge() + " : "
-							+ e.getCause().getMessage());
+					logger.error("InvocationTargetException for: " + getMachine().getLastEdge() + " : " + e.getCause().getMessage());
 				} else {
-					logger.error("InvocationTargetException for: "
-							+ getMachine().getCurrentState() + " : "
-							+ e.getCause().getMessage());
+					logger.error("InvocationTargetException for: " + getMachine().getCurrentState() + " : " + e.getCause().getMessage());
 				}
 
 				StringWriter sw = new StringWriter();
@@ -909,15 +857,12 @@ public class ModelBasedTesting {
 				pw.close();
 				logger.error(sw.toString());
 
-				throw new RuntimeException("InvocationTargetException.", e
-						.getCause());
+				throw new RuntimeException("InvocationTargetException.", e.getCause());
 			} catch (NoSuchMethodException e) {
 				if (isEdge) {
-					logger.error("NoSuchMethodException for: "
-							+ getMachine().getLastEdge());
+					logger.error("NoSuchMethodException for: " + getMachine().getLastEdge());
 				} else {
-					logger.error("NoSuchMethodException for: "
-							+ getMachine().getCurrentState());
+					logger.error("NoSuchMethodException for: " + getMachine().getCurrentState());
 				}
 				throw new RuntimeException("NoSuchMethodException.", e);
 			} finally {
@@ -932,6 +877,16 @@ public class ModelBasedTesting {
 		writePath(System.out);
 	}
 
+	public void writePath(Vector<Pair<String>> testSequence) {
+		if (this.machine == null) {
+			getMachine();
+		}
+		while (hasNextStep()) {
+			String[] stepPair = getNextStep();
+			testSequence.add(new Pair<String>(stepPair[0], stepPair[1]));
+		}
+	}
+
 	public void writePath(PrintStream out) {
 		if (this.machine == null) {
 			getMachine();
@@ -943,19 +898,16 @@ public class ModelBasedTesting {
 				out.println(stepPair[0]);
 				logExecution(getMachine().getLastEdge(), "");
 				if (isUseStatisticsManager()) {
-					getStatisticsManager().addProgress(
-							getMachine().getLastEdge());
+					getStatisticsManager().addProgress(getMachine().getLastEdge());
 				}
 			}
 			if (stepPair[1].trim() != "") {
 				out.println(stepPair[1]);
 				logExecution(getMachine().getCurrentState(), "");
 				if (isUseStatisticsManager()) {
-					getStatisticsManager().addProgress(
-							getMachine().getCurrentState());
+					getStatisticsManager().addProgress(getMachine().getCurrentState());
 				}
 			}
-
 		}
 	}
 
@@ -964,8 +916,7 @@ public class ModelBasedTesting {
 	 */
 	public void setStartupScript(String script) {
 		this.startupScript = script;
-		if (this.machine != null
-				&& this.machine instanceof ExtendedFiniteStateMachine) {
+		if (this.machine != null && this.machine instanceof ExtendedFiniteStateMachine) {
 			logger.debug("Will now try to run script: " + script);
 			((ExtendedFiniteStateMachine) this.machine).eval(script);
 		} else {
@@ -992,8 +943,7 @@ public class ModelBasedTesting {
 	public Vertex getCurrentVertex() {
 		if (this.machine != null)
 			return getMachine().getCurrentState();
-		logger
-				.warn("Trying to retrieve current state without specifying machine");
+		logger.warn("Trying to retrieve current state without specifying machine");
 		return null;
 	}
 
@@ -1001,11 +951,11 @@ public class ModelBasedTesting {
 	 * Changes the current state in the model.
 	 * 
 	 * @param newState
-	 *            The name ({@link Keywords.LABEL_KEY}) of the new current state
-	 *            of the model. If null is given, or newState is empty, then the
-	 *            default value will be the START vertex in the model. If
-	 *            newState does not exist in the model, the method does nothing,
-	 *            and the current vertex is unaffected.
+	 *          The name ({@link Keywords.LABEL_KEY}) of the new current state of
+	 *          the model. If null is given, or newState is empty, then the
+	 *          default value will be the START vertex in the model. If newState
+	 *          does not exist in the model, the method does nothing, and the
+	 *          current vertex is unaffected.
 	 * @return True if the operation succeeds, false if not.
 	 */
 	public boolean setCurrentVertex(String newState) {
@@ -1014,15 +964,11 @@ public class ModelBasedTesting {
 				newState = Keywords.START_NODE;
 			}
 			if (getMachine().hasState(newState) == false) {
-				logger
-						.error("Could not manually change the state from: "
-								+ getMachine().getCurrentStateName() + " to: "
-								+ newState
-								+ " beacuse it does not exist in the model.");
+				logger.error("Could not manually change the state from: " + getMachine().getCurrentStateName() + " to: " + newState
+				    + " beacuse it does not exist in the model.");
 				return false;
 			}
-			logger.info("Manually changing state from: "
-					+ getMachine().getCurrentStateName() + " to: " + newState);
+			logger.info("Manually changing state from: " + getMachine().getCurrentStateName() + " to: " + newState);
 			getMachine().setState(newState);
 
 			// We have to empty current Dijkstra path, if it exists.
@@ -1031,8 +977,7 @@ public class ModelBasedTesting {
 			}
 			return true;
 		} else {
-			logger
-					.warn("Trying to set current state without specifying machine");
+			logger.warn("Trying to set current state without specifying machine");
 		}
 		return false;
 	}

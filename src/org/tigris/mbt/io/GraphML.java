@@ -170,10 +170,10 @@ public class GraphML extends AbstractModelHandler {
 								if (label.length() <= 0) {
 									throw new RuntimeException("Vertex is missing its label in file: '" + fileName + "'");
 								}
-								if (label.matches(".*[\\s].*")) {
+								if (!isManualTestSequence() && label.matches(".*[\\s].*")) {
 									throw new RuntimeException("Vertex has a label '" + label + "', containing whitespaces in file: '" + fileName + "'");
 								}
-								if (Keywords.isKeyWord(label)) {
+								if (!isManualTestSequence() && Keywords.isKeyWord(label)) {
 									throw new RuntimeException("Vertex has a label '" + label + "', which is a reserved keyword, in file: '" + fileName + "'");
 								}
 								v.setLabelKey(label);
