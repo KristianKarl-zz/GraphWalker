@@ -340,6 +340,17 @@ public class Util {
 			}			
 		}
 
+		if( root.getAttributeValue("SCRIPT_ENGINE") != null && root.getAttributeValue("SCRIPT_ENGINE").equalsIgnoreCase("js") )
+		{
+			logger.debug( "Enabling JavaScript engine" );
+			mbt.enableJsScriptEngine( true );
+		}
+		else
+		{
+			logger.debug( "Using BeanShell script engine, if EFSM is enabled." );
+			mbt.enableJsScriptEngine( false );
+		}
+		
 		if( root.getAttributeValue("EXTENDED") != null && root.getAttributeValue("EXTENDED").equalsIgnoreCase("true") )
 		{
 			logger.debug( "Enabling extended FSM" );

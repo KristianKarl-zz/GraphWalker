@@ -86,7 +86,7 @@ public class A_StarPathGeneratorTest extends TestCase {
     {
 		PathGenerator pathGenerator = new A_StarPathGenerator();
 		pathGenerator.setStopCondition(new ReachedState("V1/x=3;y=\\[2, 3, 3\\];") );
-		pathGenerator.setMachine(new ExtendedFiniteStateMachine(graph));
+		pathGenerator.setMachine(new ExtendedFiniteStateMachine(graph, false));
 		
 		String[] stepPair;
 		stepPair = pathGenerator.getNext();
@@ -124,7 +124,7 @@ public class A_StarPathGeneratorTest extends TestCase {
     {
 		PathGenerator pathGenerator = new A_StarPathGenerator();
 		pathGenerator.setStopCondition(new ReachedEdge("E2"));
-		pathGenerator.setMachine(new ExtendedFiniteStateMachine(graph));
+		pathGenerator.setMachine(new ExtendedFiniteStateMachine(graph, false));
 		
 		String[] stepPair;
 		stepPair = pathGenerator.getNext();

@@ -44,19 +44,19 @@ public class ExtendedFiniteStateMachineTest extends TestCase {
 
 	public void testConstructor() 
 	{
-		new ExtendedFiniteStateMachine(graph);
+		new ExtendedFiniteStateMachine(graph, false);
 	}
 
 	public void testRequirements() 
 	{
-		ExtendedFiniteStateMachine EFSM = new ExtendedFiniteStateMachine(graph);
+		ExtendedFiniteStateMachine EFSM = new ExtendedFiniteStateMachine(graph, false);
 		assertEquals("{REQ001=0, REQ004=0, REQ003=0, REQ002=0}", EFSM.getAllRequirements().toString());
 		assertEquals("[]", EFSM.getCoveredRequirements().toString());
 	}
 
 	public void testRequirementsWalk() 
 	{
-		ExtendedFiniteStateMachine EFSM = new ExtendedFiniteStateMachine(graph);
+		ExtendedFiniteStateMachine EFSM = new ExtendedFiniteStateMachine(graph, false);
 		assertEquals("Start",EFSM.getCurrentStateName());
 		EFSM.walkEdge(e1);
 		assertEquals("V1/x=1;y=[];",EFSM.getCurrentStateName());
@@ -71,7 +71,7 @@ public class ExtendedFiniteStateMachineTest extends TestCase {
 
 	public void testBacktrackWalk() 
 	{
-		ExtendedFiniteStateMachine EFSM = new ExtendedFiniteStateMachine(graph);
+		ExtendedFiniteStateMachine EFSM = new ExtendedFiniteStateMachine(graph, false);
 		EFSM.setBacktrackEnabled(true);
 		assertEquals("Start",EFSM.getCurrentStateName());
 		EFSM.walkEdge(e1);
@@ -90,7 +90,7 @@ public class ExtendedFiniteStateMachineTest extends TestCase {
 
 	public void testBacktrackWalk2() 
 	{
-		ExtendedFiniteStateMachine EFSM = new ExtendedFiniteStateMachine(graph);
+		ExtendedFiniteStateMachine EFSM = new ExtendedFiniteStateMachine(graph, false);
 		EFSM.setBacktrackEnabled(true);
 		assertEquals("Start",EFSM.getCurrentStateName());
 		EFSM.walkEdge(e1);

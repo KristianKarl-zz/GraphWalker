@@ -17,6 +17,8 @@
 
 package org.tigris.mbt.filters;
 
+import javax.script.ScriptEngine;
+import javax.script.ScriptException;
 
 import org.apache.log4j.Logger;
 import org.tigris.mbt.Util;
@@ -27,33 +29,51 @@ import bsh.Interpreter;
 
 /**
  * @author Johan Tejle
- *
+ * 
  */
-public class AccessableEdgeFilter
-{
+public class AccessableEdgeFilter {
 	static Logger logger = Util.setupLogger(AccessableEdgeFilter.class);
-	
-	private Interpreter i;
-	public AccessableEdgeFilter(Interpreter intepreter) {
+
+	private ScriptEngine jsEngine = null;
+	private Interpreter beanShellEngine = null;
+
+	public AccessableEdgeFilter(ScriptEngine sciptEngine) {
 		super();
-		i = intepreter;
+		this.jsEngine = sciptEngine;
 	}
 
-	public boolean acceptEdge( org.tigris.mbt.graph.Graph graph, Edge edge) 
-	{
-		if ( edge.getGuardKey().isEmpty() )
-		{
+	public AccessableEdgeFilter(Interpreter beanShellEngine) {
+		super();
+		this.beanShellEngine = beanShellEngine;
+	}
+
+	public boolean acceptEdge(org.tigris.mbt.graph.Graph graph, Edge edge) {
+		if (edge.getGuardKey().isEmpty()) {
 			return true;
 		}
 
-		try 
-		{
-			return ((Boolean)i.eval((String)edge.getGuardKey())).booleanValue();
-		} 
-		catch (EvalError e) 
-		{
-			throw new RuntimeException( "Malformed Edge guard\n\t" + edge + "\n\tGuard: " + edge.getGuardKey() + "\n\tBeanShell error message: '" + e.getMessage() + "'" );
+		if (jsEngine != null) {
+			try {
+				return ((Boolean) jsEngine.eval((String) edge.getGuardKey()))
+						.booleanValue();
+			} catch (ScriptException e) {
+				throw new RuntimeException("Malformed Edge guard\n\t" + edge
+						+ "\n\tGuard: " + edge.getGuardKey()
+						+ "\n\tBeanShell error message: '" + e.getMessage()
+						+ "'");
+			}
+		} else if (beanShellEngine != null) {
+			try {
+				return ((Boolean) beanShellEngine.eval((String) edge
+						.getGuardKey())).booleanValue();
+			} catch (EvalError e) {
+				throw new RuntimeException("Malformed Edge guard\n\t" + edge
+						+ "\n\tGuard: " + edge.getGuardKey()
+						+ "\n\tBeanShell error message: '" + e.getMessage()
+						+ "'");
+			}
 		}
+		return false;
 	}
 
 	public String getName() {
