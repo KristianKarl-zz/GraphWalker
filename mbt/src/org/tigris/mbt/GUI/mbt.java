@@ -89,8 +89,7 @@ public class mbt extends JFrame implements ActionListener, ItemListener {
 	JPanel runPanel;
 	JButton runButton;
 
-	PrintStream aPrintStream = new PrintStream(new FilteredStream(
-			new ByteArrayOutputStream()), true);
+	PrintStream aPrintStream = new PrintStream(new FilteredStream(new ByteArrayOutputStream()), true);
 
 	class FilteredStream extends FilterOutputStream {
 		public FilteredStream(OutputStream aStream) {
@@ -101,16 +100,14 @@ public class mbt extends JFrame implements ActionListener, ItemListener {
 			String aString = new String(b);
 			outputTextArea.append(aString);
 			// Make sure the last line is always visible
-			outputTextArea.setCaretPosition(outputTextArea.getDocument()
-					.getLength());
+			outputTextArea.setCaretPosition(outputTextArea.getDocument().getLength());
 		}
 
 		public void write(byte b[], int off, int len) throws IOException {
 			String aString = new String(b, off, len);
 			outputTextArea.append(aString);
 			// Make sure the last line is always visible
-			outputTextArea.setCaretPosition(outputTextArea.getDocument()
-					.getLength());
+			outputTextArea.setCaretPosition(outputTextArea.getDocument().getLength());
 		}
 	}
 
@@ -118,7 +115,7 @@ public class mbt extends JFrame implements ActionListener, ItemListener {
 		setTitle("MBT Setup and Launch Utility");
 
 		// Create a file chooser
-		fileChooser = new JFileChooser( System.getProperty("user.dir") );
+		fileChooser = new JFileChooser(System.getProperty("user.dir"));
 		GridBagConstraints c = new GridBagConstraints();
 
 		commandPanel = new JPanel(new GridBagLayout());
@@ -158,7 +155,7 @@ public class mbt extends JFrame implements ActionListener, ItemListener {
 		setMyConstraints(c, 2, 0, GridBagConstraints.EAST);
 		browseXMLButton.addActionListener(this);
 		xmlPanel.add(browseXMLButton, c);
-		
+
 		templatePanel = new JPanel(new GridBagLayout());
 		templateLabel = new JLabel("Template:");
 		setMyConstraints(c, 0, 0, GridBagConstraints.EAST);
@@ -222,9 +219,8 @@ public class mbt extends JFrame implements ActionListener, ItemListener {
 		outputPanel.setBorder(BorderFactory.createTitledBorder("Preview"));
 		outputTextArea = new JTextArea(10, 35);
 		setMyConstraints(c, 0, 0, GridBagConstraints.EAST);
-		outputPanel.add(new JScrollPane(outputTextArea,
-				ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
-				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS), c);
+		outputPanel.add(new JScrollPane(outputTextArea, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+		    ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS), c);
 
 		runPanel = new JPanel(new GridBagLayout());
 		runButton = new JButton("Run");
@@ -245,8 +241,7 @@ public class mbt extends JFrame implements ActionListener, ItemListener {
 	public void actionPerformed(ActionEvent e) {
 		// Handle open button action.
 		if (e.getSource() == browseModelButton) {
-			fileChooser
-					.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+			fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 			int returnVal = fileChooser.showOpenDialog(mbt.this);
 			if (returnVal == JFileChooser.APPROVE_OPTION) {
 				File file = fileChooser.getSelectedFile();
@@ -275,9 +270,8 @@ public class mbt extends JFrame implements ActionListener, ItemListener {
 			}
 		} else if (e.getSource() == runButton) {
 			if (runButton.getText().equals("Stop")) {
-				if ( workerThread instanceof SOAPThread )
-				{
-					((SOAPThread)workerThread).stopService();
+				if (workerThread instanceof SOAPThread) {
+					((SOAPThread) workerThread).stopService();
 				}
 				workerThread = null;
 				setGUIIdleMode();
@@ -301,8 +295,7 @@ public class mbt extends JFrame implements ActionListener, ItemListener {
 				runButton.setText("Stop");
 				workerThread = new OnlineThread();
 				workerThread.start();
-			} else if (commandsComboBox.getSelectedItem()
-					.equals("requirements")) {
+			} else if (commandsComboBox.getSelectedItem().equals("requirements")) {
 				workerThread = new RequirementsThread();
 				workerThread.start();
 			} else if (commandsComboBox.getSelectedItem().equals("methods")) {
@@ -317,8 +310,7 @@ public class mbt extends JFrame implements ActionListener, ItemListener {
 		if (e.getSource() == commandsComboBox) {
 			if (commandsComboBox.getSelectedItem().equals("source")) {
 				setSourcePanels();
-			} else if (commandsComboBox.getSelectedItem()
-					.equals("requirements")) {
+			} else if (commandsComboBox.getSelectedItem().equals("requirements")) {
 				setRequirementsPanels();
 			} else if (commandsComboBox.getSelectedItem().equals("xml")) {
 				setXMLPanels();
@@ -336,8 +328,7 @@ public class mbt extends JFrame implements ActionListener, ItemListener {
 		}
 	}
 
-	private static void setMyConstraints(GridBagConstraints c, int gridx,
-			int gridy, int anchor) {
+	private static void setMyConstraints(GridBagConstraints c, int gridx, int gridy, int anchor) {
 		c.gridx = gridx;
 		c.gridy = gridy;
 		c.anchor = anchor;
@@ -509,15 +500,8 @@ public class mbt extends JFrame implements ActionListener, ItemListener {
 		public void run() {
 			reset();
 			setGUIRunningMode();
-			String args[] = {
-					"offline",
-					"-f",
-					modelPathTextField.getText(),
-					"-g",
-					(String) generatorsComboBox.getSelectedItem(),
-					"-s",
-					(String) stopConditionsComboBox.getSelectedItem() + ":"
-							+ stopConditionValueTextField.getText() };
+			String args[] = { "offline", "-f", modelPathTextField.getText(), "-g", (String) generatorsComboBox.getSelectedItem(), "-s",
+			    (String) stopConditionsComboBox.getSelectedItem() + ":" + stopConditionValueTextField.getText() };
 			setCli(new CLI());
 			getCli().main(args);
 			setGUIIdleMode();
@@ -528,15 +512,8 @@ public class mbt extends JFrame implements ActionListener, ItemListener {
 		public void run() {
 			reset();
 			setGUIRunningMode();
-			String args[] = {
-					"online",
-					"-f",
-					modelPathTextField.getText(),
-					"-g",
-					(String) generatorsComboBox.getSelectedItem(),
-					"-s",
-					(String) stopConditionsComboBox.getSelectedItem() + ":"
-							+ stopConditionValueTextField.getText() };
+			String args[] = { "online", "-f", modelPathTextField.getText(), "-g", (String) generatorsComboBox.getSelectedItem(), "-s",
+			    (String) stopConditionsComboBox.getSelectedItem() + ":" + stopConditionValueTextField.getText() };
 			setCli(new CLI());
 			getCli().main(args);
 			setGUIIdleMode();
@@ -547,8 +524,7 @@ public class mbt extends JFrame implements ActionListener, ItemListener {
 		public void run() {
 			reset();
 			setGUIRunningMode();
-			String args[] = { "source", "-f", modelPathTextField.getText(),
-					"-t", templatePathTextField.getText() };
+			String args[] = { "source", "-f", modelPathTextField.getText(), "-t", templatePathTextField.getText() };
 			setCli(new CLI());
 			getCli().main(args);
 			setGUIIdleMode();
@@ -574,16 +550,12 @@ public class mbt extends JFrame implements ActionListener, ItemListener {
 			InetAddress ia = null;
 			boolean foundNIC = false;
 			try {
-				for( Enumeration<NetworkInterface> ifaces = NetworkInterface.getNetworkInterfaces();
-				     ifaces.hasMoreElements() && foundNIC == false; )
-				{
-					iface = (NetworkInterface)ifaces.nextElement();
-					for ( Enumeration<InetAddress> ips = iface.getInetAddresses();
-					      ips.hasMoreElements() && foundNIC == false; )
-					{
-						ia = (InetAddress)ips.nextElement();
-						if( !ia.isLoopbackAddress() ){
-							if( ia.getHostAddress().indexOf(":") == -1 ){							
+				for (Enumeration<NetworkInterface> ifaces = NetworkInterface.getNetworkInterfaces(); ifaces.hasMoreElements() && foundNIC == false;) {
+					iface = (NetworkInterface) ifaces.nextElement();
+					for (Enumeration<InetAddress> ips = iface.getInetAddresses(); ips.hasMoreElements() && foundNIC == false;) {
+						ia = (InetAddress) ips.nextElement();
+						if (!ia.isLoopbackAddress()) {
+							if (ia.getHostAddress().indexOf(":") == -1) {
 								foundNIC = true;
 							}
 						}
@@ -594,13 +566,12 @@ public class mbt extends JFrame implements ActionListener, ItemListener {
 				e.printStackTrace();
 			}
 			String wsURL = "http://" + ia.getCanonicalHostName() + ":9090/mbt-services";
-			setEndpoint(Endpoint.publish( wsURL, new SoapServices( xmlTextField.getText() ) ));
-			System.out.println( "Now running as a SOAP server." );
-			System.out.println( "For the WSDL file, see: " + wsURL + "?WSDL" );
+			setEndpoint(Endpoint.publish(wsURL, new SoapServices(xmlTextField.getText())));
+			System.out.println("Now running as a SOAP server.");
+			System.out.println("For the WSDL file, see: " + wsURL + "?WSDL");
 		}
-		
-		public void stopService()
-		{
+
+		public void stopService() {
 			getEndpoint().stop();
 			Util.killTimer();
 		}
@@ -621,8 +592,7 @@ public class mbt extends JFrame implements ActionListener, ItemListener {
 		public void run() {
 			reset();
 			setGUIRunningMode();
-			String args[] = { "requirements", "-f",
-					modelPathTextField.getText() };
+			String args[] = { "requirements", "-f", modelPathTextField.getText() };
 			setCli(new CLI());
 			getCli().main(args);
 			setGUIIdleMode();

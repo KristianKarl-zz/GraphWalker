@@ -1,8 +1,10 @@
 package org.tigris.mbt.conditions;
 
-/** Stops test execution after a certain amount of time has passed.
+/**
+ * Stops test execution after a certain amount of time has passed.
+ * 
  * @author Johan Tejle
- *
+ * 
  */
 public class TimeDuration extends StopCondition {
 
@@ -19,11 +21,11 @@ public class TimeDuration extends StopCondition {
 	}
 
 	public double getFulfilment() {
-		return (System.currentTimeMillis()-this.start_time) / this.duration;
+		return (System.currentTimeMillis() - this.start_time) / this.duration;
 	}
-	
+
 	public String toString() {
-		return "DURATION="+ (duration/1000) +"s";
+		return "DURATION=" + (duration / 1000) + "s";
 	}
 
 }

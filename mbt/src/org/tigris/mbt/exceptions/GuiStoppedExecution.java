@@ -2,7 +2,7 @@ package org.tigris.mbt.exceptions;
 
 /**
  * This exception indicats to MBT that GUI wants to stop execution of MBT
- *
+ * 
  */
 public class GuiStoppedExecution extends RuntimeException {
 

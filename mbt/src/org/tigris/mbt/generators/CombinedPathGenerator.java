@@ -13,81 +13,73 @@ public class CombinedPathGenerator extends PathGenerator {
 
 	private Vector<PathGenerator> generatorList = new Vector<PathGenerator>();
 	private int currentGenerator = 0;
-	
+
 	public CombinedPathGenerator() {
 		super();
 	}
-	
+
 	public CombinedPathGenerator(PathGenerator generator) {
 		super();
 		addPathGenerator(generator);
 	}
-	
-	public void addPathGenerator(PathGenerator generator)
-	{
+
+	public void addPathGenerator(PathGenerator generator) {
 		logger.debug("Adding PathGenerator: " + generator);
 		generatorList.add(generator);
 	}
 
 	public void setMachine(FiniteStateMachine machine) {
-		for(Iterator<PathGenerator> i = generatorList.iterator();i.hasNext();)
-		{
+		for (Iterator<PathGenerator> i = generatorList.iterator(); i.hasNext();) {
 			i.next().setMachine(machine);
 		}
 	}
-	
+
 	public void setStopCondition(StopCondition stopCondition) {
-		for(Iterator<PathGenerator> i = generatorList.iterator();i.hasNext();)
-		{
+		for (Iterator<PathGenerator> i = generatorList.iterator(); i.hasNext();) {
 			i.next().setStopCondition(stopCondition);
 		}
 	}
-	
-	private PathGenerator getActivePathGenerator()
-	{
+
+	private PathGenerator getActivePathGenerator() {
 		return generatorList.get(currentGenerator);
 	}
 
-	private boolean hasPath()
-	{
+	private boolean hasPath() {
 		return generatorList.size() > currentGenerator;
 	}
-	
-	private void scrapActivePathGenerator()
-	{
+
+	private void scrapActivePathGenerator() {
 		logger.debug("Removing PathGenerator: " + getActivePathGenerator());
 		currentGenerator++;
 	}
-	
-	public boolean hasNext() 
-	{
+
+	public boolean hasNext() {
 		boolean nextIsAvailable = false;
-		while(hasPath() && !nextIsAvailable)
-		{
+		while (hasPath() && !nextIsAvailable) {
 			nextIsAvailable = getActivePathGenerator().hasNext();
-			if(!nextIsAvailable) scrapActivePathGenerator();
+			if (!nextIsAvailable)
+				scrapActivePathGenerator();
 		}
 		return nextIsAvailable;
 	}
-	
+
 	public String[] getNext() {
-		String[] retur = {"",""};
+		String[] retur = { "", "" };
 
 		boolean nextIsAvailable = false;
-		while(hasPath() && !nextIsAvailable)
-		{
+		while (hasPath() && !nextIsAvailable) {
 			nextIsAvailable = getActivePathGenerator().hasNext();
-			if(!nextIsAvailable) scrapActivePathGenerator();
+			if (!nextIsAvailable)
+				scrapActivePathGenerator();
 		}
-		if(!nextIsAvailable) return retur;
+		if (!nextIsAvailable)
+			return retur;
 		return getActivePathGenerator().getNext();
 	}
-	
-	
+
 	public String toString() {
 		String retur = "";
-		for(Iterator<PathGenerator> i = generatorList.iterator();i.hasNext();)
-		{
+		for (Iterator<PathGenerator> i = generatorList.iterator(); i.hasNext();) {
 			retur += i.next().toString() + "\n";
 		}
 		return retur.trim();

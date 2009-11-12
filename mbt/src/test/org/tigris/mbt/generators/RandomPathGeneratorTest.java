@@ -14,41 +14,38 @@ import junit.framework.TestCase;
 public class RandomPathGeneratorTest extends TestCase {
 
 	private Logger logger = Util.setupLogger(RandomPathGeneratorTest.class);
-	
+
 	protected void setUp() throws Exception {
 		super.setUp();
 	}
 
-	public void test_WeightedRandomGeneration()
-    {
-		logger.info( "TEST: test_WeightedRandomGeneration" );
-		logger.info( "=======================================================================" );
+	public void test_WeightedRandomGeneration() {
+		logger.info("TEST: test_WeightedRandomGeneration");
+		logger.info("=======================================================================");
 		GraphML gml = new GraphML();
 		gml.load("graphml/weight/FSM.graphml");
 		FiniteStateMachine FSM = new FiniteStateMachine(gml.getModel());
 		FSM.setWeighted(true);
-		
+
 		StopCondition sc = new EdgeCoverage(1.0);
 		PathGenerator pathGenerator = new RandomPathGenerator();
 		pathGenerator.setMachine(FSM);
 		pathGenerator.setStopCondition(sc);
-		
-		while(pathGenerator.hasNext())
-		{
+
+		while (pathGenerator.hasNext()) {
 			String[] stepPair = pathGenerator.getNext();
 
 			int stats[] = FSM.getStatistics();
-			int ec = 100*stats[1]/stats[0];
+			int ec = 100 * stats[1] / stats[0];
 
-			logger.debug("call( "+ stepPair[0] + " ) then verify( " + stepPair[1] + " ) --> Edge coverage @ " + ec +"%" );
+			logger.debug("call( " + stepPair[0] + " ) then verify( " + stepPair[1] + " ) --> Edge coverage @ " + ec + "%");
 		}
 		logger.debug("==============================");
-    }
+	}
 
-	public void test_RandomGeneration()
-    {
-		logger.info( "TEST: test_RandomGeneration" );
-		logger.info( "=======================================================================" );
+	public void test_RandomGeneration() {
+		logger.info("TEST: test_RandomGeneration");
+		logger.info("=======================================================================");
 		GraphML gml = new GraphML();
 		gml.load("graphml/weight/FSM.graphml");
 		FiniteStateMachine FSM = new FiniteStateMachine(gml.getModel());
@@ -57,16 +54,15 @@ public class RandomPathGeneratorTest extends TestCase {
 		PathGenerator pathGenerator = new RandomPathGenerator();
 		pathGenerator.setMachine(FSM);
 		pathGenerator.setStopCondition(sc);
-		
-		while(pathGenerator.hasNext())
-		{
+
+		while (pathGenerator.hasNext()) {
 			String[] stepPair = pathGenerator.getNext();
 
 			int stats[] = FSM.getStatistics();
-			int ec = 100*stats[1]/stats[0];
+			int ec = 100 * stats[1] / stats[0];
 
-			logger.debug("call( "+ stepPair[0] + " ) then verify( " + stepPair[1] + " ) --> Edge coverage @ " + ec +"%" );
+			logger.debug("call( " + stepPair[0] + " ) then verify( " + stepPair[1] + " ) --> Edge coverage @ " + ec + "%");
 		}
 		logger.debug("==============================");
-    }
+	}
 }

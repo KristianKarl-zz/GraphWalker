@@ -50,20 +50,20 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 
 	private PrintStream oldPrintStream;
 
-	public ExtendedFiniteStateMachine( Graph model, boolean usingJsEngine ) {
-		this( usingJsEngine );
+	public ExtendedFiniteStateMachine(Graph model, boolean usingJsEngine) {
+		this(usingJsEngine);
 		setModel(model);
 	}
 
-	public ExtendedFiniteStateMachine( boolean usingJsEngine ) {
+	public ExtendedFiniteStateMachine(boolean usingJsEngine) {
 		super();
 		namespaceStack = new Stack<CannedNameSpace>();
-		if ( usingJsEngine ) {
+		if (usingJsEngine) {
 			mgr = new ScriptEngineManager();
-			jsEngine = mgr.getEngineByExtension("js");			
+			jsEngine = mgr.getEngineByExtension("js");
 			accessableFilter = new AccessableEdgeFilter(jsEngine);
 		} else {
-			beanShellEngine = new Interpreter();			
+			beanShellEngine = new Interpreter();
 			accessableFilter = new AccessableEdgeFilter(beanShellEngine);
 		}
 		Void = new VoidPrintStream();
@@ -77,8 +77,7 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 				logger.error("Problem when running: '" + script + "' in BeanShell");
 				logger.error("EvalError: " + e);
 				logger.error(e.getCause());
-				throw new RuntimeException(
-				    "Execution of startup script generated an error.", e);
+				throw new RuntimeException("Execution of startup script generated an error.", e);
 			}
 		} else if (beanShellEngine != null) {
 			try {
@@ -87,15 +86,13 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 				logger.error("Problem when running: '" + script + "' in BeanShell");
 				logger.error("EvalError: " + e);
 				logger.error(e.getCause());
-				throw new RuntimeException(
-				    "Execution of startup script generated an error.", e);
+				throw new RuntimeException("Execution of startup script generated an error.", e);
 			}
 		}
 	}
 
 	public String getCurrentStateName() {
-		return super.getCurrentStateName()
-		    + (hasInternalVariables() ? "/" + getCurrentDataString() : "");
+		return super.getCurrentStateName() + (hasInternalVariables() ? "/" + getCurrentDataString() : "");
 	}
 
 	public Set<Edge> getCurrentOutEdges() throws FoundNoEdgeException {
@@ -110,8 +107,7 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 			}
 		}
 		if (retur.size() == 0) {
-			throw new FoundNoEdgeException("Cul-De-Sac, dead end found in '"
-			    + getCurrentState() + "'");
+			throw new FoundNoEdgeException("Cul-De-Sac, dead end found in '" + getCurrentState() + "'");
 		}
 		return retur;
 	}
@@ -141,13 +137,11 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 		try {
 			for (; i < variableNames.length; i++) {
 				if (!variableNames[i].equals("bsh")) {
-					retur.put(variableNames[i], Primitive.unwrap(ns
-					    .getVariable(variableNames[i])));
+					retur.put(variableNames[i], Primitive.unwrap(ns.getVariable(variableNames[i])));
 				}
 			}
 		} catch (UtilEvalError e) {
-			throw new RuntimeException("Malformed model data: " + variableNames[i]
-			    + "\nBeanShell error message: '" + e.getMessage() + "'");
+			throw new RuntimeException("Malformed model data: " + variableNames[i] + "\nBeanShell error message: '" + e.getMessage() + "'");
 		}
 		return retur;
 	}
@@ -190,15 +184,13 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 			try {
 				res = jsEngine.eval(action);
 			} catch (ScriptException e) {
-				throw new InvalidDataException("The action: '" + action
-				    + "', does not evaluate correctly. Detail: " + e.getMessage());
+				throw new InvalidDataException("The action: '" + action + "', does not evaluate correctly. Detail: " + e.getMessage());
 			}
 		} else if (beanShellEngine != null) {
 			try {
 				res = beanShellEngine.eval(action);
 			} catch (EvalError e) {
-				throw new InvalidDataException("The action: '" + action
-				    + "', does not evaluate correctly. Detail: " + e.getMessage());
+				throw new InvalidDataException("The action: '" + action + "', does not evaluate correctly. Detail: " + e.getMessage());
 			}
 		}
 		return res.toString();
@@ -210,9 +202,7 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 		if (jsEngine != null) {
 			Set<Entry<String, Object>> dataTable = getCurrentJsEngineData();
 			for (Entry<String, Object> entry : dataTable) {
-				if (!entry.getKey().equals("println")
-				    && !entry.getKey().equals("print")
-				    && !entry.getKey().equals("context"))
+				if (!entry.getKey().equals("println") && !entry.getKey().equals("print") && !entry.getKey().equals("context"))
 					retur += entry.getKey() + "=" + entry.getValue() + ";";
 			}
 		} else if (beanShellEngine != null) {
@@ -243,14 +233,11 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 					try {
 						jsEngine.eval(getAction(edge));
 					} catch (ScriptException e) {
-						logger.error("Problem when running: '" + getAction(edge)
-						    + "' in Java Script engine");
+						logger.error("Problem when running: '" + getAction(edge) + "' in Java Script engine");
 						logger.error("EvalError: " + e);
 						logger.error(e.getCause());
-						throw new RuntimeException("Malformed action sequence\n\t" + edge
-						    + "\n\tAction sequence: " + edge.getActionsKey()
-						    + "\n\tJava Script error message: '" + e.getMessage()
-						    + "'\nDetails: " + e.getCause());
+						throw new RuntimeException("Malformed action sequence\n\t" + edge + "\n\tAction sequence: " + edge.getActionsKey()
+						    + "\n\tJava Script error message: '" + e.getMessage() + "'\nDetails: " + e.getCause());
 					} finally {
 						System.setOut(ps);
 					}
@@ -258,14 +245,11 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 					try {
 						beanShellEngine.eval(getAction(edge));
 					} catch (EvalError e) {
-						logger.error("Problem when running: '" + getAction(edge)
-						    + "' in BeanShell");
+						logger.error("Problem when running: '" + getAction(edge) + "' in BeanShell");
 						logger.error("EvalError: " + e);
 						logger.error(e.getCause());
-						throw new RuntimeException("Malformed action sequence\n\t" + edge
-						    + "\n\tAction sequence: " + edge.getActionsKey()
-						    + "\n\tBeanShell error message: '" + e.getMessage()
-						    + "'\nDetails: " + e.getCause());
+						throw new RuntimeException("Malformed action sequence\n\t" + edge + "\n\tAction sequence: " + edge.getActionsKey()
+						    + "\n\tBeanShell error message: '" + e.getMessage() + "'\nDetails: " + e.getCause());
 					} finally {
 						System.setOut(ps);
 					}
@@ -295,8 +279,7 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 		super.popState();
 		if (jsEngine != null) {
 		} else if (beanShellEngine != null) {
-			beanShellEngine.setNameSpace(((CannedNameSpace) namespaceStack.pop())
-			    .unpack());
+			beanShellEngine.setNameSpace(((CannedNameSpace) namespaceStack.pop()).unpack());
 		}
 	}
 
@@ -310,8 +293,7 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 				oos = new ObjectOutputStream(baos);
 				oos.writeObject(objNameSpace);
 			} catch (IOException e) {
-				throw new RuntimeException(
-				    "Unable to store backtrack information due to a IOException.", e);
+				throw new RuntimeException("Unable to store backtrack information due to a IOException.", e);
 			}
 			store = baos.toByteArray();
 		}
@@ -323,12 +305,9 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 				ois = new ObjectInputStream(bais);
 				return (NameSpace) ois.readObject();
 			} catch (IOException e) {
-				throw new RuntimeException(
-				    "Unable to restore backtrack information due to a IOException.", e);
+				throw new RuntimeException("Unable to restore backtrack information due to a IOException.", e);
 			} catch (ClassNotFoundException e) {
-				throw new RuntimeException(
-				    "Unable to restore backtrack information as the NameSpace Class could not be found.",
-				    e);
+				throw new RuntimeException("Unable to restore backtrack information as the NameSpace Class could not be found.", e);
 			}
 		}
 	}

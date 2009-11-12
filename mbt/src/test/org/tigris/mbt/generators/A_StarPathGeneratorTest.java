@@ -23,11 +23,11 @@ public class A_StarPathGeneratorTest extends TestCase {
 	Edge e1;
 	Edge e2;
 	Edge e3;
-	
+
 	protected void setUp() throws Exception {
 		super.setUp();
 		graph = new Graph();
-		
+
 		start = Util.addVertexToGraph(graph, "Start");
 		v1 = Util.addVertexToGraph(graph, "V1");
 		v2 = Util.addVertexToGraph(graph, "V2");
@@ -42,102 +42,97 @@ public class A_StarPathGeneratorTest extends TestCase {
 		super.tearDown();
 		graph.removeAllEdges();
 		graph.removeAllVertices();
-		start = v1 = v2 = null; 
+		start = v1 = v2 = null;
 		e0 = e1 = e2 = e3 = null;
 	}
-	
-	public void test_FSM_StateStop()
-    {
+
+	public void test_FSM_StateStop() {
 		PathGenerator pathGenerator = new A_StarPathGenerator();
 		pathGenerator.setStopCondition(new ReachedState("V2"));
 		pathGenerator.setMachine(new FiniteStateMachine(graph));
-		
+
 		String[] stepPair;
 		stepPair = pathGenerator.getNext();
-		assertEquals("E0",  stepPair[0]);
+		assertEquals("E0", stepPair[0]);
 		assertEquals("V1", stepPair[1]);
 		stepPair = pathGenerator.getNext();
-		assertEquals("E1",  stepPair[0]);
+		assertEquals("E1", stepPair[0]);
 		assertEquals("V2", stepPair[1]);
 		assertFalse(pathGenerator.hasNext());
-    }
+	}
 
-	public void test_FSM_EdgeStop()
-    {
+	public void test_FSM_EdgeStop() {
 		PathGenerator pathGenerator = new A_StarPathGenerator();
 		pathGenerator.setStopCondition(new ReachedEdge("E2"));
 		pathGenerator.setMachine(new FiniteStateMachine(graph));
-		
-		
+
 		String[] stepPair;
 		stepPair = pathGenerator.getNext();
-		assertEquals("E0",  stepPair[0]);
+		assertEquals("E0", stepPair[0]);
 		assertEquals("V1", stepPair[1]);
 		stepPair = pathGenerator.getNext();
-		assertEquals("E1",  stepPair[0]);
+		assertEquals("E1", stepPair[0]);
 		assertEquals("V2", stepPair[1]);
 		stepPair = pathGenerator.getNext();
-		assertEquals("E2",  stepPair[0]);
+		assertEquals("E2", stepPair[0]);
 		assertEquals("V2", stepPair[1]);
 		assertFalse(pathGenerator.hasNext());
-    }
+	}
 
-	public void test_EFSM_StateStop()
-    {
+	public void test_EFSM_StateStop() {
 		PathGenerator pathGenerator = new A_StarPathGenerator();
-		pathGenerator.setStopCondition(new ReachedState("V1/x=3;y=\\[2, 3, 3\\];") );
+		pathGenerator.setStopCondition(new ReachedState("V1/x=3;y=\\[2, 3, 3\\];"));
 		pathGenerator.setMachine(new ExtendedFiniteStateMachine(graph, false));
-		
+
 		String[] stepPair;
 		stepPair = pathGenerator.getNext();
-		assertEquals("E0",  stepPair[0]);
-		assertEquals("V1/x=1;y=[];",  stepPair[1]);
+		assertEquals("E0", stepPair[0]);
+		assertEquals("V1/x=1;y=[];", stepPair[1]);
 		stepPair = pathGenerator.getNext();
-		assertEquals("E1",  stepPair[0]);
-		assertEquals("V2/x=2;y=[];",  stepPair[1]);
+		assertEquals("E1", stepPair[0]);
+		assertEquals("V2/x=2;y=[];", stepPair[1]);
 		stepPair = pathGenerator.getNext();
-		assertEquals("E3",  stepPair[0]);
-		assertEquals("V1/x=2;y=[2];",  stepPair[1]);
+		assertEquals("E3", stepPair[0]);
+		assertEquals("V1/x=2;y=[2];", stepPair[1]);
 		stepPair = pathGenerator.getNext();
-		assertEquals("E1",  stepPair[0]);
-		assertEquals("V2/x=2;y=[2];",  stepPair[1]);
+		assertEquals("E1", stepPair[0]);
+		assertEquals("V2/x=2;y=[2];", stepPair[1]);
 		stepPair = pathGenerator.getNext();
-		assertEquals("E2",  stepPair[0]);
-		assertEquals("V2/x=3;y=[2];",  stepPair[1]);
+		assertEquals("E2", stepPair[0]);
+		assertEquals("V2/x=3;y=[2];", stepPair[1]);
 		stepPair = pathGenerator.getNext();
-		assertEquals("E3",  stepPair[0]);
-		assertEquals("V1/x=3;y=[2, 3];",  stepPair[1]);
+		assertEquals("E3", stepPair[0]);
+		assertEquals("V1/x=3;y=[2, 3];", stepPair[1]);
 		stepPair = pathGenerator.getNext();
-		assertEquals("E1",  stepPair[0]);
-		assertEquals("V2/x=2;y=[2, 3];",  stepPair[1]);
+		assertEquals("E1", stepPair[0]);
+		assertEquals("V2/x=2;y=[2, 3];", stepPair[1]);
 		stepPair = pathGenerator.getNext();
-		assertEquals("E2",  stepPair[0]);
-		assertEquals("V2/x=3;y=[2, 3];",  stepPair[1]);
+		assertEquals("E2", stepPair[0]);
+		assertEquals("V2/x=3;y=[2, 3];", stepPair[1]);
 		stepPair = pathGenerator.getNext();
-		assertEquals("E3",  stepPair[0]);
-		assertEquals("V1/x=3;y=[2, 3, 3];",  stepPair[1]);
+		assertEquals("E3", stepPair[0]);
+		assertEquals("V1/x=3;y=[2, 3, 3];", stepPair[1]);
 		assertFalse(pathGenerator.hasNext());
 
-    }
+	}
 
-	public void test_EFSM_EdgeStop()
-    {
+	public void test_EFSM_EdgeStop() {
 		PathGenerator pathGenerator = new A_StarPathGenerator();
 		pathGenerator.setStopCondition(new ReachedEdge("E2"));
 		pathGenerator.setMachine(new ExtendedFiniteStateMachine(graph, false));
-		
+
 		String[] stepPair;
 		stepPair = pathGenerator.getNext();
-		assertEquals("E0",  stepPair[0]);
-		assertEquals("V1/x=1;y=[];",  stepPair[1]);
+		assertEquals("E0", stepPair[0]);
+		assertEquals("V1/x=1;y=[];", stepPair[1]);
 		stepPair = pathGenerator.getNext();
-		assertEquals("E1",  stepPair[0]);
-		assertEquals("V2/x=2;y=[];",  stepPair[1]);
+		assertEquals("E1", stepPair[0]);
+		assertEquals("V2/x=2;y=[];", stepPair[1]);
 		stepPair = pathGenerator.getNext();
-		assertEquals("E2",  stepPair[0]);
-		assertEquals("V2/x=3;y=[];",  stepPair[1]);
+		assertEquals("E2", stepPair[0]);
+		assertEquals("V2/x=3;y=[];", stepPair[1]);
 		assertFalse(pathGenerator.hasNext());
 
-    }
+	}
 
 }

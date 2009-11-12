@@ -4,14 +4,14 @@ import java.awt.Color;
 import java.awt.geom.Point2D;
 
 public class Vertex extends AbstractElement {
-	
+
 	private String motherStartVertexKey = new String();
 	private String subGraphStartVertexKey = new String();
 	private Color fillColor = new Color(0);
 	private Point2D location = new Point2D.Float();
 	private float width = 0;
 	private float height = 0;
-	
+
 	public float getWidth() {
 		return width;
 	}
@@ -35,7 +35,7 @@ public class Vertex extends AbstractElement {
 	public Point2D getLocation() {
 		return location;
 	}
-	
+
 	public Color getFillColor() {
 		return fillColor;
 	}
@@ -55,7 +55,7 @@ public class Vertex extends AbstractElement {
 		this.fillColor = vertex.fillColor;
 		this.location = vertex.location;
 		this.width = vertex.width;
-		this.height = vertex.height;		
+		this.height = vertex.height;
 	}
 
 	public String getSubGraphStartVertexKey() {

@@ -9,10 +9,9 @@ import org.tigris.mbt.machines.FiniteStateMachine;
 import junit.framework.TestCase;
 
 public class FloydWarshallGeneratorTest extends TestCase {
-	//private Logger logger = Util.setupLogger(FloydWarshallGeneratorTest.class);
-	
-	public void test_RandomGeneration()
-    {
+	// private Logger logger = Util.setupLogger(FloydWarshallGeneratorTest.class);
+
+	public void test_RandomGeneration() {
 		GraphML gml = new GraphML();
 		gml.load("graphml/backtrack/keepass.graphml");
 		FiniteStateMachine FSM = new FiniteStateMachine(gml.getModel());
@@ -21,16 +20,16 @@ public class FloydWarshallGeneratorTest extends TestCase {
 		FloydWarshallGenerator fwg = new FloydWarshallGenerator();
 		fwg.setMachine(FSM);
 		fwg.setStopCondition(sc);
-		
-		while(fwg.hasNext())
-		{
+
+		while (fwg.hasNext()) {
 			break;
-/*			String[] stepPair = fwg.getNext();
-
-			int stats[] = FSM.getStatistics();
-			int ec = 100*stats[1]/stats[0];
-
-			logger.debug("call( "+ stepPair[0] + " ) then verify( " + stepPair[1] + " ) --> Edge coverage @ " + ec +"%" );
-*/		}
-    }
+			/*
+			 * String[] stepPair = fwg.getNext();
+			 * 
+			 * int stats[] = FSM.getStatistics(); int ec = 100*stats[1]/stats[0];
+			 * 
+			 * logger.debug("call( "+ stepPair[0] + " ) then verify( " + stepPair[1] +
+			 * " ) --> Edge coverage @ " + ec +"%" );
+			 */}
+	}
 }

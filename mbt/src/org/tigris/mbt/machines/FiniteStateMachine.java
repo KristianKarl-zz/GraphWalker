@@ -35,13 +35,12 @@ import org.tigris.mbt.graph.Edge;
 import org.tigris.mbt.graph.Graph;
 import org.tigris.mbt.graph.Vertex;
 
-
 /**
  * @author Johan Tejle
- *
+ * 
  */
-public class FiniteStateMachine{
-	
+public class FiniteStateMachine {
+
 	static Logger logger = Util.setupLogger(FiniteStateMachine.class);
 
 	protected Graph model = null;
@@ -58,151 +57,124 @@ public class FiniteStateMachine{
 
 	private Hashtable<String, Integer> associatedRequirements;
 
-	public void setState(String stateName)
-	{
+	public void setState(String stateName) {
 		logger.debug("Setting state to: '" + stateName + "'");
 		Vertex e = findState(stateName);
 		Util.AbortIf(e == null, "Vertex not Found: '" + stateName + "'");
-		
+
 		currentState = e;
 		setAsVisited(e);
 	}
 
-	public Vertex findState(String stateName)
-	{
-		for(Iterator<Vertex> i = model.getVertices().iterator(); i.hasNext();)
-		{
+	public Vertex findState(String stateName) {
+		for (Iterator<Vertex> i = model.getVertices().iterator(); i.hasNext();) {
 			Vertex e = i.next();
-			if( ((String)e.getLabelKey()).equals(stateName))
-			{
+			if (((String) e.getLabelKey()).equals(stateName)) {
 				return e;
 			}
 		}
 		return null;
 	}
 
-	public boolean hasState( String stateName )
-	{
-		if ( findState( stateName ) != null ) {
+	public boolean hasState(String stateName) {
+		if (findState(stateName) != null) {
 			return true;
 		}
 		return false;
 	}
 
-	public Edge findEdge(String edgeName) 
-	{
-		for(Iterator<Edge> i = model.getEdges().iterator(); i.hasNext();)
-		{
+	public Edge findEdge(String edgeName) {
+		for (Iterator<Edge> i = model.getEdges().iterator(); i.hasNext();) {
 			Edge e = i.next();
-			if( ((String)e.getLabelKey()).equals(edgeName))
-			{
+			if (((String) e.getLabelKey()).equals(edgeName)) {
 				return e;
 			}
 		}
 		return null;
 	}
 
-	public FiniteStateMachine(Graph model)
-	{
+	public FiniteStateMachine(Graph model) {
 		this();
 		this.setModel(model);
 	}
-	
-	public FiniteStateMachine()
-	{
+
+	public FiniteStateMachine() {
 		logger.debug("Initializing");
 		edgeStack = new Stack<Edge>();
 		start_time = System.currentTimeMillis();
 	}
-	
+
 	public void setModel(Graph model) {
 		this.model = model;
 		setState(Keywords.START_NODE);
 	}
-	
+
 	public Vertex getCurrentState() {
 		return currentState;
 	}
 
-	public String getCurrentStateName()
-	{
+	public String getCurrentStateName() {
 		return getStateName(currentState);
 	}
-	
-	public Collection<Vertex> getAllStates()
-	{
+
+	public Collection<Vertex> getAllStates() {
 		return model.getVertices();
 	}
-	
-	public Collection<Edge> getAllEdges()
-	{
+
+	public Collection<Edge> getAllEdges() {
 		return model.getEdges();
 	}
-	
-	public String getStateName(Vertex state)
-	{
+
+	public String getStateName(Vertex state) {
 		return state.getLabelKey();
 	}
-	
-	public Set<Edge> getCurrentOutEdges() throws FoundNoEdgeException
-	{
-		Set<Edge> retur = new HashSet<Edge>( model.getOutEdges(currentState) );
-		if(retur.size()==0)
-		{
-			throw new FoundNoEdgeException( "Cul-De-Sac, dead end found in '" + getCurrentState() + "'" );
+
+	public Set<Edge> getCurrentOutEdges() throws FoundNoEdgeException {
+		Set<Edge> retur = new HashSet<Edge>(model.getOutEdges(currentState));
+		if (retur.size() == 0) {
+			throw new FoundNoEdgeException("Cul-De-Sac, dead end found in '" + getCurrentState() + "'");
 		}
 		return retur;
 	}
-	
-	public void setAsVisited(AbstractElement e)
-	{
+
+	public void setAsVisited(AbstractElement e) {
 		e.setVisitedKey(e.getVisitedKey() + 1);
 
-		if( e.getReqTagKey().isEmpty() == false )
-		{
+		if (e.getReqTagKey().isEmpty() == false) {
 			Hashtable<String, Integer> reqs = getAllRequirements();
-			String[] tags = e.getReqTagKey().split( "," );
-			for ( int j = 0; j < tags.length; j++ ) 
-			{
-				reqs.put( tags[j], new Integer(((Integer)reqs.get(tags[j])).intValue()+1));	
+			String[] tags = e.getReqTagKey().split(",");
+			for (int j = 0; j < tags.length; j++) {
+				reqs.put(tags[j], new Integer(((Integer) reqs.get(tags[j])).intValue() + 1));
 			}
 		}
 	}
-	
-	public void setAsUnvisited(AbstractElement e)
-	{
-		Integer visits = e.getVisitedKey();
-		e.setVisitedKey( e.getVisitedKey() - 1 );
 
-		if(visits <= 0 )
-			logger.error( "Edge: " + e + ", has a negative number in VISITED_KEY" );
-		
-		if(!e.getReqTagKey().isEmpty())
-		{
+	public void setAsUnvisited(AbstractElement e) {
+		Integer visits = e.getVisitedKey();
+		e.setVisitedKey(e.getVisitedKey() - 1);
+
+		if (visits <= 0)
+			logger.error("Edge: " + e + ", has a negative number in VISITED_KEY");
+
+		if (!e.getReqTagKey().isEmpty()) {
 			Hashtable<String, Integer> reqs = getAllRequirements();
-			String[] tags = e.getReqTagKey().split( "," );
-			for ( int j = 0; j < tags.length; j++ ) 
-			{
-				reqs.put( tags[j], new Integer(((Integer)reqs.get(tags[j])).intValue()-1));	
+			String[] tags = e.getReqTagKey().split(",");
+			for (int j = 0; j < tags.length; j++) {
+				reqs.put(tags[j], new Integer(((Integer) reqs.get(tags[j])).intValue() - 1));
 			}
 		}
 	}
-	
-	public void walkEdge(Stack<Edge> p) 
-	{
-		for(int i = 0; i < p.size(); i++)
-		{
+
+	public void walkEdge(Stack<Edge> p) {
+		for (int i = 0; i < p.size(); i++) {
 			walkEdge(p.get(i));
 		}
 	}
-	
-	public boolean walkEdge(Edge edge)
-	{
-		if( model.isSource(currentState, edge) )
-		{
+
+	public boolean walkEdge(Edge edge) {
+		if (model.isSource(currentState, edge)) {
 			lastEdge = edge;
-			if(isBacktrackPossible())
-			{
+			if (isBacktrackPossible()) {
 				track();
 			}
 
@@ -210,106 +182,88 @@ public class FiniteStateMachine{
 			setAsVisited(lastEdge);
 			setAsVisited(currentState);
 			numberOfEdgesTravesed++;
-			logger.debug( "No. of walked edges: " + numberOfEdgesTravesed );
+			logger.debug("No. of walked edges: " + numberOfEdgesTravesed);
 			return true;
-		}
-		else
-			logger.error( "Edge: " + edge + 
-					", is not the source of: " + 
-					currentState );
+		} else
+			logger.error("Edge: " + edge + ", is not the source of: " + currentState);
 		return false;
 	}
 
-	public Edge getLastEdge()
-	{
+	public Edge getLastEdge() {
 		return lastEdge;
 	}
-	
-	public String getStatisticsStringCompact()
-	{
+
+	public String getStatisticsStringCompact() {
 		int stats[] = getStatistics();
-		int e   = stats[0];
-		int ec  = stats[1];
-		int v   = stats[2];
-		int vc  = stats[3];
+		int e = stats[0];
+		int ec = stats[1];
+		int v = stats[2];
+		int vc = stats[3];
 		int len = stats[4];
 		int req = stats[5];
-		int reqc= stats[6];
-		
-		return 
-		(req>0?"RC: " + reqc + "/" + req + " => " +  (100*reqc)/req + "% ":"") +
-		"EC: " + ec + "/" + e + " => " + (100*ec)/e + "% " +
-		"SC: " + vc + "/" + v + " => " + (100*vc)/v + "% " +
-		"L: " + len; 
+		int reqc = stats[6];
+
+		return (req > 0 ? "RC: " + reqc + "/" + req + " => " + (100 * reqc) / req + "% " : "") + "EC: " + ec + "/" + e + " => " + (100 * ec)
+		    / e + "% " + "SC: " + vc + "/" + v + " => " + (100 * vc) / v + "% " + "L: " + len;
 	}
 
-	public String getStatisticsString()
-	{
+	public String getStatisticsString() {
 		int stats[] = getStatistics();
-		int e   = stats[0];
-		int ec  = stats[1];
-		int v   = stats[2];
-		int vc  = stats[3];
+		int e = stats[0];
+		int ec = stats[1];
+		int v = stats[2];
+		int vc = stats[3];
 		int len = stats[4];
 		int req = stats[5];
-		int reqc= stats[6];
-		
+		int reqc = stats[6];
+
 		String str = "";
-		if ( e > 0 && v > 0 )
-			str = "Coverage Edges: " + ec + "/" + e + " => " +  (100*ec)/e + "%\n" + 
-			"Coverage Vertices: " + vc + "/" + v + " => " + (100*vc)/v  + "%\n" + 
-			"Unvisited Edges:  " + (e-ec) + "\n" + 
-			"Unvisited Vertices: " + (v-vc) + "\n" +
-			"Test sequence length:  " + len;
-		else if ( req > 0 )
-			str = "Coverage Requirements: " + reqc + "/" + req + " => " +  (100*reqc)/req + "%\n";
+		if (e > 0 && v > 0)
+			str = "Coverage Edges: " + ec + "/" + e + " => " + (100 * ec) / e + "%\n" + "Coverage Vertices: " + vc + "/" + v + " => "
+			    + (100 * vc) / v + "%\n" + "Unvisited Edges:  " + (e - ec) + "\n" + "Unvisited Vertices: " + (v - vc) + "\n"
+			    + "Test sequence length:  " + len;
+		else if (req > 0)
+			str = "Coverage Requirements: " + reqc + "/" + req + " => " + (100 * reqc) / req + "%\n";
 		else
 			str = "No statistics available. Probably no run made?";
-			
+
 		return str;
 	}
-	
-	public int[] getStatistics()
-	{
+
+	public int[] getStatistics() {
 		Collection<Edge> e = model.getEdges();
 		Collection<Vertex> v = model.getVertices();
 
-		int[] retur = {e.size(), getEdgeCoverage(e), v.size(), getVertexCoverage(v), numberOfEdgesTravesed, getAllRequirements().size(), getCoveredRequirements().size()};
+		int[] retur = { e.size(), getEdgeCoverage(e), v.size(), getVertexCoverage(v), numberOfEdgesTravesed, getAllRequirements().size(),
+		    getCoveredRequirements().size() };
 		return retur;
 	}
-	
-	public String getStatisticsVerbose()
-	{
+
+	public String getStatisticsVerbose() {
 		String retur = "";
 		String newLine = "\n";
-		
+
 		Vector<String> notCovered = new Vector<String>();
-		for(Iterator<Edge> i = model.getEdges().iterator();i.hasNext();)
-		{
+		for (Iterator<Edge> i = model.getEdges().iterator(); i.hasNext();) {
 			Edge e = i.next();
-			if(e.getVisitedKey()<=0)
-			{
-				notCovered.add( "Edge not reached: " + e + newLine);
+			if (e.getVisitedKey() <= 0) {
+				notCovered.add("Edge not reached: " + e + newLine);
 			}
 		}
-		for(Iterator<Vertex> i = model.getVertices().iterator();i.hasNext();)
-		{
+		for (Iterator<Vertex> i = model.getVertices().iterator(); i.hasNext();) {
 			Vertex v = i.next();
-			if(v.getVisitedKey()<=0)
-			{
-				notCovered.add( "Vertex not reached: " + v + newLine);
+			if (v.getVisitedKey() <= 0) {
+				notCovered.add("Vertex not reached: " + v + newLine);
 			}
 		}
-		if(notCovered.size()>0)
-		{
+		if (notCovered.size() > 0) {
 			Collections.sort(notCovered);
-			for(Iterator<String> i = notCovered.iterator();i.hasNext();)
-			{
+			for (Iterator<String> i = notCovered.iterator(); i.hasNext();) {
 				retur += i.next();
 			}
 		}
 		retur += getStatisticsString() + newLine;
-		retur += "Execution time: " + ( ( System.currentTimeMillis() - start_time ) / 1000 ) + " seconds";
+		retur += "Execution time: " + ((System.currentTimeMillis() - start_time) / 1000) + " seconds";
 		return retur;
 	}
 
@@ -317,205 +271,176 @@ public class FiniteStateMachine{
 		return getCurrentState().equals(vertex);
 	}
 
-	protected int getCoverage(Collection<AbstractElement> modelItems)
-	{
+	protected int getCoverage(Collection<AbstractElement> modelItems) {
 		int unique = 0;
-		
-		for(Iterator<AbstractElement> i = modelItems.iterator(); i.hasNext();)
-		{
+
+		for (Iterator<AbstractElement> i = modelItems.iterator(); i.hasNext();) {
 			AbstractElement ae = i.next();
-			if(ae.getVisitedKey()>0)
-			{
+			if (ae.getVisitedKey() > 0) {
 				unique++;
 			}
 		}
-		
+
 		return unique;
 	}
-	
-	protected int getVertexCoverage(Collection<Vertex> modelItems)
-	{
+
+	protected int getVertexCoverage(Collection<Vertex> modelItems) {
 		int unique = 0;
-		
-		for(Iterator<Vertex> i = modelItems.iterator(); i.hasNext();)
-		{
+
+		for (Iterator<Vertex> i = modelItems.iterator(); i.hasNext();) {
 			Vertex v = i.next();
-			if(v.getVisitedKey()>0)
-			{
+			if (v.getVisitedKey() > 0) {
 				unique++;
 			}
 		}
-		
+
 		return unique;
 	}
-	
-	protected int getEdgeCoverage(Collection<Edge> modelItems)
-	{
+
+	protected int getEdgeCoverage(Collection<Edge> modelItems) {
 		int unique = 0;
-		
-		for(Iterator<Edge> i = modelItems.iterator(); i.hasNext();)
-		{
+
+		for (Iterator<Edge> i = modelItems.iterator(); i.hasNext();) {
 			Edge e = i.next();
-			if(e.getVisitedKey()>0)
-			{
+			if (e.getVisitedKey() > 0) {
 				unique++;
 			}
 		}
-		
+
 		return unique;
 	}
-	
-	public Hashtable<String, Integer> getAllRequirements()
-	{
-		if(associatedRequirements == null)
-		{ 
+
+	public Hashtable<String, Integer> getAllRequirements() {
+		if (associatedRequirements == null) {
 			associatedRequirements = new Hashtable<String, Integer>();
-			
+
 			Vector<AbstractElement> abstractElements = new Vector<AbstractElement>();
 			abstractElements.addAll(getAllStates());
 			abstractElements.addAll(getAllEdges());
-			
-			for(Iterator<AbstractElement> i = abstractElements.iterator();i.hasNext();)
-			{
+
+			for (Iterator<AbstractElement> i = abstractElements.iterator(); i.hasNext();) {
 				AbstractElement ae = i.next();
 				String reqtags = ae.getReqTagKey();
-				if( !reqtags.isEmpty() )
-				{
-					String[] tags = reqtags.split( "," );
-					for ( int j = 0; j < tags.length; j++ ) 
-					{
-						associatedRequirements.put( tags[j], new Integer(0) );	
+				if (!reqtags.isEmpty()) {
+					String[] tags = reqtags.split(",");
+					for (int j = 0; j < tags.length; j++) {
+						associatedRequirements.put(tags[j], new Integer(0));
 					}
 				}
 			}
 		}
 		return associatedRequirements;
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public Set<String> getCoveredRequirements()
-	{
+	public Set<String> getCoveredRequirements() {
 		Vector<Integer> notCoveredValues = new Vector<Integer>();
 		notCoveredValues.add(new Integer(0));
 		Hashtable<String, Integer> allRequirements = (Hashtable<String, Integer>) getAllRequirements().clone();
 		allRequirements.values().removeAll(notCoveredValues);
 		return allRequirements.keySet();
 	}
-	
-	public String getEdgeName(Edge edge)
-	{
-		if ( edge.getParameterKey().isEmpty() ) {
+
+	public String getEdgeName(Edge edge) {
+		if (edge.getParameterKey().isEmpty()) {
 			return edge.getLabelKey();
 		}
-		
+
 		return edge.getLabelKey() + " " + edge.getParameterKey();
 	}
-	
-	public String getVertexName(Vertex vertex)
-	{
+
+	public String getVertexName(Vertex vertex) {
 		String l = vertex.getLabelKey();
 		String p = vertex.getParameterKey();
-		
-		return (l==null ? "" : l) + (p==null ? "" : " " + p);
+
+		return (l == null ? "" : l) + (p == null ? "" : " " + p);
 	}
-	
-	public void storeState()
-	{
-		if(this.statestore == null)
+
+	public void storeState() {
+		if (this.statestore == null)
 			this.statestore = new Stack<Integer>();
 		this.statestore.push(new Integer(edgeStack.size()));
 	}
-	
-	public void restoreState()
-	{
-		if(this.statestore == null || this.statestore.size() == 0)
+
+	public void restoreState() {
+		if (this.statestore == null || this.statestore.size() == 0)
 			throw new RuntimeException("Nothing to restore");
-		int prevState = ((Integer)this.statestore.pop()).intValue();
-		if( prevState > edgeStack.size())
+		int prevState = ((Integer) this.statestore.pop()).intValue();
+		if (prevState > edgeStack.size())
 			throw new RuntimeException("Cannot restore state from backtrack");
-		while(prevState < edgeStack.size())
-		{
+		while (prevState < edgeStack.size()) {
 			popState();
 		}
 	}
-	
-	protected void track()
-	{
+
+	protected void track() {
 		edgeStack.push(getLastEdge());
 	}
-	
-	protected void popState()
-	{
-		setAsUnvisited( getLastEdge() );
-		setAsUnvisited( getCurrentState() );
+
+	protected void popState() {
+		setAsUnvisited(getLastEdge());
+		setAsUnvisited(getCurrentState());
 
 		edgeStack.pop();
-		if( lastEdge == null ) {
+		if (lastEdge == null) {
 			setState(Keywords.START_NODE);
 		} else {
 			currentState = model.getSource(lastEdge);
 		}
-		lastEdge = (edgeStack.size()>0?(Edge) edgeStack.peek():null);
+		lastEdge = (edgeStack.size() > 0 ? (Edge) edgeStack.peek() : null);
 		numberOfEdgesTravesed--;
 	}
-		
+
 	/**
-	 * @param weighted if edge weights are to be considered
+	 * @param weighted
+	 *          if edge weights are to be considered
 	 */
-	public void setWeighted(boolean weighted) 
-	{
+	public void setWeighted(boolean weighted) {
 		this.weighted = weighted;
 	}
+
 	/**
 	 * @return true if the edge weights is considered
 	 */
-	public boolean isWeighted() 
-	{
+	public boolean isWeighted() {
 		return weighted;
 	}
 
 	/**
 	 * @return the number of edges traversed
 	 */
-	public int getNumberOfEdgesTravesed() 
-	{
+	public int getNumberOfEdgesTravesed() {
 		return numberOfEdgesTravesed;
 	}
 
-	public void backtrack()
-	{
-		if(isBacktrackPossible())
-		{
+	public void backtrack() {
+		if (isBacktrackPossible()) {
 			popState();
 		} else {
-			if(!isLastEdgeBacktrackSupported())
-				throw new RuntimeException( "Backtracking was asked for, but model does not suppport BACKTRACK at egde: " + getLastEdge() );	
-			if(!isBacktrackEnabled())
-				throw new RuntimeException( "Backtracking was asked for, but was disabled." );			
-			throw new RuntimeException( "Backtracking was asked for, but was refused" );						
+			if (!isLastEdgeBacktrackSupported())
+				throw new RuntimeException("Backtracking was asked for, but model does not suppport BACKTRACK at egde: " + getLastEdge());
+			if (!isBacktrackEnabled())
+				throw new RuntimeException("Backtracking was asked for, but was disabled.");
+			throw new RuntimeException("Backtracking was asked for, but was refused");
 		}
 	}
-	
-	public void setBacktrackEnabled(boolean backtracking) 
-	{
-		this.backtracking  = backtracking;
+
+	public void setBacktrackEnabled(boolean backtracking) {
+		this.backtracking = backtracking;
 	}
 
-	public boolean isBacktrackEnabled() 
-	{
+	public boolean isBacktrackEnabled() {
 		return this.backtracking;
 	}
 
-	public boolean isBacktrackPossible() 
-	{
+	public boolean isBacktrackPossible() {
 		return isBacktrackEnabled() || isCalculatingPath() || isLastEdgeBacktrackSupported();
 	}
-	
-	private boolean isLastEdgeBacktrackSupported()
-	{
+
+	private boolean isLastEdgeBacktrackSupported() {
 		return getLastEdge().isBacktrackKey();
 	}
-	
+
 	public boolean isCalculatingPath() {
 		return calculatingPath;
 	}
@@ -523,82 +448,68 @@ public class FiniteStateMachine{
 	public void setCalculatingPath(boolean calculatingPath) {
 		this.calculatingPath = calculatingPath;
 	}
-	
+
 	/**
 	 * This functions returns a list of edges, which has not yet been covered
 	 */
-	public Vector<Edge> getUncoveredEdges()
-	{
+	public Vector<Edge> getUncoveredEdges() {
 		Vector<Edge> retur = new Vector<Edge>();
-		for ( Iterator<Edge> i = getAllEdges().iterator(); i.hasNext();)
-		{
+		for (Iterator<Edge> i = getAllEdges().iterator(); i.hasNext();) {
 			Edge e = i.next();
-			if(e.getVisitedKey()<=0)
-			{
-				retur.add( e );
+			if (e.getVisitedKey() <= 0) {
+				retur.add(e);
 			}
 		}
 		return retur;
 	}
-	
+
 	/**
 	 * This functions returns a list of edges, which has been covered
 	 */
-	public Vector<Edge> getCoveredEdges()
-	{
+	public Vector<Edge> getCoveredEdges() {
 		Vector<Edge> retur = new Vector<Edge>(getAllEdges());
 		retur.removeAll(getUncoveredEdges());
 		return retur;
 	}
-	
-	public Vector<Vertex> getUncoveredStates()
-	{
+
+	public Vector<Vertex> getUncoveredStates() {
 		Vector<Vertex> retur = new Vector<Vertex>();
-		for ( Iterator<Vertex> i = getAllStates().iterator(); i.hasNext();)
-		{
+		for (Iterator<Vertex> i = getAllStates().iterator(); i.hasNext();) {
 			Vertex v = i.next();
-			if(v.getVisitedKey()<=0)
-			{
-				retur.add( v );
+			if (v.getVisitedKey() <= 0) {
+				retur.add(v);
 			}
 		}
 		return retur;
 	}
-	
-	public Vector<Vertex> getCoveredStates()
-	{
+
+	public Vector<Vertex> getCoveredStates() {
 		Vector<Vertex> retur = new Vector<Vertex>(getAllStates());
 		retur.removeAll(getUncoveredStates());
 		return retur;
 	}
-	
-	public Vector<AbstractElement> getUncoveredElements()
-	{
+
+	public Vector<AbstractElement> getUncoveredElements() {
 		Vector<AbstractElement> retur = new Vector<AbstractElement>(getUncoveredEdges());
 		retur.addAll(getUncoveredStates());
 		return retur;
 	}
 
-	public Vector<AbstractElement> getCoveredElements()
-	{
+	public Vector<AbstractElement> getCoveredElements() {
 		Vector<AbstractElement> retur = new Vector<AbstractElement>(getCoveredEdges());
 		retur.addAll(getCoveredStates());
 		return retur;
 	}
 
-	public Graph getModel()
-	{
+	public Graph getModel() {
 		return model;
 	}
-	
-	public String getCurrentDataString() 
-	{
+
+	public String getCurrentDataString() {
 		return "";
 	}
 
-	public boolean hasInternalVariables()
-	{
+	public boolean hasInternalVariables() {
 		return false;
 	}
 }
-

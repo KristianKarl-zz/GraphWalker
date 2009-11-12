@@ -18,10 +18,9 @@
 package org.tigris.mbt.exceptions;
 
 /**
- * This exception can be thrown in order to backtrack the current point of execution
- * to the previous vertex. 
+ * This exception can be thrown in order to backtrack the current point of
+ * execution to the previous vertex.
  */
-public class GoBackToPreviousVertexException extends Exception
-{
+public class GoBackToPreviousVertexException extends Exception {
 	private static final long serialVersionUID = -2597269122921601356L;
 }

@@ -13,11 +13,11 @@ public class TestCaseLength extends StopCondition {
 	}
 
 	public double getFulfilment() {
-		return machine.getNumberOfEdgesTravesed() / (double)numberOfEdges;
+		return machine.getNumberOfEdgesTravesed() / (double) numberOfEdges;
 	}
-	
+
 	public String toString() {
-		return "L="+ numberOfEdges ;
+		return "L=" + numberOfEdges;
 	}
 
 }

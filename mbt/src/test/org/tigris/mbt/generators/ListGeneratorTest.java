@@ -15,22 +15,22 @@ public class ListGeneratorTest extends TestCase {
 
 	public void testGetNext() {
 		Graph graph = new Graph();
-		
+
 		Vertex v1 = new Vertex();
-		v1.setIndexKey( new Integer(1) );
-		v1.setLabelKey( "Start" );
+		v1.setIndexKey(new Integer(1));
+		v1.setLabelKey("Start");
 		graph.addVertex(v1);
-		
+
 		Vertex v2 = new Vertex();
-		v2.setIndexKey( new Integer(2) );
-		v2.setLabelKey( "V2" );
+		v2.setIndexKey(new Integer(2));
+		v2.setLabelKey("V2");
 		graph.addVertex(v2);
-		
+
 		Edge edge = new Edge();
-		edge.setIndexKey( new Integer(3) );
-		edge.setLabelKey( "E1" );
-		graph.addEdge(edge, v1, v2 );
-		
+		edge.setIndexKey(new Integer(3));
+		edge.setLabelKey("E1");
+		graph.addEdge(edge, v1, v2);
+
 		ListGenerator generator = new ListGenerator();
 		generator.setMachine(new FiniteStateMachine(graph));
 

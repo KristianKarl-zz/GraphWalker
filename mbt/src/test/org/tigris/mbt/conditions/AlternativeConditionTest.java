@@ -8,28 +8,25 @@ import junit.framework.TestCase;
 
 public class AlternativeConditionTest extends TestCase {
 
-	public void testConstructor()
-	{
+	public void testConstructor() {
 		new AlternativeCondition();
 	}
 
-	public void testFulfillment()
-	{
+	public void testFulfillment() {
 		AlternativeCondition condition = new AlternativeCondition();
 		condition.add(new NeverCondition());
-		assertEquals((double)0, condition.getFulfilment(), 0.01);
+		assertEquals((double) 0, condition.getFulfilment(), 0.01);
 		condition.add(new NeverCondition());
-		assertEquals((double)0, condition.getFulfilment(), 0.01);
+		assertEquals((double) 0, condition.getFulfilment(), 0.01);
 		condition.add(new AlwaysCondition());
-		assertEquals((double)1, condition.getFulfilment(), 0.01);
+		assertEquals((double) 1, condition.getFulfilment(), 0.01);
 		condition.add(new AlwaysCondition());
-		assertEquals((double)1, condition.getFulfilment(), 0.01);
+		assertEquals((double) 1, condition.getFulfilment(), 0.01);
 		condition.add(new NeverCondition());
-		assertEquals((double)1, condition.getFulfilment(), 0.01);
+		assertEquals((double) 1, condition.getFulfilment(), 0.01);
 	}
 
-	public void testIsFulfilled()
-	{
+	public void testIsFulfilled() {
 		AlternativeCondition condition = new AlternativeCondition();
 		condition.add(new NeverCondition());
 		assertEquals(false, condition.isFulfilled());

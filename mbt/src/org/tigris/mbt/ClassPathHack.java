@@ -11,8 +11,7 @@ public class ClassPathHack {
 
 	public static void addFile(String s) throws IOException {
 		File f = new File(s);
-		if ( f.exists() == false )
-		{	
+		if (f.exists() == false) {
 			throw new RuntimeException("File or folder does not exist.");
 		}
 		addFile(f);
@@ -25,8 +24,7 @@ public class ClassPathHack {
 	}
 
 	public static void addURL(URL u) throws IOException {
-		URLClassLoader sysloader = (URLClassLoader) ClassLoader
-				.getSystemClassLoader();
+		URLClassLoader sysloader = (URLClassLoader) ClassLoader.getSystemClassLoader();
 		Class<?> sysclass = URLClassLoader.class;
 
 		try {
@@ -35,8 +33,7 @@ public class ClassPathHack {
 			method.invoke(sysloader, new Object[] { u });
 		} catch (Throwable t) {
 			t.printStackTrace();
-			throw new IOException(
-					"Error, could not add URL to system classloader");
+			throw new IOException("Error, could not add URL to system classloader");
 		}
 
 	}
