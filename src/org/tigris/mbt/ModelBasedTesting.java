@@ -75,6 +75,7 @@ public class ModelBasedTesting {
 	private boolean backtracking = false;
 	private boolean runRandomGeneratorOnce = false;
 	private boolean dryRun = false;
+	private boolean useJsScriptEngine = false;
 	private boolean useGUI = false;
 	private MbtEvent notifyApp = null;
 	private String javaExecutorClass = null;
@@ -327,10 +328,17 @@ public class ModelBasedTesting {
 			logger.info(str);
 		}
 	}
-
+	
+	public void enableJsScriptEngine(boolean enableJs) {
+		if ( enableJs )
+		  useJsScriptEngine = true;
+		else
+			useJsScriptEngine = false;
+	}
+	 
 	public void enableExtended(boolean extended) {
 		if (extended) {
-			setMachine(new ExtendedFiniteStateMachine());
+			setMachine(new ExtendedFiniteStateMachine(useJsScriptEngine));
 			if (!getStartupScript().equals("")) {
 				logger.debug("Will now try to run script: "
 						+ getStartupScript());
@@ -784,8 +792,8 @@ public class ModelBasedTesting {
 				throw new RuntimeException(
 						"SecurityException: " + e.getMessage(), e);
 			} catch (NoSuchMethodException e) {
-				throw new RuntimeException(
-						"NoSuchMethodException: " + e.getMessage(), e);
+				//throw new RuntimeException(
+				//		"NoSuchMethodException: " + e.getMessage(), e);
 			} catch (IllegalArgumentException e) {
 				throw new RuntimeException(
 						"IllegalArgumentException: " + e.getMessage(), e);
