@@ -637,7 +637,6 @@ public class CLI {
 		getMbt().writePath(testSequence);
 
 		new PrintHTMLTestSequence(testSequence, System.out);
-
 	}
 
 	/**

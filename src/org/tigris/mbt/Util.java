@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.Vector;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
@@ -56,6 +57,9 @@ import org.tigris.mbt.graph.AbstractElement;
 import org.tigris.mbt.graph.Edge;
 import org.tigris.mbt.graph.Graph;
 import org.tigris.mbt.graph.Vertex;
+import org.tigris.mbt.io.PrintHTMLTestSequence;
+
+import edu.uci.ics.jung.graph.util.Pair;
 
 /**
  * This class has some utility functionality used by org.tigris.mbt The
@@ -421,7 +425,12 @@ public class Util {
 					executor = executor.substring(0, executor.indexOf(':'));
 				}
 
-				if (executor.equalsIgnoreCase("offline")) {
+				if (root.getAttributeValue("MANUAL") != null && root.getAttributeValue("MANUAL").equalsIgnoreCase("true")) {
+					logger.debug("Manual test sequence requested");
+					Vector<Pair<String>> testSequence = new Vector<Pair<String>>();
+					mbt.writePath(testSequence);
+					new PrintHTMLTestSequence(testSequence, System.out);
+				}else if (executor.equalsIgnoreCase("offline")) {
 					PrintStream out = System.out;
 					if (executorParam != null && !executorParam.equals("")) {
 						try {
