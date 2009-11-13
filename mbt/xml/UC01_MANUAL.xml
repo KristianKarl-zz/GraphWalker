@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE MBTINIT SYSTEM "mbt_setup.dtd" >
+<MBTINIT EXECUTOR="none" EXTENDED="true" MANUAL="true" SCRIPT_ENGINE="js">
+  <MODEL PATH="model/manual/UC01-manual.graphml"/>
+  <GENERATOR TYPE="A_STAR">
+  	<CONDITION TYPE="EDGE_COVERAGE" VALUE="100"/>
+  </GENERATOR>
+</MBTINIT>
+

@@ -11,6 +11,7 @@
 <!ELEMENT MODEL (#PCDATA)>
 
 <!ATTLIST MBTINIT EXTENDED (true|false) "false">
+<!ATTLIST MBTINIT MANUAL (true|false) "false">
 <!ATTLIST MBTINIT WEIGHT (true|false) "false">
 <!ATTLIST MBTINIT GUI (true|false) "false">
 <!ATTLIST MBTINIT SCRIPT_ENGINE CDATA "beanshell">
