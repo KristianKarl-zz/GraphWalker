@@ -8,20 +8,6 @@ public abstract class AbstractModelHandler {
 
 	protected Graph graph;
 
-	/**
-	 * Do not verify labels for edges and vertices. This is used when creating
-	 * manual test sequences.
-	 */
-	private boolean manualTestSequence;
-
-	public boolean isManualTestSequence() {
-		return manualTestSequence;
-	}
-
-	public void setManualTestSequence(boolean manualTestSequence) {
-		this.manualTestSequence = manualTestSequence;
-	}
-
 	public abstract void load(String fileName);
 
 	public abstract void save(PrintStream ps);

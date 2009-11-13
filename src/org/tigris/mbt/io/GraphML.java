@@ -170,10 +170,10 @@ public class GraphML extends AbstractModelHandler {
 								if (label.length() <= 0) {
 									throw new RuntimeException("Vertex is missing its label in file: '" + fileName + "'");
 								}
-								if (!isManualTestSequence() && label.matches(".*[\\s].*")) {
+								if (label.matches(".*[\\s].*")) {
 									throw new RuntimeException("Vertex has a label '" + label + "', containing whitespaces in file: '" + fileName + "'");
 								}
-								if (!isManualTestSequence() && Keywords.isKeyWord(label)) {
+								if (Keywords.isKeyWord(label)) {
 									throw new RuntimeException("Vertex has a label '" + label + "', which is a reserved keyword, in file: '" + fileName + "'");
 								}
 								v.setLabelKey(label);
@@ -250,6 +250,22 @@ public class GraphML extends AbstractModelHandler {
 									}
 								}
 								v.setReqTagKey(reqtags);
+							}
+						}
+					}
+
+					// Extract any manual test instructions
+					Iterator<Object> iterData = element.getDescendants(new org.jdom.filter.ElementFilter("data"));
+					while (iterData.hasNext() && currentVertex != null) {
+						Object o2 = iterData.next();
+						if (o2 instanceof org.jdom.Element) {
+							org.jdom.Element data = (org.jdom.Element) o2;
+							if (data.getContent(0) != null) {
+								String text = data.getContent(0).getValue().trim();
+								if ( !text.isEmpty() ) {
+									logger.debug("  Data: '" + text + "'");
+									currentVertex.setManualInstructions(text);
+								}
 							}
 						}
 					}
@@ -504,6 +520,22 @@ public class GraphML extends AbstractModelHandler {
 					}
 					e.setVisitedKey(new Integer(0));
 					logger.debug("  Added edge: '" + e.getLabelKey() + "', with id: " + e.getIndexKey());
+
+					// Extract any manual test instructions
+					Iterator<Object> iterData = element.getDescendants(new org.jdom.filter.ElementFilter("data"));
+					while (iterData.hasNext() && e != null) {
+						Object o2 = iterData.next();
+						if (o2 instanceof org.jdom.Element) {
+							org.jdom.Element data = (org.jdom.Element) o2;
+							if (data.getContent(0) != null) {
+								String text = data.getContent(0).getValue().trim();
+								if ( !text.isEmpty() ) {
+									logger.debug("  Data: '" + text + "'");
+									e.setManualInstructions(text);
+								}
+							}
+						}
+					}
 				}
 			}
 		} catch (JDOMException e) {

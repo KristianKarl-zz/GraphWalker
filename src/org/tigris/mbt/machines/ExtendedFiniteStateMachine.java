@@ -330,4 +330,12 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 		public void write(byte[] buf, int off, int len) {
 		}
 	}
+	
+	public boolean isJsEnabled() {
+		return jsEngine != null;
+	}
+	
+	public boolean isBeanShellEnabled() {
+		return beanShellEngine != null;
+	}
 }
