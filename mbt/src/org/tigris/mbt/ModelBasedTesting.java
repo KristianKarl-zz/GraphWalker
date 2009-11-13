@@ -26,8 +26,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.Set;
 import java.util.Vector;
+import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -447,7 +450,6 @@ public class ModelBasedTesting {
 		if (this.modelHandler == null) {
 			this.modelHandler = new GraphML();
 		}
-		this.modelHandler.setManualTestSequence(isManualTestSequence());
 		this.modelHandler.load(graphmlFileName);
 
 		if (this.machine != null) {
@@ -882,10 +884,33 @@ public class ModelBasedTesting {
 			getMachine();
 		}
 		while (hasNextStep()) {
-			String[] stepPair = getNextStep();
-			testSequence.add(new Pair<String>(stepPair[0], stepPair[1]));
+			getNextStep();
+			String edgeManualInstruction = parseManualInstructions( getMachine().getLastEdge().getManualInstructions() );
+			String vertexManualInstruction = parseManualInstructions( getCurrentVertex().getManualInstructions() );
+			testSequence.add(new Pair<String>( edgeManualInstruction, vertexManualInstruction));
 		}
 	}
+
+	private String parseManualInstructions(String manualInstructions) {
+		if ( !(getMachine() instanceof ExtendedFiniteStateMachine ) ) {
+			return manualInstructions;
+		}
+		ExtendedFiniteStateMachine efsm = (ExtendedFiniteStateMachine)getMachine();
+		if ( !(efsm.isJsEnabled() || efsm.isBeanShellEnabled() ) ) {
+			return manualInstructions;			
+		}
+		
+		String parsedStr = manualInstructions;
+		Pattern p = Pattern.compile("\\{\\$(\\w+)\\}", Pattern.MULTILINE);
+		Matcher m = p.matcher(manualInstructions);
+		while (m.find()) {
+			String data = m.group(1);
+			parsedStr = manualInstructions.replaceAll("\\{\\$" + data + "\\}", efsm.getDataValue(data));
+			manualInstructions = parsedStr;
+		}
+
+	  return parsedStr;
+  }
 
 	public void writePath(PrintStream out) {
 		if (this.machine == null) {

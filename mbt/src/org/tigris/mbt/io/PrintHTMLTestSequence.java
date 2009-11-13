@@ -23,12 +23,12 @@ public class PrintHTMLTestSequence {
 			out.println("<col width=45%>");
 			out.println("<col width=45%>");
 			out.println("<tr>");
-			out.println("<td class=\"indexRow\"><b>Step " + index++ + "</b></td>");
+			out.println("<td class=\"indexRow\"><b>Step</b></td>");
 			out.println("<td class=\"indexRow\"><b>Action</b></td>");
 			out.println("<td class=\"indexRow\"><b>Expected Result</b></td>");
 			out.println("</tr>");
 			out.println("<tr>");
-			out.println("<td class=\"tcRow\"> </td>");
+			out.println("<td class=\"tcRow\">" + index++ + "</td>");
 			out.println("<td class=\"tcRow\">" + pair.getFirst() + "</td>");
 			out.println("<td class=\"tcRow\">" + pair.getSecond() + "</td>");
 			out.println("</tr></tbody></table></div>");

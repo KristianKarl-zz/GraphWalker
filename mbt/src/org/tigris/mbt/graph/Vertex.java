@@ -73,5 +73,4 @@ public class Vertex extends AbstractElement {
 	public void setMotherStartVertexKey(String motherStartVertexKey) {
 		this.motherStartVertexKey = motherStartVertexKey;
 	}
-
 }

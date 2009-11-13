@@ -19,6 +19,7 @@ public class AbstractElement {
 	private boolean blockedKey = false;
 	private String imageKey = new String();
 	private boolean mergedMbtKey = false;
+	private String manualInstructions = "";
 
 	public AbstractElement() {
 	}
@@ -39,6 +40,7 @@ public class AbstractElement {
 		this.blockedKey = ae.blockedKey;
 		this.imageKey = ae.imageKey;
 		this.mergedMbtKey = ae.mergedMbtKey;
+		this.manualInstructions = ae.manualInstructions;
 	}
 
 	public AbstractElement(AbstractElement A, AbstractElement B) {
@@ -58,6 +60,7 @@ public class AbstractElement {
 			this.blockedKey = A.blockedKey;
 			this.imageKey = A.imageKey;
 			this.mergedMbtKey = A.mergedMbtKey;
+			this.manualInstructions = A.manualInstructions;
 		} else {
 			this.labelKey = B.labelKey;
 			this.fullLabelKey = B.fullLabelKey;
@@ -74,6 +77,7 @@ public class AbstractElement {
 			this.blockedKey = B.blockedKey;
 			this.imageKey = B.imageKey;
 			this.mergedMbtKey = B.mergedMbtKey;
+			this.manualInstructions = B.manualInstructions;
 		}
 	}
 
@@ -200,4 +204,12 @@ public class AbstractElement {
 	public String toString() {
 		return Util.getCompleteName(this);
 	}
+	
+	public String getManualInstructions() {
+  	return manualInstructions;
+  }
+
+	public void setManualInstructions(String attributeValue) {
+		this.manualInstructions = attributeValue;
+  }
 }
