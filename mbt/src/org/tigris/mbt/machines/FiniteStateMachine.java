@@ -21,7 +21,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.Set;
 import java.util.Stack;
 import java.util.Vector;
@@ -67,12 +66,11 @@ public class FiniteStateMachine {
 	}
 
 	public Vertex findState(String stateName) {
-		for (Iterator<Vertex> i = model.getVertices().iterator(); i.hasNext();) {
-			Vertex e = i.next();
-			if (((String) e.getLabelKey()).equals(stateName)) {
-				return e;
+		for (Vertex vertex : model.getVertices()) {
+			if (((String) vertex.getLabelKey()).equals(stateName)) {
+				return vertex;
 			}
-		}
+    }
 		return null;
 	}
 
@@ -84,10 +82,9 @@ public class FiniteStateMachine {
 	}
 
 	public Edge findEdge(String edgeName) {
-		for (Iterator<Edge> i = model.getEdges().iterator(); i.hasNext();) {
-			Edge e = i.next();
-			if (((String) e.getLabelKey()).equals(edgeName)) {
-				return e;
+		for (Edge edge : model.getEdges()) {
+			if (((String) edge.getLabelKey()).equals(edgeName)) {
+				return edge;
 			}
 		}
 		return null;
@@ -244,23 +241,21 @@ public class FiniteStateMachine {
 		String newLine = "\n";
 
 		Vector<String> notCovered = new Vector<String>();
-		for (Iterator<Edge> i = model.getEdges().iterator(); i.hasNext();) {
-			Edge e = i.next();
-			if (e.getVisitedKey() <= 0) {
-				notCovered.add("Edge not reached: " + e + newLine);
+		for (Edge edge : model.getEdges()) {
+			if (edge.getVisitedKey() <= 0) {
+				notCovered.add("Edge not reached: " + edge + newLine);
 			}
 		}
-		for (Iterator<Vertex> i = model.getVertices().iterator(); i.hasNext();) {
-			Vertex v = i.next();
-			if (v.getVisitedKey() <= 0) {
-				notCovered.add("Vertex not reached: " + v + newLine);
+		for (Vertex vertex : model.getVertices()) {
+			if (vertex.getVisitedKey() <= 0) {
+				notCovered.add("Vertex not reached: " + vertex + newLine);
 			}
 		}
 		if (notCovered.size() > 0) {
 			Collections.sort(notCovered);
-			for (Iterator<String> i = notCovered.iterator(); i.hasNext();) {
-				retur += i.next();
-			}
+			for (String string : notCovered) {
+				retur += string;
+      }
 		}
 		retur += getStatisticsString() + newLine;
 		retur += "Execution time: " + ((System.currentTimeMillis() - start_time) / 1000) + " seconds";
@@ -274,9 +269,8 @@ public class FiniteStateMachine {
 	protected int getCoverage(Collection<AbstractElement> modelItems) {
 		int unique = 0;
 
-		for (Iterator<AbstractElement> i = modelItems.iterator(); i.hasNext();) {
-			AbstractElement ae = i.next();
-			if (ae.getVisitedKey() > 0) {
+		for (AbstractElement abstractElement : modelItems) {
+			if (abstractElement.getVisitedKey() > 0) {
 				unique++;
 			}
 		}
@@ -287,12 +281,11 @@ public class FiniteStateMachine {
 	protected int getVertexCoverage(Collection<Vertex> modelItems) {
 		int unique = 0;
 
-		for (Iterator<Vertex> i = modelItems.iterator(); i.hasNext();) {
-			Vertex v = i.next();
-			if (v.getVisitedKey() > 0) {
+		for (Vertex vertex : modelItems) {
+			if (vertex.getVisitedKey() > 0) {
 				unique++;
-			}
-		}
+			}	    
+    }
 
 		return unique;
 	}
@@ -300,12 +293,11 @@ public class FiniteStateMachine {
 	protected int getEdgeCoverage(Collection<Edge> modelItems) {
 		int unique = 0;
 
-		for (Iterator<Edge> i = modelItems.iterator(); i.hasNext();) {
-			Edge e = i.next();
-			if (e.getVisitedKey() > 0) {
+		for (Edge edge : modelItems) {
+			if (edge.getVisitedKey() > 0) {
 				unique++;
-			}
-		}
+			}	    
+    }
 
 		return unique;
 	}
@@ -318,9 +310,8 @@ public class FiniteStateMachine {
 			abstractElements.addAll(getAllStates());
 			abstractElements.addAll(getAllEdges());
 
-			for (Iterator<AbstractElement> i = abstractElements.iterator(); i.hasNext();) {
-				AbstractElement ae = i.next();
-				String reqtags = ae.getReqTagKey();
+			for (AbstractElement abstractElement : abstractElements) {
+				String reqtags = abstractElement.getReqTagKey();
 				if (!reqtags.isEmpty()) {
 					String[] tags = reqtags.split(",");
 					for (int j = 0; j < tags.length; j++) {
@@ -454,10 +445,9 @@ public class FiniteStateMachine {
 	 */
 	public Vector<Edge> getUncoveredEdges() {
 		Vector<Edge> retur = new Vector<Edge>();
-		for (Iterator<Edge> i = getAllEdges().iterator(); i.hasNext();) {
-			Edge e = i.next();
-			if (e.getVisitedKey() <= 0) {
-				retur.add(e);
+		for (Edge edge : getAllEdges()) {
+			if (edge.getVisitedKey() <= 0) {
+				retur.add(edge);
 			}
 		}
 		return retur;
@@ -474,10 +464,9 @@ public class FiniteStateMachine {
 
 	public Vector<Vertex> getUncoveredStates() {
 		Vector<Vertex> retur = new Vector<Vertex>();
-		for (Iterator<Vertex> i = getAllStates().iterator(); i.hasNext();) {
-			Vertex v = i.next();
-			if (v.getVisitedKey() <= 0) {
-				retur.add(v);
+		for (Vertex vertex : getAllStates()) {
+			if (vertex.getVisitedKey() <= 0) {
+				retur.add(vertex);
 			}
 		}
 		return retur;
