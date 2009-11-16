@@ -260,7 +260,7 @@ public class GraphML extends AbstractModelHandler {
 						Object o2 = iterData.next();
 						if (o2 instanceof org.jdom.Element) {
 							org.jdom.Element data = (org.jdom.Element) o2;
-							if (data.getContent(0) != null) {
+							if (!data.getContent().isEmpty() && data.getContent(0) != null) {
 								String text = data.getContent(0).getValue().trim();
 								if ( !text.isEmpty() ) {
 									logger.debug("  Data: '" + text + "'");
@@ -527,7 +527,7 @@ public class GraphML extends AbstractModelHandler {
 						Object o2 = iterData.next();
 						if (o2 instanceof org.jdom.Element) {
 							org.jdom.Element data = (org.jdom.Element) o2;
-							if (data.getContent(0) != null) {
+							if (!data.getContent().isEmpty() && data.getContent(0) != null) {
 								String text = data.getContent(0).getValue().trim();
 								if ( !text.isEmpty() ) {
 									logger.debug("  Data: '" + text + "'");
