@@ -59,8 +59,8 @@ public class A_StarPathGenerator extends PathGenerator {
 	private Stack<Edge> a_star() {
 		Vector<String> closed = new Vector<String>();
 
-		PriorityQueue<weightedPath> q = new PriorityQueue<weightedPath>(10, new Comparator<weightedPath>() {
-			public int compare(weightedPath arg0, weightedPath arg1) {
+		PriorityQueue<WeightedPath> q = new PriorityQueue<WeightedPath>(10, new Comparator<WeightedPath>() {
+			public int compare(WeightedPath arg0, WeightedPath arg1) {
 				int retur = Double.compare(arg0.getWeight(), arg1.getWeight());
 				if (retur == 0)
 					retur = arg0.getPath().size() - arg1.getPath().size();
@@ -82,7 +82,7 @@ public class A_StarPathGenerator extends PathGenerator {
 		}
 		double maxWeight = 0;
 		while (q.size() > 0) {
-			weightedPath p = (weightedPath) q.poll();
+			WeightedPath p = (WeightedPath) q.poll();
 			if (p.getWeight() > maxWeight)
 				maxWeight = p.getWeight();
 			if (p.getWeight() > 0.99999) // are we done yet?
@@ -113,7 +113,7 @@ public class A_StarPathGenerator extends PathGenerator {
 		    + (int) (maxWeight * 100) + "% of condition.");
 	}
 
-	private weightedPath getWeightedPath(Stack<Edge> path) {
+	private WeightedPath getWeightedPath(Stack<Edge> path) {
 		double weight = 0;
 		String subState = "";
 
@@ -126,7 +126,7 @@ public class A_StarPathGenerator extends PathGenerator {
 		}
 		getMachine().restoreState();
 
-		return new weightedPath(path, weight, subState);
+		return new WeightedPath(path, weight, subState);
 	}
 
 	private Set<Edge> getPathOutEdges(Stack<Edge> path) {
@@ -154,7 +154,7 @@ public class A_StarPathGenerator extends PathGenerator {
 		return "A_STAR{" + super.toString() + "}";
 	}
 
-	private class weightedPath {
+	private class WeightedPath {
 		private double weight;
 		private Stack<Edge> path;
 		private String subState;
@@ -183,7 +183,7 @@ public class A_StarPathGenerator extends PathGenerator {
 			this.weight = weight;
 		}
 
-		public weightedPath(Stack<Edge> path, double weight, String subState) {
+		public WeightedPath(Stack<Edge> path, double weight, String subState) {
 			setPath(path);
 			setWeight(weight);
 			setSubState(subState);
