@@ -51,10 +51,20 @@ public class FiniteStateMachine {
 	private int numberOfEdgesTravesed = 0;
 	protected boolean backtracking = false;
 	protected boolean calculatingPath = false;
+	private int numOfCoveredEdges = 0;
+	private int numOfCoveredVertices = 0;
 
 	private long start_time;
 
 	private Hashtable<String, Integer> associatedRequirements;
+
+	public int getNumOfCoveredEdges() {
+  	return numOfCoveredEdges;
+  }
+
+	public int getNumOfCoveredVertices() {
+	  return numOfCoveredVertices;
+  }
 
 	public void setState(String stateName) {
 		logger.debug("Setting state to: '" + stateName + "'");
@@ -102,6 +112,7 @@ public class FiniteStateMachine {
 	}
 
 	public void setModel(Graph model) {
+		reset();
 		this.model = model;
 		setState(Keywords.START_NODE);
 	}
@@ -135,6 +146,17 @@ public class FiniteStateMachine {
 	}
 
 	public void setAsVisited(AbstractElement e) {
+		if ( e instanceof Edge ) {
+			if ( e.getVisitedKey() < 1 ) {
+				numOfCoveredEdges++;
+			}
+		}
+		else if ( e instanceof Vertex ) {
+			if ( e.getVisitedKey() < 1 ) {
+				numOfCoveredVertices++;
+			}
+		}
+
 		e.setVisitedKey(e.getVisitedKey() + 1);
 
 		if (e.getReqTagKey().isEmpty() == false) {
@@ -149,6 +171,16 @@ public class FiniteStateMachine {
 	public void setAsUnvisited(AbstractElement e) {
 		Integer visits = e.getVisitedKey();
 		e.setVisitedKey(e.getVisitedKey() - 1);
+		if ( e instanceof Edge ) {
+			if ( e.getVisitedKey() < 1 ) {
+				numOfCoveredEdges--;
+			}
+		}
+		else if ( e instanceof Vertex ) {
+			if ( e.getVisitedKey() < 1 ) {
+				numOfCoveredVertices--;
+			}
+		}
 
 		if (visits <= 0)
 			logger.error("Edge: " + e + ", has a negative number in VISITED_KEY");
@@ -501,4 +533,12 @@ public class FiniteStateMachine {
 	public boolean hasInternalVariables() {
 		return false;
 	}
+
+	public void reset() {
+		numberOfEdgesTravesed = 0;
+		backtracking = false;
+		calculatingPath = false;
+		numOfCoveredEdges = 0;
+		numOfCoveredVertices = 0;
+  }
 }
