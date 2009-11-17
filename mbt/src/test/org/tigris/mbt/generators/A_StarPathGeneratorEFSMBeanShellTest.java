@@ -9,7 +9,6 @@ import org.tigris.mbt.graph.Edge;
 import org.tigris.mbt.graph.Graph;
 import org.tigris.mbt.graph.Vertex;
 import org.tigris.mbt.machines.ExtendedFiniteStateMachine;
-import org.tigris.mbt.machines.FiniteStateMachine;
 
 import junit.framework.TestCase;
 
