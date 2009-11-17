@@ -1,7 +1,6 @@
 package org.tigris.mbt.generators;
 
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.PriorityQueue;
 import java.util.Set;
 import java.util.Stack;
@@ -59,7 +58,7 @@ public class A_StarPathGenerator extends PathGenerator {
 	private Stack<Edge> a_star() {
 		Vector<String> closed = new Vector<String>();
 
-		PriorityQueue<WeightedPath> q = new PriorityQueue<WeightedPath>(10, new Comparator<WeightedPath>() {
+		PriorityQueue<WeightedPath> a_starPath = new PriorityQueue<WeightedPath>(10, new Comparator<WeightedPath>() {
 			public int compare(WeightedPath arg0, WeightedPath arg1) {
 				int retur = Double.compare(arg0.getWeight(), arg1.getWeight());
 				if (retur == 0)
@@ -74,38 +73,36 @@ public class A_StarPathGenerator extends PathGenerator {
 		} catch (FoundNoEdgeException e) {
 			throw new RuntimeException("No available edges found at " + getMachine().getCurrentStateName(), e);
 		}
-		for (Iterator<Edge> i = availableOutEdges.iterator(); i.hasNext();) {
-			Edge y = i.next();
-			Stack<Edge> s = new Stack<Edge>();
-			s.push(y);
-			q.add(getWeightedPath(s));
+		for (Edge edge : availableOutEdges) {
+			Stack<Edge> path = new Stack<Edge>();
+			path.push(edge);
+			a_starPath.add(getWeightedPath(path));
 		}
 		double maxWeight = 0;
-		while (q.size() > 0) {
-			WeightedPath p = (WeightedPath) q.poll();
-			if (p.getWeight() > maxWeight)
-				maxWeight = p.getWeight();
-			if (p.getWeight() > 0.99999) // are we done yet?
-				return p.getPath();
+		while (a_starPath.size() > 0) {
+			WeightedPath path = (WeightedPath) a_starPath.poll();
+			if (path.getWeight() > maxWeight)
+				maxWeight = path.getWeight();
+			if (path.getWeight() > 0.99999) // are we done yet?
+				return path.getPath();
 
-			Edge x = (Edge) p.getPath().peek();
+			Edge possibleDuplicate = (Edge) path.getPath().peek();
 
 			// have we been here before?
-			if (closed.contains(x.hashCode() + "." + p.getSubState().hashCode() + "." + p.getWeight()))
+			if (closed.contains(possibleDuplicate.hashCode() + "." + path.getSubState().hashCode() + "." + path.getWeight()))
 				continue; // ignore this and move on
 
 			// We don't want to use this edge again as this path is
 			// the fastest, and if we come here again we have used more
 			// steps to get here than we used this time.
-			closed.add(x.hashCode() + "." + p.getSubState().hashCode() + "." + p.getWeight());
+			closed.add(possibleDuplicate.hashCode() + "." + path.getSubState().hashCode() + "." + path.getWeight());
 
-			availableOutEdges = getPathOutEdges(p.getPath());
+			availableOutEdges = getPathOutEdges(path.getPath());
 			if (availableOutEdges != null && availableOutEdges.size() > 0) {
-				for (Iterator<Edge> i = availableOutEdges.iterator(); i.hasNext();) {
-					Edge y = i.next();
-					Stack<Edge> newStack = (Stack<Edge>) p.getPath().clone();
-					newStack.push(y);
-					q.add(getWeightedPath(newStack));
+				for (Edge edge : availableOutEdges) {
+					Stack<Edge> newStack = (Stack<Edge>) path.getPath().clone();
+					newStack.push(edge);
+					a_starPath.add(getWeightedPath(newStack));
 				}
 			}
 		}
@@ -118,7 +115,7 @@ public class A_StarPathGenerator extends PathGenerator {
 		String subState = "";
 
 		getMachine().storeState();
-		getMachine().walkEdge(path);
+		getMachine().walkPath(path);
 		weight = getConditionFulfilment();
 		String currentState = getMachine().getCurrentStateName();
 		if (currentState.contains("/")) {
@@ -132,7 +129,7 @@ public class A_StarPathGenerator extends PathGenerator {
 	private Set<Edge> getPathOutEdges(Stack<Edge> path) {
 		Set<Edge> retur = null;
 		getMachine().storeState();
-		getMachine().walkEdge(path);
+		getMachine().walkPath(path);
 		try {
 			retur = getMachine().getCurrentOutEdges();
 		} catch (FoundNoEdgeException e) {

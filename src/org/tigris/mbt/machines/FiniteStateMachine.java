@@ -194,9 +194,9 @@ public class FiniteStateMachine {
 		}
 	}
 
-	public void walkEdge(Stack<Edge> p) {
-		for (int i = 0; i < p.size(); i++) {
-			walkEdge(p.get(i));
+	public void walkPath(Stack<Edge> path) {
+		for (Edge edge : path) {
+			walkEdge(edge);
 		}
 	}
 
