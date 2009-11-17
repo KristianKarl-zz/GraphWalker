@@ -16,17 +16,15 @@ public class StateCoverage extends StopCondition {
 	}
 
 	public boolean isFulfilled() {
-		int stats[] = machine.getStatistics();
-		double edges = stats[2];
-		double covered = stats[3];
-		return (covered / edges) >= limit;
+		double vertices = machine.getAllStates().size();
+		double covered = machine.getNumOfCoveredVertices();
+		return (covered / vertices) >= limit;
 	}
 
 	public double getFulfilment() {
-		int stats[] = machine.getStatistics();
-		double edges = stats[2];
-		double covered = stats[3];
-		return (covered / edges) / limit;
+		double vertices = machine.getAllStates().size();
+		double covered = machine.getNumOfCoveredVertices();
+		return (covered / vertices) / limit;
 	}
 
 	public String toString() {

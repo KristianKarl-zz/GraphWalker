@@ -16,16 +16,14 @@ public class EdgeCoverage extends StopCondition {
 	}
 
 	public boolean isFulfilled() {
-		int stats[] = machine.getStatistics();
-		double edges = stats[0];
-		double covered = stats[1];
+		double edges = machine.getAllEdges().size();
+		double covered = machine.getNumOfCoveredEdges();
 		return (covered / edges) >= limit;
 	}
 
 	public double getFulfilment() {
-		int stats[] = machine.getStatistics();
-		double edges = stats[0];
-		double covered = stats[1];
+		double edges = machine.getAllEdges().size();
+		double covered = machine.getNumOfCoveredEdges();
 		return (covered / edges) / limit;
 	}
 
