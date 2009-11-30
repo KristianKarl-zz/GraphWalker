@@ -25,8 +25,6 @@ import org.apache.log4j.Logger;
 import org.tigris.mbt.GUI.App;
 import org.tigris.mbt.io.PrintHTMLTestSequence;
 
-import edu.uci.ics.jung.graph.util.Pair;
-
 /**
  * Command Line Interface object, to the org.tigris.mbt package. The object
  * provides a way of working with MBT using a Windows DOS, or a console window
@@ -633,7 +631,7 @@ public class CLI {
 			getMbt().setGenerator(Keywords.getGenerator(genrators[0].trim()));
 		}
 
-		Vector<Pair<String>> testSequence = new Vector<Pair<String>>();
+		Vector<String[]> testSequence = new Vector<String[]>();
 		getMbt().writePath(testSequence);
 
 		new PrintHTMLTestSequence(testSequence, System.out);
