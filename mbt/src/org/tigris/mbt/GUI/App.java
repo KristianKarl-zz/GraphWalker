@@ -298,7 +298,7 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 			ModelBasedTesting.getInstance().setUseGUI();
 			try {
 				Util.loadMbtFromXml(xmlFile.getAbsolutePath());
-				setTitle("Model-Based Testing 2.2 Beta 11 - " + xmlFile.getName());
+				setTitle("Model-Based Testing 2.2 Beta 12 - " + xmlFile.getName());
 			} catch (Exception e) {
 				Util.printStackTrace(e);
 				JOptionPane.showMessageDialog(App.getInstance(), e.getMessage());
@@ -718,7 +718,7 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 
 	public void init() {
 		log.debug("Entry");
-		setTitle("Model-Based Testing 2.2 Beta 11");
+		setTitle("Model-Based Testing 2.2 Beta 12");
 		setBackground(Color.gray);
 
 		JPanel topPanel = new JPanel();
