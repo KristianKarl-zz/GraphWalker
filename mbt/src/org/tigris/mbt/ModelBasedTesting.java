@@ -26,11 +26,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.Set;
 import java.util.Vector;
-import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -59,8 +56,6 @@ import org.tigris.mbt.statistics.EdgeCoverageStatistics;
 import org.tigris.mbt.statistics.EdgeSequenceCoverageStatistics;
 import org.tigris.mbt.statistics.RequirementCoverageStatistics;
 import org.tigris.mbt.statistics.StateCoverageStatistics;
-
-import edu.uci.ics.jung.graph.util.Pair;
 
 /**
  * The object handles the test case generation, both online and offline.
@@ -879,15 +874,16 @@ public class ModelBasedTesting {
 		writePath(System.out);
 	}
 
-	public void writePath(Vector<Pair<String>> testSequence) {
+	public void writePath(Vector<String[]> testSequence) {
 		if (this.machine == null) {
 			getMachine();
 		}
 		while (hasNextStep()) {
 			getNextStep();
+			String labels = getMachine().getLastEdge().getLabelKey() + " -> " + getCurrentVertex().getLabelKey();
 			String edgeManualInstruction = parseManualInstructions( getMachine().getLastEdge().getManualInstructions() );
 			String vertexManualInstruction = parseManualInstructions( getCurrentVertex().getManualInstructions() );
-			testSequence.add(new Pair<String>( edgeManualInstruction, vertexManualInstruction));
+			testSequence.add(new String[]{labels, edgeManualInstruction, vertexManualInstruction});
 		}
 	}
 

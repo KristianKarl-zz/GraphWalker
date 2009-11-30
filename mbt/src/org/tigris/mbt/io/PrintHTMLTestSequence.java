@@ -3,22 +3,26 @@ package org.tigris.mbt.io;
 import java.io.PrintStream;
 import java.util.Vector;
 
-import edu.uci.ics.jung.graph.util.Pair;
-
 public class PrintHTMLTestSequence {
 
-	public PrintHTMLTestSequence(Vector<Pair<String>> testSequence, PrintStream out) {
+	public PrintHTMLTestSequence(Vector<String[]> testSequence, PrintStream out) {
 		writeHTML(testSequence, out);
 	}
 
-	private void writeHTML(Vector<Pair<String>> testSequence, PrintStream out) {
+	private void writeHTML(Vector<String[]> testSequence, PrintStream out) {
 
 		header(out);
 
 		int index = 1;
-		for (Pair<String> pair : testSequence) {
+		for (String[] string : testSequence) {
+			
 			out.println("<p>");
-			out.println("<div align=\"center\"><table class=\"myTable\" cellpadding=\"3\" cellspacing=\"0\"><tbody>");
+			out.println("<table class=\"example\" width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">");
+			out.println("<tbody><tr><td>");
+			out.println("<h2 class=\"example\">" + string[0] + "</h2>");
+			out.println("<table style=\"background-color: white;\" width=\"100%\" border=\"1\" cellpadding=\"2\" cellspacing=\"0\">");
+
+			out.println("<tbody><tr>");
 			out.println("<col width=10%>");
 			out.println("<col width=45%>");
 			out.println("<col width=45%>");
@@ -29,22 +33,25 @@ public class PrintHTMLTestSequence {
 			out.println("</tr>");
 			out.println("<tr>");
 			out.println("<td class=\"tcRow\">" + index++ + "</td>");
-			out.println("<td class=\"tcRow\">" + pair.getFirst() + "</td>");
-			out.println("<td class=\"tcRow\">" + pair.getSecond() + "</td>");
-			out.println("</tr></tbody></table></div>");
+			out.println("<td class=\"tcRow\">" + string[1] + "</td>");
+			out.println("<td class=\"tcRow\">" + string[2] + "</td>");
+			out.println("</tr>");
+			out.println("</tbody></table>");
+			out.println("</td></tr></tbody></table>");
 			out.println("</p>");
 		}
 
 
 		footer(out);
 	}
-	
+
 	private void header(PrintStream out) {
 		out.println("<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">");
 		out.println("<html>");
 		out.println("<head>");
 		out.println("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=ISO-8859-1\">");
 		out.println("<title>Test Sequence made by MBT</title>");
+		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"http://www.w3schools.com/stdtheme.css\" />");
 		out.println("</head>");
 		out.println("<body>");
 

@@ -59,8 +59,6 @@ import org.tigris.mbt.graph.Graph;
 import org.tigris.mbt.graph.Vertex;
 import org.tigris.mbt.io.PrintHTMLTestSequence;
 
-import edu.uci.ics.jung.graph.util.Pair;
-
 /**
  * This class has some utility functionality used by org.tigris.mbt The
  * functionality is:<br>
@@ -427,7 +425,7 @@ public class Util {
 
 				if (root.getAttributeValue("MANUAL") != null && root.getAttributeValue("MANUAL").equalsIgnoreCase("true")) {
 					logger.debug("Manual test sequence requested");
-					Vector<Pair<String>> testSequence = new Vector<Pair<String>>();
+					Vector<String[]> testSequence = new Vector<String[]>();
 					mbt.writePath(testSequence);
 					new PrintHTMLTestSequence(testSequence, System.out);
 				}else if (executor.equalsIgnoreCase("offline")) {
