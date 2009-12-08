@@ -174,7 +174,12 @@ public class ModelBasedTesting {
 	}
 
 	public void addAlternativeCondition(int conditionType, String conditionValue) {
-		StopCondition condition = Util.getCondition(conditionType, conditionValue);
+		StopCondition condition = null;
+		try {
+			condition = Util.getCondition(conditionType, conditionValue);
+		} catch ( NumberFormatException e ) {
+			Util.AbortIf(true, "Error in the stop condition. Check the stop condition");
+		}
 
 		// If requirement stop condition, check if requirement exists in model
 		if (condition instanceof ReachedRequirement) {
