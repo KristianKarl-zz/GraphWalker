@@ -5,6 +5,7 @@ import org.tigris.mbt.ModelBasedTesting;
 import org.tigris.mbt.Util;
 import org.tigris.mbt.conditions.TestCaseLength;
 import org.tigris.mbt.conditions.StopCondition;
+import org.tigris.mbt.exceptions.GeneratorException;
 import org.tigris.mbt.graph.Edge;
 import org.tigris.mbt.graph.Graph;
 import org.tigris.mbt.graph.Vertex;
@@ -45,7 +46,7 @@ public class TestCaseLengthTest extends TestCase {
 		mbt.setCondition(new TestCaseLength(2));
 	}
 
-	public void testFulfillment() {
+	public void testFulfillment() throws GeneratorException {
 		ModelBasedTesting mbt = ModelBasedTesting.getInstance();
 		StopCondition condition = new TestCaseLength(2);
 		mbt.setCondition(condition);
@@ -60,7 +61,7 @@ public class TestCaseLengthTest extends TestCase {
 		assertEquals((double) 2 / 2, condition.getFulfilment(), 0.01);
 	}
 
-	public void testIsFulfilled() {
+	public void testIsFulfilled() throws GeneratorException {
 		ModelBasedTesting mbt = ModelBasedTesting.getInstance();
 		StopCondition condition = new TestCaseLength(2);
 		mbt.setCondition(condition);

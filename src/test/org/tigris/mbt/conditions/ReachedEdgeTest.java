@@ -5,6 +5,7 @@ import org.tigris.mbt.ModelBasedTesting;
 import org.tigris.mbt.Util;
 import org.tigris.mbt.conditions.ReachedEdge;
 import org.tigris.mbt.conditions.StopCondition;
+import org.tigris.mbt.exceptions.GeneratorException;
 import org.tigris.mbt.graph.Edge;
 import org.tigris.mbt.graph.Graph;
 import org.tigris.mbt.graph.Vertex;
@@ -46,7 +47,7 @@ public class ReachedEdgeTest extends TestCase {
 		mbt.setCondition(new ReachedEdge("E1"));
 	}
 
-	public void testFulfillment() {
+	public void testFulfillment() throws GeneratorException {
 		ModelBasedTesting mbt = ModelBasedTesting.getInstance();
 		StopCondition condition = new ReachedEdge("E1");
 		mbt.setCondition(condition);
@@ -61,7 +62,7 @@ public class ReachedEdgeTest extends TestCase {
 		assertEquals((double) 1, condition.getFulfilment(), 0.01);
 	}
 
-	public void testIsFulfilled() {
+	public void testIsFulfilled() throws GeneratorException {
 		ModelBasedTesting mbt = ModelBasedTesting.getInstance();
 		StopCondition condition = new ReachedEdge("E1");
 		mbt.setCondition(condition);

@@ -5,6 +5,8 @@ import org.tigris.mbt.ModelBasedTesting;
 import org.tigris.mbt.Util;
 import org.tigris.mbt.conditions.EdgeCoverage;
 import org.tigris.mbt.conditions.StopCondition;
+import org.tigris.mbt.exceptions.GeneratorException;
+import org.tigris.mbt.exceptions.StopConditionException;
 import org.tigris.mbt.graph.Edge;
 import org.tigris.mbt.graph.Graph;
 import org.tigris.mbt.graph.Vertex;
@@ -40,12 +42,12 @@ public class EdgeCoverageTest extends TestCase {
 		e0 = e1 = null;
 	}
 
-	public void testConstructor() {
+	public void testConstructor() throws StopConditionException {
 		ModelBasedTesting mbt = ModelBasedTesting.getInstance();
 		mbt.setCondition(new EdgeCoverage());
 	}
 
-	public void testFulfillment() {
+	public void testFulfillment() throws StopConditionException, GeneratorException {
 		ModelBasedTesting mbt = ModelBasedTesting.getInstance();
 		StopCondition condition = new EdgeCoverage();
 		mbt.setCondition(condition);
@@ -60,7 +62,7 @@ public class EdgeCoverageTest extends TestCase {
 		assertEquals((double) 2 / 2, condition.getFulfilment(), 0.01);
 	}
 
-	public void testIsFulfilled() {
+	public void testIsFulfilled() throws StopConditionException, GeneratorException {
 		ModelBasedTesting mbt = ModelBasedTesting.getInstance();
 		StopCondition condition = new EdgeCoverage();
 		mbt.setCondition(condition);

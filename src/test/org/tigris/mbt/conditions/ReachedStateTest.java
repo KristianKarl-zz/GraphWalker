@@ -3,8 +3,9 @@ package test.org.tigris.mbt.conditions;
 import org.tigris.mbt.Keywords;
 import org.tigris.mbt.ModelBasedTesting;
 import org.tigris.mbt.Util;
-import org.tigris.mbt.conditions.ReachedState;
+import org.tigris.mbt.conditions.ReachedVertex;
 import org.tigris.mbt.conditions.StopCondition;
+import org.tigris.mbt.exceptions.GeneratorException;
 import org.tigris.mbt.graph.Edge;
 import org.tigris.mbt.graph.Graph;
 import org.tigris.mbt.graph.Vertex;
@@ -42,12 +43,12 @@ public class ReachedStateTest extends TestCase {
 
 	public void testConstructor() {
 		ModelBasedTesting mbt = ModelBasedTesting.getInstance();
-		mbt.setCondition(new ReachedState("V2"));
+		mbt.setCondition(new ReachedVertex("V2"));
 	}
 
-	public void testFulfillment() {
+	public void testFulfillment() throws GeneratorException {
 		ModelBasedTesting mbt = ModelBasedTesting.getInstance();
-		StopCondition condition = new ReachedState("V2");
+		StopCondition condition = new ReachedVertex("V2");
 		mbt.setCondition(condition);
 		mbt.setGraph(graph);
 		mbt.setGenerator(Keywords.GENERATOR_RANDOM);
@@ -60,9 +61,9 @@ public class ReachedStateTest extends TestCase {
 		assertEquals((double) 1, condition.getFulfilment(), 0.01);
 	}
 
-	public void testIsFulfilled() {
+	public void testIsFulfilled() throws GeneratorException {
 		ModelBasedTesting mbt = ModelBasedTesting.getInstance();
-		StopCondition condition = new ReachedState("V2");
+		StopCondition condition = new ReachedVertex("V2");
 		mbt.setCondition(condition);
 		mbt.setGraph(graph);
 		mbt.setGenerator(Keywords.GENERATOR_RANDOM);

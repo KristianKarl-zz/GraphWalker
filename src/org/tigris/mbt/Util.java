@@ -39,12 +39,14 @@ import org.tigris.mbt.conditions.EdgeCoverage;
 import org.tigris.mbt.conditions.NeverCondition;
 import org.tigris.mbt.conditions.ReachedEdge;
 import org.tigris.mbt.conditions.ReachedRequirement;
-import org.tigris.mbt.conditions.ReachedState;
+import org.tigris.mbt.conditions.ReachedVertex;
 import org.tigris.mbt.conditions.RequirementCoverage;
-import org.tigris.mbt.conditions.StateCoverage;
+import org.tigris.mbt.conditions.VertexCoverage;
 import org.tigris.mbt.conditions.StopCondition;
 import org.tigris.mbt.conditions.TestCaseLength;
 import org.tigris.mbt.conditions.TimeDuration;
+import org.tigris.mbt.exceptions.GeneratorException;
+import org.tigris.mbt.exceptions.StopConditionException;
 import org.tigris.mbt.generators.CodeGenerator;
 import org.tigris.mbt.generators.CombinedPathGenerator;
 import org.tigris.mbt.generators.ListGenerator;
@@ -172,43 +174,50 @@ public class Util {
 		return retur;
 	}
 
-	public static StopCondition getCondition(int conditionType, String conditionValue) {
+	public static StopCondition getCondition(int conditionType, String conditionValue) throws StopConditionException {
 		StopCondition condition = null;
-		switch (conditionType) {
-		case Keywords.CONDITION_EDGE_COVERAGE:
-			condition = new EdgeCoverage(Double.parseDouble(conditionValue) / 100);
-			break;
-		case Keywords.CONDITION_REACHED_EDGE:
-			condition = new ReachedEdge(conditionValue);
-			break;
-		case Keywords.CONDITION_REACHED_STATE:
-			condition = new ReachedState(conditionValue);
-			break;
-		case Keywords.CONDITION_STATE_COVERAGE:
-			condition = new StateCoverage(Double.parseDouble(conditionValue) / 100);
-			break;
-		case Keywords.CONDITION_TEST_DURATION:
-			condition = new TimeDuration(Long.parseLong(conditionValue));
-			break;
-		case Keywords.CONDITION_TEST_LENGTH:
-			condition = new TestCaseLength(Integer.parseInt(conditionValue));
-			break;
-		case Keywords.CONDITION_NEVER:
-			condition = new NeverCondition();
-			break;
-		case Keywords.CONDITION_REQUIREMENT_COVERAGE:
-			condition = new RequirementCoverage(Double.parseDouble(conditionValue) / 100);
-			break;
-		case Keywords.CONDITION_REACHED_REQUIREMENT:
-			condition = new ReachedRequirement(conditionValue);
-			break;
-		default:
-			throw new RuntimeException("Unsupported stop condition selected: " + conditionType);
+		try {
+			switch (conditionType) {
+			case Keywords.CONDITION_EDGE_COVERAGE:
+				condition = new EdgeCoverage(Double.parseDouble(conditionValue) / 100);
+				break;
+			case Keywords.CONDITION_REACHED_EDGE:
+				condition = new ReachedEdge(conditionValue);
+				break;
+			case Keywords.CONDITION_REACHED_VERTEX:
+				condition = new ReachedVertex(conditionValue);
+				break;
+			case Keywords.CONDITION_VERTEX_COVERAGE:
+				condition = new VertexCoverage(Double.parseDouble(conditionValue) / 100);
+				break;
+			case Keywords.CONDITION_TEST_DURATION:
+				condition = new TimeDuration(Long.parseLong(conditionValue));
+				break;
+			case Keywords.CONDITION_TEST_LENGTH:
+				condition = new TestCaseLength(Integer.parseInt(conditionValue));
+				break;
+			case Keywords.CONDITION_NEVER:
+				condition = new NeverCondition();
+				break;
+			case Keywords.CONDITION_REQUIREMENT_COVERAGE:
+				condition = new RequirementCoverage(Double.parseDouble(conditionValue) / 100);
+				break;
+			case Keywords.CONDITION_REACHED_REQUIREMENT:
+				condition = new ReachedRequirement(conditionValue);
+				break;
+			default:
+				throw new StopConditionException("Unsupported stop condition selected");
+			}
+		} catch (NumberFormatException e) {
+			if (conditionValue == null || conditionValue.isEmpty())
+				throw new StopConditionException("Stop condition value is missing. ");
+			else
+				throw new StopConditionException("Invalid stop condition value: " + conditionValue);
 		}
 		return condition;
 	}
 
-	public static PathGenerator getGenerator(int generatorType) {
+	public static PathGenerator getGenerator(int generatorType) throws GeneratorException {
 		PathGenerator generator = null;
 
 		switch (generatorType) {
@@ -237,7 +246,7 @@ public class Util {
 			break;
 
 		default:
-			throw new RuntimeException("Generator not implemented yet!");
+			throw new GeneratorException("Unsupported generator selected.");
 		}
 
 		logger.debug("Added generator: " + generator);
@@ -251,8 +260,10 @@ public class Util {
 	 * @param fileName
 	 *          The XML settings file
 	 * @return
+	 * @throws StopConditionException
+	 * @throws GeneratorException 
 	 */
-	public static ModelBasedTesting loadMbtAsWSFromXml(String fileName) {
+	public static ModelBasedTesting loadMbtAsWSFromXml(String fileName) throws StopConditionException, GeneratorException {
 		return loadXml(fileName, true, false);
 	}
 
@@ -264,8 +275,10 @@ public class Util {
 	 * @param dryRun
 	 *          Is mbt to be run in a dry run mode?
 	 * @return
+	 * @throws StopConditionException
+	 * @throws GeneratorException 
 	 */
-	public static ModelBasedTesting loadMbtFromXml(String fileName, boolean dryRun) {
+	public static ModelBasedTesting loadMbtFromXml(String fileName, boolean dryRun) throws StopConditionException, GeneratorException {
 		return loadXml(fileName, false, dryRun);
 	}
 
@@ -275,8 +288,10 @@ public class Util {
 	 * @param fileName
 	 *          The XML settings file
 	 * @return
+	 * @throws StopConditionException
+	 * @throws GeneratorException 
 	 */
-	public static ModelBasedTesting loadMbtFromXml(String fileName) {
+	public static ModelBasedTesting loadMbtFromXml(String fileName) throws StopConditionException, GeneratorException {
 		return loadXml(fileName, false, false);
 	}
 
@@ -290,9 +305,11 @@ public class Util {
 	 * @param dryRun
 	 *          Is mbt to be run in a dry run mode?
 	 * @return
+	 * @throws StopConditionException
+	 * @throws GeneratorException 
 	 */
 	@SuppressWarnings("unchecked")
-	private static ModelBasedTesting loadXml(String fileName, boolean runningSoapServices, boolean dryRun) {
+	private static ModelBasedTesting loadXml(String fileName, boolean runningSoapServices, boolean dryRun) throws StopConditionException, GeneratorException {
 		final ModelBasedTesting mbt = ModelBasedTesting.getInstance();
 		mbt.reset();
 		mbt.setDryRun(dryRun);
@@ -428,7 +445,7 @@ public class Util {
 					Vector<String[]> testSequence = new Vector<String[]>();
 					mbt.writePath(testSequence);
 					new PrintHTMLTestSequence(testSequence, System.out);
-				}else if (executor.equalsIgnoreCase("offline")) {
+				} else if (executor.equalsIgnoreCase("offline")) {
 					PrintStream out = System.out;
 					if (executorParam != null && !executorParam.equals("")) {
 						try {
@@ -500,7 +517,7 @@ public class Util {
 	}
 
 	@SuppressWarnings("unchecked")
-	private static PathGenerator getGenerator(Element generator) {
+	private static PathGenerator getGenerator(Element generator) throws StopConditionException, GeneratorException {
 		int generatorType = Keywords.getGenerator(generator.getAttributeValue("TYPE"));
 		PathGenerator generatorObject = getGenerator(generatorType);
 		if (generatorObject instanceof CodeGenerator) {
@@ -528,7 +545,7 @@ public class Util {
 		return generatorObject;
 	}
 
-	private static StopCondition getCondition(List<Element> conditions) {
+	private static StopCondition getCondition(List<Element> conditions) throws StopConditionException {
 		StopCondition condition = null;
 		if (conditions.size() > 1) {
 			condition = new CombinationalCondition();
@@ -541,7 +558,7 @@ public class Util {
 	}
 
 	@SuppressWarnings("unchecked")
-	private static StopCondition getCondition(Element condition) {
+	private static StopCondition getCondition(Element condition) throws StopConditionException {
 		StopCondition stopCondition = null;
 		if (condition.getName().equalsIgnoreCase("AND")) {
 			stopCondition = new CombinationalCondition();

@@ -8,17 +8,17 @@
 			<attribute name="javadoc_location" value="http://www.jdom.org/docs/apidocs/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/commons-cli-1.1.jar">
+	<classpathentry kind="lib" path="/home/krikar/workspace/mbt-trunk/lib/commons-cli-1.2.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="http://commons.apache.org/cli/api-release/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/bsh-2.0b4.jar">
+	<classpathentry kind="lib" path="lib/bsh-2.0b4.jar" sourcepath="/home/krikar/workspace/mbt-trunk/lib/bsh-2.0b4-src.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="http://www.beanshell.org/javadoc/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="lib/log4j-1.2.15.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="http://logging.apache.org/log4j/1.2/apidocs/"/>
@@ -42,7 +42,6 @@
 			<attribute name="javadoc_location" value="http://jung.sourceforge.net/site/apidocs//"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/jung-api-2.0-tests.jar"/>
 	<classpathentry kind="lib" path="lib/jung-graph-impl-2.0.jar" sourcepath="/home/krikar/workspace/jung/sources/jung-graph-impl-2.0-sources.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="http://jung.sourceforge.net/site/apidocs//"/>
@@ -58,8 +57,6 @@
 			<attribute name="javadoc_location" value="http://jung.sourceforge.net/site/apidocs//"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/jung-jai-samples-2.0.jar"/>
-	<classpathentry kind="lib" path="lib/jung-samples-2.0.jar"/>
 	<classpathentry kind="lib" path="lib/jung-visualization-2.0.jar" sourcepath="/home/krikar/workspace/jung/sources/jung-visualization-2.0-sources.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="http://jung.sourceforge.net/site/apidocs//"/>

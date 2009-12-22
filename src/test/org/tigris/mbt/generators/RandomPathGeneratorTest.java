@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import org.tigris.mbt.Util;
 import org.tigris.mbt.conditions.EdgeCoverage;
 import org.tigris.mbt.conditions.StopCondition;
+import org.tigris.mbt.exceptions.StopConditionException;
 import org.tigris.mbt.generators.RandomPathGenerator;
 import org.tigris.mbt.generators.PathGenerator;
 import org.tigris.mbt.io.GraphML;
@@ -19,7 +20,7 @@ public class RandomPathGeneratorTest extends TestCase {
 		super.setUp();
 	}
 
-	public void test_WeightedRandomGeneration() {
+	public void test_WeightedRandomGeneration() throws StopConditionException {
 		logger.info("TEST: test_WeightedRandomGeneration");
 		logger.info("=======================================================================");
 		GraphML gml = new GraphML();
@@ -43,7 +44,7 @@ public class RandomPathGeneratorTest extends TestCase {
 		logger.debug("==============================");
 	}
 
-	public void test_RandomGeneration() {
+	public void test_RandomGeneration() throws StopConditionException {
 		logger.info("TEST: test_RandomGeneration");
 		logger.info("=======================================================================");
 		GraphML gml = new GraphML();

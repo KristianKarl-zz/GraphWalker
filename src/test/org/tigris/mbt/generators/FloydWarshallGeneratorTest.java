@@ -2,6 +2,7 @@ package test.org.tigris.mbt.generators;
 
 import org.tigris.mbt.conditions.EdgeCoverage;
 import org.tigris.mbt.conditions.StopCondition;
+import org.tigris.mbt.exceptions.StopConditionException;
 import org.tigris.mbt.generators.FloydWarshallGenerator;
 import org.tigris.mbt.io.GraphML;
 import org.tigris.mbt.machines.FiniteStateMachine;
@@ -11,7 +12,7 @@ import junit.framework.TestCase;
 public class FloydWarshallGeneratorTest extends TestCase {
 	// private Logger logger = Util.setupLogger(FloydWarshallGeneratorTest.class);
 
-	public void test_RandomGeneration() {
+	public void test_RandomGeneration() throws StopConditionException {
 		GraphML gml = new GraphML();
 		gml.load("graphml/backtrack/keepass.graphml");
 		FiniteStateMachine FSM = new FiniteStateMachine(gml.getModel());

@@ -9,7 +9,9 @@ import javax.jws.WebService;
 
 import org.apache.log4j.Logger;
 import org.tigris.mbt.GUI.App;
+import org.tigris.mbt.exceptions.GeneratorException;
 import org.tigris.mbt.exceptions.InvalidDataException;
+import org.tigris.mbt.exceptions.StopConditionException;
 
 @WebService
 public class SoapServices {
@@ -22,7 +24,7 @@ public class SoapServices {
 	public SoapServices() {
 	}
 
-	public SoapServices(String xmlFile) {
+	public SoapServices(String xmlFile) throws StopConditionException, GeneratorException {
 		if (xmlFile != null) {
 			this.xmlFile = xmlFile;
 			Util.loadMbtAsWSFromXml(this.xmlFile);

@@ -5,6 +5,7 @@ import org.tigris.mbt.ModelBasedTesting;
 import org.tigris.mbt.Util;
 import org.tigris.mbt.conditions.RequirementCoverage;
 import org.tigris.mbt.conditions.StopCondition;
+import org.tigris.mbt.exceptions.GeneratorException;
 import org.tigris.mbt.graph.Edge;
 import org.tigris.mbt.graph.Graph;
 import org.tigris.mbt.graph.Vertex;
@@ -52,7 +53,7 @@ public class RequirementCoverageTest extends TestCase {
 		mbt.setCondition(new RequirementCoverage());
 	}
 
-	public void testFulfillment() {
+	public void testFulfillment() throws GeneratorException {
 		ModelBasedTesting mbt = ModelBasedTesting.getInstance();
 		StopCondition condition = new RequirementCoverage();
 		mbt.setCondition(condition);
@@ -67,7 +68,7 @@ public class RequirementCoverageTest extends TestCase {
 		assertEquals((double) 4 / 4, condition.getFulfilment(), 0.01);
 	}
 
-	public void testIsFulfilled() {
+	public void testIsFulfilled() throws GeneratorException {
 		ModelBasedTesting mbt = ModelBasedTesting.getInstance();
 		StopCondition condition = new RequirementCoverage();
 		mbt.setCondition(condition);

@@ -1,8 +1,9 @@
 package org.tigris.mbt;
 
-import java.util.Hashtable;
-import java.util.Set;
 import java.util.Vector;
+
+import org.tigris.mbt.exceptions.GeneratorException;
+import org.tigris.mbt.exceptions.StopConditionException;
 
 /**
  * Handles the common constants for the org.tigris.mbt package. This includes
@@ -192,11 +193,11 @@ public class Keywords {
 
 	public static final int CONDITION_REACHED_EDGE = 1001;
 
-	public static final int CONDITION_REACHED_STATE = 1002;
+	public static final int CONDITION_REACHED_VERTEX = 1002;
 
 	public static final int CONDITION_EDGE_COVERAGE = 1003;
 
-	public static final int CONDITION_STATE_COVERAGE = 1004;
+	public static final int CONDITION_VERTEX_COVERAGE = 1004;
 
 	public static final int CONDITION_TEST_LENGTH = 1005;
 
@@ -244,83 +245,188 @@ public class Keywords {
 		return reservedKeyWords.contains(wordToCheck.toUpperCase());
 	}
 
+	static class StopCondition {
+		private String name;
+		private String description;
+		private Integer id;
+
+		public StopCondition(String name, String description, Integer id) {
+			this.name = name;
+			this.description = description;
+			this.id = id;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
+
+		public String getDescription() {
+			return description;
+		}
+
+		public void setDescription(String description) {
+			this.description = description;
+		}
+
+		public Integer getId() {
+			return id;
+		}
+
+		public void setId(Integer id) {
+			this.id = id;
+		}
+	}
+
 	/**
 	 * Holds the pre-defined list of stop-condition.
 	 */
-	private static Hashtable<String, Integer> stopConditions = new Hashtable<String, Integer>();
+	private static Vector<StopCondition> stopConditions = new Vector<StopCondition>();
 
 	/**
 	 * Defines the stop-condition strings
 	 */
 	static {
-		stopConditions.put("REACHED_EDGE", new Integer(CONDITION_REACHED_EDGE));
-		stopConditions.put("REACHED_STATE", new Integer(CONDITION_REACHED_STATE));
-		stopConditions.put("EDGE_COVERAGE", new Integer(CONDITION_EDGE_COVERAGE));
-		stopConditions.put("STATE_COVERAGE", new Integer(CONDITION_STATE_COVERAGE));
-		stopConditions.put("TEST_LENGTH", new Integer(CONDITION_TEST_LENGTH));
-		stopConditions.put("TEST_DURATION", new Integer(CONDITION_TEST_DURATION));
-		stopConditions.put("REQUIREMENT_COVERAGE", new Integer(CONDITION_REQUIREMENT_COVERAGE));
-		stopConditions.put("REACHED_REQUIREMENT", new Integer(CONDITION_REACHED_REQUIREMENT));
-		stopConditions.put("NEVER", new Integer(CONDITION_NEVER));
+		stopConditions.add( new StopCondition("REACHED_EDGE", "REACHED_EDGE:<Edge label>", CONDITION_REACHED_EDGE));
+		stopConditions.add( new StopCondition("REACHED_VERTEX", "REACHED_VERTEX:<Vertex label[/variable1=value1;variable2=value2;...]>", CONDITION_REACHED_VERTEX));
+		stopConditions.add( new StopCondition("EDGE_COVERAGE", "EDGE_COVERAGE:<Coverage in %, between 1 and 100>", CONDITION_EDGE_COVERAGE));
+		stopConditions.add( new StopCondition("VERTEX_COVERAGE", "VERTEX_COVERAGE:<Coverage in %, between 1 and 100>", CONDITION_VERTEX_COVERAGE));
+		stopConditions.add( new StopCondition("TEST_LENGTH", "TEST_LENGTH:<Number of edge and vertex pairs to execute>", CONDITION_TEST_LENGTH));
+		stopConditions.add( new StopCondition("TEST_DURATION", "TEST_DURATION:<Time in seconds>", CONDITION_TEST_DURATION));
+		stopConditions.add( new StopCondition("REQUIREMENT_COVERAGE", "REQUIREMENT_COVERAGE:<Coverage in %, between 1 and 100>", CONDITION_REQUIREMENT_COVERAGE));
+		stopConditions.add( new StopCondition("REACHED_REQUIREMENT", "REACHED_REQUIREMENT:<Requirement id>", CONDITION_REACHED_REQUIREMENT));
+		stopConditions.add( new StopCondition("NEVER", "NEVER", CONDITION_NEVER));
 	}
 
-	static public Set<String> getStopConditions() {
-		return stopConditions.keySet();
+	static public Vector<StopCondition> getStopConditions() {
+		return stopConditions;
 	}
 
 	static public boolean isStopCondition(String presumedCondition) {
 		if (presumedCondition == null)
 			return false;
-		return stopConditions.containsKey(presumedCondition.toUpperCase());
+		for (StopCondition sc : stopConditions) {
+			if ( sc.getName().equals(presumedCondition.toUpperCase()))
+				return true;
+		}
+		return false;
 	}
 
 	/**
 	 * @param stopCondition
 	 * @return if supplied with a valid stop condition returns its constant value.
 	 *         returns -1 if supplied with false value.
+	 * @throws StopConditionException
 	 */
-	static public int getStopCondition(String stopCondition) {
+	static public int getStopCondition(String stopCondition) throws StopConditionException {
 		if (!isStopCondition(stopCondition))
-			return -1;
-		return ((Integer) stopConditions.get(stopCondition.toUpperCase())).intValue();
+			if (stopCondition == null | stopCondition.isEmpty())
+				throw new StopConditionException("No stop condition is given.");
+			else
+				throw new StopConditionException("Invalid stop condition: " + stopCondition);
+		for (StopCondition sc : stopConditions) {
+			if ( sc.getName().equals(stopCondition))
+				return sc.getId().intValue();
+		}
+		return -1;
+	}
+
+	static class Generator {
+		private String name;
+		private String description;
+		private Integer id;
+		private Boolean published;
+
+		public Generator(String name, String description, Integer id, Boolean published) {
+			this.name = name;
+			this.description = description;
+			this.id = id;
+			this.published = published;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
+
+		public String getDescription() {
+			return description;
+		}
+
+		public void setDescription(String description) {
+			this.description = description;
+		}
+
+		public Integer getId() {
+			return id;
+		}
+
+		public void setId(Integer id) {
+			this.id = id;
+		}
+
+		public Boolean isPublished() {
+    	return published;
+    }
+
+		public void setPublished(Boolean published) {
+    	this.published = published;
+    }
 	}
 
 	/**
 	 * Holds the pre-defined list of generators
 	 */
-	private static Hashtable<String, Integer> generators = new Hashtable<String, Integer>();
+	private static Vector<Generator> generators = new Vector<Generator>();
 
 	/**
 	 * Defines the generators strings
 	 */
 	static {
-		generators.put("RANDOM", new Integer(GENERATOR_RANDOM));
-		generators.put("A_STAR", new Integer(GENERATOR_A_STAR));
-		generators.put("LIST", new Integer(GENERATOR_LIST));
-		generators.put("STUB", new Integer(GENERATOR_STUB));
-		generators.put("REQUIREMENTS", new Integer(GENERATOR_REQUIREMENTS));
-		generators.put("SHORTEST_NON_OPTIMIZED", new Integer(GENERATOR_SHORTEST_NON_OPTIMIZED));
+		generators.add( new Generator("RANDOM", "RANDOM", GENERATOR_RANDOM, true));
+		generators.add( new Generator("A_STAR", "A_STAR", GENERATOR_A_STAR, true));
+		generators.add( new Generator("LIST", "LIST", GENERATOR_LIST, false));
+		generators.add( new Generator("STUB", "STUB", GENERATOR_STUB, false));
+		generators.add( new Generator("REQUIREMENTS", "REQUIREMENTS", GENERATOR_REQUIREMENTS, false));
+		generators.add( new Generator("SHORTEST_NON_OPTIMIZED", "SHORTEST_NON_OPTIMIZED", GENERATOR_SHORTEST_NON_OPTIMIZED, true));
 	}
 
-	static public Set<String> getGenerators() {
-		return generators.keySet();
+	static public Vector<Generator> getGenerators() {
+		return generators;
 	}
 
 	static public boolean isGenerator(String presumedGenerator) {
 		if (presumedGenerator == null)
 			return false;
-		return generators.containsKey(presumedGenerator.toUpperCase());
+		for (Generator g : generators) {
+			if ( g.getName().equals(presumedGenerator.toUpperCase()))
+				return true;
+		}
+		return false;
 	}
 
 	/**
 	 * @param generator
 	 * @return if supplied with a valid generator returns its constant value.
 	 *         returns -1 if supplied with false value.
+	 * @throws GeneratorException 
 	 */
-	static public int getGenerator(String generator) {
+	static public int getGenerator(String generator) throws GeneratorException {
 		if (!isGenerator(generator))
-			return -1;
-		return ((Integer) generators.get(generator.toUpperCase())).intValue();
+			if (generator == null | generator.isEmpty())
+				throw new GeneratorException("No generator is given.");
+			else
+				throw new GeneratorException("Invalid generator: " + generator);
+		for (Generator g : generators) {
+			if ( g.getName().equals(generator.toUpperCase()))
+				return g.getId().intValue();
+		}
+		return -1;
 	}
-
 }

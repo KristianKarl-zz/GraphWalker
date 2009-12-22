@@ -5,6 +5,7 @@ import org.tigris.mbt.ModelBasedTesting;
 import org.tigris.mbt.Util;
 import org.tigris.mbt.conditions.TimeDuration;
 import org.tigris.mbt.conditions.StopCondition;
+import org.tigris.mbt.exceptions.GeneratorException;
 import org.tigris.mbt.graph.Edge;
 import org.tigris.mbt.graph.Graph;
 import org.tigris.mbt.graph.Vertex;
@@ -44,7 +45,7 @@ public class TimeDurationTest extends TestCase {
 		mbt.setCondition(new TimeDuration(1));
 	}
 
-	public void testFulfillment() throws InterruptedException {
+	public void testFulfillment() throws InterruptedException, GeneratorException {
 		ModelBasedTesting mbt = ModelBasedTesting.getInstance();
 		StopCondition condition = new TimeDuration(1);
 		double startTime = (double) System.currentTimeMillis();
@@ -64,7 +65,7 @@ public class TimeDurationTest extends TestCase {
 		assertEquals((System.currentTimeMillis() - startTime) / 1000, condition.getFulfilment(), 0.1);
 	}
 
-	public void testIsFulfilled() throws InterruptedException {
+	public void testIsFulfilled() throws InterruptedException, GeneratorException {
 		ModelBasedTesting mbt = ModelBasedTesting.getInstance();
 		StopCondition condition = new TimeDuration(1);
 		double startTime = (double) System.currentTimeMillis();

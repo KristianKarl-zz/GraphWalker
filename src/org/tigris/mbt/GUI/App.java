@@ -51,7 +51,9 @@ import org.tigris.mbt.SoapServices;
 import org.tigris.mbt.Util;
 import org.tigris.mbt.events.AppEvent;
 import org.tigris.mbt.events.MbtEvent;
+import org.tigris.mbt.exceptions.GeneratorException;
 import org.tigris.mbt.exceptions.GuiStoppedExecution;
+import org.tigris.mbt.exceptions.StopConditionException;
 import org.tigris.mbt.graph.Edge;
 import org.tigris.mbt.graph.Graph;
 import org.tigris.mbt.graph.Vertex;
@@ -159,7 +161,15 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 		}
 
 		String wsURL = "http://0.0.0.0:" + Util.readWSPort() + "/mbt-services";
-		soapService = new SoapServices(xmlFile.getAbsolutePath());
+		try {
+			soapService = new SoapServices(xmlFile.getAbsolutePath());
+		} catch (StopConditionException e) {
+			log.error("Failed to start the SOAP service. " + e.getMessage());
+			JOptionPane.showMessageDialog(App.getInstance(), "Failed to start the SOAP service. " + e.getMessage());
+		} catch (GeneratorException e) {
+			log.error("Failed to start the SOAP service. " + e.getMessage());
+			JOptionPane.showMessageDialog(App.getInstance(), "Failed to start the SOAP service. " + e.getMessage());
+		}
 		endpoint = Endpoint.publish(wsURL, soapService);
 
 		try {
@@ -168,9 +178,8 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 			JOptionPane.showMessageDialog(App.getInstance(), "Now running as a SOAP server. For the WSDL file, see: "
 			    + wsURL.replace("0.0.0.0", InetAddress.getLocalHost().getHostName()) + "?WSDL");
 		} catch (UnknownHostException e) {
-			log.info("Now running as a SOAP server. For the WSDL file, see: " + wsURL + "?WSDL");
-			JOptionPane.showMessageDialog(App.getInstance(), "Now running as a SOAP server. For the WSDL file, see: " + wsURL + "?WSDL");
-			log.error(e.getMessage());
+			log.error("Failed to start the SOAP service. " + e.getMessage());
+			JOptionPane.showMessageDialog(App.getInstance(), "Failed to start the SOAP service. " + e.getMessage());
 		}
 	}
 
@@ -205,7 +214,7 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 			if (xmlFile != null && xmlFile.canRead())
 				reload();
 		} else if (CENTERONVERTEX.equals(cmd)) { // center on vertex checkbox
-																						 // clicked
+			// clicked
 			if (centerOnVertexButton.isSelected())
 				centerOnVertex();
 		}
@@ -298,7 +307,7 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 			ModelBasedTesting.getInstance().setUseGUI();
 			try {
 				Util.loadMbtFromXml(xmlFile.getAbsolutePath());
-				setTitle("Model-Based Testing 2.2 Beta 12 - " + xmlFile.getName());
+				setTitle("Model-Based Testing 2.2 Beta 13 - " + xmlFile.getName());
 			} catch (Exception e) {
 				Util.printStackTrace(e);
 				JOptionPane.showMessageDialog(App.getInstance(), e.getMessage());
@@ -718,7 +727,7 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 
 	public void init() {
 		log.debug("Entry");
-		setTitle("Model-Based Testing 2.2 Beta 12");
+		setTitle("Model-Based Testing 2.2 Beta 13");
 		setBackground(Color.gray);
 
 		JPanel topPanel = new JPanel();

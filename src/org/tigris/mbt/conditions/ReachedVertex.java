@@ -8,10 +8,10 @@ import org.tigris.mbt.graph.Vertex;
 import org.tigris.mbt.machines.ExtendedFiniteStateMachine;
 import org.tigris.mbt.machines.FiniteStateMachine;
 
-public class ReachedState extends StopCondition {
+public class ReachedVertex extends StopCondition {
 
-	private ArrayList<Vertex> allStates;
-	private Vertex endState;
+	private ArrayList<Vertex> allVertices;
+	private Vertex endVertex;
 	private int[] proximity;
 	private int maxDistance;
 	private String stateName;
@@ -23,28 +23,28 @@ public class ReachedState extends StopCondition {
 
 	public void setMachine(FiniteStateMachine machine) {
 		super.setMachine(machine);
-		if (this.endState == null)
-			this.endState = machine.findState(stateName);
-		if (this.endState == null)
+		if (this.endVertex == null)
+			this.endVertex = machine.findState(stateName);
+		if (this.endVertex == null)
 			throw new RuntimeException("State '" + stateName + "' not found in model");
 		this.proximity = getFloydWarshall();
 		this.maxDistance = max(this.proximity);
 	}
 
-	public ReachedState(Vertex endState) {
-		this.endState = endState;
+	public ReachedVertex(Vertex endState) {
+		this.endVertex = endState;
 		this.subState = "";
 	}
 
-	public ReachedState(String stateName) {
+	public ReachedVertex(String vertexName) {
 
-		String[] state = stateName.split("/", 2);
+		String[] state = vertexName.split("/", 2);
 		this.stateName = state[0];
 		this.subState = (state.length > 1 ? state[1] : "");
 	}
 
 	public double getFulfilment() {
-		int distance = proximity[allStates.indexOf(getMachine().getCurrentState())];
+		int distance = proximity[allVertices.indexOf(getMachine().getCurrentState())];
 		if (getMachine() instanceof ExtendedFiniteStateMachine) {
 			String currentState = getMachine().getCurrentStateName();
 			String currentSubState = "";
@@ -73,15 +73,15 @@ public class ReachedState extends StopCondition {
 	}
 
 	private int[][] getFloydWarshallMatrix() {
-		allStates = new ArrayList<Vertex>(getMachine().getAllStates());
-		int n = allStates.size();
+		allVertices = new ArrayList<Vertex>(getMachine().getAllStates());
+		int n = allVertices.size();
 		int[][] retur = new int[n][n];
 		for (int i = 0; i < n; i++)
 			for (int j = 0; j < n; j++) {
 				int x = 99999;
 				if (i == j) {
 					x = 0;
-				} else if (getMachine().getModel().isPredecessor(allStates.get(i), allStates.get(j))) {
+				} else if (getMachine().getModel().isPredecessor(allVertices.get(i), allVertices.get(j))) {
 					x = 1;
 				}
 				retur[i][j] = x;
@@ -98,14 +98,14 @@ public class ReachedState extends StopCondition {
 					path[i][j] = Math.min(path[i][j], path[i][k] + path[k][j]);
 				}
 		}
-		int startIndex = allStates.indexOf(endState);
+		int startIndex = allVertices.indexOf(endVertex);
 		if (startIndex >= 0)
 			return path[startIndex];
-		throw new RuntimeException("state no longer in Graph!");
+		throw new RuntimeException("vertex no longer in Graph!");
 	}
 
 	public String toString() {
-		return "STATE='" + endState + "'";
+		return "VERTEX='" + endVertex + "'";
 	}
 
 }

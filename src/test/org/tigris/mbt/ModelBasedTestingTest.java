@@ -12,7 +12,9 @@ import java.io.PrintStream;
 import org.tigris.mbt.Keywords;
 import org.tigris.mbt.ModelBasedTesting;
 import org.tigris.mbt.Util;
+import org.tigris.mbt.exceptions.GeneratorException;
 import org.tigris.mbt.exceptions.InvalidDataException;
+import org.tigris.mbt.exceptions.StopConditionException;
 import org.tigris.mbt.generators.NonOptimizedShortestPath;
 
 import junit.framework.TestCase;
@@ -41,22 +43,22 @@ public class ModelBasedTestingTest extends TestCase {
 		};
 	}
 
-	public void testXmlLoading_Simple() {
+	public void testXmlLoading_Simple() throws StopConditionException, GeneratorException {
 		ModelBasedTesting mbt = Util.loadMbtFromXml("graphml/reqtags/mbt_init.xml");
 		assertEquals("RANDOM{EC>=100}", mbt.toString());
 	}
 
-	public void testXmlLoading_Moderate() {
+	public void testXmlLoading_Moderate() throws StopConditionException, GeneratorException {
 		ModelBasedTesting mbt = Util.loadMbtFromXml("graphml/reqtags/mbt_init2.xml");
 		assertEquals("RANDOM{((EC>=100 AND SC>=100) OR L=50)}", mbt.toString());
 	}
 
-	public void testXmlLoading_Advanced() {
+	public void testXmlLoading_Advanced() throws StopConditionException, GeneratorException {
 		ModelBasedTesting mbt = Util.loadMbtFromXml("graphml/reqtags/mbt_init3.xml");
 		assertEquals("RANDOM{EC>=10}\nRANDOM{(SC>=30 AND EC>=10)}", mbt.toString());
 	}
 
-	public void testXmlLoading_OfflineStub() {
+	public void testXmlLoading_OfflineStub() throws StopConditionException, GeneratorException {
 		ModelBasedTesting mbt = Util.loadMbtFromXml("graphml/reqtags/mbt_init4.xml");
 		assertEquals("CODE", mbt.toString());
 		File f = new File("mbt_init4.java");
@@ -65,12 +67,12 @@ public class ModelBasedTestingTest extends TestCase {
 		assertFalse(f.exists());
 	}
 
-	public void testXmlLoading_JavaExecution() {
+	public void testXmlLoading_JavaExecution() throws StopConditionException, GeneratorException {
 		ModelBasedTesting mbt = Util.loadMbtFromXml("graphml/reqtags/mbt_init5.xml");
 		assertEquals("RANDOM{SC>=40}", mbt.toString());
 	}
 
-	public void testXmlLoading_OfflineRequirements() {
+	public void testXmlLoading_OfflineRequirements() throws StopConditionException, GeneratorException {
 		PrintStream oldOut = System.out;
 		ByteArrayOutputStream innerOut = new ByteArrayOutputStream();
 
@@ -82,7 +84,7 @@ public class ModelBasedTestingTest extends TestCase {
 		assertEquals(6, innerOut.toString().trim().split("\r\n|\r|\n").length);
 	}
 
-	public void testXmlLoading_OnlineRequirements() {
+	public void testXmlLoading_OnlineRequirements() throws StopConditionException, GeneratorException {
 		InputStream oldIn = System.in;
 		PrintStream oldOut = System.out;
 		ByteArrayOutputStream innerOut = new ByteArrayOutputStream();
@@ -97,7 +99,7 @@ public class ModelBasedTestingTest extends TestCase {
 		assertEquals(6, innerOut.toString().trim().split("\r\n|\r|\n").length);
 	}
 
-	public void testGetdataValue() throws InvalidDataException {
+	public void testGetdataValue() throws InvalidDataException, StopConditionException, GeneratorException {
 		InputStream oldIn = System.in;
 		PrintStream oldOut = System.out;
 		ByteArrayOutputStream innerOut = new ByteArrayOutputStream();
@@ -113,7 +115,7 @@ public class ModelBasedTestingTest extends TestCase {
 		assertEquals("0", mbt.getDataValue("incorrect"));
 	}
 
-	public void testExecAction() throws InvalidDataException {
+	public void testExecAction() throws InvalidDataException, StopConditionException, GeneratorException {
 		InputStream oldIn = System.in;
 		PrintStream oldOut = System.out;
 		ByteArrayOutputStream innerOut = new ByteArrayOutputStream();
@@ -129,7 +131,7 @@ public class ModelBasedTestingTest extends TestCase {
 		assertEquals("ABC", mbt.execAction("str.toUpperCase()"));
 	}
 
-	public void testPassRequirement() {
+	public void testPassRequirement() throws StopConditionException, GeneratorException {
 		ModelBasedTesting mbt;
 		mbt = Util.loadMbtFromXml("xml/reqCoverage.xml");
 		mbt.passRequirement(true);
@@ -137,7 +139,7 @@ public class ModelBasedTestingTest extends TestCase {
 		mbt.passRequirement(true);
 	}
 
-	public void testNewState() {
+	public void testNewState() throws StopConditionException {
 		ModelBasedTesting mbt = ModelBasedTesting.getInstance();
 		mbt.readGraph("graphml/test.org.tigris.mbt.unittest/ModelBasedTestingTest.testNewState.graphml");
 		mbt.enableExtended(false);

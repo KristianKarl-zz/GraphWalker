@@ -247,10 +247,10 @@ public class CLITest extends TestCase {
 
 	/**
 	 * Test command: java -jar mbt.jar offline -f
-	 * graphml/reqtags/ExtendedMain.graphml -g RANDOM -s STATE_COVERAGE:100
+	 * graphml/reqtags/ExtendedMain.graphml -g RANDOM -s VERTEX_COVERAGE:100
 	 */
 	public void testOfflineRandomStateCoverage() {
-		String args[] = { "offline", "-f", "graphml/reqtags/ExtendedMain.graphml", "-g", "RANDOM", "-s", "STATE_COVERAGE:100" };
+		String args[] = { "offline", "-f", "graphml/reqtags/ExtendedMain.graphml", "-g", "RANDOM", "-s", "VERTEX_COVERAGE:100" };
 		runCommand(args);
 		assertTrue("No error messages should occur.", errMsg.isEmpty());
 		assertTrue("Expected at least 24 lines, got: " + outMsg.split("\r\n|\r|\n").length, outMsg.split("\r\n|\r|\n").length >= 24);
@@ -258,10 +258,10 @@ public class CLITest extends TestCase {
 
 	/**
 	 * Test command: java -jar mbt.jar offline -f
-	 * graphml/reqtags/ExtendedMain.graphml -g A_STAR -s STATE_COVERAGE:100
+	 * graphml/reqtags/ExtendedMain.graphml -g A_STAR -s VERTEX_COVERAGE:100
 	 */
 	public void testOfflineA_StarStateCoverage() {
-		String args[] = { "offline", "-f", "graphml/reqtags/ExtendedMain.graphml", "-g", "A_STAR", "-s", "STATE_COVERAGE:100" };
+		String args[] = { "offline", "-f", "graphml/reqtags/ExtendedMain.graphml", "-g", "A_STAR", "-s", "VERTEX_COVERAGE:100" };
 		runCommand(args);
 		assertEquals("No error messages should occur.", "", errMsg);
 		assertTrue(outMsg.split("\r\n|\r|\n").length <= 32);
@@ -439,10 +439,10 @@ public class CLITest extends TestCase {
 	}
 
 	/**
-	 * Test command: java -jar mbt.jar xml -f xml/ReachedState.xml
+	 * Test command: java -jar mbt.jar xml -f xml/ReachedVertex.xml
 	 */
-	public void testReachedStateXML() {
-		String args[] = { "xml", "-f", "xml/ReachedState.xml" };
+	public void testReachedVertexXML() {
+		String args[] = { "xml", "-f", "xml/ReachedVertex.xml" };
 		runCommand(args);
 		assertTrue("No error messages should occur.", errMsg.isEmpty());
 	}

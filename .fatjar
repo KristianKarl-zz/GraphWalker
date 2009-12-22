@@ -1,14 +1,14 @@
 #Fat Jar Configuration File
-#Sat Jan 26 19:51:27 CET 2008
+#Tue Dec 22 10:27:38 CET 2009
 onejar.license.required=true
 manifest.classpath=
 manifest.removesigners=true
 onejar.checkbox=false
-jarname=mbt.jar
+jarname=mbt-2.2-beta13.jar
 manifest.mergeall=true
 manifest.mainclass=org.tigris.mbt.CLI
 manifest.file=<createnew>
 jarname.isextern=false
 onejar.expand=
-excludes=<po|mbt>~.svn/;<po|mbt>~test/;<jar|junit.jar>
+excludes=<po|mbt-trunk>~.svn/;<po|mbt-trunk>~test/;<jar|junit.jar>
 includes=
