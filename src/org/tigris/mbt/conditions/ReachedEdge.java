@@ -13,8 +13,6 @@ public class ReachedEdge extends StopCondition {
 	private int maxDistance;
 	private String edgeName;
 
-	// private String subState;
-
 	public boolean isFulfilled() {
 		return getFulfilment() >= 0.99999;
 	}
@@ -24,51 +22,24 @@ public class ReachedEdge extends StopCondition {
 		if (this.endEdge == null)
 			this.endEdge = machine.findEdge(edgeName);
 		if (this.endEdge == null)
-			throw new RuntimeException("State '" + edgeName + "' not found in model");
+			throw new RuntimeException("Vertex '" + edgeName + "' not found in model");
 		this.proximity = getFloydWarshall();
 		this.maxDistance = max(this.proximity);
 	}
 
 	public ReachedEdge(Edge endEdge) {
 		this.endEdge = endEdge;
-		// this.subState = "";
 	}
 
 	public ReachedEdge(String edgeName) {
-		String[] state = edgeName.split("/", 2);
-		this.edgeName = state[0];
-		// this.subState = (state.length>1?state[1]:"");
+		String[] vertex = edgeName.split("/", 2);
+		this.edgeName = vertex[0];
 	}
 
 	public double getFulfilment() {
 		int distance = this.maxDistance;
 		if (getMachine().getLastEdge() != null)
 			distance = proximity[allEdges.indexOf(getMachine().getLastEdge())];
-		/**
-		 * XXX should we use substate information in this condition?
-		 * 
-		 */
-
-		// if(getMachine() instanceof ExtendedFiniteStateMachine)
-		// {
-		// /**TODO should probably be the inner state of the last state visited as
-		// * the current state contains action information from the edge itself
-		// */
-		//			
-		// String currentState = getMachine().getCurrentStateName();
-		// String currentSubState = "";
-		// if(currentState.contains("/"))
-		// {
-		// currentSubState = currentState.split("/",2)[1];
-		// }
-		// double maxDiff = Math.max(currentSubState.length(),
-		// this.subState.length());
-		// double substateFulfilment = (double)1 -
-		// ((double)Util.getLevenshteinDistance(currentSubState, this.subState)) /
-		// maxDiff;
-		// return (substateFulfilment + ((double)1)-( (double)distance /
-		// (double)maxDistance))/2;
-		// }
 
 		return ((double) 1) - ((double) distance / (double) maxDistance);
 	}

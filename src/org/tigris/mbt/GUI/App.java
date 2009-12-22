@@ -87,14 +87,14 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 	private JPanel panelGraph = null;
 	private JTextArea statisticsTextArea = null;
 	private JTextArea variablesTextArea = null;
-	private JLabel latestStateLabel = null;
+	private JLabel latestVertexLabel = null;
 	private JFileChooser fileChooser = new JFileChooser(System.getProperty("user.dir"));
 	private VisualizationViewer<Vertex, Edge> vv;
 	private Layout<Vertex, Edge> graphLayout;
 
 	static private File xmlFile;
 	private ExecuteMBT executeMBT = null;
-	private Timer updateColorLatestStateLabel = new Timer();
+	private Timer updateColorLatestVertexLabel = new Timer();
 
 	static private Logger log;
 	private static Endpoint endpoint = null;
@@ -247,8 +247,8 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 		variablesTextArea.setText(ModelBasedTesting.getInstance().getStatisticsString());
 		String str = "Edge: "
 		    + (ModelBasedTesting.getInstance().getMachine().getLastEdge() == null ? "" : (String) ModelBasedTesting.getInstance().getMachine()
-		        .getLastEdge().getLabelKey()) + "   Vertex: " + ModelBasedTesting.getInstance().getMachine().getCurrentState().getLabelKey();
-		getLatestStateLabel().setText(str);
+		        .getLastEdge().getLabelKey()) + "   Vertex: " + ModelBasedTesting.getInstance().getMachine().getCurrentVertex().getLabelKey();
+		getLatestVertexLabel().setText(str);
 
 		str = ModelBasedTesting.getInstance().getMachine().getCurrentDataString();
 		str = str.replaceAll(";", newline);
@@ -507,7 +507,7 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 
 	public class MyVertexPaintFunction implements Transformer<Vertex, Paint> {
 		public Paint transform(Vertex v) {
-			if (ModelBasedTesting.getInstance().getMachine().isCurrentState(v))
+			if (ModelBasedTesting.getInstance().getMachine().isCurrentVertex(v))
 				return Color.RED;
 			else if (v.getVisitedKey() > 0)
 				return Color.LIGHT_GRAY;
@@ -518,7 +518,7 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 
 	public class MyVertexFillPaintFunction implements Transformer<Vertex, Paint> {
 		public Paint transform(Vertex v) {
-			if (ModelBasedTesting.getInstance().getMachine().isCurrentState(v))
+			if (ModelBasedTesting.getInstance().getMachine().isCurrentVertex(v))
 				return Color.RED;
 			else if (v.getVisitedKey() > 0)
 				return Color.LIGHT_GRAY;
@@ -718,10 +718,10 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 		log.debug("Entry");
 		panelGraph = new JPanel();
 		panelGraph.setLayout(new BorderLayout());
-		setLatestStateLabel(new JLabel(" "));
-		getLatestStateLabel().setHorizontalAlignment(SwingConstants.CENTER);
-		getLatestStateLabel().setOpaque(true);
-		panelGraph.add(getLatestStateLabel(), BorderLayout.NORTH);
+		setLatestVertexLabel(new JLabel(" "));
+		getLatestVertexLabel().setHorizontalAlignment(SwingConstants.CENTER);
+		getLatestVertexLabel().setOpaque(true);
+		panelGraph.add(getLatestVertexLabel(), BorderLayout.NORTH);
 		panelGraph.add(getGraphViewer(), BorderLayout.CENTER);
 	}
 
@@ -755,22 +755,22 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 
 		int delay = 1000; // delay for 1 sec.
 		int period = 500; // repeat every 0.5 sec.
-		updateColorLatestStateLabel = new Timer();
+		updateColorLatestVertexLabel = new Timer();
 
-		updateColorLatestStateLabel.scheduleAtFixedRate(new TimerTask() {
+		updateColorLatestVertexLabel.scheduleAtFixedRate(new TimerTask() {
 			public void run() {
 				if (getStatus().isStopped()) {
-					if (getLatestStateLabel().getBackground().equals(Color.GRAY)) {
+					if (getLatestVertexLabel().getBackground().equals(Color.GRAY)) {
 						return;
 					}
-					getLatestStateLabel().setBackground(Color.GRAY);
+					getLatestVertexLabel().setBackground(Color.GRAY);
 				}
 
 				if (getStatus().isPaused() && !(getStatus().isNext() || getStatus().isExecutingJavaTest())) {
-					getLatestStateLabel().setBackground(Color.RED);
+					getLatestVertexLabel().setBackground(Color.RED);
 				} else if (getStatus().isRunning() || getStatus().isNext() || getStatus().isExecutingJavaTest()
 				    || getStatus().isExecutingSoapTest()) {
-					getLatestStateLabel().setBackground(Color.GREEN);
+					getLatestVertexLabel().setBackground(Color.GREEN);
 				}
 			}
 		}, delay, period);
@@ -815,12 +815,12 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 		ModelBasedTesting.getInstance().setUseGUI();
 	}
 
-	public void setLatestStateLabel(JLabel latestStateLabel) {
-		this.latestStateLabel = latestStateLabel;
+	public void setLatestVertexLabel(JLabel latestVertexLabel) {
+		this.latestVertexLabel = latestVertexLabel;
 	}
 
-	public JLabel getLatestStateLabel() {
-		return latestStateLabel;
+	public JLabel getLatestVertexLabel() {
+		return latestVertexLabel;
 	}
 
 	public File getXmlFile() {

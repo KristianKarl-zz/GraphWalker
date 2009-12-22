@@ -32,9 +32,9 @@ public class SoapServices {
 		Reset();
 	}
 
-	public boolean SetCurrentVertex(String newState) {
-		logger.debug("SOAP service SetCurrentVertex recieving: " + newState);
-		boolean value = ModelBasedTesting.getInstance().setCurrentVertex(newState);
+	public boolean SetCurrentVertex(String newVertex) {
+		logger.debug("SOAP service SetCurrentVertex recieving: " + newVertex);
+		boolean value = ModelBasedTesting.getInstance().setCurrentVertex(newVertex);
 		logger.debug("SOAP service SetCurrentVertex returning: " + value);
 		return value;
 	}
@@ -109,10 +109,10 @@ public class SoapServices {
 					ModelBasedTesting.getInstance().getStatisticsManager().addProgress(ModelBasedTesting.getInstance().getMachine().getLastEdge());
 				}
 			} else {
-				ModelBasedTesting.getInstance().logExecution(ModelBasedTesting.getInstance().getMachine().getCurrentState(), addInfo);
+				ModelBasedTesting.getInstance().logExecution(ModelBasedTesting.getInstance().getMachine().getCurrentVertex(), addInfo);
 				if (ModelBasedTesting.getInstance().isUseStatisticsManager()) {
 					ModelBasedTesting.getInstance().getStatisticsManager()
-					    .addProgress(ModelBasedTesting.getInstance().getMachine().getCurrentState());
+					    .addProgress(ModelBasedTesting.getInstance().getMachine().getCurrentVertex());
 				}
 			}
 			return value;

@@ -57,7 +57,7 @@ import org.tigris.mbt.machines.FiniteStateMachine;
 import org.tigris.mbt.statistics.EdgeCoverageStatistics;
 import org.tigris.mbt.statistics.EdgeSequenceCoverageStatistics;
 import org.tigris.mbt.statistics.RequirementCoverageStatistics;
-import org.tigris.mbt.statistics.StateCoverageStatistics;
+import org.tigris.mbt.statistics.VertexCoverageStatistics;
 
 /**
  * The object handles the test case generation, both online and offline.
@@ -155,12 +155,12 @@ public class ModelBasedTesting {
 	private void setupStatisticsManager() {
 		if (this.statisticsManager == null)
 			this.statisticsManager = new StatisticsManager();
-		this.statisticsManager.addStatisicsCounter("State Coverage", new StateCoverageStatistics(getGraph()));
+		this.statisticsManager.addStatisicsCounter("Vertex Coverage", new VertexCoverageStatistics(getGraph()));
 		this.statisticsManager.addStatisicsCounter("Edge Coverage", new EdgeCoverageStatistics(getGraph()));
 		this.statisticsManager.addStatisicsCounter("2-Edge Sequence Coverage", new EdgeSequenceCoverageStatistics(getGraph(), 2));
 		this.statisticsManager.addStatisicsCounter("3-Edge Sequence Coverage", new EdgeSequenceCoverageStatistics(getGraph(), 3));
 		this.statisticsManager.addStatisicsCounter("Requirements Coverage", new RequirementCoverageStatistics(getGraph()));
-		this.statisticsManager.addProgress(getMachine().getCurrentState());
+		this.statisticsManager.addProgress(getMachine().getCurrentVertex());
 	}
 
 	/**
@@ -318,7 +318,7 @@ public class ModelBasedTesting {
 	 */
 	public void passRequirement(boolean pass) {
 		Util.AbortIf(this.machine == null, "No machine has been defined!");
-		Vertex v = getMachine().getCurrentState();
+		Vertex v = getMachine().getCurrentVertex();
 		if (!v.getReqTagKey().isEmpty()) {
 			String str = "REQUIREMENT: '" + v.getReqTagKey() + "' has ";
 			if (pass)
@@ -436,10 +436,10 @@ public class ModelBasedTesting {
 		}
 	}
 
-	public String getCurrentState() {
+	public String getCurrentVertexName() {
 		if (this.machine != null)
-			return getMachine().getCurrentStateName();
-		logger.warn("Trying to retrieve current state without specifying machine");
+			return getMachine().getCurrentVertexName();
+		logger.warn("Trying to retrieve current vertex without specifying machine");
 		return "";
 	}
 
@@ -563,7 +563,7 @@ public class ModelBasedTesting {
 					stepPair = new Vector<String>(Arrays.asList(getNextStep()));
 					req = getRequirement(getMachine().getLastEdge());
 				} else {
-					req = getRequirement(getMachine().getCurrentState());
+					req = getRequirement(getMachine().getCurrentVertex());
 				}
 
 				if (req.length() > 0) {
@@ -585,9 +585,9 @@ public class ModelBasedTesting {
 						getStatisticsManager().addProgress(getMachine().getLastEdge());
 					}
 				} else {
-					logExecution(getMachine().getCurrentState(), addInfo);
+					logExecution(getMachine().getCurrentVertex(), addInfo);
 					if (isUseStatisticsManager()) {
-						getStatisticsManager().addProgress(getMachine().getCurrentState());
+						getStatisticsManager().addProgress(getMachine().getCurrentVertex());
 					}
 				}
 
@@ -607,8 +607,8 @@ public class ModelBasedTesting {
 			}
 			return req;
 		} else if (element instanceof Vertex) {
-			if (!getMachine().getCurrentState().getReqTagKey().isEmpty()) {
-				req = "REQUIREMENT: '" + getMachine().getCurrentState().getReqTagKey() + "'";
+			if (!getMachine().getCurrentVertex().getReqTagKey().isEmpty()) {
+				req = "REQUIREMENT: '" + getMachine().getCurrentVertex().getReqTagKey() + "'";
 			}
 			return req;
 		}
@@ -621,7 +621,7 @@ public class ModelBasedTesting {
 			logger.info("Edge: " + getMachine().getLastEdge() + req + additionalInfo);
 			return;
 		} else if (element instanceof Vertex) {
-			logger.info("Vertex: " + getMachine().getCurrentState() + req
+			logger.info("Vertex: " + getMachine().getCurrentVertex() + req
 			    + (getMachine().hasInternalVariables() ? " DATA: " + getMachine().getCurrentDataString() : "") + additionalInfo);
 			return;
 		}
@@ -652,9 +652,9 @@ public class ModelBasedTesting {
 				}
 			}
 			if (stepPair[1].trim() != "") {
-				logExecution(getMachine().getCurrentState(), "");
+				logExecution(getMachine().getCurrentVertex(), "");
 				if (isUseStatisticsManager()) {
-					getStatisticsManager().addProgress(getMachine().getCurrentState());
+					getStatisticsManager().addProgress(getMachine().getCurrentVertex());
 				}
 			}
 
@@ -732,15 +732,15 @@ public class ModelBasedTesting {
 					getStatisticsManager().addProgress(getMachine().getLastEdge());
 				}
 
-				logExecution(getMachine().getCurrentState(), "");
-				System.out.println("Do vertex: " + getMachine().getCurrentState());
+				logExecution(getMachine().getCurrentVertex(), "");
+				System.out.println("Do vertex: " + getMachine().getCurrentVertex());
 				System.out.println("Data: " + stepPair[1]);
 				try {
 					System.in.read();
 				} catch (IOException e) {
 				}
 				if (isUseStatisticsManager()) {
-					getStatisticsManager().addProgress(getMachine().getCurrentState());
+					getStatisticsManager().addProgress(getMachine().getCurrentVertex());
 				}
 			}
 			return;
@@ -791,10 +791,10 @@ public class ModelBasedTesting {
 					getStatisticsManager().addProgress(getMachine().getLastEdge());
 				}
 
-				logExecution(getMachine().getCurrentState(), "");
+				logExecution(getMachine().getCurrentVertex(), "");
 				executeMethod(clsClass, objInstance, stepPair[1], false);
 				if (isUseStatisticsManager()) {
-					getStatisticsManager().addProgress(getMachine().getCurrentState());
+					getStatisticsManager().addProgress(getMachine().getCurrentVertex());
 				}
 			} catch (IllegalArgumentException e) {
 				throw new RuntimeException("Illegal argument used.", e);
@@ -828,14 +828,14 @@ public class ModelBasedTesting {
 				if (isEdge) {
 					logger.error("InvocationTargetException for: " + getMachine().getLastEdge());
 				} else {
-					logger.error("InvocationTargetException for: " + getMachine().getCurrentState());
+					logger.error("InvocationTargetException for: " + getMachine().getCurrentVertex());
 				}
 				throw new RuntimeException("InvocationTargetException.", e);
 			} catch (NoSuchMethodException e) {
 				if (isEdge) {
 					logger.error("NoSuchMethodException for: " + getMachine().getLastEdge());
 				} else {
-					logger.error("NoSuchMethodException for: " + getMachine().getCurrentState());
+					logger.error("NoSuchMethodException for: " + getMachine().getCurrentVertex());
 				}
 				throw new RuntimeException("NoSuchMethodException.", e);
 			}
@@ -853,7 +853,7 @@ public class ModelBasedTesting {
 				if (isEdge) {
 					logger.error("InvocationTargetException for: " + getMachine().getLastEdge() + " : " + e.getCause().getMessage());
 				} else {
-					logger.error("InvocationTargetException for: " + getMachine().getCurrentState() + " : " + e.getCause().getMessage());
+					logger.error("InvocationTargetException for: " + getMachine().getCurrentVertex() + " : " + e.getCause().getMessage());
 				}
 
 				StringWriter sw = new StringWriter();
@@ -867,7 +867,7 @@ public class ModelBasedTesting {
 				if (isEdge) {
 					logger.error("NoSuchMethodException for: " + getMachine().getLastEdge());
 				} else {
-					logger.error("NoSuchMethodException for: " + getMachine().getCurrentState());
+					logger.error("NoSuchMethodException for: " + getMachine().getCurrentVertex());
 				}
 				throw new RuntimeException("NoSuchMethodException.", e);
 			} finally {
@@ -932,9 +932,9 @@ public class ModelBasedTesting {
 			}
 			if (stepPair[1].trim() != "") {
 				out.println(stepPair[1]);
-				logExecution(getMachine().getCurrentState(), "");
+				logExecution(getMachine().getCurrentVertex(), "");
 				if (isUseStatisticsManager()) {
-					getStatisticsManager().addProgress(getMachine().getCurrentState());
+					getStatisticsManager().addProgress(getMachine().getCurrentVertex());
 				}
 			}
 		}
@@ -971,34 +971,34 @@ public class ModelBasedTesting {
 
 	public Vertex getCurrentVertex() {
 		if (this.machine != null)
-			return getMachine().getCurrentState();
-		logger.warn("Trying to retrieve current state without specifying machine");
+			return getMachine().getCurrentVertex();
+		logger.warn("Trying to retrieve current vertex without specifying machine");
 		return null;
 	}
 
 	/**
-	 * Changes the current state in the model.
+	 * Changes the current vertex in the model.
 	 * 
-	 * @param newState
-	 *          The name ({@link Keywords.LABEL_KEY}) of the new current state of
-	 *          the model. If null is given, or newState is empty, then the
-	 *          default value will be the START vertex in the model. If newState
+	 * @param newVertex
+	 *          The name ({@link Keywords.LABEL_KEY}) of the new current vertex of
+	 *          the model. If null is given, or newVertex is empty, then the
+	 *          default value will be the START vertex in the model. If newVertex
 	 *          does not exist in the model, the method does nothing, and the
 	 *          current vertex is unaffected.
 	 * @return True if the operation succeeds, false if not.
 	 */
-	public boolean setCurrentVertex(String newState) {
+	public boolean setCurrentVertex(String newVertex) {
 		if (this.machine != null) {
-			if (newState == null || newState.isEmpty()) {
-				newState = Keywords.START_NODE;
+			if (newVertex == null || newVertex.isEmpty()) {
+				newVertex = Keywords.START_NODE;
 			}
-			if (getMachine().hasState(newState) == false) {
-				logger.error("Could not manually change the state from: " + getMachine().getCurrentStateName() + " to: " + newState
+			if (getMachine().hasVertex(newVertex) == false) {
+				logger.error("Could not manually change the vertex from: " + getMachine().getCurrentVertexName() + " to: " + newVertex
 				    + " beacuse it does not exist in the model.");
 				return false;
 			}
-			logger.info("Manually changing state from: " + getMachine().getCurrentStateName() + " to: " + newState);
-			getMachine().setState(newState);
+			logger.info("Manually changing vertex from: " + getMachine().getCurrentVertexName() + " to: " + newVertex);
+			getMachine().setVertex(newVertex);
 
 			// We have to empty current Dijkstra path, if it exists.
 			if (getGenerator() instanceof NonOptimizedShortestPath) {

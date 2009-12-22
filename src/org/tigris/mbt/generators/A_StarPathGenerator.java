@@ -19,7 +19,7 @@ public class A_StarPathGenerator extends PathGenerator {
 	static Logger logger = Util.setupLogger(A_StarPathGenerator.class);
 
 	private Stack<Edge> preCalculatedPath = null;
-	private Vertex lastState;
+	private Vertex lastVertex;
 
 	public void setMachine(FiniteStateMachine machine) {
 		super.setMachine(machine);
@@ -27,7 +27,7 @@ public class A_StarPathGenerator extends PathGenerator {
 
 	public String[] getNext() {
 		Util.AbortIf(!hasNext(), "Finished");
-		if (lastState == null || lastState != getMachine().getCurrentState() || preCalculatedPath == null || preCalculatedPath.size() == 0) {
+		if (lastVertex == null || lastVertex != getMachine().getCurrentVertex() || preCalculatedPath == null || preCalculatedPath.size() == 0) {
 			boolean oldCalculatingPathValue = getMachine().isCalculatingPath();
 			getMachine().setCalculatingPath(true);
 
@@ -49,8 +49,8 @@ public class A_StarPathGenerator extends PathGenerator {
 
 		Edge edge = (Edge) preCalculatedPath.pop();
 		getMachine().walkEdge(edge);
-		lastState = getMachine().getCurrentState();
-		String[] retur = { getMachine().getEdgeName(edge), getMachine().getCurrentStateName() };
+		lastVertex = getMachine().getCurrentVertex();
+		String[] retur = { getMachine().getEdgeName(edge), getMachine().getCurrentVertexName() };
 		return retur;
 	}
 
@@ -71,7 +71,7 @@ public class A_StarPathGenerator extends PathGenerator {
 		try {
 			availableOutEdges = getMachine().getCurrentOutEdges();
 		} catch (FoundNoEdgeException e) {
-			throw new RuntimeException("No available edges found at " + getMachine().getCurrentStateName(), e);
+			throw new RuntimeException("No available edges found at " + getMachine().getCurrentVertexName(), e);
 		}
 		for (Edge edge : availableOutEdges) {
 			Stack<Edge> path = new Stack<Edge>();
@@ -114,21 +114,21 @@ public class A_StarPathGenerator extends PathGenerator {
 		double weight = 0;
 		String subState = "";
 
-		getMachine().storeState();
+		getMachine().storeVertex();
 		getMachine().walkPath(path);
 		weight = getConditionFulfilment();
-		String currentState = getMachine().getCurrentStateName();
+		String currentState = getMachine().getCurrentVertexName();
 		if (currentState.contains("/")) {
 			subState = currentState.split("/", 2)[1];
 		}
-		getMachine().restoreState();
+		getMachine().restoreVertex();
 
 		return new WeightedPath(path, weight, subState);
 	}
 
 	private Set<Edge> getPathOutEdges(Stack<Edge> path) {
 		Set<Edge> retur = null;
-		getMachine().storeState();
+		getMachine().storeVertex();
 		getMachine().walkPath(path);
 		try {
 			retur = getMachine().getCurrentOutEdges();
@@ -136,12 +136,12 @@ public class A_StarPathGenerator extends PathGenerator {
 			// no edges found? degrade gracefully and return the default value of
 			// null.
 		}
-		getMachine().restoreState();
+		getMachine().restoreVertex();
 		return retur;
 	}
 
 	/**
-	 * Will reset the generator to its initial state.
+	 * Will reset the generator to its initial vertex.
 	 */
 	public void reset() {
 		preCalculatedPath = null;

@@ -27,7 +27,7 @@ public class NonOptimizedShortestPath extends RandomPathGenerator {
 		} while (!isEdgeAvailable(edge));
 
 		getMachine().walkEdge(edge);
-		String[] retur = { getMachine().getEdgeName(edge), getMachine().getCurrentStateName() };
+		String[] retur = { getMachine().getEdgeName(edge), getMachine().getCurrentVertexName() };
 		return retur;
 	}
 
@@ -45,10 +45,10 @@ public class NonOptimizedShortestPath extends RandomPathGenerator {
 				e = (Edge) shuffledList[0];
 			}
 
-			logger.debug("Current state: " + getMachine().getCurrentState());
+			logger.debug("Current vertex: " + getMachine().getCurrentVertex());
 			logger.debug("Will try to reach unvisited edge: " + e);
 
-			dijkstraShortestPath = new DijkstraShortestPath<Vertex, Edge>(getMachine().getModel()).getPath(getMachine().getCurrentState(),
+			dijkstraShortestPath = new DijkstraShortestPath<Vertex, Edge>(getMachine().getModel()).getPath(getMachine().getCurrentVertex(),
 			    getMachine().getModel().getSource(e));
 
 			// DijkstraShortestPath.getPath returns 0 if there is no way to reach the
@@ -57,8 +57,8 @@ public class NonOptimizedShortestPath extends RandomPathGenerator {
 			// destination vertex are the same, even if there is
 			// an edge there (self-loop). So we have to check for that.
 			if (dijkstraShortestPath.size() == 0) {
-				if (getMachine().getCurrentState().getIndexKey() != getMachine().getModel().getSource(e).getIndexKey()) {
-					String msg = "There is no way to reach: " + e + ", from: " + getMachine().getCurrentState();
+				if (getMachine().getCurrentVertex().getIndexKey() != getMachine().getModel().getSource(e).getIndexKey()) {
+					String msg = "There is no way to reach: " + e + ", from: " + getMachine().getCurrentVertex();
 					logger.error(msg);
 					throw new RuntimeException(msg);
 				}

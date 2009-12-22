@@ -25,7 +25,7 @@ public class RandomPathGenerator extends PathGenerator {
 		getMachine().walkEdge(edge);
 		logger.debug(edge.getFullLabelKey());
 		logger.debug(edge);
-		String[] retur = { getMachine().getEdgeName(edge), getMachine().getCurrentStateName() };
+		String[] retur = { getMachine().getEdgeName(edge), getMachine().getCurrentVertexName() };
 		return retur;
 	}
 
