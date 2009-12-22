@@ -2,7 +2,7 @@ package test.org.tigris.mbt.generators;
 
 import org.tigris.mbt.Util;
 import org.tigris.mbt.conditions.ReachedEdge;
-import org.tigris.mbt.conditions.ReachedState;
+import org.tigris.mbt.conditions.ReachedVertex;
 import org.tigris.mbt.generators.PathGenerator;
 import org.tigris.mbt.generators.A_StarPathGenerator;
 import org.tigris.mbt.graph.Edge;
@@ -47,7 +47,7 @@ public class A_StarPathGeneratorFSMTest extends TestCase {
 
 	public void test_FSM_StateStop() {
 		PathGenerator pathGenerator = new A_StarPathGenerator();
-		pathGenerator.setStopCondition(new ReachedState("V2"));
+		pathGenerator.setStopCondition(new ReachedVertex("V2"));
 		pathGenerator.setMachine(new FiniteStateMachine(graph));
 
 		String[] stepPair;

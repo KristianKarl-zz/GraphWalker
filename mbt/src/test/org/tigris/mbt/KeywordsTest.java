@@ -1,6 +1,8 @@
 package test.org.tigris.mbt;
 
 import org.tigris.mbt.Keywords;
+import org.tigris.mbt.exceptions.GeneratorException;
+import org.tigris.mbt.exceptions.StopConditionException;
 
 import junit.framework.TestCase;
 
@@ -26,33 +28,39 @@ public class KeywordsTest extends TestCase {
 		assertEquals(false, Keywords.isKeyWord(""));
 	}
 
-	public void testGetStopCondition() {
+	public void testGetStopCondition() throws StopConditionException {
 		assertTrue(Keywords.getStopCondition("REACHED_EDGE") != -1);
-		assertTrue(Keywords.getStopCondition("REACHED_STATE") != -1);
+		assertTrue(Keywords.getStopCondition("REACHED_VERTEX") != -1);
 		assertTrue(Keywords.getStopCondition("EDGE_COVERAGE") != -1);
-		assertTrue(Keywords.getStopCondition("STATE_COVERAGE") != -1);
+		assertTrue(Keywords.getStopCondition("VERTEX_COVERAGE") != -1);
 		assertTrue(Keywords.getStopCondition("TEST_LENGTH") != -1);
 		assertTrue(Keywords.getStopCondition("TEST_DURATION") != -1);
 		assertTrue(Keywords.getStopCondition("REQUIREMENT_COVERAGE") != -1);
 		assertTrue(Keywords.getStopCondition("REACHED_REQUIREMENT") != -1);
 
-		assertTrue(Keywords.getStopCondition("REACHEDREQUIREMENT") == -1);
-		assertTrue(Keywords.getStopCondition("") == -1);
-		assertTrue(Keywords.getStopCondition(null) == -1);
+		try {
+			assertTrue(Keywords.getStopCondition("REACHEDREQUIREMENT") == -1);
+			assertTrue(Keywords.getStopCondition("") == -1);
+			assertTrue(Keywords.getStopCondition(null) == -1);
+		} catch (StopConditionException e) {
+		}
 
 		assertTrue(Keywords.getStopConditions().size() > 0);
 	}
 
-	public void testGetGenerator() {
+	public void testGetGenerator() throws GeneratorException {
 		assertTrue(Keywords.getGenerator("RANDOM") != -1);
 		assertTrue(Keywords.getGenerator("A_STAR") != -1);
 		assertTrue(Keywords.getGenerator("LIST") != -1);
 		assertTrue(Keywords.getGenerator("STUB") != -1);
 		assertTrue(Keywords.getGenerator("REQUIREMENTS") != -1);
 
-		assertTrue(Keywords.getGenerator("RASNDOM") == -1);
-		assertTrue(Keywords.getGenerator("") == -1);
-		assertTrue(Keywords.getGenerator(null) == -1);
+		try {
+			assertTrue(Keywords.getGenerator("RASNDOM") == -1);
+			assertTrue(Keywords.getGenerator("") == -1);
+			assertTrue(Keywords.getGenerator(null) == -1);
+		} catch (GeneratorException e) {
+		}
 
 		assertTrue(Keywords.getGenerators().size() > 0);
 	}

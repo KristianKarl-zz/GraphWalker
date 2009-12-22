@@ -39,8 +39,10 @@ import org.tigris.mbt.conditions.CombinationalCondition;
 import org.tigris.mbt.conditions.ReachedRequirement;
 import org.tigris.mbt.conditions.StopCondition;
 import org.tigris.mbt.events.MbtEvent;
+import org.tigris.mbt.exceptions.GeneratorException;
 import org.tigris.mbt.exceptions.GuiStoppedExecution;
 import org.tigris.mbt.exceptions.InvalidDataException;
+import org.tigris.mbt.exceptions.StopConditionException;
 import org.tigris.mbt.generators.CodeGenerator;
 import org.tigris.mbt.generators.NonOptimizedShortestPath;
 import org.tigris.mbt.generators.PathGenerator;
@@ -173,13 +175,9 @@ public class ModelBasedTesting {
 		return this.statisticsManager;
 	}
 
-	public void addAlternativeCondition(int conditionType, String conditionValue) {
+	public void addAlternativeCondition(int conditionType, String conditionValue) throws StopConditionException {
 		StopCondition condition = null;
-		try {
-			condition = Util.getCondition(conditionType, conditionValue);
-		} catch ( NumberFormatException e ) {
-			Util.AbortIf(true, "Error in the stop condition. Check the stop condition");
-		}
+		condition = Util.getCondition(conditionType, conditionValue);
 
 		// If requirement stop condition, check if requirement exists in model
 		if (condition instanceof ReachedRequirement) {
@@ -203,7 +201,7 @@ public class ModelBasedTesting {
 		}
 	}
 
-	public void addCondition(int conditionType, String conditionValue) {
+	public void addCondition(int conditionType, String conditionValue) throws StopConditionException {
 		StopCondition condition = Util.getCondition(conditionType, conditionValue);
 
 		if (getCondition() == null) {
@@ -361,7 +359,7 @@ public class ModelBasedTesting {
 			getGenerator().setStopCondition(getCondition());
 	}
 
-	public void setGenerator(int generatorType) {
+	public void setGenerator(int generatorType) throws GeneratorException {
 		setGenerator(Util.getGenerator(generatorType));
 	}
 
@@ -405,7 +403,12 @@ public class ModelBasedTesting {
 		PathGenerator backupGenerator = null;
 		if (runRandomGeneratorOnce) {
 			backupGenerator = getGenerator();
-			setGenerator(Keywords.GENERATOR_RANDOM);
+			try {
+				setGenerator(Keywords.GENERATOR_RANDOM);
+			} catch ( GeneratorException e ) {
+				logger.error(e.getMessage());
+				throw new RuntimeException("ERROR: " + e.getMessage(), e);
+			}
 		}
 
 		try {

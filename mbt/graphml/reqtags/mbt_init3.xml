@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE MBTINIT SYSTEM "../../templates/mbt_setup.dtd" >
+<!DOCTYPE MBTINIT SYSTEM "http://mbt.tigris.org/mbt_setup.dtd" >
 <MBTINIT EXTENDED="true" EXECUTOR="none">
 	<MODEL PATH="graphml/reqtags/ExtendedMain.graphml"/>
 	<SCRIPT PATH="graphml/reqtags/graph.bsh"/>
@@ -13,7 +13,7 @@
 	</GENERATOR>
 	<GENERATOR TYPE="RANDOM">
 	 	<AND>
-			<CONDITION TYPE="STATE_COVERAGE" VALUE="30"/>
+			<CONDITION TYPE="VERTEX_COVERAGE" VALUE="30"/>
 			<CONDITION TYPE="EDGE_COVERAGE" VALUE="10"/>
 		</AND>
 	</GENERATOR>

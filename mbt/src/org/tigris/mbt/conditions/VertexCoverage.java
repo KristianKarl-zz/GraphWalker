@@ -1,17 +1,18 @@
 package org.tigris.mbt.conditions;
 
-import org.tigris.mbt.Util;
+import org.tigris.mbt.exceptions.StopConditionException;
 
-public class StateCoverage extends StopCondition {
+public class VertexCoverage extends StopCondition {
 
 	private double limit;
 
-	public StateCoverage() {
+	public VertexCoverage() throws StopConditionException {
 		this(1);
 	}
 
-	public StateCoverage(double limit) {
-		Util.AbortIf((limit > 1 || limit < 0), "State coverage must be between 0 and 100");
+	public VertexCoverage(double limit) throws StopConditionException {
+		if (limit > 1 || limit < 0)
+			throw new StopConditionException("Excpeted a vertex coverage between 0 and 100. Actual: " + limit * 100);
 		this.limit = limit;
 	}
 

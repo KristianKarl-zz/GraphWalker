@@ -3,8 +3,10 @@ package test.org.tigris.mbt.conditions;
 import org.tigris.mbt.Keywords;
 import org.tigris.mbt.ModelBasedTesting;
 import org.tigris.mbt.Util;
-import org.tigris.mbt.conditions.StateCoverage;
+import org.tigris.mbt.conditions.VertexCoverage;
 import org.tigris.mbt.conditions.StopCondition;
+import org.tigris.mbt.exceptions.GeneratorException;
+import org.tigris.mbt.exceptions.StopConditionException;
 import org.tigris.mbt.graph.Edge;
 import org.tigris.mbt.graph.Graph;
 import org.tigris.mbt.graph.Vertex;
@@ -39,14 +41,14 @@ public class StateCoverageTest extends TestCase {
 		e0 = e1 = null;
 	}
 
-	public void testConstructor() {
+	public void testConstructor() throws StopConditionException {
 		ModelBasedTesting mbt = ModelBasedTesting.getInstance();
-		mbt.setCondition(new StateCoverage());
+		mbt.setCondition(new VertexCoverage());
 	}
 
-	public void testFulfillment() {
+	public void testFulfillment() throws StopConditionException, GeneratorException {
 		ModelBasedTesting mbt = ModelBasedTesting.getInstance();
-		StopCondition condition = new StateCoverage();
+		StopCondition condition = new VertexCoverage();
 		mbt.setCondition(condition);
 		mbt.setGraph(graph);
 		mbt.setGenerator(Keywords.GENERATOR_RANDOM);
@@ -59,9 +61,9 @@ public class StateCoverageTest extends TestCase {
 		assertEquals((double) 3 / 3, condition.getFulfilment(), 0.01);
 	}
 
-	public void testIsFulfilled() {
+	public void testIsFulfilled() throws StopConditionException, GeneratorException {
 		ModelBasedTesting mbt = ModelBasedTesting.getInstance();
-		StopCondition condition = new StateCoverage();
+		StopCondition condition = new VertexCoverage();
 		mbt.setCondition(condition);
 		mbt.setGraph(graph);
 		mbt.setGenerator(Keywords.GENERATOR_RANDOM);

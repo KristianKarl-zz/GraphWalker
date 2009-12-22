@@ -1,0 +1,7 @@
+/**
+ * This method implements the {EDGE_VERTEX} '{LABEL}'
+ */
+public void {LABEL}()
+{
+  logInfo( "{LABEL}" );
+}
