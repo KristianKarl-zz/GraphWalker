@@ -14,7 +14,7 @@ public class ReachedVertex extends StopCondition {
 	private Vertex endVertex;
 	private int[] proximity;
 	private int maxDistance;
-	private String stateName;
+	private String vertexName;
 	private String subState;
 
 	public boolean isFulfilled() {
@@ -24,32 +24,32 @@ public class ReachedVertex extends StopCondition {
 	public void setMachine(FiniteStateMachine machine) {
 		super.setMachine(machine);
 		if (this.endVertex == null)
-			this.endVertex = machine.findState(stateName);
+			this.endVertex = machine.findVertex(vertexName);
 		if (this.endVertex == null)
-			throw new RuntimeException("State '" + stateName + "' not found in model");
+			throw new RuntimeException("Vertex '" + vertexName + "' not found in model");
 		this.proximity = getFloydWarshall();
 		this.maxDistance = max(this.proximity);
 	}
 
-	public ReachedVertex(Vertex endState) {
-		this.endVertex = endState;
+	public ReachedVertex(Vertex endVertex) {
+		this.endVertex = endVertex;
 		this.subState = "";
 	}
 
 	public ReachedVertex(String vertexName) {
 
-		String[] state = vertexName.split("/", 2);
-		this.stateName = state[0];
-		this.subState = (state.length > 1 ? state[1] : "");
+		String[] vertex = vertexName.split("/", 2);
+		this.vertexName = vertex[0];
+		this.subState = (vertex.length > 1 ? vertex[1] : "");
 	}
 
 	public double getFulfilment() {
-		int distance = proximity[allVertices.indexOf(getMachine().getCurrentState())];
+		int distance = proximity[allVertices.indexOf(getMachine().getCurrentVertex())];
 		if (getMachine() instanceof ExtendedFiniteStateMachine) {
-			String currentState = getMachine().getCurrentStateName();
+			String currentVertex = getMachine().getCurrentVertexName();
 			String currentSubState = "";
-			if (currentState.contains("/")) {
-				currentSubState = currentState.split("/", 2)[1];
+			if (currentVertex.contains("/")) {
+				currentSubState = currentVertex.split("/", 2)[1];
 				Pattern actionPattern = Pattern.compile(this.subState);
 				Matcher actionMatcher = actionPattern.matcher(currentSubState);
 				if (actionMatcher.find()) {
@@ -73,7 +73,7 @@ public class ReachedVertex extends StopCondition {
 	}
 
 	private int[][] getFloydWarshallMatrix() {
-		allVertices = new ArrayList<Vertex>(getMachine().getAllStates());
+		allVertices = new ArrayList<Vertex>(getMachine().getAllVertices());
 		int n = allVertices.size();
 		int[][] retur = new int[n][n];
 		for (int i = 0; i < n; i++)

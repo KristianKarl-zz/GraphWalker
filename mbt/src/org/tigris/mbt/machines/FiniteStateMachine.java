@@ -43,11 +43,11 @@ public class FiniteStateMachine {
 	static Logger logger = Util.setupLogger(FiniteStateMachine.class);
 
 	protected Graph model = null;
-	protected Vertex currentState = null;
+	protected Vertex currentVertex = null;
 	private boolean weighted = false;
 	private Edge lastEdge = null;
 	private Stack<Edge> edgeStack;
-	private Stack<Integer> statestore;
+	private Stack<Integer> vertexStore;
 	private int numberOfEdgesTravesed = 0;
 	protected boolean backtracking = false;
 	protected boolean calculatingPath = false;
@@ -66,26 +66,26 @@ public class FiniteStateMachine {
 	  return numOfCoveredVertices;
   }
 
-	public void setState(String stateName) {
-		logger.debug("Setting state to: '" + stateName + "'");
-		Vertex e = findState(stateName);
-		Util.AbortIf(e == null, "Vertex not Found: '" + stateName + "'");
+	public void setVertex(String vertexName) {
+		logger.debug("Setting vertex to: '" + vertexName + "'");
+		Vertex e = findVertex(vertexName);
+		Util.AbortIf(e == null, "Vertex not Found: '" + vertexName + "'");
 
-		currentState = e;
+		currentVertex = e;
 		setAsVisited(e);
 	}
 
-	public Vertex findState(String stateName) {
+	public Vertex findVertex(String vertexName) {
 		for (Vertex vertex : model.getVertices()) {
-			if (((String) vertex.getLabelKey()).equals(stateName)) {
+			if (((String) vertex.getLabelKey()).equals(vertexName)) {
 				return vertex;
 			}
     }
 		return null;
 	}
 
-	public boolean hasState(String stateName) {
-		if (findState(stateName) != null) {
+	public boolean hasVertex(String vertexName) {
+		if (findVertex(vertexName) != null) {
 			return true;
 		}
 		return false;
@@ -114,18 +114,18 @@ public class FiniteStateMachine {
 	public void setModel(Graph model) {
 		reset();
 		this.model = model;
-		setState(Keywords.START_NODE);
+		setVertex(Keywords.START_NODE);
 	}
 
-	public Vertex getCurrentState() {
-		return currentState;
+	public Vertex getCurrentVertex() {
+		return currentVertex;
 	}
 
-	public String getCurrentStateName() {
-		return getStateName(currentState);
+	public String getCurrentVertexName() {
+		return currentVertex.getLabelKey();
 	}
 
-	public Collection<Vertex> getAllStates() {
+	public Collection<Vertex> getAllVertices() {
 		return model.getVertices();
 	}
 
@@ -133,14 +133,10 @@ public class FiniteStateMachine {
 		return model.getEdges();
 	}
 
-	public String getStateName(Vertex state) {
-		return state.getLabelKey();
-	}
-
 	public Set<Edge> getCurrentOutEdges() throws FoundNoEdgeException {
-		Set<Edge> retur = new HashSet<Edge>(model.getOutEdges(currentState));
+		Set<Edge> retur = new HashSet<Edge>(model.getOutEdges(currentVertex));
 		if (retur.size() == 0) {
-			throw new FoundNoEdgeException("Cul-De-Sac, dead end found in '" + getCurrentState() + "'");
+			throw new FoundNoEdgeException("Cul-De-Sac, dead end found in '" + getCurrentVertex() + "'");
 		}
 		return retur;
 	}
@@ -201,20 +197,20 @@ public class FiniteStateMachine {
 	}
 
 	public boolean walkEdge(Edge edge) {
-		if (model.isSource(currentState, edge)) {
+		if (model.isSource(currentVertex, edge)) {
 			lastEdge = edge;
 			if (isBacktrackPossible()) {
 				track();
 			}
 
-			currentState = model.getDest(edge);
+			currentVertex = model.getDest(edge);
 			setAsVisited(lastEdge);
-			setAsVisited(currentState);
+			setAsVisited(currentVertex);
 			numberOfEdgesTravesed++;
 			logger.debug("No. of walked edges: " + numberOfEdgesTravesed);
 			return true;
 		} else
-			logger.error("Edge: " + edge + ", is not the source of: " + currentState);
+			logger.error("Edge: " + edge + ", is not the source of: " + currentVertex);
 		return false;
 	}
 
@@ -294,8 +290,8 @@ public class FiniteStateMachine {
 		return retur;
 	}
 
-	public boolean isCurrentState(Vertex vertex) {
-		return getCurrentState().equals(vertex);
+	public boolean isCurrentVertex(Vertex vertex) {
+		return getCurrentVertex().equals(vertex);
 	}
 
 	protected int getCoverage(Collection<AbstractElement> modelItems) {
@@ -339,7 +335,7 @@ public class FiniteStateMachine {
 			associatedRequirements = new Hashtable<String, Integer>();
 
 			Vector<AbstractElement> abstractElements = new Vector<AbstractElement>();
-			abstractElements.addAll(getAllStates());
+			abstractElements.addAll(getAllVertices());
 			abstractElements.addAll(getAllEdges());
 
 			for (AbstractElement abstractElement : abstractElements) {
@@ -379,20 +375,20 @@ public class FiniteStateMachine {
 		return (l == null ? "" : l) + (p == null ? "" : " " + p);
 	}
 
-	public void storeState() {
-		if (this.statestore == null)
-			this.statestore = new Stack<Integer>();
-		this.statestore.push(new Integer(edgeStack.size()));
+	public void storeVertex() {
+		if (this.vertexStore == null)
+			this.vertexStore = new Stack<Integer>();
+		this.vertexStore.push(new Integer(edgeStack.size()));
 	}
 
-	public void restoreState() {
-		if (this.statestore == null || this.statestore.size() == 0)
+	public void restoreVertex() {
+		if (this.vertexStore == null || this.vertexStore.size() == 0)
 			throw new RuntimeException("Nothing to restore");
-		int prevState = ((Integer) this.statestore.pop()).intValue();
-		if (prevState > edgeStack.size())
-			throw new RuntimeException("Cannot restore state from backtrack");
-		while (prevState < edgeStack.size()) {
-			popState();
+		int prevVertex = ((Integer) this.vertexStore.pop()).intValue();
+		if (prevVertex > edgeStack.size())
+			throw new RuntimeException("Cannot restore vertex from backtrack");
+		while (prevVertex < edgeStack.size()) {
+			popVertex();
 		}
 	}
 
@@ -400,15 +396,15 @@ public class FiniteStateMachine {
 		edgeStack.push(getLastEdge());
 	}
 
-	protected void popState() {
+	protected void popVertex() {
 		setAsUnvisited(getLastEdge());
-		setAsUnvisited(getCurrentState());
+		setAsUnvisited(getCurrentVertex());
 
 		edgeStack.pop();
 		if (lastEdge == null) {
-			setState(Keywords.START_NODE);
+			setVertex(Keywords.START_NODE);
 		} else {
-			currentState = model.getSource(lastEdge);
+			currentVertex = model.getSource(lastEdge);
 		}
 		lastEdge = (edgeStack.size() > 0 ? (Edge) edgeStack.peek() : null);
 		numberOfEdgesTravesed--;
@@ -438,7 +434,7 @@ public class FiniteStateMachine {
 
 	public void backtrack() {
 		if (isBacktrackPossible()) {
-			popState();
+			popVertex();
 		} else {
 			if (!isLastEdgeBacktrackSupported())
 				throw new RuntimeException("Backtracking was asked for, but model does not suppport BACKTRACK at egde: " + getLastEdge());
@@ -494,9 +490,9 @@ public class FiniteStateMachine {
 		return retur;
 	}
 
-	public Vector<Vertex> getUncoveredStates() {
+	public Vector<Vertex> getUncoveredVertices() {
 		Vector<Vertex> retur = new Vector<Vertex>();
-		for (Vertex vertex : getAllStates()) {
+		for (Vertex vertex : getAllVertices()) {
 			if (vertex.getVisitedKey() <= 0) {
 				retur.add(vertex);
 			}
@@ -504,21 +500,21 @@ public class FiniteStateMachine {
 		return retur;
 	}
 
-	public Vector<Vertex> getCoveredStates() {
-		Vector<Vertex> retur = new Vector<Vertex>(getAllStates());
-		retur.removeAll(getUncoveredStates());
+	public Vector<Vertex> getCoveredVertices() {
+		Vector<Vertex> retur = new Vector<Vertex>(getAllVertices());
+		retur.removeAll(getUncoveredVertices());
 		return retur;
 	}
 
 	public Vector<AbstractElement> getUncoveredElements() {
 		Vector<AbstractElement> retur = new Vector<AbstractElement>(getUncoveredEdges());
-		retur.addAll(getUncoveredStates());
+		retur.addAll(getUncoveredVertices());
 		return retur;
 	}
 
 	public Vector<AbstractElement> getCoveredElements() {
 		Vector<AbstractElement> retur = new Vector<AbstractElement>(getCoveredEdges());
-		retur.addAll(getCoveredStates());
+		retur.addAll(getCoveredVertices());
 		return retur;
 	}
 

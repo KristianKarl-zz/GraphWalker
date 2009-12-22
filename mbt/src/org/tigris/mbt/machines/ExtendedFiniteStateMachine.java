@@ -91,8 +91,8 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 		}
 	}
 
-	public String getCurrentStateName() {
-		return super.getCurrentStateName() + (hasInternalVariables() ? "/" + getCurrentDataString() : "");
+	public String getCurrentVertexName() {
+		return super.getCurrentVertexName() + (hasInternalVariables() ? "/" + getCurrentDataString() : "");
 	}
 
 	public Set<Edge> getCurrentOutEdges() throws FoundNoEdgeException {
@@ -100,14 +100,14 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 		for (Iterator<Edge> i = retur.iterator(); i.hasNext();) {
 			Edge e = i.next();
 			if (!accessableFilter.acceptEdge(getModel(), e)) {
-				logger.debug("Not accessable: " + e + " from " + getCurrentStateName());
+				logger.debug("Not accessable: " + e + " from " + getCurrentVertexName());
 				i.remove();
 			} else {
-				logger.debug("Accessable: " + e + " from " + getCurrentStateName());
+				logger.debug("Accessable: " + e + " from " + getCurrentVertexName());
 			}
 		}
 		if (retur.size() == 0) {
-			throw new FoundNoEdgeException("Cul-De-Sac, dead end found in '" + getCurrentState() + "'");
+			throw new FoundNoEdgeException("Cul-De-Sac, dead end found in '" + getCurrentVertex() + "'");
 		}
 		return retur;
 	}
@@ -275,8 +275,8 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 		}
 	}
 
-	protected void popState() {
-		super.popState();
+	protected void popVertex() {
+		super.popVertex();
 		if (jsEngine != null) {
 		} else if (beanShellEngine != null) {
 			beanShellEngine.setNameSpace(((CannedNameSpace) namespaceStack.pop()).unpack());

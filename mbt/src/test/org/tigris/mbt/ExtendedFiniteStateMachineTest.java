@@ -54,13 +54,13 @@ public class ExtendedFiniteStateMachineTest extends TestCase {
 
 	public void testRequirementsWalk() {
 		ExtendedFiniteStateMachine EFSM = new ExtendedFiniteStateMachine(graph, false);
-		assertEquals("Start", EFSM.getCurrentStateName());
+		assertEquals("Start", EFSM.getCurrentVertexName());
 		EFSM.walkEdge(e1);
-		assertEquals("V1/x=1;y=[];", EFSM.getCurrentStateName());
+		assertEquals("V1/x=1;y=[];", EFSM.getCurrentVertexName());
 		assertEquals("{REQ001=1, REQ004=0, REQ003=0, REQ002=2}", EFSM.getAllRequirements().toString());
 		assertEquals("[REQ001, REQ002]", EFSM.getCoveredRequirements().toString());
 		EFSM.walkEdge(e2);
-		assertEquals("V2/x=2;y=[];", EFSM.getCurrentStateName());
+		assertEquals("V2/x=2;y=[];", EFSM.getCurrentVertexName());
 		assertEquals("{REQ001=1, REQ004=1, REQ003=1, REQ002=2}", EFSM.getAllRequirements().toString());
 		assertEquals("[REQ001, REQ004, REQ003, REQ002]", EFSM.getCoveredRequirements().toString());
 	}
@@ -68,40 +68,40 @@ public class ExtendedFiniteStateMachineTest extends TestCase {
 	public void testBacktrackWalk() {
 		ExtendedFiniteStateMachine EFSM = new ExtendedFiniteStateMachine(graph, false);
 		EFSM.setBacktrackEnabled(true);
-		assertEquals("Start", EFSM.getCurrentStateName());
+		assertEquals("Start", EFSM.getCurrentVertexName());
 		EFSM.walkEdge(e1);
-		assertEquals("V1/x=1;y=[];", EFSM.getCurrentStateName());
+		assertEquals("V1/x=1;y=[];", EFSM.getCurrentVertexName());
 		EFSM.walkEdge(e2);
-		assertEquals("V2/x=2;y=[];", EFSM.getCurrentStateName());
+		assertEquals("V2/x=2;y=[];", EFSM.getCurrentVertexName());
 		EFSM.walkEdge(e3);
-		assertEquals("V2/x=3;y=[];", EFSM.getCurrentStateName());
+		assertEquals("V2/x=3;y=[];", EFSM.getCurrentVertexName());
 		EFSM.backtrack();
-		assertEquals("V2/x=2;y=[];", EFSM.getCurrentStateName());
+		assertEquals("V2/x=2;y=[];", EFSM.getCurrentVertexName());
 		EFSM.backtrack();
-		assertEquals("V1/x=1;y=[];", EFSM.getCurrentStateName());
+		assertEquals("V1/x=1;y=[];", EFSM.getCurrentVertexName());
 		EFSM.backtrack();
-		assertEquals("Start", EFSM.getCurrentStateName());
+		assertEquals("Start", EFSM.getCurrentVertexName());
 	}
 
 	public void testBacktrackWalk2() {
 		ExtendedFiniteStateMachine EFSM = new ExtendedFiniteStateMachine(graph, false);
 		EFSM.setBacktrackEnabled(true);
-		assertEquals("Start", EFSM.getCurrentStateName());
+		assertEquals("Start", EFSM.getCurrentVertexName());
 		EFSM.walkEdge(e1);
-		assertEquals("V1/x=1;y=[];", EFSM.getCurrentStateName());
+		assertEquals("V1/x=1;y=[];", EFSM.getCurrentVertexName());
 		EFSM.walkEdge(e2);
-		assertEquals("V2/x=2;y=[];", EFSM.getCurrentStateName());
+		assertEquals("V2/x=2;y=[];", EFSM.getCurrentVertexName());
 		EFSM.walkEdge(e3);
-		assertEquals("V2/x=3;y=[];", EFSM.getCurrentStateName());
+		assertEquals("V2/x=3;y=[];", EFSM.getCurrentVertexName());
 		EFSM.walkEdge(e4);
-		assertEquals("V1/x=3;y=[3];", EFSM.getCurrentStateName());
+		assertEquals("V1/x=3;y=[3];", EFSM.getCurrentVertexName());
 		EFSM.backtrack();
-		assertEquals("V2/x=3;y=[];", EFSM.getCurrentStateName());
+		assertEquals("V2/x=3;y=[];", EFSM.getCurrentVertexName());
 		EFSM.backtrack();
-		assertEquals("V2/x=2;y=[];", EFSM.getCurrentStateName());
+		assertEquals("V2/x=2;y=[];", EFSM.getCurrentVertexName());
 		EFSM.backtrack();
-		assertEquals("V1/x=1;y=[];", EFSM.getCurrentStateName());
+		assertEquals("V1/x=1;y=[];", EFSM.getCurrentVertexName());
 		EFSM.backtrack();
-		assertEquals("Start", EFSM.getCurrentStateName());
+		assertEquals("Start", EFSM.getCurrentVertexName());
 	}
 }

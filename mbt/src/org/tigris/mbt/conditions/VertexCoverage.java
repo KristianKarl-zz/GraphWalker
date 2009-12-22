@@ -17,13 +17,13 @@ public class VertexCoverage extends StopCondition {
 	}
 
 	public boolean isFulfilled() {
-		double vertices = machine.getAllStates().size();
+		double vertices = machine.getAllVertices().size();
 		double covered = machine.getNumOfCoveredVertices();
 		return (covered / vertices) >= limit;
 	}
 
 	public double getFulfilment() {
-		double vertices = machine.getAllStates().size();
+		double vertices = machine.getAllVertices().size();
 		double covered = machine.getNumOfCoveredVertices();
 		return (covered / vertices) / limit;
 	}

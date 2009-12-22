@@ -13,17 +13,17 @@ import org.tigris.mbt.graph.Vertex;
  * @author Johan Tejle
  * 
  */
-public class StateCoverageStatistics extends Statistics {
+public class VertexCoverageStatistics extends Statistics {
 
 	private int max;
-	private HashSet<String> usedStates;
+	private HashSet<String> usedVertices;
 
 	/**
 	 * 
 	 */
-	public StateCoverageStatistics(Graph model) {
+	public VertexCoverageStatistics(Graph model) {
 		max = model.getVertices().size();
-		usedStates = new HashSet<String>();
+		usedVertices = new HashSet<String>();
 	}
 
 	/*
@@ -35,7 +35,7 @@ public class StateCoverageStatistics extends Statistics {
 	 */
 	public void addProgress(AbstractElement element) {
 		if (element instanceof Vertex)
-			usedStates.add(element.toString());
+			usedVertices.add(element.toString());
 	}
 
 	/*
@@ -44,7 +44,7 @@ public class StateCoverageStatistics extends Statistics {
 	 * @see org.tigris.mbt.statistics.Statistics#getCurrent()
 	 */
 	public int getCurrent() {
-		return usedStates.size();
+		return usedVertices.size();
 	}
 
 	/*

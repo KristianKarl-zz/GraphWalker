@@ -14,7 +14,7 @@ import org.tigris.mbt.graph.Vertex;
 import org.tigris.mbt.statistics.EdgeCoverageStatistics;
 import org.tigris.mbt.statistics.EdgeSequenceCoverageStatistics;
 import org.tigris.mbt.statistics.RequirementCoverageStatistics;
-import org.tigris.mbt.statistics.StateCoverageStatistics;
+import org.tigris.mbt.statistics.VertexCoverageStatistics;
 
 import junit.framework.TestCase;
 
@@ -62,7 +62,7 @@ public class StatisticsManagerTest extends TestCase {
 
 	public void testAdd() {
 		StatisticsManager statisticsManager = new StatisticsManager();
-		statisticsManager.addStatisicsCounter("State Coverage", new StateCoverageStatistics(graph));
+		statisticsManager.addStatisicsCounter("State Coverage", new VertexCoverageStatistics(graph));
 		statisticsManager.addStatisicsCounter("Edge Coverage", new EdgeCoverageStatistics(graph));
 		statisticsManager.addStatisicsCounter("2-Edge Sequence Coverage", new EdgeSequenceCoverageStatistics(graph, 2));
 		statisticsManager.addStatisicsCounter("3-Edge Sequence Coverage", new EdgeSequenceCoverageStatistics(graph, 3));
@@ -73,7 +73,7 @@ public class StatisticsManagerTest extends TestCase {
 
 	public void testProgress() {
 		StatisticsManager statisticsManager = new StatisticsManager();
-		statisticsManager.addStatisicsCounter("State Coverage", new StateCoverageStatistics(graph));
+		statisticsManager.addStatisicsCounter("State Coverage", new VertexCoverageStatistics(graph));
 		statisticsManager.addStatisicsCounter("Edge Coverage", new EdgeCoverageStatistics(graph));
 		statisticsManager.addStatisicsCounter("2-Edge Sequence Coverage", new EdgeSequenceCoverageStatistics(graph, 2));
 		statisticsManager.addStatisicsCounter("3-Edge Sequence Coverage", new EdgeSequenceCoverageStatistics(graph, 3));
@@ -131,7 +131,7 @@ public class StatisticsManagerTest extends TestCase {
 
 	public void testFullProgress() {
 		StatisticsManager statisticsManager = new StatisticsManager();
-		statisticsManager.addStatisicsCounter("State Coverage", new StateCoverageStatistics(graph));
+		statisticsManager.addStatisicsCounter("State Coverage", new VertexCoverageStatistics(graph));
 		statisticsManager.addStatisicsCounter("Edge Coverage", new EdgeCoverageStatistics(graph));
 		statisticsManager.addStatisicsCounter("2-Edge Sequence Coverage", new EdgeSequenceCoverageStatistics(graph, 2));
 		statisticsManager.addStatisicsCounter("3-Edge Sequence Coverage", new EdgeSequenceCoverageStatistics(graph, 3));
@@ -153,7 +153,7 @@ public class StatisticsManagerTest extends TestCase {
 
 	public void testFullProgressReport() {
 		StatisticsManager statisticsManager = new StatisticsManager();
-		statisticsManager.addStatisicsCounter("State Coverage", new StateCoverageStatistics(graph));
+		statisticsManager.addStatisicsCounter("State Coverage", new VertexCoverageStatistics(graph));
 		statisticsManager.addStatisicsCounter("Edge Coverage", new EdgeCoverageStatistics(graph));
 		statisticsManager.addStatisicsCounter("2-Edge Sequence Coverage", new EdgeSequenceCoverageStatistics(graph, 2));
 		statisticsManager.addStatisicsCounter("3-Edge Sequence Coverage", new EdgeSequenceCoverageStatistics(graph, 3));

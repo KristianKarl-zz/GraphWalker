@@ -33,7 +33,7 @@ public class RequirementsGenerator extends PathGenerator {
 		});
 
 		Vector<AbstractElement> abstractElements = new Vector<AbstractElement>();
-		abstractElements.addAll(getMachine().getAllStates());
+		abstractElements.addAll(getMachine().getAllVertices());
 		abstractElements.addAll(getMachine().getAllEdges());
 
 		for (Iterator<AbstractElement> i = abstractElements.iterator(); i.hasNext();) {

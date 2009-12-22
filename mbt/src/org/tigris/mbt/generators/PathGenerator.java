@@ -45,7 +45,7 @@ public abstract class PathGenerator {
 	}
 
 	/**
-	 * Will reset the generator to its initial state.
+	 * Will reset the generator to its initial vertex.
 	 */
 	public void reset() {
 	}
