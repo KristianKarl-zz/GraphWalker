@@ -15,6 +15,7 @@ import java.awt.event.ActionListener;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.net.InetAddress;
@@ -69,8 +70,10 @@ import edu.uci.ics.jung.algorithms.layout.SpringLayout2;
 import edu.uci.ics.jung.algorithms.layout.StaticLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.visualization.Layer;
+import edu.uci.ics.jung.visualization.VisualizationServer;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.DefaultModalGraphMouse;
+import edu.uci.ics.jung.visualization.control.ScalingControl;
 import edu.uci.ics.jung.visualization.layout.LayoutTransition;
 import edu.uci.ics.jung.visualization.picking.ShapePickSupport;
 import edu.uci.ics.jung.visualization.renderers.Renderer;
@@ -81,6 +84,8 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 	 * 
 	 */
 	private static final long serialVersionUID = -8605452811238545133L;
+	private static final String title = "Model-Based Testing 2.2 Beta 13";
+
 
 	private JSplitPane splitPaneMessages = null;
 	private JSplitPane splitPaneGraph = null;
@@ -98,7 +103,7 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 	private ExecuteMBT executeMBT = null;
 	private Timer updateColorLatestVertexLabel = new Timer();
 
-	static private Logger log;
+	static private Logger logger;
 	private static Endpoint endpoint = null;
 	private SoapServices soapService = null;
 
@@ -135,7 +140,7 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 
 	@SuppressWarnings("unchecked")
 	private static Class<? extends Layout>[] getCombos() {
-		log.debug("Entry");
+		logger.debug("Entry");
 
 		List<Class<? extends Layout>> layouts = new ArrayList<Class<? extends Layout>>();
 		layouts.add(StaticLayout.class);
@@ -149,14 +154,14 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 	}
 
 	public static void SetAppEventNotifier(AppEvent event) {
-		log.debug("Entry");
-		log.debug("AppEvent is set using: " + event);
+		logger.debug("Entry");
+		logger.debug("AppEvent is set using: " + event);
 		appEvent = event;
 		changeEvent = new ChangeEvent(event);
 	}
 
 	private void runSoap() {
-		log.debug("Entry");
+		logger.debug("Entry");
 
 		if (endpoint != null) {
 			endpoint = null;
@@ -166,33 +171,47 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 		try {
 			soapService = new SoapServices(xmlFile.getAbsolutePath());
 		} catch (StopConditionException e) {
-			log.error("Failed to start the SOAP service. " + e.getMessage());
+			logger.warn("Failed to start the SOAP service. " + e.getMessage());
 			JOptionPane.showMessageDialog(App.getInstance(), "Failed to start the SOAP service. " + e.getMessage());
+			reset();
+			return;
 		} catch (JDOMException e) {
-			log.error("Failed to start the SOAP service. " + e.getMessage());
+			logger.warn("Failed to start the SOAP service. " + e.getMessage());
 			JOptionPane.showMessageDialog(App.getInstance(), "Failed to start the SOAP service. " + e.getMessage());
+			reset();
+			return;
 		} catch (IOException e) {
-			log.error("Failed to start the SOAP service. " + e.getMessage());
+			logger.warn("Failed to start the SOAP service. " + e.getMessage());
 			JOptionPane.showMessageDialog(App.getInstance(), "Failed to start the SOAP service. " + e.getMessage());
+			reset();
+			return;
 		} catch (GeneratorException e) {
-			log.error("Failed to start the SOAP service. " + e.getMessage());
+			logger.warn("Failed to start the SOAP service. " + e.getMessage());
 			JOptionPane.showMessageDialog(App.getInstance(), "Failed to start the SOAP service. " + e.getMessage());
+			reset();
+			return;
+		} catch (Exception e) {
+			logger.error("Failed to start the SOAP service. " + e.getMessage());
+			JOptionPane.showMessageDialog(App.getInstance(), "Failed to start the SOAP service. " + e.getMessage());
+			reset();
+			return;
 		}
 		endpoint = Endpoint.publish(wsURL, soapService);
 
 		try {
-			log.info("Now running as a SOAP server. For the WSDL file, see: "
+			logger.info("Now running as a SOAP server. For the WSDL file, see: "
 			    + wsURL.replace("0.0.0.0", InetAddress.getLocalHost().getHostName()) + "?WSDL");
 			JOptionPane.showMessageDialog(App.getInstance(), "Now running as a SOAP server. For the WSDL file, see: "
 			    + wsURL.replace("0.0.0.0", InetAddress.getLocalHost().getHostName()) + "?WSDL");
 		} catch (UnknownHostException e) {
-			log.error("Failed to start the SOAP service. " + e.getMessage());
+			logger.error("Failed to start the SOAP service. " + e.getMessage());
 			JOptionPane.showMessageDialog(App.getInstance(), "Failed to start the SOAP service. " + e.getMessage());
+			reset();
 		}
 	}
 
 	public void getNextEvent() {
-		log.debug("Entry");
+		logger.debug("Entry");
 
 		updateUI();
 		getVv().stateChanged(changeEvent);
@@ -202,10 +221,10 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		log.debug("Entry");
+		logger.debug("Entry");
 
 		String cmd = e.getActionCommand();
-		log.debug("Got action: " + cmd);
+		logger.debug("Got action: " + cmd);
 
 		// Handle each button.
 		if (LOAD.equals(cmd)) {
@@ -229,7 +248,7 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 	}
 
 	public void load() {
-		log.debug("Entry");
+		logger.debug("Entry");
 
 		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("XML files", "xml");
@@ -237,7 +256,7 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 		int returnVal = fileChooser.showOpenDialog(getContentPane());
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			xmlFile = fileChooser.getSelectedFile();
-			log.debug("Got file: " + xmlFile.getAbsolutePath());
+			logger.debug("Got file: " + xmlFile.getAbsolutePath());
 			loadModel();
 			if (appEvent != null)
 				appEvent.getLoadEvent();
@@ -245,14 +264,16 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 	}
 
 	private void outPut() {
-		log.debug("Entry");
+		logger.debug("Entry");
 
-		if (ModelBasedTesting.getInstance().getMachine() == null) {
+		if (ModelBasedTesting.getInstance().getMachine() == null||
+			ModelBasedTesting.getInstance().getGraph() == null ) {
+			statisticsTextArea.setText("");
+			variablesTextArea.setText("");
 			return;
 		}
 		statisticsTextArea.setText(ModelBasedTesting.getInstance().getStatisticsString());
 
-		variablesTextArea.setText(ModelBasedTesting.getInstance().getStatisticsString());
 		String str = "Edge: "
 		    + (ModelBasedTesting.getInstance().getMachine().getLastEdge() == null ? "" : (String) ModelBasedTesting.getInstance().getMachine()
 		        .getLastEdge().getLabelKey()) + "   Vertex: " + ModelBasedTesting.getInstance().getMachine().getCurrentVertex().getLabelKey();
@@ -264,7 +285,7 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 	}
 
 	public void setButtons() {
-		log.debug("Entry");
+		logger.debug("Entry");
 		if (status.isStopped()) {
 			loadButton.setEnabled(true);
 			reloadButton.setEnabled(true);
@@ -295,10 +316,10 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 			soapButton.setEnabled(true);
 		}
 	}
-
+	
 	@SuppressWarnings("synthetic-access")
 	private void loadModel() {
-		log.debug("Entry");
+		logger.debug("Entry");
 		setWaitCursor();
 		status.reset();
 		if (executeMBT != null) {
@@ -309,19 +330,54 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 			status.setState(Status.executingSoapTest);
 			runSoap();
 		} else {
-			log.debug("Loading model");
+			logger.debug("Loading model");
 			status.unsetState(Status.stopped);
 			status.setState(Status.paused);
 			ModelBasedTesting.getInstance().setUseGUI();
 			try {
 				Util.loadMbtFromXml(xmlFile.getAbsolutePath());
-				setTitle("Model-Based Testing 2.2 Beta 13 - " + xmlFile.getName());
+				setTitle(title + " - " + xmlFile.getName());
+			} catch (ArrayIndexOutOfBoundsException e) {
+				logger.warn(e.getMessage());
+				JOptionPane.showMessageDialog(App.getInstance(), e.getMessage());
+				reset();
+				return;
+			} catch (StopConditionException e) {
+				logger.warn(e.getMessage());
+				JOptionPane.showMessageDialog(App.getInstance(), e.getMessage());
+				reset();
+				return;
+			} catch (GeneratorException e) {
+				logger.warn(e.getMessage());
+				JOptionPane.showMessageDialog(App.getInstance(), e.getMessage());
+				reset();
+				return;
+			} catch (JDOMException e) {
+				logger.warn(e.getMessage());
+				JOptionPane.showMessageDialog(App.getInstance(), e.getMessage());
+				reset();
+				return;
+			} catch (FileNotFoundException e) {
+				logger.warn(e.getMessage());
+				JOptionPane.showMessageDialog(App.getInstance(), e.getMessage());
+				reset();
+				return;
+			} catch (IOException e) {
+				logger.warn(e.getMessage());
+				JOptionPane.showMessageDialog(App.getInstance(), e.getMessage());
+				reset();
+				return;
+			} catch (RuntimeException e) {
+				logger.warn(e.getMessage());
+				JOptionPane.showMessageDialog(App.getInstance(), e.getMessage());
+				reset();
+				return;
 			} catch (Exception e) {
 				Util.logStackTraceToError(e);
 				JOptionPane.showMessageDialog(App.getInstance(), e.getMessage());
-				log.error(e.getMessage());
+				reset();
+				return;
 			}
-
 			centerOnVertex();
 
 			if (executeMBT != null) {
@@ -333,8 +389,22 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 		setDefaultCursor();
 	}
 
+	private void reset() {
+		statisticsTextArea.setText("");
+		variablesTextArea.setText("");
+		getLatestVertexLabel().setText("");
+		
+		setTitle(title);
+		ModelBasedTesting.getInstance().reset();
+		setGraphLayout(new StaticLayout<Vertex, Edge>(new Graph()));
+		getVv().setGraphLayout(getGraphLayout());
+		status.reset();
+		setButtons();
+		setDefaultCursor();
+	}
+
 	public void run() {
-		log.debug("Entry");
+		logger.debug("Entry");
 		status.unsetState(Status.stopped);
 		if (status.isExecutingSoapTest()) {
 			status.unsetState(Status.paused);
@@ -345,7 +415,7 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 	}
 
 	public void executingJavaTest(boolean executingJavaTest) {
-		log.debug("Entry");
+		logger.debug("Entry");
 		if (executingJavaTest == true) {
 			status.setState(Status.executingJavaTest);
 		} else {
@@ -381,13 +451,13 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 	}
 
 	public void stop() {
-		log.debug("Entry");
+		logger.debug("Entry");
 		status.setState(Status.stopped);
 		setButtons();
 	}
 
 	public void pause() {
-		log.debug("Entry");
+		logger.debug("Entry");
 		status.unsetState(Status.stopped);
 		status.unsetState(Status.running);
 		status.setState(Status.paused);
@@ -395,7 +465,7 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 	}
 
 	public void next() {
-		log.debug("Entry");
+		logger.debug("Entry");
 		if (ModelBasedTesting.getInstance().hasNextStep() == false) {
 			status.setState(Status.stopped);
 			setButtons();
@@ -411,7 +481,7 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 	}
 
 	public void centerOnVertex() {
-		log.debug("Entry");
+		logger.debug("Entry");
 		Vertex v = ModelBasedTesting.getInstance().getCurrentVertex();
 		if (v != null) {
 			Point2D target = getVv().getGraphLayout().transform(v);
@@ -423,18 +493,18 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 	}
 
 	public void updateUI() {
-		log.debug("Updating the UI");
+		logger.debug("Updating the UI");
 		outPut();
 	}
 
 	public void reload() {
-		log.debug("reload");
+		logger.debug("reload");
 		loadModel();
 	}
 
 	public void setGraphLayout(Layout<Vertex, Edge> graphLayout) {
-		log.debug("Entry");
-		log.debug("setLayout using: " + graphLayout.toString());
+		logger.debug("Entry");
+		logger.debug("setLayout using: " + graphLayout.toString());
 		this.graphLayout = graphLayout;
 
 		Transformer<Vertex, Point2D> vertexLocation = new Transformer<Vertex, Point2D>() {
@@ -451,7 +521,7 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 	}
 
 	public void disableToolBarExceptPauseButton() {
-		log.debug("Entry");
+		logger.debug("Entry");
 		loadButton.setEnabled(false);
 		reloadButton.setEnabled(false);
 		runButton.setEnabled(false);
@@ -462,20 +532,20 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 	}
 
 	public void setWaitCursor() {
-		log.debug("Entry");
+		logger.debug("Entry");
 		setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 	}
 
 	public void setDefaultCursor() {
-		log.debug("Entry");
+		logger.debug("Entry");
 		setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 	}
 
 	public void updateLayout() {
-		log.debug("Entry");
+		logger.debug("Entry");
 
 		if (isVisible() && ModelBasedTesting.getInstance().getGraph() != null) {
-			log.debug("updateLayout");
+			logger.debug("updateLayout");
 			setWaitCursor();
 			setGraphLayout(new StaticLayout<Vertex, Edge>(ModelBasedTesting.getInstance().getGraph()));
 			getVv().setGraphLayout(getGraphLayout());
@@ -536,7 +606,7 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 	}
 
 	private VisualizationViewer<Vertex, Edge> getGraphViewer() {
-		log.debug("Entry");
+		logger.debug("Entry");
 
 		if (ModelBasedTesting.getInstance().getGraph() == null)
 			setGraphLayout(new StaticLayout<Vertex, Edge>(new Graph()));
@@ -581,7 +651,7 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 	}
 
 	public void createPanelStatistics() {
-		log.debug("Entry");
+		logger.debug("Entry");
 		panelStatistics = new JPanel();
 		panelStatistics.setLayout(new BorderLayout());
 
@@ -591,7 +661,7 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 	}
 
 	public void createPanelVariables() {
-		log.debug("Entry");
+		logger.debug("Entry");
 
 		panelVariables = new JPanel();
 		panelVariables.setLayout(new BorderLayout());
@@ -602,7 +672,7 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 	}
 
 	protected JButton makeNavigationButton(String imageName, String actionCommand, String toolTipText, String altText, boolean enabled) {
-		log.debug("Entry");
+		logger.debug("Entry");
 
 		// Look for the image.
 		String imgLocation = "resources/icons/" + imageName + ".png";
@@ -619,14 +689,14 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 			button.setIcon(new ImageIcon(imageURL, altText));
 		} else { // no image found
 			button.setText(altText);
-			log.error("Resource not found: " + imgLocation);
+			logger.error("Resource not found: " + imgLocation);
 		}
 
 		return button;
 	}
 
 	protected JCheckBox makeNavigationCheckBoxButton(String imageName, String actionCommand, String toolTipText, String altText) {
-		log.debug("Entry");
+		logger.debug("Entry");
 
 		// Create and initialize the button.
 		JCheckBox button = new JCheckBox();
@@ -682,7 +752,7 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 
 	@SuppressWarnings( { "unchecked", "serial", "synthetic-access" })
 	public void addButtons(JToolBar toolBar) {
-		log.debug("Entry");
+		logger.debug("Entry");
 
 		loadButton = makeNavigationButton("open", LOAD, "Load a model (graphml file)", "Load", true);
 		toolBar.add(loadButton);
@@ -723,7 +793,7 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 	}
 
 	public void createPanelGraph() {
-		log.debug("Entry");
+		logger.debug("Entry");
 		panelGraph = new JPanel();
 		panelGraph.setLayout(new BorderLayout());
 		setLatestVertexLabel(new JLabel(" "));
@@ -734,8 +804,8 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 	}
 
 	public void init() {
-		log.debug("Entry");
-		setTitle("Model-Based Testing 2.2 Beta 13");
+		logger.debug("Entry");
+		setTitle(title);
 		setBackground(Color.gray);
 
 		JPanel topPanel = new JPanel();
@@ -789,8 +859,8 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 
 	// Private constructor prevents instantiation from other classes
 	private App() {
-		log = Util.setupLogger(App.class);
-		log.debug("Entry");
+		logger = Util.setupLogger(App.class);
+		logger.debug("Entry");
 		init();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		pack();

@@ -7,12 +7,13 @@ public class Status {
 	static private Logger log = Util.setupLogger(Status.class);
 	private int state = stopped;
 
-	public static final int running = 1;
-	public static final int next = 2;
-	public static final int paused = 4;
-	public static final int stopped = 8;
-	public static final int executingJavaTest = 16;
-	public static final int executingSoapTest = 32;
+	public static final int initial = 1;
+	public static final int running = 2;
+	public static final int next = 4;
+	public static final int paused = 8;
+	public static final int stopped = 16;
+	public static final int executingJavaTest = 32;
+	public static final int executingSoapTest = 64;
 
 	public boolean isExecutingSoapTest() {
 		return (state & executingSoapTest) == executingSoapTest;
@@ -20,6 +21,10 @@ public class Status {
 
 	public boolean isExecutingJavaTest() {
 		return (state & executingJavaTest) == executingJavaTest;
+	}
+
+	public boolean isInitial() {
+		return (state & initial) == initial;
 	}
 
 	public boolean isStopped() {
@@ -52,8 +57,13 @@ public class Status {
 		log.debug("State: " + this.state);
 	}
 
-	public void reset() {
-		log.debug("Reset the state to stopped");
+	public void setStopped() {
+		log.debug("Set the state to stopped");
 		state = stopped;
+	}
+
+	public void reset() {
+		log.debug("Reset the state to initial");
+		state = initial;
 	}
 }

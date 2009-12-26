@@ -18,6 +18,7 @@ import org.apache.commons.cli.MissingOptionException;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.PosixParser;
+import org.apache.commons.cli.UnrecognizedOptionException;
 import org.apache.log4j.Logger;
 import org.jdom.JDOMException;
 import org.tigris.mbt.GUI.App;
@@ -265,6 +266,10 @@ public class CLI {
 			System.err.println("Argument is required to the option.");
 			System.err.println(e.getMessage());
 			System.err.println("Type 'java -jar mbt.jar help " + args[0] + "' for help.");			
+		} catch (UnrecognizedOptionException e) {
+			logger.warn(e.getMessage());
+			System.err.println(e.getMessage());
+			System.err.println("Type 'java -jar mbt.jar help " + args[0] + "' for help.");			
 		} catch (StopConditionException e) {
 			logger.warn(e.getMessage());
 			System.err.println(e.getMessage());
@@ -272,6 +277,10 @@ public class CLI {
 		} catch (GeneratorException e) {
 			logger.warn(e.getMessage());
 			System.err.println(e.getMessage());
+			System.err.println("Type 'java -jar mbt.jar help " + args[0] + "' for help.");			
+		} catch (JDOMException e) {
+			logger.warn(e.getMessage());
+			System.err.println("Can not access file: " + e.getMessage());
 			System.err.println("Type 'java -jar mbt.jar help " + args[0] + "' for help.");			
 		} catch (FileNotFoundException e) {
 			logger.warn(e.getMessage());
