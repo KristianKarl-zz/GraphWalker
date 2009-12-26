@@ -263,8 +263,9 @@ public class Util {
 	 * @throws StopConditionException
 	 * @throws GeneratorException
 	 * @throws IOException 
+	 * @throws JDOMException 
 	 */
-	public static ModelBasedTesting loadMbtAsWSFromXml(String fileName) throws StopConditionException, GeneratorException, IOException {
+	public static ModelBasedTesting loadMbtAsWSFromXml(String fileName) throws StopConditionException, GeneratorException, IOException, JDOMException {
 		return loadXml(fileName, true, false);
 	}
 
@@ -279,8 +280,9 @@ public class Util {
 	 * @throws StopConditionException
 	 * @throws GeneratorException
 	 * @throws IOException 
+	 * @throws JDOMException 
 	 */
-	public static ModelBasedTesting loadMbtFromXml(String fileName, boolean dryRun) throws StopConditionException, GeneratorException, IOException {
+	public static ModelBasedTesting loadMbtFromXml(String fileName, boolean dryRun) throws StopConditionException, GeneratorException, IOException, JDOMException {
 		return loadXml(fileName, false, dryRun);
 	}
 
@@ -293,8 +295,9 @@ public class Util {
 	 * @throws StopConditionException
 	 * @throws GeneratorException
 	 * @throws IOException 
+	 * @throws JDOMException 
 	 */
-	public static ModelBasedTesting loadMbtFromXml(String fileName) throws StopConditionException, GeneratorException, IOException {
+	public static ModelBasedTesting loadMbtFromXml(String fileName) throws StopConditionException, GeneratorException, IOException, JDOMException {
 		return loadXml(fileName, false, false);
 	}
 
@@ -311,23 +314,18 @@ public class Util {
 	 * @throws StopConditionException
 	 * @throws GeneratorException
 	 * @throws IOException 
+	 * @throws JDOMException 
 	 */
 	@SuppressWarnings("unchecked")
 	private static ModelBasedTesting loadXml(String fileName, boolean runningSoapServices, boolean dryRun) throws StopConditionException,
-			GeneratorException, IOException {
+			GeneratorException, IOException, JDOMException {
 		final ModelBasedTesting mbt = ModelBasedTesting.getInstance();
 		mbt.reset();
 		mbt.setDryRun(dryRun);
 
 		SAXBuilder parser = new SAXBuilder("org.apache.crimson.parser.XMLReaderImpl", false);
 		Document doc;
-		try {
-			doc = parser.build(fileName);
-		} catch (JDOMException e) {
-			throw new RuntimeException("Error parsing XML file.", e);
-		} catch (IOException e) {
-			throw new RuntimeException("Error reading XML file.", e);
-		}
+		doc = parser.build(fileName);
 		Element root = doc.getRootElement();
 		List<Element> models = root.getChildren("MODEL");
 

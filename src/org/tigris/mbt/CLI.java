@@ -19,6 +19,7 @@ import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.PosixParser;
 import org.apache.log4j.Logger;
+import org.jdom.JDOMException;
 import org.tigris.mbt.GUI.App;
 import org.tigris.mbt.Keywords.Generator;
 import org.tigris.mbt.Keywords.StopCondition;
@@ -869,8 +870,9 @@ public class CLI {
 	 * @throws StopConditionException 
 	 * @throws GeneratorException 
 	 * @throws IOException 
+	 * @throws JDOMException
 	 */
-	private void RunCommandXml(CommandLine cl) throws StopConditionException, GeneratorException, IOException {
+	private void RunCommandXml(CommandLine cl) throws StopConditionException, GeneratorException, IOException, JDOMException {
 		if (helpNeeded("xml", !cl.hasOption("f"), "Missing the input xml file, See  option -f"))
 			return;
 
@@ -888,8 +890,9 @@ public class CLI {
 	 * @throws StopConditionException 
 	 * @throws GeneratorException 
 	 * @throws IOException 
+	 * @throws JDOMException 
 	 */
-	private void RunCommandSoap(CommandLine cl) throws StopConditionException, GeneratorException, IOException {
+	private void RunCommandSoap(CommandLine cl) throws StopConditionException, GeneratorException, IOException, JDOMException {
 		String port = null;
 		String nicAddr = null;
 		if (cl.hasOption("p")) {

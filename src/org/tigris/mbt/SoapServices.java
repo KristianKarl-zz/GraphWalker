@@ -7,6 +7,7 @@ import java.util.Vector;
 import javax.jws.WebService;
 
 import org.apache.log4j.Logger;
+import org.jdom.JDOMException;
 import org.tigris.mbt.GUI.App;
 import org.tigris.mbt.exceptions.GeneratorException;
 import org.tigris.mbt.exceptions.InvalidDataException;
@@ -23,7 +24,7 @@ public class SoapServices {
 	public SoapServices() {
 	}
 
-	public SoapServices(String xmlFile) throws StopConditionException, GeneratorException, IOException {
+	public SoapServices(String xmlFile) throws StopConditionException, GeneratorException, IOException, JDOMException {
 		if (xmlFile != null) {
 			this.xmlFile = xmlFile;
 			Util.loadMbtAsWSFromXml(this.xmlFile);
