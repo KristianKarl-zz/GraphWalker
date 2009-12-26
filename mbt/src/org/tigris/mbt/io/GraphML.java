@@ -539,10 +539,11 @@ public class GraphML extends AbstractModelHandler {
 				}
 			}
 		} catch (JDOMException e) {
+			Util.logStackTraceToError(e);
 			logger.error(e);
 			throw new RuntimeException("Could not parse file: '" + fileName + "'");
 		} catch (IOException e) {
-			e.printStackTrace();
+			Util.logStackTraceToError(e);
 			throw new RuntimeException("Could not parse file: '" + fileName + "'");
 		}
 

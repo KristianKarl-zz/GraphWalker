@@ -6,7 +6,6 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Vector;
@@ -138,7 +137,7 @@ public class CLI {
 			cli.run(args);
 			endpoint = cli.GetEndpoint();
 		} catch (Exception e) {
-			Util.printStackTrace(e);
+			Util.logStackTraceToError(e);
 		}
 	}
 
@@ -253,29 +252,38 @@ public class CLI {
 				RunCommandManual(cl);
 			}
 		} catch (ArrayIndexOutOfBoundsException e) {
+			logger.warn(e.getMessage());
 			System.err.println("The arguments for either the generator, or the stop-condition, is incorrect.");
 			System.err.println("Example: java -jar mbt.jar offline -f ../demo/model/UC01.graphml -s EDGE_COVERAGE:100 -g A_STAR");
 			System.err.println("Type 'java -jar mbt.jar help " + args[0] + "' for help.");
 		} catch (MissingOptionException e) {
+			logger.warn(e.getMessage());
 			System.err.println("Mandatory option(s) are missing.");
 			System.err.println(e.getMessage());
 			System.err.println("Type 'java -jar mbt.jar help " + args[0] + "' for help.");
 		} catch (MissingArgumentException e) {
+			logger.warn(e.getMessage());
 			System.err.println("Argument is required to the option.");
 			System.err.println(e.getMessage());
 			System.err.println("Type 'java -jar mbt.jar help " + args[0] + "' for help.");			
 		} catch (StopConditionException e) {
+			logger.warn(e.getMessage());
 			System.err.println(e.getMessage());
 			System.err.println("Type 'java -jar mbt.jar help " + args[0] + "' for help.");			
 		} catch (GeneratorException e) {
+			logger.warn(e.getMessage());
+			System.err.println(e.getMessage());
+			System.err.println("Type 'java -jar mbt.jar help " + args[0] + "' for help.");			
+		} catch (FileNotFoundException e) {
+			logger.warn(e.getMessage());
+			System.err.println("Can not access file: " + e.getMessage());
+			System.err.println("Type 'java -jar mbt.jar help " + args[0] + "' for help.");			
+		} catch (IOException e) {
+			logger.warn(e.getMessage());
 			System.err.println(e.getMessage());
 			System.err.println("Type 'java -jar mbt.jar help " + args[0] + "' for help.");			
 		} catch (Exception e) {
-			StringWriter sw = new StringWriter();
-			PrintWriter pw = new PrintWriter(sw);
-			e.printStackTrace(pw);
-			pw.close();
-			logger.error(sw.toString());
+			Util.logStackTraceToError(e);
 			System.err.println(e.getMessage());
 			System.err.println("Type 'java -jar mbt.jar help " + args[0] + "' for help.");
 		} finally {
@@ -354,6 +362,7 @@ public class CLI {
 		f.printHelp( "java -jar mbt.jar " + helpSection.toLowerCase(), header, opt, "", true);
 	}
 
+	@SuppressWarnings("static-access")
 	private void buildRequirementsCLI() {
 		opt.addOption(OptionBuilder.isRequired().withArgName("file|folder")
 		    .withDescription("The file (or folder) containing graphml formatted files.").hasArg().withLongOpt("input_graphml").create("f"));
@@ -376,6 +385,7 @@ public class CLI {
 		return list;
 	}
 
+	@SuppressWarnings("static-access")
 	private void buildOnlineCLI() {
 		opt.addOption("a", "statistics", false, "Prints the statistics of the test, at the end of the run.");
 		opt.addOption("x", "extended", false, "Use an extended finite state machine to handle the model.");
@@ -414,6 +424,7 @@ public class CLI {
 	/**
 	 * Build the command offline command line parser
 	 */
+	@SuppressWarnings("static-access")
 	private void buildOfflineCLI() {
 		opt.addOption("a", false, "Prints the statistics of the test, at the end of the run.");
 		opt.addOption("x", false, "Use an extended finite state machine to handle the model.");
@@ -447,6 +458,7 @@ public class CLI {
 	/**
 	 * Build the command manual command line parser
 	 */
+	@SuppressWarnings("static-access")
 	private void buildManualCLI() {
 		opt.addOption("x", false, "Use an extended finite state machine to handle the model.");
 		opt.addOption("j", false, "Enable JavaScript engine");
@@ -471,6 +483,7 @@ public class CLI {
 		opt.addOption("w", "weighted", false, "Use weighted values if they exists in the model, and the generator is RANDOM.");
 	}
 
+	@SuppressWarnings("static-access")
 	private void buildMethodsCLI() {
 		opt.addOption(OptionBuilder.isRequired().withArgName("file|folder")
 		    .withDescription("The file (or folder) containing graphml formatted files.").hasArg().withLongOpt("input_graphml").create("f"));
@@ -479,6 +492,7 @@ public class CLI {
 	/**
 	 * Build the command merge command line parser
 	 */
+	@SuppressWarnings("static-access")
 	private void buildMergeCLI() {
 		opt.addOption(OptionBuilder.isRequired().withArgName("file|folder")
 		    .withDescription("The file (or folder) containing graphml formatted files.").hasArg().withLongOpt("input_graphml").create("f"));
@@ -487,6 +501,7 @@ public class CLI {
 	/**
 	 * Build the command source command line parser
 	 */
+	@SuppressWarnings("static-access")
 	private void buildSourceCLI() {
 		opt.addOption(OptionBuilder.isRequired().withArgName("file|folder")
 		    .withDescription("The file (or folder) containing graphml formatted files.").hasArg().withLongOpt("input_graphml").create("f"));
@@ -497,6 +512,7 @@ public class CLI {
 	/**
 	 * Build the command xml command line parser
 	 */
+	@SuppressWarnings("static-access")
 	private void buildXmlCLI() {
 		opt.addOption("a", false, "Prints the statistics of the test, at the end of the run.");
 		opt.addOption(OptionBuilder.isRequired().withArgName("file").withDescription("The xml file containing the mbt settings.").hasArg()
@@ -510,6 +526,7 @@ public class CLI {
 	/**
 	 * Build the command soap command line parser
 	 */
+	@SuppressWarnings("static-access")
 	private void buildSoapCLI() {
 		opt.addOption(OptionBuilder.withArgName("file").withDescription("The xml file containing the mbt model and settings.").hasArg().create(
 		    "f"));
@@ -522,6 +539,7 @@ public class CLI {
 	/**
 	 * Build the command gui command line parser
 	 */
+	@SuppressWarnings("static-access")
 	private void buildGuiCLI() {
 		opt.addOption(OptionBuilder.withArgName("file").withDescription("The xml file containing the mbt settings.").hasArg().create("f"));
 	}
@@ -797,8 +815,9 @@ public class CLI {
 	/**
 	 * Run the source command
 	 * @throws GeneratorException 
+	 * @throws IOException 
 	 */
-	private void RunCommandSource(CommandLine cl) throws GeneratorException {
+	private void RunCommandSource(CommandLine cl) throws GeneratorException, IOException {
 		if (helpNeeded("source", !cl.hasOption("f"), "Missing the input graphml file (folder), See -f (--input_graphml)")
 		    || helpNeeded("source", !cl.hasOption("t"), "Missing the template file. See -t (--template)"))
 			return;
@@ -851,8 +870,9 @@ public class CLI {
 	 * Run the xml command
 	 * @throws StopConditionException 
 	 * @throws GeneratorException 
+	 * @throws IOException 
 	 */
-	private void RunCommandXml(CommandLine cl) throws StopConditionException, GeneratorException {
+	private void RunCommandXml(CommandLine cl) throws StopConditionException, GeneratorException, IOException {
 		if (helpNeeded("xml", !cl.hasOption("f"), "Missing the input xml file, See  option -f"))
 			return;
 
@@ -867,11 +887,11 @@ public class CLI {
 	/**
 	 * Run the soap command
 	 * 
-	 * @throws UnknownHostException
 	 * @throws StopConditionException 
 	 * @throws GeneratorException 
+	 * @throws IOException 
 	 */
-	private void RunCommandSoap(CommandLine cl) throws UnknownHostException, StopConditionException, GeneratorException {
+	private void RunCommandSoap(CommandLine cl) throws StopConditionException, GeneratorException, IOException {
 		String port = null;
 		String nicAddr = null;
 		if (cl.hasOption("p")) {

@@ -1,5 +1,6 @@
 package org.tigris.mbt;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Arrays;
@@ -24,7 +25,7 @@ public class SoapServices {
 	public SoapServices() {
 	}
 
-	public SoapServices(String xmlFile) throws StopConditionException, GeneratorException {
+	public SoapServices(String xmlFile) throws StopConditionException, GeneratorException, IOException {
 		if (xmlFile != null) {
 			this.xmlFile = xmlFile;
 			Util.loadMbtAsWSFromXml(this.xmlFile);
@@ -147,12 +148,7 @@ public class SoapServices {
 		try {
 			Util.loadMbtAsWSFromXml(this.xmlFile);
 		} catch (Exception e) {
-			StringWriter sw = new StringWriter();
-			PrintWriter pw = new PrintWriter(sw);
-			e.printStackTrace(pw);
-			pw.close();
-			logger.error(sw.toString());
-			System.err.println(e.getMessage());
+			Util.logStackTraceToError(e);
 			retValue = false;
 		}
 		Reset();
@@ -167,12 +163,7 @@ public class SoapServices {
 		try {
 			Util.loadMbtAsWSFromXml(this.xmlFile);
 		} catch (Exception e) {
-			StringWriter sw = new StringWriter();
-			PrintWriter pw = new PrintWriter(sw);
-			e.printStackTrace(pw);
-			pw.close();
-			logger.error(sw.toString());
-			System.err.println(e.getMessage());
+			Util.logStackTraceToError(e);
 			retValue = false;
 		}
 		Reset();

@@ -15,6 +15,7 @@ import java.awt.event.ActionListener;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.net.InetAddress;
 import java.net.URL;
@@ -92,7 +93,7 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 	private VisualizationViewer<Vertex, Edge> vv;
 	private Layout<Vertex, Edge> graphLayout;
 
-	static private File xmlFile;
+	private static File xmlFile;
 	private ExecuteMBT executeMBT = null;
 	private Timer updateColorLatestVertexLabel = new Timer();
 
@@ -164,6 +165,9 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 		try {
 			soapService = new SoapServices(xmlFile.getAbsolutePath());
 		} catch (StopConditionException e) {
+			log.error("Failed to start the SOAP service. " + e.getMessage());
+			JOptionPane.showMessageDialog(App.getInstance(), "Failed to start the SOAP service. " + e.getMessage());
+		} catch (IOException e) {
 			log.error("Failed to start the SOAP service. " + e.getMessage());
 			JOptionPane.showMessageDialog(App.getInstance(), "Failed to start the SOAP service. " + e.getMessage());
 		} catch (GeneratorException e) {
@@ -309,7 +313,7 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 				Util.loadMbtFromXml(xmlFile.getAbsolutePath());
 				setTitle("Model-Based Testing 2.2 Beta 13 - " + xmlFile.getName());
 			} catch (Exception e) {
-				Util.printStackTrace(e);
+				Util.logStackTraceToError(e);
 				JOptionPane.showMessageDialog(App.getInstance(), e.getMessage());
 				log.error(e.getMessage());
 			}
@@ -356,7 +360,7 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 				ModelBasedTesting.getInstance().executePath();
 			} catch (GuiStoppedExecution e) {
 			} catch (Exception e) {
-				Util.printStackTrace(e);
+				Util.logStackTraceToError(e);
 				log.error(e.getMessage());
 				log.error(e.getCause());
 				JOptionPane.showMessageDialog(App.getInstance(), e.getCause().getMessage());
@@ -667,7 +671,7 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 				vv.repaint();
 
 			} catch (Exception e) {
-				e.printStackTrace();
+				Util.logStackTraceToError(e);
 			}
 		}
 	}
@@ -831,6 +835,7 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 		return graphLayout;
 	}
 
+	@SuppressWarnings("static-access")
 	public void setXmlFile(File xmlFile) {
 		this.xmlFile = xmlFile;
 	}
