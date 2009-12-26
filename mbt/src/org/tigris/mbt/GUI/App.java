@@ -47,6 +47,7 @@ import javax.xml.ws.Endpoint;
 
 import org.apache.commons.collections15.Transformer;
 import org.apache.log4j.Logger;
+import org.jdom.JDOMException;
 import org.tigris.mbt.ModelBasedTesting;
 import org.tigris.mbt.SoapServices;
 import org.tigris.mbt.Util;
@@ -165,6 +166,9 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 		try {
 			soapService = new SoapServices(xmlFile.getAbsolutePath());
 		} catch (StopConditionException e) {
+			log.error("Failed to start the SOAP service. " + e.getMessage());
+			JOptionPane.showMessageDialog(App.getInstance(), "Failed to start the SOAP service. " + e.getMessage());
+		} catch (JDOMException e) {
 			log.error("Failed to start the SOAP service. " + e.getMessage());
 			JOptionPane.showMessageDialog(App.getInstance(), "Failed to start the SOAP service. " + e.getMessage());
 		} catch (IOException e) {
