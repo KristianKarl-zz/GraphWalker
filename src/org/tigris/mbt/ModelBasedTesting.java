@@ -521,7 +521,7 @@ public class ModelBasedTesting {
 
 	}
 
-	public void setTemplate(String templateFile) {
+	public void setTemplate(String templateFile) throws IOException {
 		String template = Util.readFile(templateFile);
 		String header = "", body = "", footer = "";
 		Pattern p = Pattern.compile("HEADER<\\{\\{([.\\s\\S]+)\\}\\}>HEADER([.\\s\\S]+)FOOTER<\\{\\{([.\\s\\S]+)\\}\\}>FOOTER");
@@ -686,7 +686,7 @@ public class ModelBasedTesting {
 			String str = "Could not load class: " + e.getMessage() + "\nProblem occured when loading class: " + strClassName
 			    + ".\n Current class path is: " + System.getProperty("java.class.path");
 			logger.error(str);
-			e.printStackTrace();
+			Util.logStackTraceToError(e);
 			throw new RuntimeException(str, e);
 		} catch (ClassNotFoundException e) {
 			String str = "Could not load class: " + strClassName + ".\n Current class path is: " + System.getProperty("java.class.path");
@@ -855,13 +855,7 @@ public class ModelBasedTesting {
 				} else {
 					logger.error("InvocationTargetException for: " + getMachine().getCurrentVertex() + " : " + e.getCause().getMessage());
 				}
-
-				StringWriter sw = new StringWriter();
-				PrintWriter pw = new PrintWriter(sw);
-				e.printStackTrace(pw);
-				pw.close();
-				logger.error(sw.toString());
-
+				Util.logStackTraceToError(e);
 				throw new RuntimeException("InvocationTargetException.", e.getCause());
 			} catch (NoSuchMethodException e) {
 				if (isEdge) {

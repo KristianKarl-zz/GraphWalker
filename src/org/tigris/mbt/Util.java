@@ -87,9 +87,9 @@ public class Util {
 	 * method is for logging purposes.
 	 * 
 	 * @param edge
-	 *          The edge about which information shall be retrieved.
-	 * @return Returns a String with information regarding the edge, including the
-	 *         source and destination vertices. The format is:<br>
+	 *            The edge about which information shall be retrieved.
+	 * @return Returns a String with information regarding the edge, including
+	 *         the source and destination vertices. The format is:<br>
 	 * 
 	 *         <pre>
 	 * '&lt;EDGE LABEL&gt;', INDEX=x ('&lt;SOURCE VERTEX LABEL&gt;', INDEX=y -&gt; '&lt;DEST VERTEX LABEL&gt;', INDEX=z)
@@ -97,8 +97,8 @@ public class Util {
 	 * 
 	 *         Where x, y and n are the unique indexes for the edge, the source
 	 *         vertex and the destination vertex.<br>
-	 *         Please note that the label of an edge can be either null, or empty
-	 *         ("");
+	 *         Please note that the label of an edge can be either null, or
+	 *         empty ("");
 	 */
 	private static String getCompleteEdgeName(Edge edge) {
 		String str = "Edge: '" + edge.getLabelKey() + "', INDEX=" + edge.getIndexKey();
@@ -110,9 +110,9 @@ public class Util {
 	 * method is for logging purposes.
 	 * 
 	 * @param vertex
-	 *          The vertex about which information shall be retrieved.
-	 * @return Returns a String with information regarding the vertex. The format
-	 *         is:<br>
+	 *            The vertex about which information shall be retrieved.
+	 * @return Returns a String with information regarding the vertex. The
+	 *         format is:<br>
 	 * 
 	 *         <pre>
 	 * '&lt;VERTEX LABEL&gt;', INDEX=n
@@ -159,7 +159,7 @@ public class Util {
 	}
 
 	public static Edge addEdgeToGraph(Graph graph, Vertex vertexFrom, Vertex vertexTo, String strLabel, String strParameter, String strGuard,
-	    String strAction) {
+			String strAction) {
 		Edge retur = new Edge();
 		retur.setIndexKey(new Integer(graph.getEdgeCount() + graph.getVertexCount() + 1));
 		if (strLabel != null)
@@ -258,12 +258,13 @@ public class Util {
 	 * Load MBT settings from a xml file
 	 * 
 	 * @param fileName
-	 *          The XML settings file
+	 *            The XML settings file
 	 * @return
 	 * @throws StopConditionException
-	 * @throws GeneratorException 
+	 * @throws GeneratorException
+	 * @throws IOException 
 	 */
-	public static ModelBasedTesting loadMbtAsWSFromXml(String fileName) throws StopConditionException, GeneratorException {
+	public static ModelBasedTesting loadMbtAsWSFromXml(String fileName) throws StopConditionException, GeneratorException, IOException {
 		return loadXml(fileName, true, false);
 	}
 
@@ -271,14 +272,15 @@ public class Util {
 	 * Load MBT settings from a xml file
 	 * 
 	 * @param fileName
-	 *          The XML settings file
+	 *            The XML settings file
 	 * @param dryRun
-	 *          Is mbt to be run in a dry run mode?
+	 *            Is mbt to be run in a dry run mode?
 	 * @return
 	 * @throws StopConditionException
-	 * @throws GeneratorException 
+	 * @throws GeneratorException
+	 * @throws IOException 
 	 */
-	public static ModelBasedTesting loadMbtFromXml(String fileName, boolean dryRun) throws StopConditionException, GeneratorException {
+	public static ModelBasedTesting loadMbtFromXml(String fileName, boolean dryRun) throws StopConditionException, GeneratorException, IOException {
 		return loadXml(fileName, false, dryRun);
 	}
 
@@ -286,12 +288,13 @@ public class Util {
 	 * Load MBT settings from a xml file
 	 * 
 	 * @param fileName
-	 *          The XML settings file
+	 *            The XML settings file
 	 * @return
 	 * @throws StopConditionException
-	 * @throws GeneratorException 
+	 * @throws GeneratorException
+	 * @throws IOException 
 	 */
-	public static ModelBasedTesting loadMbtFromXml(String fileName) throws StopConditionException, GeneratorException {
+	public static ModelBasedTesting loadMbtFromXml(String fileName) throws StopConditionException, GeneratorException, IOException {
 		return loadXml(fileName, false, false);
 	}
 
@@ -299,17 +302,19 @@ public class Util {
 	 * Load MBT settings from a xml file
 	 * 
 	 * @param fileName
-	 *          The XML settings file
+	 *            The XML settings file
 	 * @param runningSoapServices
-	 *          Is mbt to run in Web Services mode?
+	 *            Is mbt to run in Web Services mode?
 	 * @param dryRun
-	 *          Is mbt to be run in a dry run mode?
+	 *            Is mbt to be run in a dry run mode?
 	 * @return
 	 * @throws StopConditionException
-	 * @throws GeneratorException 
+	 * @throws GeneratorException
+	 * @throws IOException 
 	 */
 	@SuppressWarnings("unchecked")
-	private static ModelBasedTesting loadXml(String fileName, boolean runningSoapServices, boolean dryRun) throws StopConditionException, GeneratorException {
+	private static ModelBasedTesting loadXml(String fileName, boolean runningSoapServices, boolean dryRun) throws StopConditionException,
+			GeneratorException, IOException {
 		final ModelBasedTesting mbt = ModelBasedTesting.getInstance();
 		mbt.reset();
 		mbt.setDryRun(dryRun);
@@ -342,7 +347,7 @@ public class Util {
 					logger.debug("Added to classpath: " + classPaths[j]);
 				} catch (Exception e) {
 					throw new RuntimeException(e.getMessage() + "\nCould not add: '" + classPaths[j] + "' to CLASSPATH\n"
-					    + "Please review your xml file: '" + fileName + "' at CLASS PATH", e);
+							+ "Please review your xml file: '" + fileName + "' at CLASS PATH", e);
 				}
 			}
 		}
@@ -502,7 +507,7 @@ public class Util {
 		}
 	}
 
-	private static String getScriptContent(List<Element> scripts) {
+	private static String getScriptContent(List<Element> scripts) throws IOException {
 		String retur = "";
 		for (Iterator<Element> i = scripts.iterator(); i.hasNext();) {
 			Element script = (Element) i.next();
@@ -517,7 +522,7 @@ public class Util {
 	}
 
 	@SuppressWarnings("unchecked")
-	private static PathGenerator getGenerator(Element generator) throws StopConditionException, GeneratorException {
+	private static PathGenerator getGenerator(Element generator) throws StopConditionException, GeneratorException, IOException {
 		int generatorType = Keywords.getGenerator(generator.getAttributeValue("TYPE"));
 		PathGenerator generatorObject = getGenerator(generatorType);
 		if (generatorObject instanceof CodeGenerator) {
@@ -576,15 +581,11 @@ public class Util {
 		return stopCondition;
 	}
 
-	public static String readFile(String fileName) {
+	public static String readFile(String fileName) throws IOException  {
 		String retur = "";
-		try {
-			BufferedReader in = new BufferedReader(new FileReader(fileName));
-			while (in.ready())
-				retur += in.readLine() + "\n";
-		} catch (IOException e) {
-			throw new RuntimeException("Problem reading file '" + fileName + "'", e);
-		}
+		BufferedReader in = new BufferedReader(new FileReader(fileName));
+		while (in.ready())
+			retur += in.readLine() + "\n";
 		return retur;
 	}
 
@@ -654,7 +655,8 @@ public class Util {
 
 			for (i = 1; i <= n; i++) {
 				cost = s.charAt(i - 1) == t_j ? 0 : 1;
-				// minimum of cell to the left+1, to the top+1, diagonally left and up
+				// minimum of cell to the left+1, to the top+1, diagonally left
+				// and up
 				// +cost
 				d[i] = Math.min(Math.min(d[i - 1] + 1, p[i] + 1), p[i - 1] + cost);
 			}
@@ -737,10 +739,18 @@ public class Util {
 		return classPath;
 	}
 
-	public static void printStackTrace(Exception e) {
+	public static void logStackTraceToError(Exception e) {
 		StringWriter sw = new StringWriter();
 		PrintWriter pw = new PrintWriter(sw);
 		e.printStackTrace(pw);
+		pw.close();
+		logger.error(sw.toString());
+	}
+
+	public static void logStackTraceToError(Throwable t) {
+		StringWriter sw = new StringWriter();
+		PrintWriter pw = new PrintWriter(sw);
+		t.printStackTrace(pw);
 		pw.close();
 		logger.error(sw.toString());
 	}

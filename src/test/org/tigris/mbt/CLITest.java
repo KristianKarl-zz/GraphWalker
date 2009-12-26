@@ -54,7 +54,7 @@ public class CLITest extends TestCase {
 				try {
 					Thread.sleep(300);
 				} catch (InterruptedException e) {
-					e.printStackTrace();
+					Util.logStackTraceToError(e);
 				}
 				return '0';
 			}
@@ -98,7 +98,7 @@ public class CLITest extends TestCase {
 		try {
 			stdin = new FileInputStream(fileName);
 		} catch (Exception e) {
-			e.printStackTrace();
+			Util.logStackTraceToError(e);
 			fail(e.getMessage());
 		}
 		System.setOut(outStream);

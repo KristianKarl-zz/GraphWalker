@@ -32,7 +32,7 @@ public class ClassPathHack {
 			method.setAccessible(true);
 			method.invoke(sysloader, new Object[] { u });
 		} catch (Throwable t) {
-			t.printStackTrace();
+			Util.logStackTraceToError(t);
 			throw new IOException("Error, could not add URL to system classloader");
 		}
 
