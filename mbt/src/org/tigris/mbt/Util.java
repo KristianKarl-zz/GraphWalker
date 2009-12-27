@@ -442,12 +442,7 @@ public class Util {
 					executor = executor.substring(0, executor.indexOf(':'));
 				}
 
-				if (root.getAttributeValue("MANUAL") != null && root.getAttributeValue("MANUAL").equalsIgnoreCase("true")) {
-					logger.debug("Manual test sequence requested");
-					Vector<String[]> testSequence = new Vector<String[]>();
-					mbt.writePath(testSequence);
-					new PrintHTMLTestSequence(testSequence, System.out);
-				} else if (executor.equalsIgnoreCase("offline")) {
+				if (executor.equalsIgnoreCase("offline")) {
 					PrintStream out = System.out;
 					if (executorParam != null && !executorParam.equals("")) {
 						try {
