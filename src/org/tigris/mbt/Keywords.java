@@ -328,7 +328,7 @@ public class Keywords {
 			else
 				throw new StopConditionException("Invalid stop condition: " + stopCondition);
 		for (StopCondition sc : stopConditions) {
-			if ( sc.getName().equals(stopCondition))
+			if ( sc.getName().equals(stopCondition.toUpperCase()))
 				return sc.getId().intValue();
 		}
 		return -1;

@@ -182,7 +182,9 @@ public class ModelBasedTesting {
 			Collection<String> reqs = ((ReachedRequirement) condition).getRequirements();
 			for (Iterator<String> iterator = reqs.iterator(); iterator.hasNext();) {
 				String req = iterator.next();
-				Util.AbortIf(getMachine().getAllRequirements().containsKey(req) == false, "Requirement: '" + req + "' do not exist in the model");
+				if ( getMachine().getAllRequirements().containsKey(req) == false ) {
+					throw new StopConditionException("Requirement: '" + req + "' do not exist in the model");
+				}
 			}
 		}
 
