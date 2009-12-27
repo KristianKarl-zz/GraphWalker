@@ -375,11 +375,6 @@ public class Util {
 			mbt.setWeighted(false);
 		}
 
-		if (root.getAttributeValue("GUI") != null && root.getAttributeValue("GUI").equalsIgnoreCase("true")) {
-			logger.debug("Will use GUI mode");
-			mbt.setUseGUI();
-		}
-
 		List<Element> generators = root.getChildren("GENERATOR");
 
 		if (generators.size() == 0)
