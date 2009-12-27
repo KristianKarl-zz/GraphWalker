@@ -249,6 +249,7 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 
 	public void load() {
 		logger.debug("Entry");
+		status.setStopped();
 
 		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("XML files", "xml");
@@ -321,7 +322,6 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 	private void loadModel() {
 		logger.debug("Entry");
 		setWaitCursor();
-		status.reset();
 		if (executeMBT != null) {
 			executeMBT.cancel(true);
 		}
@@ -499,6 +499,7 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 
 	public void reload() {
 		logger.debug("reload");
+		status.setStopped();
 		loadModel();
 	}
 

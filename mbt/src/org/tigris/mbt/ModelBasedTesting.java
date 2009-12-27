@@ -379,7 +379,7 @@ public class ModelBasedTesting {
 
 			while (true) {
 				if (App.getInstance().getStatus().isStopped())
-					new GuiStoppedExecution();
+					throw new GuiStoppedExecution();
 
 				if (App.getInstance().getStatus().isNext() || App.getInstance().getStatus().isRunning()
 				    || App.getInstance().getStatus().isExecutingJavaTest() || App.getInstance().getStatus().isExecutingSoapTest()
