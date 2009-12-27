@@ -14,12 +14,15 @@ public class RandomPathGenerator extends PathGenerator {
 
 	private Random random = new Random();
 
-	public String[] getNext() {
+	public String[] getNext() throws InterruptedException {
 		Set<Edge> availableEdges;
 		try {
 			availableEdges = getMachine().getCurrentOutEdges();
 		} catch (FoundNoEdgeException e) {
 			throw new RuntimeException("No possible edges available for path", e);
+		}
+		if (Thread.interrupted()) {
+	    throw new InterruptedException();
 		}
 		Edge edge = (getMachine().isWeighted() ? getWeightedEdge(availableEdges) : getRandomEdge(availableEdges));
 		getMachine().walkEdge(edge);

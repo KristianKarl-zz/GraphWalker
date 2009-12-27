@@ -24,7 +24,7 @@ public class SoapServices {
 	public SoapServices() {
 	}
 
-	public SoapServices(String xmlFile) throws StopConditionException, GeneratorException, IOException, JDOMException {
+	public SoapServices(String xmlFile) throws StopConditionException, GeneratorException, IOException, JDOMException, InterruptedException {
 		if (xmlFile != null) {
 			this.xmlFile = xmlFile;
 			Util.loadMbtAsWSFromXml(this.xmlFile);

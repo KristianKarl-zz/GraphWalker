@@ -11,7 +11,7 @@ public abstract class PathGenerator {
 	private FiniteStateMachine machine;
 	private StopCondition stopCondition;
 
-	public abstract String[] getNext();
+	public abstract String[] getNext() throws InterruptedException;
 
 	public boolean hasNext() {
 		return !stopCondition.isFulfilled();

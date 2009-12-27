@@ -583,8 +583,9 @@ public class CLI {
 	 * Run the offline command
 	 * @throws StopConditionException 
 	 * @throws GeneratorException 
+	 * @throws InterruptedException 
 	 */
-	private void RunCommandOffline(CommandLine cl) throws StopConditionException, GeneratorException {
+	private void RunCommandOffline(CommandLine cl) throws StopConditionException, GeneratorException, InterruptedException {
 		/**
 		 * Get the model from the graphml file (or folder)
 		 */
@@ -670,8 +671,9 @@ public class CLI {
 	 * Run the manual command
 	 * @throws StopConditionException 
 	 * @throws GeneratorException 
+	 * @throws InterruptedException 
 	 */
-	private void RunCommandManual(CommandLine cl) throws StopConditionException, GeneratorException {
+	private void RunCommandManual(CommandLine cl) throws StopConditionException, GeneratorException, InterruptedException {
 		/**
 		 * Get the model from the graphml file (or folder)
 		 */
@@ -715,8 +717,9 @@ public class CLI {
 	 * Run the online command
 	 * @throws StopConditionException 
 	 * @throws GeneratorException 
+	 * @throws InterruptedException 
 	 */
-	private void RunCommandOnline(CommandLine cl) throws StopConditionException, GeneratorException {
+	private void RunCommandOnline(CommandLine cl) throws StopConditionException, GeneratorException, InterruptedException {
 		/**
 		 * Get the model from the graphml file (or folder)
 		 */
@@ -824,8 +827,9 @@ public class CLI {
 	 * Run the source command
 	 * @throws GeneratorException 
 	 * @throws IOException 
+	 * @throws InterruptedException 
 	 */
-	private void RunCommandSource(CommandLine cl) throws GeneratorException, IOException {
+	private void RunCommandSource(CommandLine cl) throws GeneratorException, IOException, InterruptedException {
 		if (helpNeeded("source", !cl.hasOption("f"), "Missing the input graphml file (folder), See -f (--input_graphml)")
 		    || helpNeeded("source", !cl.hasOption("t"), "Missing the template file. See -t (--template)"))
 			return;
@@ -839,8 +843,9 @@ public class CLI {
 	/**
 	 * Run the requirements command
 	 * @throws GeneratorException 
+	 * @throws InterruptedException 
 	 */
-	private void RunCommandRequirements(CommandLine cl) throws GeneratorException {
+	private void RunCommandRequirements(CommandLine cl) throws GeneratorException, InterruptedException {
 		if (helpNeeded("requirements", !cl.hasOption("f"), "Missing the input graphml file (folder), See -f (--input_graphml)"))
 			return;
 
@@ -852,8 +857,9 @@ public class CLI {
 	/**
 	 * Run the methods command
 	 * @throws GeneratorException 
+	 * @throws InterruptedException 
 	 */
-	private void RunCommandMethods(CommandLine cl) throws GeneratorException {
+	private void RunCommandMethods(CommandLine cl) throws GeneratorException, InterruptedException {
 		if (helpNeeded("methods", !cl.hasOption("f"), "Missing the input graphml file (folder), See -f (--input_graphml)"))
 			return;
 
@@ -880,8 +886,9 @@ public class CLI {
 	 * @throws GeneratorException 
 	 * @throws IOException 
 	 * @throws JDOMException
+	 * @throws InterruptedException 
 	 */
-	private void RunCommandXml(CommandLine cl) throws StopConditionException, GeneratorException, IOException, JDOMException {
+	private void RunCommandXml(CommandLine cl) throws StopConditionException, GeneratorException, IOException, JDOMException, InterruptedException {
 		if (helpNeeded("xml", !cl.hasOption("f"), "Missing the input xml file, See  option -f"))
 			return;
 
@@ -900,8 +907,9 @@ public class CLI {
 	 * @throws GeneratorException 
 	 * @throws IOException 
 	 * @throws JDOMException 
+	 * @throws InterruptedException 
 	 */
-	private void RunCommandSoap(CommandLine cl) throws StopConditionException, GeneratorException, IOException, JDOMException {
+	private void RunCommandSoap(CommandLine cl) throws StopConditionException, GeneratorException, IOException, JDOMException, InterruptedException {
 		String port = null;
 		String nicAddr = null;
 		if (cl.hasOption("p")) {

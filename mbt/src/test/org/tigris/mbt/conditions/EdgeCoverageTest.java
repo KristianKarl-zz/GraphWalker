@@ -47,7 +47,7 @@ public class EdgeCoverageTest extends TestCase {
 		mbt.setCondition(new EdgeCoverage());
 	}
 
-	public void testFulfillment() throws StopConditionException, GeneratorException {
+	public void testFulfillment() throws StopConditionException, GeneratorException, InterruptedException {
 		ModelBasedTesting mbt = ModelBasedTesting.getInstance();
 		StopCondition condition = new EdgeCoverage();
 		mbt.setCondition(condition);
@@ -62,7 +62,7 @@ public class EdgeCoverageTest extends TestCase {
 		assertEquals((double) 2 / 2, condition.getFulfilment(), 0.01);
 	}
 
-	public void testIsFulfilled() throws StopConditionException, GeneratorException {
+	public void testIsFulfilled() throws StopConditionException, GeneratorException, InterruptedException {
 		ModelBasedTesting mbt = ModelBasedTesting.getInstance();
 		StopCondition condition = new EdgeCoverage();
 		mbt.setCondition(condition);

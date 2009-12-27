@@ -15,9 +15,12 @@ public class NonOptimizedShortestPath extends RandomPathGenerator {
 	static Logger logger = Util.setupLogger(NonOptimizedShortestPath.class);
 	private List<Edge> dijkstraShortestPath;
 
-	public String[] getNext() {
+	public String[] getNext() throws InterruptedException {
 		Util.AbortIf(!hasNext(), "Finished");
 
+		if (Thread.interrupted()) {
+	    throw new InterruptedException();
+		}
 		Edge edge = null;
 		do {
 			if (setDijkstraPath() == false) {

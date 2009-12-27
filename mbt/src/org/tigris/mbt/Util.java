@@ -264,8 +264,9 @@ public class Util {
 	 * @throws GeneratorException
 	 * @throws IOException 
 	 * @throws JDOMException 
+	 * @throws InterruptedException 
 	 */
-	public static ModelBasedTesting loadMbtAsWSFromXml(String fileName) throws StopConditionException, GeneratorException, IOException, JDOMException {
+	public static ModelBasedTesting loadMbtAsWSFromXml(String fileName) throws StopConditionException, GeneratorException, IOException, JDOMException, InterruptedException {
 		return loadXml(fileName, true, false);
 	}
 
@@ -281,8 +282,9 @@ public class Util {
 	 * @throws GeneratorException
 	 * @throws IOException 
 	 * @throws JDOMException 
+	 * @throws InterruptedException 
 	 */
-	public static ModelBasedTesting loadMbtFromXml(String fileName, boolean dryRun) throws StopConditionException, GeneratorException, IOException, JDOMException {
+	public static ModelBasedTesting loadMbtFromXml(String fileName, boolean dryRun) throws StopConditionException, GeneratorException, IOException, JDOMException, InterruptedException {
 		return loadXml(fileName, false, dryRun);
 	}
 
@@ -296,8 +298,9 @@ public class Util {
 	 * @throws GeneratorException
 	 * @throws IOException 
 	 * @throws JDOMException 
+	 * @throws InterruptedException 
 	 */
-	public static ModelBasedTesting loadMbtFromXml(String fileName) throws StopConditionException, GeneratorException, IOException, JDOMException {
+	public static ModelBasedTesting loadMbtFromXml(String fileName) throws StopConditionException, GeneratorException, IOException, JDOMException, InterruptedException {
 		return loadXml(fileName, false, false);
 	}
 
@@ -315,10 +318,11 @@ public class Util {
 	 * @throws GeneratorException
 	 * @throws IOException 
 	 * @throws JDOMException 
+	 * @throws InterruptedException 
 	 */
 	@SuppressWarnings("unchecked")
 	private static ModelBasedTesting loadXml(String fileName, boolean runningSoapServices, boolean dryRun) throws StopConditionException,
-			GeneratorException, IOException, JDOMException {
+			GeneratorException, IOException, JDOMException, InterruptedException {
 		final ModelBasedTesting mbt = ModelBasedTesting.getInstance();
 		mbt.reset();
 		mbt.setDryRun(dryRun);
