@@ -36,7 +36,7 @@ public class CombinedPathGeneratorTest extends TestCase {
 		Util.addEdgeToGraph(graph, v1, v2, "E1", null, null, null);
 	}
 
-	public void testCodeList() {
+	public void testCodeList() throws InterruptedException {
 		FiniteStateMachine FSM = new FiniteStateMachine(graph);
 
 		String[] template = { "", "{EDGE_VERTEX}: {LABEL}", "" };

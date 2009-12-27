@@ -25,7 +25,7 @@ public class A_StarPathGenerator extends PathGenerator {
 		super.setMachine(machine);
 	}
 
-	public String[] getNext() {
+	public String[] getNext() throws InterruptedException {
 		Util.AbortIf(!hasNext(), "Finished");
 		if (lastVertex == null || lastVertex != getMachine().getCurrentVertex() || preCalculatedPath == null || preCalculatedPath.size() == 0) {
 			boolean oldCalculatingPathValue = getMachine().isCalculatingPath();
@@ -55,7 +55,7 @@ public class A_StarPathGenerator extends PathGenerator {
 	}
 
 	@SuppressWarnings("unchecked")
-	private Stack<Edge> a_star() {
+	private Stack<Edge> a_star() throws InterruptedException {
 		Vector<String> closed = new Vector<String>();
 
 		PriorityQueue<WeightedPath> a_starPath = new PriorityQueue<WeightedPath>(10, new Comparator<WeightedPath>() {
@@ -80,6 +80,10 @@ public class A_StarPathGenerator extends PathGenerator {
 		}
 		double maxWeight = 0;
 		while (a_starPath.size() > 0) {
+			if (Thread.interrupted()) {
+		    throw new InterruptedException();
+			}
+
 			WeightedPath path = (WeightedPath) a_starPath.poll();
 			if (path.getWeight() > maxWeight)
 				maxWeight = path.getWeight();

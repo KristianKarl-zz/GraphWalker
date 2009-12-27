@@ -53,7 +53,7 @@ public class RequirementCoverageTest extends TestCase {
 		mbt.setCondition(new RequirementCoverage());
 	}
 
-	public void testFulfillment() throws GeneratorException {
+	public void testFulfillment() throws GeneratorException, InterruptedException {
 		ModelBasedTesting mbt = ModelBasedTesting.getInstance();
 		StopCondition condition = new RequirementCoverage();
 		mbt.setCondition(condition);
@@ -68,7 +68,7 @@ public class RequirementCoverageTest extends TestCase {
 		assertEquals((double) 4 / 4, condition.getFulfilment(), 0.01);
 	}
 
-	public void testIsFulfilled() throws GeneratorException {
+	public void testIsFulfilled() throws GeneratorException, InterruptedException {
 		ModelBasedTesting mbt = ModelBasedTesting.getInstance();
 		StopCondition condition = new RequirementCoverage();
 		mbt.setCondition(condition);

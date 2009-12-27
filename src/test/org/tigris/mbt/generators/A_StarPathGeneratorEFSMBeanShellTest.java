@@ -45,7 +45,7 @@ public class A_StarPathGeneratorEFSMBeanShellTest extends TestCase {
 		e0 = e1 = e2 = e3 = null;
 	}
 
-	public void test_EFSM_StateStop() {
+	public void test_EFSM_StateStop() throws InterruptedException {
 		PathGenerator pathGenerator = new A_StarPathGenerator();
 		pathGenerator.setStopCondition(new ReachedVertex("V1/x=3;y=\\[2, 3, 3\\];"));
 		pathGenerator.setMachine(new ExtendedFiniteStateMachine(graph, false));
@@ -82,7 +82,7 @@ public class A_StarPathGeneratorEFSMBeanShellTest extends TestCase {
 
 	}
 
-	public void test_EFSM_EdgeStop() {
+	public void test_EFSM_EdgeStop() throws InterruptedException {
 		PathGenerator pathGenerator = new A_StarPathGenerator();
 		pathGenerator.setStopCondition(new ReachedEdge("E2"));
 		pathGenerator.setMachine(new ExtendedFiniteStateMachine(graph, false));

@@ -45,7 +45,7 @@ public class A_StarPathGeneratorFSMTest extends TestCase {
 		e0 = e1 = e2 = e3 = null;
 	}
 
-	public void test_FSM_StateStop() {
+	public void test_FSM_StateStop() throws InterruptedException {
 		PathGenerator pathGenerator = new A_StarPathGenerator();
 		pathGenerator.setStopCondition(new ReachedVertex("V2"));
 		pathGenerator.setMachine(new FiniteStateMachine(graph));
@@ -60,7 +60,7 @@ public class A_StarPathGeneratorFSMTest extends TestCase {
 		assertFalse(pathGenerator.hasNext());
 	}
 
-	public void test_FSM_EdgeStop() {
+	public void test_FSM_EdgeStop() throws InterruptedException {
 		PathGenerator pathGenerator = new A_StarPathGenerator();
 		pathGenerator.setStopCondition(new ReachedEdge("E2"));
 		pathGenerator.setMachine(new FiniteStateMachine(graph));

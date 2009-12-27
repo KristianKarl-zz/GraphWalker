@@ -46,7 +46,7 @@ public class StateCoverageTest extends TestCase {
 		mbt.setCondition(new VertexCoverage());
 	}
 
-	public void testFulfillment() throws StopConditionException, GeneratorException {
+	public void testFulfillment() throws StopConditionException, GeneratorException, InterruptedException {
 		ModelBasedTesting mbt = ModelBasedTesting.getInstance();
 		StopCondition condition = new VertexCoverage();
 		mbt.setCondition(condition);
@@ -61,7 +61,7 @@ public class StateCoverageTest extends TestCase {
 		assertEquals((double) 3 / 3, condition.getFulfilment(), 0.01);
 	}
 
-	public void testIsFulfilled() throws StopConditionException, GeneratorException {
+	public void testIsFulfilled() throws StopConditionException, GeneratorException, InterruptedException {
 		ModelBasedTesting mbt = ModelBasedTesting.getInstance();
 		StopCondition condition = new VertexCoverage();
 		mbt.setCondition(condition);

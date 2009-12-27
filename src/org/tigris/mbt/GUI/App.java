@@ -70,10 +70,8 @@ import edu.uci.ics.jung.algorithms.layout.SpringLayout2;
 import edu.uci.ics.jung.algorithms.layout.StaticLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.visualization.Layer;
-import edu.uci.ics.jung.visualization.VisualizationServer;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.DefaultModalGraphMouse;
-import edu.uci.ics.jung.visualization.control.ScalingControl;
 import edu.uci.ics.jung.visualization.layout.LayoutTransition;
 import edu.uci.ics.jung.visualization.picking.ShapePickSupport;
 import edu.uci.ics.jung.visualization.renderers.Renderer;
@@ -432,6 +430,7 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 			try {
 				log.debug("GUI is starting to traverse the model");
 				ModelBasedTesting.getInstance().executePath();
+			} catch (InterruptedException e) {
 			} catch (GuiStoppedExecution e) {
 			} catch (Exception e) {
 				Util.logStackTraceToError(e);

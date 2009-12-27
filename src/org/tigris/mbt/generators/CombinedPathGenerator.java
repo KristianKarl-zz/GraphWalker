@@ -63,7 +63,7 @@ public class CombinedPathGenerator extends PathGenerator {
 		return nextIsAvailable;
 	}
 
-	public String[] getNext() {
+	public String[] getNext() throws InterruptedException {
 		String[] retur = { "", "" };
 
 		boolean nextIsAvailable = false;

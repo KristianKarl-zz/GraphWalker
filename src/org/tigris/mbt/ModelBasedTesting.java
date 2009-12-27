@@ -374,7 +374,7 @@ public class ModelBasedTesting {
 		return getGenerator().hasNext();
 	}
 
-	public String[] getNextStep() {
+	public String[] getNextStep() throws InterruptedException {
 		if (isUseGUI()) {
 
 			while (true) {
@@ -386,17 +386,17 @@ public class ModelBasedTesting {
 				    && App.getInstance().getStatus().isPaused() == false) {
 					break;
 				}
-				try {
-					Thread.sleep(500);
-				} catch (InterruptedException e) {
-					break;
-				}
+				Thread.sleep(500);
 			}
 		}
 
+		if (Thread.interrupted()) {
+	    throw new InterruptedException();
+		}
 		if (this.machine == null) {
 			getMachine();
 		}
+
 		getStatisticsManager();
 		Util.AbortIf(getGenerator() == null, "No generator has been defined!");
 
@@ -536,11 +536,11 @@ public class ModelBasedTesting {
 		}
 	}
 
-	public void interractivePath() {
+	public void interractivePath() throws InterruptedException {
 		interractivePath(System.in);
 	}
 
-	public void interractivePath(InputStream in) {
+	public void interractivePath(InputStream in) throws InterruptedException {
 		Vector<String> stepPair = new Vector<String>();
 		String req = "";
 
@@ -635,7 +635,7 @@ public class ModelBasedTesting {
 		return javaExecutorClass;
 	}
 
-	public void executePath() {
+	public void executePath() throws InterruptedException {
 		if (getJavaExecutorClass() != null) {
 			logger.debug("Start executing, using the java class: " + getJavaExecutorClass());
 			executePath(getJavaExecutorClass());
@@ -662,7 +662,7 @@ public class ModelBasedTesting {
 
 	}
 
-	public void executePath(String strClassName) {
+	public void executePath(String strClassName) throws InterruptedException {
 		if (getJavaExecutorClass() == null) {
 			setJavaExecutorClass(strClassName);
 		}
@@ -696,13 +696,13 @@ public class ModelBasedTesting {
 		executePath(clsClass, null);
 	}
 
-	public void executePath(Class<?> clsClass) {
+	public void executePath(Class<?> clsClass) throws InterruptedException {
 		if (clsClass == null)
 			throw new RuntimeException("Needed execution class is missing as parameter.");
 		executePath(clsClass, null);
 	}
 
-	public void executePath(Object objInstance) {
+	public void executePath(Object objInstance) throws InterruptedException {
 		if (objInstance == null)
 			throw new RuntimeException("Needed execution instance is missing as parameter.");
 		if (isUseGUI()) {
@@ -712,7 +712,7 @@ public class ModelBasedTesting {
 		executePath(null, objInstance);
 	}
 
-	public void executePath(Class<?> clsClass, Object objInstance) {
+	public void executePath(Class<?> clsClass, Object objInstance) throws InterruptedException {
 		if (this.machine == null)
 			getMachine();
 
@@ -872,11 +872,11 @@ public class ModelBasedTesting {
 		}
 	}
 
-	public void writePath() {
+	public void writePath() throws InterruptedException {
 		writePath(System.out);
 	}
 
-	public void writePath(Vector<String[]> testSequence) {
+	public void writePath(Vector<String[]> testSequence) throws InterruptedException {
 		if (this.machine == null) {
 			getMachine();
 		}
@@ -910,7 +910,7 @@ public class ModelBasedTesting {
 	  return parsedStr;
   }
 
-	public void writePath(PrintStream out) {
+	public void writePath(PrintStream out) throws InterruptedException {
 		if (this.machine == null) {
 			getMachine();
 		}

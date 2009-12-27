@@ -47,7 +47,7 @@ public class ReachedEdgeTest extends TestCase {
 		mbt.setCondition(new ReachedEdge("E1"));
 	}
 
-	public void testFulfillment() throws GeneratorException {
+	public void testFulfillment() throws GeneratorException, InterruptedException {
 		ModelBasedTesting mbt = ModelBasedTesting.getInstance();
 		StopCondition condition = new ReachedEdge("E1");
 		mbt.setCondition(condition);
@@ -62,7 +62,7 @@ public class ReachedEdgeTest extends TestCase {
 		assertEquals((double) 1, condition.getFulfilment(), 0.01);
 	}
 
-	public void testIsFulfilled() throws GeneratorException {
+	public void testIsFulfilled() throws GeneratorException, InterruptedException {
 		ModelBasedTesting mbt = ModelBasedTesting.getInstance();
 		StopCondition condition = new ReachedEdge("E1");
 		mbt.setCondition(condition);

@@ -20,7 +20,7 @@ public class RandomPathGeneratorTest extends TestCase {
 		super.setUp();
 	}
 
-	public void test_WeightedRandomGeneration() throws StopConditionException {
+	public void test_WeightedRandomGeneration() throws StopConditionException, InterruptedException {
 		logger.info("TEST: test_WeightedRandomGeneration");
 		logger.info("=======================================================================");
 		GraphML gml = new GraphML();
@@ -44,7 +44,7 @@ public class RandomPathGeneratorTest extends TestCase {
 		logger.debug("==============================");
 	}
 
-	public void test_RandomGeneration() throws StopConditionException {
+	public void test_RandomGeneration() throws StopConditionException, InterruptedException {
 		logger.info("TEST: test_RandomGeneration");
 		logger.info("=======================================================================");
 		GraphML gml = new GraphML();
