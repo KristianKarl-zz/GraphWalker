@@ -47,12 +47,14 @@ public class ReachedVertex extends StopCondition {
 		if (getMachine() instanceof ExtendedFiniteStateMachine) {
 			String currentVertex = getMachine().getCurrentVertexName();
 			String currentSubState = "";
-			if (currentVertex.contains("/")) {
-				currentSubState = currentVertex.split("/", 2)[1];
-				Pattern actionPattern = Pattern.compile(this.subState);
-				Matcher actionMatcher = actionPattern.matcher(currentSubState);
-				if (actionMatcher.find()) {
-					return 1;
+			if ( vertexName.equals(Vertex.getLabel(currentVertex))) {
+				if (currentVertex.contains("/")) {
+					currentSubState = currentVertex.split("/", 2)[1];
+					Pattern actionPattern = Pattern.compile(this.subState);
+					Matcher actionMatcher = actionPattern.matcher(currentSubState);
+					if (actionMatcher.find()) {
+						return 1;
+					}
 				}
 			}
 			return 0;
