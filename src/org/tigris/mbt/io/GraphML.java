@@ -18,6 +18,7 @@ import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 import org.tigris.mbt.Keywords;
 import org.tigris.mbt.Util;
+import org.tigris.mbt.graph.AbstractElement;
 import org.tigris.mbt.graph.Edge;
 import org.tigris.mbt.graph.Graph;
 import org.tigris.mbt.graph.Vertex;
@@ -150,6 +151,7 @@ public class GraphML extends AbstractModelHandler {
 							org.jdom.Element nodeLabel = (org.jdom.Element) o2;
 							logger.debug("  Full name: '" + nodeLabel.getQualifiedName() + "'");
 							logger.debug("  Name: '" + nodeLabel.getTextTrim() + "'");
+							String str = nodeLabel.getTextTrim();
 
 							Vertex v = new Vertex();
 							graph.addVertex(v);
@@ -158,99 +160,19 @@ public class GraphML extends AbstractModelHandler {
 							v.setIdKey(element.getAttributeValue("id"));
 							v.setVisitedKey(new Integer(0));
 							v.setFileKey(fileName);
-							v.setFullLabelKey(nodeLabel.getTextTrim());
+							v.setFullLabelKey(str);
 							v.setIndexKey(new Integer(getNewVertexAndEdgeIndex()));
-
-							String str = nodeLabel.getTextTrim();
-							Pattern p = Pattern.compile("(.*)", Pattern.MULTILINE);
-							Matcher m = p.matcher(str);
-							String label;
-							if (m.find()) {
-								label = m.group(1);
-								if (label.length() <= 0) {
-									throw new RuntimeException("Vertex is missing its label in file: '" + fileName + "'");
-								}
-								if (label.matches(".*[\\s].*")) {
-									throw new RuntimeException("Vertex has a label '" + label + "', containing whitespaces in file: '" + fileName + "'");
-								}
-								if (Keywords.isKeyWord(label)) {
-									throw new RuntimeException("Vertex has a label '" + label + "', which is a reserved keyword, in file: '" + fileName + "'");
-								}
-								v.setLabelKey(label);
-							} else {
-								throw new RuntimeException("Label must be defined in file: '" + fileName + "'");
+							v.setLabelKey(Vertex.getLabel(str));
+							v.setMergeKey(AbstractElement.isMerged(str));
+							v.setNoMergeKey(AbstractElement.isNoMerge(str));
+							v.setBlockedKey(AbstractElement.isBlocked(str));
+							
+							Integer index = AbstractElement.getIndex(str);
+							if  ( index != 0 ) {
+								v.setIndexKey( index );
 							}
-							logger.debug("  Added vertex: '" + v.getLabelKey() + "', with id: " + v.getIndexKey());
-
-							// If merge is defined, find it...
-							// If defined, it means that the node will be merged with all
-							// other nodes wit the same name,
-							// but not replaced by any subgraphs
-							p = Pattern.compile("\\n(MERGE)", Pattern.MULTILINE);
-							m = p.matcher(str);
-							if (m.find()) {
-								v.setMergeKey(true);
-								logger.debug("  Found MERGE for vertex: " + label);
-							}
-
-							// If no merge is defined, find it...
-							// If defined, it means that when merging graphs, this specific
-							// vertex will not be merged
-							// or replaced by any subgraphs
-							p = Pattern.compile("\\n(NO_MERGE)", Pattern.MULTILINE);
-							m = p.matcher(str);
-							if (m.find()) {
-								v.setNoMergeKey(true);
-								logger.debug("  Found NO_MERGE for vertex: " + label);
-							}
-
-							// If BLOCKED is defined, find it...
-							// If defined, it means that this vertex will not be added to the
-							// graph
-							// Sometimes it can be useful during testing to mark vertcies as
-							// BLOCKED
-							// due to bugs in the system you test. When the bug is removed,
-							// the BLOCKED
-							// tag can be removed.
-							p = Pattern.compile("\\n(BLOCKED)", Pattern.MULTILINE);
-							m = p.matcher(str);
-							if (m.find()) {
-								logger.debug("  Found BLOCKED. This vetex will be removed from the graph: " + label);
-								v.setBlockedKey(true);
-							}
-
-							// If INDEX is defined, find it...
-							// If defined, it means that this vertex has already a unique id
-							// gnerated
-							// by mbt before, so we use this instead..
-							p = Pattern.compile("\\n(INDEX=(.*))", Pattern.MULTILINE);
-							m = p.matcher(str);
-							if (m.find()) {
-								String index_key = m.group(2);
-								logger.debug("  Found INDEX. This vertex will use the INDEX key: " + index_key);
-								v.setIndexKey(new Integer(index_key));
-							}
-
-							// If the REQTAG is defined, find it...
-							p = Pattern.compile("\\n(REQTAG=(.*))", Pattern.MULTILINE);
-							m = p.matcher(str);
-							if (m.find()) {
-								String value = m.group(2);
-								p = Pattern.compile("([^,]+)", Pattern.MULTILINE);
-								m = p.matcher(value);
-								String reqtags = "";
-								while (m.find()) {
-									String reqtag = m.group(1);
-									reqtag = reqtag.trim();
-									logger.debug("  Found REQTAG: " + reqtag);
-									if (reqtags.length() == 0) {
-										reqtags = reqtag;
-									} else {
-										reqtags += "," + reqtag;
-									}
-								}
-								v.setReqTagKey(reqtags);
-							}
+							
+							v.setReqTagKey(AbstractElement.getReqTags(str));
 						}
 					}
 
@@ -380,143 +302,24 @@ public class GraphML extends AbstractModelHandler {
 						// optional.
 
 						String str = edgeLabel.getText();
+						
 						e.setFullLabelKey(str);
-						Pattern p = Pattern.compile("(.*)", Pattern.MULTILINE);
-						Matcher m = p.matcher(str);
-						String label = null;
-						if (m.find()) {
-							label = m.group(1);
-
-							// Look for a Guard
-							Pattern firstLinePattern = Pattern.compile("\\[(.*)\\]\\s*/|\\[(.*)\\]\\s*$", Pattern.MULTILINE);
-							Matcher firstLineMatcher = firstLinePattern.matcher(label);
-							if (firstLineMatcher.find()) {
-								// Since we have 2 groups in the pattern, we have to check which
-								// one is valid.
-								String guard = firstLineMatcher.group(1);
-								if (guard == null) {
-									guard = firstLineMatcher.group(2);
-								}
-								e.setGuardKey(guard);
-								logger.debug(" Found guard = '" + guard + "' for edge id: " + edgeLabel.getQualifiedName());
-							}
-
-							// Look for Actions
-							// To simplify this we wash the string by removing the guard
-							// from a temporary string and make the search.
-							String washedLabel = label.replace(e.getGuardKey(), "");
-							Pattern actionPattern = Pattern.compile("/\\s*(.*)\\s*$", Pattern.MULTILINE);
-							Matcher actionMatcher = actionPattern.matcher(washedLabel);
-							if (actionMatcher.find()) {
-								String actions = actionMatcher.group(1);
-								e.setActionsKey(actions);
-								logger.debug(" Found actions: '" + actions + "' for edge id: " + edgeLabel.getQualifiedName());
-							}
-
-							// Look for the Label and Parameter
-							firstLinePattern = Pattern.compile("^(\\w+)\\s?([^/^\\[]+)?", Pattern.MULTILINE);
-							firstLineMatcher = firstLinePattern.matcher(label);
-							if (firstLineMatcher.find()) {
-								String label_key = firstLineMatcher.group(1);
-								if (Keywords.isKeyWord(label_key)) {
-									throw new RuntimeException("Edge has a label '" + label + "', which is a reserved keyword, in file: '" + fileName + "'");
-								}
-								e.setLabelKey(label_key);
-								logger.debug(" Found label = '" + label_key + "' for edge id: " + edgeLabel.getQualifiedName());
-
-								String parameter = firstLineMatcher.group(2);
-								if (parameter != null) {
-									parameter = parameter.trim();
-									e.setParameterKey(parameter);
-									logger.debug(" Found parameter = '" + parameter + "' for edge id: " + edgeLabel.getQualifiedName());
-								}
-							}
-						} else {
-							throw new RuntimeException("Label for edge must be defined in file '" + fileName + "'");
+						String[] guardAndAction =  Edge.getGuardAndActions(str);
+						String[] labelAndParameter =  Edge.getLabelAndParameter(str);
+						e.setGuardKey(guardAndAction[0]);
+						e.setActionsKey(guardAndAction[1]);
+						e.setLabelKey(labelAndParameter[0]);
+						e.setParameterKey(labelAndParameter[1]);
+						e.setWeightKey(Edge.getWeight(str));
+						e.setBlockedKey(AbstractElement.isBlocked(str));
+						e.setBacktrackKey(Edge.isBacktrack(str));
+						
+						Integer index = AbstractElement.getIndex(str);
+						if  ( index != 0 ) {
+							e.setIndexKey(index);
 						}
-
-						// If weight is defined, find it...
-						// weight must be associated with a value, which depicts the
-						// probability for the edge
-						// to be executed.
-						// A value of 0.05 is the same as 5% chance of going down this road.
-						p = Pattern.compile("\\n(weight\\s*=\\s*(.*))", Pattern.MULTILINE);
-						m = p.matcher(str);
-						if (m.find()) {
-							Float weight;
-							String value = m.group(2);
-							try {
-								weight = Float.valueOf(value.trim());
-								logger.debug("  Found weight= " + weight + " for edge: " + label);
-							} catch (NumberFormatException error) {
-								throw new RuntimeException("For label: " + label + ", weight is not a correct float value: " + error.toString()
-								    + " In file '" + fileName + "'");
-							}
-							e.setWeightKey(weight);
-						}
-
-						// If BLOCKED is defined, find it...
-						// If defined, it means that this edge will not be added to the
-						// graph
-						// Sometimes it can be useful during testing to mark edges as
-						// BLOCKED
-						// due to bugs in the system you test. When the bug is removed, the
-						// BLOCKED
-						// tag can be removed.
-						p = Pattern.compile("\\n(BLOCKED)", Pattern.MULTILINE);
-						m = p.matcher(str);
-						if (m.find()) {
-							logger.debug("  Found BLOCKED. This edge will be removed from the graph: " + label);
-							e.setBlockedKey(true);
-						}
-
-						// If BACKTRACK is defined, find it...
-						// If defined, it means that executing this edge may not lead to the
-						// desired
-						// vertex. So, if that happens, the model gives the user a chance to
-						// try an
-						// other edge from the previous vertex (the source vertex of the
-						// edge defined
-						// with BACKTRACK)
-						p = Pattern.compile("\\n(BACKTRACK)", Pattern.MULTILINE);
-						m = p.matcher(str);
-						if (m.find()) {
-							logger.debug("  Found BACKTRACK for edge: " + label);
-							e.setBacktrackKey(true);
-						}
-
-						// If INDEX is defined, find it...
-						// If defined, it means that this edge has already a unique id
-						// generated
-						// by mbt before, so we use this instead..
-						p = Pattern.compile("\\n(INDEX=(.*))", Pattern.MULTILINE);
-						m = p.matcher(str);
-						if (m.find()) {
-							String index_key = m.group(2);
-							logger.debug("  Found INDEX. This edge will use the INDEX key: " + index_key);
-							e.setIndexKey(new Integer(index_key));
-						}
-
-						// If the REQTAG is defined, find it...
-						p = Pattern.compile("\\n(REQTAG=(.*))", Pattern.MULTILINE);
-						m = p.matcher(str);
-						if (m.find()) {
-							String value = m.group(2);
-							p = Pattern.compile("([^,]+)", Pattern.MULTILINE);
-							m = p.matcher(value);
-							String reqtags = "";
-							while (m.find()) {
-								String reqtag = m.group(1);
-								reqtag = reqtag.trim();
-								logger.debug("  Found REQTAG: " + reqtag);
-								if (reqtags.length() == 0) {
-									reqtags = reqtag;
-								} else {
-									reqtags += "," + reqtag;
-								}
-							}
-							e.setReqTagKey(reqtags);
-						}
+						
+						e.setReqTagKey(AbstractElement.getReqTags(str));
 					}
 					e.setVisitedKey(new Integer(0));
 					logger.debug("  Added edge: '" + e.getLabelKey() + "', with id: " + e.getIndexKey());
@@ -538,13 +341,12 @@ public class GraphML extends AbstractModelHandler {
 					}
 				}
 			}
+		} catch (RuntimeException e) {
+			throw new RuntimeException("Could not parse file: '" + fileName + "'. " + e.getMessage());
 		} catch (JDOMException e) {
-			Util.logStackTraceToError(e);
-			logger.error(e);
-			throw new RuntimeException("Could not parse file: '" + fileName + "'");
+			throw new RuntimeException("Could not parse file: '" + fileName + "'. " + e.getMessage());
 		} catch (IOException e) {
-			Util.logStackTraceToError(e);
-			throw new RuntimeException("Could not parse file: '" + fileName + "'");
+			throw new RuntimeException("Could not parse file: '" + fileName + "'. " + e.getMessage());
 		}
 
 		logger.debug("Finished parsing graph: " + graph);
