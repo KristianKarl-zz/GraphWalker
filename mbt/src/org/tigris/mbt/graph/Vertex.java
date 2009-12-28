@@ -2,6 +2,12 @@ package org.tigris.mbt.graph;
 
 import java.awt.Color;
 import java.awt.geom.Point2D;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.apache.log4j.Logger;
+import org.tigris.mbt.Keywords;
+import org.tigris.mbt.Util;
 
 public class Vertex extends AbstractElement {
 
@@ -73,4 +79,37 @@ public class Vertex extends AbstractElement {
 	public void setMotherStartVertexKey(String motherStartVertexKey) {
 		this.motherStartVertexKey = motherStartVertexKey;
 	}
+
+	/**
+	 * @param str
+	 * @return
+	 */
+	static public String getLabel( String str ) {
+		Pattern p;
+		Matcher m;
+		String label = "";
+		if ( str.split("/").length > 1 ||
+				 str.split("\\[").length > 1 ) {
+			p = Pattern.compile("^(\\w+)\\s?([^/^\\[]+)?", Pattern.MULTILINE);
+		} else {
+			p = Pattern.compile("(.*)", Pattern.MULTILINE);			
+		}
+		m = p.matcher(str);
+		if (m.find()) {
+			label = m.group(1);
+			if (label.length() <= 0) {
+				throw new RuntimeException("Vertex is missing mandatory label");
+			}
+			if (label.matches(".*[\\s].*")) {
+				throw new RuntimeException("Label of vertex: '" + label + "', containing whitespaces");
+			}
+			if (Keywords.isKeyWord(label)) {
+				throw new RuntimeException("The label of vertex: '" + label + "', is a reserved keyword");
+			}
+		} else {
+			throw new RuntimeException("Label must be defined for vertex");
+		}
+		return label;
+	}
+	
 }

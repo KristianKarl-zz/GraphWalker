@@ -20,7 +20,7 @@ public class GraphMLTest extends TestCase {
 			ModelBasedTesting mbt = ModelBasedTesting.getInstance();
 			mbt.readGraph("graphml/efsm_lables/testMergeEFSM_Lables.graphml");
 		} catch (Exception e) {
-			System.err.println(e.getMessage());
+			System.out.println(e.getMessage());
 			fail(e.getMessage());
 		}
 	}
@@ -32,7 +32,7 @@ public class GraphMLTest extends TestCase {
 			mbt.readGraph("graphml/test23");
 			verifyIds(mbt.getGraph());
 		} catch (Exception e) {
-			System.err.println(e.getMessage());
+			System.out.println(e.getMessage());
 			fail(e.getMessage());
 		}
 	}
@@ -45,6 +45,7 @@ public class GraphMLTest extends TestCase {
 			fail("Missing error message");
 		} catch (RuntimeException e) {
 			String msg = e.getMessage();
+			System.out.println(msg);
 			assertTrue(msg
 			    .matches("Found 2 subgraphs using the same name: 'B', they are defined in files: '.*graphml.test09.(C|B).graphml', and :'.*graphml.test09.(B|C).graphml'"));
 		}
@@ -58,7 +59,8 @@ public class GraphMLTest extends TestCase {
 			fail("Missing error message");
 		} catch (RuntimeException e) {
 			String msg = e.getMessage();
-			assertTrue(msg.matches("Vertex is missing its label in file: '.*test10.B\\.graphml'"));
+			System.out.println(msg);
+			assertTrue(msg.matches("Could not parse file: '.*test10.B\\.graphml'. Vertex is missing mandatory label"));
 		}
 	}
 
@@ -71,6 +73,7 @@ public class GraphMLTest extends TestCase {
 			fail("Missing error message");
 		} catch (RuntimeException e) {
 			String msg = e.getMessage();
+			System.out.println(msg);
 			assertTrue(msg.matches("Found a subgraph containing a duplicate vertex with name: 'C', in file: '.*test11.C\\.graphml'"));
 		}
 	}
@@ -82,7 +85,7 @@ public class GraphMLTest extends TestCase {
 			ModelBasedTesting mbt = ModelBasedTesting.getInstance();
 			mbt.readGraph("graphml/test13");
 		} catch (RuntimeException e) {
-			System.err.println(e.getMessage());
+			System.out.println(e.getMessage());
 			fail(e.getMessage());
 		}
 	}
@@ -96,8 +99,9 @@ public class GraphMLTest extends TestCase {
 			fail("Missing error message");
 		} catch (RuntimeException e) {
 			String msg = e.getMessage();
+			System.out.println(msg);
 			assertTrue(msg
-			    .matches("Vertex has a label 'Containing a whitespace', containing whitespaces in file: '.*graphml.test14.C\\.graphml'"));
+			    .matches("Could not parse file: '.*graphml.test14.C\\.graphml'. Label of vertex: 'Containing a whitespace', containing whitespaces"));
 		}
 	}
 
@@ -110,6 +114,7 @@ public class GraphMLTest extends TestCase {
 			fail("Missing error message");
 		} catch (Exception e) {
 			String msg = e.getMessage();
+			System.out.println(msg);
 			assertTrue(msg.matches("Did not find a Start vertex with an out edge with a label."));
 		}
 	}
@@ -123,6 +128,7 @@ public class GraphMLTest extends TestCase {
 			fail("Missing error message");
 		} catch (Exception e) {
 			String msg = e.getMessage();
+			System.out.println(msg);
 			assertTrue(msg.matches("Only one Start vertex can exist in one file, see file 'graphml/test17/test17.graphml'"));
 		}
 	}
@@ -136,6 +142,7 @@ public class GraphMLTest extends TestCase {
 			fail("Missing error message");
 		} catch (Exception e) {
 			String msg = e.getMessage();
+			System.out.println(msg);
 			assertTrue(msg.matches("Only one Start vertex can exist in one file, see file 'graphml/test18/test18.graphml'"));
 		}
 	}
@@ -149,6 +156,7 @@ public class GraphMLTest extends TestCase {
 			fail("Missing error message");
 		} catch (Exception e) {
 			String msg = e.getMessage();
+			System.out.println(msg);
 			assertTrue(msg.matches("Only one Start vertex can exist in one file, see file 'graphml/test19/test19.graphml'"));
 		}
 	}
@@ -161,6 +169,7 @@ public class GraphMLTest extends TestCase {
 			fail("Missing error message");
 		} catch (Exception e) {
 			String msg = e.getMessage();
+			System.out.println(msg);
 			assertTrue(msg.matches("A Start vertex can only have one out edge, look in file: graphml/test20/test20.graphml"));
 		}
 	}
@@ -174,7 +183,7 @@ public class GraphMLTest extends TestCase {
 			assertTrue(mbt.getGraph().getEdges().size() == 16);
 			verifyIds(mbt.getGraph());
 		} catch (Exception e) {
-			System.err.println(e.getMessage());
+			System.out.println(e.getMessage());
 			fail(e.getMessage());
 		}
 	}
@@ -188,7 +197,7 @@ public class GraphMLTest extends TestCase {
 			assertTrue(mbt.getGraph().getEdges().size() == 55);
 			verifyIds(mbt.getGraph());
 		} catch (Exception e) {
-			System.err.println(e.getMessage());
+			System.out.println(e.getMessage());
 			fail(e.getMessage());
 		}
 	}
@@ -202,7 +211,7 @@ public class GraphMLTest extends TestCase {
 			assertTrue(mbt.getGraph().getVertices().size() == 7);
 			verifyIds(mbt.getGraph());
 		} catch (Exception e) {
-			System.err.println(e.getMessage());
+			System.out.println(e.getMessage());
 			fail(e.getMessage());
 		}
 	}
@@ -216,7 +225,7 @@ public class GraphMLTest extends TestCase {
 			assertTrue(mbt.getGraph().getVertices().size() == 8);
 			verifyIds(mbt.getGraph());
 		} catch (Exception e) {
-			System.err.println(e.getMessage());
+			System.out.println(e.getMessage());
 			fail(e.getMessage());
 		}
 	}
@@ -230,7 +239,7 @@ public class GraphMLTest extends TestCase {
 			assertTrue(mbt.getGraph().getVertices().size() == 788);
 			verifyIds(mbt.getGraph());
 		} catch (Exception e) {
-			System.err.println(e.getMessage());
+			System.out.println(e.getMessage());
 			fail(e.getMessage());
 		}
 	}
@@ -244,7 +253,7 @@ public class GraphMLTest extends TestCase {
 			assertTrue(mbt.getGraph().getVertices().size() == 8);
 			verifyIds(mbt.getGraph());
 		} catch (Exception e) {
-			System.err.println(e.getMessage());
+			System.out.println(e.getMessage());
 			fail(e.getMessage());
 		}
 	}
@@ -258,7 +267,7 @@ public class GraphMLTest extends TestCase {
 			assertTrue(mbt.getGraph().getVertices().size() == 9);
 			verifyIds(mbt.getGraph());
 		} catch (Exception e) {
-			System.err.println(e.getMessage());
+			System.out.println(e.getMessage());
 			fail(e.getMessage());
 		}
 	}

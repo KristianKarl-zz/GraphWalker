@@ -182,9 +182,23 @@ public class Util {
 				condition = new EdgeCoverage(Double.parseDouble(conditionValue) / 100);
 				break;
 			case Keywords.CONDITION_REACHED_EDGE:
+				if ( conditionValue == null || conditionValue.isEmpty() ) {
+					throw new StopConditionException("The name of reached edge must not be empty");
+				}
+				if ( ModelBasedTesting.getInstance().getMachine().findEdge( Edge.getLabelAndParameter(conditionValue)[0] ) == null ) {
+					throw new StopConditionException("The name of reached edge: '" + conditionValue + 
+							                             "' does not exists in the model.");
+				}
 				condition = new ReachedEdge(conditionValue);
 				break;
 			case Keywords.CONDITION_REACHED_VERTEX:
+				if ( conditionValue == null || conditionValue.isEmpty() ) {
+					throw new StopConditionException("The name of reached vertex must not be empty");
+				}
+				if ( ModelBasedTesting.getInstance().getMachine().findVertex( Vertex.getLabel(conditionValue) ) == null ) {
+					throw new StopConditionException("The name of reached vertex: '" + conditionValue + 
+							                             "' does not exists in the model.");
+				}
 				condition = new ReachedVertex(conditionValue);
 				break;
 			case Keywords.CONDITION_VERTEX_COVERAGE:

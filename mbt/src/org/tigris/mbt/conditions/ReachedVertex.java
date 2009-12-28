@@ -37,7 +37,6 @@ public class ReachedVertex extends StopCondition {
 	}
 
 	public ReachedVertex(String vertexName) {
-
 		String[] vertex = vertexName.split("/", 2);
 		this.vertexName = vertex[0];
 		this.subState = (vertex.length > 1 ? vertex[1] : "");

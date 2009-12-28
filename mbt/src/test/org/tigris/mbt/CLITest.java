@@ -380,8 +380,9 @@ public class CLITest extends TestCase {
 		String args[] = { "methods", "-f", "graphml/test24" };
 		runCommand(args);
 		pattern = Pattern.compile(
-		    "Edge has a label 'BACKTRACK', which is a reserved keyword, in file: '.*graphml.test24.(Camera|Time).graphml'", Pattern.MULTILINE);
+		    "Could not parse file: '.*graphml.test24.(Camera|Time).graphml'. Edge has a label 'BACKTRACK', which is a reserved keyword", Pattern.MULTILINE);
 		matcher = pattern.matcher(errMsg);
+		System.out.println( errMsg );
 		assertTrue(matcher.find());
 	}
 
@@ -444,6 +445,7 @@ public class CLITest extends TestCase {
 	public void testReachedVertexXML() {
 		String args[] = { "xml", "-f", "xml/ReachedVertex.xml" };
 		runCommand(args);
+		System.out.println( errMsg );
 		assertTrue("No error messages should occur.", errMsg.isEmpty());
 	}
 }
