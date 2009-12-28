@@ -418,14 +418,14 @@ public class CLI {
 		    .create("g"));
 		opt.addOption(OptionBuilder.isRequired().withArgName("file|folder")
 		    .withDescription("The file (or folder) containing graphml formatted files.").hasArg().withLongOpt("input_graphml").create("f"));
-		opt.addOption(OptionBuilder.withArgName("log-coverage").withDescription(
-		    "Prints the test coverage of the graph during execution every " + "<n>. The printout goes to the log file defined in "
+		opt.addOption(OptionBuilder.withArgName("seconds").withDescription(
+		    "Prints the test coverage of the graph during execution every <n second>. The printout goes to the log file defined in "
 		        + "mbt.properties, and only, if at least INFO level is set in " + "that same file.").hasArg().withLongOpt("log-coverage")
 		    .create("o"));
 		opt.addOption("c", "class_name", true, "Optional class name to use for test execution.");
-		opt.addOption("t", "report-template", true, "Optional report template to use.");
-		opt.addOption("r", "report-output", true, "Optional report filename to save report to.");
-		opt.addOption("w", "weighted", false, "Use weighted values if they exists in the model, and the generator is RANDOM.");
+		opt.addOption("t", "report-template", true, "Optional report template to use. (Also requires option -r) (To be better documented)");
+		opt.addOption("r", "report-output", true, "Optional report filename to save report to. (Also requires option -t)  (To be better documented)");
+		opt.addOption("w", "weighted", false, "Use weighted values if they exist in the model, and the generator is RANDOM.");
 		opt.addOption("d", "dry-run", false, "Will execute a dry-run of the model. Dialog will pop up for every edge and vertex.");
 	}
 
@@ -455,12 +455,12 @@ public class CLI {
 		    .create("g"));
 		opt.addOption(OptionBuilder.isRequired().withArgName("file|folder")
 		    .withDescription("The file (or folder) containing graphml formatted files.").hasArg().create("f"));
-		opt.addOption(OptionBuilder.withArgName("log-coverage").withDescription(
-		    "Prints the test coverage of the graph during execution every " + "<n>. The printout goes to the log file defined in "
+		opt.addOption(OptionBuilder.withArgName("seconds").withDescription(
+		    "Prints the test coverage of the graph during execution every <n second>. The printout goes to the log file defined in "
 		        + "mbt.properties, and only, if at least INFO level is set in " + "that same file.").hasArg().create("o"));
-		opt.addOption("t", "report-template", true, "Optional report template to use.");
-		opt.addOption("r", "report-output", true, "Optional report filename to save report to.");
-		opt.addOption("w", "weighted", false, "Use weighted values if they exists in the model, and the generator is RANDOM.");
+		opt.addOption("t", "report-template", true, "Optional report template to use. (Also requires option -r) (To be better documented)");
+		opt.addOption("r", "report-output", true, "Optional report filename to save report to. (Also requires option -t)  (To be better documented)");
+		opt.addOption("w", "weighted", false, "Use weighted values if they exist in the model, and the generator is RANDOM.");
 	}
 
 	/**
@@ -488,7 +488,7 @@ public class CLI {
 		    .create("g"));
 		opt.addOption(OptionBuilder.isRequired().withArgName("file|folder")
 		    .withDescription("The file (or folder) containing graphml formatted files.").hasArg().create("f"));
-		opt.addOption("w", "weighted", false, "Use weighted values if they exists in the model, and the generator is RANDOM.");
+		opt.addOption("w", "weighted", false, "Use weighted values if they exist in the model, and the generator is RANDOM.");
 	}
 
 	@SuppressWarnings("static-access")
@@ -525,8 +525,8 @@ public class CLI {
 		opt.addOption("a", false, "Prints the statistics of the test, at the end of the run.");
 		opt.addOption(OptionBuilder.isRequired().withArgName("file").withDescription("The xml file containing the mbt settings.").hasArg()
 		    .create("f"));
-		opt.addOption(OptionBuilder.withArgName("log-coverage").withDescription(
-		    "Prints the test coverage of the graph during execution every " + "<n>. The printout goes to the log file defined in "
+		opt.addOption(OptionBuilder.withArgName("seconds").withDescription(
+		    "Prints the test coverage of the graph during execution every <n second>. The printout goes to the log file defined in "
 		        + "mbt.properties, and only, if at least INFO level is set in " + "that same file.").hasArg().create("o"));
 		opt.addOption("d", "dry-run", false, "Will execute a dry-run of the model. Dialog will pop up for every edge and vertex.");
 	}
@@ -556,7 +556,7 @@ public class CLI {
 	 * Print version information
 	 */
 	private void printVersionInformation() {
-		System.out.println("org.tigris.mbt version 2.2 (revision 742) Beta 13\n");
+		System.out.println("org.tigris.mbt version 2.2 (revision 758) Beta 13\n");
 		System.out.println("org.tigris.mbt is open source software licensed under GPL");
 		System.out.println("The software (and it's source) can be downloaded from http://mbt.tigris.org/\n");
 		System.out.println("This package contains following software packages:");
