@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.Vector;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
@@ -59,7 +58,6 @@ import org.tigris.mbt.graph.AbstractElement;
 import org.tigris.mbt.graph.Edge;
 import org.tigris.mbt.graph.Graph;
 import org.tigris.mbt.graph.Vertex;
-import org.tigris.mbt.io.PrintHTMLTestSequence;
 
 /**
  * This class has some utility functionality used by org.tigris.mbt The
@@ -186,8 +184,8 @@ public class Util {
 					throw new StopConditionException("The name of reached edge must not be empty");
 				}
 				if ( ModelBasedTesting.getInstance().getMachine().findEdge( Edge.getLabelAndParameter(conditionValue)[0] ) == null ) {
-					throw new StopConditionException("The name of reached edge: '" + conditionValue + 
-							                             "' does not exists in the model.");
+					throw new StopConditionException("The name of reached edge: '" + Edge.getLabelAndParameter(conditionValue)[0] + 
+              "' (in stop condition: '" +  conditionValue + "') does not exists in the model.");
 				}
 				condition = new ReachedEdge(conditionValue);
 				break;
@@ -196,8 +194,8 @@ public class Util {
 					throw new StopConditionException("The name of reached vertex must not be empty");
 				}
 				if ( ModelBasedTesting.getInstance().getMachine().findVertex( Vertex.getLabel(conditionValue) ) == null ) {
-					throw new StopConditionException("The name of reached vertex: '" + conditionValue + 
-							                             "' does not exists in the model.");
+					throw new StopConditionException("The name of reached vertex: '" + Vertex.getLabel(conditionValue) + 
+							                             "' (in stop condition: '" +  conditionValue + "') does not exists in the model.");
 				}
 				condition = new ReachedVertex(conditionValue);
 				break;
