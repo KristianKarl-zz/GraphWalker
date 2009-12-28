@@ -367,7 +367,7 @@ public class CLI {
 		}
 
 		HelpFormatter f = new HelpFormatter();
-		f.printHelp( "java -jar mbt.jar " + helpSection.toLowerCase(), header, opt, "", true);
+		f.printHelp( 100, "java -jar mbt.jar " + helpSection.toLowerCase(), header, opt, "", true);
 	}
 
 	@SuppressWarnings("static-access")
