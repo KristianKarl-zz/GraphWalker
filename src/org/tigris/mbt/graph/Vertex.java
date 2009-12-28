@@ -5,9 +5,7 @@ import java.awt.geom.Point2D;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.log4j.Logger;
 import org.tigris.mbt.Keywords;
-import org.tigris.mbt.Util;
 
 public class Vertex extends AbstractElement {
 

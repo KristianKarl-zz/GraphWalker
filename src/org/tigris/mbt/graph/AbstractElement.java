@@ -3,7 +3,6 @@ package org.tigris.mbt.graph;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.tigris.mbt.Keywords;
 import org.tigris.mbt.Util;
 
 public class AbstractElement {
