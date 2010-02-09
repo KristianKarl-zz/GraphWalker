@@ -179,7 +179,7 @@ public class FiniteStateMachine {
 		}
 
 		if (visits <= 0)
-			logger.error("Edge: " + e + ", has a negative number in VISITED_KEY");
+			logger.error(e + ", has a negative number in VISITED_KEY");
 
 		if (!e.getReqTagKey().isEmpty()) {
 			Hashtable<String, Integer> reqs = getAllRequirements();
@@ -210,7 +210,7 @@ public class FiniteStateMachine {
 			logger.debug("No. of walked edges: " + numberOfEdgesTravesed);
 			return true;
 		} else
-			logger.error("Edge: " + edge + ", is not the source of: " + currentVertex);
+			logger.error(edge + ", is not the source of: " + currentVertex);
 		return false;
 	}
 

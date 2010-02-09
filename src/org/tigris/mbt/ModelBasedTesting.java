@@ -618,10 +618,10 @@ public class ModelBasedTesting {
 	public void logExecution(AbstractElement element, String additionalInfo) {
 		String req = " " + getRequirement(element);
 		if (element instanceof Edge) {
-			logger.info("Edge: " + getMachine().getLastEdge() + req + additionalInfo);
+			logger.info(getMachine().getLastEdge() + req + additionalInfo);
 			return;
 		} else if (element instanceof Vertex) {
-			logger.info("Vertex: " + getMachine().getCurrentVertex() + req
+			logger.info(getMachine().getCurrentVertex() + req
 			    + (getMachine().hasInternalVariables() ? " DATA: " + getMachine().getCurrentDataString() : "") + additionalInfo);
 			return;
 		}
