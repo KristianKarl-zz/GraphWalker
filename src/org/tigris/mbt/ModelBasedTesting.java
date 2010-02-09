@@ -182,7 +182,7 @@ public class ModelBasedTesting {
 			Collection<String> reqs = ((ReachedRequirement) condition).getRequirements();
 			for (Iterator<String> iterator = reqs.iterator(); iterator.hasNext();) {
 				String req = iterator.next();
-				if ( getMachine().getAllRequirements().containsKey(req) == false ) {
+				if (getMachine().getAllRequirements().containsKey(req) == false) {
 					throw new StopConditionException("Requirement: '" + req + "' do not exist in the model");
 				}
 			}
@@ -391,7 +391,7 @@ public class ModelBasedTesting {
 		}
 
 		if (Thread.interrupted()) {
-	    throw new InterruptedException();
+			throw new InterruptedException();
 		}
 		if (this.machine == null) {
 			getMachine();
@@ -405,7 +405,7 @@ public class ModelBasedTesting {
 			backupGenerator = getGenerator();
 			try {
 				setGenerator(Keywords.GENERATOR_RANDOM);
-			} catch ( GeneratorException e ) {
+			} catch (GeneratorException e) {
 				logger.error(e.getMessage());
 				throw new RuntimeException("ERROR: " + e.getMessage(), e);
 			}
@@ -883,21 +883,21 @@ public class ModelBasedTesting {
 		while (hasNextStep()) {
 			getNextStep();
 			String labels = getMachine().getLastEdge().getLabelKey() + " -> " + getCurrentVertex().getLabelKey();
-			String edgeManualInstruction = parseManualInstructions( getMachine().getLastEdge().getManualInstructions() );
-			String vertexManualInstruction = parseManualInstructions( getCurrentVertex().getManualInstructions() );
-			testSequence.add(new String[]{labels, edgeManualInstruction, vertexManualInstruction});
+			String edgeManualInstruction = parseManualInstructions(getMachine().getLastEdge().getManualInstructions());
+			String vertexManualInstruction = parseManualInstructions(getCurrentVertex().getManualInstructions());
+			testSequence.add(new String[] { labels, edgeManualInstruction, vertexManualInstruction });
 		}
 	}
 
 	private String parseManualInstructions(String manualInstructions) {
-		if ( !(getMachine() instanceof ExtendedFiniteStateMachine ) ) {
+		if (!(getMachine() instanceof ExtendedFiniteStateMachine)) {
 			return manualInstructions;
 		}
-		ExtendedFiniteStateMachine efsm = (ExtendedFiniteStateMachine)getMachine();
-		if ( !(efsm.isJsEnabled() || efsm.isBeanShellEnabled() ) ) {
-			return manualInstructions;			
+		ExtendedFiniteStateMachine efsm = (ExtendedFiniteStateMachine) getMachine();
+		if (!(efsm.isJsEnabled() || efsm.isBeanShellEnabled())) {
+			return manualInstructions;
 		}
-		
+
 		String parsedStr = manualInstructions;
 		Pattern p = Pattern.compile("\\{\\$(\\w+)\\}", Pattern.MULTILINE);
 		Matcher m = p.matcher(manualInstructions);
@@ -907,8 +907,8 @@ public class ModelBasedTesting {
 			manualInstructions = parsedStr;
 		}
 
-	  return parsedStr;
-  }
+		return parsedStr;
+	}
 
 	public void writePath(PrintStream out) throws InterruptedException {
 		if (this.machine == null) {
@@ -1012,4 +1012,25 @@ public class ModelBasedTesting {
 	public void setUseStatisticsManager(boolean useStatisticsManager) {
 		this.useStatisticsManager = useStatisticsManager;
 	}
+
+	public AbstractElement setAsVisited(Integer index) {
+		AbstractElement e = getMachine().findElement(index);
+		e.setVisitedKey(e.getVisitedKey() + 1);
+		return e;
+	}
+
+	public void setCurrentVertex(Vertex vertex) {
+		getMachine().setVertex(vertex);
+	}
+
+	public AbstractElement decrementVisited(Integer index) {
+		AbstractElement e = getMachine().findElement(index);
+		if ( e.getVisitedKey() > 0 ) 
+			e.setVisitedKey(e.getVisitedKey() - 1);
+		return e;
+  }
+
+	public void setAllUnvisited() {
+	  getMachine().setAllUnvisited();
+  }
 }

@@ -9,11 +9,17 @@ public class Status {
 
 	public static final int initial = 1;
 	public static final int running = 2;
-	public static final int next = 4;
-	public static final int paused = 8;
-	public static final int stopped = 16;
-	public static final int executingJavaTest = 32;
-	public static final int executingSoapTest = 64;
+	public static final int previous = 4;
+	public static final int next = 8;
+	public static final int paused = 16;
+	public static final int stopped = 32;
+	public static final int executingJavaTest = 64;
+	public static final int executingSoapTest = 128;
+	public static final int executingLogTest = 256;
+
+	public boolean isExecutingLogTest() {
+		return (state & executingLogTest) == executingLogTest;
+	}
 
 	public boolean isExecutingSoapTest() {
 		return (state & executingSoapTest) == executingSoapTest;
@@ -29,6 +35,10 @@ public class Status {
 
 	public boolean isStopped() {
 		return (state & stopped) == stopped;
+	}
+
+	public boolean isPrevious() {
+		return (state & previous) == previous;
 	}
 
 	public boolean isNext() {
