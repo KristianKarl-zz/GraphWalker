@@ -173,6 +173,8 @@ public class CLI {
 				buildSoapCLI();
 			} else if (args[0].equals("gui")) {
 				buildGuiCLI();
+			} else if (args[0].equals("log")) {
+				buildLogCLI();
 			} else if (args[0].equals("-v") || args[0].equals("--version")) {
 				printVersionInformation();
 				return;
@@ -246,6 +248,12 @@ public class CLI {
 				RunCommandGui(cl);
 			}
 			/**
+			 * Command: log
+			 */
+			else if (args[0].equals("log")) {
+				RunCommandLog(cl);
+			}
+			/**
 			 * Command: manual
 			 */
 			else if (args[0].equals("manual")) {
@@ -265,31 +273,31 @@ public class CLI {
 			logger.warn(e.getMessage());
 			System.err.println("Argument is required to the option.");
 			System.err.println(e.getMessage());
-			System.err.println("Type 'java -jar mbt.jar help " + args[0] + "' for help.");			
+			System.err.println("Type 'java -jar mbt.jar help " + args[0] + "' for help.");
 		} catch (UnrecognizedOptionException e) {
 			logger.warn(e.getMessage());
 			System.err.println(e.getMessage());
-			System.err.println("Type 'java -jar mbt.jar help " + args[0] + "' for help.");			
+			System.err.println("Type 'java -jar mbt.jar help " + args[0] + "' for help.");
 		} catch (StopConditionException e) {
 			logger.warn(e.getMessage());
 			System.err.println(e.getMessage());
-			System.err.println("Type 'java -jar mbt.jar help " + args[0] + "' for help.");			
+			System.err.println("Type 'java -jar mbt.jar help " + args[0] + "' for help.");
 		} catch (GeneratorException e) {
 			logger.warn(e.getMessage());
 			System.err.println(e.getMessage());
-			System.err.println("Type 'java -jar mbt.jar help " + args[0] + "' for help.");			
+			System.err.println("Type 'java -jar mbt.jar help " + args[0] + "' for help.");
 		} catch (JDOMException e) {
 			logger.warn(e.getMessage());
 			System.err.println("Can not access file: " + e.getMessage());
-			System.err.println("Type 'java -jar mbt.jar help " + args[0] + "' for help.");			
+			System.err.println("Type 'java -jar mbt.jar help " + args[0] + "' for help.");
 		} catch (FileNotFoundException e) {
 			logger.warn(e.getMessage());
 			System.err.println("Can not access file: " + e.getMessage());
-			System.err.println("Type 'java -jar mbt.jar help " + args[0] + "' for help.");			
+			System.err.println("Type 'java -jar mbt.jar help " + args[0] + "' for help.");
 		} catch (IOException e) {
 			logger.warn(e.getMessage());
 			System.err.println(e.getMessage());
-			System.err.println("Type 'java -jar mbt.jar help " + args[0] + "' for help.");			
+			System.err.println("Type 'java -jar mbt.jar help " + args[0] + "' for help.");
 		} catch (Exception e) {
 			Util.logStackTraceToError(e);
 			System.err.println(e.getMessage());
@@ -313,6 +321,7 @@ public class CLI {
 		System.out.println("    requirements");
 		System.out.println("    soap");
 		System.out.println("    source");
+		System.out.println("    log");
 		System.out.println("    xml\n");
 		System.out.println("Type 'java -jar mbt.jar -v (--version)' for version information.");
 	}
@@ -361,19 +370,24 @@ public class CLI {
 		} else if (helpSection.equalsIgnoreCase("gui")) {
 			buildGuiCLI();
 			header = "Run MBT in a GUI mode.\n" + "Also an mbt xml file can be supplied.";
+		} else if (helpSection.equalsIgnoreCase("log")) {
+			buildLogCLI();
+			header = "This will start MBT's GUI, and load a model and it's log file.\n"
+				+ "MBT parses the log file and shows the user how it traversed the model." 
+				+ " This is usefull when the user whishes to debug a session, and analyze the test.";
 		} else {
 			System.err.println("Type 'java -jar mbt.jar help' for usage.");
 			return;
 		}
 
 		HelpFormatter f = new HelpFormatter();
-		f.printHelp( 100, "java -jar mbt.jar " + helpSection.toLowerCase(), header, opt, "", true);
+		f.printHelp(100, "java -jar mbt.jar " + helpSection.toLowerCase(), header, opt, "", true);
 	}
 
 	@SuppressWarnings("static-access")
 	private void buildRequirementsCLI() {
-		opt.addOption(OptionBuilder.isRequired().withArgName("file|folder")
-		    .withDescription("The file (or folder) containing graphml formatted files.").hasArg().withLongOpt("input_graphml").create("f"));
+		opt.addOption(OptionBuilder.isRequired().withArgName("file|folder").withDescription(
+		    "The file (or folder) containing graphml formatted files.").hasArg().withLongOpt("input_graphml").create("f"));
 	}
 
 	private String generateListOfValidStopConditions() {
@@ -387,7 +401,7 @@ public class CLI {
 	private String generateListOfValidGenerators() {
 		String list = "";
 		for (Generator g : Keywords.getGenerators()) {
-			if ( g.isPublished() )
+			if (g.isPublished())
 				list += g.getDescription() + System.getProperty("line.separator");
 		}
 		return list;
@@ -404,27 +418,25 @@ public class CLI {
 		        + "At least 1 condition must be given. If more than 1 is given, the condition that meets "
 		        + "it's stop-condition first, will cause the generation to halt. "
 		        + "To separate multiple conditions, the separator pipe-character | is used. "
-		        + "A list of valid stop-conditions are:\n -------------------\n"
-		        + generateListOfValidStopConditions()
-		        + " -------------------\nFor more extensive examples, "
-		        + "see http://mbt.tigris.org/wiki/All_about_stop_conditions" ).hasArg().create("s"));
+		        + "A list of valid stop-conditions are:\n -------------------\n" + generateListOfValidStopConditions()
+		        + " -------------------\nFor more extensive examples, " + "see http://mbt.tigris.org/wiki/All_about_stop_conditions").hasArg()
+		    .create("s"));
 		opt.addOption(OptionBuilder.isRequired().withArgName("generator").withDescription(
 		    "The generator to be used when traversing the model. At least 1 generator must be given. "
 		        + "To separate multiple generators, the separator pipe-character | is used. "
-		        + "A list of valid generators are:\n -------------------\n"
-		        + generateListOfValidGenerators()
-		        + " -------------------\nFor more extensive examples, "
-		        + "see http://mbt.tigris.org/wiki/All_about_generators" ).hasArg()
+		        + "A list of valid generators are:\n -------------------\n" + generateListOfValidGenerators()
+		        + " -------------------\nFor more extensive examples, " + "see http://mbt.tigris.org/wiki/All_about_generators").hasArg()
 		    .create("g"));
-		opt.addOption(OptionBuilder.isRequired().withArgName("file|folder")
-		    .withDescription("The file (or folder) containing graphml formatted files.").hasArg().withLongOpt("input_graphml").create("f"));
+		opt.addOption(OptionBuilder.isRequired().withArgName("file|folder").withDescription(
+		    "The file (or folder) containing graphml formatted files.").hasArg().withLongOpt("input_graphml").create("f"));
 		opt.addOption(OptionBuilder.withArgName("seconds").withDescription(
 		    "Prints the test coverage of the graph during execution every <n second>. The printout goes to the log file defined in "
 		        + "mbt.properties, and only, if at least INFO level is set in " + "that same file.").hasArg().withLongOpt("log-coverage")
 		    .create("o"));
 		opt.addOption("c", "class_name", true, "Optional class name to use for test execution.");
 		opt.addOption("t", "report-template", true, "Optional report template to use. (Also requires option -r) (To be better documented)");
-		opt.addOption("r", "report-output", true, "Optional report filename to save report to. (Also requires option -t)  (To be better documented)");
+		opt.addOption("r", "report-output", true,
+		    "Optional report filename to save report to. (Also requires option -t)  (To be better documented)");
 		opt.addOption("w", "weighted", false, "Use weighted values if they exist in the model, and the generator is RANDOM.");
 		opt.addOption("d", "dry-run", false, "Will execute a dry-run of the model. Dialog will pop up for every edge and vertex.");
 	}
@@ -443,23 +455,22 @@ public class CLI {
 		        + "it's stop-condition first, will cause the generation to halt. "
 		        + "To separate multiple conditions, the separator pipe-character | is used. "
 		        + "A list of valid stop-conditions are:\n -------------------\n" + generateListOfValidStopConditions()
-		        + " -------------------\nFor more extensive examples, "
-		        + "see http://mbt.tigris.org/wiki/All_about_stop_conditions" ).hasArg().create("s"));
+		        + " -------------------\nFor more extensive examples, " + "see http://mbt.tigris.org/wiki/All_about_stop_conditions").hasArg()
+		    .create("s"));
 		opt.addOption(OptionBuilder.isRequired().withArgName("generator").withDescription(
 		    "The generator to be used when traversing the model. At least 1 generator must be given. "
 		        + "To separate multiple generators, the separator pipe-character | is used. "
-		        + "A list of valid generators are:\n -------------------\n"
-		        + generateListOfValidGenerators()
-		        + " -------------------\nFor more extensive examples, "
-		        + "see http://mbt.tigris.org/wiki/All_about_generators" ).hasArg()
+		        + "A list of valid generators are:\n -------------------\n" + generateListOfValidGenerators()
+		        + " -------------------\nFor more extensive examples, " + "see http://mbt.tigris.org/wiki/All_about_generators").hasArg()
 		    .create("g"));
-		opt.addOption(OptionBuilder.isRequired().withArgName("file|folder")
-		    .withDescription("The file (or folder) containing graphml formatted files.").hasArg().create("f"));
+		opt.addOption(OptionBuilder.isRequired().withArgName("file|folder").withDescription(
+		    "The file (or folder) containing graphml formatted files.").hasArg().create("f"));
 		opt.addOption(OptionBuilder.withArgName("seconds").withDescription(
 		    "Prints the test coverage of the graph during execution every <n second>. The printout goes to the log file defined in "
 		        + "mbt.properties, and only, if at least INFO level is set in " + "that same file.").hasArg().create("o"));
 		opt.addOption("t", "report-template", true, "Optional report template to use. (Also requires option -r) (To be better documented)");
-		opt.addOption("r", "report-output", true, "Optional report filename to save report to. (Also requires option -t)  (To be better documented)");
+		opt.addOption("r", "report-output", true,
+		    "Optional report filename to save report to. (Also requires option -t)  (To be better documented)");
 		opt.addOption("w", "weighted", false, "Use weighted values if they exist in the model, and the generator is RANDOM.");
 	}
 
@@ -476,25 +487,23 @@ public class CLI {
 		        + "it's stop-condition first, will cause the generation to halt. "
 		        + "To separate multiple conditions, the separator pipe-character | is used. "
 		        + "A list of valid stop-conditions are:\n -------------------\n" + generateListOfValidStopConditions()
-		        + " -------------------\nFor more extensive examples, "
-		        + "see http://mbt.tigris.org/wiki/All_about_stop_conditions" ).hasArg().create("s"));
+		        + " -------------------\nFor more extensive examples, " + "see http://mbt.tigris.org/wiki/All_about_stop_conditions").hasArg()
+		    .create("s"));
 		opt.addOption(OptionBuilder.isRequired().withArgName("generator").withDescription(
 		    "The generator to be used when traversing the model. At least 1 generator must be given. "
 		        + "To separate multiple generators, the separator pipe-character | is used. "
-		        + "A list of valid generators are:\n -------------------\n"
-		        + generateListOfValidGenerators()
-		        + " -------------------\nFor more extensive examples, "
-		        + "see http://mbt.tigris.org/wiki/All_about_generators" ).hasArg()
+		        + "A list of valid generators are:\n -------------------\n" + generateListOfValidGenerators()
+		        + " -------------------\nFor more extensive examples, " + "see http://mbt.tigris.org/wiki/All_about_generators").hasArg()
 		    .create("g"));
-		opt.addOption(OptionBuilder.isRequired().withArgName("file|folder")
-		    .withDescription("The file (or folder) containing graphml formatted files.").hasArg().create("f"));
+		opt.addOption(OptionBuilder.isRequired().withArgName("file|folder").withDescription(
+		    "The file (or folder) containing graphml formatted files.").hasArg().create("f"));
 		opt.addOption("w", "weighted", false, "Use weighted values if they exist in the model, and the generator is RANDOM.");
 	}
 
 	@SuppressWarnings("static-access")
 	private void buildMethodsCLI() {
-		opt.addOption(OptionBuilder.isRequired().withArgName("file|folder")
-		    .withDescription("The file (or folder) containing graphml formatted files.").hasArg().withLongOpt("input_graphml").create("f"));
+		opt.addOption(OptionBuilder.isRequired().withArgName("file|folder").withDescription(
+		    "The file (or folder) containing graphml formatted files.").hasArg().withLongOpt("input_graphml").create("f"));
 	}
 
 	/**
@@ -502,8 +511,8 @@ public class CLI {
 	 */
 	@SuppressWarnings("static-access")
 	private void buildMergeCLI() {
-		opt.addOption(OptionBuilder.isRequired().withArgName("file|folder")
-		    .withDescription("The file (or folder) containing graphml formatted files.").hasArg().withLongOpt("input_graphml").create("f"));
+		opt.addOption(OptionBuilder.isRequired().withArgName("file|folder").withDescription(
+		    "The file (or folder) containing graphml formatted files.").hasArg().withLongOpt("input_graphml").create("f"));
 	}
 
 	/**
@@ -511,8 +520,8 @@ public class CLI {
 	 */
 	@SuppressWarnings("static-access")
 	private void buildSourceCLI() {
-		opt.addOption(OptionBuilder.isRequired().withArgName("file|folder")
-		    .withDescription("The file (or folder) containing graphml formatted files.").hasArg().withLongOpt("input_graphml").create("f"));
+		opt.addOption(OptionBuilder.isRequired().withArgName("file|folder").withDescription(
+		    "The file (or folder) containing graphml formatted files.").hasArg().withLongOpt("input_graphml").create("f"));
 		opt.addOption(OptionBuilder.isRequired().withArgName("file").withDescription("The template file").hasArg().withLongOpt("template")
 		    .create("t"));
 	}
@@ -553,6 +562,16 @@ public class CLI {
 	}
 
 	/**
+	 * Build the command log command line parser
+	 */
+	@SuppressWarnings("static-access")
+	private void buildLogCLI() {
+		opt.addOption(OptionBuilder.isRequired().withArgName("file|folder").withDescription(
+		    "The file (or folder) containing graphml formatted files.").hasArg().withLongOpt("input_graphml").create("f"));
+		opt.addOption(OptionBuilder.withArgName("log").withDescription("The log file from a previuos run.").hasArg().create("l"));
+	}
+
+	/**
 	 * Print version information
 	 */
 	private void printVersionInformation() {
@@ -581,9 +600,10 @@ public class CLI {
 
 	/**
 	 * Run the offline command
-	 * @throws StopConditionException 
-	 * @throws GeneratorException 
-	 * @throws InterruptedException 
+	 * 
+	 * @throws StopConditionException
+	 * @throws GeneratorException
+	 * @throws InterruptedException
 	 */
 	private void RunCommandOffline(CommandLine cl) throws StopConditionException, GeneratorException, InterruptedException {
 		/**
@@ -611,7 +631,8 @@ public class CLI {
 			String[] sc = stopConditions[i].trim().split(":");
 			getMbt().addAlternativeCondition(Keywords.getStopCondition(sc[0].trim()), // Stop
 			    // condition
-			    (sc.length == 1 ? "" : sc[1].trim())); // Optional condition parameter
+			    (sc.length == 1 ? "" : sc[1].trim())); // Optional condition
+			// parameter
 		}
 
 		/*
@@ -669,9 +690,10 @@ public class CLI {
 
 	/**
 	 * Run the manual command
-	 * @throws StopConditionException 
-	 * @throws GeneratorException 
-	 * @throws InterruptedException 
+	 * 
+	 * @throws StopConditionException
+	 * @throws GeneratorException
+	 * @throws InterruptedException
 	 */
 	private void RunCommandManual(CommandLine cl) throws StopConditionException, GeneratorException, InterruptedException {
 		/**
@@ -696,7 +718,8 @@ public class CLI {
 			String[] sc = stopConditions[i].trim().split(":");
 			getMbt().addAlternativeCondition(Keywords.getStopCondition(sc[0].trim()), // Stop
 			    // condition
-			    (sc.length == 1 ? "" : sc[1].trim())); // Optional condition parameter
+			    (sc.length == 1 ? "" : sc[1].trim())); // Optional condition
+			// parameter
 		}
 
 		/*
@@ -715,9 +738,10 @@ public class CLI {
 
 	/**
 	 * Run the online command
-	 * @throws StopConditionException 
-	 * @throws GeneratorException 
-	 * @throws InterruptedException 
+	 * 
+	 * @throws StopConditionException
+	 * @throws GeneratorException
+	 * @throws InterruptedException
 	 */
 	private void RunCommandOnline(CommandLine cl) throws StopConditionException, GeneratorException, InterruptedException {
 		/**
@@ -825,9 +849,10 @@ public class CLI {
 
 	/**
 	 * Run the source command
-	 * @throws GeneratorException 
-	 * @throws IOException 
-	 * @throws InterruptedException 
+	 * 
+	 * @throws GeneratorException
+	 * @throws IOException
+	 * @throws InterruptedException
 	 */
 	private void RunCommandSource(CommandLine cl) throws GeneratorException, IOException, InterruptedException {
 		if (helpNeeded("source", !cl.hasOption("f"), "Missing the input graphml file (folder), See -f (--input_graphml)")
@@ -842,8 +867,9 @@ public class CLI {
 
 	/**
 	 * Run the requirements command
-	 * @throws GeneratorException 
-	 * @throws InterruptedException 
+	 * 
+	 * @throws GeneratorException
+	 * @throws InterruptedException
 	 */
 	private void RunCommandRequirements(CommandLine cl) throws GeneratorException, InterruptedException {
 		if (helpNeeded("requirements", !cl.hasOption("f"), "Missing the input graphml file (folder), See -f (--input_graphml)"))
@@ -856,8 +882,9 @@ public class CLI {
 
 	/**
 	 * Run the methods command
-	 * @throws GeneratorException 
-	 * @throws InterruptedException 
+	 * 
+	 * @throws GeneratorException
+	 * @throws InterruptedException
 	 */
 	private void RunCommandMethods(CommandLine cl) throws GeneratorException, InterruptedException {
 		if (helpNeeded("methods", !cl.hasOption("f"), "Missing the input graphml file (folder), See -f (--input_graphml)"))
@@ -882,13 +909,15 @@ public class CLI {
 
 	/**
 	 * Run the xml command
-	 * @throws StopConditionException 
-	 * @throws GeneratorException 
-	 * @throws IOException 
+	 * 
+	 * @throws StopConditionException
+	 * @throws GeneratorException
+	 * @throws IOException
 	 * @throws JDOMException
-	 * @throws InterruptedException 
+	 * @throws InterruptedException
 	 */
-	private void RunCommandXml(CommandLine cl) throws StopConditionException, GeneratorException, IOException, JDOMException, InterruptedException {
+	private void RunCommandXml(CommandLine cl) throws StopConditionException, GeneratorException, IOException, JDOMException,
+	    InterruptedException {
 		if (helpNeeded("xml", !cl.hasOption("f"), "Missing the input xml file, See  option -f"))
 			return;
 
@@ -903,13 +932,14 @@ public class CLI {
 	/**
 	 * Run the soap command
 	 * 
-	 * @throws StopConditionException 
-	 * @throws GeneratorException 
-	 * @throws IOException 
-	 * @throws JDOMException 
-	 * @throws InterruptedException 
+	 * @throws StopConditionException
+	 * @throws GeneratorException
+	 * @throws IOException
+	 * @throws JDOMException
+	 * @throws InterruptedException
 	 */
-	private void RunCommandSoap(CommandLine cl) throws StopConditionException, GeneratorException, IOException, JDOMException, InterruptedException {
+	private void RunCommandSoap(CommandLine cl) throws StopConditionException, GeneratorException, IOException, JDOMException,
+	    InterruptedException {
 		String port = null;
 		String nicAddr = null;
 		if (cl.hasOption("p")) {
@@ -946,6 +976,19 @@ public class CLI {
 			App.main(new String[] { cl.getOptionValue("f") });
 		else
 			App.main(null);
+	}
+
+	/**
+	 * Run the log command
+	 * 
+	 * @throws IOException
+	 */
+	private void RunCommandLog(CommandLine cl) throws IOException {
+		if (helpNeeded("log", !cl.hasOption("f"), "Missing the input graphml file (folder), See -f (--input_graphml)")
+		    || helpNeeded("log", !cl.hasOption("l"), "Missing the log file. See -l"))
+			return;
+		
+		App.main(new String[] { cl.getOptionValue("f"), cl.getOptionValue("l") });		
 	}
 
 	private boolean helpNeeded(String module, boolean condition, String message) {

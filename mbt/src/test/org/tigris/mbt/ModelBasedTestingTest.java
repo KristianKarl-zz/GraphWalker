@@ -162,7 +162,7 @@ public class ModelBasedTestingTest extends TestCase {
 		assertEquals("v_BaseURL", pair[1]);
 
 		assertEquals(false, mbt.setCurrentVertex("foobar"));
-		assertEquals(true, mbt.setCurrentVertex(null));
+		assertEquals(true, mbt.setCurrentVertex((String)null));
 		pair = mbt.getNextStep();
 		assertEquals("e_init", pair[0]);
 		assertEquals("v_BrowserStopped", pair[1]);

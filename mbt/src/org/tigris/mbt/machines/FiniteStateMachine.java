@@ -59,12 +59,12 @@ public class FiniteStateMachine {
 	private Hashtable<String, Integer> associatedRequirements;
 
 	public int getNumOfCoveredEdges() {
-  	return numOfCoveredEdges;
-  }
+		return numOfCoveredEdges;
+	}
 
 	public int getNumOfCoveredVertices() {
-	  return numOfCoveredVertices;
-  }
+		return numOfCoveredVertices;
+	}
 
 	public void setVertex(String vertexName) {
 		logger.debug("Setting vertex to: '" + vertexName + "'");
@@ -80,7 +80,21 @@ public class FiniteStateMachine {
 			if (((String) vertex.getLabelKey()).equals(vertexName)) {
 				return vertex;
 			}
-    }
+		}
+		return null;
+	}
+
+	public AbstractElement findElement(Integer index) {
+		for (Vertex vertex : model.getVertices()) {
+			if (vertex.getIndexKey().equals(index)) {
+				return vertex;
+			}
+		}
+		for (Edge edge : model.getEdges()) {
+			if (edge.getIndexKey().equals(index)) {
+				return edge;
+			}
+		}
 		return null;
 	}
 
@@ -142,13 +156,12 @@ public class FiniteStateMachine {
 	}
 
 	public void setAsVisited(AbstractElement e) {
-		if ( e instanceof Edge ) {
-			if ( e.getVisitedKey() < 1 ) {
+		if (e instanceof Edge) {
+			if (e.getVisitedKey() < 1) {
 				numOfCoveredEdges++;
 			}
-		}
-		else if ( e instanceof Vertex ) {
-			if ( e.getVisitedKey() < 1 ) {
+		} else if (e instanceof Vertex) {
+			if (e.getVisitedKey() < 1) {
 				numOfCoveredVertices++;
 			}
 		}
@@ -167,13 +180,12 @@ public class FiniteStateMachine {
 	public void setAsUnvisited(AbstractElement e) {
 		Integer visits = e.getVisitedKey();
 		e.setVisitedKey(e.getVisitedKey() - 1);
-		if ( e instanceof Edge ) {
-			if ( e.getVisitedKey() < 1 ) {
+		if (e instanceof Edge) {
+			if (e.getVisitedKey() < 1) {
 				numOfCoveredEdges--;
 			}
-		}
-		else if ( e instanceof Vertex ) {
-			if ( e.getVisitedKey() < 1 ) {
+		} else if (e instanceof Vertex) {
+			if (e.getVisitedKey() < 1) {
 				numOfCoveredVertices--;
 			}
 		}
@@ -216,6 +228,10 @@ public class FiniteStateMachine {
 
 	public Edge getLastEdge() {
 		return lastEdge;
+	}
+
+	public void setLastEdge(Edge e) {
+		lastEdge = e;
 	}
 
 	public String getStatisticsStringCompact() {
@@ -283,7 +299,7 @@ public class FiniteStateMachine {
 			Collections.sort(notCovered);
 			for (String string : notCovered) {
 				retur += string;
-      }
+			}
 		}
 		retur += getStatisticsString() + newLine;
 		retur += "Execution time: " + ((System.currentTimeMillis() - start_time) / 1000) + " seconds";
@@ -291,7 +307,9 @@ public class FiniteStateMachine {
 	}
 
 	public boolean isCurrentVertex(Vertex vertex) {
-		return getCurrentVertex().equals(vertex);
+		if (getCurrentVertex() != null )
+			return getCurrentVertex().equals(vertex);
+		return false;
 	}
 
 	protected int getCoverage(Collection<AbstractElement> modelItems) {
@@ -312,8 +330,8 @@ public class FiniteStateMachine {
 		for (Vertex vertex : modelItems) {
 			if (vertex.getVisitedKey() > 0) {
 				unique++;
-			}	    
-    }
+			}
+		}
 
 		return unique;
 	}
@@ -324,8 +342,8 @@ public class FiniteStateMachine {
 		for (Edge edge : modelItems) {
 			if (edge.getVisitedKey() > 0) {
 				unique++;
-			}	    
-    }
+			}
+		}
 
 		return unique;
 	}
@@ -536,5 +554,18 @@ public class FiniteStateMachine {
 		calculatingPath = false;
 		numOfCoveredEdges = 0;
 		numOfCoveredVertices = 0;
+	}
+
+	public void setVertex(Vertex vertex) {
+		currentVertex = vertex;
+	}
+
+	public void setAllUnvisited() {
+		for (Vertex vertex : model.getVertices()) {
+			vertex.setVisitedKey(0);
+		}
+		for (Edge edge : model.getEdges()) {
+			edge.setVisitedKey(0);
+		}
   }
 }

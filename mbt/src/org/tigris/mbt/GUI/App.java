@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.Vector;
 
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.ImageIcon;
@@ -57,9 +58,11 @@ import org.tigris.mbt.events.MbtEvent;
 import org.tigris.mbt.exceptions.GeneratorException;
 import org.tigris.mbt.exceptions.GuiStoppedExecution;
 import org.tigris.mbt.exceptions.StopConditionException;
+import org.tigris.mbt.graph.AbstractElement;
 import org.tigris.mbt.graph.Edge;
 import org.tigris.mbt.graph.Graph;
 import org.tigris.mbt.graph.Vertex;
+import org.tigris.mbt.io.ParseLog;
 
 import edu.uci.ics.jung.algorithms.layout.CircleLayout;
 import edu.uci.ics.jung.algorithms.layout.FRLayout;
@@ -84,7 +87,6 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 	private static final long serialVersionUID = -8605452811238545133L;
 	private static final String title = "Model-Based Testing 2.2 Beta 13";
 
-
 	private JSplitPane splitPaneMessages = null;
 	private JSplitPane splitPaneGraph = null;
 	private JPanel panelStatistics = null;
@@ -97,7 +99,9 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 	private VisualizationViewer<Vertex, Edge> vv;
 	private Layout<Vertex, Edge> graphLayout;
 
-	private static File xmlFile;
+	private static File xmlFile = null;
+	private static File graphmlFile = null;
+	private static File logFile = null;
 	private ExecuteMBT executeMBT = null;
 	private Timer updateColorLatestVertexLabel = new Timer();
 
@@ -107,6 +111,8 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 
 	private JButton loadButton;
 	private JButton reloadButton;
+	private JButton firstButton;
+	private JButton backButton;
 	private JButton runButton;
 	private JButton pauseButton;
 	private JButton nextButton;
@@ -114,6 +120,8 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 	private JCheckBox centerOnVertexButton;
 
 	private Status status = new Status();
+	private Vector<ParseLog.LoggedItem> parsedLogFile = null;
+	private Integer currentStep = null;
 
 	public Status getStatus() {
 		return status;
@@ -127,6 +135,8 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 	protected String newline = "\n";
 	static final private String LOAD = "load";
 	static final private String RELOAD = "reload";
+	static final private String FIRST = "first";
+	static final private String BACK = "BACK";
 	static final private String RUN = "run";
 	static final private String PAUSE = "pause";
 	static final private String NEXT = "next";
@@ -227,21 +237,33 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 		// Handle each button.
 		if (LOAD.equals(cmd)) {
 			load();
-		} else if (RELOAD.equals(cmd)) { // second button clicked
+		} else if (RELOAD.equals(cmd)) {
 			reload();
-		} else if (RUN.equals(cmd)) { // third button clicked
-			run();
-		} else if (PAUSE.equals(cmd)) { // third button clicked
+		} else if (FIRST.equals(cmd)) {
+			first();
+		} else if (BACK.equals(cmd)) {
+			prev();
+		} else if (RUN.equals(cmd)) {
+			if (status.isExecutingLogTest())
+				next();
+			else
+				run();
+		} else if (PAUSE.equals(cmd)) {
 			pause();
-		} else if (NEXT.equals(cmd)) { // third button clicked
-			next();
-		} else if (SOAP.equals(cmd)) { // soap checkbox clicked
+		} else if (NEXT.equals(cmd)) {
+			if (status.isExecutingLogTest())
+				last();
+			else
+				next();
+		} else if (SOAP.equals(cmd)) {
 			if (xmlFile != null && xmlFile.canRead())
 				reload();
 		} else if (CENTERONVERTEX.equals(cmd)) { // center on vertex checkbox
 			// clicked
-			if (centerOnVertexButton.isSelected())
+			if (centerOnVertexButton.isSelected()) {
 				centerOnVertex();
+				getVv().repaint();
+			}
 		}
 	}
 
@@ -265,20 +287,27 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 	private void outPut() {
 		logger.debug("Entry");
 
-		if (ModelBasedTesting.getInstance().getMachine() == null||
-			ModelBasedTesting.getInstance().getGraph() == null ) {
+		if (ModelBasedTesting.getInstance().getMachine() == null || ModelBasedTesting.getInstance().getGraph() == null) {
 			statisticsTextArea.setText("");
 			variablesTextArea.setText("");
 			return;
 		}
 		statisticsTextArea.setText(ModelBasedTesting.getInstance().getStatisticsString());
 
-		String str = "Edge: "
-		    + (ModelBasedTesting.getInstance().getMachine().getLastEdge() == null ? "" : (String) ModelBasedTesting.getInstance().getMachine()
-		        .getLastEdge().getLabelKey()) + "   Vertex: " + ModelBasedTesting.getInstance().getMachine().getCurrentVertex().getLabelKey();
+		String str = (ModelBasedTesting.getInstance().getMachine().getLastEdge() == null ? "" : "Edge: "
+		    + (String) ModelBasedTesting.getInstance().getMachine().getLastEdge().getLabelKey())
+		    + (ModelBasedTesting.getInstance().getMachine().getCurrentVertex() == null ? "" : "   Vertex: "
+		        + ModelBasedTesting.getInstance().getMachine().getCurrentVertex().getLabelKey());
 		getLatestVertexLabel().setText(str);
 
-		str = ModelBasedTesting.getInstance().getMachine().getCurrentDataString();
+		if (status.isExecutingLogTest()) {
+			if (parsedLogFile.get(currentStep).data != null )
+				str = parsedLogFile.get(currentStep).data;
+			else
+				str = variablesTextArea.getText();
+		} else {
+			str = ModelBasedTesting.getInstance().getMachine().getCurrentDataString();
+		}
 		str = str.replaceAll(";", newline);
 		variablesTextArea.setText(str);
 	}
@@ -288,6 +317,8 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 		if (status.isStopped()) {
 			loadButton.setEnabled(true);
 			reloadButton.setEnabled(true);
+			firstButton.setEnabled(false);
+			backButton.setEnabled(false);
 			runButton.setEnabled(false);
 			pauseButton.setEnabled(false);
 			nextButton.setEnabled(false);
@@ -295,6 +326,8 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 		} else if (status.isPaused() && status.isExecutingSoapTest()) {
 			loadButton.setEnabled(true);
 			reloadButton.setEnabled(true);
+			firstButton.setEnabled(false);
+			backButton.setEnabled(false);
 			runButton.setEnabled(true);
 			pauseButton.setEnabled(false);
 			nextButton.setEnabled(true);
@@ -302,6 +335,8 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 		} else if (status.isRunning() || status.isNext() || status.isExecutingJavaTest() || status.isExecutingSoapTest()) {
 			loadButton.setEnabled(false);
 			reloadButton.setEnabled(false);
+			firstButton.setEnabled(false);
+			backButton.setEnabled(false);
 			runButton.setEnabled(false);
 			pauseButton.setEnabled(true);
 			nextButton.setEnabled(false);
@@ -309,13 +344,24 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 		} else if (status.isPaused() && !(status.isNext() || status.isExecutingJavaTest())) {
 			loadButton.setEnabled(true);
 			reloadButton.setEnabled(true);
+			firstButton.setEnabled(true);
+			backButton.setEnabled(false);
 			runButton.setEnabled(true);
 			pauseButton.setEnabled(false);
 			nextButton.setEnabled(true);
 			soapButton.setEnabled(true);
+		} else if (status.isExecutingLogTest()) {
+			loadButton.setEnabled(false);
+			reloadButton.setEnabled(false);
+			firstButton.setEnabled(true);
+			backButton.setEnabled(true);
+			runButton.setEnabled(true);
+			pauseButton.setEnabled(false);
+			nextButton.setEnabled(true);
+			soapButton.setEnabled(false);
 		}
 	}
-	
+
 	@SuppressWarnings("synthetic-access")
 	private void loadModel() {
 		logger.debug("Entry");
@@ -391,7 +437,7 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 		statisticsTextArea.setText("");
 		variablesTextArea.setText("");
 		getLatestVertexLabel().setText("");
-		
+
 		setTitle(title);
 		ModelBasedTesting.getInstance().reset();
 		setGraphLayout(new StaticLayout<Vertex, Edge>(new Graph()));
@@ -463,8 +509,93 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 		setButtons();
 	}
 
+	public void first() {
+		if (status.isExecutingLogTest()) {
+			ModelBasedTesting.getInstance().setAllUnvisited();
+			currentStep = 0;
+			Integer index = parsedLogFile.get(currentStep).index;
+			AbstractElement ae = ModelBasedTesting.getInstance().getMachine().findElement(index);
+			if (ae instanceof Edge) {
+				ModelBasedTesting.getInstance().getMachine().setLastEdge((Edge) ae);
+				ModelBasedTesting.getInstance().setCurrentVertex((Vertex) null);
+			} else if (ae instanceof Vertex) {
+				ModelBasedTesting.getInstance().setCurrentVertex((Vertex) ae);
+				ModelBasedTesting.getInstance().getMachine().setLastEdge(null);
+			}
+			outPut();
+			if (centerOnVertexButton.isSelected())
+				centerOnVertex();
+  		getVv().repaint();
+		}		
+	}
+
+	public void last() {
+		if (status.isExecutingLogTest()) {
+			Integer index = null;
+			for (; currentStep < parsedLogFile.size(); currentStep++) {
+				index = parsedLogFile.get(currentStep).index;
+				ModelBasedTesting.getInstance().setAsVisited(index);
+      }
+			index = parsedLogFile.get(--currentStep).index;
+			AbstractElement ae = ModelBasedTesting.getInstance().getMachine().findElement(index);
+			if (ae instanceof Edge) {
+				ModelBasedTesting.getInstance().getMachine().setLastEdge((Edge) ae);
+				ModelBasedTesting.getInstance().setCurrentVertex((Vertex) null);
+			} else if (ae instanceof Vertex) {
+				ModelBasedTesting.getInstance().setCurrentVertex((Vertex) ae);
+				ModelBasedTesting.getInstance().getMachine().setLastEdge(null);
+			}
+			outPut();
+			if (centerOnVertexButton.isSelected())
+				centerOnVertex();
+  		getVv().repaint();
+		}		
+	}
+
+	public void prev() {
+		logger.debug("Entry");
+		if (status.isExecutingLogTest()) {
+			Integer index = parsedLogFile.get(currentStep).index;
+			AbstractElement ae = ModelBasedTesting.getInstance().decrementVisited(index);
+			if ( currentStep > 0 )
+				currentStep--;
+			index = parsedLogFile.get(currentStep).index;
+			ae = ModelBasedTesting.getInstance().decrementVisited(index);
+			if (ae instanceof Edge) {
+				ModelBasedTesting.getInstance().getMachine().setLastEdge((Edge) ae);
+				ModelBasedTesting.getInstance().setCurrentVertex((Vertex) null);
+			} else if (ae instanceof Vertex) {
+				ModelBasedTesting.getInstance().setCurrentVertex((Vertex) ae);
+				ModelBasedTesting.getInstance().getMachine().setLastEdge(null);
+			}
+			outPut();
+			if (centerOnVertexButton.isSelected())
+				centerOnVertex();
+  		getVv().repaint();
+			return;
+		}
+	}
+
 	public void next() {
 		logger.debug("Entry");
+		if (status.isExecutingLogTest()) {
+			if ( currentStep < parsedLogFile.size() - 1 )
+				currentStep++;
+			Integer index = parsedLogFile.get(currentStep).index;
+			AbstractElement ae = ModelBasedTesting.getInstance().setAsVisited(index);
+			if (ae instanceof Edge) {
+				ModelBasedTesting.getInstance().getMachine().setLastEdge((Edge) ae);
+				ModelBasedTesting.getInstance().setCurrentVertex((Vertex) null);
+			} else if (ae instanceof Vertex) {
+				ModelBasedTesting.getInstance().setCurrentVertex((Vertex) ae);
+				ModelBasedTesting.getInstance().getMachine().setLastEdge(null);
+			}
+			outPut();
+			if (centerOnVertexButton.isSelected())
+				centerOnVertex();
+			getVv().repaint();
+			return;
+		}
 		if (ModelBasedTesting.getInstance().hasNextStep() == false) {
 			status.setState(Status.stopped);
 			setButtons();
@@ -760,13 +891,19 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 		reloadButton = makeNavigationButton("reload", RELOAD, "Reload/Restart already loaded Model", "Reload", false);
 		toolBar.add(reloadButton);
 
-		runButton = makeNavigationButton("run", RUN, "Starts the execution", "Run", false);
+		firstButton = makeNavigationButton("first", FIRST, "Start at the beginning", "First", false);
+		toolBar.add(firstButton);
+
+		backButton = makeNavigationButton("back", BACK, "Backs a step", "Back", false);
+		toolBar.add(backButton);
+
+		runButton = makeNavigationButton("run", RUN, "Starts the execution/Take a step forward in the log", "Run", false);
 		toolBar.add(runButton);
 
 		pauseButton = makeNavigationButton("pause", PAUSE, "Pauses the execution", "Pause", false);
 		toolBar.add(pauseButton);
 
-		nextButton = makeNavigationButton("next", NEXT, "Walk a step in the model", "Next", false);
+		nextButton = makeNavigationButton("next", NEXT, "Walk a step in the model/Go to the end of log", "Next", false);
 		toolBar.add(nextButton);
 
 		soapButton = makeNavigationCheckBoxButton("soap", SOAP, "Run MBT in SOAP(Web Services) mode", "Soap");
@@ -855,6 +992,34 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 
 		if (xmlFile != null)
 			loadModel();
+		else if (graphmlFile != null && logFile != null) {
+			setWaitCursor();
+			try {
+				ModelBasedTesting.getInstance().readGraph(graphmlFile.getAbsolutePath());
+			} catch (Exception e) {
+				Util.logStackTraceToError(e);
+				JOptionPane.showMessageDialog(App.getInstance(), "Failed to load model. " + e.getMessage());
+			}
+			try {
+				parsedLogFile = ParseLog.readLog(logFile);
+				currentStep = new Integer(0);
+			} catch (IOException e) {
+				Util.logStackTraceToError(e);
+				JOptionPane.showMessageDialog(App.getInstance(), "Failed to load log file. " + e.getMessage());
+			}
+			
+			Integer index = parsedLogFile.get(currentStep).index;
+			AbstractElement ae = ModelBasedTesting.getInstance().setAsVisited(index);
+			if (ae instanceof Edge) {
+				ModelBasedTesting.getInstance().getMachine().setLastEdge((Edge) ae);
+				ModelBasedTesting.getInstance().setCurrentVertex((Vertex) null);
+			}
+
+			status.setState(Status.executingLogTest);
+			status.unsetState(Status.stopped);
+			setButtons();
+			setDefaultCursor();
+		}
 	}
 
 	// Private constructor prevents instantiation from other classes
@@ -887,6 +1052,9 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 
 		if (args != null && args.length == 1) {
 			xmlFile = new File((String) args[0]);
+		} else if (args != null && args.length == 2) {
+			graphmlFile = new File((String) args[0]);
+			logFile = new File((String) args[1]);
 		}
 
 		getInstance();
