@@ -575,7 +575,7 @@ public class CLI {
 	 * Print version information
 	 */
 	private void printVersionInformation() {
-		System.out.println("org.tigris.mbt version 2.2 (revision 758) Beta 13\n");
+		System.out.println("org.tigris.mbt version 2.2 (revision 770) Beta 14\n");
 		System.out.println("org.tigris.mbt is open source software licensed under GPL");
 		System.out.println("The software (and it's source) can be downloaded from http://mbt.tigris.org/\n");
 		System.out.println("This package contains following software packages:");
