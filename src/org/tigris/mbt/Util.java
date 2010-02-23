@@ -132,7 +132,7 @@ public class Util {
 	@SuppressWarnings("unchecked")
 	public static Logger setupLogger(Class classParam) {
 		Logger logger = Logger.getLogger(classParam);
-		if (new File("mbt.properties").exists()) {
+		if (new File("mbt.properties").canRead()) {
 			PropertyConfigurator.configure("mbt.properties");
 		} else {
 			try {
