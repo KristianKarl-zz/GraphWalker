@@ -162,31 +162,14 @@ public class ModelBasedTestingTest extends TestCase {
 		assertEquals("v_BaseURL", pair[1]);
 
 		assertEquals(false, mbt.setCurrentVertex("foobar"));
-		assertEquals(true, mbt.setCurrentVertex((String)null));
+		assertEquals(false, mbt.setCurrentVertex((String)null));
 		pair = mbt.getNextStep();
-		assertEquals("e_init", pair[0]);
-		assertEquals("v_BrowserStopped", pair[1]);
+		assertEquals("e_SearchBook", pair[0]);
+		assertEquals("v_SearchResult", pair[1]);
 
-		pair = mbt.getNextStep();
-		assertEquals("e_StartBrowser", pair[0]);
-		assertEquals("v_BrowserStarted", pair[1]);
-
-		pair = mbt.getNextStep();
-		assertEquals("e_EnterBaseURL", pair[0]);
-		assertEquals("v_BaseURL", pair[1]);
-
-		assertEquals(true, mbt.setCurrentVertex(""));
-		pair = mbt.getNextStep();
-		assertEquals("e_init", pair[0]);
-		assertEquals("v_BrowserStopped", pair[1]);
-
-		pair = mbt.getNextStep();
-		assertEquals("e_StartBrowser", pair[0]);
-		assertEquals("v_BrowserStarted", pair[1]);
-
-		pair = mbt.getNextStep();
-		assertEquals("e_EnterBaseURL", pair[0]);
-		assertEquals("v_BaseURL", pair[1]);
+		assertEquals(false, mbt.setCurrentVertex(""));
+		assertEquals("e_SearchBook", pair[0]);
+		assertEquals("v_SearchResult", pair[1]);
 
 		assertEquals(true, mbt.setCurrentVertex("v_BrowserStopped"));
 		pair = mbt.getNextStep();

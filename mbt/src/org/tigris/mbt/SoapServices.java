@@ -1,5 +1,6 @@
 package org.tigris.mbt;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Vector;
@@ -7,6 +8,7 @@ import java.util.Vector;
 import javax.jws.WebService;
 
 import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 import org.jdom.JDOMException;
 import org.tigris.mbt.GUI.App;
 import org.tigris.mbt.exceptions.GeneratorException;
@@ -157,6 +159,16 @@ public class SoapServices {
 
 	public boolean Load(String xmlFile) {
 		logger.debug("SOAP service load recieving: " + xmlFile);
+		if ( xmlFile == null ) {
+			logger.error( "Web service 'Load' needs a valid xml file name." );
+			logger.debug("SOAP service load returning: false");
+			return false;
+		}
+		if (new File(xmlFile).canRead()==false) {
+			logger.error( "Web service 'Load' needs a readable xml file name. Check the file: '" + xmlFile + "'" );
+			logger.debug("SOAP service load returning: false");
+			return false;
+		}
 		this.xmlFile = xmlFile;
 		boolean retValue = true;
 		try {

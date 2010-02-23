@@ -984,7 +984,9 @@ public class ModelBasedTesting {
 	public boolean setCurrentVertex(String newVertex) {
 		if (this.machine != null) {
 			if (newVertex == null || newVertex.isEmpty()) {
-				newVertex = Keywords.START_NODE;
+				logger.error("Could not manually change the vertex from: " + getMachine().getCurrentVertexName()
+				    + " beacuse it is an empty string.");
+				return false;
 			}
 			if (getMachine().hasVertex(newVertex) == false) {
 				logger.error("Could not manually change the vertex from: " + getMachine().getCurrentVertexName() + " to: " + newVertex
