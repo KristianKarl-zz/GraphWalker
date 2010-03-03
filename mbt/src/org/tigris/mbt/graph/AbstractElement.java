@@ -10,6 +10,7 @@ public class AbstractElement {
 	private String labelKey = new String();
 	private String fullLabelKey = new String();
 	private String reqTagKey = new String();
+	private Integer reqTagResult = 0;
 	private String parameterKey = new String();
 	private Integer visitedKey = new Integer(0);
 	private boolean backtrackKey = false;
@@ -31,6 +32,7 @@ public class AbstractElement {
 		this.labelKey = ae.labelKey;
 		this.fullLabelKey = ae.fullLabelKey;
 		this.reqTagKey = ae.reqTagKey;
+		this.reqTagResult = ae.reqTagResult;
 		this.parameterKey = ae.parameterKey;
 		this.visitedKey = ae.visitedKey;
 		this.backtrackKey = ae.backtrackKey;
@@ -51,6 +53,7 @@ public class AbstractElement {
 			this.labelKey = A.labelKey;
 			this.fullLabelKey = A.fullLabelKey;
 			this.reqTagKey = A.reqTagKey;
+			this.reqTagResult = A.reqTagResult;
 			this.parameterKey = A.parameterKey;
 			this.visitedKey = A.visitedKey;
 			this.backtrackKey = A.backtrackKey;
@@ -68,6 +71,7 @@ public class AbstractElement {
 			this.labelKey = B.labelKey;
 			this.fullLabelKey = B.fullLabelKey;
 			this.reqTagKey = B.reqTagKey;
+			this.reqTagResult = B.reqTagResult;
 			this.parameterKey = B.parameterKey;
 			this.visitedKey = B.visitedKey;
 			this.backtrackKey = B.backtrackKey;
@@ -187,6 +191,19 @@ public class AbstractElement {
 	public void setReqTagKey(String reqTagKey) {
 		this.reqTagKey = reqTagKey;
 	}
+
+	/**
+	 * @return 0 is the requirement is untested.<br>
+	 * 1 if requirement tested ok<br>
+	 * 2 if the requirement has failed the test.
+	 */
+	public Integer getReqTagResult() {
+  	return reqTagResult;
+  }
+
+	public void setReqTagResult(Integer reqTagResult) {
+  	this.reqTagResult = reqTagResult;
+  }
 
 	public String getFullLabelKey() {
 		return fullLabelKey;

@@ -676,7 +676,7 @@ public class CLI {
 		getMbt().writePath();
 
 		if (cl.hasOption("a")) {
-			System.out.println(getMbt().getStatisticsString());
+			System.out.println(getMbt().getStatisticsVerbose());
 		}
 		if (cl.hasOption("o")) {
 			logger.info(mbt.getStatisticsCompact());

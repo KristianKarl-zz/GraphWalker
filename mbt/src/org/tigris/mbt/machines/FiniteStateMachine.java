@@ -19,8 +19,10 @@ package org.tigris.mbt.machines;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.Set;
 import java.util.Stack;
 import java.util.Vector;
@@ -285,6 +287,34 @@ public class FiniteStateMachine {
 		String newLine = "\n";
 
 		Vector<String> notCovered = new Vector<String>();
+		Hashtable<String, Integer> reqResult = new Hashtable<String, Integer>();
+		Enumeration<String> e = getAllRequirements().keys();
+		while(e.hasMoreElements()) {
+			String req = e.nextElement();
+			for (Edge edge : model.getEdges()) {
+				if ( edge.getReqTagKey().contains(req) ) {
+					if ( reqResult.get(req) == null ) {
+						reqResult.put(req, edge.getReqTagResult());
+					}	else {
+						if ( edge.getReqTagResult() == 2 ) {
+							reqResult.put(req, 2);
+						}
+					}
+				}				
+			}
+			for (Vertex vertex : model.getVertices()) {
+				if ( vertex.getReqTagKey().contains(req) ) {
+					if ( reqResult.get(req) == null ) {
+						reqResult.put(req, vertex.getReqTagResult());
+					}	else {
+						if ( vertex.getReqTagResult() == 2 ) {
+							reqResult.put(req, 2);
+						}
+					}
+				}				
+			}
+		}
+		
 		for (Edge edge : model.getEdges()) {
 			if (edge.getVisitedKey() <= 0) {
 				notCovered.add("Edge not reached: " + edge + newLine);
@@ -299,6 +329,23 @@ public class FiniteStateMachine {
 			Collections.sort(notCovered);
 			for (String string : notCovered) {
 				retur += string;
+			}
+		}
+		if (reqResult.size() > 0) {
+			e = getAllRequirements().keys();
+			while(e.hasMoreElements()) {
+				String req = e.nextElement();
+				switch ( reqResult.get(req) ){
+				case 0:
+					retur += "Requirement: " + req + " is not tested." + newLine;
+					break;
+				case 1:
+					retur += "Requirement: " + req + " has passed." + newLine;
+					break;
+				case 2:
+					retur += "Requirement: " + req + " has failed." + newLine;
+					break;
+				}
 			}
 		}
 		retur += getStatisticsString() + newLine;
