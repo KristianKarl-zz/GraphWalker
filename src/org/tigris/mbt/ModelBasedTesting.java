@@ -321,10 +321,18 @@ public class ModelBasedTesting {
 		Vertex v = getMachine().getCurrentVertex();
 		if (!v.getReqTagKey().isEmpty()) {
 			String str = "REQUIREMENT: '" + v.getReqTagKey() + "' has ";
-			if (pass)
+			if (pass) {
 				str += "PASSED, at " + v;
-			else
+				if ( v.getReqTagResult() == 0 ) {
+					v.setReqTagResult(1);
+				}
+			}
+			else {
 				str += "FAILED, at " + v;
+				if ( v.getReqTagResult() != 2 ) {
+					v.setReqTagResult(2);
+				}
+			}
 			logger.info(str);
 		}
 	}
