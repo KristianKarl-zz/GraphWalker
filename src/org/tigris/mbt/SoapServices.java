@@ -8,7 +8,6 @@ import java.util.Vector;
 import javax.jws.WebService;
 
 import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
 import org.jdom.JDOMException;
 import org.tigris.mbt.GUI.App;
 import org.tigris.mbt.exceptions.GeneratorException;
