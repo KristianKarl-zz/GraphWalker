@@ -183,8 +183,7 @@ public class SoapServices {
 
 	public String GetStatistics() {
 		logger.debug("SOAP service getStatistics");
-		logger.debug("SOAP service getStatistics returning: " + ModelBasedTesting.getInstance().getStatisticsString());
-		return ModelBasedTesting.getInstance().getStatisticsString();
+		return ModelBasedTesting.getInstance().getStatisticsVerbose();
 	}
 
 	private void Reset() {

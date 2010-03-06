@@ -676,7 +676,7 @@ public class CLI {
 		getMbt().writePath();
 
 		if (cl.hasOption("a")) {
-			System.out.println(getMbt().getStatisticsVerbose());
+			writeStatisticsVerbose(System.out);
 		}
 		if (cl.hasOption("o")) {
 			logger.info(mbt.getStatisticsCompact());
@@ -844,7 +844,7 @@ public class CLI {
 	}
 
 	private void writeStatisticsVerbose(PrintStream out) {
-		out.println(getMbt().getStatisticsString());
+		out.println(getMbt().getStatisticsVerbose());
 	}
 
 	/**
@@ -924,7 +924,7 @@ public class CLI {
 		setMbt(Util.loadMbtFromXml(cl.getOptionValue("f"), cl.hasOption("d")));
 
 		if (cl.hasOption("a")) {
-			logger.info(getMbt().getStatisticsString());
+			logger.info(getMbt().getStatisticsVerbose());
 			writeStatisticsVerbose(System.out);
 		}
 	}
