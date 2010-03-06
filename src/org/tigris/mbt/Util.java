@@ -194,7 +194,7 @@ public class Util {
 	 * Adds a stop condition for the model.
 	 * @param conditionType The condition type.
 	 * @param conditionValue The value of the condition.
-	 * @return The newly creaated stop condition.
+	 * @return The newly created stop condition.
 	 * @throws StopConditionException
 	 */
 	public static StopCondition getCondition(int conditionType, String conditionValue) throws StopConditionException {
