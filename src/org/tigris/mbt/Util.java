@@ -147,6 +147,12 @@ public class Util {
 		return logger;
 	}
 
+	/**
+	 * Creates an adds a vertex to a graph.
+	 * @param graph The graph to which a vertex is to be added.
+	 * @param strLabel The label of the vertex.
+	 * @return The newly created vertex.
+	 */
 	public static Vertex addVertexToGraph(Graph graph, String strLabel) {
 		Vertex retur = new Vertex();
 		retur.setIndexKey(new Integer(graph.getEdgeCount() + graph.getVertexCount() + 1));
@@ -156,6 +162,18 @@ public class Util {
 		return retur;
 	}
 
+	/**
+	 * Creates and adds an edge to a graph.
+	 * @param graph The graph to which the edge is to be added.
+	 * @param vertexFrom The source point of the edge.
+	 * @param vertexTo The destination point of the edge.
+	 * @param strLabel The label of the edge.
+	 * @param strParameter The parameter(s) to be passed to the method implementing the
+	 * edge in a test.
+	 * @param strGuard The guard of the edge.
+	 * @param strAction The action to be performed.
+	 * @return The newly created edge.
+	 */
 	public static Edge addEdgeToGraph(Graph graph, Vertex vertexFrom, Vertex vertexTo, String strLabel, String strParameter, String strGuard,
 			String strAction) {
 		Edge retur = new Edge();
@@ -172,6 +190,13 @@ public class Util {
 		return retur;
 	}
 
+	/**
+	 * Adds a stop condition for the model.
+	 * @param conditionType The condition type.
+	 * @param conditionValue The value of the condition.
+	 * @return The newly creaated stop condition.
+	 * @throws StopConditionException
+	 */
 	public static StopCondition getCondition(int conditionType, String conditionValue) throws StopConditionException {
 		StopCondition condition = null;
 		try {
