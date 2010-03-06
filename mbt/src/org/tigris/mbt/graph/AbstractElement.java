@@ -188,6 +188,11 @@ public class AbstractElement {
 		return reqTagKey;
 	}
 
+	/**
+	 * Associates a requirement to the edge/vertex.
+	 * @param reqTagKey The requirement. It can be one or many,
+	 * if many that are comma separated.
+	 */
 	public void setReqTagKey(String reqTagKey) {
 		this.reqTagKey = reqTagKey;
 	}
