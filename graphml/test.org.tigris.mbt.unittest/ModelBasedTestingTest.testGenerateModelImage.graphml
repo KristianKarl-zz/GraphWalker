@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:y="http://www.yworks.com/xml/graphml" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://www.yworks.com/xml/schema/graphml/1.1/ygraphml.xsd">
+  <!--Created by yFiles for Java 2.7-->
+  <key for="graphml" id="d0" yfiles.type="resources"/>
+  <key attr.name="url" attr.type="string" for="node" id="d1"/>
+  <key attr.name="description" attr.type="string" for="node" id="d2"/>
+  <key for="node" id="d3" yfiles.type="nodegraphics"/>
+  <key attr.name="url" attr.type="string" for="edge" id="d4"/>
+  <key attr.name="description" attr.type="string" for="edge" id="d5"/>
+  <key for="edge" id="d6" yfiles.type="edgegraphics"/>
+  <graph edgedefault="directed" id="G">
+    <node id="n0">
+      <data key="d3">
+        <y:ShapeNode>
+          <y:Geometry height="30.0" width="43.0" x="181.88095238095238" y="0.0"/>
+          <y:Fill color="#00FF00" color2="#CCFFCC" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="20.634078979492188" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="33.224609375" x="4.8876953125" y="4.682960510253906">Start</y:NodeLabel>
+          <y:Shape type="roundrectangle"/>
+          <y:DropShadow color="#B3A691" offsetX="1" offsetY="1"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n1">
+      <data key="d3">
+        <y:ShapeNode>
+          <y:Geometry height="30.0" width="121.0" x="142.88095238095238" y="158.72711181640625"/>
+          <y:Fill color="#FFCC00" color2="#FFFF00" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="20.634078979492188" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="111.86572265625" x="4.567138671875" y="4.682960510253906">v_BrowserStarted</y:NodeLabel>
+          <y:Shape type="roundrectangle"/>
+          <y:DropShadow color="#B3A691" offsetX="1" offsetY="1"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n2">
+      <data key="d3">
+        <y:ShapeNode>
+          <y:Geometry height="44.2529296875" width="145.0" x="130.88095238095238" y="238.09066772460938"/>
+          <y:Fill color="#FFCC00" color2="#FFFF00" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="37.268157958984375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="137.72607421875" x="3.636962890625" y="3.4923858642578125">v_BaseURL
+REQTAG=UC01 2.2.1</y:NodeLabel>
+          <y:Shape type="roundrectangle"/>
+          <y:DropShadow color="#B3A691" offsetX="1" offsetY="1"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n3">
+      <data key="d3">
+        <y:ShapeNode>
+          <y:Geometry height="44.2529296875" width="145.0" x="149.00595238095238" y="361.7071533203125"/>
+          <y:Fill color="#FFCC00" color2="#FFFF00" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="37.268157958984375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="225.61572265625" x="-40.307861328125" y="3.4923858642578125">v_SearchResult
+REQTAG=UC01 2.2.2.2,UC01 2.2.2</y:NodeLabel>
+          <y:Shape type="roundrectangle"/>
+          <y:DropShadow color="#B3A691" offsetX="1" offsetY="1"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n4">
+      <data key="d3">
+        <y:ShapeNode>
+          <y:Geometry height="30.0" width="128.0" x="139.38095238095238" y="79.36355590820312"/>
+          <y:Fill color="#FFCC00" color2="#FFFF00" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="20.634078979492188" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="118.8544921875" x="4.57275390625" y="4.682960510253906">v_BrowserStopped</y:NodeLabel>
+          <y:Shape type="roundrectangle"/>
+          <y:DropShadow color="#B3A691" offsetX="1" offsetY="1"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n5">
+      <data key="d3">
+        <y:ShapeNode>
+          <y:Geometry height="44.2529296875" width="145.0" x="185.2559523809524" y="460.64186096191406"/>
+          <y:Fill color="#FFCC00" color2="#FFFF00" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="37.268157958984375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="137.72607421875" x="3.636962890625" y="3.4923858642578125">v_BookInformation
+REQTAG=UC01 2.2.3</y:NodeLabel>
+          <y:Shape type="roundrectangle"/>
+          <y:DropShadow color="#B3A691" offsetX="1" offsetY="1"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n6">
+      <data key="d3">
+        <y:ShapeNode>
+          <y:Geometry height="30.0" width="145.0" x="360.94325396825394" y="584.2583465576172"/>
+          <y:Fill color="#FFCC00" color2="#FFFF00" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="20.634078979492188" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="135.06005859375" x="4.969970703125" y="4.682960510253906">v_OtherBoughtBooks</y:NodeLabel>
+          <y:Shape type="roundrectangle"/>
+          <y:DropShadow color="#B3A691" offsetX="1" offsetY="1"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n7">
+      <data key="d3">
+        <y:ShapeNode>
+          <y:Geometry height="44.2529296875" width="133.0" x="142.92261904761904" y="693.6219024658203"/>
+          <y:Fill color="#FFCC00" color2="#FFFF00" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="37.268157958984375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="125.392578125" x="3.8037109375" y="3.4923858642578125">v_ShoppingCart
+REQTAG=UC01 2.3</y:NodeLabel>
+          <y:Shape type="roundrectangle"/>
+          <y:DropShadow color="#B3A691" offsetX="1" offsetY="1"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <edge id="e0" source="n0" target="n4">
+      <data key="d6">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="15.0" tx="0.0" ty="-15.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="standard"/>
+          <y:EdgeLabel alignment="center" backgroundColor="#FFFF99" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" height="19.363555908203125" lineColor="#FFFF00" modelName="side_slider" preferredPlacement="on_edge" ratio="0.0" textColor="#000000" visible="true" width="267.5546875" x="2.0000014532180046" y="10.125">e_init / num_of_books = 0; MAX_BOOKS = 5;</y:EdgeLabel>
+          <y:BendStyle smoothed="true"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e1" source="n1" target="n2">
+      <data key="d6">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="15.0" tx="0.0" ty="-22.12646484375"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="standard"/>
+          <y:EdgeLabel alignment="center" backgroundColor="#FFFF99" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" height="19.363555908203125" lineColor="#FFFF00" modelName="side_slider" preferredPlacement="on_edge" ratio="0.0" textColor="#000000" visible="true" width="95.353515625" x="2.0000014532180046" y="10.125">e_EnterBaseURL</y:EdgeLabel>
+          <y:BendStyle smoothed="true"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e2" source="n2" target="n3">
+      <data key="d6">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="22.12646484375" tx="-18.125" ty="-22.12646484375"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="standard"/>
+          <y:EdgeLabel alignment="center" backgroundColor="#FFFF99" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" height="19.363555908203125" lineColor="#FFFF00" modelName="side_slider" preferredPlacement="on_edge" ratio="0.5" textColor="#000000" visible="true" width="83.623046875" x="-85.623045421782" y="30.0">e_SearchBook</y:EdgeLabel>
+          <y:BendStyle smoothed="true"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e3" source="n4" target="n1">
+      <data key="d6">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="15.0" tx="0.0" ty="-15.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="standard"/>
+          <y:EdgeLabel alignment="center" backgroundColor="#FFFF99" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" height="19.363555908203125" lineColor="#FFFF00" modelName="side_slider" preferredPlacement="on_edge" ratio="0.0" textColor="#000000" visible="true" width="89.8046875" x="2.0000014532180046" y="10.125">e_StartBrowser</y:EdgeLabel>
+          <y:BendStyle smoothed="true"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e4" source="n3" target="n5">
+      <data key="d6">
+        <y:PolyLineEdge>
+          <y:Path sx="36.25000000000003" sy="22.12646484375" tx="0.0" ty="-22.12646484375"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="standard"/>
+          <y:EdgeLabel alignment="center" backgroundColor="#FFFF99" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" height="19.363555908203125" lineColor="#FFFF00" modelName="side_slider" preferredPlacement="on_edge" ratio="1.0" textColor="#000000" visible="true" width="73.744140625" x="-75.74413917178197" y="25.193222045898438">e_ClickBook</y:EdgeLabel>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e5" source="n5" target="n6">
+      <data key="d6">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="22.12646484375" tx="0.0" ty="-15.0">
+            <y:Point x="257.7559523809524" y="534.8947906494141"/>
+            <y:Point x="433.44325396825394" y="534.8947906494141"/>
+          </y:Path>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="standard"/>
+          <y:EdgeLabel alignment="center" backgroundColor="#FFFF99" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" height="19.363555908203125" lineColor="#FFFF00" modelName="side_slider" preferredPlacement="on_edge" ratio="0.8300742812598684" textColor="#000000" visible="true" width="418.041015625" x="177.68730304051957" y="31.000015258789062">e_AddBookToCart [num_of_books&lt;=MAX_BOOKS] / num_of_books++;</y:EdgeLabel>
+          <y:BendStyle smoothed="true"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e6" source="n6" target="n7">
+      <data key="d6">
+        <y:PolyLineEdge>
+          <y:Path sx="-36.25" sy="15.0" tx="44.333333333333314" ty="-22.12646484375">
+            <y:Point x="397.19325396825394" y="678.6219024658203"/>
+            <y:Point x="253.75595238095235" y="678.6219024658203"/>
+          </y:Path>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="standard"/>
+          <y:EdgeLabel alignment="center" backgroundColor="#FFFF99" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" height="19.363555908203125" lineColor="#FFFF00" modelName="side_slider" preferredPlacement="on_edge" ratio="0.27004802905515596" textColor="#000000" visible="true" width="95.798828125" x="-97.79884197901168" y="43.99998474121094">e_ShoppingCart</y:EdgeLabel>
+          <y:BendStyle smoothed="true"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e7" source="n3" target="n7">
+      <data key="d6">
+        <y:PolyLineEdge>
+          <y:Path sx="-36.25" sy="22.12646484375" tx="-44.333333333333314" ty="-22.12646484375">
+            <y:Point x="185.25595238095238" y="420.9600830078125"/>
+            <y:Point x="146.52301587301588" y="420.9600830078125"/>
+            <y:Point x="146.52301587301588" y="668.9401245117188"/>
+            <y:Point x="165.08928571428572" y="668.9401245117188"/>
+          </y:Path>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="standard"/>
+          <y:EdgeLabel alignment="center" backgroundColor="#FFFF99" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" height="19.363555908203125" lineColor="#FFFF00" modelName="side_slider" preferredPlacement="on_edge" ratio="0.4815452334454281" textColor="#000000" visible="true" width="95.798828125" x="-136.5317631797185" y="119.00749345259237">e_ShoppingCart</y:EdgeLabel>
+          <y:BendStyle smoothed="true"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e8" source="n5" target="n7">
+      <data key="d6">
+        <y:PolyLineEdge>
+          <y:Path sx="-48.333333333333314" sy="22.12646484375" tx="0.0" ty="-22.12646484375"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="standard"/>
+          <y:EdgeLabel alignment="center" backgroundColor="#FFFF99" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" height="19.363555908203125" lineColor="#FFFF00" modelName="side_slider" preferredPlacement="on_edge" ratio="0.42857142857142855" textColor="#000000" visible="true" width="95.798828125" x="1.9999963669550027" y="74.03082493373324">e_ShoppingCart</y:EdgeLabel>
+          <y:BendStyle smoothed="true"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e9" source="n7" target="n3">
+      <data key="d6">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="22.12646484375" tx="-54.375" ty="-22.12646484375">
+            <y:Point x="209.42261904761904" y="752.8748321533203"/>
+            <y:Point x="41.81190476190476" y="752.8748321533203"/>
+            <y:Point x="41.81190476190476" y="346.7071533203125"/>
+            <y:Point x="167.13095238095238" y="346.7071533203125"/>
+          </y:Path>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="standard"/>
+          <y:EdgeLabel alignment="center" backgroundColor="#FFFF99" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" height="19.363555908203125" lineColor="#FFFF00" modelName="side_slider" preferredPlacement="on_edge" ratio="0.5147109064573625" textColor="#000000" visible="true" width="83.623046875" x="-253.2337647937593" y="-187.63917782432156">e_SearchBook</y:EdgeLabel>
+          <y:BendStyle smoothed="true"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e10" source="n6" target="n3">
+      <data key="d6">
+        <y:PolyLineEdge>
+          <y:Path sx="36.25" sy="15.0" tx="18.125" ty="-22.12646484375">
+            <y:Point x="469.69325396825394" y="629.2583465576172"/>
+            <y:Point x="657.4638888888888" y="629.2583465576172"/>
+            <y:Point x="657.4638888888888" y="331.7071533203125"/>
+            <y:Point x="239.63095238095238" y="331.7071533203125"/>
+          </y:Path>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="standard"/>
+          <y:EdgeLabel alignment="center" backgroundColor="#FFFF99" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" height="19.363555908203125" lineColor="#FFFF00" modelName="side_slider" preferredPlacement="on_edge" ratio="0.5053669895615465" textColor="#000000" visible="true" width="83.623046875" x="102.14757419162322" y="-261.8235201154436">e_SearchBook</y:EdgeLabel>
+          <y:BendStyle smoothed="true"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e11" source="n5" target="n3">
+      <data key="d6">
+        <y:PolyLineEdge>
+          <y:Path sx="48.33333333333333" sy="22.12646484375" tx="54.375" ty="-22.12646484375">
+            <y:Point x="306.0892857142857" y="519.8947906494141"/>
+            <y:Point x="351.43968253968256" y="519.8947906494141"/>
+            <y:Point x="351.43968253968256" y="346.7071533203125"/>
+            <y:Point x="275.8809523809524" y="346.7071533203125"/>
+          </y:Path>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="standard"/>
+          <y:EdgeLabel alignment="center" backgroundColor="#FFFF99" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" height="19.363555908203125" lineColor="#FFFF00" modelName="side_slider" preferredPlacement="on_edge" ratio="0.491062121748132" textColor="#000000" visible="true" width="83.623046875" x="-40.272658768911185" y="-92.12015860421315">e_SearchBook</y:EdgeLabel>
+          <y:BendStyle smoothed="true"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+  </graph>
+  <data key="d0">
+    <y:Resources/>
+  </data>
+</graphml>
