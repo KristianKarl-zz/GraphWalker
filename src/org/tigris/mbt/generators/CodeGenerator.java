@@ -43,6 +43,10 @@ public class CodeGenerator extends ListGenerator {
 
 	public String[] getNext() {
 		String[] retur = super.getNext();
+		if ( retur[0].isEmpty() ) {
+			retur[1] = "";
+			return retur; 
+		}
 		retur[0] = (first && template[0].length() > 0 ? template[0] + "\n" : "")
 		    + // HEADER
 		    template[1] // BODY
