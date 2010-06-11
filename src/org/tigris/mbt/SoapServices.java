@@ -70,9 +70,9 @@ public class SoapServices {
 
 	public void PassRequirement(String pass) {
 		logger.debug("SOAP service PassRequirement recieving: " + pass);
-		if (pass.toUpperCase().equals("TRUE"))
+		if (pass.equalsIgnoreCase("TRUE"))
 			ModelBasedTesting.getInstance().passRequirement(true);
-		else if (pass.toUpperCase().equals("FALSE"))
+		else if (pass.equalsIgnoreCase("FALSE"))
 			ModelBasedTesting.getInstance().passRequirement(false);
 		else
 			logger.error("SOAP service PassRequirement dont know how to handle: " + pass + "\nOnly the strings true or false are permitted");

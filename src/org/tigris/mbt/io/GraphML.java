@@ -426,7 +426,7 @@ public class GraphML extends AbstractModelHandler {
 				Vertex v = (Vertex) vertices[i];
 
 				// Find all vertices that are start nodes (START_NODE)
-				if (v.getLabelKey().equals(Keywords.START_NODE)) {
+				if (v.getLabelKey().equalsIgnoreCase(Keywords.START_NODE)) {
 					if (g.getOutEdges(v).size() != 1) {
 						throw new RuntimeException("A Start vertex can only have one out edge, look in file: " + g.getFileKey());
 					}
@@ -637,7 +637,7 @@ public class GraphML extends AbstractModelHandler {
 		Object[] vs = graph.getVertices().toArray();
 		for (int i = 0; i < vs.length; i++) {
 			Vertex v = (Vertex) vs[i];
-			if (!v.getLabelKey().equals(Keywords.START_NODE)) {
+			if (!v.getLabelKey().equalsIgnoreCase(Keywords.START_NODE)) {
 				if (graph.getInEdges(v).toArray().length == 0) {
 					String msg = "No in-edges! " + v + " is not reachable," + " from file: '" + v.getFileKey() + "'";
 					logger.error(msg);
@@ -658,7 +658,7 @@ public class GraphML extends AbstractModelHandler {
 		Object[] vertices = src.getVertices().toArray();
 		for (int i = 0; i < vertices.length; i++) {
 			Vertex v = (Vertex) vertices[i];
-			if (v.getLabelKey().equals(Keywords.START_NODE)) {
+			if (v.getLabelKey().equalsIgnoreCase(Keywords.START_NODE)) {
 				continue;
 			}
 			Vertex new_v = new Vertex(v);
@@ -755,7 +755,7 @@ public class GraphML extends AbstractModelHandler {
 		vertices = mainGraph.getVertices().toArray();
 		for (int i = 0; i < vertices.length; i++) {
 			Vertex v = (Vertex) vertices[i];
-			if (v.getLabelKey().equals(Keywords.STOP_NODE)) {
+			if (v.getLabelKey().equalsIgnoreCase(Keywords.STOP_NODE)) {
 				if (stopVertex != null) {
 					throw new RuntimeException("Found more than 1 Stop vertex in file (Only one Stop vertex per file is allowed): '"
 					    + mainGraph.getFileKey() + "'");

@@ -309,7 +309,7 @@ public class Keywords {
 		if (presumedCondition == null)
 			return false;
 		for (StopCondition sc : stopConditions) {
-			if ( sc.getName().equals(presumedCondition.toUpperCase()))
+			if ( sc.getName().equalsIgnoreCase(presumedCondition))
 				return true;
 		}
 		return false;
@@ -328,7 +328,7 @@ public class Keywords {
 			else
 				throw new StopConditionException("Invalid stop condition: " + stopCondition);
 		for (StopCondition sc : stopConditions) {
-			if ( sc.getName().equals(stopCondition.toUpperCase()))
+			if ( sc.getName().equalsIgnoreCase(stopCondition))
 				return sc.getId().intValue();
 		}
 		return -1;
@@ -405,7 +405,7 @@ public class Keywords {
 		if (presumedGenerator == null)
 			return false;
 		for (Generator g : generators) {
-			if ( g.getName().equals(presumedGenerator.toUpperCase()))
+			if ( g.getName().equalsIgnoreCase(presumedGenerator))
 				return true;
 		}
 		return false;
@@ -424,7 +424,7 @@ public class Keywords {
 			else
 				throw new GeneratorException("Invalid generator: " + generator);
 		for (Generator g : generators) {
-			if ( g.getName().equals(generator.toUpperCase()))
+			if ( g.getName().equalsIgnoreCase(generator))
 				return g.getId().intValue();
 		}
 		return -1;
