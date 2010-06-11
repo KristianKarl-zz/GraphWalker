@@ -153,27 +153,27 @@ public class CLI {
 					printHelpText(args[1]);
 				}
 				return;
-			} else if (args[0].equals("requirements")) {
+			} else if (args[0].equalsIgnoreCase("requirements")) {
 				buildRequirementsCLI();
-			} else if (args[0].equals("online")) {
+			} else if (args[0].equalsIgnoreCase("online")) {
 				buildOnlineCLI();
-			} else if (args[0].equals("offline")) {
+			} else if (args[0].equalsIgnoreCase("offline")) {
 				buildOfflineCLI();
-			} else if (args[0].equals("methods")) {
+			} else if (args[0].equalsIgnoreCase("methods")) {
 				buildMethodsCLI();
-			} else if (args[0].equals("merge")) {
+			} else if (args[0].equalsIgnoreCase("merge")) {
 				buildMergeCLI();
-			} else if (args[0].equals("source")) {
+			} else if (args[0].equalsIgnoreCase("source")) {
 				buildSourceCLI();
-			} else if (args[0].equals("manual")) {
+			} else if (args[0].equalsIgnoreCase("manual")) {
 				buildManualCLI();
-			} else if (args[0].equals("xml")) {
+			} else if (args[0].equalsIgnoreCase("xml")) {
 				buildXmlCLI();
-			} else if (args[0].equals("soap")) {
+			} else if (args[0].equalsIgnoreCase("soap")) {
 				buildSoapCLI();
-			} else if (args[0].equals("gui")) {
+			} else if (args[0].equalsIgnoreCase("gui")) {
 				buildGuiCLI();
-			} else if (args[0].equals("log")) {
+			} else if (args[0].equalsIgnoreCase("log")) {
 				buildLogCLI();
 			} else if (args[0].equals("-v") || args[0].equals("--version")) {
 				printVersionInformation();
@@ -196,67 +196,67 @@ public class CLI {
 			/**
 			 * Command: requirements
 			 */
-			if (args[0].equals("requirements")) {
+			if (args[0].equalsIgnoreCase("requirements")) {
 				RunCommandRequirements(cl);
 			}
 			/**
 			 * Command: online
 			 */
-			if (args[0].equals("online")) {
+			if (args[0].equalsIgnoreCase("online")) {
 				RunCommandOnline(cl);
 			}
 			/**
 			 * Command: offline
 			 */
-			else if (args[0].equals("offline")) {
+			else if (args[0].equalsIgnoreCase("offline")) {
 				RunCommandOffline(cl);
 			}
 			/**
 			 * Command: methods
 			 */
-			else if (args[0].equals("methods")) {
+			else if (args[0].equalsIgnoreCase("methods")) {
 				RunCommandMethods(cl);
 			}
 			/**
 			 * Command: merge
 			 */
-			else if (args[0].equals("merge")) {
+			else if (args[0].equalsIgnoreCase("merge")) {
 				RunCommandMerge(cl);
 			}
 			/**
 			 * Command: source
 			 */
-			else if (args[0].equals("source")) {
+			else if (args[0].equalsIgnoreCase("source")) {
 				RunCommandSource(cl);
 			}
 			/**
 			 * Command: xml
 			 */
-			else if (args[0].equals("xml")) {
+			else if (args[0].equalsIgnoreCase("xml")) {
 				RunCommandXml(cl);
 			}
 			/**
 			 * Command: soap
 			 */
-			else if (args[0].equals("soap")) {
+			else if (args[0].equalsIgnoreCase("soap")) {
 				RunCommandSoap(cl);
 			}
 			/**
 			 * Command: gui
 			 */
-			else if (args[0].equals("gui")) {
+			else if (args[0].equalsIgnoreCase("gui")) {
 				RunCommandGui(cl);
 			}
 			/**
 			 * Command: log
 			 */
-			else if (args[0].equals("log")) {
+			else if (args[0].equalsIgnoreCase("log")) {
 				RunCommandLog(cl);
 			}
 			/**
 			 * Command: manual
 			 */
-			else if (args[0].equals("manual")) {
+			else if (args[0].equalsIgnoreCase("manual")) {
 				RunCommandManual(cl);
 			}
 		} catch (ArrayIndexOutOfBoundsException e) {
