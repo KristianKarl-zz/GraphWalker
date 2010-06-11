@@ -4,6 +4,7 @@ import org.tigris.mbt.ModelBasedTesting;
 import org.tigris.mbt.graph.Edge;
 import org.tigris.mbt.graph.Graph;
 import org.tigris.mbt.graph.Vertex;
+import org.tigris.mbt.io.GraphML;
 
 import junit.framework.TestCase;
 
@@ -12,6 +13,19 @@ public class GraphMLTest extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		ModelBasedTesting.getInstance().reset();
+	}
+
+	// Test various types of efsm labels
+	public void testMergeFiles() {
+		try {
+			GraphML modelHandler = new GraphML();
+			modelHandler.load("graphml/test.org.tigris.mbt.unittest/merging");
+			assertEquals( modelHandler.getModel().getVertexCount(), 37 );
+			assertEquals( modelHandler.getModel().getEdgeCount(), 92 );
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			fail(e.getMessage());
+		}
 	}
 
 	// Test various types of efsm labels

@@ -837,7 +837,8 @@ public class GraphML extends AbstractModelHandler {
 			}
 		}
 
-		logger.debug("  Matching nulls from the first list with non-matched items in the second list");
+		Vector<Pair<Edge>> null_matches_from_A_list = new Vector<Pair<Edge>>();
+		logger.debug("  Matching nulls from the A list with non-matched items in the second list");
 		for (int i = 0; i < array_A.length; i++) {
 			Edge a = (Edge) array_A[i];
 			String aLabel = (String) a.getLabelKey();
@@ -846,7 +847,7 @@ public class GraphML extends AbstractModelHandler {
 					Edge b = (Edge) array_B[j];
 					String bLabel = (String) b.getLabelKey();
 					if (bLabel != null) {
-						boolean alreadyMatched = false;
+							boolean alreadyMatched = false;
 						for (Iterator<Pair<Edge>> iter = matches.iterator(); iter.hasNext();) {
 							Pair<Edge> element = iter.next();
 							if (b.equals(element.getSecond())) {
@@ -857,14 +858,15 @@ public class GraphML extends AbstractModelHandler {
 
 						if (alreadyMatched == false) {
 							logger.debug("    adding: " + a + " and " + b);
-							matches.add(new Pair<Edge>(a, b));
+							null_matches_from_A_list.add(new Pair<Edge>(a, b));
 						}
 					}
 				}
 			}
 		}
 
-		logger.debug("  Matching nulls from the second list with non-matched items in the first list");
+		Vector<Pair<Edge>> null_matches_from_B_list = new Vector<Pair<Edge>>();
+		logger.debug("  Matching nulls from the B list with non-matched items in the first list");
 		for (int i = 0; i < array_B.length; i++) {
 			Edge b = (Edge) array_B[i];
 			String bLabel = (String) b.getLabelKey();
@@ -884,12 +886,14 @@ public class GraphML extends AbstractModelHandler {
 
 						if (alreadyMatched == false) {
 							logger.debug("    adding: " + a + " and " + b);
-							matches.add(new Pair<Edge>(a, b));
+							null_matches_from_B_list.add(new Pair<Edge>(a, b));
 						}
 					}
 				}
 			}
 		}
+		matches.addAll(null_matches_from_A_list);
+		matches.addAll(null_matches_from_B_list);
 		return matches;
 	}
 
