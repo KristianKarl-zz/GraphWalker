@@ -85,7 +85,7 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 	 * 
 	 */
 	private static final long serialVersionUID = -8605452811238545133L;
-	private static final String title = "Model-Based Testing 2.2 Beta 14";
+	private static final String title = "Model-Based Testing 2.2 Beta 15";
 
 	private JSplitPane splitPaneMessages = null;
 	private JSplitPane splitPaneGraph = null;
