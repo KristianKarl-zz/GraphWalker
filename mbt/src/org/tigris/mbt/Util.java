@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.Vector;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
@@ -58,6 +59,7 @@ import org.tigris.mbt.graph.AbstractElement;
 import org.tigris.mbt.graph.Edge;
 import org.tigris.mbt.graph.Graph;
 import org.tigris.mbt.graph.Vertex;
+import org.tigris.mbt.io.PrintHTMLTestSequence;
 
 /**
  * This class has some utility functionality used by org.tigris.mbt The
@@ -485,11 +487,29 @@ public class Util {
 						try {
 							out = new PrintStream(executorParam);
 						} catch (FileNotFoundException e) {
-							throw new RuntimeException("offline file '" + executorParam + "' could not be created or is writeprotected.", e);
+							throw new RuntimeException("file '" + executorParam + "' could not be created or is writeprotected.", e);
 						}
 					}
 					if (mbt.isUseGUI() == false) {
 						mbt.writePath(out);
+						if (out != System.out) {
+							out.close();
+						}
+					}
+				} else if (executor.equalsIgnoreCase("manual")) {
+					PrintStream out = System.out;
+					if (executorParam != null && !executorParam.equals("")) {
+						try {
+							out = new PrintStream(executorParam);
+						} catch (FileNotFoundException e) {
+							throw new RuntimeException("file '" + executorParam + "' could not be created or is writeprotected.", e);
+						}
+					}
+					if (mbt.isUseGUI() == false) {
+						Vector<String[]> testSequence = new Vector<String[]>();
+						mbt.writePath(testSequence);
+
+						new PrintHTMLTestSequence(testSequence, out);
 						if (out != System.out) {
 							out.close();
 						}
