@@ -142,6 +142,9 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 			}
 		} catch (UtilEvalError e) {
 			throw new RuntimeException("Malformed model data: " + variableNames[i] + "\nBeanShell error message: '" + e.getMessage() + "'");
+		} catch (NullPointerException e) {
+			logger.warn("Did not get data/value for: " + variableNames[i]);
+			return retur;
 		}
 		return retur;
 	}
