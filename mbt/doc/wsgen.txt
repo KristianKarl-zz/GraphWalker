@@ -1,1 +1,1 @@
-wsgen -cp bin org.tigris.mbt.SoapServices -d bin
+wsgen -cp bin org.graphwalker.SoapServices -d bin

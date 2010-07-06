@@ -6,7 +6,7 @@
   	<TEMPLATE>
 		<HEADER>
 import org.apache.log4j.Logger;
-import org.tigris.mbt.Util;
+import org.graphwalker.Util;
 
 public class mbt_init4 
 {

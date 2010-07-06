@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE MBTINIT SYSTEM "mbt_setup.dtd" >
 <MBTINIT EXECUTOR="online" EXTENDED="false">
-  <MODEL PATH="graphml/test.org.tigris.mbt.unittest/ModelBasedTestingTest.testNewState.graphml"/>
+  <MODEL PATH="graphml/test.org.graphwalker.unittest/ModelBasedTestingTest.testNewState.graphml"/>
   <GENERATOR TYPE="SHORTEST_NON_OPTIMIZED">
     <CONDITION TYPE="EDGE_COVERAGE" VALUE="100"/>
   </GENERATOR>
