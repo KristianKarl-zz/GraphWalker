@@ -154,7 +154,7 @@ public class CLITest extends TestCase {
 		String args[] = { "-v" };
 		runCommand(args);
 		assertTrue("No error messages should occur.", errMsg.isEmpty());
-		pattern = Pattern.compile("^org\\.tigris\\.mbt version 2\\.[\\.0-9]+ \\(revision [0-9]+\\)", Pattern.MULTILINE);
+		pattern = Pattern.compile("^org\\.graphwalker version 2\\.[\\.0-9]+ \\(revision [0-9]+\\)", Pattern.MULTILINE);
 		matcher = pattern.matcher(outMsg);
 		assertTrue(matcher.find());
 	}
