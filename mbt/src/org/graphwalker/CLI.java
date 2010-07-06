@@ -35,38 +35,38 @@ import org.jdom.JDOMException;
  * syntax is:<br>
  * 
  * <pre>
- * java -jar mbt.jar COMMAND <options>
+ * java -jar graphwalker-"+mbt.getVersionString()+".jar COMMAND <options>
  * </pre>
  * 
- * Where mbt.jar is the whole package org.graphwalker built using the tool Fat
+ * Where graphwalker-"+mbt.getVersionString()+".jar is the whole package org.graphwalker built using the tool Fat
  * Jar from http://fjep.sourceforge.net/ using org.graphwalker.CLI as the main
  * class<br>
  * <br>
- * <strong>Example:</strong> Print help for mbt.jar<br>
+ * <strong>Example:</strong> Print help for graphwalker-"+mbt.getVersionString()+".jar<br>
  * 
  * <pre>
- * java -jar mbt.jar help
+ * java -jar graphwalker-"+mbt.getVersionString()+".jar help
  * </pre>
  * 
  * <br>
  * <strong>Example:</strong> Merge graphml files and save the merged result.<br>
  * 
  * <pre>
- * java -jar mbt.jar merge -f folder
+ * java -jar graphwalker-"+mbt.getVersionString()+".jar merge -f folder
  * </pre>
  * 
  * <br>
  * <strong>Example:</strong> Generate offline test sequence, using random walk<br>
  * 
  * <pre>
- * java -jar mbt.jar offline -f folder -g RANDOM -s EDGE_COVERAGE:30
+ * java -jar graphwalker-"+mbt.getVersionString()+".jar offline -f folder -g RANDOM -s EDGE_COVERAGE:30
  * </pre>
  * 
  * <br>
  * <strong>Example:</strong> Generate online test sequence, using shortest walk<br>
  * 
  * <pre>
- * java -jar mbt.jar online -f folder -g A_STAR -s EDGE_COVERAGE:100
+ * java -jar graphwalker-"+mbt.getVersionString()+".jar online -f folder -g A_STAR -s EDGE_COVERAGE:100
  * </pre>
  * 
  * <br>
@@ -74,7 +74,7 @@ import org.jdom.JDOMException;
  * unique)<br>
  * 
  * <pre>
- * java -jar mbt.jar methods -f folder
+ * java -jar graphwalker-"+mbt.getVersionString()+".jar methods -f folder
  * </pre>
  * 
  * <br>
@@ -83,7 +83,7 @@ import org.jdom.JDOMException;
  * added a easier way to structure the abstract test cases, using XML.<br>
  * 
  * <pre>
- * java -jar mbt.jar xml -f testcase.xml
+ * java -jar graphwalker-"+mbt.getVersionString()+".jar xml -f testcase.xml
  * </pre>
  * 
  * <br>
@@ -143,7 +143,7 @@ public class CLI {
 
 	private void run(String[] args) {
 		if (args.length < 1) {
-			System.err.println("Type 'java -jar mbt.jar help' for usage.");
+			System.err.println("Type 'java -jar graphwalker-"+mbt.getVersionString()+".jar help' for usage.");
 			return;
 		} else {
 			if (args[0].equals("help")) {
@@ -183,7 +183,7 @@ public class CLI {
 				return;
 			} else {
 				System.err.println("Unkown command: " + args[0]);
-				System.err.println("Type 'java -jar mbt.jar help' for usage.");
+				System.err.println("Type 'java -jar graphwalker-"+mbt.getVersionString()+".jar help' for usage.");
 				return;
 			}
 		}
@@ -262,54 +262,54 @@ public class CLI {
 		} catch (ArrayIndexOutOfBoundsException e) {
 			logger.warn(e.getMessage());
 			System.err.println("The arguments for either the generator, or the stop-condition, is incorrect.");
-			System.err.println("Example: java -jar mbt.jar offline -f ../demo/model/UC01.graphml -s EDGE_COVERAGE:100 -g A_STAR");
-			System.err.println("Type 'java -jar mbt.jar help " + args[0] + "' for help.");
+			System.err.println("Example: java -jar graphwalker-"+mbt.getVersionString()+".jar offline -f ../demo/model/UC01.graphml -s EDGE_COVERAGE:100 -g A_STAR");
+			System.err.println("Type 'java -jar graphwalker-"+mbt.getVersionString()+".jar help " + args[0] + "' for help.");
 		} catch (MissingOptionException e) {
 			logger.warn(e.getMessage());
 			System.err.println("Mandatory option(s) are missing.");
 			System.err.println(e.getMessage());
-			System.err.println("Type 'java -jar mbt.jar help " + args[0] + "' for help.");
+			System.err.println("Type 'java -jar graphwalker-"+mbt.getVersionString()+".jar help " + args[0] + "' for help.");
 		} catch (MissingArgumentException e) {
 			logger.warn(e.getMessage());
 			System.err.println("Argument is required to the option.");
 			System.err.println(e.getMessage());
-			System.err.println("Type 'java -jar mbt.jar help " + args[0] + "' for help.");
+			System.err.println("Type 'java -jar graphwalker-"+mbt.getVersionString()+".jar help " + args[0] + "' for help.");
 		} catch (UnrecognizedOptionException e) {
 			logger.warn(e.getMessage());
 			System.err.println(e.getMessage());
-			System.err.println("Type 'java -jar mbt.jar help " + args[0] + "' for help.");
+			System.err.println("Type 'java -jar graphwalker-"+mbt.getVersionString()+".jar help " + args[0] + "' for help.");
 		} catch (StopConditionException e) {
 			logger.warn(e.getMessage());
 			System.err.println(e.getMessage());
-			System.err.println("Type 'java -jar mbt.jar help " + args[0] + "' for help.");
+			System.err.println("Type 'java -jar graphwalker-"+mbt.getVersionString()+".jar help " + args[0] + "' for help.");
 		} catch (GeneratorException e) {
 			logger.warn(e.getMessage());
 			System.err.println(e.getMessage());
-			System.err.println("Type 'java -jar mbt.jar help " + args[0] + "' for help.");
+			System.err.println("Type 'java -jar graphwalker-"+mbt.getVersionString()+".jar help " + args[0] + "' for help.");
 		} catch (JDOMException e) {
 			logger.warn(e.getMessage());
 			System.err.println("Can not access file: " + e.getMessage());
-			System.err.println("Type 'java -jar mbt.jar help " + args[0] + "' for help.");
+			System.err.println("Type 'java -jar graphwalker-"+mbt.getVersionString()+".jar help " + args[0] + "' for help.");
 		} catch (FileNotFoundException e) {
 			logger.warn(e.getMessage());
 			System.err.println("Can not access file: " + e.getMessage());
-			System.err.println("Type 'java -jar mbt.jar help " + args[0] + "' for help.");
+			System.err.println("Type 'java -jar graphwalker-"+mbt.getVersionString()+".jar help " + args[0] + "' for help.");
 		} catch (IOException e) {
 			logger.warn(e.getMessage());
 			System.err.println(e.getMessage());
-			System.err.println("Type 'java -jar mbt.jar help " + args[0] + "' for help.");
+			System.err.println("Type 'java -jar graphwalker-"+mbt.getVersionString()+".jar help " + args[0] + "' for help.");
 		} catch (Exception e) {
 			Util.logStackTraceToError(e);
 			System.err.println(e.getMessage());
-			System.err.println("Type 'java -jar mbt.jar help " + args[0] + "' for help.");
+			System.err.println("Type 'java -jar graphwalker-"+mbt.getVersionString()+".jar help " + args[0] + "' for help.");
 		} finally {
 			timer.cancel();
 		}
 	}
 
 	private void printGeneralHelpText() {
-		System.out.println("usage: 'java -jar mbt.jar <COMMAND> [OPTION] [ARGUMENT]'\n");
-		System.out.println("Type 'java -jar mbt.jar help <COMMAND>' to get specific help about a command.");
+		System.out.println("usage: 'java -jar graphwalker-"+mbt.getVersionString()+".jar <COMMAND> [OPTION] [ARGUMENT]'\n");
+		System.out.println("Type 'java -jar graphwalker-"+mbt.getVersionString()+".jar help <COMMAND>' to get specific help about a command.");
 		System.out.println("Valid commands are:");
 		System.out.println("    gui");
 		System.out.println("    help");
@@ -323,7 +323,7 @@ public class CLI {
 		System.out.println("    source");
 		System.out.println("    log");
 		System.out.println("    xml\n");
-		System.out.println("Type 'java -jar mbt.jar -v (--version)' for version information.");
+		System.out.println("Type 'java -jar graphwalker-"+mbt.getVersionString()+".jar -v (--version)' for version information.");
 	}
 
 	private void printHelpText(String helpSection) {
@@ -376,12 +376,12 @@ public class CLI {
 				+ "MBT parses the log file and shows the user how it traversed the model." 
 				+ " This is usefull when the user whishes to debug a session, and analyze the test.";
 		} else {
-			System.err.println("Type 'java -jar mbt.jar help' for usage.");
+			System.err.println("Type 'java -jar graphwalker-"+mbt.getVersionString()+".jar help' for usage.");
 			return;
 		}
 
 		HelpFormatter f = new HelpFormatter();
-		f.printHelp(100, "java -jar mbt.jar " + helpSection.toLowerCase(), header, opt, "", true);
+		f.printHelp(100, "java -jar graphwalker-"+mbt.getVersionString()+".jar " + helpSection.toLowerCase(), header, opt, "", true);
 	}
 
 	@SuppressWarnings("static-access")
@@ -575,7 +575,7 @@ public class CLI {
 	 * Print version information
 	 */
 	private void printVersionInformation() {
-		System.out.println("org.graphwalker version 2.2 (revision 800) Beta 15\n");
+		System.out.println("org.graphwalker version "+mbt.getVersionString()+"\n");
 		System.out.println("org.graphwalker is open source software licensed under GPL");
 		System.out.println("The software (and it's source) can be downloaded from http://mbt.tigris.org/\n");
 		System.out.println("This package contains following software packages:");
@@ -994,7 +994,7 @@ public class CLI {
 	private boolean helpNeeded(String module, boolean condition, String message) {
 		if (condition) {
 			System.out.println(message);
-			System.out.println("Type 'java -jar mbt.jar help " + module + "' for help.");
+			System.out.println("Type 'java -jar graphwalker-"+mbt.getVersionString()+".jar help " + module + "' for help.");
 		}
 		return condition;
 	}
