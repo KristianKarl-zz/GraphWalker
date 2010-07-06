@@ -1,10 +1,10 @@
 #Fat Jar Configuration File
-#Fri Jul 02 14:49:28 CEST 2010
+#Tue Jul 06 11:23:52 CEST 2010
 onejar.license.required=true
 manifest.classpath=
 manifest.removesigners=true
 onejar.checkbox=false
-jarname=mbt-2.2-beta16.jar
+jarname=graphwalker-2.2.jar
 manifest.mergeall=true
 manifest.mainclass=org.graphwalker.CLI
 manifest.file=<createnew>

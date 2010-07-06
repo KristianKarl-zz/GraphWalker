@@ -17,6 +17,8 @@
 
 package org.graphwalker;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
@@ -25,11 +27,16 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Properties;
 import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
+import org.apache.log4j.SimpleLayout;
+import org.apache.log4j.WriterAppender;
 import org.graphwalker.GUI.App;
 import org.graphwalker.GUI.Status;
 import org.graphwalker.conditions.AlternativeCondition;
@@ -323,13 +330,12 @@ public class ModelBasedTesting {
 			String str = "REQUIREMENT: '" + v.getReqTagKey() + "' has ";
 			if (pass) {
 				str += "PASSED, at " + v;
-				if ( v.getReqTagResult() == 0 ) {
+				if (v.getReqTagResult() == 0) {
 					v.setReqTagResult(1);
 				}
-			}
-			else {
+			} else {
 				str += "FAILED, at " + v;
-				if ( v.getReqTagResult() != 2 ) {
+				if (v.getReqTagResult() != 2) {
 					v.setReqTagResult(2);
 				}
 			}
@@ -502,6 +508,18 @@ public class ModelBasedTesting {
 			return getMachine().getStatisticsString();
 		}
 		logger.warn("Trying to retrieve statistics without specifying machine");
+		return "";
+	}
+
+	public String getVersionString() {
+		Properties properties = new Properties();
+		try {
+			properties.load(getClass().getResourceAsStream("/org/graphwalker/resources/version.properties"));
+			return properties.getProperty("version.major") + "." + properties.getProperty("version.minor") + "."
+			    + properties.getProperty("version.fix");
+		} catch (IOException e) {
+			Util.logStackTraceToError(e);
+		}
 		return "";
 	}
 
@@ -1035,12 +1053,12 @@ public class ModelBasedTesting {
 
 	public AbstractElement decrementVisited(Integer index) {
 		AbstractElement e = getMachine().findElement(index);
-		if ( e.getVisitedKey() > 0 ) 
+		if (e.getVisitedKey() > 0)
 			e.setVisitedKey(e.getVisitedKey() - 1);
 		return e;
-  }
+	}
 
 	public void setAllUnvisited() {
-	  getMachine().setAllUnvisited();
-  }
+		getMachine().setAllUnvisited();
+	}
 }
