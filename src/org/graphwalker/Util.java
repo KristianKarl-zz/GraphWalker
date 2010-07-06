@@ -134,17 +134,10 @@ public class Util {
 	@SuppressWarnings("unchecked")
 	public static Logger setupLogger(Class classParam) {
 		Logger logger = Logger.getLogger(classParam);
-		if (new File("mbt.properties").canRead()) {
+		if (new File("graphwalker.properties").canRead()) {
 			PropertyConfigurator.configure("mbt.properties");
 		} else {
-			try {
-				WriterAppender writerAppender = new WriterAppender(new SimpleLayout(), new FileOutputStream("mbt.log"));
-				logger.addAppender(writerAppender);
-				logger.setLevel((Level) Level.ERROR);
-			} catch (Exception e) {
-				throw new RuntimeException(e.getMessage());
-			}
-
+			PropertyConfigurator.configure(classParam.getResource("/org/graphwalker/resources/graphwalker.properties"));
 		}
 		return logger;
 	}
