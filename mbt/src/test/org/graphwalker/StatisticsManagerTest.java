@@ -168,16 +168,20 @@ public class StatisticsManagerTest extends TestCase {
 		statisticsManager.setReportTemplate("templates/short.report");
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		statisticsManager.writeFullReport(new PrintStream(out));
-		assertEquals("<table cellpadding=\"5px\">" + Util.newline + "<tr>" + Util.newline
-		    + "<td rowspan=\"4\"><img src=\"http://chart.apis.google.com/chart?" + "chs=300x200&" + "chxt=x,y&" + "chxr=1,0,100|0,0,7&"
-		    + "chco=ff0000,00ff00,0000ff,000000,777777&"
-		    + "chd=t:0,0,25,25,50,50,75,100|0,33,33,67,67,100,100,100|0,0,0,0,17,17,33,50|0,0,0,0,0,0,10,20&"
-		    + "cht=lc\" alt=\"Coverage\"></td><td style=\"background-color: #f00\"> </td><td>Edge Coverage</td>" + Util.newline + "</tr>"
-		    + Util.newline + "<tr>" + Util.newline + "<td style=\"background-color: #0f0\"> </td><td>State Coverage</td>" + Util.newline
-		    + "</tr>" + Util.newline + "<tr>" + Util.newline + "<td style=\"background-color: #00f\"> </td><td>2-Edge Sequence Coverage</td>"
-		    + Util.newline + "</tr>" + Util.newline + "<tr>" + Util.newline
-		    + "<td style=\"background-color: #000\"> </td><td>3-Edge Sequence Coverage</td>" + Util.newline + "</tr>" + Util.newline
-		    + "</table>" + Util.newline, out.toString());
+		assertEquals(
+		    "<table cellpadding=\"5px\">"
+		        + Util.newline
+		        + "<tr>"
+		        + Util.newline
+		        + "<td rowspan=\"4\"><img src=\"http://chart.apis.google.com/chart?"
+		        + "chs=300x200&"
+		        + "amp;chxt=x,y&amp;chxr=1,0,100|0,0,7&amp;chco=ff0000,00ff00,0000ff,000000,777777&amp;chd=t:0,0,25,25,50,50,75,100|0,33,33,67,67,100,100,100|0,0,0,0,17,17,33,50|0,0,0,0,0,0,10,20&amp;"
+		        + "cht=lc\" alt=\"Coverage\"></td><td style=\"background-color: #f00\"> </td><td>Edge Coverage</td>" + Util.newline + "</tr>"
+		        + Util.newline + "<tr>" + Util.newline + "<td style=\"background-color: #0f0\"> </td><td>State Coverage</td>" + Util.newline
+		        + "</tr>" + Util.newline + "<tr>" + Util.newline
+		        + "<td style=\"background-color: #00f\"> </td><td>2-Edge Sequence Coverage</td>" + Util.newline + "</tr>" + Util.newline
+		        + "<tr>" + Util.newline + "<td style=\"background-color: #000\"> </td><td>3-Edge Sequence Coverage</td>" + Util.newline
+		        + "</tr>" + Util.newline + "</table>" + Util.newline, out.toString());
 	}
 
 }
