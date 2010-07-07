@@ -116,23 +116,23 @@ public class CLITest extends TestCase {
 	}
 
 	private void moveMbtPropertiesFile() {
-		File mbt_properties = new File("mbt.properties");
+		File mbt_properties = new File("graphwalker.properties");
 		if (mbt_properties.exists()) {
-			mbt_properties.renameTo(new File("mbt.properties.bak"));
+			mbt_properties.renameTo(new File("graphwalker.properties.bak"));
 		} else {
-			fail("Expected mbt.properties to exist!");
+			fail("Expected graphwalker.properties to exist!");
 		}
-		assertFalse(new File("mbt.properties").exists());
+		assertFalse(new File("graphwalker.properties").exists());
 	}
 
 	private void restoreMbtPropertiesFile() {
-		File mbt_properties = new File("mbt.properties.bak");
+		File mbt_properties = new File("graphwalker.properties.bak");
 		if (mbt_properties.exists()) {
-			mbt_properties.renameTo(new File("mbt.properties"));
+			mbt_properties.renameTo(new File("graphwalker.properties"));
 		} else {
-			fail("Expected mbt.properties.bak to exist!");
+			fail("Expected graphwalker.properties.bak to exist!");
 		}
-		assertFalse(new File("mbt.properties.bak").exists());
+		assertFalse(new File("graphwalker.properties.bak").exists());
 	}
 
 	/**
@@ -141,10 +141,11 @@ public class CLITest extends TestCase {
 	public void testNoArgs() {
 		String args[] = {};
 		runCommand(args);
-		pattern = Pattern.compile("Type 'java -jar mbt.jar help' for usage.", Pattern.MULTILINE);
+		pattern = Pattern.compile(
+		    "Type 'java -jar graphwalker-" + ModelBasedTesting.getInstance().getVersionString() + ".jar help' for usage.", Pattern.MULTILINE);
 		matcher = pattern.matcher(errMsg);
 		assertTrue(matcher.find());
-		assertTrue("Nothing should be written to standard output.", outMsg.isEmpty());
+		assertTrue("Nothing should be written to standard output: " + outMsg, outMsg.isEmpty());
 	}
 
 	/**
@@ -153,8 +154,8 @@ public class CLITest extends TestCase {
 	public void testVersion() {
 		String args[] = { "-v" };
 		runCommand(args);
-		assertTrue("No error messages should occur.", errMsg.isEmpty());
-		pattern = Pattern.compile("^org\\.graphwalker version 2\\.[\\.0-9]+ \\(revision [0-9]+\\)", Pattern.MULTILINE);
+		assertTrue("No error messages should occur: " + errMsg, errMsg.isEmpty());
+		pattern = Pattern.compile("^org\\.graphwalker version " + ModelBasedTesting.getInstance().getVersionString(), Pattern.MULTILINE);
 		matcher = pattern.matcher(outMsg);
 		assertTrue(matcher.find());
 	}
@@ -167,10 +168,11 @@ public class CLITest extends TestCase {
 		moveMbtPropertiesFile();
 		runCommand(args);
 		restoreMbtPropertiesFile();
-		pattern = Pattern.compile("Type 'java -jar mbt.jar help' for usage.", Pattern.MULTILINE);
+		pattern = Pattern.compile(
+		    "Type 'java -jar graphwalker-" + ModelBasedTesting.getInstance().getVersionString() + ".jar help' for usage.", Pattern.MULTILINE);
 		matcher = pattern.matcher(errMsg);
 		assertTrue(matcher.find());
-		assertTrue("Nothing should be written to standard output.", outMsg.isEmpty());
+		assertTrue("Nothing should be written to standard output: " + outMsg, outMsg.isEmpty());
 	}
 
 	/**
@@ -185,7 +187,7 @@ public class CLITest extends TestCase {
 		System.out.println(errMsg);
 		assertEquals("No error messages should occur.", "", errMsg);
 		assertEquals(20, outMsg.split("\r\n|\r|\n").length); // 20 rows as 1 step =
-																												 // 1 edge
+		// 1 edge
 	}
 
 	/**
@@ -197,7 +199,7 @@ public class CLITest extends TestCase {
 		pattern = Pattern.compile("^Unkown command: .*\\s+", Pattern.MULTILINE);
 		matcher = pattern.matcher(errMsg);
 		assertTrue(matcher.find());
-		assertTrue("Nothing should be written to standard output.", outMsg.isEmpty());
+		assertTrue("Nothing should be written to standard output: " + outMsg, outMsg.isEmpty());
 	}
 
 	/**
@@ -241,7 +243,7 @@ public class CLITest extends TestCase {
 	public void testOfflineRandomEdgeCoverage() {
 		String args[] = { "offline", "-f", "graphml/reqtags/ExtendedMain.graphml", "-g", "RANDOM", "-s", "EDGE_COVERAGE:100" };
 		runCommand(args);
-		assertTrue("No error messgaes should occur.", errMsg.isEmpty());
+		assertTrue("No error messgaes should occur: " + errMsg, errMsg.isEmpty());
 		assertTrue("Expected at least 78 lines, got: " + outMsg.split("\r\n|\r|\n").length, outMsg.split("\r\n|\r|\n").length >= 78);
 	}
 
@@ -252,7 +254,7 @@ public class CLITest extends TestCase {
 	public void testOfflineRandomStateCoverage() {
 		String args[] = { "offline", "-f", "graphml/reqtags/ExtendedMain.graphml", "-g", "RANDOM", "-s", "VERTEX_COVERAGE:100" };
 		runCommand(args);
-		assertTrue("No error messages should occur.", errMsg.isEmpty());
+		assertTrue("No error messages should occur: " + errMsg, errMsg.isEmpty());
 		assertTrue("Expected at least 24 lines, got: " + outMsg.split("\r\n|\r|\n").length, outMsg.split("\r\n|\r|\n").length >= 24);
 	}
 
@@ -286,7 +288,7 @@ public class CLITest extends TestCase {
 	public void testListReqTags() {
 		String args[] = { "requirements", "-f", "graphml/reqtags/ExtendedMain.graphml" };
 		runCommand(args);
-		assertTrue("No error messages should occur.", errMsg.isEmpty());
+		assertTrue("No error messages should occur: " + errMsg, errMsg.isEmpty());
 		assertEquals(6, outMsg.split("\r\n|\r|\n").length);
 	}
 
@@ -297,7 +299,7 @@ public class CLITest extends TestCase {
 	public void testGenerateCodeFromTemplateHeaderAndFooter() {
 		String args[] = { "source", "-f", "graphml/methods/Main.graphml", "-t", "templates/junit.template" };
 		runCommand(args);
-		assertTrue("No error messages should occur.", errMsg.isEmpty());
+		assertTrue("No error messages should occur: " + errMsg, errMsg.isEmpty());
 		pattern = Pattern.compile(" implements the ", Pattern.MULTILINE);
 		matcher = pattern.matcher(outMsg);
 		assertTrue(matcher.find());
@@ -310,7 +312,7 @@ public class CLITest extends TestCase {
 	public void testGenerateCodeFromTemplate() {
 		String args[] = { "source", "-f", "graphml/methods/Main.graphml", "-t", "templates/perl.template" };
 		runCommand(args);
-		assertTrue("No error messages should occur.", errMsg.isEmpty());
+		assertTrue("No error messages should occur: " + errMsg, errMsg.isEmpty());
 		pattern = Pattern.compile(" implements the ", Pattern.MULTILINE);
 		matcher = pattern.matcher(outMsg);
 		assertTrue(matcher.find());
@@ -363,7 +365,7 @@ public class CLITest extends TestCase {
 	public void testCountMethods() {
 		String args[] = { "methods", "-f", "graphml/methods/Main.graphml" };
 		runCommand(args);
-		assertTrue("No error messages should occur.", errMsg.isEmpty());
+		assertTrue("No error messages should occur: " + errMsg, errMsg.isEmpty());
 		pattern = Pattern
 		    .compile(
 		        "e_Cancel\\s+e_CloseApp\\s+e_CloseDB\\s+e_CloseDialog\\s+e_EnterCorrectKey\\s+e_EnterInvalidKey\\s+e_Initialize\\s+e_No\\s+e_Start\\s+e_StartWithDatabase\\s+e_Yes\\s+v_EnterMasterCompositeMasterKey\\s+v_InvalidKey\\s+v_KeePassNotRunning\\s+v_MainWindowEmpty\\s+v_MainWindow_DB_Loaded\\s+v_SaveBeforeCloseLock",
@@ -380,9 +382,10 @@ public class CLITest extends TestCase {
 		String args[] = { "methods", "-f", "graphml/test24" };
 		runCommand(args);
 		pattern = Pattern.compile(
-		    "Could not parse file: '.*graphml.test24.(Camera|Time).graphml'. Edge has a label 'BACKTRACK', which is a reserved keyword", Pattern.MULTILINE);
+		    "Could not parse file: '.*graphml.test24.(Camera|Time).graphml'. Edge has a label 'BACKTRACK', which is a reserved keyword",
+		    Pattern.MULTILINE);
 		matcher = pattern.matcher(errMsg);
-		System.out.println( errMsg );
+		System.out.println(errMsg);
 		assertTrue(matcher.find());
 	}
 
@@ -393,7 +396,7 @@ public class CLITest extends TestCase {
 	public void testXmlSetup() {
 		String args[] = { "xml", "-f", "graphml/reqtags/mbt_init6.xml" };
 		runCommand(args);
-		assertTrue("No error messages should occur.", errMsg.isEmpty());
+		assertTrue("No error messages should occur: " + errMsg, errMsg.isEmpty());
 		assertEquals(6, outMsg.split("\r\n|\r|\n").length);
 	}
 
@@ -403,7 +406,7 @@ public class CLITest extends TestCase {
 	public void testSOAPWithXML() {
 		String args[] = { "soap", "-f", "graphml/reqtags/mbt_init6.xml" };
 		runCommand(args);
-		assertTrue("No error messages should occur.", errMsg.isEmpty());
+		assertTrue("No error messages should occur: " + errMsg, errMsg.isEmpty());
 		assertEquals(true, outMsg
 		    .matches("Now running as a SOAP server. For the WSDL file, see: http://.*:9090/mbt-services\\?WSDL\\s+Press Ctrl\\+C to quit\\s+"));
 	}
@@ -414,7 +417,7 @@ public class CLITest extends TestCase {
 	public void testSOAPWithoutXML() {
 		String args[] = { "soap" };
 		runCommand(args);
-		assertTrue("No error messages should occur.", errMsg.isEmpty());
+		assertTrue("No error messages should occur: " + errMsg, errMsg.isEmpty());
 		assertEquals(true, outMsg
 		    .matches("Now running as a SOAP server. For the WSDL file, see: http://.*:9090/mbt-services\\?WSDL\\s+Press Ctrl\\+C to quit\\s+"));
 	}
@@ -425,7 +428,7 @@ public class CLITest extends TestCase {
 	public void testSOAPWithCorrectClassPathInXML() {
 		String args[] = { "soap", "-f", "graphml/reqtags/mbt_init8.xml" };
 		runCommand(args);
-		assertTrue("No error messages should occur.", errMsg.isEmpty());
+		assertTrue("No error messages should occur: " + errMsg, errMsg.isEmpty());
 		assertEquals(true, outMsg
 		    .matches("Now running as a SOAP server. For the WSDL file, see: http://.*:9090/mbt-services\\?WSDL\\s+Press Ctrl\\+C to quit\\s+"));
 	}
@@ -445,7 +448,7 @@ public class CLITest extends TestCase {
 	public void testReachedVertexXML() {
 		String args[] = { "xml", "-f", "xml/ReachedVertex.xml" };
 		runCommand(args);
-		System.out.println( errMsg );
-		assertTrue("No error messages should occur.", errMsg.isEmpty());
+		System.out.println(errMsg);
+		assertTrue("No error messages should occur: " + errMsg, errMsg.isEmpty());
 	}
 }
