@@ -16,6 +16,7 @@ import java.net.URLClassLoader;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -131,7 +132,7 @@ public class Util {
 	public static Logger setupLogger(Class classParam) {
 		Logger logger = Logger.getLogger(classParam);
 		if (new File("graphwalker.properties").canRead()) {
-			PropertyConfigurator.configure("mbt.properties");
+			PropertyConfigurator.configure("graphwalker.properties");
 		} else {
 			PropertyConfigurator.configure(classParam.getResource("/org/graphwalker/resources/graphwalker.properties"));
 		}
@@ -748,13 +749,22 @@ public class Util {
 
 	public static String readWSPort() {
 		PropertiesConfiguration conf = null;
-		try {
-			conf = new PropertiesConfiguration("mbt.properties");
-		} catch (ConfigurationException e) {
-			logger.error(e.getMessage());
+		if (new File("graphwalker.properties").canRead()) {
+			try {
+				conf = new PropertiesConfiguration("graphwalker.properties");
+			} catch (ConfigurationException e) {
+				logger.error(e.getMessage());
+			}
+		} else {
+			conf = new PropertiesConfiguration();
+			try {
+				conf.load( Util.class.getResourceAsStream("/org/graphwalker/resources/graphwalker.properties"));			
+			} catch (ConfigurationException e) {
+				logger.error(e.getMessage());
+			}
 		}
-		String port = conf.getString("mbt.ws.port");
-		logger.debug("Read port from mbt.properties: " + port);
+		String port = conf.getString("graphwalker.ws.port");
+		logger.debug("Read port from graphwalker.properties: " + port);
 		if (port == null) {
 			port = "9090";
 			logger.debug("Setting port to: 9090");
