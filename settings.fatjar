@@ -1,5 +1,5 @@
 #Fat Jar Configuration File
-#Tue Jul 06 11:23:52 CEST 2010
+#Wed Jul 07 15:26:38 CEST 2010
 onejar.license.required=true
 manifest.classpath=
 manifest.removesigners=true
@@ -10,5 +10,5 @@ manifest.mainclass=org.graphwalker.CLI
 manifest.file=<createnew>
 jarname.isextern=false
 onejar.expand=
-excludes=<po|mbt-trunk>~test/;<po|mbt-trunk>~.svn/;<jar|junit.jar>
+excludes=<po|graphwalker>~.svn/;<po|graphwalker>~test/;<jar|junit.jar>
 includes=
