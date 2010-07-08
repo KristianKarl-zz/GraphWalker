@@ -1,0 +1,14 @@
+#Fat Jar Configuration File
+#Wed Jul 07 15:26:38 CEST 2010
+onejar.license.required=true
+manifest.classpath=
+manifest.removesigners=true
+onejar.checkbox=false
+jarname=graphwalker-2.2.jar
+manifest.mergeall=true
+manifest.mainclass=org.graphwalker.CLI
+manifest.file=<createnew>
+jarname.isextern=false
+onejar.expand=
+excludes=<po|graphwalker>~.svn/;<po|graphwalker>~test/;<jar|junit.jar>
+includes=
