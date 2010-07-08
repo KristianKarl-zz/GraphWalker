@@ -16,7 +16,6 @@ import java.net.URLClassLoader;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Properties;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
