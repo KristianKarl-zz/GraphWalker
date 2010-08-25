@@ -60,4 +60,7 @@ public class UtilTest extends TestCase {
 		assertEquals(true, Util.printClassPath().length() > 0);
 	}
 
+	public void testReadPropertySOAP_GUI() {		
+		assertEquals(true, Util.readSoapGuiStartupState()==true);
+	}
 }

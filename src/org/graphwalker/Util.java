@@ -16,6 +16,7 @@ import java.net.URLClassLoader;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -763,12 +764,41 @@ public class Util {
 			}
 		}
 		String port = conf.getString("graphwalker.ws.port");
-		logger.debug("Read port from graphwalker.properties: " + port);
+		logger.debug("Read graphwalker.ws.port from graphwalker.properties: " + port);
 		if (port == null) {
 			port = "9090";
 			logger.debug("Setting port to: 9090");
 		}
 		return port;
+	}
+
+
+	
+	public static Boolean readSoapGuiStartupState() {
+		PropertiesConfiguration conf = null;
+		if (new File("graphwalker.properties").canRead()) {
+			try {
+				conf = new PropertiesConfiguration("graphwalker.properties");
+			} catch (ConfigurationException e) {
+				logger.error(e.getMessage());
+			}
+		} else {
+			conf = new PropertiesConfiguration();
+			try {
+				conf.load( Util.class.getResourceAsStream("/org/graphwalker/resources/graphwalker.properties"));			
+			} catch (ConfigurationException e) {
+				logger.error(e.getMessage());
+			}
+		}
+		Boolean soapGuiState = false;
+		try {
+			soapGuiState = conf.getBoolean("org.graphwalker.GUI.startSOAP");
+		} catch ( NoSuchElementException e ) {
+			logger.debug("org.graphwalker.GUI.startSOAP not found in graphwalker.properties");
+			soapGuiState = false;
+		}
+		logger.debug("Read org.graphwalker.GUI.startSOAP from graphwalker.properties: " + soapGuiState);
+		return soapGuiState;
 	}
 
 	public static String printClassPath() {

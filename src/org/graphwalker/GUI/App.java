@@ -907,6 +907,7 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 		toolBar.add(nextButton);
 
 		soapButton = makeNavigationCheckBoxButton("soap", SOAP, "Run MBT in SOAP(Web Services) mode", "Soap");
+		soapButton.setSelected(Util.readSoapGuiStartupState());
 		toolBar.add(soapButton);
 
 		centerOnVertexButton = makeNavigationCheckBoxButton("centerOnVertex", CENTERONVERTEX, "Center the layout on the current vertex",
