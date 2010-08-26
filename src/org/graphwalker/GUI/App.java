@@ -118,6 +118,7 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 	private JButton nextButton;
 	private JCheckBox soapButton;
 	private JCheckBox centerOnVertexButton;
+	private StatusBar statusBar;
 
 	private Status status = new Status();
 	private Vector<ParseLog.LoggedItem> parsedLogFile = null;
@@ -207,10 +208,13 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 		endpoint = Endpoint.publish(wsURL, soapService);
 
 		try {
-			logger.info("Now running as a SOAP server. For the WSDL file, see: "
-			    + wsURL.replace("0.0.0.0", InetAddress.getLocalHost().getHostName()) + "?WSDL");
-			JOptionPane.showMessageDialog(App.getInstance(), "Now running as a SOAP server. For the WSDL file, see: "
-			    + wsURL.replace("0.0.0.0", InetAddress.getLocalHost().getHostName()) + "?WSDL");
+			String msg = "Now running as a SOAP server. For the WSDL file, see: "
+		    + wsURL.replace("0.0.0.0", InetAddress.getLocalHost().getHostName()) + "?WSDL"; 
+			logger.info(msg);
+			if ( Util.readSoapGuiStartupState() == false ) {
+				JOptionPane.showMessageDialog(App.getInstance(), msg);
+			}
+			statusBar.setMessage(msg);
 		} catch (UnknownHostException e) {
 			logger.error("Failed to start the SOAP service. " + e.getMessage());
 			JOptionPane.showMessageDialog(App.getInstance(), "Failed to start the SOAP service. " + e.getMessage());
@@ -270,6 +274,7 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 	public void load() {
 		logger.debug("Entry");
 		status.setStopped();
+		statusBar.setMessage("Stopped");
 
 		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("XML files", "xml");
@@ -372,11 +377,13 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 		if (soapButton.isSelected()) {
 			status.unsetState(Status.stopped);
 			status.setState(Status.executingSoapTest);
+			statusBar.setMessage("Running test in SOAP mode");
 			runSoap();
 		} else {
 			logger.debug("Loading model");
 			status.unsetState(Status.stopped);
 			status.setState(Status.paused);
+			statusBar.setMessage("Paused");
 			ModelBasedTesting.getInstance().setUseGUI();
 			try {
 				Util.loadMbtFromXml(xmlFile.getAbsolutePath());
@@ -455,6 +462,7 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 		} else {
 			status.setState(Status.running);
 		}
+		statusBar.setMessage("Running");
 		setButtons();
 	}
 
@@ -462,6 +470,7 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 		logger.debug("Entry");
 		if (executingJavaTest == true) {
 			status.setState(Status.executingJavaTest);
+			statusBar.setMessage("Executing a Java test");
 		} else {
 			status.unsetState(Status.executingJavaTest);
 		}
@@ -498,6 +507,7 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 	public void stop() {
 		logger.debug("Entry");
 		status.setState(Status.stopped);
+		statusBar.setMessage("Stopped");
 		setButtons();
 	}
 
@@ -506,6 +516,7 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 		status.unsetState(Status.stopped);
 		status.unsetState(Status.running);
 		status.setState(Status.paused);
+		statusBar.setMessage("Paused");
 		setButtons();
 	}
 
@@ -598,6 +609,7 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 		}
 		if (ModelBasedTesting.getInstance().hasNextStep() == false) {
 			status.setState(Status.stopped);
+			statusBar.setMessage("Stopped");
 			setButtons();
 			return;
 		}
@@ -630,6 +642,7 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 	public void reload() {
 		logger.debug("reload");
 		status.setStopped();
+		statusBar.setMessage("Stopped");
 		loadModel();
 	}
 
@@ -968,6 +981,9 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 		JToolBar toolBar = new JToolBar("Toolbar");
 		add(toolBar, BorderLayout.PAGE_START);
 		addButtons(toolBar);
+		
+		statusBar = new StatusBar();
+		getContentPane().add(statusBar, java.awt.BorderLayout.SOUTH);
 
 		int delay = 1000; // delay for 1 sec.
 		int period = 500; // repeat every 0.5 sec.
