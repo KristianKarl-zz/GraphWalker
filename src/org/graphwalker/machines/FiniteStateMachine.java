@@ -136,6 +136,10 @@ public class FiniteStateMachine {
 		return currentVertex;
 	}
 
+	public String getLastEdgeName() {
+		return lastEdge.getLabelKey();
+	}
+
 	public String getCurrentVertexName() {
 		return currentVertex.getLabelKey();
 	}

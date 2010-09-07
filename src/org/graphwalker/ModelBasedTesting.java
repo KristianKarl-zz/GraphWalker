@@ -444,9 +444,16 @@ public class ModelBasedTesting {
 		}
 	}
 
-	public String getCurrentVertexName() {
+  public String getCurrentVertexName() {
 		if (this.machine != null)
 			return getMachine().getCurrentVertexName();
+		logger.warn("Trying to retrieve current vertex without specifying machine");
+		return "";
+	}
+
+	public String getCurrentEdgeName() {
+		if (this.machine != null)
+			return getMachine().getLastEdgeName();
 		logger.warn("Trying to retrieve current vertex without specifying machine");
 		return "";
 	}
@@ -981,6 +988,13 @@ public class ModelBasedTesting {
 
 	public void setWeighted(boolean b) {
 		getMachine().setWeighted(b);
+	}
+
+	public Edge getCurrentEdge() {
+		if (this.machine != null)
+			return getMachine().getLastEdge();
+		logger.warn("Trying to retrieve current edge without specifying machine");
+		return null;
 	}
 
 	public Vertex getCurrentVertex() {
