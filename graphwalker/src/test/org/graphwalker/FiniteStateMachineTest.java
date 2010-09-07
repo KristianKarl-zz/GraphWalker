@@ -56,6 +56,7 @@ public class FiniteStateMachineTest extends TestCase {
 		FiniteStateMachine FSM = new FiniteStateMachine(graph);
 		assertEquals("Start", FSM.getCurrentVertexName());
 		FSM.walkEdge(e1);
+		assertEquals("E1", FSM.getLastEdgeName());
 		assertEquals("V1", FSM.getCurrentVertexName());
 		assertEquals("{REQ001=1, REQ004=0, REQ003=0, REQ002=2}", FSM.getAllRequirements().toString());
 		assertEquals("[REQ001, REQ002]", FSM.getCoveredRequirements().toString());
