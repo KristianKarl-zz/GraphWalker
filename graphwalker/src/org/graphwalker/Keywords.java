@@ -156,13 +156,6 @@ public class Keywords {
 	public static final String BLOCKED = "BLOCKED";
 
 	/**
-	 * An edge with the key word BACKTRACK is used to enable a simple logic that
-	 * enables a end user to backtrack in the graph to the previous vertex.<br>
-	 * This is used only during a online run.
-	 */
-	public static final String BACKTRACK = "BACKTRACK";
-
-	/**
 	 * This datum contains the label parameter used by an edge in EFSM models.
 	 */
 	public static final String PARAMETER_KEY = "parameter";
@@ -233,7 +226,6 @@ public class Keywords {
 	 */
 	static {
 		reservedKeyWords.add("BLOCKED");
-		reservedKeyWords.add("BACKTRACK");
 		reservedKeyWords.add("MERGE");
 		reservedKeyWords.add("NO_MERGE");
 	}

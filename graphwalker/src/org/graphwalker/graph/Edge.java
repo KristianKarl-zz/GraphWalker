@@ -151,22 +151,4 @@ public class Edge extends AbstractElement {
 		}
 		return weight;
 	}
-
-	/**
-	 * If BACKTRACK is defined, find it...
-	 * If defined, it means that executing this edge may not lead to the
-	 * desired vertex. So, if that happens, the model gives the user a chance to
-	 * try another edge from the previous vertex (the source vertex of the
-	 * edge defined with BACKTRACK)
-	 * @param str
-	 * @return
-	 */
-	static public Boolean isBacktrack( String str ) {
-		Pattern p = Pattern.compile("\\n(BACKTRACK)", Pattern.MULTILINE);
-		Matcher m = p.matcher(str);
-		if (m.find()) {
-			return true;
-		}
-		return false;
-	}
 }
