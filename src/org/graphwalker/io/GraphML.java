@@ -298,7 +298,6 @@ public class GraphML extends AbstractModelHandler {
 						e.setParameterKey(labelAndParameter[1]);
 						e.setWeightKey(Edge.getWeight(str));
 						e.setBlockedKey(AbstractElement.isBlocked(str));
-						e.setBacktrackKey(Edge.isBacktrack(str));
 
 						Integer index = AbstractElement.getIndex(str);
 						if (index != 0) {

@@ -271,14 +271,6 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 		return (edge == null ? false : !edge.getActionsKey().isEmpty());
 	}
 
-	protected void track() {
-		super.track();
-		if (jsEngine != null) {
-		} else if (beanShellEngine != null) {
-			namespaceStack.push(new CannedNameSpace(beanShellEngine.getNameSpace()));
-		}
-	}
-
 	protected void popVertex() {
 		super.popVertex();
 		if (jsEngine != null) {

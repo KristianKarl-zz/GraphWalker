@@ -51,7 +51,6 @@ public class FiniteStateMachine {
 	private Stack<Edge> edgeStack;
 	private Stack<Integer> vertexStore;
 	private int numberOfEdgesTravesed = 0;
-	protected boolean backtracking = false;
 	protected boolean calculatingPath = false;
 	private int numOfCoveredEdges = 0;
 	private int numOfCoveredVertices = 0;
@@ -184,10 +183,6 @@ public class FiniteStateMachine {
 	
 	public boolean walkEdge(Edge edge) {
 		lastEdge = edge;
-		if (isBacktrackPossible()) {
-			track();
-		}
-
 		currentVertex = modelHandler.getDestination(edge);
 		setAsVisited(lastEdge);
 		setAsVisited(currentVertex);
@@ -425,10 +420,6 @@ public class FiniteStateMachine {
 		}
 	}
 
-	protected void track() {
-		edgeStack.push(getLastEdge());
-	}
-
 	protected void popVertex() {
 		setAsUnvisited(getLastEdge());
 		setAsUnvisited(getCurrentVertex());
@@ -463,34 +454,6 @@ public class FiniteStateMachine {
 	 */
 	public int getNumberOfEdgesTravesed() {
 		return numberOfEdgesTravesed;
-	}
-
-	public void backtrack() {
-		if (isBacktrackPossible()) {
-			popVertex();
-		} else {
-			if (!isLastEdgeBacktrackSupported())
-				throw new RuntimeException("Backtracking was asked for, but model does not suppport BACKTRACK at egde: " + getLastEdge());
-			if (!isBacktrackEnabled())
-				throw new RuntimeException("Backtracking was asked for, but was disabled.");
-			throw new RuntimeException("Backtracking was asked for, but was refused");
-		}
-	}
-
-	public void setBacktrackEnabled(boolean backtracking) {
-		this.backtracking = backtracking;
-	}
-
-	public boolean isBacktrackEnabled() {
-		return this.backtracking;
-	}
-
-	public boolean isBacktrackPossible() {
-		return isBacktrackEnabled() || isCalculatingPath() || isLastEdgeBacktrackSupported();
-	}
-
-	private boolean isLastEdgeBacktrackSupported() {
-		return getLastEdge().isBacktrackKey();
 	}
 
 	public boolean isCalculatingPath() {
@@ -565,7 +528,6 @@ public class FiniteStateMachine {
 
 	public void reset() {
 		numberOfEdgesTravesed = 0;
-		backtracking = false;
 		calculatingPath = false;
 		numOfCoveredEdges = 0;
 		numOfCoveredVertices = 0;
