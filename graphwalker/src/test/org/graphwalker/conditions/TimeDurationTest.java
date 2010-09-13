@@ -50,7 +50,7 @@ public class TimeDurationTest extends TestCase {
 		StopCondition condition = new TimeDuration(1);
 		double startTime = (double) System.currentTimeMillis();
 		mbt.setCondition(condition);
-		mbt.setGraph(graph);
+		mbt.addGraph(graph);
 		mbt.setGenerator(Keywords.GENERATOR_RANDOM);
 		assertTrue(mbt.hasNextStep());
 
@@ -70,7 +70,7 @@ public class TimeDurationTest extends TestCase {
 		StopCondition condition = new TimeDuration(1);
 		double startTime = (double) System.currentTimeMillis();
 		mbt.setCondition(condition);
-		mbt.setGraph(graph);
+		mbt.addGraph(graph);
 		mbt.setGenerator(Keywords.GENERATOR_RANDOM);
 		assertTrue(mbt.hasNextStep());
 

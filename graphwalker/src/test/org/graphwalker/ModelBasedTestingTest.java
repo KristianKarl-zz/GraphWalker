@@ -44,6 +44,11 @@ public class ModelBasedTestingTest extends TestCase {
 		};
 	}
 
+	public void testSimpleSubgraphOffline() throws StopConditionException, GeneratorException, IOException, JDOMException, InterruptedException {
+		ModelBasedTesting mbt = Util.loadMbtFromXml("xml/test.org.graphwalker.unittest/ModelBasedTestingTest.testSimpleSubgraphOffline.xml");
+		assertEquals("RANDOM{EC>=100}", mbt.toString());
+	}
+
 	public void testXmlLoading_Simple() throws StopConditionException, GeneratorException, IOException, JDOMException, InterruptedException {
 		ModelBasedTesting mbt = Util.loadMbtFromXml("graphml/reqtags/mbt_init.xml");
 		assertEquals("RANDOM{EC>=100}", mbt.toString());

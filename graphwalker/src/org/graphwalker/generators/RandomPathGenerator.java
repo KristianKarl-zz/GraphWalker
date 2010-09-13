@@ -53,7 +53,7 @@ public class RandomPathGenerator extends PathGenerator {
 		}
 
 		if (sum > 1) {
-			throw new RuntimeException("The sum of all weights in edges from vertex: '" + getMachine().getModel().getSource(edge).getLabelKey()
+			throw new RuntimeException("The sum of all weights in edges from vertex: '" + getMachine().getModelHandler().getActiveModel().getSource(edge).getLabelKey()
 			    + "', adds up to more than 1.00");
 		}
 

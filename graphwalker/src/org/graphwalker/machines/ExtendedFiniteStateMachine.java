@@ -27,6 +27,7 @@ import org.graphwalker.exceptions.InvalidDataException;
 import org.graphwalker.filters.AccessableEdgeFilter;
 import org.graphwalker.graph.Edge;
 import org.graphwalker.graph.Graph;
+import org.graphwalker.io.AbstractModelHandler;
 
 import bsh.EvalError;
 import bsh.Interpreter;
@@ -50,9 +51,9 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 
 	private PrintStream oldPrintStream;
 
-	public ExtendedFiniteStateMachine(Graph model, boolean usingJsEngine) {
+	public ExtendedFiniteStateMachine(AbstractModelHandler modelHandler, boolean usingJsEngine) {
 		this(usingJsEngine);
-		setModel(model);
+		setModelHandler(modelHandler);
 	}
 
 	public ExtendedFiniteStateMachine(boolean usingJsEngine) {
@@ -99,7 +100,7 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 		Set<Edge> retur = super.getCurrentOutEdges();
 		for (Iterator<Edge> i = retur.iterator(); i.hasNext();) {
 			Edge e = i.next();
-			if (!accessableFilter.acceptEdge(getModel(), e)) {
+			if (!accessableFilter.acceptEdge(getModelHandler().getActiveModel(), e)) {
 				logger.debug("Not accessable: " + e + " from " + getCurrentVertexName());
 				i.remove();
 			} else {
