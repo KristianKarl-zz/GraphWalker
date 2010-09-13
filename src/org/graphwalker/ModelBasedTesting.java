@@ -253,14 +253,15 @@ public class ModelBasedTesting {
 	public Graph getGraph() {
 		if (this.modelHandler == null)
 			return null;
-		return this.modelHandler.getModel();
+		return this.modelHandler.getActiveModel();
 	}
 
-	public void setGraph(Graph graph) {
+	public void addGraph(Graph graph) {
 		if (this.modelHandler == null) {
 			this.modelHandler = new GraphML();
 		}
-		this.modelHandler.setModel(graph);
+		this.modelHandler.addModel(graph);
+		this.modelHandler.setActiveModel(graph.getLabelKey());
 		if (this.machine != null)
 			getMachine().setModel(graph);
 	}

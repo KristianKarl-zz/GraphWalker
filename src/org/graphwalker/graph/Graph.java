@@ -9,6 +9,7 @@ public class Graph extends SparseMultigraph<Vertex, Edge> {
 
 	private String fileKey = new String();
 	private String labelKey = new String();
+	private Boolean mainGraph = false;
 
 	public String getLabelKey() {
 		return labelKey;
@@ -56,5 +57,13 @@ public class Graph extends SparseMultigraph<Vertex, Edge> {
 	public boolean addEdge(Edge e, Vertex source, Vertex dest) {
 		return super.addEdge(e, source, dest, EdgeType.DIRECTED);
 	}
+
+	public void setMainGraph(Boolean mainGraph) {
+	  this.mainGraph = mainGraph;
+  }
+
+	public Boolean getMainGraph() {
+	  return mainGraph;
+  }
 
 }

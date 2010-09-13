@@ -25,7 +25,8 @@ public class RandomPathGeneratorTest extends TestCase {
 		logger.info("=======================================================================");
 		GraphML gml = new GraphML();
 		gml.load("graphml/weight/FSM.graphml");
-		FiniteStateMachine FSM = new FiniteStateMachine(gml.getModel());
+		gml.setActiveModel("S5");
+		FiniteStateMachine FSM = new FiniteStateMachine(gml.getActiveModel());
 		FSM.setWeighted(true);
 
 		StopCondition sc = new EdgeCoverage(1.0);
@@ -49,7 +50,8 @@ public class RandomPathGeneratorTest extends TestCase {
 		logger.info("=======================================================================");
 		GraphML gml = new GraphML();
 		gml.load("graphml/weight/FSM.graphml");
-		FiniteStateMachine FSM = new FiniteStateMachine(gml.getModel());
+		gml.setActiveModel("S5");
+		FiniteStateMachine FSM = new FiniteStateMachine(gml.getActiveModel());
 		FSM.setWeighted(false);
 		StopCondition sc = new EdgeCoverage(1.0);
 		PathGenerator pathGenerator = new RandomPathGenerator();

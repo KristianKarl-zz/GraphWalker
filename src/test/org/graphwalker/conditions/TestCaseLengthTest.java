@@ -50,7 +50,7 @@ public class TestCaseLengthTest extends TestCase {
 		ModelBasedTesting mbt = ModelBasedTesting.getInstance();
 		StopCondition condition = new TestCaseLength(2);
 		mbt.setCondition(condition);
-		mbt.setGraph(graph);
+		mbt.addGraph(graph);
 		mbt.setGenerator(Keywords.GENERATOR_RANDOM);
 		assertTrue(mbt.hasNextStep());
 
@@ -65,7 +65,7 @@ public class TestCaseLengthTest extends TestCase {
 		ModelBasedTesting mbt = ModelBasedTesting.getInstance();
 		StopCondition condition = new TestCaseLength(2);
 		mbt.setCondition(condition);
-		mbt.setGraph(graph);
+		mbt.addGraph(graph);
 		mbt.setGenerator(Keywords.GENERATOR_RANDOM);
 		assertTrue(mbt.hasNextStep());
 

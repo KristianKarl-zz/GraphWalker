@@ -20,8 +20,8 @@ public class GraphMLTest extends TestCase {
 		try {
 			GraphML modelHandler = new GraphML();
 			modelHandler.load("graphml/test.org.graphwalker.unittest/merging");
-			assertEquals( modelHandler.getModel().getVertexCount(), 37 );
-			assertEquals( modelHandler.getModel().getEdgeCount(), 92 );
+			assertEquals( modelHandler.getActiveModel().getVertexCount(), 37 );
+			assertEquals( modelHandler.getActiveModel().getEdgeCount(), 92 );
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 			fail(e.getMessage());
