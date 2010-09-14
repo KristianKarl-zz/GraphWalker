@@ -39,8 +39,7 @@ public class A_StarPathGeneratorEFSMJavaScriptTest extends TestCase {
 
 	protected void tearDown() throws Exception {
 		super.tearDown();
-		graph.removeAllEdges();
-		graph.removeAllVertices();
+		graph = null;
 		start = v1 = v2 = null;
 		e0 = e1 = e2 = e3 = null;
 	}
@@ -48,7 +47,9 @@ public class A_StarPathGeneratorEFSMJavaScriptTest extends TestCase {
 	public void test_EFSM_StateStop() throws InterruptedException {
 		PathGenerator pathGenerator = new A_StarPathGenerator();
 		pathGenerator.setStopCondition(new ReachedVertex("V1/y=\\[2.0, 3.0, 3.0\\];x=3.0;"));
-		pathGenerator.setMachine(new ExtendedFiniteStateMachine(graph, true));
+		ExtendedFiniteStateMachine machine = new ExtendedFiniteStateMachine(true);
+		machine.setModel(graph);
+		pathGenerator.setMachine(machine);
 
 		String[] stepPair;
 		stepPair = pathGenerator.getNext();
@@ -85,7 +86,9 @@ public class A_StarPathGeneratorEFSMJavaScriptTest extends TestCase {
 	public void test_EFSM_EdgeStop() throws InterruptedException {
 		PathGenerator pathGenerator = new A_StarPathGenerator();
 		pathGenerator.setStopCondition(new ReachedEdge("E2"));
-		pathGenerator.setMachine(new ExtendedFiniteStateMachine(graph, true));
+		ExtendedFiniteStateMachine machine = new ExtendedFiniteStateMachine(true);
+		machine.setModel(graph);
+		pathGenerator.setMachine(machine);
 
 		String[] stepPair;
 		stepPair = pathGenerator.getNext();

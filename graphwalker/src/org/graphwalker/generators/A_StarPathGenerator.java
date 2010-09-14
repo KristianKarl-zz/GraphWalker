@@ -6,7 +6,6 @@ import java.util.Set;
 import java.util.Stack;
 import java.util.Vector;
 
-import org.apache.log4j.Logger;
 import org.graphwalker.Util;
 import org.graphwalker.exceptions.FoundNoEdgeException;
 import org.graphwalker.generators.PathGenerator;
@@ -15,8 +14,6 @@ import org.graphwalker.graph.Vertex;
 import org.graphwalker.machines.FiniteStateMachine;
 
 public class A_StarPathGenerator extends PathGenerator {
-
-	static Logger logger = Util.setupLogger(A_StarPathGenerator.class);
 
 	private Stack<Edge> preCalculatedPath = null;
 	private Vertex lastVertex;

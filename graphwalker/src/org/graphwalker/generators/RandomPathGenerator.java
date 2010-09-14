@@ -10,7 +10,7 @@ import org.graphwalker.graph.Edge;
 
 public class RandomPathGenerator extends PathGenerator {
 
-	static Logger logger = Util.setupLogger(RandomPathGenerator.class);
+	private static Logger logger = Util.setupLogger(RandomPathGenerator.class);
 
 	private Random random = new Random();
 

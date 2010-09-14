@@ -56,10 +56,6 @@ public class UtilTest extends TestCase {
 		logger.debug("Working");
 	}
 
-	public void testPrintClassPath() {
-		assertEquals(true, Util.printClassPath().length() > 0);
-	}
-
 	public void testReadPropertySOAP_GUI() {		
 		assertEquals(true, Util.readSoapGuiStartupState()==true);
 	}

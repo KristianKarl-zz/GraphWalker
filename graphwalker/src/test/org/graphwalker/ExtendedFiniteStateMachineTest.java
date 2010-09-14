@@ -42,18 +42,16 @@ public class ExtendedFiniteStateMachineTest extends TestCase {
 		e4 = Util.addEdgeToGraph(graph, v2, v1, "E4", null, "y.size()<3", "y.add(x)");
 	}
 
-	public void testConstructor() {
-		new ExtendedFiniteStateMachine(graph, false);
-	}
-
 	public void testRequirements() {
-		ExtendedFiniteStateMachine EFSM = new ExtendedFiniteStateMachine(graph, false);
+		ExtendedFiniteStateMachine EFSM = new ExtendedFiniteStateMachine(false);
+		EFSM.setModel(graph);
 		assertEquals("{REQ001=0, REQ004=0, REQ003=0, REQ002=0}", EFSM.getAllRequirements().toString());
 		assertEquals("[]", EFSM.getCoveredRequirements().toString());
 	}
 
 	public void testRequirementsWalk() {
-		ExtendedFiniteStateMachine EFSM = new ExtendedFiniteStateMachine(graph, false);
+		ExtendedFiniteStateMachine EFSM = new ExtendedFiniteStateMachine(false);
+		EFSM.setModel(graph);
 		assertEquals("Start", EFSM.getCurrentVertexName());
 		EFSM.walkEdge(e1);
 		assertEquals("V1/x=1;y=[];", EFSM.getCurrentVertexName());

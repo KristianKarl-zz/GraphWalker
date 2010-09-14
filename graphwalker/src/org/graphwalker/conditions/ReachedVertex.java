@@ -31,11 +31,6 @@ public class ReachedVertex extends StopCondition {
 		this.maxDistance = max(this.proximity);
 	}
 
-	public ReachedVertex(Vertex endVertex) {
-		this.endVertex = endVertex;
-		this.subState = "";
-	}
-
 	public ReachedVertex(String vertexName) {
 		String[] vertex = vertexName.split("/", 2);
 		this.vertexName = vertex[0];

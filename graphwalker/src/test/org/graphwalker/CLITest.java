@@ -1,12 +1,10 @@
 package test.org.graphwalker;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -82,37 +80,6 @@ public class CLITest extends TestCase {
 		errMsg = errOutput.toString();
 		logger.debug("stdout: " + outMsg);
 		logger.debug("stderr: " + errMsg);
-	}
-
-	private void runCommandWithInputFile(String args[], String fileName) {
-		stdOutput = new StringBuffer();
-		errOutput = new StringBuffer();
-
-		PrintStream outStream = new PrintStream(redirectOut());
-		PrintStream oldOutStream = System.out; // backup
-		PrintStream errStream = new PrintStream(redirectErr());
-		PrintStream oldErrStream = System.err; // backup
-		InputStream oldInputStream = System.in; // backup
-
-		InputStream stdin = null;
-		try {
-			stdin = new FileInputStream(fileName);
-		} catch (Exception e) {
-			Util.logStackTraceToError(e);
-			fail(e.getMessage());
-		}
-		System.setOut(outStream);
-		System.setErr(errStream);
-		System.setIn(stdin);
-
-		CLI.main(args);
-
-		System.setIn(oldInputStream);
-		System.setOut(oldOutStream);
-		System.setErr(oldErrStream);
-
-		outMsg = stdOutput.toString();
-		errMsg = errOutput.toString();
 	}
 
 	private void moveMbtPropertiesFile() {

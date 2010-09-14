@@ -17,7 +17,7 @@ import org.jdom.JDOMException;
 @WebService
 public class SoapServices {
 
-	static Logger logger = Util.setupLogger(SoapServices.class);
+	private static Logger logger = Util.setupLogger(SoapServices.class);
 	private Vector<String> stepPair = new Vector<String>();
 	private String xmlFile = "";
 	private boolean hardStop = false;

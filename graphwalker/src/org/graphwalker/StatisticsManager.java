@@ -34,8 +34,8 @@ import javax.xml.transform.stream.StreamSource;
 public class StatisticsManager {
 
 	static private Logger log = Util.setupLogger(StatisticsManager.class);
-	Hashtable<String, Statistics> counters;
-	Document progress;
+	private Hashtable<String, Statistics> counters;
+	private Document progress;
 	private Transformer styleTemplate;
 
 	/**
@@ -59,7 +59,7 @@ public class StatisticsManager {
 		this.progress.getRootElement().addContent(getCurrentStatistic().detachRootElement());
 	}
 
-	public int[] getStatistic(String key) {
+	private int[] getStatistic(String key) {
 		Statistics stats = (Statistics) counters.get(key);
 		int[] retur = { stats.getCurrent(), stats.getMax() };
 		return retur;
@@ -102,11 +102,7 @@ public class StatisticsManager {
 		}
 	}
 
-	public void writeFullReport() {
-		writeFullReport(System.out);
-	}
-
-	public void writeFullReport(String fileName) {
+	protected void writeFullReport(String fileName) {
 		try {
 			writeFullReport(new PrintStream(new File(fileName)));
 		} catch (FileNotFoundException e) {

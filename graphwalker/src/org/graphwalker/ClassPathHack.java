@@ -9,7 +9,7 @@ import java.net.URLClassLoader;
 public class ClassPathHack {
 	private static final Class<?>[] parameters = new Class[] { URL.class };
 
-	public static void addFile(String s) throws IOException {
+	static void addFile(String s) throws IOException {
 		File f = new File(s);
 		if (f.exists() == false) {
 			throw new RuntimeException("File or folder does not exist.");
@@ -18,12 +18,12 @@ public class ClassPathHack {
 	}
 
 	@SuppressWarnings("deprecation")
-	public static void addFile(File f) throws IOException {
+	private static void addFile(File f) throws IOException {
 		// f.toURL is deprecated
 		addURL(f.toURL());
 	}
 
-	public static void addURL(URL u) throws IOException {
+	protected static void addURL(URL u) throws IOException {
 		URLClassLoader sysloader = (URLClassLoader) ClassLoader.getSystemClassLoader();
 		Class<?> sysclass = URLClassLoader.class;
 

@@ -42,18 +42,16 @@ public class FiniteStateMachineTest extends TestCase {
 		e4 = Util.addEdgeToGraph(graph, v2, v1, "E4", null, null, null);
 	}
 
-	public void testConstructor() {
-		new FiniteStateMachine(graph);
-	}
-
 	public void testRequirements() {
-		FiniteStateMachine FSM = new FiniteStateMachine(graph);
+		FiniteStateMachine FSM = new FiniteStateMachine();
+		FSM.setModel(graph);
 		assertEquals("{REQ001=0, REQ004=0, REQ003=0, REQ002=0}", FSM.getAllRequirements().toString());
 		assertEquals("[]", FSM.getCoveredRequirements().toString());
 	}
 
 	public void testRequirementsWalk() {
-		FiniteStateMachine FSM = new FiniteStateMachine(graph);
+		FiniteStateMachine FSM = new FiniteStateMachine();
+		FSM.setModel(graph);
 		assertEquals("Start", FSM.getCurrentVertexName());
 		FSM.walkEdge(e1);
 		assertEquals("E1", FSM.getLastEdgeName());

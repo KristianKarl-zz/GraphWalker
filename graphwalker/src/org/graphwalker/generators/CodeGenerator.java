@@ -26,15 +26,11 @@ package org.graphwalker.generators;
  */
 public class CodeGenerator extends ListGenerator {
 
-	String[] template; // {HEADER, BODY, FOOTER}
+	private String[] template; // {HEADER, BODY, FOOTER}
 	private boolean first = true;
 
 	public CodeGenerator() {
 		super();
-	}
-
-	public CodeGenerator(String[] template) {
-		setTemplate(template);
 	}
 
 	public void setTemplate(String[] template) {
