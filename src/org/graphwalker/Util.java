@@ -82,9 +82,9 @@ public class Util {
 	 * method is for logging purposes.
 	 * 
 	 * @param edge
-	 *            The edge about which information shall be retrieved.
-	 * @return Returns a String with information regarding the edge, including
-	 *         the source and destination vertices. The format is:<br>
+	 *          The edge about which information shall be retrieved.
+	 * @return Returns a String with information regarding the edge, including the
+	 *         source and destination vertices. The format is:<br>
 	 * 
 	 *         <pre>
 	 * '&lt;EDGE LABEL&gt;', INDEX=x ('&lt;SOURCE VERTEX LABEL&gt;', INDEX=y -&gt; '&lt;DEST VERTEX LABEL&gt;', INDEX=z)
@@ -92,8 +92,8 @@ public class Util {
 	 * 
 	 *         Where x, y and n are the unique indexes for the edge, the source
 	 *         vertex and the destination vertex.<br>
-	 *         Please note that the label of an edge can be either null, or
-	 *         empty ("");
+	 *         Please note that the label of an edge can be either null, or empty
+	 *         ("");
 	 */
 	private static String getCompleteEdgeName(Edge edge) {
 		String str = "Edge: '" + edge.getLabelKey() + "', INDEX=" + edge.getIndexKey();
@@ -105,9 +105,9 @@ public class Util {
 	 * method is for logging purposes.
 	 * 
 	 * @param vertex
-	 *            The vertex about which information shall be retrieved.
-	 * @return Returns a String with information regarding the vertex. The
-	 *         format is:<br>
+	 *          The vertex about which information shall be retrieved.
+	 * @return Returns a String with information regarding the vertex. The format
+	 *         is:<br>
 	 * 
 	 *         <pre>
 	 * '&lt;VERTEX LABEL&gt;', INDEX=n
@@ -138,8 +138,11 @@ public class Util {
 
 	/**
 	 * Creates an adds a vertex to a graph.
-	 * @param graph The graph to which a vertex is to be added.
-	 * @param strLabel The label of the vertex.
+	 * 
+	 * @param graph
+	 *          The graph to which a vertex is to be added.
+	 * @param strLabel
+	 *          The label of the vertex.
 	 * @return The newly created vertex.
 	 */
 	public static Vertex addVertexToGraph(Graph graph, String strLabel) {
@@ -153,18 +156,26 @@ public class Util {
 
 	/**
 	 * Creates and adds an edge to a graph.
-	 * @param graph The graph to which the edge is to be added.
-	 * @param vertexFrom The source point of the edge.
-	 * @param vertexTo The destination point of the edge.
-	 * @param strLabel The label of the edge.
-	 * @param strParameter The parameter(s) to be passed to the method implementing the
-	 * edge in a test.
-	 * @param strGuard The guard of the edge.
-	 * @param strAction The action to be performed.
+	 * 
+	 * @param graph
+	 *          The graph to which the edge is to be added.
+	 * @param vertexFrom
+	 *          The source point of the edge.
+	 * @param vertexTo
+	 *          The destination point of the edge.
+	 * @param strLabel
+	 *          The label of the edge.
+	 * @param strParameter
+	 *          The parameter(s) to be passed to the method implementing the edge
+	 *          in a test.
+	 * @param strGuard
+	 *          The guard of the edge.
+	 * @param strAction
+	 *          The action to be performed.
 	 * @return The newly created edge.
 	 */
 	public static Edge addEdgeToGraph(Graph graph, Vertex vertexFrom, Vertex vertexTo, String strLabel, String strParameter, String strGuard,
-			String strAction) {
+	    String strAction) {
 		Edge retur = new Edge();
 		retur.setIndexKey(new Integer(graph.getEdgeCount() + graph.getVertexCount() + 1));
 		if (strLabel != null)
@@ -181,8 +192,11 @@ public class Util {
 
 	/**
 	 * Adds a stop condition for the model.
-	 * @param conditionType The condition type.
-	 * @param conditionValue The value of the condition.
+	 * 
+	 * @param conditionType
+	 *          The condition type.
+	 * @param conditionValue
+	 *          The value of the condition.
 	 * @return The newly created stop condition.
 	 * @throws StopConditionException
 	 */
@@ -194,22 +208,22 @@ public class Util {
 				condition = new EdgeCoverage(Double.parseDouble(conditionValue) / 100);
 				break;
 			case Keywords.CONDITION_REACHED_EDGE:
-				if ( conditionValue == null || conditionValue.isEmpty() ) {
+				if (conditionValue == null || conditionValue.isEmpty()) {
 					throw new StopConditionException("The name of reached edge must not be empty");
 				}
-				if ( ModelBasedTesting.getInstance().getMachine().findEdge( Edge.getLabelAndParameter(conditionValue)[0] ) == null ) {
-					throw new StopConditionException("The name of reached edge: '" + Edge.getLabelAndParameter(conditionValue)[0] + 
-              "' (in stop condition: '" +  conditionValue + "') does not exists in the model.");
+				if (ModelBasedTesting.getInstance().getMachine().findEdge(Edge.getLabelAndParameter(conditionValue)[0]) == null) {
+					throw new StopConditionException("The name of reached edge: '" + Edge.getLabelAndParameter(conditionValue)[0]
+					    + "' (in stop condition: '" + conditionValue + "') does not exists in the model.");
 				}
 				condition = new ReachedEdge(conditionValue);
 				break;
 			case Keywords.CONDITION_REACHED_VERTEX:
-				if ( conditionValue == null || conditionValue.isEmpty() ) {
+				if (conditionValue == null || conditionValue.isEmpty()) {
 					throw new StopConditionException("The name of reached vertex must not be empty");
 				}
-				if ( ModelBasedTesting.getInstance().getMachine().findVertex( Vertex.getLabel(conditionValue) ) == null ) {
-					throw new StopConditionException("The name of reached vertex: '" + Vertex.getLabel(conditionValue) + 
-							                             "' (in stop condition: '" +  conditionValue + "') does not exists in the model.");
+				if (ModelBasedTesting.getInstance().getMachine().findVertex(Vertex.getLabel(conditionValue)) == null) {
+					throw new StopConditionException("The name of reached vertex: '" + Vertex.getLabel(conditionValue) + "' (in stop condition: '"
+					    + conditionValue + "') does not exists in the model.");
 				}
 				condition = new ReachedVertex(conditionValue);
 				break;
@@ -284,15 +298,16 @@ public class Util {
 	 * Load MBT settings from a xml file
 	 * 
 	 * @param fileName
-	 *            The XML settings file
+	 *          The XML settings file
 	 * @return
 	 * @throws StopConditionException
 	 * @throws GeneratorException
-	 * @throws IOException 
-	 * @throws JDOMException 
-	 * @throws InterruptedException 
+	 * @throws IOException
+	 * @throws JDOMException
+	 * @throws InterruptedException
 	 */
-	protected static ModelBasedTesting loadMbtAsWSFromXml(String fileName) throws StopConditionException, GeneratorException, IOException, JDOMException, InterruptedException {
+	protected static ModelBasedTesting loadMbtAsWSFromXml(String fileName) throws StopConditionException, GeneratorException, IOException,
+	    JDOMException, InterruptedException {
 		return loadXml(fileName, true, false);
 	}
 
@@ -300,17 +315,18 @@ public class Util {
 	 * Load MBT settings from a xml file
 	 * 
 	 * @param fileName
-	 *            The XML settings file
+	 *          The XML settings file
 	 * @param dryRun
-	 *            Is mbt to be run in a dry run mode?
+	 *          Is mbt to be run in a dry run mode?
 	 * @return
 	 * @throws StopConditionException
 	 * @throws GeneratorException
-	 * @throws IOException 
-	 * @throws JDOMException 
-	 * @throws InterruptedException 
+	 * @throws IOException
+	 * @throws JDOMException
+	 * @throws InterruptedException
 	 */
-	protected static ModelBasedTesting loadMbtFromXml(String fileName, boolean dryRun) throws StopConditionException, GeneratorException, IOException, JDOMException, InterruptedException {
+	protected static ModelBasedTesting loadMbtFromXml(String fileName, boolean dryRun) throws StopConditionException, GeneratorException,
+	    IOException, JDOMException, InterruptedException {
 		return loadXml(fileName, false, dryRun);
 	}
 
@@ -318,15 +334,16 @@ public class Util {
 	 * Load MBT settings from a xml file
 	 * 
 	 * @param fileName
-	 *            The XML settings file
+	 *          The XML settings file
 	 * @return
 	 * @throws StopConditionException
 	 * @throws GeneratorException
-	 * @throws IOException 
-	 * @throws JDOMException 
-	 * @throws InterruptedException 
+	 * @throws IOException
+	 * @throws JDOMException
+	 * @throws InterruptedException
 	 */
-	public static ModelBasedTesting loadMbtFromXml(String fileName) throws StopConditionException, GeneratorException, IOException, JDOMException, InterruptedException {
+	public static ModelBasedTesting loadMbtFromXml(String fileName) throws StopConditionException, GeneratorException, IOException,
+	    JDOMException, InterruptedException {
 		return loadXml(fileName, false, false);
 	}
 
@@ -334,21 +351,38 @@ public class Util {
 	 * Load MBT settings from a xml file
 	 * 
 	 * @param fileName
-	 *            The XML settings file
-	 * @param runningSoapServices
-	 *            Is mbt to run in Web Services mode?
-	 * @param dryRun
-	 *            Is mbt to be run in a dry run mode?
+	 *          The XML settings file
 	 * @return
 	 * @throws StopConditionException
 	 * @throws GeneratorException
-	 * @throws IOException 
-	 * @throws JDOMException 
-	 * @throws InterruptedException 
+	 * @throws IOException
+	 * @throws JDOMException
+	 * @throws InterruptedException
+	 */
+	public ModelBasedTesting loadMbtFromXmlNonStatic(String fileName) throws StopConditionException, GeneratorException, IOException,
+	    JDOMException, InterruptedException {
+		return loadXmlNonStatic(fileName, false, false);
+	}
+
+	/**
+	 * Load MBT settings from a xml file
+	 * 
+	 * @param fileName
+	 *          The XML settings file
+	 * @param runningSoapServices
+	 *          Is mbt to run in Web Services mode?
+	 * @param dryRun
+	 *          Is mbt to be run in a dry run mode?
+	 * @return
+	 * @throws StopConditionException
+	 * @throws GeneratorException
+	 * @throws IOException
+	 * @throws JDOMException
+	 * @throws InterruptedException
 	 */
 	@SuppressWarnings("unchecked")
 	private static ModelBasedTesting loadXml(String fileName, boolean runningSoapServices, boolean dryRun) throws StopConditionException,
-			GeneratorException, IOException, JDOMException, InterruptedException {
+	    GeneratorException, IOException, JDOMException, InterruptedException {
 		final ModelBasedTesting mbt = ModelBasedTesting.getInstance();
 		mbt.reset();
 		mbt.setDryRun(dryRun);
@@ -375,7 +409,196 @@ public class Util {
 					logger.debug("Added to classpath: " + classPaths[j]);
 				} catch (Exception e) {
 					throw new RuntimeException(e.getMessage() + "\nCould not add: '" + classPaths[j] + "' to CLASSPATH\n"
-							+ "Please review your xml file: '" + fileName + "' at CLASS PATH", e);
+					    + "Please review your xml file: '" + fileName + "' at CLASS PATH", e);
+				}
+			}
+		}
+
+		if (root.getAttributeValue("SCRIPT_ENGINE") != null && root.getAttributeValue("SCRIPT_ENGINE").equalsIgnoreCase("js")) {
+			logger.debug("Enabling JavaScript engine");
+			mbt.enableJsScriptEngine(true);
+		} else {
+			logger.debug("Using BeanShell script engine, if EFSM is enabled.");
+			mbt.enableJsScriptEngine(false);
+		}
+
+		if (root.getAttributeValue("EXTENDED") != null && root.getAttributeValue("EXTENDED").equalsIgnoreCase("true")) {
+			logger.debug("Enabling extended FSM");
+			mbt.enableExtended(true);
+			mbt.setStartupScript(getScriptContent(root.getChildren("SCRIPT")));
+		} else {
+			logger.debug("Disabling extended FSM");
+			mbt.enableExtended(false);
+		}
+
+		if (root.getAttributeValue("WEIGHT") != null && root.getAttributeValue("WEIGHT").equalsIgnoreCase("true")) {
+			logger.debug("Using weighted edges");
+			mbt.setWeighted(true);
+		} else {
+			logger.debug("Will not use weighted edges");
+			mbt.setWeighted(false);
+		}
+
+		List<Element> generators = root.getChildren("GENERATOR");
+
+		if (generators.size() == 0)
+			throw new RuntimeException("Generator is missing from XML");
+
+		PathGenerator generator;
+		if (generators.size() > 1) {
+			generator = new CombinedPathGenerator();
+			for (Iterator<Element> i = generators.iterator(); i.hasNext();) {
+				((CombinedPathGenerator) generator).addPathGenerator(getGenerator(i.next()));
+			}
+		} else {
+			generator = getGenerator((Element) generators.get(0));
+		}
+		if (generator == null)
+			throw new RuntimeException("Failed to set generator");
+		mbt.setGenerator(generator);
+
+		final String reportName = root.getAttributeValue("REPORT");
+		String reportTemplate = root.getAttributeValue("REPORT-TEMPLATE");
+
+		if (reportName != null && reportTemplate != null) {
+			logger.debug("Will use report template: " + reportTemplate);
+			mbt.getStatisticsManager().setReportTemplate(reportTemplate);
+		}
+
+		String logInterval = root.getAttributeValue("LOG-INTERVAL");
+
+		if (logInterval != null) {
+			long seconds = Integer.valueOf(logInterval).longValue();
+			TimerTask logTask;
+			if (reportName != null && reportTemplate != null) {
+				logTask = new TimerTask() {
+					public void run() {
+						try {
+							mbt.getStatisticsManager().writeFullReport(new PrintStream(reportName));
+						} catch (FileNotFoundException e) {
+							throw new RuntimeException("Could not open or write report file '" + reportName + "'", e);
+						}
+					}
+				};
+			} else {
+				logTask = new TimerTask() {
+					public void run() {
+						logger.info(mbt.getStatisticsCompact());
+					}
+				};
+			}
+			timer = new Timer();
+			timer.schedule(logTask, 500, seconds * 1000);
+		}
+
+		if (runningSoapServices == false) {
+			try {
+
+				String executor = root.getAttributeValue("EXECUTOR");
+				logger.debug("Executor is: " + executor);
+				String executorParam = null;
+				if (executor.contains(":")) {
+					executorParam = executor.substring(executor.indexOf(':') + 1);
+					executor = executor.substring(0, executor.indexOf(':'));
+				}
+
+				if (executor.equalsIgnoreCase("offline")) {
+					PrintStream out = System.out;
+					if (executorParam != null && !executorParam.equals("")) {
+						try {
+							out = new PrintStream(executorParam);
+						} catch (FileNotFoundException e) {
+							throw new RuntimeException("file '" + executorParam + "' could not be created or is writeprotected.", e);
+						}
+					}
+					if (mbt.isUseGUI() == false) {
+						mbt.writePath(out);
+						if (out != System.out) {
+							out.close();
+						}
+					}
+				} else if (executor.equalsIgnoreCase("manual")) {
+					PrintStream out = System.out;
+					if (executorParam != null && !executorParam.equals("")) {
+						try {
+							out = new PrintStream(executorParam);
+						} catch (FileNotFoundException e) {
+							throw new RuntimeException("file '" + executorParam + "' could not be created or is writeprotected.", e);
+						}
+					}
+					if (mbt.isUseGUI() == false) {
+						Vector<String[]> testSequence = new Vector<String[]>();
+						mbt.writePath(testSequence);
+
+						new PrintHTMLTestSequence(testSequence, out);
+						if (out != System.out) {
+							out.close();
+						}
+					}
+				} else if (executor.equalsIgnoreCase("java")) {
+					if (executorParam == null || executorParam.equals("")) {
+						throw new RuntimeException("No java class specified for execution");
+					}
+
+					if (mbt.isUseGUI() == false) {
+						mbt.executePath(executorParam);
+					} else {
+						mbt.setJavaExecutorClass(executorParam);
+					}
+				} else if (executor.equalsIgnoreCase("online")) {
+					if (mbt.isDryRun()) {
+						logger.debug("Executing a dry run");
+						mbt.executePath(null, null);
+					}
+					if (mbt.isUseGUI() == false) {
+						mbt.interractivePath();
+					}
+
+				} else if (executor.equalsIgnoreCase("none") || executor.equals("")) {
+					// no execution (for debug purpose)
+				} else {
+					throw new RuntimeException("Unknown executor '" + executor + "'");
+				}
+
+			} finally {
+				if (timer != null)
+					timer.cancel();
+				if (reportName != null && reportTemplate != null && mbt.isUseGUI() == false) {
+					mbt.getStatisticsManager().writeFullReport(reportName);
+				}
+			}
+		}
+		return mbt;
+	}
+
+	private ModelBasedTesting loadXmlNonStatic(String fileName, boolean runningSoapServices, boolean dryRun) throws StopConditionException,
+	    GeneratorException, IOException, JDOMException, InterruptedException {
+		final ModelBasedTesting mbt = new ModelBasedTesting();
+		mbt.setDryRun(dryRun);
+
+		SAXBuilder parser = new SAXBuilder("org.apache.crimson.parser.XMLReaderImpl", false);
+		Document doc;
+		doc = parser.build(fileName);
+		Element root = doc.getRootElement();
+		List<Element> models = root.getChildren("MODEL");
+
+		if (models.size() == 0)
+			throw new RuntimeException("Model is missing from XML");
+
+		for (Iterator<Element> i = models.iterator(); i.hasNext();) {
+			mbt.readGraph((i.next()).getAttributeValue("PATH"));
+		}
+
+		List<Element> classPath = root.getChildren("CLASS");
+		for (Iterator<Element> i = classPath.iterator(); i.hasNext();) {
+			String classPaths[] = i.next().getAttributeValue("PATH").split(":");
+			for (int j = 0; j < classPaths.length; j++) {
+				try {
+					ClassPathHack.addFile(classPaths[j]);
+					logger.debug("Added to classpath: " + classPaths[j]);
+				} catch (Exception e) {
+					throw new RuntimeException(e.getMessage() + "\nCould not add: '" + classPaths[j] + "' to CLASSPATH\n"
+					    + "Please review your xml file: '" + fileName + "' at CLASS PATH", e);
 				}
 			}
 		}
@@ -611,7 +834,7 @@ public class Util {
 		return stopCondition;
 	}
 
-	protected static String readFile(String fileName) throws IOException  {
+	protected static String readFile(String fileName) throws IOException {
 		String retur = "";
 		BufferedReader in = new BufferedReader(new FileReader(fileName));
 		while (in.ready())
@@ -696,7 +919,7 @@ public class Util {
 		} else {
 			conf = new PropertiesConfiguration();
 			try {
-				conf.load( Util.class.getResourceAsStream("/org/graphwalker/resources/graphwalker.properties"));			
+				conf.load(Util.class.getResourceAsStream("/org/graphwalker/resources/graphwalker.properties"));
 			} catch (ConfigurationException e) {
 				logger.error(e.getMessage());
 			}
@@ -710,8 +933,6 @@ public class Util {
 		return port;
 	}
 
-
-	
 	public static Boolean readSoapGuiStartupState() {
 		PropertiesConfiguration conf = null;
 		if (new File("graphwalker.properties").canRead()) {
@@ -723,7 +944,7 @@ public class Util {
 		} else {
 			conf = new PropertiesConfiguration();
 			try {
-				conf.load( Util.class.getResourceAsStream("/org/graphwalker/resources/graphwalker.properties"));			
+				conf.load(Util.class.getResourceAsStream("/org/graphwalker/resources/graphwalker.properties"));
 			} catch (ConfigurationException e) {
 				logger.error(e.getMessage());
 			}
@@ -731,7 +952,7 @@ public class Util {
 		Boolean soapGuiState = false;
 		try {
 			soapGuiState = conf.getBoolean("org.graphwalker.GUI.startSOAP");
-		} catch ( NoSuchElementException e ) {
+		} catch (NoSuchElementException e) {
 			logger.debug("org.graphwalker.GUI.startSOAP not found in graphwalker.properties");
 			soapGuiState = false;
 		}
