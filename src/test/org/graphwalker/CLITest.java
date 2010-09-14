@@ -203,29 +203,6 @@ public class CLITest extends TestCase {
 	}
 
 	/**
-	 * Test command: java -jar mbt.jar online -f
-	 * graphml/backtrack/simpleGraph.graphml -g RANDOM -s EDGE_COVERAGE:100
-	 */
-	public void testOnlineBacktrackingIncorrectInput() {
-		String args[] = { "online", "-f", "graphml/backtrack/simpleGraph.graphml", "-g", "RANDOM", "-s", "EDGE_COVERAGE:100" };
-		runCommandWithInputFile(args, "graphml/backtrack/testOnlineBacktrackingIncorrect.stdin");
-		assertEquals("Backtracking was asked for, but model does not suppport BACKTRACK at egde: Edge: 'e_Init', INDEX=4", errMsg
-		    .split("\r\n|\r|\n")[0]);
-	}
-
-	/**
-	 * Test command: java -jar mbt.jar online -f
-	 * graphml/backtrack/simpleGraph.graphml -g RANDOM -s EDGE_COVERAGE:100
-	 */
-	public void testOnlineBacktrackingCorrectInput() {
-		String args[] = { "online", "-f", "graphml/backtrack/simpleGraph.graphml", "-g", "RANDOM", "-s", "EDGE_COVERAGE:100" };
-		runCommandWithInputFile(args, "graphml/backtrack/testOnlineBacktrackingCorrect.stdin");
-		String[] expected = { "e_Init", "v_Main", "e_NodeA BACKTRACK", "e_NodeA BACKTRACK", "e_NodeA BACKTRACK", "v_NodeA BACKTRACK",
-		    "e_NodeA BACKTRACK", "v_NodeA BACKTRACK" };
-		assertTrue(Arrays.deepEquals(expected, outMsg.split("\r\n|\r|\n")));
-	}
-
-	/**
 	 * Test command: java -jar mbt.jar offline -f
 	 * graphml/reqtags/ExtendedMain.graphml -g A_STAR -s EDGE_COVERAGE:100
 	 */
