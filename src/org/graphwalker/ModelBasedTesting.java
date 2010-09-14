@@ -73,6 +73,7 @@ public class ModelBasedTesting {
 	private PathGenerator generator;
 	private String[] template;
 	private boolean useStatisticsManager = false;
+	private boolean backtracking = false;
 	private boolean runRandomGeneratorOnce = false;
 	private boolean dryRun = false;
 	private boolean useJsScriptEngine = false;
@@ -123,6 +124,7 @@ public class ModelBasedTesting {
 		condition = null;
 		generator = null;
 		template = null;
+		backtracking = false;
 		runRandomGeneratorOnce = false;
 		dryRun = false;
 		javaExecutorClass = null;
@@ -242,6 +244,7 @@ public class ModelBasedTesting {
 			getCondition().setMachine(machine);
 		if (getGenerator() != null)
 			getGenerator().setMachine(machine);
+		getMachine().setBacktrackEnabled(this.backtracking);
 	}
 
 	/**
@@ -250,15 +253,14 @@ public class ModelBasedTesting {
 	public Graph getGraph() {
 		if (this.modelHandler == null)
 			return null;
-		return this.modelHandler.getActiveModel();
+		return this.modelHandler.getModel();
 	}
 
-	public void addGraph(Graph graph) {
+	public void setGraph(Graph graph) {
 		if (this.modelHandler == null) {
 			this.modelHandler = new GraphML();
 		}
-		this.modelHandler.addModel(graph);
-		this.modelHandler.setActiveModel(graph.getLabelKey());
+		this.modelHandler.setModel(graph);
 		if (this.machine != null)
 			getMachine().setModel(graph);
 	}
@@ -456,6 +458,12 @@ public class ModelBasedTesting {
 		return "";
 	}
 
+	public void backtrack() {
+		if (this.machine != null)
+			getMachine().backtrack();
+		getGenerator().reset();
+	}
+
 	public void readGraph(String graphmlFileName) {
 		if (this.modelHandler == null) {
 			this.modelHandler = new GraphML();
@@ -473,6 +481,27 @@ public class ModelBasedTesting {
 
 	public void writeModel(PrintStream ps) {
 		this.modelHandler.save(ps);
+	}
+
+	public boolean hasCurrentEdgeBackTracking() {
+		if (this.machine != null && getMachine().getLastEdge() != null) {
+			return getMachine().getLastEdge().isBacktrackKey();
+		}
+		return false;
+	}
+
+	public boolean hasCurrentVertexBackTracking() {
+		if (this.machine != null && getMachine().getLastEdge() != null) {
+			return getMachine().getLastEdge().isBacktrackKey();
+		}
+		return false;
+	}
+
+	public void enableBacktrack(boolean backtracking) {
+		this.backtracking = backtracking;
+		if (this.machine != null) {
+			getMachine().setBacktrackEnabled(backtracking);
+		}
 	}
 
 	public String getStatisticsString() {
@@ -548,6 +577,10 @@ public class ModelBasedTesting {
 			switch (input) {
 			case '2':
 				return;
+			case '1':
+				backtrack();
+				runRandomGeneratorOnce = true;
+				stepPair.clear();
 			case '0':
 
 				if (!hasNextStep() && (stepPair.size() == 0)) {
@@ -567,7 +600,11 @@ public class ModelBasedTesting {
 				System.out.print((String) stepPair.remove(0) + req);
 
 				String addInfo = "";
-  			System.out.println();
+				if ((stepPair.size() == 1 && hasCurrentEdgeBackTracking()) || (stepPair.size() == 0 && hasCurrentVertexBackTracking())) {
+					System.out.println(" BACKTRACK");
+					addInfo = " BACKTRACK";
+				} else
+					System.out.println();
 
 				if (stepPair.size() == 1) {
 					logExecution(getMachine().getLastEdge(), addInfo);

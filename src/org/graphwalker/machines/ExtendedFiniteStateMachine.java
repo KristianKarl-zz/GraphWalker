@@ -27,7 +27,6 @@ import org.graphwalker.exceptions.InvalidDataException;
 import org.graphwalker.filters.AccessableEdgeFilter;
 import org.graphwalker.graph.Edge;
 import org.graphwalker.graph.Graph;
-import org.graphwalker.io.AbstractModelHandler;
 
 import bsh.EvalError;
 import bsh.Interpreter;
@@ -51,9 +50,9 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 
 	private PrintStream oldPrintStream;
 
-	public ExtendedFiniteStateMachine(AbstractModelHandler modelHandler, boolean usingJsEngine) {
+	public ExtendedFiniteStateMachine(Graph model, boolean usingJsEngine) {
 		this(usingJsEngine);
-		setModelHandler(modelHandler);
+		setModel(model);
 	}
 
 	public ExtendedFiniteStateMachine(boolean usingJsEngine) {
@@ -100,7 +99,7 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 		Set<Edge> retur = super.getCurrentOutEdges();
 		for (Iterator<Edge> i = retur.iterator(); i.hasNext();) {
 			Edge e = i.next();
-			if (!accessableFilter.acceptEdge(getModelHandler().getActiveModel(), e)) {
+			if (!accessableFilter.acceptEdge(getModel(), e)) {
 				logger.debug("Not accessable: " + e + " from " + getCurrentVertexName());
 				i.remove();
 			} else {
@@ -269,6 +268,14 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 
 	private boolean hasAction(Edge edge) {
 		return (edge == null ? false : !edge.getActionsKey().isEmpty());
+	}
+
+	protected void track() {
+		super.track();
+		if (jsEngine != null) {
+		} else if (beanShellEngine != null) {
+			namespaceStack.push(new CannedNameSpace(beanShellEngine.getNameSpace()));
+		}
 	}
 
 	protected void popVertex() {

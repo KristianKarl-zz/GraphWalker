@@ -332,7 +332,7 @@ public class CLI {
 			buildOnlineCLI();
 			header = "Run the test online.\n" + "MBT will return a test sequence, one line at a time to standard output, "
 			    + "it will wait until a line is fed back via standard input. The data fed back can be:\n"
-			    + "  '0' which means, continue the test as normal\n" 
+			    + "  '0' which means, continue the test as normal\n" + "  '1' which means go back to previous vertex (backtracking)\n"
 			    + "  '2' will end the test normally\n" + "anything else will abort the execution.\n";
 		} else if (helpSection.equalsIgnoreCase("requirements")) {
 			buildRequirementsCLI();
@@ -412,6 +412,7 @@ public class CLI {
 		opt.addOption("a", "statistics", false, "Prints the statistics of the test, at the end of the run.");
 		opt.addOption("x", "extended", false, "Use an extended finite state machine to handle the model.");
 		opt.addOption("j", false, "Enable JavaScript engine");
+		opt.addOption("b", "backtrack", false, "Enable backtracking in the model.");
 		opt.addOption(OptionBuilder.isRequired().withArgName("stop-condition").withDescription(
 		    "Defines the stop condition(s).\nHalts the generation after the specified stop-conditon(s) has been met. "
 		        + "At least 1 condition must be given. If more than 1 is given, the condition that meets "
@@ -780,6 +781,11 @@ public class CLI {
 		for (int i = 0; i < genrators.length; i++) {
 			getMbt().setGenerator(Keywords.getGenerator(genrators[0].trim()));
 		}
+
+		/**
+		 * Set backtracking
+		 */
+		getMbt().enableBacktrack(cl.hasOption("b"));
 
 		/**
 		 * Set dry-run

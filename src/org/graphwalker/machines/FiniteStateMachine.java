@@ -34,7 +34,6 @@ import org.graphwalker.graph.AbstractElement;
 import org.graphwalker.graph.Edge;
 import org.graphwalker.graph.Graph;
 import org.graphwalker.graph.Vertex;
-import org.graphwalker.io.AbstractModelHandler;
 
 /**
  * @author Johan Tejle
@@ -44,13 +43,14 @@ public class FiniteStateMachine {
 
 	static Logger logger = Util.setupLogger(FiniteStateMachine.class);
 
-	protected AbstractModelHandler modelHandler = null;
+	protected Graph model = null;
 	protected Vertex currentVertex = null;
 	private boolean weighted = false;
 	private Edge lastEdge = null;
 	private Stack<Edge> edgeStack;
 	private Stack<Integer> vertexStore;
 	private int numberOfEdgesTravesed = 0;
+	protected boolean backtracking = false;
 	protected boolean calculatingPath = false;
 	private int numOfCoveredEdges = 0;
 	private int numOfCoveredVertices = 0;
@@ -69,23 +69,55 @@ public class FiniteStateMachine {
 
 	public void setVertex(String vertexName) {
 		logger.debug("Setting vertex to: '" + vertexName + "'");
-		Vertex e = modelHandler.findVertex(vertexName);
+		Vertex e = findVertex(vertexName);
 		Util.AbortIf(e == null, "Vertex not Found: '" + vertexName + "'");
 
 		currentVertex = e;
 		setAsVisited(e);
 	}
 
+	public Vertex findVertex(String vertexName) {
+		for (Vertex vertex : model.getVertices()) {
+			if (((String) vertex.getLabelKey()).equals(vertexName)) {
+				return vertex;
+			}
+		}
+		return null;
+	}
+
+	public AbstractElement findElement(Integer index) {
+		for (Vertex vertex : model.getVertices()) {
+			if (vertex.getIndexKey().equals(index)) {
+				return vertex;
+			}
+		}
+		for (Edge edge : model.getEdges()) {
+			if (edge.getIndexKey().equals(index)) {
+				return edge;
+			}
+		}
+		return null;
+	}
+
 	public boolean hasVertex(String vertexName) {
-		if (modelHandler.findVertex(vertexName) != null) {
+		if (findVertex(vertexName) != null) {
 			return true;
 		}
 		return false;
 	}
 
-	public FiniteStateMachine(AbstractModelHandler modelHandler) {
+	public Edge findEdge(String edgeName) {
+		for (Edge edge : model.getEdges()) {
+			if (((String) edge.getLabelKey()).equals(edgeName)) {
+				return edge;
+			}
+		}
+		return null;
+	}
+
+	public FiniteStateMachine(Graph model) {
 		this();
-		this.setModelHandler(modelHandler);
+		this.setModel(model);
 	}
 
 	public FiniteStateMachine() {
@@ -94,9 +126,9 @@ public class FiniteStateMachine {
 		start_time = System.currentTimeMillis();
 	}
 
-	public void setModelHandler(AbstractModelHandler modelHandler) {
+	public void setModel(Graph model) {
 		reset();
-		this.modelHandler = modelHandler;
+		this.model = model;
 		setVertex(Keywords.START_NODE);
 	}
 
@@ -113,15 +145,15 @@ public class FiniteStateMachine {
 	}
 
 	public Collection<Vertex> getAllVertices() {
-		return modelHandler.getVertices();
+		return model.getVertices();
 	}
 
 	public Collection<Edge> getAllEdges() {
-		return modelHandler.getEdges();
+		return model.getEdges();
 	}
 
 	public Set<Edge> getCurrentOutEdges() throws FoundNoEdgeException {
-		Set<Edge> retur = new HashSet<Edge>(modelHandler.getActiveModel().getOutEdges(currentVertex));
+		Set<Edge> retur = new HashSet<Edge>(model.getOutEdges(currentVertex));
 		if (retur.size() == 0) {
 			throw new FoundNoEdgeException("Cul-De-Sac, dead end found in '" + getCurrentVertex() + "'");
 		}
@@ -180,15 +212,23 @@ public class FiniteStateMachine {
 			walkEdge(edge);
 		}
 	}
-	
+
 	public boolean walkEdge(Edge edge) {
-		lastEdge = edge;
-		currentVertex = modelHandler.getDestination(edge);
-		setAsVisited(lastEdge);
-		setAsVisited(currentVertex);
-		numberOfEdgesTravesed++;
-		logger.debug("No. of walked edges: " + numberOfEdgesTravesed);
-		return true;
+		if (model.isSource(currentVertex, edge)) {
+			lastEdge = edge;
+			if (isBacktrackPossible()) {
+				track();
+			}
+
+			currentVertex = model.getDest(edge);
+			setAsVisited(lastEdge);
+			setAsVisited(currentVertex);
+			numberOfEdgesTravesed++;
+			logger.debug("No. of walked edges: " + numberOfEdgesTravesed);
+			return true;
+		} else
+			logger.error(edge + ", is not the source of: " + currentVertex);
+		return false;
 	}
 
 	public Edge getLastEdge() {
@@ -237,8 +277,8 @@ public class FiniteStateMachine {
 	}
 
 	public int[] getStatistics() {
-		Collection<Edge> e = modelHandler.getEdges();
-		Collection<Vertex> v = modelHandler.getVertices();
+		Collection<Edge> e = model.getEdges();
+		Collection<Vertex> v = model.getVertices();
 
 		int[] retur = { e.size(), getEdgeCoverage(e), v.size(), getVertexCoverage(v), numberOfEdgesTravesed, getAllRequirements().size(),
 		    getCoveredRequirements().size() };
@@ -254,7 +294,7 @@ public class FiniteStateMachine {
 		Enumeration<String> e = getAllRequirements().keys();
 		while(e.hasMoreElements()) {
 			String req = e.nextElement();
-			for (Edge edge : modelHandler.getEdges()) {
+			for (Edge edge : model.getEdges()) {
 				if ( edge.getReqTagKey().contains(req) ) {
 					if ( reqResult.get(req) == null ) {
 						reqResult.put(req, edge.getReqTagResult());
@@ -265,7 +305,7 @@ public class FiniteStateMachine {
 					}
 				}				
 			}
-			for (Vertex vertex : modelHandler.getVertices()) {
+			for (Vertex vertex : model.getVertices()) {
 				if ( vertex.getReqTagKey().contains(req) ) {
 					if ( reqResult.get(req) == null ) {
 						reqResult.put(req, vertex.getReqTagResult());
@@ -278,12 +318,12 @@ public class FiniteStateMachine {
 			}
 		}
 		
-		for (Edge edge : modelHandler.getEdges()) {
+		for (Edge edge : model.getEdges()) {
 			if (edge.getVisitedKey() <= 0) {
 				notCovered.add("Edge not reached: " + edge + newLine);
 			}
 		}
-		for (Vertex vertex : modelHandler.getVertices()) {
+		for (Vertex vertex : model.getVertices()) {
 			if (vertex.getVisitedKey() <= 0) {
 				notCovered.add("Vertex not reached: " + vertex + newLine);
 			}
@@ -420,6 +460,10 @@ public class FiniteStateMachine {
 		}
 	}
 
+	protected void track() {
+		edgeStack.push(getLastEdge());
+	}
+
 	protected void popVertex() {
 		setAsUnvisited(getLastEdge());
 		setAsUnvisited(getCurrentVertex());
@@ -428,7 +472,7 @@ public class FiniteStateMachine {
 		if (lastEdge == null) {
 			setVertex(Keywords.START_NODE);
 		} else {
-			currentVertex = modelHandler.getActiveModel().getSource(lastEdge);
+			currentVertex = model.getSource(lastEdge);
 		}
 		lastEdge = (edgeStack.size() > 0 ? (Edge) edgeStack.peek() : null);
 		numberOfEdgesTravesed--;
@@ -454,6 +498,34 @@ public class FiniteStateMachine {
 	 */
 	public int getNumberOfEdgesTravesed() {
 		return numberOfEdgesTravesed;
+	}
+
+	public void backtrack() {
+		if (isBacktrackPossible()) {
+			popVertex();
+		} else {
+			if (!isLastEdgeBacktrackSupported())
+				throw new RuntimeException("Backtracking was asked for, but model does not suppport BACKTRACK at egde: " + getLastEdge());
+			if (!isBacktrackEnabled())
+				throw new RuntimeException("Backtracking was asked for, but was disabled.");
+			throw new RuntimeException("Backtracking was asked for, but was refused");
+		}
+	}
+
+	public void setBacktrackEnabled(boolean backtracking) {
+		this.backtracking = backtracking;
+	}
+
+	public boolean isBacktrackEnabled() {
+		return this.backtracking;
+	}
+
+	public boolean isBacktrackPossible() {
+		return isBacktrackEnabled() || isCalculatingPath() || isLastEdgeBacktrackSupported();
+	}
+
+	private boolean isLastEdgeBacktrackSupported() {
+		return getLastEdge().isBacktrackKey();
 	}
 
 	public boolean isCalculatingPath() {
@@ -514,8 +586,8 @@ public class FiniteStateMachine {
 		return retur;
 	}
 
-	public AbstractModelHandler getModelHandler() {
-		return modelHandler;
+	public Graph getModel() {
+		return model;
 	}
 
 	public String getCurrentDataString() {
@@ -528,6 +600,7 @@ public class FiniteStateMachine {
 
 	public void reset() {
 		numberOfEdgesTravesed = 0;
+		backtracking = false;
 		calculatingPath = false;
 		numOfCoveredEdges = 0;
 		numOfCoveredVertices = 0;
@@ -538,10 +611,10 @@ public class FiniteStateMachine {
 	}
 
 	public void setAllUnvisited() {
-		for (Vertex vertex : modelHandler.getVertices()) {
+		for (Vertex vertex : model.getVertices()) {
 			vertex.setVisitedKey(0);
 		}
-		for (Edge edge : modelHandler.getEdges()) {
+		for (Edge edge : model.getEdges()) {
 			edge.setVisitedKey(0);
 		}
   }
