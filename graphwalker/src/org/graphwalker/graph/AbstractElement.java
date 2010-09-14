@@ -13,7 +13,6 @@ public class AbstractElement {
 	private Integer reqTagResult = 0;
 	private String parameterKey = new String();
 	private Integer visitedKey = new Integer(0);
-	private boolean backtrackKey = false;
 	private String actionsKey = new String();
 	private Integer indexKey = new Integer(0);
 	private String idKey = new String();
@@ -35,7 +34,6 @@ public class AbstractElement {
 		this.reqTagResult = ae.reqTagResult;
 		this.parameterKey = ae.parameterKey;
 		this.visitedKey = ae.visitedKey;
-		this.backtrackKey = ae.backtrackKey;
 		this.actionsKey = ae.actionsKey;
 		this.indexKey = ae.indexKey;
 		this.idKey = ae.idKey;
@@ -56,7 +54,6 @@ public class AbstractElement {
 			this.reqTagResult = A.reqTagResult;
 			this.parameterKey = A.parameterKey;
 			this.visitedKey = A.visitedKey;
-			this.backtrackKey = A.backtrackKey;
 			this.actionsKey = A.actionsKey;
 			this.indexKey = A.indexKey;
 			this.idKey = A.idKey;
@@ -74,7 +71,6 @@ public class AbstractElement {
 			this.reqTagResult = B.reqTagResult;
 			this.parameterKey = B.parameterKey;
 			this.visitedKey = B.visitedKey;
-			this.backtrackKey = B.backtrackKey;
 			this.actionsKey = B.actionsKey;
 			this.indexKey = B.indexKey;
 			this.idKey = B.idKey;
@@ -158,14 +154,6 @@ public class AbstractElement {
 
 	public void setActionsKey(String actionsKey) {
 		this.actionsKey = actionsKey;
-	}
-
-	public boolean isBacktrackKey() {
-		return backtrackKey;
-	}
-
-	public void setBacktrackKey(boolean backtrackKey) {
-		this.backtrackKey = backtrackKey;
 	}
 
 	public Integer getVisitedKey() {

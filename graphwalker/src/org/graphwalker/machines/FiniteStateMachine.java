@@ -500,32 +500,8 @@ public class FiniteStateMachine {
 		return numberOfEdgesTravesed;
 	}
 
-	public void backtrack() {
-		if (isBacktrackPossible()) {
-			popVertex();
-		} else {
-			if (!isLastEdgeBacktrackSupported())
-				throw new RuntimeException("Backtracking was asked for, but model does not suppport BACKTRACK at egde: " + getLastEdge());
-			if (!isBacktrackEnabled())
-				throw new RuntimeException("Backtracking was asked for, but was disabled.");
-			throw new RuntimeException("Backtracking was asked for, but was refused");
-		}
-	}
-
-	public void setBacktrackEnabled(boolean backtracking) {
-		this.backtracking = backtracking;
-	}
-
-	public boolean isBacktrackEnabled() {
-		return this.backtracking;
-	}
-
 	public boolean isBacktrackPossible() {
-		return isBacktrackEnabled() || isCalculatingPath() || isLastEdgeBacktrackSupported();
-	}
-
-	private boolean isLastEdgeBacktrackSupported() {
-		return getLastEdge().isBacktrackKey();
+		return isCalculatingPath();
 	}
 
 	public boolean isCalculatingPath() {

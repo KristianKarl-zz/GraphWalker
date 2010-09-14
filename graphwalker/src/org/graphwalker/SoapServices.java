@@ -99,10 +99,6 @@ public class SoapServices {
 			value = (String) stepPair.remove(0);
 			value = value.replaceAll("/.*$", "");
 			String addInfo = "";
-			if ((stepPair.size() == 1 && ModelBasedTesting.getInstance().hasCurrentEdgeBackTracking())
-			    || (stepPair.size() == 0 && ModelBasedTesting.getInstance().hasCurrentVertexBackTracking())) {
-				addInfo = " BACKTRACK";
-			}
 
 			if (stepPair.size() == 1) {
 				ModelBasedTesting.getInstance().logExecution(ModelBasedTesting.getInstance().getMachine().getLastEdge(), addInfo);
