@@ -74,6 +74,6 @@ public class Issue_9 extends TestCase {
 		System.out.println("Test will excute during 35 seconds");
 		String args[] = { "xml", "-f", "xml/test.org.graphwalker.bugs/Issue_9.xml" };
 		runCommand(args);
-		assertTrue(errMsg, errMsg.isEmpty());
+		assertTrue("No error messages should occur.", errMsg.isEmpty());
 	}
 }

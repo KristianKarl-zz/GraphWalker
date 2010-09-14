@@ -15,8 +15,7 @@ public class FloydWarshallGeneratorTest extends TestCase {
 	public void test_RandomGeneration() throws StopConditionException {
 		GraphML gml = new GraphML();
 		gml.load("graphml/backtrack/keepass.graphml");
-		gml.setActiveModel("v_KeePassNotRunning");
-		FiniteStateMachine FSM = new FiniteStateMachine(gml.getActiveModel());
+		FiniteStateMachine FSM = new FiniteStateMachine(gml.getModel());
 		FSM.setWeighted(false);
 		StopCondition sc = new EdgeCoverage(1.0);
 		FloydWarshallGenerator fwg = new FloydWarshallGenerator();

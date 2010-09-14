@@ -66,4 +66,43 @@ public class FiniteStateMachineTest extends TestCase {
 		assertEquals("[REQ001, REQ004, REQ003, REQ002]", FSM.getCoveredRequirements().toString());
 	}
 
+	public void testBacktrackWalk() {
+		FiniteStateMachine FSM = new FiniteStateMachine(graph);
+		FSM.setBacktrackEnabled(true);
+		assertEquals("Start", FSM.getCurrentVertexName());
+		FSM.walkEdge(e1);
+		assertEquals("V1", FSM.getCurrentVertexName());
+		FSM.walkEdge(e2);
+		assertEquals("V2", FSM.getCurrentVertexName());
+		FSM.walkEdge(e3);
+		assertEquals("V2", FSM.getCurrentVertexName());
+		FSM.backtrack();
+		assertEquals("V2", FSM.getCurrentVertexName());
+		FSM.backtrack();
+		assertEquals("V1", FSM.getCurrentVertexName());
+		FSM.backtrack();
+		assertEquals("Start", FSM.getCurrentVertexName());
+	}
+
+	public void testBacktrackWalk2() {
+		FiniteStateMachine FSM = new FiniteStateMachine(graph);
+		FSM.setBacktrackEnabled(true);
+		assertEquals("Start", FSM.getCurrentVertexName());
+		FSM.walkEdge(e1);
+		assertEquals("V1", FSM.getCurrentVertexName());
+		FSM.walkEdge(e2);
+		assertEquals("V2", FSM.getCurrentVertexName());
+		FSM.walkEdge(e3);
+		assertEquals("V2", FSM.getCurrentVertexName());
+		FSM.walkEdge(e4);
+		assertEquals("V1", FSM.getCurrentVertexName());
+		FSM.backtrack();
+		assertEquals("V2", FSM.getCurrentVertexName());
+		FSM.backtrack();
+		assertEquals("V2", FSM.getCurrentVertexName());
+		FSM.backtrack();
+		assertEquals("V1", FSM.getCurrentVertexName());
+		FSM.backtrack();
+		assertEquals("Start", FSM.getCurrentVertexName());
+	}
 }

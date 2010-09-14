@@ -51,7 +51,7 @@ public class EdgeCoverageTest extends TestCase {
 		ModelBasedTesting mbt = ModelBasedTesting.getInstance();
 		StopCondition condition = new EdgeCoverage();
 		mbt.setCondition(condition);
-		mbt.addGraph(graph);
+		mbt.setGraph(graph);
 		mbt.setGenerator(Keywords.GENERATOR_RANDOM);
 		assertTrue(mbt.hasNextStep());
 
@@ -66,7 +66,7 @@ public class EdgeCoverageTest extends TestCase {
 		ModelBasedTesting mbt = ModelBasedTesting.getInstance();
 		StopCondition condition = new EdgeCoverage();
 		mbt.setCondition(condition);
-		mbt.addGraph(graph);
+		mbt.setGraph(graph);
 		mbt.setGenerator(Keywords.GENERATOR_RANDOM);
 		assertTrue(mbt.hasNextStep());
 
