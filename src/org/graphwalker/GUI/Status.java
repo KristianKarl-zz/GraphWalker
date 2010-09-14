@@ -67,12 +67,12 @@ public class Status {
 		log.debug("State: " + this.state);
 	}
 
-	public void setStopped() {
+	protected void setStopped() {
 		log.debug("Set the state to stopped");
 		state = stopped;
 	}
 
-	public void reset() {
+	protected void reset() {
 		log.debug("Reset the state to initial");
 		state = initial;
 	}

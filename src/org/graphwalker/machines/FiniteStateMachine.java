@@ -41,17 +41,17 @@ import org.graphwalker.graph.Vertex;
  */
 public class FiniteStateMachine {
 
-	static Logger logger = Util.setupLogger(FiniteStateMachine.class);
+	private static Logger logger = Util.setupLogger(FiniteStateMachine.class);
 
-	protected Graph model = null;
-	protected Vertex currentVertex = null;
+	private Graph model = null;
+	private Vertex currentVertex = null;
 	private boolean weighted = false;
 	private Edge lastEdge = null;
 	private Stack<Edge> edgeStack;
 	private Stack<Integer> vertexStore;
 	private int numberOfEdgesTravesed = 0;
-	protected boolean backtracking = false;
-	protected boolean calculatingPath = false;
+	
+	private boolean calculatingPath = false;
 	private int numOfCoveredEdges = 0;
 	private int numOfCoveredVertices = 0;
 
@@ -113,11 +113,6 @@ public class FiniteStateMachine {
 			}
 		}
 		return null;
-	}
-
-	public FiniteStateMachine(Graph model) {
-		this();
-		this.setModel(model);
 	}
 
 	public FiniteStateMachine() {
@@ -362,19 +357,7 @@ public class FiniteStateMachine {
 		return false;
 	}
 
-	protected int getCoverage(Collection<AbstractElement> modelItems) {
-		int unique = 0;
-
-		for (AbstractElement abstractElement : modelItems) {
-			if (abstractElement.getVisitedKey() > 0) {
-				unique++;
-			}
-		}
-
-		return unique;
-	}
-
-	protected int getVertexCoverage(Collection<Vertex> modelItems) {
+	private int getVertexCoverage(Collection<Vertex> modelItems) {
 		int unique = 0;
 
 		for (Vertex vertex : modelItems) {
@@ -385,8 +368,8 @@ public class FiniteStateMachine {
 
 		return unique;
 	}
-
-	protected int getEdgeCoverage(Collection<Edge> modelItems) {
+	
+	private int getEdgeCoverage(Collection<Edge> modelItems) {
 		int unique = 0;
 
 		for (Edge edge : modelItems) {
@@ -434,13 +417,6 @@ public class FiniteStateMachine {
 		}
 
 		return edge.getLabelKey() + " " + edge.getParameterKey();
-	}
-
-	public String getVertexName(Vertex vertex) {
-		String l = vertex.getLabelKey();
-		String p = vertex.getParameterKey();
-
-		return (l == null ? "" : l) + (p == null ? "" : " " + p);
 	}
 
 	public void storeVertex() {
@@ -574,9 +550,8 @@ public class FiniteStateMachine {
 		return false;
 	}
 
-	public void reset() {
+	private void reset() {
 		numberOfEdgesTravesed = 0;
-		backtracking = false;
 		calculatingPath = false;
 		numOfCoveredEdges = 0;
 		numOfCoveredVertices = 0;

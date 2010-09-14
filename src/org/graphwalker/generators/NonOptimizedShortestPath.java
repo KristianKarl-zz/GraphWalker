@@ -12,7 +12,7 @@ import org.graphwalker.graph.Vertex;
 import edu.uci.ics.jung.algorithms.shortestpath.DijkstraShortestPath;
 
 public class NonOptimizedShortestPath extends RandomPathGenerator {
-	static Logger logger = Util.setupLogger(NonOptimizedShortestPath.class);
+	private static Logger logger = Util.setupLogger(NonOptimizedShortestPath.class);
 	private List<Edge> dijkstraShortestPath;
 
 	public String[] getNext() throws InterruptedException {

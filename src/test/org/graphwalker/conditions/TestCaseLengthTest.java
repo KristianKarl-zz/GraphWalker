@@ -35,8 +35,7 @@ public class TestCaseLengthTest extends TestCase {
 
 	protected void tearDown() throws Exception {
 		super.tearDown();
-		graph.removeAllEdges();
-		graph.removeAllVertices();
+		graph = null;
 		start = v1 = v2 = null;
 		e0 = e1 = null;
 	}

@@ -26,22 +26,6 @@ public class Graph extends SparseMultigraph<Vertex, Edge> {
 		this.fileKey = fileKey;
 	}
 
-	public void removeAllEdges() {
-		Object[] list = getEdges().toArray();
-		for (int i = 0; i < list.length; i++) {
-			Edge e = (Edge) list[i];
-			removeEdge(e);
-		}
-	}
-
-	public void removeAllVertices() {
-		Object[] list = getVertices().toArray();
-		for (int i = 0; i < list.length; i++) {
-			Vertex v = (Vertex) list[i];
-			removeVertex(v);
-		}
-	}
-
 	public String toString() {
 		String str = "";
 		if (!getFileKey().isEmpty())

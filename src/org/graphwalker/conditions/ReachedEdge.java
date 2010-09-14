@@ -27,10 +27,6 @@ public class ReachedEdge extends StopCondition {
 		this.maxDistance = max(this.proximity);
 	}
 
-	public ReachedEdge(Edge endEdge) {
-		this.endEdge = endEdge;
-	}
-
 	public ReachedEdge(String edgeName) {
 		String[] vertex = edgeName.split("/", 2);
 		this.edgeName = vertex[0];

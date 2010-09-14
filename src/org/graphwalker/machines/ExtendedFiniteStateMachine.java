@@ -26,7 +26,6 @@ import org.graphwalker.exceptions.FoundNoEdgeException;
 import org.graphwalker.exceptions.InvalidDataException;
 import org.graphwalker.filters.AccessableEdgeFilter;
 import org.graphwalker.graph.Edge;
-import org.graphwalker.graph.Graph;
 
 import bsh.EvalError;
 import bsh.Interpreter;
@@ -38,7 +37,7 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 
 	private PrintStream Void;
 
-	static Logger logger = Util.setupLogger(ExtendedFiniteStateMachine.class);
+	private static Logger logger = Util.setupLogger(ExtendedFiniteStateMachine.class);
 
 	private Interpreter beanShellEngine = null;
 	private AccessableEdgeFilter accessableFilter;
@@ -49,11 +48,6 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 	private Stack<CannedNameSpace> namespaceStack;
 
 	private PrintStream oldPrintStream;
-
-	public ExtendedFiniteStateMachine(Graph model, boolean usingJsEngine) {
-		this(usingJsEngine);
-		setModel(model);
-	}
 
 	public ExtendedFiniteStateMachine(boolean usingJsEngine) {
 		super();

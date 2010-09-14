@@ -27,7 +27,7 @@ public class AbstractElement {
 	public AbstractElement() {
 	}
 
-	public AbstractElement(AbstractElement ae) {
+	protected AbstractElement(AbstractElement ae) {
 		this.labelKey = ae.labelKey;
 		this.fullLabelKey = ae.fullLabelKey;
 		this.reqTagKey = ae.reqTagKey;
@@ -46,7 +46,7 @@ public class AbstractElement {
 		this.manualInstructions = ae.manualInstructions;
 	}
 
-	public AbstractElement(AbstractElement A, AbstractElement B) {
+	protected AbstractElement(AbstractElement A, AbstractElement B) {
 		if (A.fullLabelKey.length() > B.fullLabelKey.length()) {
 			this.labelKey = A.labelKey;
 			this.fullLabelKey = A.fullLabelKey;

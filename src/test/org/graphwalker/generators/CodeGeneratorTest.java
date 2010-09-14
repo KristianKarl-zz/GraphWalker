@@ -31,10 +31,12 @@ public class CodeGeneratorTest extends TestCase {
 		edge.setIndexKey(new Integer(3));
 		edge.setLabelKey("E1");
 
-		FiniteStateMachine FSM = new FiniteStateMachine(graph);
+		FiniteStateMachine FSM = new FiniteStateMachine();
+		FSM.setModel(graph);
 
 		String[] template = { "", "{EDGE_VERTEX}: {LABEL}", "" };
-		CodeGenerator generator = new CodeGenerator(template);
+		CodeGenerator generator = new CodeGenerator();
+		generator.setTemplate(template);
 		generator.setMachine(FSM);
 
 		assertEquals("Edge: E1", generator.getNext()[0]);
@@ -60,10 +62,12 @@ public class CodeGeneratorTest extends TestCase {
 		edge.setIndexKey(new Integer(3));
 		edge.setLabelKey("E1");
 
-		FiniteStateMachine FSM = new FiniteStateMachine(graph);
+		FiniteStateMachine FSM = new FiniteStateMachine();
+		FSM.setModel(graph);
 
 		String[] template = { "This is the HEADER", "{EDGE_VERTEX}: {LABEL}", "This is the FOOTER" };
-		CodeGenerator generator = new CodeGenerator(template);
+		CodeGenerator generator = new CodeGenerator();
+		generator.setTemplate(template);
 		generator.setMachine(FSM);
 
 		StringBuffer str = new StringBuffer();

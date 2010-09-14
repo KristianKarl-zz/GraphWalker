@@ -53,22 +53,13 @@ public abstract class PathGenerator {
 	PathGenerator() {
 	}
 
-	PathGenerator(StopCondition stopCondition) {
-		setStopCondition(stopCondition);
-	}
-
-	PathGenerator(FiniteStateMachine machine, StopCondition stopCondition) {
-		this(stopCondition);
-		setMachine(machine);
-	}
-
 	public String toString() {
 		if (getStopCondition() != null)
 			return getStopCondition().toString();
 		return "";
 	}
 
-	public boolean isEdgeAvailable(Edge edge) {
+	protected boolean isEdgeAvailable(Edge edge) {
 		Set<Edge> availableEdges;
 		try {
 			availableEdges = getMachine().getCurrentOutEdges();

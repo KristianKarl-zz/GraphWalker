@@ -93,7 +93,7 @@ public class CLI {
 	public static class VerboseStatisticsLogger extends Thread {
 		private ModelBasedTesting modelBasedTesting;
 
-		VerboseStatisticsLogger(ModelBasedTesting modelBasedTesting) {
+		private VerboseStatisticsLogger(ModelBasedTesting modelBasedTesting) {
 			this.modelBasedTesting = modelBasedTesting;
 		}
 
@@ -102,7 +102,7 @@ public class CLI {
 		}
 	}
 
-	static Logger logger = Util.setupLogger(CLI.class);
+	private static Logger logger = Util.setupLogger(CLI.class);
 	private ModelBasedTesting mbt = null;
 	private Timer timer = null;
 	private Options opt = new Options();
@@ -111,7 +111,7 @@ public class CLI {
 	public CLI() {
 	}
 
-	ModelBasedTesting getMbt() {
+	private ModelBasedTesting getMbt() {
 		if (mbt == null)
 			mbt = ModelBasedTesting.getInstance();
 		return mbt;
@@ -993,14 +993,7 @@ public class CLI {
 		return condition;
 	}
 
-	public Endpoint GetEndpoint() {
+	private Endpoint GetEndpoint() {
 		return endpoint;
-	}
-
-	public void StopSOAP() {
-		if (endpoint != null) {
-			logger.debug("Stopping the SOAP service");
-			endpoint.stop();
-		}
 	}
 }

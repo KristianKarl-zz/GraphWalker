@@ -32,7 +32,9 @@ public class ListGeneratorTest extends TestCase {
 		graph.addEdge(edge, v1, v2);
 
 		ListGenerator generator = new ListGenerator();
-		generator.setMachine(new FiniteStateMachine(graph));
+		FiniteStateMachine fsm = new FiniteStateMachine();
+		fsm.setModel(graph);
+		generator.setMachine(fsm);
 
 		String[] s = generator.getNext();
 		assertEquals("E1", s[0]);

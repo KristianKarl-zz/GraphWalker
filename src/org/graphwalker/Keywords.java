@@ -250,7 +250,7 @@ public class Keywords {
 		private String description;
 		private Integer id;
 
-		public StopCondition(String name, String description, Integer id) {
+		private StopCondition(String name, String description, Integer id) {
 			this.name = name;
 			this.description = description;
 			this.id = id;
@@ -305,7 +305,7 @@ public class Keywords {
 		return stopConditions;
 	}
 
-	static public boolean isStopCondition(String presumedCondition) {
+	static private boolean isStopCondition(String presumedCondition) {
 		if (presumedCondition == null)
 			return false;
 		for (StopCondition sc : stopConditions) {
@@ -340,7 +340,7 @@ public class Keywords {
 		private Integer id;
 		private Boolean published;
 
-		public Generator(String name, String description, Integer id, Boolean published) {
+		private Generator(String name, String description, Integer id, Boolean published) {
 			this.name = name;
 			this.description = description;
 			this.id = id;
@@ -401,7 +401,7 @@ public class Keywords {
 		return generators;
 	}
 
-	static public boolean isGenerator(String presumedGenerator) {
+	static private boolean isGenerator(String presumedGenerator) {
 		if (presumedGenerator == null)
 			return false;
 		for (Generator g : generators) {

@@ -20,8 +20,6 @@ package org.graphwalker.filters;
 import javax.script.ScriptEngine;
 import javax.script.ScriptException;
 
-import org.apache.log4j.Logger;
-import org.graphwalker.Util;
 import org.graphwalker.graph.Edge;
 
 import bsh.EvalError;
@@ -32,7 +30,6 @@ import bsh.Interpreter;
  * 
  */
 public class AccessableEdgeFilter {
-	static Logger logger = Util.setupLogger(AccessableEdgeFilter.class);
 
 	private ScriptEngine jsEngine = null;
 	private Interpreter beanShellEngine = null;

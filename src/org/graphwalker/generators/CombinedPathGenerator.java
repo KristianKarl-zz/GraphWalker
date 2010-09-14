@@ -9,18 +9,13 @@ import org.graphwalker.machines.FiniteStateMachine;
 
 public class CombinedPathGenerator extends PathGenerator {
 
-	static Logger logger = Logger.getLogger(CombinedPathGenerator.class);
+	private static Logger logger = Logger.getLogger(CombinedPathGenerator.class);
 
 	private Vector<PathGenerator> generatorList = new Vector<PathGenerator>();
 	private int currentGenerator = 0;
 
 	public CombinedPathGenerator() {
 		super();
-	}
-
-	public CombinedPathGenerator(PathGenerator generator) {
-		super();
-		addPathGenerator(generator);
 	}
 
 	public void addPathGenerator(PathGenerator generator) {

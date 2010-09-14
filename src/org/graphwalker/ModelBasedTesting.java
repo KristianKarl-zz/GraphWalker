@@ -34,7 +34,6 @@ import org.apache.log4j.Logger;
 import org.graphwalker.GUI.App;
 import org.graphwalker.GUI.Status;
 import org.graphwalker.conditions.AlternativeCondition;
-import org.graphwalker.conditions.CombinationalCondition;
 import org.graphwalker.conditions.ReachedRequirement;
 import org.graphwalker.conditions.StopCondition;
 import org.graphwalker.events.MbtEvent;
@@ -65,7 +64,7 @@ import org.graphwalker.statistics.VertexCoverageStatistics;
  * 
  */
 public class ModelBasedTesting {
-	static Logger logger = Util.setupLogger(ModelBasedTesting.class);
+	private static Logger logger = Util.setupLogger(ModelBasedTesting.class);
 
 	private AbstractModelHandler modelHandler;
 	private FiniteStateMachine machine;
@@ -73,7 +72,6 @@ public class ModelBasedTesting {
 	private PathGenerator generator;
 	private String[] template;
 	private boolean useStatisticsManager = false;
-	private boolean backtracking = false;
 	private boolean runRandomGeneratorOnce = false;
 	private boolean dryRun = false;
 	private boolean useJsScriptEngine = false;
@@ -124,7 +122,6 @@ public class ModelBasedTesting {
 		condition = null;
 		generator = null;
 		template = null;
-		backtracking = false;
 		runRandomGeneratorOnce = false;
 		dryRun = false;
 		javaExecutorClass = null;
@@ -174,7 +171,7 @@ public class ModelBasedTesting {
 		return this.statisticsManager;
 	}
 
-	public void addAlternativeCondition(int conditionType, String conditionValue) throws StopConditionException {
+	protected void addAlternativeCondition(int conditionType, String conditionValue) throws StopConditionException {
 		StopCondition condition = null;
 		condition = Util.getCondition(conditionType, conditionValue);
 
@@ -199,21 +196,6 @@ public class ModelBasedTesting {
 				((AlternativeCondition) getCondition()).add(old);
 			}
 			((AlternativeCondition) getCondition()).add(condition);
-		}
-	}
-
-	public void addCondition(int conditionType, String conditionValue) throws StopConditionException {
-		StopCondition condition = Util.getCondition(conditionType, conditionValue);
-
-		if (getCondition() == null) {
-			setCondition(condition);
-		} else {
-			if (!(getCondition() instanceof CombinationalCondition)) {
-				StopCondition old = getCondition();
-				setCondition(new CombinationalCondition());
-				((CombinationalCondition) getCondition()).add(old);
-			}
-			((CombinationalCondition) getCondition()).add(condition);
 		}
 	}
 
@@ -336,7 +318,7 @@ public class ModelBasedTesting {
 		}
 	}
 
-	public void enableJsScriptEngine(boolean enableJs) {
+	protected void enableJsScriptEngine(boolean enableJs) {
 		if (enableJs)
 			useJsScriptEngine = true;
 		else
@@ -472,7 +454,7 @@ public class ModelBasedTesting {
 		}
 	}
 
-	public void writeModel(PrintStream ps) {
+	protected void writeModel(PrintStream ps) {
 		this.modelHandler.save(ps);
 	}
 
@@ -535,11 +517,11 @@ public class ModelBasedTesting {
 		}
 	}
 
-	public void interractivePath() throws InterruptedException {
+	protected void interractivePath() throws InterruptedException {
 		interractivePath(System.in);
 	}
 
-	public void interractivePath(InputStream in) throws InterruptedException {
+	private void interractivePath(InputStream in) throws InterruptedException {
 		Vector<String> stepPair = new Vector<String>();
 		String req = "";
 
@@ -590,7 +572,7 @@ public class ModelBasedTesting {
 		}
 	}
 
-	public String getRequirement(AbstractElement element) {
+	private String getRequirement(AbstractElement element) {
 		String req = "";
 		if (element instanceof Edge) {
 			if (!getMachine().getLastEdge().getReqTagKey().isEmpty()) {
@@ -606,7 +588,7 @@ public class ModelBasedTesting {
 		return "";
 	}
 
-	public void logExecution(AbstractElement element, String additionalInfo) {
+	protected void logExecution(AbstractElement element, String additionalInfo) {
 		String req = " " + getRequirement(element);
 		if (element instanceof Edge) {
 			logger.info(getMachine().getLastEdge() + req + additionalInfo);
@@ -653,7 +635,7 @@ public class ModelBasedTesting {
 
 	}
 
-	public void executePath(String strClassName) throws InterruptedException {
+	protected void executePath(String strClassName) throws InterruptedException {
 		if (getJavaExecutorClass() == null) {
 			setJavaExecutorClass(strClassName);
 		}
@@ -687,23 +669,7 @@ public class ModelBasedTesting {
 		executePath(clsClass, null);
 	}
 
-	public void executePath(Class<?> clsClass) throws InterruptedException {
-		if (clsClass == null)
-			throw new RuntimeException("Needed execution class is missing as parameter.");
-		executePath(clsClass, null);
-	}
-
-	public void executePath(Object objInstance) throws InterruptedException {
-		if (objInstance == null)
-			throw new RuntimeException("Needed execution instance is missing as parameter.");
-		if (isUseGUI()) {
-			App.getInstance().pause();
-			App.getInstance().updateLayout();
-		}
-		executePath(null, objInstance);
-	}
-
-	public void executePath(Class<?> clsClass, Object objInstance) throws InterruptedException {
+	protected void executePath(Class<?> clsClass, Object objInstance) throws InterruptedException {
 		if (this.machine == null)
 			getMachine();
 
@@ -863,11 +829,11 @@ public class ModelBasedTesting {
 		}
 	}
 
-	public void writePath() throws InterruptedException {
+	protected void writePath() throws InterruptedException {
 		writePath(System.out);
 	}
 
-	public void writePath(Vector<String[]> testSequence) throws InterruptedException {
+	protected void writePath(Vector<String[]> testSequence) throws InterruptedException {
 		if (this.machine == null) {
 			getMachine();
 		}
@@ -901,7 +867,7 @@ public class ModelBasedTesting {
 		return parsedStr;
 	}
 
-	public void writePath(PrintStream out) throws InterruptedException {
+	protected void writePath(PrintStream out) throws InterruptedException {
 		if (this.machine == null) {
 			getMachine();
 		}

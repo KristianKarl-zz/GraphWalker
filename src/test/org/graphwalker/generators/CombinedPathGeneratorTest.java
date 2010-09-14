@@ -37,13 +37,16 @@ public class CombinedPathGeneratorTest extends TestCase {
 	}
 
 	public void testCodeList() throws InterruptedException {
-		FiniteStateMachine FSM = new FiniteStateMachine(graph);
+		FiniteStateMachine FSM = new FiniteStateMachine();
+		FSM.setModel(graph);
 
 		String[] template = { "", "{EDGE_VERTEX}: {LABEL}", "" };
-		CodeGenerator generator1 = new CodeGenerator(template);
+		CodeGenerator generator1 = new CodeGenerator();
+		generator1.setTemplate(template);
 		ListGenerator generator2 = new ListGenerator();
 
-		CombinedPathGenerator pathGenerator = new CombinedPathGenerator(generator1);
+		CombinedPathGenerator pathGenerator = new CombinedPathGenerator();
+		pathGenerator.addPathGenerator(generator1);
 		pathGenerator.addPathGenerator(generator2);
 		pathGenerator.setMachine(FSM);
 

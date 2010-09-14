@@ -133,7 +133,7 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 		setButtons();
 	}
 
-	protected String newline = "\n";
+	private String newline = "\n";
 	static final private String LOAD = "load";
 	static final private String RELOAD = "reload";
 	static final private String FIRST = "first";
@@ -160,13 +160,6 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 		layouts.add(SpringLayout2.class);
 		layouts.add(ISOMLayout.class);
 		return layouts.toArray(new Class[0]);
-	}
-
-	public static void SetAppEventNotifier(AppEvent event) {
-		logger.debug("Entry");
-		logger.debug("AppEvent is set using: " + event);
-		appEvent = event;
-		changeEvent = new ChangeEvent(event);
 	}
 
 	private void runSoap() {
@@ -271,7 +264,7 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 		}
 	}
 
-	public void load() {
+	private void load() {
 		logger.debug("Entry");
 		status.setStopped();
 		statusBar.setMessage("Stopped");
@@ -504,7 +497,7 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 		}
 	}
 
-	public void stop() {
+	private void stop() {
 		logger.debug("Entry");
 		status.setState(Status.stopped);
 		statusBar.setMessage("Stopped");
@@ -520,7 +513,7 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 		setButtons();
 	}
 
-	public void first() {
+	private void first() {
 		if (status.isExecutingLogTest()) {
 			ModelBasedTesting.getInstance().setAllUnvisited();
 			currentStep = 0;
@@ -540,7 +533,7 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 		}		
 	}
 
-	public void last() {
+	private void last() {
 		if (status.isExecutingLogTest()) {
 			Integer index = null;
 			for (; currentStep < parsedLogFile.size(); currentStep++) {
@@ -563,7 +556,7 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 		}		
 	}
 
-	public void prev() {
+	private void prev() {
 		logger.debug("Entry");
 		if (status.isExecutingLogTest()) {
 			Integer index = parsedLogFile.get(currentStep).index;
@@ -587,7 +580,7 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 		}
 	}
 
-	public void next() {
+	private void next() {
 		logger.debug("Entry");
 		if (status.isExecutingLogTest()) {
 			if ( currentStep < parsedLogFile.size() - 1 )
@@ -622,7 +615,7 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 			centerOnVertex();
 	}
 
-	public void centerOnVertex() {
+	private void centerOnVertex() {
 		logger.debug("Entry");
 		Vertex v = ModelBasedTesting.getInstance().getCurrentVertex();
 		if (v != null) {
@@ -634,12 +627,12 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 		}
 	}
 
-	public void updateUI() {
+	private void updateUI() {
 		logger.debug("Updating the UI");
 		outPut();
 	}
 
-	public void reload() {
+	private void reload() {
 		logger.debug("reload");
 		status.setStopped();
 		statusBar.setMessage("Stopped");
@@ -664,23 +657,12 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 		return vv;
 	}
 
-	public void disableToolBarExceptPauseButton() {
-		logger.debug("Entry");
-		loadButton.setEnabled(false);
-		reloadButton.setEnabled(false);
-		runButton.setEnabled(false);
-		pauseButton.setEnabled(true);
-		nextButton.setEnabled(false);
-		soapButton.setEnabled(false);
-		centerOnVertexButton.setEnabled(false);
-	}
-
-	public void setWaitCursor() {
+	private void setWaitCursor() {
 		logger.debug("Entry");
 		setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 	}
 
-	public void setDefaultCursor() {
+	private void setDefaultCursor() {
 		logger.debug("Entry");
 		setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 	}
@@ -710,10 +692,10 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 		}
 	}
 
-	public class MyEdgeStrokeFunction implements Transformer<Edge, Stroke> {
-		protected final Stroke UNVISITED = new BasicStroke(3);
-		protected final Stroke VISITED = new BasicStroke(1);
-		protected final Stroke CURRENT = new BasicStroke(3);
+	private class MyEdgeStrokeFunction implements Transformer<Edge, Stroke> {
+		private final Stroke UNVISITED = new BasicStroke(3);
+		private final Stroke VISITED = new BasicStroke(1);
+		private final Stroke CURRENT = new BasicStroke(3);
 
 		public Stroke transform(Edge e) {
 			if (ModelBasedTesting.getInstance().getMachine().getLastEdge() != null
@@ -727,7 +709,7 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 
 	}
 
-	public class MyVertexPaintFunction implements Transformer<Vertex, Paint> {
+	private class MyVertexPaintFunction implements Transformer<Vertex, Paint> {
 		public Paint transform(Vertex v) {
 			if (ModelBasedTesting.getInstance().getMachine().isCurrentVertex(v))
 				return Color.RED;
@@ -738,7 +720,7 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 		}
 	}
 
-	public class MyVertexFillPaintFunction implements Transformer<Vertex, Paint> {
+	private class MyVertexFillPaintFunction implements Transformer<Vertex, Paint> {
 		public Paint transform(Vertex v) {
 			if (ModelBasedTesting.getInstance().getMachine().isCurrentVertex(v))
 				return Color.RED;
@@ -794,7 +776,7 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 		return vv;
 	}
 
-	public void createPanelStatistics() {
+	private void createPanelStatistics() {
 		logger.debug("Entry");
 		panelStatistics = new JPanel();
 		panelStatistics.setLayout(new BorderLayout());
@@ -804,7 +786,7 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 		panelStatistics.add(statisticsTextArea, BorderLayout.CENTER);
 	}
 
-	public void createPanelVariables() {
+	private void createPanelVariables() {
 		logger.debug("Entry");
 
 		panelVariables = new JPanel();
@@ -815,7 +797,7 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 		panelVariables.add(variablesTextArea, BorderLayout.CENTER);
 	}
 
-	protected JButton makeNavigationButton(String imageName, String actionCommand, String toolTipText, String altText, boolean enabled) {
+	private JButton makeNavigationButton(String imageName, String actionCommand, String toolTipText, String altText, boolean enabled) {
 		logger.debug("Entry");
 
 		// Look for the image.
@@ -839,7 +821,7 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 		return button;
 	}
 
-	protected JCheckBox makeNavigationCheckBoxButton(String imageName, String actionCommand, String toolTipText, String altText) {
+	private JCheckBox makeNavigationCheckBoxButton(String imageName, String actionCommand, String toolTipText, String altText) {
 		logger.debug("Entry");
 
 		// Create and initialize the button.
@@ -894,8 +876,7 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 		}
 	}
 
-	@SuppressWarnings( { "unchecked", "serial", "synthetic-access" })
-	public void addButtons(JToolBar toolBar) {
+	private void addButtons(JToolBar toolBar) {
 		logger.debug("Entry");
 
 		loadButton = makeNavigationButton("open", LOAD, "Load a model (graphml file)", "Load", true);
@@ -943,7 +924,7 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 		toolBar.add(jcb);
 	}
 
-	public void createPanelGraph() {
+	private void createPanelGraph() {
 		logger.debug("Entry");
 		panelGraph = new JPanel();
 		panelGraph.setLayout(new BorderLayout());
@@ -954,7 +935,7 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 		panelGraph.add(getGraphViewer(), BorderLayout.CENTER);
 	}
 
-	public void init() {
+	private void init() {
 		logger.debug("Entry");
 		setTitle(title);
 		setBackground(Color.gray);
