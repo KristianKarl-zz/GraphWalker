@@ -6,8 +6,10 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
@@ -396,7 +398,17 @@ public class GraphML extends AbstractModelHandler {
 			logger.info("Done merging");
 			setMerged(true);
 		}
+		setGraphName();
 	}
+
+	private void setGraphName() {
+		for (Vertex v : graph.getVertices()) {
+			if ( v.getLabelKey().equalsIgnoreCase(Keywords.START_NODE)) {
+				Edge e = (Edge)graph.getOutEdges(v).toArray()[0];
+				graph.setLabelKey(graph.getDest(e).getLabelKey());
+			}	    
+    }
+  }
 
 	private void setMerged(boolean merged) {
 		this.merged = merged;

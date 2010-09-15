@@ -22,6 +22,7 @@ public class GraphMLTest extends TestCase {
 			modelHandler.load("graphml/test.org.graphwalker.unittest/merging");
 			assertEquals( modelHandler.getModel().getVertexCount(), 37 );
 			assertEquals( modelHandler.getModel().getEdgeCount(), 92 );
+			assertEquals( modelHandler.getModel().getLabelKey(), "v_A"  );
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 			fail(e.getMessage());
