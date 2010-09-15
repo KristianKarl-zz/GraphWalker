@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 
 import java.io.IOException;
 
+import org.graphwalker.Model;
 import org.graphwalker.ModelBasedTesting;
 import org.graphwalker.Util;
 import org.graphwalker.exceptions.GeneratorException;
@@ -36,22 +37,18 @@ public class EventDrivenModels {
 	@Test
 	public void load2Models() throws StopConditionException, GeneratorException, IOException, JDOMException, InterruptedException {
 		org.graphwalker.EventDrivenModels edm = new org.graphwalker.EventDrivenModels();
-		assertEquals(edm.getModels().size(), 0);
+		assertEquals(0, edm.countObservers());
 
 		Util u = new Util();
-		edm.addModel(u.loadMbtFromXmlNonStatic("xml/test.org.graphwalker.unittest/org.graphwalker.EventDrivenModels.load2Models.1.xml"));
-		assertEquals(edm.getModels().size(), 1);
+		Model model = new Model();
+
+		model.setMbt(u.loadMbtFromXmlNonStatic("xml/test.org.graphwalker.unittest/org.graphwalker.EventDrivenModels.load2Models.1.xml"));
+		edm.addModel(model);
+		assertEquals(1, edm.countObservers());
 		
-		edm.addModel(u.loadMbtFromXmlNonStatic("xml/test.org.graphwalker.unittest/org.graphwalker.EventDrivenModels.load2Models.2.xml"));
-		assertEquals(edm.getModels().size(), 2);
-		
-		ModelBasedTesting a = edm.getModels().get(0); 
-		ModelBasedTesting b = edm.getModels().get(1);
-		ModelBasedTesting c = ModelBasedTesting.getInstance();
-		
-		assertNotSame(a, b);		
-		assertNotSame(a, c);		
-		assertNotSame(b, c);
-		assertSame(mbt, c);
+		model = new Model();
+		model.setMbt(u.loadMbtFromXmlNonStatic("xml/test.org.graphwalker.unittest/org.graphwalker.EventDrivenModels.load2Models.2.xml"));
+		edm.addModel(model);
+		assertEquals(2, edm.countObservers());
 	}
 }

@@ -1,15 +1,10 @@
 package org.graphwalker;
 
-import java.util.Vector;
+import java.util.Observable;
 
-public class EventDrivenModels {
-  private Vector<ModelBasedTesting> models = new Vector<ModelBasedTesting>();
+public class EventDrivenModels extends Observable {
 
-	public Vector<ModelBasedTesting> getModels() {
-  	return models;
-  }
-
-	public void addModel(ModelBasedTesting mbt) {
-		models.add(mbt);	  
+	public void addModel(Model model) {
+		addObserver(model);	  
   }
 }
