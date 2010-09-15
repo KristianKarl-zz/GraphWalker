@@ -36,6 +36,7 @@ import org.graphwalker.GUI.Status;
 import org.graphwalker.conditions.AlternativeCondition;
 import org.graphwalker.conditions.ReachedRequirement;
 import org.graphwalker.conditions.StopCondition;
+import org.graphwalker.conditions.TimeDuration;
 import org.graphwalker.events.MbtEvent;
 import org.graphwalker.exceptions.GeneratorException;
 import org.graphwalker.exceptions.GuiStoppedExecution;
@@ -78,7 +79,9 @@ public class ModelBasedTesting {
 	private boolean useGUI = false;
 	private MbtEvent notifyApp = null;
 	private String javaExecutorClass = null;
-
+	private volatile Thread stopFlag;
+	private Thread thisThread;
+	
 	/**
 	 * Do not verify labels for edges and vertices. This is used when creating
 	 * manual test sequences.
@@ -364,6 +367,7 @@ public class ModelBasedTesting {
 	}
 
 	public String[] getNextStep() throws InterruptedException {
+		Util.AbortIf(stopFlag != thisThread, "Execution of model has been stopped: " + getGraph() );
 		if (isUseGUI()) {
 
 			while (true) {
@@ -425,7 +429,7 @@ public class ModelBasedTesting {
 		}
 	}
 
-  public String getCurrentVertexName() {
+	public String getCurrentVertexName() {
 		if (this.machine != null)
 			return getMachine().getCurrentVertexName();
 		logger.warn("Trying to retrieve current vertex without specifying machine");
@@ -630,9 +634,23 @@ public class ModelBasedTesting {
 					getStatisticsManager().addProgress(getMachine().getCurrentVertex());
 				}
 			}
-
 		}
+	}
 
+	public void executePath(Class<?> clsClass) throws InterruptedException {
+		if (clsClass == null)
+			throw new RuntimeException("Needed execution class is missing as parameter.");
+		executePath(clsClass, null);
+	}
+
+	public void executePath(Object objInstance) throws InterruptedException {
+		if (objInstance == null)
+			throw new RuntimeException("Needed execution instance is missing as parameter.");
+		if (isUseGUI()) {
+			App.getInstance().pause();
+			App.getInstance().updateLayout();
+		}
+		executePath(null, objInstance);
 	}
 
 	protected void executePath(String strClassName) throws InterruptedException {
@@ -670,6 +688,12 @@ public class ModelBasedTesting {
 	}
 
 	protected void executePath(Class<?> clsClass, Object objInstance) throws InterruptedException {
+		thisThread = Thread.currentThread();
+		stopFlag = thisThread;
+		if ( getGenerator().getStopCondition() instanceof TimeDuration ) {
+			((TimeDuration)getGenerator().getStopCondition()).restartTime();
+		}
+
 		if (this.machine == null)
 			getMachine();
 
@@ -998,5 +1022,10 @@ public class ModelBasedTesting {
 
 	public void setAllUnvisited() {
 		getMachine().setAllUnvisited();
+	}	
+
+	public void stop() {
+		logger.debug("Will stop the excution of the model.");
+		stopFlag = null;
 	}
 }
