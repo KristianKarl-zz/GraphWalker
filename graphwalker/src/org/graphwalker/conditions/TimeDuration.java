@@ -28,4 +28,8 @@ public class TimeDuration extends StopCondition {
 		return "DURATION=" + (duration / 1000) + "s";
 	}
 
+	public void restartTime() {
+		start_time = System.currentTimeMillis();
+  }
+
 }
