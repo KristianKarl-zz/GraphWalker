@@ -77,8 +77,11 @@ public class FiniteStateMachine {
 	}
 
 	public Vertex findVertex(String vertexName) {
+		logger.debug("Looking for vertex: " + vertexName + ", in model: " + model );
 		for (Vertex vertex : model.getVertices()) {
+			logger.debug("  " + vertex.getLabelKey() );
 			if (((String) vertex.getLabelKey()).equals(vertexName)) {
+				logger.debug("    Found it: " + vertex );
 				return vertex;
 			}
 		}

@@ -80,8 +80,9 @@ public class ModelBasedTesting {
 	private MbtEvent notifyApp = null;
 	private String javaExecutorClass = null;
 	private volatile Thread stopFlag;
+	private volatile boolean threadSuspended = false;
 	private Thread thisThread;
-	
+
 	/**
 	 * Do not verify labels for edges and vertices. This is used when creating
 	 * manual test sequences.
@@ -176,7 +177,7 @@ public class ModelBasedTesting {
 
 	protected void addAlternativeCondition(int conditionType, String conditionValue) throws StopConditionException {
 		StopCondition condition = null;
-		condition = Util.getCondition(conditionType, conditionValue);
+		condition = Util.getCondition(getMachine(), conditionType, conditionValue);
 
 		// If requirement stop condition, check if requirement exists in model
 		if (condition instanceof ReachedRequirement) {
@@ -367,7 +368,7 @@ public class ModelBasedTesting {
 	}
 
 	public String[] getNextStep() throws InterruptedException {
-		Util.AbortIf(stopFlag != thisThread, "Execution of model has been stopped: " + getGraph() );
+		Util.AbortIf(stopFlag != thisThread, "Execution of model has been stopped: " + getGraph());
 		if (isUseGUI()) {
 
 			while (true) {
@@ -381,6 +382,15 @@ public class ModelBasedTesting {
 				}
 				Thread.sleep(500);
 			}
+		}
+
+		if (threadSuspended) {
+			logger.debug("Executions is now suspended.");
+			synchronized (this) {
+				while (threadSuspended)
+					wait();
+			}
+			logger.debug("Executions is now resumed.");
 		}
 
 		if (Thread.interrupted()) {
@@ -690,8 +700,8 @@ public class ModelBasedTesting {
 	protected void executePath(Class<?> clsClass, Object objInstance) throws InterruptedException {
 		thisThread = Thread.currentThread();
 		stopFlag = thisThread;
-		if ( getGenerator().getStopCondition() instanceof TimeDuration ) {
-			((TimeDuration)getGenerator().getStopCondition()).restartTime();
+		if (getGenerator().getStopCondition() instanceof TimeDuration) {
+			((TimeDuration) getGenerator().getStopCondition()).restartTime();
 		}
 
 		if (this.machine == null)
@@ -1022,10 +1032,21 @@ public class ModelBasedTesting {
 
 	public void setAllUnvisited() {
 		getMachine().setAllUnvisited();
-	}	
+	}
 
 	public void stop() {
 		logger.debug("Will stop the excution of the model.");
 		stopFlag = null;
+	}
+
+	public synchronized void suspend() {
+		logger.debug("Will suspend the excution of the model.");
+		threadSuspended = true;
+	}
+
+	public synchronized void resume() {
+		logger.debug("Will resume the excution of the model.");
+		threadSuspended = false;
+		notify();
 	}
 }

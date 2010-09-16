@@ -51,6 +51,7 @@ import org.graphwalker.graph.Edge;
 import org.graphwalker.graph.Graph;
 import org.graphwalker.graph.Vertex;
 import org.graphwalker.io.PrintHTMLTestSequence;
+import org.graphwalker.machines.FiniteStateMachine;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -200,7 +201,7 @@ public class Util {
 	 * @return The newly created stop condition.
 	 * @throws StopConditionException
 	 */
-	public static StopCondition getCondition(int conditionType, String conditionValue) throws StopConditionException {
+	public static StopCondition getCondition(FiniteStateMachine machine, int conditionType, String conditionValue) throws StopConditionException {
 		StopCondition condition = null;
 		try {
 			switch (conditionType) {
@@ -211,7 +212,7 @@ public class Util {
 				if (conditionValue == null || conditionValue.isEmpty()) {
 					throw new StopConditionException("The name of reached edge must not be empty");
 				}
-				if (ModelBasedTesting.getInstance().getMachine().findEdge(Edge.getLabelAndParameter(conditionValue)[0]) == null) {
+				if (machine.findEdge(Edge.getLabelAndParameter(conditionValue)[0]) == null) {
 					throw new StopConditionException("The name of reached edge: '" + Edge.getLabelAndParameter(conditionValue)[0]
 					    + "' (in stop condition: '" + conditionValue + "') does not exists in the model.");
 				}
@@ -221,7 +222,7 @@ public class Util {
 				if (conditionValue == null || conditionValue.isEmpty()) {
 					throw new StopConditionException("The name of reached vertex must not be empty");
 				}
-				if (ModelBasedTesting.getInstance().getMachine().findVertex(Vertex.getLabel(conditionValue)) == null) {
+				if (machine.findVertex(Vertex.getLabel(conditionValue)) == null) {
 					throw new StopConditionException("The name of reached vertex: '" + Vertex.getLabel(conditionValue) + "' (in stop condition: '"
 					    + conditionValue + "') does not exists in the model.");
 				}
@@ -448,10 +449,10 @@ public class Util {
 		if (generators.size() > 1) {
 			generator = new CombinedPathGenerator();
 			for (Iterator<Element> i = generators.iterator(); i.hasNext();) {
-				((CombinedPathGenerator) generator).addPathGenerator(getGenerator(i.next()));
+				((CombinedPathGenerator) generator).addPathGenerator(getGenerator(mbt.getMachine(), i.next()));
 			}
 		} else {
-			generator = getGenerator((Element) generators.get(0));
+			generator = getGenerator(mbt.getMachine(), (Element) generators.get(0));
 		}
 		if (generator == null)
 			throw new RuntimeException("Failed to set generator");
@@ -637,10 +638,10 @@ public class Util {
 		if (generators.size() > 1) {
 			generator = new CombinedPathGenerator();
 			for (Iterator<Element> i = generators.iterator(); i.hasNext();) {
-				((CombinedPathGenerator) generator).addPathGenerator(getGenerator(i.next()));
+				((CombinedPathGenerator) generator).addPathGenerator(getGenerator(mbt.getMachine(), i.next()));
 			}
 		} else {
-			generator = getGenerator((Element) generators.get(0));
+			generator = getGenerator(mbt.getMachine(), (Element) generators.get(0));
 		}
 		if (generator == null)
 			throw new RuntimeException("Failed to set generator");
@@ -775,7 +776,7 @@ public class Util {
 	}
 
 	@SuppressWarnings("unchecked")
-	private static PathGenerator getGenerator(Element generator) throws StopConditionException, GeneratorException, IOException {
+	private static PathGenerator getGenerator(FiniteStateMachine machine, Element generator) throws StopConditionException, GeneratorException, IOException {
 		int generatorType = Keywords.getGenerator(generator.getAttributeValue("TYPE"));
 		PathGenerator generatorObject = getGenerator(generatorType);
 		if (generatorObject instanceof CodeGenerator) {
@@ -795,7 +796,7 @@ public class Util {
 			}
 			((CodeGenerator) generatorObject).setTemplate(template);
 		} else {
-			StopCondition stopCondition = getCondition(generator.getChildren());
+			StopCondition stopCondition = getCondition(machine, generator.getChildren());
 			if (stopCondition != null) {
 				generatorObject.setStopCondition(stopCondition);
 			}
@@ -803,33 +804,33 @@ public class Util {
 		return generatorObject;
 	}
 
-	private static StopCondition getCondition(List<Element> conditions) throws StopConditionException {
+	private static StopCondition getCondition(FiniteStateMachine machine, List<Element> conditions) throws StopConditionException {
 		StopCondition condition = null;
 		if (conditions.size() > 1) {
 			condition = new CombinationalCondition();
 			for (Iterator<Element> i = conditions.iterator(); i.hasNext();)
-				((CombinationalCondition) condition).add(getCondition((Element) i.next()));
+				((CombinationalCondition) condition).add(getCondition(machine, (Element) i.next()));
 		} else if (conditions.size() == 1) {
-			condition = getCondition((Element) conditions.get(0));
+			condition = getCondition(machine, (Element) conditions.get(0));
 		}
 		return condition;
 	}
 
 	@SuppressWarnings("unchecked")
-	private static StopCondition getCondition(Element condition) throws StopConditionException {
+	private static StopCondition getCondition(FiniteStateMachine machine, Element condition) throws StopConditionException {
 		StopCondition stopCondition = null;
 		if (condition.getName().equalsIgnoreCase("AND")) {
 			stopCondition = new CombinationalCondition();
 			for (Iterator<Element> i = condition.getChildren().iterator(); i.hasNext();)
-				((CombinationalCondition) stopCondition).add(getCondition(i.next()));
+				((CombinationalCondition) stopCondition).add(getCondition(machine, i.next()));
 		} else if (condition.getName().equalsIgnoreCase("OR")) {
 			stopCondition = new AlternativeCondition();
 			for (Iterator<Element> i = condition.getChildren().iterator(); i.hasNext();)
-				((AlternativeCondition) stopCondition).add(getCondition(i.next()));
+				((AlternativeCondition) stopCondition).add(getCondition(machine, i.next()));
 		} else if (condition.getName().equalsIgnoreCase("CONDITION")) {
 			int type = Keywords.getStopCondition(condition.getAttributeValue("TYPE"));
 			String value = condition.getAttributeValue("VALUE");
-			stopCondition = getCondition(type, value);
+			stopCondition = getCondition(machine, type, value);
 		}
 		return stopCondition;
 	}

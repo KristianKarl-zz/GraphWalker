@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE MBTINIT SYSTEM "mbt_setup.dtd" >
 <MBTINIT EXECUTOR="NONE" EXTENDED="false">
-  <MODEL PATH="graphml/test.org.graphwalker.unittest/org.graphwalker.EventDrivenModels.runThreadeTest.B.graphml"/>
+  <MODEL PATH="graphml/test.org.graphwalker.unittest/org.graphwalker.EventDrivenModels.switchModels.A.graphml"/>
   <GENERATOR TYPE="RANDOM">
-    <CONDITION TYPE="TEST_DURATION" VALUE="10"/>
+    <CONDITION TYPE="NEVER"/>
   </GENERATOR>
 </MBTINIT>
