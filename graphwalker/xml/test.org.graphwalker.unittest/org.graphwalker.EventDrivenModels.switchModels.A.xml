@@ -3,6 +3,6 @@
 <MBTINIT EXECUTOR="NONE" EXTENDED="false">
   <MODEL PATH="graphml/test.org.graphwalker.unittest/org.graphwalker.EventDrivenModels.switchModels.A.graphml"/>
   <GENERATOR TYPE="RANDOM">
-    <CONDITION TYPE="NEVER"/>
+    <CONDITION TYPE="TEST_DURATION" VALUE="25"/>
   </GENERATOR>
 </MBTINIT>
