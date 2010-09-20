@@ -385,7 +385,7 @@ public class ModelBasedTesting {
 		}
 
 		if (threadSuspended) {
-			logger.debug("Executions is now suspended.");
+			logger.debug("Execution is now suspended.");
 			synchronized (this) {
 				while (threadSuspended)
 					wait();
