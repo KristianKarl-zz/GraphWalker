@@ -1,18 +1,14 @@
 package org.graphwalker;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Set;
+import java.util.Stack;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
-import sun.management.snmp.jvminstr.JvmThreadInstanceEntryImpl.ThreadStateMap;
-
 public class EventDrivenModels {
 	private static Logger logger = Util.setupLogger(EventDrivenModels.class);
-	HashMap<ModelExection, Thread.State> models = new HashMap<ModelExection, Thread.State>();
+	Vector<ModelExection> models = new Vector<ModelExection>();
+	Stack<ModelExection> pausedModels = new Stack<ModelExection>(); 
 	private Object executionClass = null;
 	private ModelExection executingModel = null;
 	static Object lockbox = new Object();
@@ -24,12 +20,12 @@ public class EventDrivenModels {
 	public EventDrivenModels() {
 	}
 
-	public Set<ModelExection> getModels() {
-		return models.keySet();
+	public Vector<ModelExection> getModels() {
+		return models;
 	}
 
 	public void addModel(ModelBasedTesting model) {
-		models.put(new ModelExection(model), Thread.State.NEW);
+		models.add(new ModelExection(model));
 	}
 
 	public void runModel(String modelName) {
@@ -42,7 +38,7 @@ public class EventDrivenModels {
 			logger.debug("Stopping model thread: " + executingModel);
 			executingModel.getModel().stop();
 		}
-		for (ModelExection m : models.keySet()) {
+		for (ModelExection m : models) {
 			if (modelName.equals(m.getModel().getGraph().getLabelKey())) {
 				logger.debug("Found the model, will now start it: " + m);
 				executingModel = m;
@@ -58,8 +54,9 @@ public class EventDrivenModels {
 		if (executingModel != null) {
 			logger.debug("Suspending model thread: " + executingModel);
 			executingModel.getModel().suspend();
+			pausedModels.push(executingModel);
 		}
-		for (ModelExection m : models.keySet()) {
+		for (ModelExection m : models) {
 			if (modelName.equals(m.getModel().getGraph().getLabelKey())) {
 				logger.debug("Found the model, will now start it: " + m);
 				executingModel = m;
@@ -71,30 +68,37 @@ public class EventDrivenModels {
 	}
 
 	public void waitToFinish() {
+		boolean isThreadRunning;
+		boolean allThreadsTerminated;
 		try {
 			while (true) {
 				synchronized (lockbox) {
-					for (ModelExection m : models.keySet()) {
+					isThreadRunning = false;
+					allThreadsTerminated = true;
+					for (ModelExection m : models) {
 						logger.debug(m.getName() + ": " + m.getState());
-						models.put(m, m.getState());
-					}
-
-					if (models.containsValue(Thread.State.RUNNABLE) || models.containsValue(Thread.State.TIMED_WAITING)) {
-						;
-					} else if (models.containsValue(Thread.State.WAITING)) {
-						logger.debug("Searching suspended model");
-						for (ModelExection m : models.keySet()) {
-							if (m.getState() == Thread.State.WAITING) {
-								logger.debug("Found suspended model: " + m);
-								m.getModel().resume();
-								break;
+						if ( m.getState() != Thread.State.TERMINATED ) {
+							allThreadsTerminated = false;
+							if ( m.getState() == Thread.State.RUNNABLE || m.getState() == Thread.State.TIMED_WAITING ) {
+								isThreadRunning = true;
 							}
-						}
-					} else if (models.containsValue(Thread.State.TERMINATED)) {
-						logger.debug("All threads terminated");
-						return;
+						}						
 					}
-					Thread.sleep(1000);
+					
+					if ( allThreadsTerminated ) {
+						if ( pausedModels.isEmpty() ) {
+							logger.debug("All threads terminated");
+							return;							
+						}
+						throw new RuntimeException("This should never happen! Can't have all threads in TERMINATED state, and paused threads.");
+					} else if ( isThreadRunning == false ){
+						if ( !pausedModels.isEmpty() ) {
+							logger.debug("Found suspended model: " + pausedModels.peek());
+							pausedModels.pop().getModel().resume();
+						}
+					}					
+
+					Thread.sleep(100);
 				}
 			}
 		} catch (InterruptedException e) {
