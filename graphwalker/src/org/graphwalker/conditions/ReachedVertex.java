@@ -4,12 +4,15 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.log4j.Logger;
+import org.graphwalker.Util;
 import org.graphwalker.graph.Vertex;
 import org.graphwalker.machines.ExtendedFiniteStateMachine;
 import org.graphwalker.machines.FiniteStateMachine;
 
 public class ReachedVertex extends StopCondition {
 
+	private static Logger logger = Util.setupLogger(ReachedVertex.class);
 	private ArrayList<Vertex> allVertices;
 	private Vertex endVertex;
 	private int[] proximity;
@@ -38,6 +41,7 @@ public class ReachedVertex extends StopCondition {
 	}
 
 	public double getFulfilment() {
+		logger.debug("Machine: " + getMachine());
 		int distance = proximity[allVertices.indexOf(getMachine().getCurrentVertex())];
 		if (getMachine() instanceof ExtendedFiniteStateMachine) {
 			String currentVertex = getMachine().getCurrentVertexName();
