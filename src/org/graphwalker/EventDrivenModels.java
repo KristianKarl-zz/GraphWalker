@@ -7,25 +7,25 @@ import org.apache.log4j.Logger;
 
 public class EventDrivenModels {
 	private static Logger logger = Util.setupLogger(EventDrivenModels.class);
-	Vector<ModelExection> models = new Vector<ModelExection>();
-	Stack<ModelExection> pausedModels = new Stack<ModelExection>(); 
+	Vector<ModelBasedTesting> models = new Vector<ModelBasedTesting>();
+	Stack<ThreadWrapper> pausedModels = new Stack<ThreadWrapper>(); 
 	private Object executionClass = null;
-	private ModelExection executingModel = null;
+	private ThreadWrapper executingModel = null;
 	static Object lockbox = new Object();
 
-	public EventDrivenModels(Object objInstance) {
-		executionClass = objInstance;
+	public EventDrivenModels(Object executionClass) {
+		this.executionClass = executionClass;
 	}
 
 	public EventDrivenModels() {
 	}
 
-	public Vector<ModelExection> getModels() {
+	public Vector<ModelBasedTesting> getModels() {
 		return models;
 	}
 
 	public void addModel(ModelBasedTesting model) {
-		models.add(new ModelExection(model));
+		models.add(model);
 	}
 
 	public void runModel(String modelName) {
@@ -37,11 +37,12 @@ public class EventDrivenModels {
 		if (executingModel != null) {
 			logger.debug("Stopping model thread: " + executingModel);
 			executingModel.getModel().stop();
+			executingModel = null;
 		}
-		for (ModelExection m : models) {
-			if (modelName.equals(m.getModel().getGraph().getLabelKey())) {
-				logger.debug("Found the model, will now start it: " + m);
-				executingModel = m;
+		for (ModelBasedTesting m : models) {
+			if (modelName.equals(m.getGraph().getLabelKey())) {
+				logger.debug("Found the model, will now start it: " + m.getGraph().getLabelKey());
+				executingModel = new ThreadWrapper(m);
 				executingModel.start();
 				return;
 			}
@@ -55,11 +56,12 @@ public class EventDrivenModels {
 			logger.debug("Suspending model thread: " + executingModel);
 			executingModel.getModel().suspend();
 			pausedModels.push(executingModel);
+			executingModel = null;
 		}
-		for (ModelExection m : models) {
-			if (modelName.equals(m.getModel().getGraph().getLabelKey())) {
-				logger.debug("Found the model, will now start it: " + m);
-				executingModel = m;
+		for (ModelBasedTesting m : models) {
+			if (modelName.equals(m.getGraph().getLabelKey())) {
+				logger.debug("Found the model, will now start it: " + m.getGraph().getLabelKey());
+				executingModel = new ThreadWrapper(m);
 				executingModel.start();
 				return;
 			}
@@ -68,35 +70,24 @@ public class EventDrivenModels {
 	}
 
 	public void waitToFinish() {
-		boolean isThreadRunning;
-		boolean allThreadsTerminated;
 		try {
 			while (true) {
 				synchronized (lockbox) {
-					isThreadRunning = false;
-					allThreadsTerminated = true;
-					for (ModelExection m : models) {
-						logger.debug(m.getName() + ": " + m.getState());
-						if ( m.getState() != Thread.State.TERMINATED ) {
-							allThreadsTerminated = false;
-							if ( m.getState() == Thread.State.RUNNABLE || m.getState() == Thread.State.TIMED_WAITING ) {
-								isThreadRunning = true;
-							}
-						}						
-					}
-					
-					if ( allThreadsTerminated ) {
+
+					if ( executingModel == null ) {
 						if ( pausedModels.isEmpty() ) {
 							logger.debug("All threads terminated");
 							return;							
+						} 
+						logger.debug("Found suspended model: " + pausedModels.peek());
+						executingModel = pausedModels.pop();
+						executingModel.getModel().resume();							
+					} else {
+						if ( executingModel.getState() == Thread.State.TERMINATED ) {
+							logger.debug("Terminated: " + executingModel);
+							executingModel = null;
 						}
-						throw new RuntimeException("This should never happen! Can't have all threads in TERMINATED state, and paused threads.");
-					} else if ( isThreadRunning == false ){
-						if ( !pausedModels.isEmpty() ) {
-							logger.debug("Found suspended model: " + pausedModels.peek());
-							pausedModels.pop().getModel().resume();
-						}
-					}					
+					}
 
 					Thread.sleep(100);
 				}
@@ -106,7 +97,7 @@ public class EventDrivenModels {
 		}
 	}
 
-	public class ModelExection extends Thread {
+	public class ThreadWrapper extends Thread {
 		private ModelBasedTesting model;
 
 		public ModelBasedTesting getModel() {
@@ -117,13 +108,15 @@ public class EventDrivenModels {
 			this.model = model;
 		}
 
-		public ModelExection(ModelBasedTesting model) {
+		public ThreadWrapper(ModelBasedTesting model) {
 			this.model = model;
 			setName(model.getGraph().getLabelKey());
 		}
 
 		public void run() {
 			try {
+				model.setCurrentVertex("Start");
+				model.reload();
 				model.executePath(executionClass);
 			} catch (InterruptedException e) {
 				Util.logStackTraceToError(e);

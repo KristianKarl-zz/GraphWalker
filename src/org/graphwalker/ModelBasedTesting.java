@@ -131,6 +131,10 @@ public class ModelBasedTesting {
 		javaExecutorClass = null;
 	}
 
+	public void reload() {
+		machine.setAllUnvisited();
+	}
+
 	public boolean isUseGUI() {
 		return useGUI;
 	}
@@ -385,12 +389,12 @@ public class ModelBasedTesting {
 		}
 
 		if (threadSuspended) {
-			logger.debug("Execution is now suspended.");
+			logger.debug("Execution is now suspended: " + getGraph().getLabelKey());
 			synchronized (this) {
 				while (threadSuspended)
 					wait();
 			}
-			logger.debug("Executions is now resumed.");
+			logger.debug("Executions is now resumed: " + getGraph().getLabelKey());
 		}
 
 		if (Thread.interrupted()) {

@@ -3,11 +3,9 @@ package test.org.graphwalker;
 import static org.junit.Assert.*;
 
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.util.Random;
 
 import org.apache.log4j.Logger;
-import org.graphwalker.ModelBasedTesting;
 import org.graphwalker.Util;
 import org.graphwalker.exceptions.GeneratorException;
 import org.graphwalker.exceptions.StopConditionException;
@@ -19,11 +17,9 @@ import org.junit.Test;
 public class EventDrivenModels {
 
 	private static Logger logger = Util.setupLogger(EventDrivenModels.class);
-	ModelBasedTesting mbt = null;	
 
 	@Before
 	public void setUp() throws Exception {
-		mbt = ModelBasedTesting.getInstance();
 	}
 
 	@After
@@ -65,7 +61,7 @@ public class EventDrivenModels {
 		edm.runModel("A");
 		edm.waitToFinish();
 	}
-		
+	
 	@Test
 	public void pauseAndSwitchModel() throws StopConditionException, GeneratorException, IOException, JDOMException, InterruptedException {
 		TestTool tt = new TestTool();
@@ -75,6 +71,22 @@ public class EventDrivenModels {
 		edm.addModel(u.loadMbtFromXmlNonStatic("xml/test.org.graphwalker.unittest/org.graphwalker.EventDrivenModels.switchModels.B.xml"));
 		
 		Thread tc = new Thread( new TestClientPauseSwitch(edm) );
+		tc.setName("Test Client");
+		tc.start();
+		
+		edm.runModel("A");
+		edm.waitToFinish();
+	}
+	
+	@Test
+	public void restartModel() throws StopConditionException, GeneratorException, IOException, JDOMException, InterruptedException {
+		TestTool tt = new TestTool();
+		org.graphwalker.EventDrivenModels edm = new org.graphwalker.EventDrivenModels(tt);
+		Util u = new Util();
+		edm.addModel(u.loadMbtFromXmlNonStatic("xml/test.org.graphwalker.unittest/org.graphwalker.EventDrivenModels.switchModels.A.xml"));
+		edm.addModel(u.loadMbtFromXmlNonStatic("xml/test.org.graphwalker.unittest/org.graphwalker.EventDrivenModels.switchModels.C.xml"));
+		
+		Thread tc = new Thread( new TestClientRestart(edm) );
 		tc.setName("Test Client");
 		tc.start();
 		
@@ -123,6 +135,41 @@ public class EventDrivenModels {
 		public void method_B() {
 			logger.debug("Calling modell B");
 			edm.pauseAndSwitchModel( "B" );
+		}
+	}
+
+	public class TestClientRestart implements Runnable {
+		private org.graphwalker.EventDrivenModels edm;
+		public TestClientRestart(org.graphwalker.EventDrivenModels edm) {
+	    this.edm = edm;
+    }
+
+		public void run() {
+			try {
+				logger.debug("In 3 seconds, I'm gonna trigger an event!");
+				Thread.sleep(3000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			method_C();
+
+			try {
+				logger.debug("In 3 seconds, I'm gonna trigger an event!");
+				Thread.sleep(3000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			method_C();
+		}
+		
+		public void method_B() {
+			logger.debug("Calling modell B");
+			edm.pauseAndSwitchModel( "B" );
+		}
+
+		public void method_C() {
+			logger.debug("Calling modell C");
+			edm.pauseAndSwitchModel( "C" );
 		}
 	}
 
