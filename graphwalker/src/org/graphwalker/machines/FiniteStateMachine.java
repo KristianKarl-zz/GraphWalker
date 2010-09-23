@@ -565,6 +565,8 @@ public class FiniteStateMachine {
 	}
 
 	public void setAllUnvisited() {
+		logger.debug("setAllUnvisited");
+		reset();
 		for (Vertex vertex : model.getVertices()) {
 			vertex.setVisitedKey(0);
 		}
