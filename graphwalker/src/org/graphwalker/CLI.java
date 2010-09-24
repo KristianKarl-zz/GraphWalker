@@ -591,7 +591,13 @@ public class CLI {
 		System.out.println("  jung-io-2.0.jar                http://jung.sourceforge.net/");
 		System.out.println("  jung-jai-2.0.jar               http://jung.sourceforge.net/");
 		System.out.println("  jung-visualization-2.0.jar     http://jung.sourceforge.net/");
-		System.out.println("  bsh-2.0b4.jar                  http://www.beanshell.org/");
+		System.out.println("  bsh-core-2.0b4.jar             http://www.beanshell.org/");
+		System.out.println("  bsh-classgen-2.0b4.jar         http://www.beanshell.org/");
+		System.out.println("  bsh-commands-2.0b4.jar         http://www.beanshell.org/");
+  	System.out.println("  bsh-util-2.0b4.jar             http://www.beanshell.org/");
+		System.out.println("  bsh-classpath-2.0b4.jar        http://www.beanshell.org/");
+		System.out.println("  bsh-reflect-2.0b4.jar          http://www.beanshell.org/");
+		System.out.println("  bsh-bsf-2.0b4.jar              http://www.beanshell.org/");	
 		System.out.println("  commons-configuration-1.5.jar  http://commons.apache.org/configuration/");
 		System.out.println("  commons-lang-2.4.jar           http://commons.apache.org/lang/");
 		System.out.println("  commons-logging-1.1.1.jar      http://commons.apache.org/logging/");
