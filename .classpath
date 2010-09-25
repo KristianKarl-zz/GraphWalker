@@ -35,12 +35,12 @@
 	<classpathentry kind="lib" path="lib/jung-io-2.0.1.jar"/>
 	<classpathentry kind="lib" path="lib/jung-jai-2.0.1.jar"/>
 	<classpathentry kind="lib" path="lib/jung-visualization-2.0.1.jar"/>
-	<classpathentry kind="lib" path="/home/kristiank/workspace/graphwalker/lib/bsh-core-2.0b4.jar"/>
-	<classpathentry kind="lib" path="/home/kristiank/workspace/graphwalker/lib/bsh-util-2.0b4.jar"/>
-	<classpathentry kind="lib" path="/home/kristiank/workspace/graphwalker/lib/bsh-bsf-2.0b4.jar"/>
-	<classpathentry kind="lib" path="/home/kristiank/workspace/graphwalker/lib/bsh-classgen-2.0b4.jar"/>
-	<classpathentry kind="lib" path="/home/kristiank/workspace/graphwalker/lib/bsh-classpath-2.0b4.jar"/>
-	<classpathentry kind="lib" path="/home/kristiank/workspace/graphwalker/lib/bsh-reflect-2.0b4.jar"/>
-	<classpathentry kind="lib" path="/home/kristiank/workspace/graphwalker/lib/bsh-commands-2.0b4.jar"/>
+	<classpathentry kind="lib" path="lib/bsh-core-2.0b4.jar"/>
+	<classpathentry kind="lib" path="lib/bsh-util-2.0b4.jar"/>
+	<classpathentry kind="lib" path="lib/bsh-bsf-2.0b4.jar"/>
+	<classpathentry kind="lib" path="lib/bsh-classgen-2.0b4.jar"/>
+	<classpathentry kind="lib" path="lib/bsh-classpath-2.0b4.jar"/>
+	<classpathentry kind="lib" path="lib/bsh-reflect-2.0b4.jar"/>
+	<classpathentry kind="lib" path="lib/bsh-commands-2.0b4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
