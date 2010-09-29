@@ -388,7 +388,7 @@ public class Util {
 		mbt.reset();
 		mbt.setDryRun(dryRun);
 
-		SAXBuilder parser = new SAXBuilder("org.apache.crimson.parser.XMLReaderImpl", false);
+		SAXBuilder parser = new SAXBuilder();
 		Document doc;
 		doc = parser.build(fileName);
 		Element root = doc.getRootElement();
@@ -577,7 +577,7 @@ public class Util {
 		final ModelBasedTesting mbt = new ModelBasedTesting();
 		mbt.setDryRun(dryRun);
 
-		SAXBuilder parser = new SAXBuilder("org.apache.crimson.parser.XMLReaderImpl", false);
+		SAXBuilder parser = new SAXBuilder();
 		Document doc;
 		doc = parser.build(fileName);
 		Element root = doc.getRootElement();

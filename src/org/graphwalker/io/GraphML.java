@@ -118,7 +118,7 @@ public class GraphML extends AbstractModelHandler {
 	private Graph parseFile(String fileName) {
 		Graph graph = new Graph();
 		graph.setFileKey(fileName);
-		SAXBuilder parser = new SAXBuilder("org.apache.crimson.parser.XMLReaderImpl", false);
+		SAXBuilder parser = new SAXBuilder();
 
 		try {
 			logger.debug("Parsing file: " + fileName);
