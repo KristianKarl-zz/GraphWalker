@@ -1,14 +1,14 @@
 #Fat Jar Configuration File
-#Wed Jul 07 15:26:38 CEST 2010
+#Wed Sep 29 12:54:55 CEST 2010
 onejar.license.required=true
 manifest.classpath=
 manifest.removesigners=true
 onejar.checkbox=false
-jarname=graphwalker-2.2.jar
+jarname=graphwalker-2.2-r842.jar
 manifest.mergeall=true
 manifest.mainclass=org.graphwalker.CLI
 manifest.file=<createnew>
 jarname.isextern=false
 onejar.expand=
-excludes=<po|graphwalker>~.svn/;<po|graphwalker>~test/;<jar|junit.jar>
+excludes=<po|graphwalker>~test/;<po|graphwalker>~.svn/;<jar|junit.jar>;<jar|org.hamcrest.core_1.1.0.v20090501071000.jar>
 includes=

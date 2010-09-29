@@ -578,7 +578,6 @@ public class CLI {
 		System.out.println("org.graphwalker is open source software licensed under GPL");
 		System.out.println("The software (and it's source) can be downloaded from http://mbt.tigris.org/\n");
 		System.out.println("This package contains following software packages:");
-		System.out.println("  crimson-1.1.3.jar              http://xml.apache.org/crimson/");
 		System.out.println("  commons-collections-3.2.1.jar  http://jakarta.apache.org/commons/collections/");
 		System.out.println("  jdom-1.0.jar                   http://www.jdom.org/");
 		System.out.println("  log4j-1.2.15.jar               http://logging.apache.org/log4j/");
