@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE MBTINIT SYSTEM "mbt_setup.dtd" >
-<MBTINIT EXECUTOR="online" EXTENDED="true">
-  <MODEL PATH="model/EventHandler"/>
-  <GENERATOR TYPE="RANDOM">
-    <CONDITION TYPE="NEVER"/>
-  </GENERATOR>
-</MBTINIT>
