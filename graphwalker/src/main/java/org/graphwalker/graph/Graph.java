@@ -1,0 +1,44 @@
+package org.graphwalker.graph;
+
+import edu.uci.ics.jung.graph.SparseMultigraph;
+import edu.uci.ics.jung.graph.util.EdgeType;
+
+public class Graph extends SparseMultigraph<Vertex, Edge> {
+
+	private static final long serialVersionUID = 4744840850614032582L;
+
+	private String fileKey = new String();
+	private String labelKey = new String();
+
+	public String getLabelKey() {
+		return labelKey;
+	}
+
+	public void setLabelKey(String labelKey) {
+		this.labelKey = labelKey;
+	}
+
+	public String getFileKey() {
+		return fileKey;
+	}
+
+	public void setFileKey(String fileKey) {
+		this.fileKey = fileKey;
+	}
+
+	public String toString() {
+		String str = "";
+		if (!getFileKey().isEmpty())
+			str += "File: " + getFileKey() + ", ";
+		if (!getLabelKey().isEmpty())
+			str += "Label: " + getLabelKey() + ", ";
+		str += "Num of vertices: " + getVertexCount() + ", ";
+		str += "Num of edges: " + getEdgeCount();
+		return str;
+	}
+
+	public boolean addEdge(Edge e, Vertex source, Vertex dest) {
+		return super.addEdge(e, source, dest, EdgeType.DIRECTED);
+	}
+
+}

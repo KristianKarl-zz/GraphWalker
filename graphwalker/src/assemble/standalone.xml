@@ -1,0 +1,36 @@
+<assembly>
+  <id>standalone</id>
+  <formats>
+    <format>jar</format>
+  </formats>
+  <includeBaseDirectory>false</includeBaseDirectory>
+  <dependencySets>
+    <dependencySet>
+      <outputDirectory></outputDirectory>
+      <outputFileNameMapping></outputFileNameMapping>
+      <unpack>true</unpack>
+      <scope>runtime</scope>
+      <includes>
+	<include>org.jdom:jdom</include>
+	<include>commons-logging:commons-logging</include>
+	<include>net.sourceforge.collections:collections-generic</include>
+	<include>commons-lang:commons-lang</include>
+	<include>commons-collections:commons-collections</include>
+	<include>commons-cli:commons-cli</include>
+	<include>commons-configuration:commons-configuration</include>
+	<include>org.beanshell:bsh</include>
+	<include>net.sf.jung:jung-graph-impl</include>
+	<include>net.sf.jung:jung-algorithms</include>
+	<include>net.sf.jung:jung-visualization</include>
+	<include>net.sf.jung:jung-api</include>
+	<include>log4j:log4j:*</include>
+      </includes>
+    </dependencySet>
+  </dependencySets>
+  <fileSets>
+    <fileSet>
+      <directory>target/classes</directory>
+      <outputDirectory></outputDirectory>
+    </fileSet>
+  </fileSets>
+</assembly>

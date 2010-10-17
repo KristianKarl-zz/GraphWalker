@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE MBTINIT SYSTEM "http://mbt.tigris.org/mbt_setup.dtd" >
+<MBTINIT EXTENDED="true" EXECUTOR="offline:mbt_init4.java">
+  <MODEL PATH="graphml/reqtags/ExtendedMain.graphml"/>
+  <GENERATOR TYPE="STUB">
+  	<TEMPLATE>
+		<HEADER>
+import org.apache.log4j.Logger;
+import org.graphwalker.Util;
+
+public class mbt_init4 
+{
+	static Logger log = Util.setupLogger( mbt_init4.class );
+	
+		</HEADER>
+  		<BODY>
+/**
+ * This method implements the {EDGE_VERTEX} '{LABEL}'
+ */
+public void {LABEL}()
+{
+  log.info( "{EDGE_VERTEX}: {LABEL}" );
+  throw new RuntimeException( "The {EDGE_VERTEX}: {LABEL} is not implemented yet!" );
+}
+		</BODY>
+		<FOOTER>
+}
+		</FOOTER>
+	</TEMPLATE>
+  </GENERATOR>
+</MBTINIT>

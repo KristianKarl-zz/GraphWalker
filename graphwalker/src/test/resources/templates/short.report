@@ -1,0 +1,24 @@
+<xsl:stylesheet version = '1.0' xmlns:xsl='http://www.w3.org/1999/XSL/Transform'>
+  <xsl:output method="html" />
+
+  <xsl:template match="Statistics">
+    <xsl:variable name="quota" select="ceiling(count(Statistic) div 100)" />
+    <xsl:variable name="EC">0<xsl:apply-templates select="Statistic/Data[@type='Edge Coverage']" ><xsl:with-param name="quota"><xsl:value-of select="$quota"/></xsl:with-param></xsl:apply-templates></xsl:variable>
+    <xsl:variable name="SC">0<xsl:apply-templates select="Statistic/Data[@type='State Coverage']" ><xsl:with-param name="quota"><xsl:value-of select="$quota"/></xsl:with-param></xsl:apply-templates></xsl:variable>
+    <xsl:variable name="E2C">0<xsl:apply-templates select="Statistic/Data[@type='2-Edge Sequence Coverage']" ><xsl:with-param name="quota"><xsl:value-of select="$quota"/></xsl:with-param></xsl:apply-templates></xsl:variable>
+    <xsl:variable name="E3C">0<xsl:apply-templates select="Statistic/Data[@type='3-Edge Sequence Coverage']" ><xsl:with-param name="quota"><xsl:value-of select="$quota"/></xsl:with-param></xsl:apply-templates></xsl:variable>
+    <xsl:variable name="RC">0<xsl:apply-templates select="Statistic/Data[@type='Requirements Coverage']" ><xsl:with-param name="quota"><xsl:value-of select="$quota"/></xsl:with-param></xsl:apply-templates></xsl:variable>
+    <table cellpadding="5px"><tr><td rowspan="4"><img>
+      <xsl:attribute name="src"><xsl:text>http://chart.apis.google.com/chart?chs=300x200&amp;chxt=x,y&amp;chxr=1,0,100|0,0,</xsl:text><xsl:value-of select="count(Statistic)" /><xsl:text>&amp;chco=ff0000,00ff00,0000ff,000000,777777&amp;chd=t:</xsl:text><xsl:value-of select="$EC"/>|<xsl:value-of select="$SC"/>|<xsl:value-of select="$E2C"/>|<xsl:value-of select="$E3C"/><xsl:text>&amp;cht=lc</xsl:text></xsl:attribute>
+      <xsl:attribute name="alt">Coverage</xsl:attribute>
+    </img></td>
+    <td style="background-color: #f00"><xsl:text> </xsl:text></td><td>Edge Coverage</td></tr>
+    <tr><td style="background-color: #0f0"><xsl:text> </xsl:text></td><td>State Coverage</td></tr>
+    <tr><td style="background-color: #00f"><xsl:text> </xsl:text></td><td>2-Edge Sequence Coverage</td></tr>
+    <tr><td style="background-color: #000"><xsl:text> </xsl:text></td><td>3-Edge Sequence Coverage</td></tr>
+    </table>
+  </xsl:template>
+
+  <xsl:template match="Data"><xsl:param name="quota">1</xsl:param><xsl:if test="position() mod $quota = 0">,<xsl:choose><xsl:when test="@max = 0">0</xsl:when><xsl:otherwise><xsl:value-of select="round((@value div @max) * 100)"/></xsl:otherwise></xsl:choose></xsl:if></xsl:template>
+
+</xsl:stylesheet>
