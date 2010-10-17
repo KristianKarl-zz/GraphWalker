@@ -1,1 +1,0 @@
-wsgen -cp bin org.graphwalker.SoapServices -d bin

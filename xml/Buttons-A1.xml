@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE MBTINIT SYSTEM "mbt_setup.dtd" >
-<MBTINIT EXECUTOR="offline" EXTENDED="true">
-  <MODEL PATH="model/Buttons-A.graphml"/>
-  <GENERATOR TYPE="RANDOM">
-    <CONDITION TYPE="REACHED_STATE" VALUE="v_GoAnywhere/matrix=\[\[1, 1, 1, 1\], \[1, 1, 1, 1\], \[1, 1, 1, 1\], \[1, 1, 1, 1\]\]"/>
-  </GENERATOR>
-</MBTINIT>

@@ -1,6 +1,0 @@
-Manifest-Version: 1.0
-Main-Class: org.graphwalker.CLI
-Bundle-Name: mbt
-Bundle-SymbolicName: org.graphwalker
-Bundle-Version: 2.0.0
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
