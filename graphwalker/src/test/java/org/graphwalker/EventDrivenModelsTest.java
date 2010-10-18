@@ -79,11 +79,12 @@ public class EventDrivenModelsTest {
 	}
 	
 	@Test
-	public void restartModel() throws StopConditionException, GeneratorException, IOException, JDOMException, InterruptedException {
+	public void pauseAndSwitchModel3Models() throws StopConditionException, GeneratorException, IOException, JDOMException, InterruptedException {
 		TestTool tt = new TestTool();
 		org.graphwalker.EventDrivenModels edm = new org.graphwalker.EventDrivenModels(tt);
 		Util u = new Util();
 		edm.addModel(u.loadMbtFromXmlNonStatic(Util.getFile("xml/org.graphwalker.EventDrivenModels.switchModels.A.xml")));
+		edm.addModel(u.loadMbtFromXmlNonStatic(Util.getFile("xml/org.graphwalker.EventDrivenModels.switchModels.B.xml")));
 		edm.addModel(u.loadMbtFromXmlNonStatic(Util.getFile("xml/org.graphwalker.EventDrivenModels.switchModels.C.xml")));
 		
 		Thread tc = new Thread( new TestClientRestart(edm) );
@@ -151,7 +152,7 @@ public class EventDrivenModelsTest {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			method_C();
+			method_B();
 
 			try {
 				logger.debug("In 3 seconds, I'm gonna trigger an event!");
