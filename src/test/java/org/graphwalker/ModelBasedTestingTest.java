@@ -3,7 +3,7 @@
  */
 package org.graphwalker;
 
-import java.awt.HeadlessException;
+import java.awt.GraphicsEnvironment;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -58,36 +58,36 @@ public class ModelBasedTestingTest extends TestCase {
 	}
 
 	public void testXmlLoading_Advanced() throws StopConditionException, GeneratorException, IOException, JDOMException, InterruptedException {
-		try {
-			ModelBasedTesting mbt = Util.loadMbtFromXml(Util.getFile("xml/reqtags/mbt_init3.xml"));
-			assertEquals("RANDOM{EC>=10}\nRANDOM{(SC>=30 AND EC>=10)}", mbt.toString());
-		} catch(HeadlessException e) {
-			System.out.println( "Test not valid in a non-window box." );
-		}
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment(); 
+		if ( ge.isHeadless() )
+			return;
+
+		ModelBasedTesting mbt = Util.loadMbtFromXml(Util.getFile("xml/reqtags/mbt_init3.xml"));
+		assertEquals("RANDOM{EC>=10}\nRANDOM{(SC>=30 AND EC>=10)}", mbt.toString());
 	}
 
 	public void testXmlLoading_OfflineStub() throws StopConditionException, GeneratorException, IOException, JDOMException,
 	    InterruptedException {
-		try {
-			ModelBasedTesting mbt = Util.loadMbtFromXml(Util.getFile("xml/reqtags/mbt_init4.xml"));
-			assertEquals("CODE", mbt.toString());
-			File f = new File("mbt_init4.java");
-			assertTrue(f.exists());
-			assertTrue(f.delete());
-			assertFalse(f.exists());
-		} catch(HeadlessException e) {
-			System.out.println( "Test not valid in a non-window box." );
-		}
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment(); 
+		if ( ge.isHeadless() )
+			return;
+
+		ModelBasedTesting mbt = Util.loadMbtFromXml(Util.getFile("xml/reqtags/mbt_init4.xml"));
+		assertEquals("CODE", mbt.toString());
+		File f = new File("mbt_init4.java");
+		assertTrue(f.exists());
+		assertTrue(f.delete());
+		assertFalse(f.exists());
 	}
 
 	public void testXmlLoading_JavaExecution() throws StopConditionException, GeneratorException, IOException, JDOMException,
 	    InterruptedException {
-		try {
-			ModelBasedTesting mbt = Util.loadMbtFromXml(Util.getFile("xml/reqtags/mbt_init5.xml"));
-			assertEquals("RANDOM{SC>=40}", mbt.toString());
-		} catch(HeadlessException e) {
-			System.out.println( "Test not valid in a non-window box." );
-		}
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment(); 
+		if ( ge.isHeadless() )
+			return;
+
+		ModelBasedTesting mbt = Util.loadMbtFromXml(Util.getFile("xml/reqtags/mbt_init5.xml"));
+		assertEquals("RANDOM{SC>=40}", mbt.toString());
 	}
 
 	public void testXmlLoading_OfflineRequirements() throws StopConditionException, GeneratorException, IOException, JDOMException,
@@ -120,23 +120,23 @@ public class ModelBasedTestingTest extends TestCase {
 
 	public void testGetdataValue() throws InvalidDataException, StopConditionException, GeneratorException, IOException, JDOMException,
 	    InterruptedException {
-		try {
-			InputStream oldIn = System.in;
-			PrintStream oldOut = System.out;
-			ByteArrayOutputStream innerOut = new ByteArrayOutputStream();
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment(); 
+		if ( ge.isHeadless() )
+			return;
 
-			System.setOut(new PrintStream(innerOut));
-			System.setIn(redirectIn());
-			ModelBasedTesting mbt = Util.loadMbtFromXml(Util.getFile("xml/reqtags/mbt_init10.xml"));
-			System.setIn(oldIn);
-			System.setOut(oldOut);
+		InputStream oldIn = System.in;
+		PrintStream oldOut = System.out;
+		ByteArrayOutputStream innerOut = new ByteArrayOutputStream();
 
-			System.out.print(mbt.getDataValue("incorrect"));
+		System.setOut(new PrintStream(innerOut));
+		System.setIn(redirectIn());
+		ModelBasedTesting mbt = Util.loadMbtFromXml(Util.getFile("xml/reqtags/mbt_init10.xml"));
+		System.setIn(oldIn);
+		System.setOut(oldOut);
 
-			assertEquals("0", mbt.getDataValue("incorrect"));
-		} catch(HeadlessException e) {
-			System.out.println( "Test not valid in a non-window box." );
-		}
+		System.out.print(mbt.getDataValue("incorrect"));
+
+		assertEquals("0", mbt.getDataValue("incorrect"));
 	}
 
 	private int getNumMatches(Matcher m) {
@@ -148,35 +148,35 @@ public class ModelBasedTestingTest extends TestCase {
 
 	public void testExecAction() throws InvalidDataException, StopConditionException, GeneratorException, IOException, JDOMException,
 	    InterruptedException {
-		try {
-			InputStream oldIn = System.in;
-			PrintStream oldOut = System.out;
-			ByteArrayOutputStream innerOut = new ByteArrayOutputStream();
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment(); 
+		if ( ge.isHeadless() )
+			return;
 
-			System.setOut(new PrintStream(innerOut));
-			System.setIn(redirectIn());
-			ModelBasedTesting mbt = Util.loadMbtFromXml(Util.getFile("xml/reqtags/mbt_init11.xml"));
-			System.setIn(oldIn);
-			System.setOut(oldOut);
+		InputStream oldIn = System.in;
+		PrintStream oldOut = System.out;
+		ByteArrayOutputStream innerOut = new ByteArrayOutputStream();
 
-			System.out.print(mbt.execAction("str.toUpperCase()"));
+		System.setOut(new PrintStream(innerOut));
+		System.setIn(redirectIn());
+		ModelBasedTesting mbt = Util.loadMbtFromXml(Util.getFile("xml/reqtags/mbt_init11.xml"));
+		System.setIn(oldIn);
+		System.setOut(oldOut);
 
-			assertEquals("ABC", mbt.execAction("str.toUpperCase()"));
-		} catch(HeadlessException e) {
-			System.out.println( "Test not valid in a non-window box." );
-		}
+		System.out.print(mbt.execAction("str.toUpperCase()"));
+
+		assertEquals("ABC", mbt.execAction("str.toUpperCase()"));
 	}
 
 	public void testPassRequirement() throws StopConditionException, GeneratorException, IOException, JDOMException, InterruptedException {
-		try {
-			ModelBasedTesting mbt;
-			mbt = Util.loadMbtFromXml(Util.getFile("xml/reqCoverage.xml"));
-			mbt.passRequirement(true);
-			mbt.passRequirement(false);
-			mbt.passRequirement(true);
-		} catch(HeadlessException e) {
-			System.out.println( "Test not valid in a non-window box." );
-		}
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment(); 
+		if ( ge.isHeadless() )
+			return;
+
+		ModelBasedTesting mbt;
+		mbt = Util.loadMbtFromXml(Util.getFile("xml/reqCoverage.xml"));
+		mbt.passRequirement(true);
+		mbt.passRequirement(false);
+		mbt.passRequirement(true);
 	}
 
 	public void testNewState() throws StopConditionException, InterruptedException {
