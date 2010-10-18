@@ -129,6 +129,7 @@ public class ModelBasedTesting {
 		runRandomGeneratorOnce = false;
 		dryRun = false;
 		javaExecutorClass = null;
+		startupScript = "";
 	}
 
 	public void reload() {
