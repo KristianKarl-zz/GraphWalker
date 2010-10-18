@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE MBTINIT SYSTEM "mbt_setup.dtd" >
+<!DOCTYPE MBTINIT SYSTEM "http://mbt.tigris.org/mbt_setup.dtd" >
 <MBTINIT EXECUTOR="offline" EXTENDED="true">
   <MODEL PATH="graphml/UC01.graphml"/>
   <GENERATOR TYPE="RANDOM">
