@@ -932,7 +932,7 @@ public class GraphML extends AbstractModelHandler {
 	/**
 	 * Writes the graph to a PrintStream, using GraphML format.
 	 */
-	public void save(PrintStream ps) {
+	public void save(PrintStream ps, boolean printIndex) {
 		Graph g = getModel();
 
 		ps.println("<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>");
@@ -961,10 +961,14 @@ public class GraphML extends AbstractModelHandler {
 
 			ps.println("          <y:Fill color=\"#CCCCFF\"  transparent=\"false\"/>");
 			ps.println("          <y:BorderStyle type=\"line\" width=\"1.0\" color=\"#000000\" />");
-			ps.println("          <y:NodeLabel x=\"1.5\" y=\"5.6494140625\" width=\"92.0\" height=\"18.701171875\" "
+			ps.print("          <y:NodeLabel x=\"1.5\" y=\"5.6494140625\" width=\"92.0\" height=\"18.701171875\" "
 			    + "visible=\"true\" alignment=\"center\" fontFamily=\"Dialog\" fontSize=\"12\" "
-			    + "fontStyle=\"plain\" textColor=\"#000000\" modelName=\"internal\" modelPosition=\"c\" " + "autoSizePolicy=\"content\">"
-			    + v.getFullLabelKey() + "&#xA;INDEX=" + v.getIndexKey() + "</y:NodeLabel>");
+			    + "fontStyle=\"plain\" textColor=\"#000000\" modelName=\"internal\" modelPosition=\"c\" " + "autoSizePolicy=\"content\">" + v.getFullLabelKey() );
+			if ( printIndex ) {
+				ps.print( "&#xA;INDEX=" + v.getIndexKey() );
+			}
+				
+			ps.println( "</y:NodeLabel>");
 
 			if (!v.getImageKey().isEmpty()) {
 				ps.println("          <y:Image href=\"" + v.getImageKey() + "\"/>");
@@ -1008,8 +1012,11 @@ public class GraphML extends AbstractModelHandler {
 				    .println("          <y:EdgeLabel x=\"-148.25\" y=\"30.000000000000014\" width=\"169.0\" height=\"18.701171875\" "
 				        + "visible=\"true\" alignment=\"center\" fontFamily=\"Dialog\" fontSize=\"12\" "
 				        + "fontStyle=\"plain\" textColor=\"#000000\" modelName=\"free\" modelPosition=\"anywhere\" "
-				        + "preferredPlacement=\"on_edge\" distance=\"2.0\" ratio=\"0.5\">" + label + "&#xA;INDEX=" + e.getIndexKey()
-				        + "</y:EdgeLabel>");
+				        + "preferredPlacement=\"on_edge\" distance=\"2.0\" ratio=\"0.5\">" + label );
+				if ( printIndex ) {
+					ps.print("&#xA;INDEX=" + e.getIndexKey());
+				}
+				ps.println("</y:EdgeLabel>");
 			}
 
 			ps.println("          <y:BendStyle smoothed=\"false\"/>");

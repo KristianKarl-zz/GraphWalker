@@ -514,6 +514,7 @@ public class CLI {
 	private void buildMergeCLI() {
 		opt.addOption(OptionBuilder.isRequired().withArgName("file|folder").withDescription(
 		    "The file (or folder) containing graphml formatted files.").hasArg().withLongOpt("input_graphml").create("f"));
+		opt.addOption("i", "index", true, "Print out the INDEX value when merging models. Default is true");
 	}
 
 	/**
@@ -907,7 +908,7 @@ public class CLI {
 			return;
 
 		getMbt().readGraph(cl.getOptionValue("f"));
-		getMbt().writeModel(System.out);
+		getMbt().writeModel(System.out,	!cl.hasOption("i"));
 	}
 
 	/**
