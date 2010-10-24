@@ -10,7 +10,7 @@ public abstract class AbstractModelHandler {
 
 	public abstract void load(String fileName);
 
-	public abstract void save(PrintStream ps);
+	public abstract void save(PrintStream ps, boolean printIndex);
 
 	public Graph getModel() {
 		return graph;

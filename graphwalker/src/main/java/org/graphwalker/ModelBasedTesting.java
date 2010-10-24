@@ -473,8 +473,8 @@ public class ModelBasedTesting {
 		}
 	}
 
-	protected void writeModel(PrintStream ps) {
-		this.modelHandler.save(ps);
+	protected void writeModel(PrintStream ps, boolean printIndex) {
+		this.modelHandler.save(ps, printIndex);
 	}
 
 	public String getStatisticsString() {
