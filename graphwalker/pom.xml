@@ -16,7 +16,7 @@
   </licenses>
   <scm>
     <url>http://mbt.tigris.org/source/browse/mbt/tags/graphwalker-2.5.0</url>
-    <developerConnection>scm:svn:http://mbt.tigris.org/source/browse/mbt/tags/graphwalker-2.5.0</developerConnection>
+    <developerConnection>scm:svn:http://mbt.tigris.org/svn/mbt/tags/graphwalker-2.5.0</developerConnection>
     <connection>http://mbt.tigris.org/svn/mbt/tags/graphwalker-2.5.0</connection>    
   </scm>
 
