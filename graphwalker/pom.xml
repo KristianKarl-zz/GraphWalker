@@ -17,7 +17,7 @@
   <scm>
     <url>http://mbt.tigris.org/svn/mbt/trunk/graphwalker</url>
     <developerConnection>scm:svn:http://mbt.tigris.org/svn/mbt/trunk/graphwalker</developerConnection>
-    <connection>http://mbt.tigris.org/svn/mbt/trunk/graphwalker</connection>    
+    <connection>scm:svn:http://mbt.tigris.org/svn/mbt/trunk/graphwalker</connection>    
   </scm>
 
   <properties>
