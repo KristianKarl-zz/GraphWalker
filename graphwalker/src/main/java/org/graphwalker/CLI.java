@@ -1,3 +1,26 @@
+//This file is part of the GraphWalker java package
+//The MIT License
+//
+//Copyright (c) 2010 graphwalker.org
+//
+//Permission is hereby granted, free of charge, to any person obtaining a copy
+//of this software and associated documentation files (the "Software"), to deal
+//in the Software without restriction, including without limitation the rights
+//to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//copies of the Software, and to permit persons to whom the Software is
+//furnished to do so, subject to the following conditions:
+//
+//The above copyright notice and this permission notice shall be included in
+//all copies or substantial portions of the Software.
+//
+//THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+//THE SOFTWARE.
+
 package org.graphwalker;
 
 import java.io.File;
@@ -185,7 +208,7 @@ public class CLI {
 				return;
 			} else {
 				System.err.println("Unkown command: " + args[0]);
-				System.err.println("Type 'java -jar graphwalker-"+mbt.getVersionString()+".jar help' for usage.");
+				System.err.println("Type 'java -jar graphwalker.jar help' for usage.");
 				return;
 			}
 		}
@@ -578,31 +601,9 @@ public class CLI {
 	 */
 	private void printVersionInformation() {
 		System.out.println("org.graphwalker version "+mbt.getVersionString()+"\n");
-		System.out.println("org.graphwalker is open source software licensed under GPL");
-		System.out.println("The software (and it's source) can be downloaded from http://mbt.tigris.org/\n");
-		System.out.println("This package contains following software packages:");
-		System.out.println("  commons-collections-3.2.1.jar  http://jakarta.apache.org/commons/collections/");
-		System.out.println("  jdom-1.0.jar                   http://www.jdom.org/");
-		System.out.println("  log4j-1.2.15.jar               http://logging.apache.org/log4j/");
-		System.out.println("  commons-cli-1.2.jar            http://commons.apache.org/cli/");
-		System.out.println("  colt-1.2..0jar                 http://dsd.lbl.gov/~hoschek/colt/");
-		System.out.println("  jung-3d-2.0.jar                http://jung.sourceforge.net/");
-		System.out.println("  jung-algoritms-2.0.jar         http://jung.sourceforge.net/");
-		System.out.println("  jung-api-2.0.jar               http://jung.sourceforge.net/");
-		System.out.println("  jung-graph-impl-2.0.jar        http://jung.sourceforge.net/");
-		System.out.println("  jung-io-2.0.jar                http://jung.sourceforge.net/");
-		System.out.println("  jung-jai-2.0.jar               http://jung.sourceforge.net/");
-		System.out.println("  jung-visualization-2.0.jar     http://jung.sourceforge.net/");
-		System.out.println("  bsh-core-2.0b4.jar             http://www.beanshell.org/");
-		System.out.println("  bsh-classgen-2.0b4.jar         http://www.beanshell.org/");
-		System.out.println("  bsh-commands-2.0b4.jar         http://www.beanshell.org/");
-  	System.out.println("  bsh-util-2.0b4.jar             http://www.beanshell.org/");
-		System.out.println("  bsh-classpath-2.0b4.jar        http://www.beanshell.org/");
-		System.out.println("  bsh-reflect-2.0b4.jar          http://www.beanshell.org/");
-		System.out.println("  bsh-bsf-2.0b4.jar              http://www.beanshell.org/");	
-		System.out.println("  commons-configuration-1.5.jar  http://commons.apache.org/configuration/");
-		System.out.println("  commons-lang-2.4.jar           http://commons.apache.org/lang/");
-		System.out.println("  commons-logging-1.1.1.jar      http://commons.apache.org/logging/");
+		System.out.println("org.graphwalker is open source software licensed under MIT licens");
+		System.out.println("The software (and it's source) can be downloaded from http://graphwalker.org");
+		System.out.println("For a complete list of this package software dependencies, see http://graphwalker.org:8080/job/graphwalker/site/dependencies.html");
 	}
 
 	/**

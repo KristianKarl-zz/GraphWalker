@@ -9,8 +9,8 @@
   <url>http://graphwalker.org</url>
   <licenses>
     <license>
-      <name>GNU General Public License, version 2</name>
-      <url>http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt</url>
+      <name>MIT License</name>
+      <url>http://www.opensource.org/licenses/mit-license.php</url>
       <distribution>repo</distribution>
     </license>
   </licenses>
@@ -19,6 +19,18 @@
     <developerConnection>scm:svn:http://mbt.tigris.org/svn/mbt/trunk/graphwalker</developerConnection>
     <connection>scm:svn:http://mbt.tigris.org/svn/mbt/trunk/graphwalker</connection>    
   </scm>
+  <developers>
+    <developer>
+      <id>krikar</id>
+      <name>Kristian Karl</name>
+      <email>kristian.hermann.karl@gmail.com</email>
+    </developer>
+    <developer>
+      <id>johtej</id>
+      <name>Johan Tejle</name>
+      <email>johan.tejle@systemverification.com</email>
+    </developer>
+  </developers>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
