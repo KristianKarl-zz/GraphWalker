@@ -128,7 +128,7 @@ public class CLITest extends TestCase {
 		String args[] = {};
 		runCommand(args);
 		pattern = Pattern.compile(
-		    "Type 'java -jar graphwalker-" + ModelBasedTesting.getInstance().getVersionString() + ".jar help' for usage.", Pattern.MULTILINE);
+		    "Type 'java -jar graphwalker.jar help' for usage.", Pattern.MULTILINE);
 		matcher = pattern.matcher(errMsg);
 		assertTrue(matcher.find());
 		assertTrue("Nothing should be written to standard output: " + outMsg, outMsg.isEmpty());
@@ -155,7 +155,7 @@ public class CLITest extends TestCase {
 		runCommand(args);
 		restoreMbtPropertiesFile();
 		pattern = Pattern.compile(
-		    "Type 'java -jar graphwalker-" + ModelBasedTesting.getInstance().getVersionString() + ".jar help' for usage.", Pattern.MULTILINE);
+		    "Type 'java -jar graphwalker.jar help' for usage.", Pattern.MULTILINE);
 		matcher = pattern.matcher(errMsg);
 		assertTrue(matcher.find());
 		assertTrue("Nothing should be written to standard output: " + outMsg, outMsg.isEmpty());
