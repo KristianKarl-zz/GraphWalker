@@ -27,6 +27,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Properties;
 import java.util.Vector;
+import java.util.concurrent.Future;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -82,6 +83,7 @@ public class ModelBasedTesting {
 	private volatile Thread stopFlag;
 	private volatile boolean threadSuspended = false;
 	private Thread thisThread;
+	private Future<?> future;
 
 	/**
 	 * Do not verify labels for edges and vertices. This is used when creating
@@ -253,6 +255,21 @@ public class ModelBasedTesting {
 		this.modelHandler.setModel(graph);
 		if (this.machine != null)
 			getMachine().setModel(graph);
+	}
+	
+	/**
+	 * Returns the current future object in the test.
+	 */
+	public Future<?> getFuture() {
+		return future;
+	}
+	
+	/**
+	 * Sets the future for the model. The execution of the path will be paused until the future
+	 * is done.
+	 */
+	public void setFuture(Future<?> future) {
+		this.future = future;
 	}
 
 	/**
@@ -778,26 +795,40 @@ public class ModelBasedTesting {
 			throw new RuntimeException("Cannot access execution instance: " + e.getMessage(), e);
 		}
 		while (hasNextStep()) {
-			String[] stepPair = getNextStep();
-
-			try {
-				logExecution(getMachine().getLastEdge(), "");
-				executeMethod(clsClass, objInstance, stepPair[0], true);
-				if (isUseStatisticsManager()) {
-					getStatisticsManager().addProgress(getMachine().getLastEdge());
+			if (future == null || future.isDone()) {
+				String[] stepPair = getNextStep();
+	
+				try {
+					logExecution(getMachine().getLastEdge(), "");
+					executeMethod(clsClass, objInstance, stepPair[0], true);
+					if (isUseStatisticsManager()) {
+						getStatisticsManager().addProgress(getMachine().getLastEdge());
+					}
+	
+					if (future != null && !future.isDone()) {
+						while (!future.isDone()) {
+							Thread.sleep(10); // Wait for future event to be done.
+						}
+					}
+					
+					logExecution(getMachine().getCurrentVertex(), "");
+					executeMethod(clsClass, objInstance, stepPair[1], false);
+					if (isUseStatisticsManager()) {
+						getStatisticsManager().addProgress(getMachine().getCurrentVertex());
+					}
+				} catch (IllegalArgumentException e) {
+					throw new RuntimeException("Illegal argument used.", e);
+				} catch (SecurityException e) {
+					throw new RuntimeException("Security failure occured.", e);
+				} catch (IllegalAccessException e) {
+					throw new RuntimeException("Illegal access was stoped.", e);
 				}
 
-				logExecution(getMachine().getCurrentVertex(), "");
-				executeMethod(clsClass, objInstance, stepPair[1], false);
-				if (isUseStatisticsManager()) {
-					getStatisticsManager().addProgress(getMachine().getCurrentVertex());
+			} else {
+				if (future.isCancelled()) {
+					throw new RuntimeException("Future task was canceled.");
 				}
-			} catch (IllegalArgumentException e) {
-				throw new RuntimeException("Illegal argument used.", e);
-			} catch (SecurityException e) {
-				throw new RuntimeException("Security failure occured.", e);
-			} catch (IllegalAccessException e) {
-				throw new RuntimeException("Illegal access was stoped.", e);
+				Thread.sleep(10); // Sleep a little to release the thread for other activities
 			}
 		}
 	}
