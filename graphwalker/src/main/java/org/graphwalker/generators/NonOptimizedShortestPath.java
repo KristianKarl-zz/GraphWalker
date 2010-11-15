@@ -29,6 +29,7 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 import org.graphwalker.Util;
+import org.graphwalker.conditions.StopCondition;
 import org.graphwalker.graph.Edge;
 import org.graphwalker.graph.Vertex;
 
@@ -106,5 +107,13 @@ public class NonOptimizedShortestPath extends RandomPathGenerator {
 			return;
 		}
 		dijkstraShortestPath = null;
+	}
+	
+	public String toString() {
+		if (getStopCondition() == null) {
+			return "SHORTESTNONOPT";
+		} else {
+			return "SHORTESTNONOPT{" + getStopCondition().toString() + "}";
+		}
 	}
 }

@@ -106,7 +106,7 @@ public class ModelBasedTesting {
 	}
 
 	// Private constructor prevents instantiation from other classes
-	public ModelBasedTesting() {
+	protected ModelBasedTesting() {
 	}
 
 	/**
