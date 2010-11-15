@@ -335,7 +335,7 @@ public class Util {
 	 */
 	protected static ModelBasedTesting loadMbtAsWSFromXml(File file) throws StopConditionException, GeneratorException, IOException,
 	    JDOMException, InterruptedException {
-		return loadXml(file, true, false);
+		return loadXml(file, true, false, false);
 	}
 
 	/**
@@ -354,7 +354,7 @@ public class Util {
 	 */
 	protected static ModelBasedTesting loadMbtFromXml(File file, boolean dryRun) throws StopConditionException, GeneratorException,
 	    IOException, JDOMException, InterruptedException {
-		return loadXml(file, false, dryRun);
+		return loadXml(file, false, dryRun, false);
 	}
 
 	/**
@@ -371,7 +371,24 @@ public class Util {
 	 */
 	public static ModelBasedTesting loadMbtFromXml(File file) throws StopConditionException, GeneratorException, IOException,
 	    JDOMException, InterruptedException {
-		return loadXml(file, false, false);
+		return loadXml(file, false, false, false);
+	}
+
+	/**
+	 * Creates a new instance of MBT and loads the settings from a xml file
+	 * 
+	 * @param file
+	 *          The XML settings file
+	 * @return
+	 * @throws StopConditionException
+	 * @throws GeneratorException
+	 * @throws IOException
+	 * @throws JDOMException
+	 * @throws InterruptedException
+	 */
+	public static ModelBasedTesting getNewMbtFromXml(File file) throws StopConditionException, GeneratorException, IOException,
+	    JDOMException, InterruptedException {
+		return loadXml(file, false, false, true);
 	}
 
 	/**
@@ -400,6 +417,7 @@ public class Util {
 	 *          Is mbt to run in Web Services mode?
 	 * @param dryRun
 	 *          Is mbt to be run in a dry run mode?
+	 * @param generateNewModel TODO
 	 * @return
 	 * @throws StopConditionException
 	 * @throws GeneratorException
@@ -408,9 +426,10 @@ public class Util {
 	 * @throws InterruptedException
 	 */
 	@SuppressWarnings("unchecked")
-	private static ModelBasedTesting loadXml(File file, boolean runningSoapServices, boolean dryRun) throws StopConditionException,
+	private static ModelBasedTesting loadXml(File file, boolean runningSoapServices, boolean dryRun, boolean generateNewModel) throws StopConditionException,
 	    GeneratorException, IOException, JDOMException, InterruptedException {
-		final ModelBasedTesting mbt = ModelBasedTesting.getInstance();
+		
+		final ModelBasedTesting mbt = (generateNewModel) ? new ModelBasedTesting() : ModelBasedTesting.getInstance();
 		mbt.reset();
 		mbt.setDryRun(dryRun);
 
