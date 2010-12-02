@@ -111,7 +111,7 @@ public class Vertex extends AbstractElement {
 		String label = "";
 		if ( str.split("/").length > 1 ||
 				 str.split("\\[").length > 1 ) {
-			p = Pattern.compile("^(\\w+)\\s?([^/^\\[]+)?", Pattern.MULTILINE);
+			p = Pattern.compile("^([\\w\\.]+)\\s?([^/^\\[]+)?", Pattern.MULTILINE);
 		} else {
 			p = Pattern.compile("(.*)", Pattern.MULTILINE);			
 		}
