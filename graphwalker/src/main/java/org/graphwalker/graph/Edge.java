@@ -131,7 +131,7 @@ public class Edge extends AbstractElement {
 			label = m.group(1);
 
 			// Look for the Label and Parameter
-			Pattern firstLinePattern = Pattern.compile("^(\\w+)\\s?([^/^\\[]+)?", Pattern.MULTILINE);
+			Pattern firstLinePattern = Pattern.compile("^([\\w\\.]+)\\s?([^/^\\[]+)?", Pattern.MULTILINE);
 			Matcher firstLineMatcher = firstLinePattern.matcher(label);
 			if (firstLineMatcher.find()) {
 				String label_key = firstLineMatcher.group(1);
