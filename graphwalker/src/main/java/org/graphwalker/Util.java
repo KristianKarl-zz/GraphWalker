@@ -248,7 +248,7 @@ public class Util {
 				if (conditionValue == null || conditionValue.isEmpty()) {
 					throw new StopConditionException("The name of reached vertex must not be empty");
 				}
-				if (machine.findVertex(Vertex.getLabel(conditionValue)) == null) {
+				if (machine.getModel().findVertex(Vertex.getLabel(conditionValue)) == null) {
 					throw new StopConditionException("The name of reached vertex: '" + Vertex.getLabel(conditionValue) + "' (in stop condition: '"
 					    + conditionValue + "') does not exists in the model.");
 				}
@@ -429,8 +429,7 @@ public class Util {
 	private static ModelBasedTesting loadXml(File file, boolean runningSoapServices, boolean dryRun, boolean generateNewModel) throws StopConditionException,
 	    GeneratorException, IOException, JDOMException, InterruptedException {
 		
-		final ModelBasedTesting mbt = (generateNewModel) ? new ModelBasedTesting() : ModelBasedTesting.getInstance();
-		mbt.reset();
+	  final ModelBasedTesting mbt = new ModelBasedTesting();
 		mbt.setDryRun(dryRun);
 
 		SAXBuilder parser = new SAXBuilder();

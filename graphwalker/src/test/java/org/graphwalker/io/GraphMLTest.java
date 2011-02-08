@@ -38,6 +38,50 @@ public class GraphMLTest extends TestCase {
 		ModelBasedTesting.getInstance().reset();
 	}
 
+	public void testGraphNode() {
+		try {
+			GraphML modelHandler = new GraphML();
+			modelHandler.load("graphml/multiple/switch/A.graphml");
+			assertEquals( modelHandler.getModel().getVertexCount(), 5 );
+			assertEquals( modelHandler.getModel().getEdgeCount(), 8 );
+			assertEquals( modelHandler.getModel().getLabelKey(), "v_ClientNotRunning"  );
+
+      Vertex clientNotRunning = modelHandler.getModel().findVertex("v_ClientNotRunning");
+      assertNotNull(clientNotRunning);
+      assertTrue(clientNotRunning.isGraphVertex());
+
+      Vertex whatsNew = modelHandler.getModel().findVertex("v_WhatsNew");
+      assertNotNull(whatsNew);
+      assertFalse(whatsNew.isGraphVertex());
+
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			fail(e.getMessage());
+		}
+	}
+
+  public void testSwitchModelKeyWord() {
+    try {
+      GraphML modelHandler = new GraphML();
+      modelHandler.load("graphml/multiple/switch/A.graphml");
+      assertEquals( modelHandler.getModel().getVertexCount(), 5 );
+      assertEquals( modelHandler.getModel().getEdgeCount(), 8 );
+      assertEquals( modelHandler.getModel().getLabelKey(), "v_ClientNotRunning"  );
+
+      Vertex clientNotRunning = modelHandler.getModel().findVertex("v_ClientNotRunning");
+      assertNotNull(clientNotRunning);
+      assertFalse(clientNotRunning.isSwitchModelKey());
+
+      Vertex whatsNew = modelHandler.getModel().findVertex("v_WhatsNew");
+      assertNotNull(whatsNew);
+      assertTrue(whatsNew.isSwitchModelKey());
+
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
+      fail(e.getMessage());
+    }
+  }
+
 	// Test various types of efsm labels
 	public void testMergeFiles() {
 		try {

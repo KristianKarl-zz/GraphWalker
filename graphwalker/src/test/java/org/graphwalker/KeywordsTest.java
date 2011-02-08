@@ -40,6 +40,8 @@ public class KeywordsTest extends TestCase {
 		assertEquals(true, Keywords.isKeyWord("merge"));
 		assertEquals(true, Keywords.isKeyWord("NO_MERGE"));
 		assertEquals(true, Keywords.isKeyWord("no_merge"));
+		assertEquals(true, Keywords.isKeyWord("SWITCH_MODEL"));
+		assertEquals(true, Keywords.isKeyWord("switch_model"));
 	}
 
 	public void testNonKeywords() {

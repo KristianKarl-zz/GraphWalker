@@ -50,7 +50,7 @@ public class ReachedVertex extends StopCondition {
 	public void setMachine(FiniteStateMachine machine) {
 		super.setMachine(machine);
 		if (this.endVertex == null)
-			this.endVertex = machine.findVertex(vertexName);
+			this.endVertex = machine.getModel().findVertex(vertexName);
 		if (this.endVertex == null)
 			throw new RuntimeException("Vertex '" + vertexName + "' not found in model");
 		this.proximity = getFloydWarshall();

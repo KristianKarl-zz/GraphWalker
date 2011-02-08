@@ -187,6 +187,7 @@ public class GraphML extends AbstractModelHandler {
 							v.setMergeKey(AbstractElement.isMerged(str));
 							v.setNoMergeKey(AbstractElement.isNoMerge(str));
 							v.setBlockedKey(AbstractElement.isBlocked(str));
+							v.setSwitchModelKey(Vertex.isSwitchModel(str));
 							
 							Integer index = AbstractElement.getIndex(str);
 							if  ( index != 0 ) {
@@ -427,6 +428,7 @@ public class GraphML extends AbstractModelHandler {
 			if ( v.getLabelKey().equalsIgnoreCase(Keywords.START_NODE)) {
 				Edge e = (Edge)graph.getOutEdges(v).toArray()[0];
 				graph.setLabelKey(graph.getDest(e).getLabelKey());
+				graph.getDest(e).setGraphVertex(true);
 			}	    
     }
   }
