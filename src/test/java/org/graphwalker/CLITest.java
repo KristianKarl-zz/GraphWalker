@@ -194,8 +194,8 @@ public class CLITest extends TestCase {
 	public void testOfflineA_StarEdgeCoverage() {
 		String args[] = { "offline", "-f", "graphml/reqtags/ExtendedMain.graphml", "-g", "A_STAR", "-s", "EDGE_COVERAGE:100" };
 		runCommand(args);
-		assertEquals("No error messages should occur.", "", errMsg);
-		assertEquals(0, getNumMatches(Pattern.compile("INFO").matcher(outMsg)));
+		assertEquals(errMsg, "", errMsg);
+		assertEquals(outMsg, 0, getNumMatches(Pattern.compile("INFO").matcher(outMsg)));
 	}
 
 	private int getNumMatches(Matcher m) {

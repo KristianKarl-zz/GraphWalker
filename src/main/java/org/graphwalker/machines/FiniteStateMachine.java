@@ -75,26 +75,14 @@ public class FiniteStateMachine {
 
 	public void setVertex(String vertexName) {
 		logger.debug("Setting vertex to: '" + vertexName + "'");
-		Vertex e = findVertex(vertexName);
+		Vertex e = model.findVertex(vertexName);
 		Util.AbortIf(e == null, "Vertex not Found: '" + vertexName + "'");
 
 		currentVertex = e;
 		setAsVisited(e);
 	}
 
-	public Vertex findVertex(String vertexName) {
-		logger.debug("Looking for vertex: " + vertexName + ", in model: " + model );
-		for (Vertex vertex : model.getVertices()) {
-			logger.debug("  " + vertex.getLabelKey() );
-			if (((String) vertex.getLabelKey()).equals(vertexName)) {
-				logger.debug("    Found it: " + vertex );
-				return vertex;
-			}
-		}
-		return null;
-	}
-
-	public AbstractElement findElement(Integer index) {
+  public AbstractElement findElement(Integer index) {
 		for (Vertex vertex : model.getVertices()) {
 			if (vertex.getIndexKey().equals(index)) {
 				return vertex;
@@ -109,7 +97,7 @@ public class FiniteStateMachine {
 	}
 
 	public boolean hasVertex(String vertexName) {
-		if (findVertex(vertexName) != null) {
+		if (model.findVertex(vertexName) != null) {
 			return true;
 		}
 		return false;

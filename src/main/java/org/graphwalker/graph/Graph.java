@@ -25,10 +25,13 @@ package org.graphwalker.graph;
 
 import edu.uci.ics.jung.graph.SparseMultigraph;
 import edu.uci.ics.jung.graph.util.EdgeType;
+import org.apache.log4j.Logger;
+import org.graphwalker.Util;
 
 public class Graph extends SparseMultigraph<Vertex, Edge> {
 
 	private static final long serialVersionUID = 4744840850614032582L;
+	private static Logger logger = Util.setupLogger(Graph.class);
 
 	private String fileKey = new String();
 	private String labelKey = new String();
@@ -64,4 +67,15 @@ public class Graph extends SparseMultigraph<Vertex, Edge> {
 		return super.addEdge(e, source, dest, EdgeType.DIRECTED);
 	}
 
+	public Vertex findVertex(String vertexName) {
+		logger.debug("Looking for vertex: " + vertexName + ", in model: " + this.toString() );
+		for (Vertex vertex : getVertices()) {
+			logger.debug("  " + vertex.getLabelKey() );
+			if (((String) vertex.getLabelKey()).equals(vertexName)) {
+				logger.debug("    Found it: " + vertex );
+				return vertex;
+			}
+		}
+		return null;
+	}
 }
