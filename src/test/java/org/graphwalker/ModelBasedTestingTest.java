@@ -77,7 +77,8 @@ public class ModelBasedTestingTest extends TestCase {
 		assertEquals("RANDOM{((EC>=100 AND SC>=100) OR L=50)}", mbt.toString());
 	}
 
-	public void testXmlLoading_Advanced() throws StopConditionException, GeneratorException, IOException, JDOMException, InterruptedException {
+	@SuppressWarnings("static-access")
+  public void testXmlLoading_Advanced() throws StopConditionException, GeneratorException, IOException, JDOMException, InterruptedException {
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment(); 
 		if ( ge.isHeadless() )
 			return;
@@ -86,7 +87,8 @@ public class ModelBasedTestingTest extends TestCase {
 		assertEquals("RANDOM{EC>=10}\nRANDOM{(SC>=30 AND EC>=10)}", mbt.toString());
 	}
 
-	public void testXmlLoading_OfflineStub() throws StopConditionException, GeneratorException, IOException, JDOMException,
+	@SuppressWarnings("static-access")
+  public void testXmlLoading_OfflineStub() throws StopConditionException, GeneratorException, IOException, JDOMException,
 	    InterruptedException {
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment(); 
 		if ( ge.isHeadless() )
@@ -100,7 +102,8 @@ public class ModelBasedTestingTest extends TestCase {
 		assertFalse(f.exists());
 	}
 
-	public void testXmlLoading_JavaExecution() throws StopConditionException, GeneratorException, IOException, JDOMException,
+	@SuppressWarnings("static-access")
+  public void testXmlLoading_JavaExecution() throws StopConditionException, GeneratorException, IOException, JDOMException,
 	    InterruptedException {
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment(); 
 		if ( ge.isHeadless() )
@@ -138,7 +141,8 @@ public class ModelBasedTestingTest extends TestCase {
 		assertEquals(6, getNumMatches(Pattern.compile("req[ \\d]+").matcher(innerOut.toString())));
 	}
 
-	public void testGetdataValue() throws InvalidDataException, StopConditionException, GeneratorException, IOException, JDOMException,
+	@SuppressWarnings("static-access")
+  public void testGetdataValue() throws InvalidDataException, StopConditionException, GeneratorException, IOException, JDOMException,
 	    InterruptedException {
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment(); 
 		if ( ge.isHeadless() )
@@ -166,7 +170,8 @@ public class ModelBasedTestingTest extends TestCase {
 		return numMatches;
 	}
 
-	public void testExecAction() throws InvalidDataException, StopConditionException, GeneratorException, IOException, JDOMException,
+	@SuppressWarnings("static-access")
+  public void testExecAction() throws InvalidDataException, StopConditionException, GeneratorException, IOException, JDOMException,
 	    InterruptedException {
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment(); 
 		if ( ge.isHeadless() )
@@ -187,7 +192,8 @@ public class ModelBasedTestingTest extends TestCase {
 		assertEquals("ABC", mbt.execAction("str.toUpperCase()"));
 	}
 
-	public void testPassRequirement() throws StopConditionException, GeneratorException, IOException, JDOMException, InterruptedException {
+	@SuppressWarnings("static-access")
+  public void testPassRequirement() throws StopConditionException, GeneratorException, IOException, JDOMException, InterruptedException {
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment(); 
 		if ( ge.isHeadless() )
 			return;

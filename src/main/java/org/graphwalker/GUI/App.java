@@ -170,7 +170,7 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 	static private AppEvent appEvent = null;
 	static private ChangeEvent changeEvent = null;
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private static Class<? extends Layout>[] getCombos() {
 		logger.debug("Entry");
 
@@ -899,7 +899,8 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 		}
 	}
 
-	private void addButtons(JToolBar toolBar) {
+	@SuppressWarnings("serial")
+  private void addButtons(JToolBar toolBar) {
 		logger.debug("Entry");
 
 		loadButton = makeNavigationButton("open", LOAD, "Load a model (graphml file)", "Load", true);
@@ -931,7 +932,8 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 		    "Center on current vertex");
 		toolBar.add(centerOnVertexButton);
 
-		Class[] combos = getCombos();
+		@SuppressWarnings("rawtypes")
+    Class[] combos = getCombos();
 		final JComboBox jcb = new JComboBox(combos);
 		// use a renderer to shorten the layout name presentation
 		jcb.setRenderer(new DefaultListCellRenderer() {

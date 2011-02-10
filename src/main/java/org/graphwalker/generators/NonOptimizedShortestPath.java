@@ -29,7 +29,6 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 import org.graphwalker.Util;
-import org.graphwalker.conditions.StopCondition;
 import org.graphwalker.graph.Edge;
 import org.graphwalker.graph.Vertex;
 

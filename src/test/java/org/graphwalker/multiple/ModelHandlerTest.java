@@ -1,19 +1,12 @@
 package org.graphwalker.multiple;
 
-import java.io.IOException;
-
 import org.apache.log4j.Logger;
 import org.graphwalker.ModelBasedTesting;
-import org.graphwalker.MultipleModels;
 import org.graphwalker.Util;
-import org.jdom.JDOMException;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
 import org.graphwalker.ModelHandler;
-import org.graphwalker.MultipleModelsTest.ModelAPI;
-import org.graphwalker.exceptions.GeneratorException;
-import org.graphwalker.exceptions.StopConditionException;
 
 public class ModelHandlerTest {
 
