@@ -90,8 +90,8 @@ public class ModelBasedTesting {
   private volatile boolean finishedFlag = false;
   private volatile boolean threadSuspended = false;
   private volatile boolean hasStartedExecution = false;
-  private boolean overrideStopCondition = false;
-  private boolean multiModelRun = false;
+
+  private ModelHandler multiModelHandler = null;
 
   private Thread thisThread = null;
   private Future<?> future;
@@ -154,8 +154,7 @@ public class ModelBasedTesting {
     finishedFlag = false;
     threadSuspended = false;
     hasStartedExecution = false;
-    overrideStopCondition = false;
-    multiModelRun = false;
+    multiModelHandler = null;
     thisThread = null;
   }
 
@@ -408,18 +407,6 @@ public class ModelBasedTesting {
   }
 
   public boolean hasNextStep() {
-    if (this.machine == null) {
-      getMachine();
-    }
-    Util.AbortIf(getGenerator() == null, "No generator has been defined!");
-
-    if (isOverrideStopCondition()) {
-      return true;
-    }
-    return hasNext();
-  }
-
-  public boolean hasNext() {
     if (this.machine == null) {
       getMachine();
     }
@@ -850,17 +837,23 @@ public class ModelBasedTesting {
               }
             }
 
+            if (getMultiModelHandler() != null) {
+              getMultiModelHandler().setCurrentVertex(getCurrentVertex().getLabelKey());
+            }
+
             if (getCurrentVertex().isSwitchModelKey()) {
               logger.debug("Will suspend the model because the SWITCH_MODEL key is found for current vertex: " + getCurrentVertex().getLabelKey());
               suspend();
               while (threadSuspended) {
                 Thread.sleep(10);
               }
-            } else if (isMultiModelRun() && getCurrentVertex().isGraphVertex()) {
-              logger.debug("Will suspend the model because the vertex is a GRAPH_VERTEX: " + getCurrentVertex().getLabelKey());
-              suspend();
-              while (threadSuspended) {
-                Thread.sleep(10);
+            } else if (getMultiModelHandler() != null) {
+              if (getCurrentVertex().isGraphVertex()) {
+                logger.debug("Will suspend the model because the vertex is a GRAPH_VERTEX: " + getCurrentVertex().getLabelKey());
+                suspend();
+                while (threadSuspended) {
+                  Thread.sleep(10);
+                }
               }
             }
 
@@ -1129,7 +1122,7 @@ public class ModelBasedTesting {
   }
 
   public synchronized void stop() {
-    logger.debug("Will stop the excution of the model.");
+    logger.debug("Will stop the excution of the model: " + getGraph());
     finishedFlag = true;
     stopFlag = null;
     notifyAll();
@@ -1187,44 +1180,12 @@ public class ModelBasedTesting {
     return false;
   }
 
-  /**
-   * Will override the stop condition. Used when running multiple models.
-   * Typically, if one of many models has reached it's stop condition, it must
-   * not mean that the execution of the test should end. Rather, when all models
-   * in the test has reached their stop condition the test should end.
-   * 
-   * @return true if the stop conditions is to be overridden.
-   */
-  public boolean isOverrideStopCondition() {
-    return overrideStopCondition;
+  public ModelHandler getMultiModelHandler() {
+    return multiModelHandler;
   }
 
-  /**
-   * Will override the stop condition. Used when running multiple models.
-   * Typically, if one of many models has reached it's stop condition, it must
-   * not mean that the execution of the test should end. Rather, when all models
-   * in the test has reached their stop condition the test should end.
-   * 
-   * @param overrideStopCondition
-   *          true if the stop conditions is to be overridden.
-   */
-  public void setOverrideStopCondition(boolean overrideStopCondition) {
-    logger.debug("Setting the overrideStopCondition from: " + this.overrideStopCondition + " to: " + overrideStopCondition);
-    this.overrideStopCondition = overrideStopCondition;
-  }
-
-  /**
-   * @return Returns true if this model is part of a multimodel run.
-   */
-  public boolean isMultiModelRun() {
-    return multiModelRun;
-  }
-
-  /**
-   * @param multiModelRun When set to true, this model is part of a multimodel run. 
-   */
-  public void setMultiModelRun(boolean multiModelRun) {
-    logger.debug("Setting the multiModelRun from: " + this.multiModelRun + " to: " + multiModelRun);
-    this.multiModelRun = multiModelRun;
+  public void setMultiModelHandler(ModelHandler modelHandler) {
+    logger.debug("Will change multiModelHandler from: " + this.multiModelHandler + ", to: " + modelHandler);
+    this.multiModelHandler = modelHandler;
   }
 }

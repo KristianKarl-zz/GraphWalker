@@ -28,8 +28,8 @@ import java.util.Iterator;
 import java.util.Random;
 
 import org.apache.log4j.Logger;
+import org.graphwalker.conditions.NeverCondition;
 import org.graphwalker.graph.Graph;
-import org.graphwalker.graph.Vertex;
 
 /**
  * The ModelHandler handles multiple models. The basic workflow using this class
@@ -65,12 +65,14 @@ public class ModelHandler {
   static Logger logger = Util.setupLogger(ModelHandler.class);
   ArrayList<ModelRunnable> models = new ArrayList<ModelRunnable>();
   static private Random random = new Random();
+  private String currentVertex;
 
   private class ModelRunnable implements Runnable {
 
     private String name;
     private ModelBasedTesting mbt;
     private Object modelAPI;
+    private boolean executionRestarted = false;
 
     public ModelRunnable(String name, ModelBasedTesting mbt, Object modelAPI) {
       this.name = name;
@@ -95,7 +97,16 @@ public class ModelHandler {
     public ModelBasedTesting getMbt() {
       return mbt;
     }
-  }
+
+    public boolean isExecutionRestarted() {
+      return executionRestarted;
+    }
+
+    public void setExecutionRestarted(boolean executionRestarted) {
+      logger.debug("Will change executionRestarted from: " + this.executionRestarted + ", to: " + executionRestarted);
+      this.executionRestarted = executionRestarted;    
+    }
+}
 
   /**
    * @return All models currently loaded.
@@ -121,8 +132,7 @@ public class ModelHandler {
       throw new IllegalArgumentException("The model name " + name + " has already been used.");
     }
     logger.debug("Adding the model: " + Integer.toHexString(System.identityHashCode(mbt)) + ", " + mbt.getGraph());
-    mbt.setOverrideStopCondition(true);
-    mbt.setMultiModelRun(true);
+    mbt.setMultiModelHandler(this);
     models.add(new ModelRunnable(name, mbt, object));
   }
 
@@ -181,27 +191,15 @@ public class ModelHandler {
         logger.debug("All models has reached their desired stop conditions.");
         break;
       }
-
-      // Do we have any paused model?
-      ArrayList<ModelRunnable> pausedModels = getPausedModel();
-      if (pausedModels.isEmpty()) {
-        logger.error("Not all models are finished, but no model is running, and none is paused. What is happening here?");
-        break;
-      }
-
-      // Get from random paused model, the vertex at which the model is paused.
-      Vertex v = pausedModels.get(random.nextInt(pausedModels.size())).getMbt().getCurrentVertex();
-      if (v == null) {
-        logger.error("Did not expect the vertex to be null!");
-        break;
-      }
+      logger.debug("Not all models has reached their desired stop conditions.");
 
       // Now, find models with matching vertex name.
       // If the model is paused, the current vertex is matched.
       // If the model is not started, the graph name is matched.
-      ArrayList<ModelRunnable> pausedAndNotStartedModels = getModel(v);
+      ArrayList<ModelRunnable> pausedAndNotStartedModels = getModelMatchingCurrentVertex();
       if (pausedAndNotStartedModels.isEmpty()) {
-        logger.debug("Did not find any models, matching the vertex: " + v.getLabelKey());
+        logger.debug("Did not find any models, matching the current vertex: " + currentVertex);
+        logger.debug(getStatistics());
         break;
       }
 
@@ -213,7 +211,7 @@ public class ModelHandler {
       logger.debug("Selecting model(" + selectModel + ") " + model.getMbt().getGraph());
       if (model.getMbt().isSuspended()) {
         model.getMbt().resume();
-      } else if (!model.getMbt().isFinished()) {
+      } else {
         t = new Thread(model);
         t.start();
       }
@@ -232,7 +230,7 @@ public class ModelHandler {
         break;
       } else if (model.getMbt().isSuspended()) {
         break;
-      } else if (model.getMbt().isFinished()) {
+      } else if (!model.getMbt().hasNextStep()) {
         break;
       }
       Thread.sleep(10);
@@ -248,25 +246,37 @@ public class ModelHandler {
    *          The vertex to match
    * @return an array of models that matches
    */
-  private ArrayList<ModelRunnable> getModel(Vertex v) {
-    logger.debug("Looking for paused or not started model matching vertex: " + v.getLabelKey());
-    ArrayList<ModelRunnable> m = new ArrayList<ModelRunnable>();
+  private ArrayList<ModelRunnable> getModelMatchingCurrentVertex() {
+    logger.debug("Looking for paused or not started model matching current vertex: " + currentVertex);
+    ArrayList<ModelRunnable> array = new ArrayList<ModelRunnable>();
     Iterator<ModelRunnable> itr = models.iterator();
     while (itr.hasNext()) {
       ModelRunnable model = itr.next();
       if (model.getMbt().hasNotStartedExecution()) {
-        if (model.getMbt().getGraph().getLabelKey().equals(v.getLabelKey())) {
+        if (model.getMbt().getGraph().getLabelKey().equals(currentVertex)) {
           logger.debug("  Adding not started model " + model.getMbt().getGraph());
-          m.add(model);
+          array.add(model);
         }
       } else if (model.getMbt().isSuspended()) {
-        if (model.getMbt().getCurrentVertex().getLabelKey().equals(v.getLabelKey())) {
+        if (model.getMbt().getCurrentVertex().getLabelKey().equals(currentVertex)) {
           logger.debug("  Adding paused model " + model.getMbt().getGraph());
-          m.add(model);
+          array.add(model);
+        }
+      } else if (!model.getMbt().hasNextStep()) {
+        if (model.getMbt().getCurrentVertex().getLabelKey().equals(currentVertex)) {
+          logger.debug("  Restarting model: " + model.getMbt().getGraph());
+          model.setExecutionRestarted(true);
+          model.getMbt().setCondition(new NeverCondition());
+          array.add(model);
+        }
+      } else if (model.isExecutionRestarted()) {
+        if (model.getMbt().getCurrentVertex().getLabelKey().equals(currentVertex)) {
+          logger.debug("  Adding recently restarted model: " + model.getMbt().getGraph());
+          array.add(model);
         }
       }
     }
-    return m;
+    return array;
   }
 
   /**
@@ -285,25 +295,6 @@ public class ModelHandler {
       }
     }
     return null;
-  }
-
-  /**
-   * Searches for paused models
-   * 
-   * @return An array of paused models
-   */
-  private ArrayList<ModelRunnable> getPausedModel() {
-    logger.debug("Looking for paused models");
-    ArrayList<ModelRunnable> pausedModels = new ArrayList<ModelRunnable>();
-    Iterator<ModelRunnable> itr = models.iterator();
-    while (itr.hasNext()) {
-      ModelRunnable model = itr.next();
-      if (model.getMbt().isSuspended()) {
-        logger.debug("  Adding paused model " + model.getMbt().getGraph());
-        pausedModels.add(model);
-      }
-    }
-    return pausedModels;
   }
 
   /**
@@ -336,7 +327,8 @@ public class ModelHandler {
     Iterator<ModelRunnable> itr = models.iterator();
     while (itr.hasNext()) {
       ModelRunnable task = itr.next();
-      if (task.mbt.hasNext()) {
+      if (task.isExecutionRestarted() == false && task.getMbt().hasNextStep()) {
+        logger.debug("  Model: " + task.getName() + ", is not done: " + task.getMbt().getStatisticsString());
         return false;
       }
     }
@@ -376,5 +368,14 @@ public class ModelHandler {
       statistics.append(model.mbt.getStatisticsString());
     }
     return statistics.toString();
+  }
+
+  public synchronized String getCurrentVertex() {
+    return currentVertex;
+  }
+
+  public synchronized void setCurrentVertex(String currentVertex) {
+    logger.debug("Changing current vertex from: " + this.currentVertex + ", to: " + currentVertex);
+    this.currentVertex = currentVertex;
   }
 }
