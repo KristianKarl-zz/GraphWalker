@@ -152,7 +152,7 @@ public class Util {
 		}
 	}
 
-	public static Logger setupLogger(Class classParam) {
+	public static Logger setupLogger(@SuppressWarnings("rawtypes") Class classParam) {
 		Logger logger = Logger.getLogger(classParam);
 		if (new File("graphwalker.properties").canRead()) {
 			PropertyConfigurator.configure("graphwalker.properties");
@@ -616,7 +616,8 @@ public class Util {
 		return mbt;
 	}
 
-	private ModelBasedTesting loadXmlNonStatic(File file, boolean runningSoapServices, boolean dryRun)
+	@SuppressWarnings("unchecked")
+  private ModelBasedTesting loadXmlNonStatic(File file, boolean runningSoapServices, boolean dryRun)
 	    throws StopConditionException, GeneratorException, IOException, JDOMException, InterruptedException {
 		final ModelBasedTesting mbt = new ModelBasedTesting();
 		mbt.setDryRun(dryRun);
@@ -625,7 +626,7 @@ public class Util {
 		Document doc;
 		doc = parser.build(file);
 		Element root = doc.getRootElement();
-		List<Element> models = root.getChildren("MODEL");
+    List<Element> models = root.getChildren("MODEL");
 
 		if (models.size() == 0)
 			throw new RuntimeException("Model is missing from XML");
@@ -634,7 +635,7 @@ public class Util {
 			mbt.readGraph((i.next()).getAttributeValue("PATH"));
 		}
 
-		List<Element> classPath = root.getChildren("CLASS");
+    List<Element> classPath = root.getChildren("CLASS");
 		for (Iterator<Element> i = classPath.iterator(); i.hasNext();) {
 			String classPaths[] = i.next().getAttributeValue("PATH").split(":");
 			for (int j = 0; j < classPaths.length; j++) {

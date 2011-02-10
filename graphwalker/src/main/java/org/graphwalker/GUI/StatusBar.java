@@ -27,6 +27,7 @@ import java.awt.Dimension;
 
 import javax.swing.JLabel;
 
+@SuppressWarnings("serial")
 public class StatusBar extends JLabel {
 	/** Creates a new instance of StatusBar */
 	public StatusBar() {
