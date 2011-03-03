@@ -1,12 +1,15 @@
 package org.graphwalker.multiple;
 
 import org.apache.log4j.Logger;
+import org.graphwalker.Keywords;
 import org.graphwalker.ModelBasedTesting;
 import org.graphwalker.Util;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
 import org.graphwalker.ModelHandler;
+import org.graphwalker.conditions.EdgeCoverage;
+import org.graphwalker.conditions.ReachedVertex;
 
 public class ModelHandlerTest {
 
@@ -71,6 +74,26 @@ public class ModelHandlerTest {
     modelhandler.execute("A");
     assertTrue(modelhandler.isAllModelsDone());
   }
+
+//  @Test
+//  public void executeModelThatStops() throws Exception {
+//    ModelHandler modelhandler = new ModelHandler();
+//    
+//    ModelBasedTesting a = new ModelBasedTesting();
+//    a.readGraph("graphml/multiple/switch/A.graphml");
+//    a.setGenerator(Keywords.GENERATOR_RANDOM);
+//    a.setCondition(new ReachedVertex("v_WhatsNew"));
+//    modelhandler.add("A", a, new Model_A_API());
+//   
+//    ModelBasedTesting b = new ModelBasedTesting();
+//    b.readGraph("graphml/multiple/switch/B.graphml");
+//    b.setGenerator(Keywords.GENERATOR_RANDOM);
+//    b.setCondition(new EdgeCoverage(1.0));
+//    modelhandler.add("B", b, new Model_B_API());
+//            
+//    modelhandler.execute("A");
+//    assertTrue(modelhandler.isAllModelsDone());
+//  }
 
   @Test
   public void executeThreeModel() throws Exception {
