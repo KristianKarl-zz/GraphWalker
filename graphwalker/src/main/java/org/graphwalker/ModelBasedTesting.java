@@ -110,8 +110,7 @@ public class ModelBasedTesting {
     this.manualTestSequence = manualTestSequence;
   }
 
-  // Private constructor prevents instantiation from other classes
-  protected ModelBasedTesting() {
+  public ModelBasedTesting() {
   }
 
   /**
