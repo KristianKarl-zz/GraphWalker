@@ -1,15 +1,12 @@
 package org.graphwalker.multiple;
 
 import org.apache.log4j.Logger;
-import org.graphwalker.Keywords;
 import org.graphwalker.ModelBasedTesting;
 import org.graphwalker.Util;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
 import org.graphwalker.ModelHandler;
-import org.graphwalker.conditions.EdgeCoverage;
-import org.graphwalker.conditions.ReachedVertex;
 
 public class ModelHandlerTest {
 
