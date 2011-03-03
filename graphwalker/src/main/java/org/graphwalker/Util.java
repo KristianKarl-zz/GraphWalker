@@ -1024,11 +1024,14 @@ public class Util {
 	}
 
 	public static File getFile(String resourceName) {
+    logger.debug("Try to get file: " + resourceName);
 		File file = new File( resourceName );
 		if ( file.exists() ) {
+	    logger.debug("File exists on file system.");
 			return file;
 		}
 		ClassLoader cloader = Thread.currentThread().getContextClassLoader();
+    logger.debug("Class loader class name: " + cloader.getClass().getName());
 		URL resource = cloader.getResource(resourceName);
 
 		if (resource == null) {
