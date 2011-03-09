@@ -24,7 +24,6 @@
 package org.graphwalker;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Vector;
 
@@ -32,33 +31,28 @@ import javax.jws.WebService;
 
 import org.apache.log4j.Logger;
 import org.graphwalker.GUI.App;
-import org.graphwalker.exceptions.GeneratorException;
 import org.graphwalker.exceptions.InvalidDataException;
-import org.graphwalker.exceptions.StopConditionException;
-import org.jdom.JDOMException;
 
 @WebService
 public class SoapServices {
 
 	private static Logger logger = Util.setupLogger(SoapServices.class);
 	private Vector<String> stepPair = new Vector<String>();
-	private String xmlFile = "";
+	public String xmlFile = "";
 	private boolean hardStop = false;
+  public ModelBasedTesting mbt;
 
-	public SoapServices() {
+  public SoapServices() {
 	}
 
-	public SoapServices(String xmlFile) throws StopConditionException, GeneratorException, IOException, JDOMException, InterruptedException {
-		if (xmlFile != null) {
-			this.xmlFile = xmlFile;
-			Util.loadMbtAsWSFromXml(Util.getFile(this.xmlFile));
-		}
-		Reset();
-	}
+	public SoapServices(ModelBasedTesting mbt) {
+	  this.mbt = mbt;
+	  Reset();
+  }
 
-	public boolean SetCurrentVertex(String newVertex) {
+  public boolean SetCurrentVertex(String newVertex) {
 		logger.debug("SOAP service SetCurrentVertex recieving: " + newVertex);
-		boolean value = ModelBasedTesting.getInstance().setCurrentVertex(newVertex);
+		boolean value = mbt.setCurrentVertex(newVertex);
 		logger.debug("SOAP service SetCurrentVertex returning: " + value);
 		return value;
 	}
@@ -67,7 +61,7 @@ public class SoapServices {
 		logger.debug("SOAP service getDataValue recieving: " + data);
 		String value = "";
 		try {
-			value = ModelBasedTesting.getInstance().getDataValue(data);
+			value = mbt.getDataValue(data);
 		} catch (InvalidDataException e) {
 			logger.error(e);
 		} catch (Exception e) {
@@ -81,7 +75,7 @@ public class SoapServices {
 		logger.debug("SOAP service ExecAction recieving: " + action);
 		String value = "";
 		try {
-			value = ModelBasedTesting.getInstance().execAction(action);
+			value = mbt.execAction(action);
 		} catch (InvalidDataException e) {
 			logger.error(e);
 		} catch (Exception e) {
@@ -94,9 +88,9 @@ public class SoapServices {
 	public void PassRequirement(String pass) {
 		logger.debug("SOAP service PassRequirement recieving: " + pass);
 		if (pass.equalsIgnoreCase("TRUE"))
-			ModelBasedTesting.getInstance().passRequirement(true);
+			mbt.passRequirement(true);
 		else if (pass.equalsIgnoreCase("FALSE"))
-			ModelBasedTesting.getInstance().passRequirement(false);
+			mbt.passRequirement(false);
 		else
 			logger.error("SOAP service PassRequirement dont know how to handle: " + pass + "\nOnly the strings true or false are permitted");
 	}
@@ -106,13 +100,13 @@ public class SoapServices {
 		try {
 			String value = "";
 
-			if (!ModelBasedTesting.getInstance().hasNextStep() && (stepPair.size() == 0)) {
+			if (!mbt.hasNextStep() && (stepPair.size() == 0)) {
 				return value;
 			}
 
 			if (stepPair.size() == 0) {
 				try {
-					stepPair = new Vector<String>(Arrays.asList(ModelBasedTesting.getInstance().getNextStep()));
+					stepPair = new Vector<String>(Arrays.asList(mbt.getNextStep()));
 				} catch (Exception e) {
 					hardStop = true;
 					return "";
@@ -124,21 +118,22 @@ public class SoapServices {
 			String addInfo = "";
 
 			if (stepPair.size() == 1) {
-				ModelBasedTesting.getInstance().logExecution(ModelBasedTesting.getInstance().getMachine().getLastEdge(), addInfo);
-				if (ModelBasedTesting.getInstance().isUseStatisticsManager()) {
-					ModelBasedTesting.getInstance().getStatisticsManager().addProgress(ModelBasedTesting.getInstance().getMachine().getLastEdge());
+				mbt.logExecution(mbt.getMachine().getLastEdge(), addInfo);
+				if (mbt.isUseStatisticsManager()) {
+					mbt.getStatisticsManager().addProgress(mbt.getMachine().getLastEdge());
 				}
 			} else {
-				ModelBasedTesting.getInstance().logExecution(ModelBasedTesting.getInstance().getMachine().getCurrentVertex(), addInfo);
-				if (ModelBasedTesting.getInstance().isUseStatisticsManager()) {
-					ModelBasedTesting.getInstance().getStatisticsManager()
-					    .addProgress(ModelBasedTesting.getInstance().getMachine().getCurrentVertex());
+				mbt.logExecution(mbt.getMachine().getCurrentVertex(), addInfo);
+				if (mbt.isUseStatisticsManager()) {
+					mbt.getStatisticsManager()
+					    .addProgress(mbt.getMachine().getCurrentVertex());
 				}
 			}
 			return value;
 		} finally {
-			if (ModelBasedTesting.getInstance().isUseGUI()) {
+			if (mbt.isUseGUI()) {
 				App.getInstance().setButtons();
+				App.getInstance().updateLayout();
 			}
 		}
 	}
@@ -152,12 +147,12 @@ public class SoapServices {
 			if (stepPair.size() != 0) {
 				value = true;
 			} else {
-				value = ModelBasedTesting.getInstance().hasNextStep();
+				value = mbt.hasNextStep();
 			}
 		}
 		logger.debug("SOAP service hasNextStep returning: " + value);
 		if (value == false)
-			logger.info(ModelBasedTesting.getInstance().getStatisticsString());
+			logger.info(mbt.getStatisticsString());
 		return value;
 	}
 
@@ -165,7 +160,9 @@ public class SoapServices {
 		logger.debug("SOAP service reload");
 		boolean retValue = true;
 		try {
-			Util.loadMbtAsWSFromXml(Util.getFile(this.xmlFile));
+		  if ( this.xmlFile.isEmpty() == false ) {
+		    mbt = Util.loadMbtAsWSFromXml(Util.getFile(this.xmlFile));
+		  }
 		} catch (Exception e) {
 			Util.logStackTraceToError(e);
 			retValue = false;
@@ -190,7 +187,7 @@ public class SoapServices {
 		this.xmlFile = xmlFile;
 		boolean retValue = true;
 		try {
-			Util.loadMbtAsWSFromXml(Util.getFile(this.xmlFile));
+			mbt = Util.loadMbtAsWSFromXml(Util.getFile(this.xmlFile));
 		} catch (Exception e) {
 			Util.logStackTraceToError(e);
 			retValue = false;
@@ -202,7 +199,7 @@ public class SoapServices {
 
 	public String GetStatistics() {
 		logger.debug("SOAP service getStatistics");
-		return ModelBasedTesting.getInstance().getStatisticsVerbose();
+		return mbt.getStatisticsVerbose();
 	}
 
 	private void Reset() {

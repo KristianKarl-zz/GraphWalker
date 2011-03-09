@@ -333,7 +333,7 @@ public class Util {
 	 * @throws JDOMException
 	 * @throws InterruptedException
 	 */
-	protected static ModelBasedTesting loadMbtAsWSFromXml(File file) throws StopConditionException, GeneratorException, IOException,
+	public static ModelBasedTesting loadMbtAsWSFromXml(File file) throws StopConditionException, GeneratorException, IOException,
 	    JDOMException, InterruptedException {
 		return loadXml(file, true, false, false);
 	}

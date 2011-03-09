@@ -116,14 +116,14 @@ import org.jdom.JDOMException;
  */
 public class CLI {
 	public static class VerboseStatisticsLogger extends Thread {
-		private ModelBasedTesting modelBasedTesting;
+		private ModelBasedTesting mbt = null;
 
 		private VerboseStatisticsLogger(ModelBasedTesting modelBasedTesting) {
-			this.modelBasedTesting = modelBasedTesting;
+			this.mbt = modelBasedTesting;
 		}
 
 		public void run() {
-			logger.info(modelBasedTesting.getStatisticsVerbose());
+			logger.info(mbt.getStatisticsVerbose());
 		}
 	}
 
@@ -134,11 +134,10 @@ public class CLI {
 	private static Endpoint endpoint = null;
 
 	public CLI() {
+    mbt = new ModelBasedTesting();
 	}
 
 	private ModelBasedTesting getMbt() {
-		if (mbt == null)
-			mbt = ModelBasedTesting.getInstance();
 		return mbt;
 	}
 
@@ -958,9 +957,20 @@ public class CLI {
 		} else {
 			nicAddr = "0.0.0.0";
 		}
+		
+		String file = cl.getOptionValue("f");
+		if ( file == null || file.isEmpty() ) {
+		  setMbt( new ModelBasedTesting() );
+		} else {
+	    setMbt(Util.loadMbtAsWSFromXml(Util.getFile(file)));		  
+		}
 
 		String wsURL = "http://" + nicAddr + ":" + port + "/mbt-services";
-		endpoint = Endpoint.publish(wsURL, new SoapServices(cl.getOptionValue("f")));
+		SoapServices soapService = new SoapServices(getMbt());
+    soapService.xmlFile = file;
+
+		
+		endpoint = Endpoint.publish(wsURL, soapService);
 
 		if (nicAddr.equals("0.0.0.0")) {
 			wsURL = wsURL.replace("0.0.0.0", InetAddress.getLocalHost().getHostName());
