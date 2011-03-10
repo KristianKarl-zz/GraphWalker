@@ -158,6 +158,14 @@ public class App extends JFrame implements ActionListener, MbtEvent {
     setButtons();
   }
 
+  public ModelBasedTesting getMbt() {
+    return mbt;
+  }
+
+  public void setMbt(ModelBasedTesting mbt) {
+    this.mbt = mbt;
+  }
+
   private String newline = "\n";
   static final private String LOAD = "load";
   static final private String RELOAD = "reload";
