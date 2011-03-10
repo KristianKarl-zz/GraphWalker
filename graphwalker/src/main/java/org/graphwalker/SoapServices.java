@@ -159,14 +159,24 @@ public class SoapServices {
 	public boolean Reload() {
 		logger.debug("SOAP service reload");
 		boolean retValue = true;
+		boolean useGui = mbt.isUseGUI();
 		try {
 		  if ( this.xmlFile.isEmpty() == false ) {
 		    mbt = Util.loadMbtAsWSFromXml(Util.getFile(this.xmlFile));
+		    if ( useGui ) {
+		      mbt.setUseGUI();
+		    }
 		  }
 		} catch (Exception e) {
 			Util.logStackTraceToError(e);
 			retValue = false;
-		}
+		} finally {
+      if (mbt.isUseGUI()) {
+        App.getInstance().setMbt(mbt);
+        App.getInstance().setButtons();
+        App.getInstance().updateLayout();
+      }
+    }
 		Reset();
 		logger.debug("SOAP service reload returning: " + retValue);
 		return retValue;
@@ -186,12 +196,22 @@ public class SoapServices {
 		}
 		this.xmlFile = xmlFile;
 		boolean retValue = true;
+    boolean useGui = mbt.isUseGUI();
 		try {
 			mbt = Util.loadMbtAsWSFromXml(Util.getFile(this.xmlFile));
+      if ( useGui ) {
+        mbt.setUseGUI();
+      }
 		} catch (Exception e) {
 			Util.logStackTraceToError(e);
 			retValue = false;
-		}
+		} finally {
+      if (mbt.isUseGUI()) {
+        App.getInstance().setMbt(mbt);
+        App.getInstance().setButtons();
+        App.getInstance().updateLayout();
+      }
+    }
 		Reset();
 		logger.debug("SOAP service load returning: " + retValue);
 		return retValue;
