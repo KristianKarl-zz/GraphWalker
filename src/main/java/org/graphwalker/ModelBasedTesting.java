@@ -45,6 +45,7 @@ import org.graphwalker.conditions.ReachedRequirement;
 import org.graphwalker.conditions.StopCondition;
 import org.graphwalker.conditions.TimeDuration;
 import org.graphwalker.events.MbtEvent;
+import org.graphwalker.exceptions.FoundNoEdgeException;
 import org.graphwalker.exceptions.GeneratorException;
 import org.graphwalker.exceptions.GuiStoppedExecution;
 import org.graphwalker.exceptions.InvalidDataException;
@@ -90,6 +91,7 @@ public class ModelBasedTesting {
   private volatile boolean finishedFlag = false;
   private volatile boolean threadSuspended = false;
   private volatile boolean hasStartedExecution = false;
+  private volatile boolean currentVertexIsChanged = false;
 
   private ModelHandler multiModelHandler = null;
 
@@ -241,7 +243,7 @@ public class ModelBasedTesting {
       getCondition().setMachine(getMachine());
   }
 
-  private StopCondition getCondition() {
+  public StopCondition getCondition() {
     return this.condition;
   }
 
@@ -846,12 +848,22 @@ public class ModelBasedTesting {
               while (threadSuspended) {
                 Thread.sleep(10);
               }
+              // We need to check if the current vertex has changed while we were asleep.
+              if ( currentVertexIsChanged ) {
+                currentVertexIsChanged = false;
+                continue;
+              }
             } else if (getMultiModelHandler() != null) {
               if (getCurrentVertex().isGraphVertex()) {
                 logger.debug("Will suspend the model because the vertex is a GRAPH_VERTEX: " + getCurrentVertex().getLabelKey());
                 suspend();
                 while (threadSuspended) {
                   Thread.sleep(10);
+                }
+                // We need to check if the current vertex has changed while we were asleep.
+                if ( currentVertexIsChanged ) {
+                  currentVertexIsChanged = false;
+                  continue;
                 }
               }
             }
@@ -937,9 +949,9 @@ public class ModelBasedTesting {
       } catch (NoSuchMethodException e) {
         logger.error("In model: " + getGraph());
         if (isEdge) {
-          logger.error("NoSuchMethodException for: " + getMachine().getLastEdge());
+          logger.error("Method: " + getMachine().getLastEdge() + ", is missing in class: " + clsClass);
         } else {
-          logger.error("NoSuchMethodException for: " + getMachine().getCurrentVertex());
+          logger.error("Method: " + getMachine().getCurrentVertex() + ", is missing in class: " + clsClass);
         }
         throw new RuntimeException("NoSuchMethodException.", e);
       } finally {
@@ -1077,8 +1089,9 @@ public class ModelBasedTesting {
             + " beacuse it does not exist in the model.");
         return false;
       }
-      logger.info("Manually changing vertex from: " + getMachine().getCurrentVertexName() + " to: " + newVertex);
+      logger.info("Manually changing vertex from: " + getMachine().getCurrentVertexName() + " to: " + newVertex);      
       getMachine().setVertex(newVertex);
+      currentVertexIsChanged = true;
 
       // We have to empty current Dijkstra path, if it exists.
       if (getGenerator() instanceof NonOptimizedShortestPath) {
@@ -1186,5 +1199,14 @@ public class ModelBasedTesting {
   public void setMultiModelHandler(ModelHandler modelHandler) {
     logger.debug("Will change multiModelHandler from: " + this.multiModelHandler + ", to: " + modelHandler);
     this.multiModelHandler = modelHandler;
+  }
+
+  public boolean isCulDeSac() {
+    try {
+      getMachine().getCurrentOutEdges();
+    } catch (FoundNoEdgeException e) {
+      return true;
+    }
+    return false;
   }
 }
