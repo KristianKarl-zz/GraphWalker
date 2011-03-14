@@ -1,12 +1,18 @@
 package org.graphwalker.multiple;
 
 import org.apache.log4j.Logger;
+import org.graphwalker.Keywords;
 import org.graphwalker.ModelBasedTesting;
 import org.graphwalker.Util;
+import org.junit.Ignore;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
 import org.graphwalker.ModelHandler;
+import org.graphwalker.conditions.EdgeCoverage;
+import org.graphwalker.conditions.ReachedVertex;
+import org.graphwalker.generators.PathGenerator;
+import org.graphwalker.generators.RandomPathGenerator;
 
 public class ModelHandlerTest {
 
@@ -72,25 +78,50 @@ public class ModelHandlerTest {
     assertTrue(modelhandler.isAllModelsDone());
   }
 
-//  @Test
-//  public void executeModelThatStops() throws Exception {
-//    ModelHandler modelhandler = new ModelHandler();
-//    
-//    ModelBasedTesting a = new ModelBasedTesting();
-//    a.readGraph("graphml/multiple/switch/A.graphml");
-//    a.setGenerator(Keywords.GENERATOR_RANDOM);
-//    a.setCondition(new ReachedVertex("v_WhatsNew"));
-//    modelhandler.add("A", a, new Model_A_API());
-//   
-//    ModelBasedTesting b = new ModelBasedTesting();
-//    b.readGraph("graphml/multiple/switch/B.graphml");
-//    b.setGenerator(Keywords.GENERATOR_RANDOM);
-//    b.setCondition(new EdgeCoverage(1.0));
-//    modelhandler.add("B", b, new Model_B_API());
-//            
-//    modelhandler.execute("A");
-//    assertTrue(modelhandler.isAllModelsDone());
-//  }
+  @Test
+  public void executeTwoModelsCulDeSac() throws Exception {
+    ModelHandler modelhandler = new ModelHandler();
+    
+    ModelBasedTesting login = new ModelBasedTesting();
+    login.readGraph("graphml/multiple/switch/A1.graphml");
+    login.enableExtended(true);
+    PathGenerator generator = new RandomPathGenerator();
+    generator.setStopCondition(new EdgeCoverage(1.0));
+    login.setGenerator(generator);
+    modelhandler.add("Login", login, new Model_A1_API());
+
+    ModelBasedTesting exitClient = new ModelBasedTesting();
+    exitClient.readGraph("graphml/multiple/switch/B1.graphml");
+    exitClient.enableExtended(true);
+    generator = new RandomPathGenerator();
+    generator.setStopCondition(new EdgeCoverage(1.0));
+    exitClient.setGenerator(generator);
+    modelhandler.add("ExitClient", exitClient, new Model_B1_API());
+    
+    
+    modelhandler.execute("Login");
+    assertTrue(modelhandler.isAllModelsDone());
+  }
+
+  @Ignore
+  public void executeModelThatStops() throws Exception {
+    ModelHandler modelhandler = new ModelHandler();
+    
+    ModelBasedTesting a = new ModelBasedTesting();
+    a.readGraph("graphml/multiple/switch/A.graphml");
+    a.setGenerator(Keywords.GENERATOR_RANDOM);
+    a.setCondition(new ReachedVertex("v_WhatsNew"));
+    modelhandler.add("A", a, new Model_A_API());
+   
+    ModelBasedTesting b = new ModelBasedTesting();
+    b.readGraph("graphml/multiple/switch/B.graphml");
+    b.setGenerator(Keywords.GENERATOR_RANDOM);
+    b.setCondition(new EdgeCoverage(1.0));
+    modelhandler.add("B", b, new Model_B_API());
+            
+    modelhandler.execute("A");
+    assertTrue(modelhandler.isAllModelsDone());
+  }
 
   @Test
   public void executeThreeModel() throws Exception {

@@ -104,9 +104,9 @@ public class ModelHandler {
 
     public void setExecutionRestarted(boolean executionRestarted) {
       logger.debug("Will change executionRestarted from: " + this.executionRestarted + ", to: " + executionRestarted);
-      this.executionRestarted = executionRestarted;    
+      this.executionRestarted = executionRestarted;
     }
-}
+  }
 
   /**
    * @return All models currently loaded.
@@ -166,7 +166,7 @@ public class ModelHandler {
    */
   public void execute(String name) throws InterruptedException {
     if (!hasModel(name)) {
-      throw new IllegalArgumentException("The model name " + name + " has already been used.");
+      throw new IllegalArgumentException("The model name " + name + " does not exist in the model handler. Have you forgotten to add it?");
     }
 
     ModelRunnable model = getModel(name);
@@ -188,7 +188,6 @@ public class ModelHandler {
 
       // If all models are finished, then exit
       if (isAllModelsDone()) {
-        logger.debug("All models has reached their desired stop conditions.");
         break;
       }
       logger.debug("Not all models has reached their desired stop conditions.");
@@ -252,25 +251,29 @@ public class ModelHandler {
     Iterator<ModelRunnable> itr = models.iterator();
     while (itr.hasNext()) {
       ModelRunnable model = itr.next();
-      if (model.getMbt().hasNotStartedExecution()) {
-        if (model.getMbt().getGraph().getLabelKey().equals(currentVertex)) {
+      logger.debug("Examining model: " + model.getMbt().getGraph());
+      logger.debug("  Current vertex of graph: " + model.getMbt().getCurrentVertex());
+
+      if (model.getMbt().getGraph().getLabelKey().equals(currentVertex) || model.getMbt().getCurrentVertex().getLabelKey().equals(currentVertex)) {
+        logger.debug("  " + model.getMbt().getGraph() + ", has matching graph or current vertex label");
+        if (model.getMbt().hasNotStartedExecution()) {
           logger.debug("  Adding not started model " + model.getMbt().getGraph());
           array.add(model);
-        }
-      } else if (model.getMbt().isSuspended()) {
-        if (model.getMbt().getCurrentVertex().getLabelKey().equals(currentVertex)) {
-          logger.debug("  Adding paused model " + model.getMbt().getGraph());
-          array.add(model);
-        }
-      } else if (!model.getMbt().hasNextStep()) {
-        if (model.getMbt().getCurrentVertex().getLabelKey().equals(currentVertex)) {
+        } else if (model.getMbt().isSuspended()) {
+          if (model.getMbt().isCulDeSac()) {
+            logger.debug("  Restarting model and resetting current vertex to Start: " + model.getMbt().getGraph());
+            model.setExecutionRestarted(true);
+            model.getMbt().setCurrentVertex(Keywords.START_NODE);
+          } else {
+            logger.debug("  Adding paused model " + model.getMbt().getGraph());
+            array.add(model);
+          }
+        } else if (!model.getMbt().hasNextStep()) {
           logger.debug("  Restarting model: " + model.getMbt().getGraph());
           model.setExecutionRestarted(true);
           model.getMbt().setCondition(new NeverCondition());
           array.add(model);
-        }
-      } else if (model.isExecutionRestarted()) {
-        if (model.getMbt().getCurrentVertex().getLabelKey().equals(currentVertex)) {
+        } else if (model.isExecutionRestarted()) {
           logger.debug("  Adding recently restarted model: " + model.getMbt().getGraph());
           array.add(model);
         }
@@ -326,12 +329,20 @@ public class ModelHandler {
   public boolean isAllModelsDone() {
     Iterator<ModelRunnable> itr = models.iterator();
     while (itr.hasNext()) {
-      ModelRunnable task = itr.next();
-      if (task.isExecutionRestarted() == false && task.getMbt().hasNextStep()) {
-        logger.debug("  Model: " + task.getName() + ", is not done: " + task.getMbt().getStatisticsString());
+      ModelRunnable model = itr.next();
+      logger.debug("Examining model: " + model.getMbt().getGraph());
+      if (model.getMbt().getCondition() instanceof NeverCondition) {
+        logger.debug("  Model: " + model.getName() + ", has a NeverCondition, thus by definition finished.");
+        continue;
+      } else if (model.getMbt().hasNextStep() == false) {
+        logger.debug("  Model: " + model.getName() + ", has reached it's stop condition");
+        continue;
+      } else {
+        logger.debug("  Model: " + model.getName() + ", is not done: " + model.getMbt().getStatisticsString());
         return false;
       }
     }
+    logger.debug("All models has reached their desired stop conditions.");
     return true;
   }
 
