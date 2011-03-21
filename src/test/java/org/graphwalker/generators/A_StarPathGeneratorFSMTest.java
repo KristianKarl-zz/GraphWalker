@@ -68,8 +68,7 @@ public class A_StarPathGeneratorFSMTest extends TestCase {
 	}
 
 	public void test_FSM_StateStop() throws InterruptedException {
-		PathGenerator pathGenerator = new A_StarPathGenerator();
-		pathGenerator.setStopCondition(new ReachedVertex("V2"));
+		PathGenerator pathGenerator = new A_StarPathGenerator(new ReachedVertex("V2"));
 		FiniteStateMachine fsm = new FiniteStateMachine();
 		fsm.setModel(graph);
 		pathGenerator.setMachine(fsm);
@@ -85,8 +84,7 @@ public class A_StarPathGeneratorFSMTest extends TestCase {
 	}
 
 	public void test_FSM_EdgeStop() throws InterruptedException {
-		PathGenerator pathGenerator = new A_StarPathGenerator();
-		pathGenerator.setStopCondition(new ReachedEdge("E2"));
+		PathGenerator pathGenerator = new A_StarPathGenerator(new ReachedEdge("E2"));
 		FiniteStateMachine fsm = new FiniteStateMachine();
 		fsm.setModel(graph);
 		pathGenerator.setMachine(fsm);

@@ -26,9 +26,9 @@ package org.graphwalker.conditions;
 import org.graphwalker.Keywords;
 import org.graphwalker.ModelBasedTesting;
 import org.graphwalker.Util;
-import org.graphwalker.conditions.StopCondition;
 import org.graphwalker.conditions.TimeDuration;
 import org.graphwalker.exceptions.GeneratorException;
+import org.graphwalker.generators.RandomPathGenerator;
 import org.graphwalker.graph.Edge;
 import org.graphwalker.graph.Graph;
 import org.graphwalker.graph.Vertex;
@@ -64,48 +64,45 @@ public class TimeDurationTest extends TestCase {
 
 	public void testConstructor() {
 		ModelBasedTesting mbt = ModelBasedTesting.getInstance();
-		mbt.setCondition(new TimeDuration(1));
+    mbt.setGenerator(new RandomPathGenerator(new TimeDuration(1)));
 	}
 
 	public void testFulfillment() throws InterruptedException, GeneratorException {
 		ModelBasedTesting mbt = ModelBasedTesting.getInstance();
-		StopCondition condition = new TimeDuration(1);
 		double startTime = (double) System.currentTimeMillis();
-		mbt.setCondition(condition);
 		mbt.setGraph(graph);
 		mbt.setGenerator(Keywords.GENERATOR_RANDOM);
+    mbt.setGenerator(new RandomPathGenerator(new TimeDuration(1)));
 		assertTrue(mbt.hasNextStep());
 
 		while ((System.currentTimeMillis() - startTime) < 10)
 			Thread.sleep(1);
-		assertEquals((System.currentTimeMillis() - startTime) / 1000, condition.getFulfilment(), 0.1);
+		assertEquals((System.currentTimeMillis() - startTime) / 1000, mbt.getGenerator().getStopCondition().getFulfilment(), 0.1);
 		while ((System.currentTimeMillis() - startTime) < 900)
 			Thread.sleep(1);
-		assertEquals((System.currentTimeMillis() - startTime) / 1000, condition.getFulfilment(), 0.1);
+		assertEquals((System.currentTimeMillis() - startTime) / 1000, mbt.getGenerator().getStopCondition().getFulfilment(), 0.1);
 		while ((System.currentTimeMillis() - startTime) < 1000)
 			Thread.sleep(1);
-		assertEquals((System.currentTimeMillis() - startTime) / 1000, condition.getFulfilment(), 0.1);
+		assertEquals((System.currentTimeMillis() - startTime) / 1000, mbt.getGenerator().getStopCondition().getFulfilment(), 0.1);
 	}
 
 	public void testIsFulfilled() throws InterruptedException, GeneratorException {
 		ModelBasedTesting mbt = ModelBasedTesting.getInstance();
-		StopCondition condition = new TimeDuration(1);
 		double startTime = (double) System.currentTimeMillis();
-		mbt.setCondition(condition);
 		mbt.setGraph(graph);
-		mbt.setGenerator(Keywords.GENERATOR_RANDOM);
+    mbt.setGenerator(new RandomPathGenerator(new TimeDuration(1)));
 		assertTrue(mbt.hasNextStep());
 
 		while ((System.currentTimeMillis() - startTime) < 10)
 			Thread.sleep(1);
-		assertEquals(false, condition.isFulfilled());
+		assertEquals(false, mbt.getGenerator().getStopCondition().isFulfilled());
 		while ((System.currentTimeMillis() - startTime) < 900)
 			Thread.sleep(1);
-		assertEquals(false, condition.isFulfilled());
+		assertEquals(false, mbt.getGenerator().getStopCondition().isFulfilled());
 		while ((System.currentTimeMillis() - startTime) < 1000)
 			Thread.sleep(1);
-		System.out.println(condition.getFulfilment());
-		assertEquals(true, condition.isFulfilled());
+		System.out.println(mbt.getGenerator().getStopCondition().getFulfilment());
+		assertEquals(true, mbt.getGenerator().getStopCondition().isFulfilled());
 	}
 
 }

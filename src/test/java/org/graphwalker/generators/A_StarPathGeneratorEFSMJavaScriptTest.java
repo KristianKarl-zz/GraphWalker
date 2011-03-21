@@ -68,8 +68,7 @@ public class A_StarPathGeneratorEFSMJavaScriptTest extends TestCase {
 	}
 
 	public void test_EFSM_StateStop() throws InterruptedException {
-		PathGenerator pathGenerator = new A_StarPathGenerator();
-		pathGenerator.setStopCondition(new ReachedVertex("V1/y=\\[2.0, 3.0, 3.0\\];x=3.0;"));
+		PathGenerator pathGenerator = new A_StarPathGenerator(new ReachedVertex("V1/y=\\[2.0, 3.0, 3.0\\];x=3.0;"));
 		ExtendedFiniteStateMachine machine = new ExtendedFiniteStateMachine(true);
 		machine.setModel(graph);
 		pathGenerator.setMachine(machine);
@@ -107,8 +106,7 @@ public class A_StarPathGeneratorEFSMJavaScriptTest extends TestCase {
 	}
 
 	public void test_EFSM_EdgeStop() throws InterruptedException {
-		PathGenerator pathGenerator = new A_StarPathGenerator();
-		pathGenerator.setStopCondition(new ReachedEdge("E2"));
+		PathGenerator pathGenerator = new A_StarPathGenerator(new ReachedEdge("E2"));
 		ExtendedFiniteStateMachine machine = new ExtendedFiniteStateMachine(true);
 		machine.setModel(graph);
 		pathGenerator.setMachine(machine);

@@ -23,13 +23,12 @@
 
 package org.graphwalker.conditions;
 
-import org.graphwalker.Keywords;
 import org.graphwalker.ModelBasedTesting;
 import org.graphwalker.Util;
-import org.graphwalker.conditions.StopCondition;
 import org.graphwalker.conditions.VertexCoverage;
 import org.graphwalker.exceptions.GeneratorException;
 import org.graphwalker.exceptions.StopConditionException;
+import org.graphwalker.generators.RandomPathGenerator;
 import org.graphwalker.graph.Edge;
 import org.graphwalker.graph.Graph;
 import org.graphwalker.graph.Vertex;
@@ -65,36 +64,32 @@ public class StateCoverageTest extends TestCase {
 
 	public void testConstructor() throws StopConditionException {
 		ModelBasedTesting mbt = ModelBasedTesting.getInstance();
-		mbt.setCondition(new VertexCoverage());
+    mbt.setGenerator(new RandomPathGenerator(new VertexCoverage()));
 	}
 
 	public void testFulfillment() throws StopConditionException, GeneratorException, InterruptedException {
 		ModelBasedTesting mbt = ModelBasedTesting.getInstance();
-		StopCondition condition = new VertexCoverage();
-		mbt.setCondition(condition);
 		mbt.setGraph(graph);
-		mbt.setGenerator(Keywords.GENERATOR_RANDOM);
+    mbt.setGenerator(new RandomPathGenerator(new VertexCoverage()));
 		assertTrue(mbt.hasNextStep());
 
-		assertEquals((double) 1 / 3, condition.getFulfilment(), 0.01);
+		assertEquals((double) 1 / 3, mbt.getGenerator().getStopCondition().getFulfilment(), 0.01);
 		mbt.getNextStep();
-		assertEquals((double) 2 / 3, condition.getFulfilment(), 0.01);
+		assertEquals((double) 2 / 3, mbt.getGenerator().getStopCondition().getFulfilment(), 0.01);
 		mbt.getNextStep();
-		assertEquals((double) 3 / 3, condition.getFulfilment(), 0.01);
+		assertEquals((double) 3 / 3, mbt.getGenerator().getStopCondition().getFulfilment(), 0.01);
 	}
 
 	public void testIsFulfilled() throws StopConditionException, GeneratorException, InterruptedException {
 		ModelBasedTesting mbt = ModelBasedTesting.getInstance();
-		StopCondition condition = new VertexCoverage();
-		mbt.setCondition(condition);
 		mbt.setGraph(graph);
-		mbt.setGenerator(Keywords.GENERATOR_RANDOM);
+    mbt.setGenerator(new RandomPathGenerator(new VertexCoverage()));
 		assertTrue(mbt.hasNextStep());
 
-		assertEquals(false, condition.isFulfilled());
+		assertEquals(false, mbt.getGenerator().getStopCondition().isFulfilled());
 		mbt.getNextStep();
-		assertEquals(false, condition.isFulfilled());
+		assertEquals(false, mbt.getGenerator().getStopCondition().isFulfilled());
 		mbt.getNextStep();
-		assertEquals(true, condition.isFulfilled());
+		assertEquals(true, mbt.getGenerator().getStopCondition().isFulfilled());
 	}
 }

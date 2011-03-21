@@ -27,6 +27,7 @@ import java.util.Vector;
 
 import org.graphwalker.exceptions.GeneratorException;
 import org.graphwalker.exceptions.StopConditionException;
+import org.graphwalker.multipleModels.ModelHandler;
 
 /**
  * Handles the common constants for the org.graphwalker package. This includes

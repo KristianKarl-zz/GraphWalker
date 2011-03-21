@@ -238,7 +238,7 @@ public class Util {
 				if (conditionValue == null || conditionValue.isEmpty()) {
 					throw new StopConditionException("The name of reached edge must not be empty");
 				}
-				if (machine.findEdge(Edge.getLabelAndParameter(conditionValue)[0]) == null) {
+				if (machine != null && machine.findEdge(Edge.getLabelAndParameter(conditionValue)[0]) == null) {
 					throw new StopConditionException("The name of reached edge: '" + Edge.getLabelAndParameter(conditionValue)[0]
 					    + "' (in stop condition: '" + conditionValue + "') does not exists in the model.");
 				}
@@ -248,7 +248,7 @@ public class Util {
 				if (conditionValue == null || conditionValue.isEmpty()) {
 					throw new StopConditionException("The name of reached vertex must not be empty");
 				}
-				if (machine.getModel().findVertex(Vertex.getLabel(conditionValue)) == null) {
+				if (machine != null && machine.getModel().findVertex(Vertex.getLabel(conditionValue)) == null) {
 					throw new StopConditionException("The name of reached vertex: '" + Vertex.getLabel(conditionValue) + "' (in stop condition: '"
 					    + conditionValue + "') does not exists in the model.");
 				}
@@ -321,7 +321,12 @@ public class Util {
 		return generator;
 	}
 
-	/**
+	public Util() {
+    super();
+    // TODO Auto-generated constructor stub
+  }
+
+  /**
 	 * Load MBT settings from a xml file
 	 * 
 	 * @param fileName

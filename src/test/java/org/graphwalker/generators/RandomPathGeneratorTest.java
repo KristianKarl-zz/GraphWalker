@@ -26,7 +26,6 @@ package org.graphwalker.generators;
 import org.apache.log4j.Logger;
 import org.graphwalker.Util;
 import org.graphwalker.conditions.EdgeCoverage;
-import org.graphwalker.conditions.StopCondition;
 import org.graphwalker.exceptions.StopConditionException;
 import org.graphwalker.generators.PathGenerator;
 import org.graphwalker.generators.RandomPathGenerator;
@@ -52,10 +51,8 @@ public class RandomPathGeneratorTest extends TestCase {
 		FSM.setModel(gml.getModel());
 		FSM.setWeighted(true);
 
-		StopCondition sc = new EdgeCoverage(1.0);
-		PathGenerator pathGenerator = new RandomPathGenerator();
+		PathGenerator pathGenerator = new RandomPathGenerator(new EdgeCoverage(1.0));
 		pathGenerator.setMachine(FSM);
-		pathGenerator.setStopCondition(sc);
 
 		while (pathGenerator.hasNext()) {
 			String[] stepPair = pathGenerator.getNext();
@@ -76,10 +73,8 @@ public class RandomPathGeneratorTest extends TestCase {
 		FiniteStateMachine FSM = new FiniteStateMachine();
 		FSM.setModel(gml.getModel());
 		FSM.setWeighted(false);
-		StopCondition sc = new EdgeCoverage(1.0);
-		PathGenerator pathGenerator = new RandomPathGenerator();
+		PathGenerator pathGenerator = new RandomPathGenerator(new EdgeCoverage(1.0));
 		pathGenerator.setMachine(FSM);
-		pathGenerator.setStopCondition(sc);
 
 		while (pathGenerator.hasNext()) {
 			String[] stepPair = pathGenerator.getNext();

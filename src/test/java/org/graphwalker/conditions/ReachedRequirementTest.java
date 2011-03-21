@@ -23,12 +23,11 @@
 
 package org.graphwalker.conditions;
 
-import org.graphwalker.Keywords;
 import org.graphwalker.ModelBasedTesting;
 import org.graphwalker.Util;
 import org.graphwalker.conditions.ReachedRequirement;
-import org.graphwalker.conditions.StopCondition;
 import org.graphwalker.exceptions.GeneratorException;
+import org.graphwalker.generators.RandomPathGenerator;
 import org.graphwalker.graph.Edge;
 import org.graphwalker.graph.Graph;
 import org.graphwalker.graph.Vertex;
@@ -71,36 +70,32 @@ public class ReachedRequirementTest extends TestCase {
 
 	public void testConstructor() {
 		ModelBasedTesting mbt = ModelBasedTesting.getInstance();
-		mbt.setCondition(new ReachedRequirement("R4"));
+		mbt.setGenerator(new RandomPathGenerator(new ReachedRequirement("R4")));
 	}
 
 	public void testFulfillment() throws GeneratorException, InterruptedException {
 		ModelBasedTesting mbt = ModelBasedTesting.getInstance();
-		StopCondition condition = new ReachedRequirement("R4");
-		mbt.setCondition(condition);
 		mbt.setGraph(graph);
-		mbt.setGenerator(Keywords.GENERATOR_RANDOM);
+    mbt.setGenerator(new RandomPathGenerator(new ReachedRequirement("R4")));
 		assertTrue(mbt.hasNextStep());
 
-		assertEquals((double) 0, condition.getFulfilment(), 0.01);
+		assertEquals((double) 0, mbt.getGenerator().getStopCondition().getFulfilment(), 0.01);
 		mbt.getNextStep();
-		assertEquals((double) 0, condition.getFulfilment(), 0.01);
+		assertEquals((double) 0, mbt.getGenerator().getStopCondition().getFulfilment(), 0.01);
 		mbt.getNextStep();
-		assertEquals((double) 1, condition.getFulfilment(), 0.01);
+		assertEquals((double) 1, mbt.getGenerator().getStopCondition().getFulfilment(), 0.01);
 	}
 
 	public void testIsFulfilled() throws GeneratorException, InterruptedException {
 		ModelBasedTesting mbt = ModelBasedTesting.getInstance();
-		StopCondition condition = new ReachedRequirement("R4");
-		mbt.setCondition(condition);
 		mbt.setGraph(graph);
-		mbt.setGenerator(Keywords.GENERATOR_RANDOM);
+    mbt.setGenerator(new RandomPathGenerator(new ReachedRequirement("R4")));
 		assertTrue(mbt.hasNextStep());
 
-		assertEquals(false, condition.isFulfilled());
+		assertEquals(false, mbt.getGenerator().getStopCondition().isFulfilled());
 		mbt.getNextStep();
-		assertEquals(false, condition.isFulfilled());
+		assertEquals(false, mbt.getGenerator().getStopCondition().isFulfilled());
 		mbt.getNextStep();
-		assertEquals(true, condition.isFulfilled());
+		assertEquals(true, mbt.getGenerator().getStopCondition().isFulfilled());
 	}
 }

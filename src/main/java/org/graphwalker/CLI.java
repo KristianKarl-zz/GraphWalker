@@ -48,6 +48,7 @@ import org.apache.log4j.Logger;
 import org.graphwalker.GUI.App;
 import org.graphwalker.Keywords.Generator;
 import org.graphwalker.Keywords.StopCondition;
+import org.graphwalker.conditions.AlternativeCondition;
 import org.graphwalker.exceptions.GeneratorException;
 import org.graphwalker.exceptions.StopConditionException;
 import org.graphwalker.io.PrintHTMLTestSequence;
@@ -634,13 +635,12 @@ public class CLI {
 		/*
 		 * Set the stop-conditions(s)
 		 */
+		AlternativeCondition alternativeCondition =  new AlternativeCondition();
 		String[] stopConditions = cl.getOptionValue("s").split("\\|");
 		for (int i = 0; i < stopConditions.length; i++) {
 			String[] sc = stopConditions[i].trim().split(":");
-			getMbt().addAlternativeCondition(Keywords.getStopCondition(sc[0].trim()), // Stop
-			    // condition
-			    (sc.length == 1 ? "" : sc[1].trim())); // Optional condition
-			// parameter
+			alternativeCondition.add(Util.getCondition( null, Keywords.getStopCondition(sc[0].trim()), // Stop condition
+			    (sc.length == 1 ? "" : sc[1].trim()))); // Optional condition parameter
 		}
 
 		/*
@@ -650,6 +650,7 @@ public class CLI {
 		for (int i = 0; i < genrators.length; i++) {
 			getMbt().setGenerator(Keywords.getGenerator(genrators[0].trim()));
 		}
+		getMbt().getGenerator().setStopCondition(alternativeCondition);
 
 		if (cl.hasOption("o")) {
 			long seconds = Integer.valueOf(cl.getOptionValue("o")).longValue();
@@ -721,13 +722,12 @@ public class CLI {
 		/*
 		 * Set the stop-conditions(s)
 		 */
+		AlternativeCondition alternativeCondition =  new AlternativeCondition();
 		String[] stopConditions = cl.getOptionValue("s").split("\\|");
 		for (int i = 0; i < stopConditions.length; i++) {
 			String[] sc = stopConditions[i].trim().split(":");
-			getMbt().addAlternativeCondition(Keywords.getStopCondition(sc[0].trim()), // Stop
-			    // condition
-			    (sc.length == 1 ? "" : sc[1].trim())); // Optional condition
-			// parameter
+			alternativeCondition.add(Util.getCondition( null, Keywords.getStopCondition(sc[0].trim()), // Stop condition
+			    (sc.length == 1 ? "" : sc[1].trim()))); // Optional condition parameter
 		}
 
 		/*
@@ -737,6 +737,7 @@ public class CLI {
 		for (int i = 0; i < genrators.length; i++) {
 			getMbt().setGenerator(Keywords.getGenerator(genrators[0].trim()));
 		}
+		getMbt().getGenerator().setStopCondition(alternativeCondition);
 
 		Vector<String[]> testSequence = new Vector<String[]>();
 		getMbt().writePath(testSequence);
@@ -773,14 +774,12 @@ public class CLI {
 		/*
 		 * Set the stop-conditions(s)
 		 */
+		AlternativeCondition alternativeCondition =  new AlternativeCondition();
 		String[] stopConditions = cl.getOptionValue("s").split("\\|");
 		for (int i = 0; i < stopConditions.length; i++) {
-			String[] stopCondition = stopConditions[i].trim().split(":");
-			if (stopCondition.length == 1) {
-				getMbt().addAlternativeCondition(Keywords.getStopCondition(stopCondition[0].trim()), "");
-			} else {
-				getMbt().addAlternativeCondition(Keywords.getStopCondition(stopCondition[0].trim()), stopCondition[1].trim());
-			}
+			String[] sc = stopConditions[i].trim().split(":");
+			alternativeCondition.add(Util.getCondition( null, Keywords.getStopCondition(sc[0].trim()), // Stop condition
+			    (sc.length == 1 ? "" : sc[1].trim()))); // Optional condition parameter
 		}
 
 		/*
@@ -790,6 +789,7 @@ public class CLI {
 		for (int i = 0; i < genrators.length; i++) {
 			getMbt().setGenerator(Keywords.getGenerator(genrators[0].trim()));
 		}
+		getMbt().getGenerator().setStopCondition(alternativeCondition);
 
 		/**
 		 * Set dry-run
