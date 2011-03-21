@@ -52,7 +52,8 @@ public class Graph extends SparseMultigraph<Vertex, Edge> {
 		this.fileKey = fileKey;
 	}
 
-	public String toString() {
+	@Override
+  public String toString() {
 		String str = "";
 		if (!getFileKey().isEmpty())
 			str += "File: " + getFileKey() + ", ";
@@ -63,7 +64,8 @@ public class Graph extends SparseMultigraph<Vertex, Edge> {
 		return str;
 	}
 
-	public boolean addEdge(Edge e, Vertex source, Vertex dest) {
+	@Override
+  public boolean addEdge(Edge e, Vertex source, Vertex dest) {
 		return super.addEdge(e, source, dest, EdgeType.DIRECTED);
 	}
 
@@ -71,7 +73,7 @@ public class Graph extends SparseMultigraph<Vertex, Edge> {
 		logger.debug("Looking for vertex: " + vertexName + ", in model: " + this.toString() );
 		for (Vertex vertex : getVertices()) {
 			logger.debug("  " + vertex.getLabelKey() );
-			if (((String) vertex.getLabelKey()).equals(vertexName)) {
+			if ((vertex.getLabelKey()).equals(vertexName)) {
 				logger.debug("    Found it: " + vertex );
 				return vertex;
 			}

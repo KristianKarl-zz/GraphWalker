@@ -42,20 +42,23 @@ public class EdgeCoverage extends StopCondition {
 		this.limit = limit;
 	}
 
-	public boolean isFulfilled() {
+	@Override
+  public boolean isFulfilled() {
 		double edges = machine.getAllEdges().size();
 		double covered = machine.getNumOfCoveredEdges();
     logger.debug("Edges/covered (limit): " + edges + "/" + covered + " (" + limit + ")");
 		return (covered / edges) >= limit;
 	}
 
-	public double getFulfilment() {
+	@Override
+  public double getFulfilment() {
 		double edges = machine.getAllEdges().size();
 		double covered = machine.getNumOfCoveredEdges();
 		return (covered / edges) / limit;
 	}
 
-	public String toString() {
+	@Override
+  public String toString() {
 		return "EC>=" + (int) (100 * limit);
 	}
 

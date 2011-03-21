@@ -53,7 +53,8 @@ public class VertexCoverageStatistics extends Statistics {
 	 * org.graphwalker.statistics.Statistics#addProgress(edu.uci.ics.jung.graph
 	 * .impl.AbstractElement)
 	 */
-	public void addProgress(AbstractElement element) {
+	@Override
+  public void addProgress(AbstractElement element) {
 		if (element instanceof Vertex)
 			usedVertices.add(element.toString());
 	}
@@ -63,7 +64,8 @@ public class VertexCoverageStatistics extends Statistics {
 	 * 
 	 * @see org.graphwalker.statistics.Statistics#getCurrent()
 	 */
-	public int getCurrent() {
+	@Override
+  public int getCurrent() {
 		return usedVertices.size();
 	}
 
@@ -72,7 +74,8 @@ public class VertexCoverageStatistics extends Statistics {
 	 * 
 	 * @see org.graphwalker.statistics.Statistics#getMax()
 	 */
-	public int getMax() {
+	@Override
+  public int getMax() {
 		return max;
 	}
 

@@ -46,7 +46,8 @@ public class A_StarPathGenerator extends PathGenerator {
   private Stack<Edge> preCalculatedPath = null;
 	private Vertex lastVertex;
 
-	public void setMachine(FiniteStateMachine machine) {
+	@Override
+  public void setMachine(FiniteStateMachine machine) {
 		super.setMachine(machine);
 	}
 
@@ -54,6 +55,7 @@ public class A_StarPathGenerator extends PathGenerator {
     super();
   }
 
+  @Override
   public String[] getNext() throws InterruptedException {
 		Util.AbortIf(!hasNext(), "Finished");
 		if (lastVertex == null || lastVertex != getMachine().getCurrentVertex() || preCalculatedPath == null || preCalculatedPath.size() == 0) {
@@ -76,7 +78,7 @@ public class A_StarPathGenerator extends PathGenerator {
 			preCalculatedPath = temp;
 		}
 
-		Edge edge = (Edge) preCalculatedPath.pop();
+		Edge edge = preCalculatedPath.pop();
 		getMachine().walkEdge(edge);
 		lastVertex = getMachine().getCurrentVertex();
 		String[] retur = { getMachine().getEdgeName(edge), getMachine().getCurrentVertexName() };
@@ -88,7 +90,8 @@ public class A_StarPathGenerator extends PathGenerator {
 		Vector<String> closed = new Vector<String>();
 
 		PriorityQueue<WeightedPath> a_starPath = new PriorityQueue<WeightedPath>(10, new Comparator<WeightedPath>() {
-			public int compare(WeightedPath arg0, WeightedPath arg1) {
+			@Override
+      public int compare(WeightedPath arg0, WeightedPath arg1) {
 				int retur = Double.compare(arg0.getWeight(), arg1.getWeight());
 				if (retur == 0)
 					retur = arg0.getPath().size() - arg1.getPath().size();
@@ -113,13 +116,13 @@ public class A_StarPathGenerator extends PathGenerator {
 		    throw new InterruptedException();
 			}
 
-			WeightedPath path = (WeightedPath) a_starPath.poll();
+			WeightedPath path = a_starPath.poll();
 			if (path.getWeight() > maxWeight)
 				maxWeight = path.getWeight();
 			if (path.getWeight() > 0.99999) // are we done yet?
 				return path.getPath();
 
-			Edge possibleDuplicate = (Edge) path.getPath().peek();
+			Edge possibleDuplicate = path.getPath().peek();
 
 			// have we been here before?
 			if (closed.contains(possibleDuplicate.hashCode() + "." + path.getSubState().hashCode() + "." + path.getWeight()))
@@ -176,11 +179,13 @@ public class A_StarPathGenerator extends PathGenerator {
 	/**
 	 * Will reset the generator to its initial vertex.
 	 */
-	public void reset() {
+	@Override
+  public void reset() {
 		preCalculatedPath = null;
 	}
 
-	public String toString() {
+	@Override
+  public String toString() {
 		return "A_STAR{" + super.toString() + "}";
 	}
 

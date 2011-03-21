@@ -29,8 +29,6 @@ import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.Properties;
 import java.util.Vector;
 import java.util.concurrent.Future;
@@ -40,16 +38,12 @@ import java.util.regex.Pattern;
 import org.apache.log4j.Logger;
 import org.graphwalker.GUI.App;
 import org.graphwalker.GUI.Status;
-import org.graphwalker.conditions.AlternativeCondition;
-import org.graphwalker.conditions.ReachedRequirement;
-import org.graphwalker.conditions.StopCondition;
 import org.graphwalker.conditions.TimeDuration;
 import org.graphwalker.events.MbtEvent;
 import org.graphwalker.exceptions.FoundNoEdgeException;
 import org.graphwalker.exceptions.GeneratorException;
 import org.graphwalker.exceptions.GuiStoppedExecution;
 import org.graphwalker.exceptions.InvalidDataException;
-import org.graphwalker.exceptions.StopConditionException;
 import org.graphwalker.generators.CodeGenerator;
 import org.graphwalker.generators.NonOptimizedShortestPath;
 import org.graphwalker.generators.PathGenerator;
@@ -91,7 +85,6 @@ public class ModelBasedTesting {
   private volatile boolean finishedFlag = false;
   private volatile boolean threadSuspended = false;
   private volatile boolean hasStartedExecution = false;
-  private volatile boolean currentVertexIsChanged = false;
 
   private ModelHandler multiModelHandler = null;
 
@@ -188,8 +181,10 @@ public class ModelBasedTesting {
       this.statisticsManager = new StatisticsManager();
     this.statisticsManager.addStatisicsCounter("Vertex Coverage", new VertexCoverageStatistics(getGraph()));
     this.statisticsManager.addStatisicsCounter("Edge Coverage", new EdgeCoverageStatistics(getGraph()));
-    this.statisticsManager.addStatisicsCounter("2-Edge Sequence Coverage", new EdgeSequenceCoverageStatistics(getGraph(), 2));
-    this.statisticsManager.addStatisicsCounter("3-Edge Sequence Coverage", new EdgeSequenceCoverageStatistics(getGraph(), 3));
+    this.statisticsManager.addStatisicsCounter("2-Edge Sequence Coverage", new EdgeSequenceCoverageStatistics(
+        getGraph(), 2));
+    this.statisticsManager.addStatisicsCounter("3-Edge Sequence Coverage", new EdgeSequenceCoverageStatistics(
+        getGraph(), 3));
     this.statisticsManager.addStatisicsCounter("Requirements Coverage", new RequirementCoverageStatistics(getGraph()));
     this.statisticsManager.addProgress(getMachine().getCurrentVertex());
   }
@@ -206,33 +201,36 @@ public class ModelBasedTesting {
     return this.statisticsManager;
   }
 
-//  protected void addAlternativeCondition(int conditionType, String conditionValue) throws StopConditionException {
-//    StopCondition condition = null;
-//    condition = Util.getCondition(getMachine(), conditionType, conditionValue);
-//
-//    // If requirement stop condition, check if requirement exists in model
-//    if (condition instanceof ReachedRequirement) {
-//      Collection<String> reqs = ((ReachedRequirement) condition).getRequirements();
-//      for (Iterator<String> iterator = reqs.iterator(); iterator.hasNext();) {
-//        String req = iterator.next();
-//        if (getMachine().getAllRequirements().containsKey(req) == false) {
-//          throw new StopConditionException("Requirement: '" + req + "' do not exist in the model");
-//        }
-//      }
-//    }
-//
-//    if (getGenerator().getStopCondition() == null) {
-//      getGenerator().setStopCondition(new AlternativeCondition());
-//      ((AlternativeCondition) getGenerator().getStopCondition()).add(condition);
-//    } else {
-//      if (!(getGenerator().getStopCondition() instanceof AlternativeCondition)) {
-//        StopCondition old = getGenerator().getStopCondition();
-//        getGenerator().setStopCondition(new AlternativeCondition());
-//        ((AlternativeCondition) getGenerator().getStopCondition()).add(old);
-//      }
-//      ((AlternativeCondition) getGenerator().getStopCondition()).add(condition);
-//    }
-//  }
+  // protected void addAlternativeCondition(int conditionType, String
+  // conditionValue) throws StopConditionException {
+  // StopCondition condition = null;
+  // condition = Util.getCondition(getMachine(), conditionType, conditionValue);
+  //
+  // // If requirement stop condition, check if requirement exists in model
+  // if (condition instanceof ReachedRequirement) {
+  // Collection<String> reqs = ((ReachedRequirement)
+  // condition).getRequirements();
+  // for (Iterator<String> iterator = reqs.iterator(); iterator.hasNext();) {
+  // String req = iterator.next();
+  // if (getMachine().getAllRequirements().containsKey(req) == false) {
+  // throw new StopConditionException("Requirement: '" + req +
+  // "' do not exist in the model");
+  // }
+  // }
+  // }
+  //
+  // if (getGenerator().getStopCondition() == null) {
+  // getGenerator().setStopCondition(new AlternativeCondition());
+  // ((AlternativeCondition) getGenerator().getStopCondition()).add(condition);
+  // } else {
+  // if (!(getGenerator().getStopCondition() instanceof AlternativeCondition)) {
+  // StopCondition old = getGenerator().getStopCondition();
+  // getGenerator().setStopCondition(new AlternativeCondition());
+  // ((AlternativeCondition) getGenerator().getStopCondition()).add(old);
+  // }
+  // ((AlternativeCondition) getGenerator().getStopCondition()).add(condition);
+  // }
+  // }
 
   public FiniteStateMachine getMachine() {
     if (this.machine == null) {
@@ -406,7 +404,8 @@ public class ModelBasedTesting {
         if (App.getInstance().getStatus().isStopped())
           throw new GuiStoppedExecution();
 
-        if (App.getInstance().getStatus().isNext() || App.getInstance().getStatus().isRunning() || App.getInstance().getStatus().isExecutingJavaTest()
+        if (App.getInstance().getStatus().isNext() || App.getInstance().getStatus().isRunning()
+            || App.getInstance().getStatus().isExecutingJavaTest()
             || App.getInstance().getStatus().isExecutingSoapTest() && App.getInstance().getStatus().isPaused() == false) {
           break;
         }
@@ -514,8 +513,8 @@ public class ModelBasedTesting {
     Properties properties = new Properties();
     try {
       properties.load(getClass().getResourceAsStream("/org/graphwalker/resources/version.properties"));
-      return properties.getProperty("version.major") + "." + properties.getProperty("version.minor") + "." + properties.getProperty("version.fix")
-          + ", svn rev. " + properties.getProperty("version.svn.rev");
+      return properties.getProperty("version.major") + "." + properties.getProperty("version.minor") + "."
+          + properties.getProperty("version.fix") + ", svn rev. " + properties.getProperty("version.svn.rev");
     } catch (IOException e) {
       Util.logStackTraceToError(e);
     }
@@ -549,7 +548,8 @@ public class ModelBasedTesting {
   public void setTemplate(String templateFile) throws IOException {
     String template = Util.readFile(Util.getFile(templateFile));
     String header = "", body = "", footer = "";
-    Pattern p = Pattern.compile("HEADER<\\{\\{([.\\s\\S]+)\\}\\}>HEADER([.\\s\\S]+)FOOTER<\\{\\{([.\\s\\S]+)\\}\\}>FOOTER");
+    Pattern p = Pattern
+        .compile("HEADER<\\{\\{([.\\s\\S]+)\\}\\}>HEADER([.\\s\\S]+)FOOTER<\\{\\{([.\\s\\S]+)\\}\\}>FOOTER");
     Matcher m = p.matcher(template);
     if (m.find()) {
       header = m.group(1);
@@ -638,7 +638,8 @@ public class ModelBasedTesting {
       logger.info(getMachine().getLastEdge() + req + additionalInfo);
       return;
     } else if (element instanceof Vertex) {
-      logger.info(getMachine().getCurrentVertex() + req + (getMachine().hasInternalVariables() ? " DATA: " + getMachine().getCurrentDataString() : "")
+      logger.info(getMachine().getCurrentVertex() + req
+          + (getMachine().hasInternalVariables() ? " DATA: " + getMachine().getCurrentDataString() : "")
           + additionalInfo);
       return;
     }
@@ -714,13 +715,14 @@ public class ModelBasedTesting {
       clsClass = Class.forName(strClassName);
       logger.debug("Got class for name: " + strClassName);
     } catch (LinkageError e) {
-      String str = "Could not load class: " + e.getMessage() + "\nProblem occured when loading class: " + strClassName + ".\n Current class path is: "
-          + System.getProperty("java.class.path");
+      String str = "Could not load class: " + e.getMessage() + "\nProblem occured when loading class: " + strClassName
+          + ".\n Current class path is: " + System.getProperty("java.class.path");
       logger.error(str);
       Util.logStackTraceToError(e);
       throw new RuntimeException(str, e);
     } catch (ClassNotFoundException e) {
-      String str = "Could not load class: " + strClassName + ".\n Current class path is: " + System.getProperty("java.class.path");
+      String str = "Could not load class: " + strClassName + ".\n Current class path is: "
+          + System.getProperty("java.class.path");
       logger.error(str);
       throw new RuntimeException(str, e);
     }
@@ -780,7 +782,8 @@ public class ModelBasedTesting {
       if (objInstance == null) {
         logger.debug("Got class: " + clsClass.getName() + ", but object instance null");
         try {
-          objInstance = clsClass.getConstructor(new Class[] { ModelBasedTesting.class }).newInstance(new Object[] { this });
+          objInstance = clsClass.getConstructor(new Class[] { ModelBasedTesting.class }).newInstance(
+              new Object[] { this });
         } catch (SecurityException e) {
           throw new RuntimeException("SecurityException: " + e.getMessage(), e);
         } catch (NoSuchMethodException e) {
@@ -821,41 +824,14 @@ public class ModelBasedTesting {
               }
             }
 
-            if (getMultiModelHandler() != null) {
-              getMultiModelHandler().setCurrentVertex(getCurrentVertex().getLabelKey());
-            }
-
-            if (getCurrentVertex().isSwitchModelKey()) {
-              logger.debug("Will suspend the model because the SWITCH_MODEL key is found for current vertex: " + getCurrentVertex().getLabelKey());
-              suspend();
-              while (threadSuspended) {
-                Thread.sleep(10);
-              }
-              // We need to check if the current vertex has changed while we were asleep.
-              if ( currentVertexIsChanged ) {
-                currentVertexIsChanged = false;
-                continue;
-              }
-            } else if (getMultiModelHandler() != null) {
-              if (getCurrentVertex().isGraphVertex()) {
-                logger.debug("Will suspend the model because the vertex is a GRAPH_VERTEX: " + getCurrentVertex().getLabelKey());
-                suspend();
-                while (threadSuspended) {
-                  Thread.sleep(10);
-                }
-                // We need to check if the current vertex has changed while we were asleep.
-                if ( currentVertexIsChanged ) {
-                  currentVertexIsChanged = false;
-                  continue;
-                }
-              }
-            }
-
             logExecution(getMachine().getCurrentVertex(), "");
             executeMethod(clsClass, objInstance, stepPair[1], false);
             if (isUseStatisticsManager()) {
               getStatisticsManager().addProgress(getMachine().getCurrentVertex());
             }
+
+            checkMultiModelHandling();
+
           } catch (IllegalArgumentException e) {
             throw new RuntimeException("Illegal argument used.", e);
           } catch (SecurityException e) {
@@ -877,8 +853,31 @@ public class ModelBasedTesting {
     }
   }
 
-  private void executeMethod(Class<?> clsClass, Object objInstance, String strMethod, boolean isEdge) throws IllegalArgumentException, SecurityException,
-      IllegalAccessException {
+  private void checkMultiModelHandling() throws InterruptedException {
+    if (getMultiModelHandler() != null) {
+      getMultiModelHandler().setCurrentVertex(getCurrentVertex().getLabelKey());
+    }
+
+    if (getCurrentVertex().isSwitchModelKey()) {
+      logger.debug("Will suspend the model because the SWITCH_MODEL key is found for current vertex: "
+          + getCurrentVertex().getLabelKey());
+      suspend();
+      while (threadSuspended) {
+        Thread.sleep(10);
+      }
+    } else if (getMultiModelHandler() != null) {
+      if (getCurrentVertex().isGraphVertex()) {
+        logger.debug("Will suspend the model because the vertex is a GRAPH_VERTEX: " + getCurrentVertex().getLabelKey());
+        suspend();
+        while (threadSuspended) {
+          Thread.sleep(10);
+        }
+      }
+    }
+  }
+
+  private void executeMethod(Class<?> clsClass, Object objInstance, String strMethod, boolean isEdge)
+      throws IllegalArgumentException, SecurityException, IllegalAccessException {
     if (strMethod.contains("/")) {
       strMethod = strMethod.substring(0, strMethod.indexOf("/"));
     }
@@ -923,9 +922,11 @@ public class ModelBasedTesting {
         m.invoke(objInstance, null);
       } catch (InvocationTargetException e) {
         if (isEdge) {
-          logger.error("InvocationTargetException for: " + getMachine().getLastEdge() + " : " + e.getCause().getMessage());
+          logger.error("InvocationTargetException for: " + getMachine().getLastEdge() + " : "
+              + e.getCause().getMessage());
         } else {
-          logger.error("InvocationTargetException for: " + getMachine().getCurrentVertex() + " : " + e.getCause().getMessage());
+          logger.error("InvocationTargetException for: " + getMachine().getCurrentVertex() + " : "
+              + e.getCause().getMessage());
         }
         Util.logStackTraceToError(e);
         throw new RuntimeException("InvocationTargetException.", e.getCause());
@@ -1064,17 +1065,17 @@ public class ModelBasedTesting {
   public boolean setCurrentVertex(String newVertex) {
     if (this.machine != null) {
       if (newVertex == null || newVertex.isEmpty()) {
-        logger.error("Could not manually change the vertex from: " + getMachine().getCurrentVertexName() + " beacuse it is an empty string.");
+        logger.error("Could not manually change the vertex from: " + getMachine().getCurrentVertexName()
+            + " beacuse it is an empty string.");
         return false;
       }
       if (getMachine().hasVertex(newVertex) == false) {
-        logger.error("Could not manually change the vertex from: " + getMachine().getCurrentVertexName() + " to: " + newVertex
-            + " beacuse it does not exist in the model.");
+        logger.error("Could not manually change the vertex from: " + getMachine().getCurrentVertexName() + " to: "
+            + newVertex + " beacuse it does not exist in the model.");
         return false;
       }
-      logger.info("Manually changing vertex from: " + getMachine().getCurrentVertexName() + " to: " + newVertex);      
+      logger.info("Manually changing vertex from: " + getMachine().getCurrentVertexName() + " to: " + newVertex);
       getMachine().setVertex(newVertex);
-      currentVertexIsChanged = true;
 
       // We have to empty current Dijkstra path, if it exists.
       if (getGenerator() instanceof NonOptimizedShortestPath) {

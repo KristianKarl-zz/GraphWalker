@@ -43,11 +43,13 @@ public class ReachedVertex extends StopCondition {
 	private String vertexName;
 	private String subState;
 
-	public boolean isFulfilled() {
+	@Override
+  public boolean isFulfilled() {
 		return getFulfilment() >= 0.99999;
 	}
 
-	public void setMachine(FiniteStateMachine machine) {
+	@Override
+  public void setMachine(FiniteStateMachine machine) {
 		super.setMachine(machine);
 		if (this.endVertex == null)
 			this.endVertex = machine.getModel().findVertex(vertexName);
@@ -63,7 +65,8 @@ public class ReachedVertex extends StopCondition {
 		this.subState = (vertex.length > 1 ? vertex[1] : "");
 	}
 
-	public double getFulfilment() {
+	@Override
+  public double getFulfilment() {
 		logger.debug("Machine: " + getMachine());
 		int distance = proximity[allVertices.indexOf(getMachine().getCurrentVertex())];
 		if (getMachine() instanceof ExtendedFiniteStateMachine) {
@@ -82,7 +85,7 @@ public class ReachedVertex extends StopCondition {
 			return 0;
 		}
 
-		return ((double) 1) - ((double) distance / (double) maxDistance);
+		return (1) - ((double) distance / (double) maxDistance);
 	}
 
 	private int max(int[] t) {
@@ -127,7 +130,8 @@ public class ReachedVertex extends StopCondition {
 		throw new RuntimeException("vertex no longer in Graph!");
 	}
 
-	public String toString() {
+	@Override
+  public String toString() {
 		return "VERTEX='" + endVertex + "'";
 	}
 

@@ -80,7 +80,8 @@ public abstract class PathGenerator {
 	PathGenerator() {
 	}
 
-	public String toString() {
+	@Override
+  public String toString() {
 		if (getStopCondition() != null)
 			return getStopCondition().toString();
 		return "";

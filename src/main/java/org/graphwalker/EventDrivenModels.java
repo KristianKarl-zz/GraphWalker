@@ -136,7 +136,8 @@ public class EventDrivenModels {
 			setName(model.getGraph().getLabelKey());
 		}
 
-		public void run() {
+		@Override
+    public void run() {
 			try {
 				model.setCurrentVertex("Start");
 				model.reload();

@@ -135,7 +135,8 @@ public class ModelHandler {
     if (hasModel(name)) {
       throw new IllegalArgumentException("The model name " + name + " has already been used.");
     }
-    logger.debug("Adding the model: " + Integer.toHexString(System.identityHashCode(modelAPI.getMbt())) + ", " + modelAPI.getMbt().getGraph());
+    logger.debug("Adding the model: " + Integer.toHexString(System.identityHashCode(modelAPI.getMbt())) + ", "
+        + modelAPI.getMbt().getGraph());
     modelAPI.getMbt().setMultiModelHandler(this);
     models.add(new ModelRunnable(name, modelAPI));
   }
@@ -170,7 +171,8 @@ public class ModelHandler {
    */
   public void execute(String name) throws InterruptedException {
     if (!hasModel(name)) {
-      throw new IllegalArgumentException("The model name " + name + " does not exist in the model handler. Have you forgotten to add it?");
+      throw new IllegalArgumentException("The model name " + name
+          + " does not exist in the model handler. Have you forgotten to add it?");
     }
 
     ModelRunnable model = getModel(name);
@@ -255,30 +257,42 @@ public class ModelHandler {
     Iterator<ModelRunnable> itr = models.iterator();
     while (itr.hasNext()) {
       ModelRunnable model = itr.next();
-      logger.debug("Examining model: " + model.getMbt().getGraph());
+      logger.debug("Examining model: " + model.getName());
       logger.debug("  Current vertex of graph: " + model.getMbt().getCurrentVertex());
 
-      if (model.getMbt().getGraph().getLabelKey().equals(currentVertex) || model.getMbt().getCurrentVertex().getLabelKey().equals(currentVertex)) {
-        logger.debug("  " + model.getMbt().getGraph() + ", has matching graph or current vertex label");
+      if (model.getMbt().getGraph().getLabelKey().equals(currentVertex)
+          || model.getMbt().getCurrentVertex().getLabelKey().equals(currentVertex)) {
+        logger.debug("  " + model.getName() + ", has matching graph or current vertex label");
         if (model.getMbt().hasNotStartedExecution()) {
-          logger.debug("  Adding not started model " + model.getMbt().getGraph());
+          logger.debug("  Adding not started model: " + model.getName());
           array.add(model);
         } else if (model.getMbt().isSuspended()) {
           if (model.getMbt().isCulDeSac()) {
-            logger.debug("  Restarting model and resetting current vertex to Start: " + model.getMbt().getGraph());
-            model.setExecutionRestarted(true);
-            model.getMbt().setCurrentVertex(Keywords.START_NODE);
+            logger.debug("  Model has ended up in a Cul-de-Sac");
+            if (!model.getMbt().hasNextStep()) {
+              logger.debug("  Model has reached it's stop condition, so restarting model and resetting current vertex to Start: "
+                  + model.getName());
+              model.setExecutionRestarted(true);
+              model.getMbt().setGenerator(new RandomPathGenerator(new NeverCondition()));
+              model.getMbt().setCurrentVertex(Keywords.START_NODE);
+              array.add(model);
+            } else {
+              logger.debug("  Model has not reached it's stop condition, so restarting model and resetting current vertex to Start: "
+                      + model.getName());
+              model.setExecutionRestarted(true);
+              model.getMbt().setCurrentVertex(Keywords.START_NODE);
+            }
           } else {
-            logger.debug("  Adding paused model " + model.getMbt().getGraph());
+            logger.debug("  Adding paused model, " + model.getName());
             array.add(model);
           }
         } else if (!model.getMbt().hasNextStep()) {
-          logger.debug("  Restarting model: " + model.getMbt().getGraph());
+          logger.debug("  Restarting model: " + model.getName());
           model.setExecutionRestarted(true);
           model.getMbt().setGenerator(new RandomPathGenerator(new NeverCondition()));
           array.add(model);
         } else if (model.isExecutionRestarted()) {
-          logger.debug("  Adding recently restarted model: " + model.getMbt().getGraph());
+          logger.debug("  Adding recently restarted model: " + model.getName());
           array.add(model);
         }
       }

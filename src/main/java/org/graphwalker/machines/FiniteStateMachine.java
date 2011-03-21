@@ -105,7 +105,7 @@ public class FiniteStateMachine {
 
 	public Edge findEdge(String edgeName) {
 		for (Edge edge : model.getEdges()) {
-			if (((String) edge.getLabelKey()).equals(edgeName)) {
+			if ((edge.getLabelKey()).equals(edgeName)) {
 				return edge;
 			}
 		}
@@ -169,7 +169,7 @@ public class FiniteStateMachine {
 			Hashtable<String, Integer> reqs = getAllRequirements();
 			String[] tags = e.getReqTagKey().split(",");
 			for (int j = 0; j < tags.length; j++) {
-				reqs.put(tags[j], new Integer(((Integer) reqs.get(tags[j])).intValue() + 1));
+				reqs.put(tags[j], new Integer((reqs.get(tags[j])).intValue() + 1));
 			}
 		}
 	}
@@ -194,7 +194,7 @@ public class FiniteStateMachine {
 			Hashtable<String, Integer> reqs = getAllRequirements();
 			String[] tags = e.getReqTagKey().split(",");
 			for (int j = 0; j < tags.length; j++) {
-				reqs.put(tags[j], new Integer(((Integer) reqs.get(tags[j])).intValue() - 1));
+				reqs.put(tags[j], new Integer((reqs.get(tags[j])).intValue() - 1));
 			}
 		}
 	}
@@ -425,7 +425,7 @@ public class FiniteStateMachine {
 	public void restoreVertex() {
 		if (this.vertexStore == null || this.vertexStore.size() == 0)
 			throw new RuntimeException("Nothing to restore");
-		int prevVertex = ((Integer) this.vertexStore.pop()).intValue();
+		int prevVertex = (this.vertexStore.pop()).intValue();
 		if (prevVertex > edgeStack.size())
 			throw new RuntimeException("Cannot restore vertex from backtrack");
 		while (prevVertex < edgeStack.size()) {

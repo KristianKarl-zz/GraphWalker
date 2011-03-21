@@ -32,7 +32,8 @@ public class CombinationalCondition extends StopCondition {
 
 	private Vector<StopCondition> conditions;
 
-	public boolean isFulfilled() {
+	@Override
+  public boolean isFulfilled() {
 		for (Iterator<StopCondition> i = conditions.iterator(); i.hasNext();) {
 			if (!i.next().isFulfilled())
 				return false;
@@ -48,21 +49,24 @@ public class CombinationalCondition extends StopCondition {
 		this.conditions.add(conditon);
 	}
 
-	public void setMachine(FiniteStateMachine machine) {
+	@Override
+  public void setMachine(FiniteStateMachine machine) {
 		super.setMachine(machine);
 		for (Iterator<StopCondition> i = conditions.iterator(); i.hasNext();)
 			i.next().setMachine(machine);
 	}
 
-	public double getFulfilment() {
+	@Override
+  public double getFulfilment() {
 		double retur = 0;
 		for (Iterator<StopCondition> i = conditions.iterator(); i.hasNext();) {
 			retur += i.next().getFulfilment();
 		}
-		return retur / (double) conditions.size();
+		return retur / conditions.size();
 	}
 
-	public String toString() {
+	@Override
+  public String toString() {
 		String retur = "(";
 		for (Iterator<StopCondition> i = conditions.iterator(); i.hasNext();) {
 			retur += i.next().toString();

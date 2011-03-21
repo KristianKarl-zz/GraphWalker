@@ -108,11 +108,13 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 		}
 	}
 
-	public String getCurrentVertexName() {
+	@Override
+  public String getCurrentVertexName() {
 		return super.getCurrentVertexName() + (hasInternalVariables() ? "/" + getCurrentDataString() : "");
 	}
 
-	public Set<Edge> getCurrentOutEdges() throws FoundNoEdgeException {
+	@Override
+  public Set<Edge> getCurrentOutEdges() throws FoundNoEdgeException {
 		Set<Edge> retur = super.getCurrentOutEdges();
 		for (Iterator<Edge> i = retur.iterator(); i.hasNext();) {
 			Edge e = i.next();
@@ -129,7 +131,8 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 		return retur;
 	}
 
-	public boolean hasInternalVariables() {
+	@Override
+  public boolean hasInternalVariables() {
 		if (jsEngine != null) {
 			return !jsEngine.getBindings(ScriptContext.ENGINE_SCOPE).isEmpty();
 		} else if (beanShellEngine != null) {
@@ -217,7 +220,8 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 		return res.toString();
 	}
 
-	public String getCurrentDataString() {
+	@Override
+  public String getCurrentDataString() {
 		String retur = "";
 
 		if (jsEngine != null) {
@@ -230,7 +234,7 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 			Hashtable<String, Object> dataTable = getCurrentBeanShellData();
 			Enumeration<String> e = dataTable.keys();
 			while (e.hasMoreElements()) {
-				String key = (String) e.nextElement();
+				String key = e.nextElement();
 				String data = "";
 				if (dataTable.get(key) instanceof Object[]) {
 					data = Arrays.deepToString((Object[]) dataTable.get(key));
@@ -243,7 +247,8 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 		return retur;
 	}
 
-	public boolean walkEdge(Edge edge) {
+	@Override
+  public boolean walkEdge(Edge edge) {
 		boolean hasWalkedEdge = super.walkEdge(edge);
 		if (hasWalkedEdge) {
 			if (hasAction(edge)) {
@@ -288,7 +293,8 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 		return (edge == null ? false : !edge.getActionsKey().isEmpty());
 	}
 
-	protected void track() {
+	@Override
+  protected void track() {
 		super.track();
 		if (jsEngine != null) {
 		} else if (beanShellEngine != null) {
@@ -296,11 +302,12 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 		}
 	}
 
-	protected void popVertex() {
+	@Override
+  protected void popVertex() {
 		super.popVertex();
 		if (jsEngine != null) {
 		} else if (beanShellEngine != null) {
-			beanShellEngine.setNameSpace(((CannedNameSpace) namespaceStack.pop()).unpack());
+			beanShellEngine.setNameSpace((namespaceStack.pop()).unpack());
 		}
 	}
 
@@ -333,7 +340,8 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 		}
 	}
 
-	public void setCalculatingPath(boolean calculatingPath) {
+	@Override
+  public void setCalculatingPath(boolean calculatingPath) {
 		super.setCalculatingPath(calculatingPath);
 		if (calculatingPath && this.oldPrintStream != System.out) {
 			this.oldPrintStream = System.out;
@@ -348,7 +356,8 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 			super(System.out);
 		}
 
-		public void write(byte[] buf, int off, int len) {
+		@Override
+    public void write(byte[] buf, int off, int len) {
 		}
 	}
 	

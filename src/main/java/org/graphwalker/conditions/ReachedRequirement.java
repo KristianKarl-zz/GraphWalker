@@ -39,17 +39,20 @@ public class ReachedRequirement extends StopCondition {
 		this.requirements = new HashSet<String>(Arrays.asList(list));
 	}
 
-	public boolean isFulfilled() {
+	@Override
+  public boolean isFulfilled() {
 		return machine.getCoveredRequirements().containsAll(requirements);
 	}
 
-	public double getFulfilment() {
+	@Override
+  public double getFulfilment() {
 		Collection<String> covered = machine.getCoveredRequirements();
 		covered.retainAll(requirements);
 		return covered.size() / (double) requirements.size();
 	}
 
-	public String toString() {
+	@Override
+  public String toString() {
 		return "RC=" + Arrays.deepToString(requirements.toArray());
 	}
 

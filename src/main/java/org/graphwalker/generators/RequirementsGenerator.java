@@ -44,22 +44,25 @@ public class RequirementsGenerator extends PathGenerator {
     super();
   }
 
+  @Override
   public boolean hasNext() {
 		if (list == null)
 			generateList();
 		return !list.isEmpty();
 	}
 
-	public String[] getNext() {
+	@Override
+  public String[] getNext() {
 		if (list == null)
 			generateList();
-		return (String[]) list.pop();
+		return list.pop();
 	}
 
 	private void generateList() {
 		list = new Stack<String[]>();
 		TreeSet<String[]> tempList = new TreeSet<String[]>(new Comparator<String[]>() {
-			public int compare(String[] arg0, String[] arg1) {
+			@Override
+      public int compare(String[] arg0, String[] arg1) {
 				return arg1[0].compareTo(arg0[0]);
 			}
 		});
@@ -82,7 +85,8 @@ public class RequirementsGenerator extends PathGenerator {
 		list.addAll(tempList);
 	}
 
-	public String toString() {
+	@Override
+  public String toString() {
 		return "REQUIREMENTS";
 	}
 

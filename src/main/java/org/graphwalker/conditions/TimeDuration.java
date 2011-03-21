@@ -34,7 +34,8 @@ public class TimeDuration extends StopCondition {
 	private double duration;
 	private double start_time;
 
-	public boolean isFulfilled() {
+	@Override
+  public boolean isFulfilled() {
 		return getFulfilment() >= 0.99999;
 	}
 
@@ -43,11 +44,13 @@ public class TimeDuration extends StopCondition {
 		this.duration = seconds * 1000;
 	}
 
-	public double getFulfilment() {
+	@Override
+  public double getFulfilment() {
 		return (System.currentTimeMillis() - this.start_time) / this.duration;
 	}
 
-	public String toString() {
+	@Override
+  public String toString() {
 		return "DURATION=" + (duration / 1000) + "s";
 	}
 

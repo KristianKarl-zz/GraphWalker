@@ -67,7 +67,8 @@ public class CodeGenerator extends ListGenerator {
 		this.template = template;
 	}
 
-	public String[] getNext() {
+	@Override
+  public String[] getNext() {
 		String[] retur = super.getNext();
 		if ( retur[0].isEmpty() ) {
 			retur[1] = "";
@@ -83,7 +84,8 @@ public class CodeGenerator extends ListGenerator {
 		return retur;
 	}
 
-	public String toString() {
+	@Override
+  public String toString() {
 		return "CODE";
 	}
 }
