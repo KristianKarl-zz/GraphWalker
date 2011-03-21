@@ -23,6 +23,8 @@
 
 package org.graphwalker.generators;
 
+import org.graphwalker.conditions.StopCondition;
+
 /**
  * Will generate code using a template. The code generated will contain all
  * lables/names defined by the vertices and edges. This enables the user to
@@ -49,12 +51,17 @@ package org.graphwalker.generators;
  */
 public class CodeGenerator extends ListGenerator {
 
-	private String[] template; // {HEADER, BODY, FOOTER}
+	public CodeGenerator(StopCondition stopCondition) {
+    super(stopCondition);
+  }
+
+  public CodeGenerator() {
+    super();
+  }
+
+  private String[] template; // {HEADER, BODY, FOOTER}
 	private boolean first = true;
 
-	public CodeGenerator() {
-		super();
-	}
 
 	public void setTemplate(String[] template) {
 		this.template = template;

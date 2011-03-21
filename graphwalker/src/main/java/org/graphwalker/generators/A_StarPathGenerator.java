@@ -30,6 +30,7 @@ import java.util.Stack;
 import java.util.Vector;
 
 import org.graphwalker.Util;
+import org.graphwalker.conditions.StopCondition;
 import org.graphwalker.exceptions.FoundNoEdgeException;
 import org.graphwalker.generators.PathGenerator;
 import org.graphwalker.graph.Edge;
@@ -38,14 +39,22 @@ import org.graphwalker.machines.FiniteStateMachine;
 
 public class A_StarPathGenerator extends PathGenerator {
 
-	private Stack<Edge> preCalculatedPath = null;
+	public A_StarPathGenerator(StopCondition stopCondition) {
+    super(stopCondition);
+  }
+
+  private Stack<Edge> preCalculatedPath = null;
 	private Vertex lastVertex;
 
 	public void setMachine(FiniteStateMachine machine) {
 		super.setMachine(machine);
 	}
 
-	public String[] getNext() throws InterruptedException {
+	public A_StarPathGenerator() {
+    super();
+  }
+
+  public String[] getNext() throws InterruptedException {
 		Util.AbortIf(!hasNext(), "Finished");
 		if (lastVertex == null || lastVertex != getMachine().getCurrentVertex() || preCalculatedPath == null || preCalculatedPath.size() == 0) {
 			boolean oldCalculatingPathValue = getMachine().isCalculatingPath();

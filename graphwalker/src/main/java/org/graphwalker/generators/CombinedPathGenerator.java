@@ -38,10 +38,14 @@ public class CombinedPathGenerator extends PathGenerator {
 	private int currentGenerator = 0;
 
 	public CombinedPathGenerator() {
-		super();
-	}
+    super();
+  }
 
-	public void addPathGenerator(PathGenerator generator) {
+  public CombinedPathGenerator(StopCondition stopCondition) {
+    super(stopCondition);
+  }
+
+  public void addPathGenerator(PathGenerator generator) {
 		logger.debug("Adding PathGenerator: " + generator);
 		generatorList.add(generator);
 	}

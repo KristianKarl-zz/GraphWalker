@@ -29,13 +29,22 @@ import java.util.Stack;
 import java.util.TreeSet;
 import java.util.Vector;
 
+import org.graphwalker.conditions.StopCondition;
 import org.graphwalker.graph.AbstractElement;
 
 public class RequirementsGenerator extends PathGenerator {
 
 	private Stack<String[]> list = null;
 
-	public boolean hasNext() {
+	public RequirementsGenerator(StopCondition stopCondition) {
+    super(stopCondition);
+  }
+
+  public RequirementsGenerator() {
+    super();
+  }
+
+  public boolean hasNext() {
 		if (list == null)
 			generateList();
 		return !list.isEmpty();

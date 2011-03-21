@@ -61,6 +61,7 @@ import org.graphwalker.io.AbstractModelHandler;
 import org.graphwalker.io.GraphML;
 import org.graphwalker.machines.ExtendedFiniteStateMachine;
 import org.graphwalker.machines.FiniteStateMachine;
+import org.graphwalker.multipleModels.ModelHandler;
 import org.graphwalker.statistics.EdgeCoverageStatistics;
 import org.graphwalker.statistics.EdgeSequenceCoverageStatistics;
 import org.graphwalker.statistics.RequirementCoverageStatistics;
@@ -77,7 +78,6 @@ public class ModelBasedTesting {
 
   private AbstractModelHandler modelHandler;
   private FiniteStateMachine machine;
-  private StopCondition condition;
   private PathGenerator generator;
   private String[] template;
   private boolean useStatisticsManager = false;
@@ -137,7 +137,6 @@ public class ModelBasedTesting {
   public void reset() {
     modelHandler = null;
     machine = null;
-    condition = null;
     generator = null;
     template = null;
     runRandomGeneratorOnce = false;
@@ -207,45 +206,33 @@ public class ModelBasedTesting {
     return this.statisticsManager;
   }
 
-  protected void addAlternativeCondition(int conditionType, String conditionValue) throws StopConditionException {
-    StopCondition condition = null;
-    condition = Util.getCondition(getMachine(), conditionType, conditionValue);
-
-    // If requirement stop condition, check if requirement exists in model
-    if (condition instanceof ReachedRequirement) {
-      Collection<String> reqs = ((ReachedRequirement) condition).getRequirements();
-      for (Iterator<String> iterator = reqs.iterator(); iterator.hasNext();) {
-        String req = iterator.next();
-        if (getMachine().getAllRequirements().containsKey(req) == false) {
-          throw new StopConditionException("Requirement: '" + req + "' do not exist in the model");
-        }
-      }
-    }
-
-    if (getCondition() == null) {
-      setCondition(new AlternativeCondition());
-      ((AlternativeCondition) getCondition()).add(condition);
-    } else {
-      if (!(getCondition() instanceof AlternativeCondition)) {
-        StopCondition old = getCondition();
-        setCondition(new AlternativeCondition());
-        ((AlternativeCondition) getCondition()).add(old);
-      }
-      ((AlternativeCondition) getCondition()).add(condition);
-    }
-  }
-
-  public void setCondition(StopCondition condition) {
-    this.condition = condition;
-    if (getGenerator() != null)
-      getGenerator().setStopCondition(getCondition());
-    if (this.machine != null)
-      getCondition().setMachine(getMachine());
-  }
-
-  public StopCondition getCondition() {
-    return this.condition;
-  }
+//  protected void addAlternativeCondition(int conditionType, String conditionValue) throws StopConditionException {
+//    StopCondition condition = null;
+//    condition = Util.getCondition(getMachine(), conditionType, conditionValue);
+//
+//    // If requirement stop condition, check if requirement exists in model
+//    if (condition instanceof ReachedRequirement) {
+//      Collection<String> reqs = ((ReachedRequirement) condition).getRequirements();
+//      for (Iterator<String> iterator = reqs.iterator(); iterator.hasNext();) {
+//        String req = iterator.next();
+//        if (getMachine().getAllRequirements().containsKey(req) == false) {
+//          throw new StopConditionException("Requirement: '" + req + "' do not exist in the model");
+//        }
+//      }
+//    }
+//
+//    if (getGenerator().getStopCondition() == null) {
+//      getGenerator().setStopCondition(new AlternativeCondition());
+//      ((AlternativeCondition) getGenerator().getStopCondition()).add(condition);
+//    } else {
+//      if (!(getGenerator().getStopCondition() instanceof AlternativeCondition)) {
+//        StopCondition old = getGenerator().getStopCondition();
+//        getGenerator().setStopCondition(new AlternativeCondition());
+//        ((AlternativeCondition) getGenerator().getStopCondition()).add(old);
+//      }
+//      ((AlternativeCondition) getGenerator().getStopCondition()).add(condition);
+//    }
+//  }
 
   public FiniteStateMachine getMachine() {
     if (this.machine == null) {
@@ -258,8 +245,6 @@ public class ModelBasedTesting {
     this.machine = machine;
     if (this.modelHandler != null)
       getMachine().setModel(getGraph());
-    if (getCondition() != null)
-      getCondition().setMachine(machine);
     if (getGenerator() != null)
       getGenerator().setMachine(machine);
   }
@@ -395,15 +380,13 @@ public class ModelBasedTesting {
       getGenerator().setMachine(getMachine());
     if (this.template != null && this.generator instanceof CodeGenerator)
       ((CodeGenerator) generator).setTemplate(this.template);
-    if (getCondition() != null)
-      getGenerator().setStopCondition(getCondition());
   }
 
   public void setGenerator(int generatorType) throws GeneratorException {
     setGenerator(Util.getGenerator(generatorType));
   }
 
-  private PathGenerator getGenerator() {
+  public PathGenerator getGenerator() {
     return this.generator;
   }
 

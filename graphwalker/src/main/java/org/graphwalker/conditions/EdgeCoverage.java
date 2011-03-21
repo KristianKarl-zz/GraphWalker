@@ -23,11 +23,14 @@
 
 package org.graphwalker.conditions;
 
+import org.apache.log4j.Logger;
+import org.graphwalker.Util;
 import org.graphwalker.exceptions.StopConditionException;
 
 public class EdgeCoverage extends StopCondition {
 
 	private double limit;
+  static Logger logger = Util.setupLogger(EdgeCoverage.class);
 
 	public EdgeCoverage() throws StopConditionException {
 		this(1);
@@ -42,6 +45,7 @@ public class EdgeCoverage extends StopCondition {
 	public boolean isFulfilled() {
 		double edges = machine.getAllEdges().size();
 		double covered = machine.getNumOfCoveredEdges();
+    logger.debug("Edges/covered (limit): " + edges + "/" + covered + " (" + limit + ")");
 		return (covered / edges) >= limit;
 	}
 

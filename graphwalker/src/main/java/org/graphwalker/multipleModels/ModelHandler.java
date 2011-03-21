@@ -21,14 +21,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.graphwalker;
+package org.graphwalker.multipleModels;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
 
 import org.apache.log4j.Logger;
+import org.graphwalker.Keywords;
+import org.graphwalker.ModelBasedTesting;
+import org.graphwalker.Util;
 import org.graphwalker.conditions.NeverCondition;
+import org.graphwalker.generators.RandomPathGenerator;
 import org.graphwalker.graph.Graph;
 
 /**
@@ -74,9 +78,9 @@ public class ModelHandler {
     private Object modelAPI;
     private boolean executionRestarted = false;
 
-    public ModelRunnable(String name, ModelBasedTesting mbt, Object modelAPI) {
+    public ModelRunnable(String name, ModelAPI modelAPI) {
       this.name = name;
-      this.mbt = mbt;
+      this.mbt = modelAPI.getMbt();
       this.modelAPI = modelAPI;
     }
 
@@ -127,13 +131,13 @@ public class ModelHandler {
    * @param object
    *          The model's java class implementing the API for the model.
    */
-  public synchronized void add(String name, ModelBasedTesting mbt, Object object) {
+  public synchronized void add(String name, ModelAPI modelAPI) {
     if (hasModel(name)) {
       throw new IllegalArgumentException("The model name " + name + " has already been used.");
     }
-    logger.debug("Adding the model: " + Integer.toHexString(System.identityHashCode(mbt)) + ", " + mbt.getGraph());
-    mbt.setMultiModelHandler(this);
-    models.add(new ModelRunnable(name, mbt, object));
+    logger.debug("Adding the model: " + Integer.toHexString(System.identityHashCode(modelAPI.getMbt())) + ", " + modelAPI.getMbt().getGraph());
+    modelAPI.getMbt().setMultiModelHandler(this);
+    models.add(new ModelRunnable(name, modelAPI));
   }
 
   /**
@@ -271,7 +275,7 @@ public class ModelHandler {
         } else if (!model.getMbt().hasNextStep()) {
           logger.debug("  Restarting model: " + model.getMbt().getGraph());
           model.setExecutionRestarted(true);
-          model.getMbt().setCondition(new NeverCondition());
+          model.getMbt().setGenerator(new RandomPathGenerator(new NeverCondition()));
           array.add(model);
         } else if (model.isExecutionRestarted()) {
           logger.debug("  Adding recently restarted model: " + model.getMbt().getGraph());
@@ -331,7 +335,7 @@ public class ModelHandler {
     while (itr.hasNext()) {
       ModelRunnable model = itr.next();
       logger.debug("Examining model: " + model.getMbt().getGraph());
-      if (model.getMbt().getCondition() instanceof NeverCondition) {
+      if (model.getMbt().getGenerator().getStopCondition() instanceof NeverCondition) {
         logger.debug("  Model: " + model.getName() + ", has a NeverCondition, thus by definition finished.");
         continue;
       } else if (model.getMbt().hasNextStep() == false) {

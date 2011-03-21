@@ -30,6 +30,7 @@ import java.util.TreeSet;
 import java.util.Vector;
 
 import org.graphwalker.Keywords;
+import org.graphwalker.conditions.StopCondition;
 import org.graphwalker.graph.AbstractElement;
 import org.graphwalker.graph.Edge;
 
@@ -37,7 +38,15 @@ public class ListGenerator extends PathGenerator {
 
 	private Stack<String[]> list = null;
 
-	public boolean hasNext() {
+	public ListGenerator(StopCondition stopCondition) {
+    super(stopCondition);
+  }
+
+  public ListGenerator() {
+    super();
+  }
+
+  public boolean hasNext() {
 		if (list == null)
 			generateList();
 		return !list.isEmpty();

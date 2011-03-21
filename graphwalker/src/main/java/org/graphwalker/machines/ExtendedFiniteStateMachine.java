@@ -199,6 +199,7 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 	 *           is thrown if the data is not found in the data space
 	 */
 	public String execAction(String action) throws InvalidDataException {
+	  logger.debug("Will try to execute: " + action);
 		Object res = null;
 		if (jsEngine != null) {
 			try {

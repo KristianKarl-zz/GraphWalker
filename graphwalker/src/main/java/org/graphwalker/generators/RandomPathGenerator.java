@@ -28,6 +28,7 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.graphwalker.Util;
+import org.graphwalker.conditions.StopCondition;
 import org.graphwalker.exceptions.FoundNoEdgeException;
 import org.graphwalker.graph.Edge;
 
@@ -37,7 +38,15 @@ public class RandomPathGenerator extends PathGenerator {
 
 	private Random random = new Random();
 
-	public String[] getNext() throws InterruptedException {
+	public RandomPathGenerator(StopCondition stopCondition) {
+    super(stopCondition);
+  }
+
+  public RandomPathGenerator() {
+    super();
+  }
+
+  public String[] getNext() throws InterruptedException {
 		Set<Edge> availableEdges;
 		try {
 			availableEdges = getMachine().getCurrentOutEdges();

@@ -210,8 +210,7 @@ public class ModelBasedTestingTest extends TestCase {
 		mbt.readGraph("graphml/ModelBasedTestingTest.testNewState.graphml");
 		mbt.enableExtended(false);
 		mbt.setWeighted(false);
-		NonOptimizedShortestPath generator = new NonOptimizedShortestPath();
-		generator.setStopCondition(Util.getCondition(mbt.getMachine(), Keywords.CONDITION_EDGE_COVERAGE, "100"));
+		NonOptimizedShortestPath generator = new NonOptimizedShortestPath(Util.getCondition(mbt.getMachine(), Keywords.CONDITION_EDGE_COVERAGE, "100"));
 		mbt.setGenerator(generator);
 
 		String[] pair = mbt.getNextStep();

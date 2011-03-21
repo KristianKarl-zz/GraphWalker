@@ -36,7 +36,11 @@ public abstract class PathGenerator {
 
 	public abstract String[] getNext() throws InterruptedException;
 
-	public boolean hasNext() {
+	public PathGenerator(StopCondition stopCondition) {
+    this.stopCondition = stopCondition;
+  }
+
+  public boolean hasNext() {
 		return !stopCondition.isFulfilled();
 	}
 
