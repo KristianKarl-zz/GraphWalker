@@ -46,23 +46,26 @@ public class ListGenerator extends PathGenerator {
     super();
   }
 
+  @Override
   public boolean hasNext() {
 		if (list == null)
 			generateList();
 		return !list.isEmpty();
 	}
 
-	public String[] getNext() {
+	@Override
+  public String[] getNext() {
 		if (list == null)
 			generateList();
-		return (String[]) list.pop();
+		return list.pop();
 	}
 
 	private void generateList() {
 		list = new Stack<String[]>();
 		TreeSet<String[]> tempList = new TreeSet<String[]>(new Comparator<String[]>() {
-			public int compare(String[] arg0, String[] arg1) {
-				return ((String[]) arg1)[0].compareTo(((String[]) arg0)[0]);
+			@Override
+      public int compare(String[] arg0, String[] arg1) {
+				return (arg1)[0].compareTo((arg0)[0]);
 			}
 		});
 
@@ -73,14 +76,15 @@ public class ListGenerator extends PathGenerator {
 		for (Iterator<AbstractElement> i = abstractElements.iterator(); i.hasNext();) {
 			AbstractElement ae = i.next();
 			if (!ae.getLabelKey().equalsIgnoreCase(Keywords.START_NODE)) {
-				String[] value = { (String) ae.getLabelKey(), (ae instanceof Edge ? "Edge" : "Vertex") };
+				String[] value = { ae.getLabelKey(), (ae instanceof Edge ? "Edge" : "Vertex") };
 				tempList.add(value);
 			}
 		}
 		list.addAll(tempList);
 	}
 
-	public String toString() {
+	@Override
+  public String toString() {
 		return "LIST";
 	}
 }

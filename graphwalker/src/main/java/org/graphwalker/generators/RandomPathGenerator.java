@@ -46,6 +46,7 @@ public class RandomPathGenerator extends PathGenerator {
     super();
   }
 
+  @Override
   public String[] getNext() throws InterruptedException {
 		Set<Edge> availableEdges;
 		try {
@@ -98,7 +99,7 @@ public class RandomPathGenerator extends PathGenerator {
 			if (probabilities[i] == 0) {
 				probabilities[i] = rest;
 			}
-			logger.debug("The edge: '" + (String) ((Edge) edges[i]).getLabelKey() + "' is given the probability of " + probabilities[i] * 100
+			logger.debug("The edge: '" + ((Edge) edges[i]).getLabelKey() + "' is given the probability of " + probabilities[i] * 100
 			    + "%");
 
 			weight = weight + probabilities[i] * 100;
@@ -117,7 +118,8 @@ public class RandomPathGenerator extends PathGenerator {
 		return (Edge) availableEdges.toArray()[random.nextInt(availableEdges.size())];
 	}
 
-	public String toString() {
+	@Override
+  public String toString() {
 		return "RANDOM{" + super.toString() + "}";
 	}
 }

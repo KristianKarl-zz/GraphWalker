@@ -74,14 +74,14 @@ public class StatisticsManager {
 	public void addProgress(AbstractElement element) {
 		for (Enumeration<String> e = counters.keys(); e.hasMoreElements();) {
 			String key = e.nextElement();
-			Statistics stats = (Statistics) counters.get(key);
+			Statistics stats = counters.get(key);
 			stats.addProgress(element);
 		}
 		this.progress.getRootElement().addContent(getCurrentStatistic().detachRootElement());
 	}
 
 	private int[] getStatistic(String key) {
-		Statistics stats = (Statistics) counters.get(key);
+		Statistics stats = counters.get(key);
 		int[] retur = { stats.getCurrent(), stats.getMax() };
 		return retur;
 	}

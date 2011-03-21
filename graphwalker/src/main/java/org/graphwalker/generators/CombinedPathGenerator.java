@@ -50,13 +50,15 @@ public class CombinedPathGenerator extends PathGenerator {
 		generatorList.add(generator);
 	}
 
-	public void setMachine(FiniteStateMachine machine) {
+	@Override
+  public void setMachine(FiniteStateMachine machine) {
 		for (Iterator<PathGenerator> i = generatorList.iterator(); i.hasNext();) {
 			i.next().setMachine(machine);
 		}
 	}
 
-	public void setStopCondition(StopCondition stopCondition) {
+	@Override
+  public void setStopCondition(StopCondition stopCondition) {
 		for (Iterator<PathGenerator> i = generatorList.iterator(); i.hasNext();) {
 			i.next().setStopCondition(stopCondition);
 		}
@@ -75,7 +77,8 @@ public class CombinedPathGenerator extends PathGenerator {
 		currentGenerator++;
 	}
 
-	public boolean hasNext() {
+	@Override
+  public boolean hasNext() {
 		boolean nextIsAvailable = false;
 		while (hasPath() && !nextIsAvailable) {
 			nextIsAvailable = getActivePathGenerator().hasNext();
@@ -85,7 +88,8 @@ public class CombinedPathGenerator extends PathGenerator {
 		return nextIsAvailable;
 	}
 
-	public String[] getNext() throws InterruptedException {
+	@Override
+  public String[] getNext() throws InterruptedException {
 		String[] retur = { "", "" };
 
 		boolean nextIsAvailable = false;
@@ -99,7 +103,8 @@ public class CombinedPathGenerator extends PathGenerator {
 		return getActivePathGenerator().getNext();
 	}
 
-	public String toString() {
+	@Override
+  public String toString() {
 		String retur = "";
 		for (Iterator<PathGenerator> i = generatorList.iterator(); i.hasNext();) {
 			retur += i.next().toString() + "\n";

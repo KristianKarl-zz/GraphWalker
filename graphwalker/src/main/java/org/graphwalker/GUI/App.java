@@ -252,6 +252,7 @@ public class App extends JFrame implements ActionListener, MbtEvent {
     }
   }
 
+  @Override
   public void getNextEvent() {
     updateUI();
     getVv().stateChanged(changeEvent);
@@ -260,6 +261,7 @@ public class App extends JFrame implements ActionListener, MbtEvent {
     }
   }
 
+  @Override
   public void actionPerformed(ActionEvent e) {
     String cmd = e.getActionCommand();
     logger.debug("Got action: " + cmd);
@@ -1053,10 +1055,10 @@ public class App extends JFrame implements ActionListener, MbtEvent {
   public static void main(String args[]) {
 
     if (args != null && args.length == 1) {
-      xmlFile = new File((String) args[0]);
+      xmlFile = new File(args[0]);
     } else if (args != null && args.length == 2) {
-      graphmlFile = new File((String) args[0]);
-      logFile = new File((String) args[1]);
+      graphmlFile = new File(args[0]);
+      logFile = new File(args[1]);
     }
 
     getInstance();

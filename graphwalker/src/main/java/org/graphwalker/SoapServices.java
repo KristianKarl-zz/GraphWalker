@@ -113,7 +113,7 @@ public class SoapServices {
 				}
 			}
 
-			value = (String) stepPair.remove(0);
+			value = stepPair.remove(0);
 			value = value.replaceAll("/.*$", "");
 			String addInfo = "";
 

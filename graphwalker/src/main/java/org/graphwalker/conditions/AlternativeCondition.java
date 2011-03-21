@@ -32,7 +32,8 @@ public class AlternativeCondition extends StopCondition {
 
 	private Vector<StopCondition> conditions;
 
-	public boolean isFulfilled() {
+	@Override
+  public boolean isFulfilled() {
 		for (Iterator<StopCondition> i = conditions.iterator(); i.hasNext();) {
 			if (i.next().isFulfilled())
 				return true;
@@ -48,13 +49,15 @@ public class AlternativeCondition extends StopCondition {
 		this.conditions.add(conditon);
 	}
 
-	public void setMachine(FiniteStateMachine machine) {
+	@Override
+  public void setMachine(FiniteStateMachine machine) {
 		super.setMachine(machine);
 		for (Iterator<StopCondition> i = conditions.iterator(); i.hasNext();)
 			i.next().setMachine(machine);
 	}
 
-	public double getFulfilment() {
+	@Override
+  public double getFulfilment() {
 		double retur = 0;
 		for (Iterator<StopCondition> i = conditions.iterator(); i.hasNext();) {
 			double newFullfillment = i.next().getFulfilment();
@@ -64,7 +67,8 @@ public class AlternativeCondition extends StopCondition {
 		return retur;
 	}
 
-	public String toString() {
+	@Override
+  public String toString() {
 		String retur = "(";
 		for (Iterator<StopCondition> i = conditions.iterator(); i.hasNext();) {
 			retur += i.next().toString();

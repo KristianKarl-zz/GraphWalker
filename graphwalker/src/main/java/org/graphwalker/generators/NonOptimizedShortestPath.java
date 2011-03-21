@@ -48,6 +48,7 @@ public class NonOptimizedShortestPath extends RandomPathGenerator {
     super();
   }
 
+  @Override
   public String[] getNext() throws InterruptedException {
 		Util.AbortIf(!hasNext(), "Finished");
 
@@ -118,7 +119,8 @@ public class NonOptimizedShortestPath extends RandomPathGenerator {
 		dijkstraShortestPath = null;
 	}
 	
-	public String toString() {
+	@Override
+  public String toString() {
 		if (getStopCondition() == null) {
 			return "SHORTESTNONOPT";
 		} else {

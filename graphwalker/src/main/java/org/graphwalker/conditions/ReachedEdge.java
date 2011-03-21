@@ -36,11 +36,13 @@ public class ReachedEdge extends StopCondition {
 	private int maxDistance;
 	private String edgeName;
 
-	public boolean isFulfilled() {
+	@Override
+  public boolean isFulfilled() {
 		return getFulfilment() >= 0.99999;
 	}
 
-	public void setMachine(FiniteStateMachine machine) {
+	@Override
+  public void setMachine(FiniteStateMachine machine) {
 		super.setMachine(machine);
 		if (this.endEdge == null)
 			this.endEdge = machine.findEdge(edgeName);
@@ -55,12 +57,13 @@ public class ReachedEdge extends StopCondition {
 		this.edgeName = vertex[0];
 	}
 
-	public double getFulfilment() {
+	@Override
+  public double getFulfilment() {
 		int distance = this.maxDistance;
 		if (getMachine().getLastEdge() != null)
 			distance = proximity[allEdges.indexOf(getMachine().getLastEdge())];
 
-		return ((double) 1) - ((double) distance / (double) maxDistance);
+		return (1) - ((double) distance / (double) maxDistance);
 	}
 
 	private int max(int[] t) {
@@ -105,7 +108,8 @@ public class ReachedEdge extends StopCondition {
 		throw new RuntimeException("edge no longer in Graph!");
 	}
 
-	public String toString() {
+	@Override
+  public String toString() {
 		return "EDGE='" + endEdge + "'";
 	}
 }
