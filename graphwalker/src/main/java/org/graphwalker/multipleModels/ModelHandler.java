@@ -77,6 +77,7 @@ public class ModelHandler {
     private ModelBasedTesting mbt;
     private Object modelAPI;
     private boolean executionRestarted = false;
+    private boolean crashed = false;
 
     public ModelRunnable(String name, ModelAPI modelAPI) {
       this.name = name;
@@ -90,6 +91,7 @@ public class ModelHandler {
         logger.debug("Will start executing the model: " + this.mbt.getGraph());
         mbt.executePath(modelAPI);
       } catch (Exception e) {
+        crashed = true;
         Util.logStackTraceToError(e);
       }
     }
@@ -100,6 +102,10 @@ public class ModelHandler {
 
     public ModelBasedTesting getMbt() {
       return mbt;
+    }
+
+    public boolean isCrashed() {
+      return crashed;
     }
 
     public boolean isExecutionRestarted() {
@@ -259,6 +265,8 @@ public class ModelHandler {
       ModelRunnable model = itr.next();
       logger.debug("Examining model: " + model.getName());
       logger.debug("  Current vertex of graph: " + model.getMbt().getCurrentVertex());
+      
+      check4Crash(model);
 
       if (model.getMbt().getGraph().getLabelKey().equals(currentVertex)
           || model.getMbt().getCurrentVertex().getLabelKey().equals(currentVertex)) {
@@ -311,6 +319,7 @@ public class ModelHandler {
     Iterator<ModelRunnable> itr = models.iterator();
     while (itr.hasNext()) {
       ModelRunnable model = itr.next();
+      check4Crash(model);
       if (model.getName().equals(name)) {
         return model;
       }
@@ -328,6 +337,7 @@ public class ModelHandler {
     Iterator<ModelRunnable> itr = models.iterator();
     while (itr.hasNext()) {
       ModelRunnable model = itr.next();
+      check4Crash(model);
       if (model.getMbt().isRunning()) {
         return true;
       }
@@ -349,6 +359,7 @@ public class ModelHandler {
     while (itr.hasNext()) {
       ModelRunnable model = itr.next();
       logger.debug("Examining model: " + model.getMbt().getGraph());
+      check4Crash(model);
       if (model.getMbt().getGenerator().getStopCondition() instanceof NeverCondition) {
         logger.debug("  Model: " + model.getName() + ", has a NeverCondition, thus by definition finished.");
         continue;
@@ -375,12 +386,20 @@ public class ModelHandler {
   private boolean hasModel(String name) {
     Iterator<ModelRunnable> itr = models.iterator();
     while (itr.hasNext()) {
-      ModelRunnable task = itr.next();
-      if (task.getName().equals(name)) {
+      ModelRunnable model = itr.next();
+      check4Crash(model);
+      if (model.getName().equals(name)) {
         return true;
       }
     }
     return false;
+  }
+
+  private void check4Crash(ModelRunnable model) {
+    if ( model.isCrashed() ) {
+      logger.error("Model has crashed: " + model.getName());
+      throw new RuntimeException("Model has crashed");
+    }
   }
 
   /**
