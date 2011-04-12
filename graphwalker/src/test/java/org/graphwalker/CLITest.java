@@ -359,14 +359,25 @@ public class CLITest extends TestCase {
 	}
 
 	/**
-	 * Check for reserved keywords Test command: java -jar mbt.jar methods -f
-	 * xml/test24
+	 * Check for reserved keywords Test command: java -jar mbt.jar xml -f
+	 * xml/reqtags/mbt_init6.xml
 	 */
 	public void testXmlSetup() {
 		String args[] = { "xml", "-f", "xml/reqtags/mbt_init6.xml" };
 		runCommand(args);
 		assertTrue("No error messages should occur: " + errMsg, errMsg.isEmpty());
 		assertEquals(6, getNumMatches(Pattern.compile("req[ \\d]+").matcher(outMsg)));
+	}
+
+	/**
+	 * Check that xml with java executor.  Test command: java -jar mbt.jar xml -f
+	 * xml/reqtags/mbt_init5.xml
+	 */
+	public void testXmlSetupWithJavaExecutor() {
+		String args[] = { "xml", "-f", "xml/reqtags/mbt_init5.xml" };
+		runCommand(args);		
+		assertTrue("No error messages should occur: " + errMsg, errMsg.isEmpty());
+		assertEquals(outMsg, 6, getNumMatches(Pattern.compile("(Vertex:|Edge:)").matcher(outMsg)));
 	}
 
 	/**
