@@ -9,11 +9,12 @@ import org.graphwalker.generators.PathGenerator;
 public class ModelAPI {
   private ModelBasedTesting mbt = null;
 
-  public ModelAPI(String model, boolean efsm, PathGenerator generator) {
+  public ModelAPI(String model, boolean efsm, PathGenerator generator, boolean weight) {
     mbt = new ModelBasedTesting();
     mbt.readGraph(model);
     mbt.enableExtended(efsm);
     mbt.setGenerator(generator);
+    mbt.setWeighted(weight);
   }
 
   public void setMbt(ModelBasedTesting mbt) {

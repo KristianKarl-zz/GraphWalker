@@ -27,23 +27,23 @@ public class ModelHandlerTest {
   @Test
   public void addModels() throws Exception {
     ModelHandler modelhandler = new ModelHandler();
-    modelhandler.add("A", new ModelAPI("graphml/multiple/switch/A.graphml", true, new RandomPathGenerator(new NeverCondition())));
+    modelhandler.add("A", new ModelAPI("graphml/multiple/switch/A.graphml", true, new RandomPathGenerator(new NeverCondition()), false));
     assertTrue(modelhandler.getModels().size() == 1);
-    modelhandler.add("B", new ModelAPI("graphml/multiple/switch/B.graphml", true, new RandomPathGenerator(new NeverCondition())));
+    modelhandler.add("B", new ModelAPI("graphml/multiple/switch/B.graphml", true, new RandomPathGenerator(new NeverCondition()), false));
     assertTrue(modelhandler.getModels().size() == 2);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void addDuplicateNameModels() throws Exception {
     ModelHandler modelhandler = new ModelHandler();
-    modelhandler.add("A", new ModelAPI("graphml/multiple/switch/A.graphml", true, new RandomPathGenerator(new NeverCondition())));
-    modelhandler.add("A", new ModelAPI("graphml/multiple/switch/B.graphml", true, new RandomPathGenerator(new NeverCondition())));
+    modelhandler.add("A", new ModelAPI("graphml/multiple/switch/A.graphml", true, new RandomPathGenerator(new NeverCondition()), false));
+    modelhandler.add("A", new ModelAPI("graphml/multiple/switch/B.graphml", true, new RandomPathGenerator(new NeverCondition()), false));
   }
 
   @Test
   public void removeModel() throws Exception {
     ModelHandler modelhandler = new ModelHandler();
-    modelhandler.add("A", new ModelAPI("graphml/multiple/switch/A.graphml", true, new RandomPathGenerator(new NeverCondition())));
+    modelhandler.add("A", new ModelAPI("graphml/multiple/switch/A.graphml", true, new RandomPathGenerator(new NeverCondition()), false));
     modelhandler.remove(0);
     assertTrue(modelhandler.getModels().isEmpty());
   }
@@ -51,7 +51,7 @@ public class ModelHandlerTest {
   @Test(expected = IllegalArgumentException.class)
   public void executeIncorrectName() throws Exception {
     ModelHandler modelhandler = new ModelHandler();
-    modelhandler.add("A", new ModelAPI("graphml/multiple/switch/A.graphml", true, new RandomPathGenerator(new NeverCondition())));
+    modelhandler.add("A", new ModelAPI("graphml/multiple/switch/A.graphml", true, new RandomPathGenerator(new NeverCondition()), false));
     modelhandler.execute("a");
   }
 
