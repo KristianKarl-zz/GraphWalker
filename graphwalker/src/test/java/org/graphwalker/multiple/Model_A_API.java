@@ -11,7 +11,7 @@ import org.graphwalker.multipleModels.ModelAPI;
 public class Model_A_API extends ModelAPI{
 
   public Model_A_API(String model, boolean efsm, PathGenerator generator) {
-    super(model, efsm, generator);
+    super(model, efsm, generator, false);
   }
 
   public void e_ExitClient() {

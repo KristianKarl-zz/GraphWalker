@@ -219,7 +219,7 @@ public class ModelHandler {
       int selectModel = random.nextInt(pausedAndNotStartedModels.size());
       model = pausedAndNotStartedModels.get(selectModel);
       logger.debug("Number of models to select from: " + pausedAndNotStartedModels.size());
-      logger.debug("Selecting model(" + selectModel + ") " + model.getMbt().getGraph());
+      logger.debug("Selecting model(" + selectModel + ") " + model.getName());
       if (model.getMbt().isSuspended()) {
         model.getMbt().resume();
       } else {
@@ -283,7 +283,6 @@ public class ModelHandler {
               model.setExecutionRestarted(true);
               model.getMbt().setGenerator(new RandomPathGenerator(new NeverCondition()));
               model.getMbt().setCurrentVertex(Keywords.START_NODE);
-              array.add(model);
             } else {
               logger.debug("  Model has not reached it's stop condition, so restarting model and resetting current vertex to Start: "
                       + model.getName());
