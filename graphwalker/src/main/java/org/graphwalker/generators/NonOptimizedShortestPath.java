@@ -36,6 +36,8 @@ import org.graphwalker.graph.Vertex;
 import edu.uci.ics.jung.algorithms.shortestpath.DijkstraShortestPath;
 
 public class NonOptimizedShortestPath extends RandomPathGenerator {
+  
+  private boolean toggleAllOrUnvisited = true; 
 
   public NonOptimizedShortestPath(StopCondition stopCondition) {
     super(stopCondition);
@@ -78,7 +80,14 @@ public class NonOptimizedShortestPath extends RandomPathGenerator {
 			if (unvisitedEdges.size() == 0) {
 				return false;
 			} else {
-				Object[] shuffledList = Util.shuffle(unvisitedEdges.toArray());
+				Object[] shuffledList = null;
+				if ( toggleAllOrUnvisited ) {
+				  shuffledList = Util.shuffle(unvisitedEdges.toArray());				  
+				} else {
+          shuffledList = Util.shuffle( getMachine().getAllEdgesExceptStartEdge().toArray());          
+				}
+				toggleAllOrUnvisited = !toggleAllOrUnvisited;
+			
 				e = (Edge) shuffledList[0];
 			}
 
@@ -95,9 +104,11 @@ public class NonOptimizedShortestPath extends RandomPathGenerator {
 			// an edge there (self-loop). So we have to check for that.
 			if (dijkstraShortestPath.size() == 0) {
 				if (getMachine().getCurrentVertex().getIndexKey() != getMachine().getModel().getSource(e).getIndexKey()) {
-					String msg = "There is no way to reach: " + e + ", from: " + getMachine().getCurrentVertex();
-					logger.error(msg);
-					throw new RuntimeException(msg);
+				  if ( !toggleAllOrUnvisited ) { 
+  					String msg = "There is no way to reach: " + e + ", from: " + getMachine().getCurrentVertex();
+  					logger.error(msg);
+  					throw new RuntimeException(msg);
+				  }
 				}
 			}
 

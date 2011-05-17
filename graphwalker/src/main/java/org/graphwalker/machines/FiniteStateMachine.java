@@ -124,9 +124,18 @@ public class FiniteStateMachine {
 		setVertex(Keywords.START_NODE);
 	}
 
-	public Vertex getCurrentVertex() {
-		return currentVertex;
-	}
+  public Vertex getCurrentVertex() {
+    return currentVertex;
+  }
+
+  public Vertex getStartVertex() {
+    for (Vertex vertex : model.getVertices()) {
+      if ( vertex.getLabelKey().equals(Keywords.START_NODE) ) {
+        return vertex;
+      }
+    }
+    return null;
+  }
 
 	public String getLastEdgeName() {
 		return lastEdge.getLabelKey();
@@ -140,9 +149,16 @@ public class FiniteStateMachine {
 		return model.getVertices();
 	}
 
-	public Collection<Edge> getAllEdges() {
-		return model.getEdges();
-	}
+  public Collection<Edge> getAllEdges() {
+    return model.getEdges();
+  }
+
+  public Collection<Edge> getAllEdgesExceptStartEdge() {
+     Vector<Edge> list = new Vector<Edge>(model.getEdges());
+     Edge e = (Edge) model.getOutEdges(getStartVertex()).toArray()[0];
+     list.remove(e);
+     return list;
+  }
 
 	public Set<Edge> getCurrentOutEdges() throws FoundNoEdgeException {
 		Set<Edge> retur = new HashSet<Edge>(model.getOutEdges(currentVertex));
