@@ -1,6 +1,5 @@
 package org.graphwalker.multiple;
 
-import org.graphwalker.conditions.StopCondition;
 import org.graphwalker.generators.PathGenerator;
 import org.graphwalker.multipleModels.ModelAPI;
 

@@ -49,6 +49,7 @@ import junit.framework.TestCase;
  */
 public class ModelBasedTestingTest extends TestCase {
 
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		ModelBasedTesting.getInstance().reset();
@@ -56,6 +57,7 @@ public class ModelBasedTestingTest extends TestCase {
 
 	private InputStream redirectIn() {
 		return new InputStream() {
+			@Override
 			public int read() throws IOException {
 				try {
 					Thread.sleep(100);

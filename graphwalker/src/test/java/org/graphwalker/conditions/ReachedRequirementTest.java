@@ -42,6 +42,7 @@ public class ReachedRequirementTest extends TestCase {
 	Edge e0;
 	Edge e1;
 
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		ModelBasedTesting.getInstance().reset();
@@ -61,6 +62,7 @@ public class ReachedRequirementTest extends TestCase {
 		e1.setReqTagKey("R4");
 	}
 
+	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
 		graph = null;
@@ -79,11 +81,11 @@ public class ReachedRequirementTest extends TestCase {
     mbt.setGenerator(new RandomPathGenerator(new ReachedRequirement("R4")));
 		assertTrue(mbt.hasNextStep());
 
-		assertEquals((double) 0, mbt.getGenerator().getStopCondition().getFulfilment(), 0.01);
+		assertEquals(0, mbt.getGenerator().getStopCondition().getFulfilment(), 0.01);
 		mbt.getNextStep();
-		assertEquals((double) 0, mbt.getGenerator().getStopCondition().getFulfilment(), 0.01);
+		assertEquals(0, mbt.getGenerator().getStopCondition().getFulfilment(), 0.01);
 		mbt.getNextStep();
-		assertEquals((double) 1, mbt.getGenerator().getStopCondition().getFulfilment(), 0.01);
+		assertEquals(1, mbt.getGenerator().getStopCondition().getFulfilment(), 0.01);
 	}
 
 	public void testIsFulfilled() throws GeneratorException, InterruptedException {

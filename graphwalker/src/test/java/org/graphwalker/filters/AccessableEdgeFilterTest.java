@@ -39,6 +39,7 @@ public class AccessableEdgeFilterTest extends TestCase {
 	private Edge e;
 	private Interpreter dataStore;
 
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		dataStore = new Interpreter();

@@ -80,4 +80,16 @@ public class Graph extends SparseMultigraph<Vertex, Edge> {
 		}
 		return null;
 	}
+	
+	 public Edge findEdge(String edgeName) {
+	    logger.debug("Looking for edge: " + edgeName + ", in model: " + this.toString() );
+	    for (Edge edge : getEdges()) {
+	      logger.debug("  " + edge.getLabelKey() );
+	      if ((edge.getLabelKey()).equals(edgeName)) {
+	        logger.debug("    Found it: " + edge );
+	        return edge;
+	      }
+	    }
+	    return null;
+	  }
 }

@@ -43,6 +43,7 @@ public class TimeDurationTest extends TestCase {
 	Edge e0;
 	Edge e1;
 
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		graph = new Graph();
@@ -55,6 +56,7 @@ public class TimeDurationTest extends TestCase {
 		e1 = Util.addEdgeToGraph(graph, v1, v2, "E1", null, null, null);
 	}
 
+	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
 		graph = null;
@@ -69,7 +71,7 @@ public class TimeDurationTest extends TestCase {
 
 	public void testFulfillment() throws InterruptedException, GeneratorException {
 		ModelBasedTesting mbt = ModelBasedTesting.getInstance();
-		double startTime = (double) System.currentTimeMillis();
+		double startTime = System.currentTimeMillis();
 		mbt.setGraph(graph);
 		mbt.setGenerator(Keywords.GENERATOR_RANDOM);
     mbt.setGenerator(new RandomPathGenerator(new TimeDuration(1)));
@@ -88,7 +90,7 @@ public class TimeDurationTest extends TestCase {
 
 	public void testIsFulfilled() throws InterruptedException, GeneratorException {
 		ModelBasedTesting mbt = ModelBasedTesting.getInstance();
-		double startTime = (double) System.currentTimeMillis();
+		double startTime = System.currentTimeMillis();
 		mbt.setGraph(graph);
     mbt.setGenerator(new RandomPathGenerator(new TimeDuration(1)));
 		assertTrue(mbt.hasNextStep());

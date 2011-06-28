@@ -46,6 +46,7 @@ public class A_StarPathGeneratorEFSMBeanShellTest extends TestCase {
 	Edge e2;
 	Edge e3;
 
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		graph = new Graph();
@@ -60,6 +61,7 @@ public class A_StarPathGeneratorEFSMBeanShellTest extends TestCase {
 		e3 = Util.addEdgeToGraph(graph, v2, v1, "E3", null, "y.size()<3", "y.add(x)");
 	}
 
+	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
 		graph = null;

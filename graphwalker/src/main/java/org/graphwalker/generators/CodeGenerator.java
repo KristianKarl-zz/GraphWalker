@@ -77,7 +77,7 @@ public class CodeGenerator extends ListGenerator {
 		retur[0] = (first && template[0].length() > 0 ? template[0] + "\n" : "")
 		    + // HEADER
 		    template[1] // BODY
-		        .replaceAll("\\{LABEL\\}", retur[0]).replaceAll("\\{EDGE_VERTEX\\}", retur[1])
+		        .replaceAll("\\{LABEL\\}", retur[0]).replaceAll("\\{EDGE_VERTEX\\}", retur[1]).replaceAll("\\{DESCRIPTION\\}", retur[2].replaceAll("\n", "\n   * "))
 		    + (!hasNext() && template[2].length() > 0 ? "\n" + template[2] : ""); // FOOTER
 		retur[1] = "";
 		first = false;

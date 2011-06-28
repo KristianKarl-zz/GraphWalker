@@ -43,6 +43,7 @@ public class RequirementCoverageTest extends TestCase {
 	Edge e0;
 	Edge e1;
 
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		ModelBasedTesting.getInstance().reset();
@@ -62,6 +63,7 @@ public class RequirementCoverageTest extends TestCase {
 		e1.setReqTagKey("R4");
 	}
 
+	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
 		graph = null;
