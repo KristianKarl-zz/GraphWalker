@@ -47,6 +47,7 @@ public class Issue_10 extends TestCase {
 	String errMsg;
 	static Logger logger = Util.setupLogger(CLITest.class);
 
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		ModelBasedTesting.getInstance().reset();
@@ -54,6 +55,7 @@ public class Issue_10 extends TestCase {
 
 	private OutputStream redirectOut() {
 		return new OutputStream() {
+			@Override
 			public void write(int b) throws IOException {
 				// Redirect to nothing, else we'll get an OutOfMemoryException
 				// stdOutput.append( Character.toString((char) b) );
@@ -63,6 +65,7 @@ public class Issue_10 extends TestCase {
 
 	private OutputStream redirectErr() {
 		return new OutputStream() {
+			@Override
 			public void write(int b) throws IOException {
 				errOutput.append(Character.toString((char) b));
 			}

@@ -76,7 +76,7 @@ public class ListGenerator extends PathGenerator {
 		for (Iterator<AbstractElement> i = abstractElements.iterator(); i.hasNext();) {
 			AbstractElement ae = i.next();
 			if (!ae.getLabelKey().equalsIgnoreCase(Keywords.START_NODE)) {
-				String[] value = { ae.getLabelKey(), (ae instanceof Edge ? "Edge" : "Vertex") };
+				String[] value = { ae.getLabelKey(), (ae instanceof Edge ? "Edge" : "Vertex"), ae.getDescriptionKey() };
 				tempList.add(value);
 			}
 		}

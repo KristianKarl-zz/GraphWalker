@@ -44,6 +44,7 @@ public class EdgeCoverageTest extends TestCase {
 	Edge e0;
 	Edge e1;
 
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		graph = new Graph();
@@ -56,6 +57,7 @@ public class EdgeCoverageTest extends TestCase {
 		e1 = Util.addEdgeToGraph(graph, v1, v2, "E1", null, null, null);
 	}
 
+	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
 		graph = null;

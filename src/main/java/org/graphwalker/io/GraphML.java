@@ -164,6 +164,8 @@ public class GraphML extends AbstractModelHandler {
 
 					// Used to remember which vertex to store the image location.
 					Vertex currentVertex = null;
+					
+					
 
 					Iterator<Object> iterNodeLabel = element.getDescendants(new org.jdom.filter.ElementFilter("NodeLabel"));
 					while (iterNodeLabel.hasNext()) {
@@ -177,6 +179,19 @@ public class GraphML extends AbstractModelHandler {
 							Vertex v = new Vertex();
 							graph.addVertex(v);
 							currentVertex = v;
+							
+							
+			        // Parse description
+							Iterator<Object> iter_data = element.getDescendants(new org.jdom.filter.ElementFilter("data"));
+		          while (iter_data.hasNext()) {
+		            Object o3 = iter_data.next();
+		            if (o instanceof org.jdom.Element) {
+		              org.jdom.Element data = (org.jdom.Element) o3;
+		              if (!data.getAttributeValue("key").equals("d5")) continue;
+		              v.setDesctiptionKey(data.getText());
+		              break;
+		            }
+		          }
 
 							v.setIdKey(element.getAttributeValue("id"));
 							v.setVisitedKey(new Integer(0));
@@ -310,6 +325,20 @@ public class GraphML extends AbstractModelHandler {
 					e.setIdKey(element.getAttributeValue("id"));
 					e.setFileKey(fileName);
 					e.setIndexKey(new Integer(getNewVertexAndEdgeIndex()));
+					
+					
+					// Parse description
+					Iterator<Object> iter_data = element.getDescendants(new org.jdom.filter.ElementFilter("data"));
+          while (iter_data.hasNext()) {
+            Object o3 = iter_data.next();
+            if (o instanceof org.jdom.Element) {
+              org.jdom.Element data = (org.jdom.Element) o3;
+              if (!data.getAttributeValue("key").equals("d9")) continue;
+              e.setDesctiptionKey(data.getText());
+              break;
+            }
+          }
+					
 					if (!graph.addEdge(e, source, dest)) {
 						String msg = "Failed adding edge: " + e + ", to graph: " + graph;
 						logger.error(msg);

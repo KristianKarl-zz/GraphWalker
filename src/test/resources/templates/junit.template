@@ -6,6 +6,7 @@ public class MyMBTJUnitTestCase extends TestCase {
 
   /**
    * This method implements the {EDGE_VERTEX} '{LABEL}'
+   * {DESCRIPTION}
    */
   public void {LABEL}()
   {

@@ -37,11 +37,11 @@ public class AlternativeConditionTest extends TestCase {
 	public void testFulfillment() {
 		AlternativeCondition condition = new AlternativeCondition();
 		condition.add(new NeverCondition());
-		assertEquals((double) 0, condition.getFulfilment(), 0.01);
+		assertEquals(0, condition.getFulfilment(), 0.01);
 		condition.add(new NeverCondition());
-		assertEquals((double) 0, condition.getFulfilment(), 0.01);
+		assertEquals(0, condition.getFulfilment(), 0.01);
 		condition.add(new NeverCondition());
-		assertEquals((double) 0, condition.getFulfilment(), 0.01);
+		assertEquals(0, condition.getFulfilment(), 0.01);
 	}
 
 	public void testIsFulfilled() {

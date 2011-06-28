@@ -33,7 +33,8 @@ import junit.framework.TestCase;
 
 public class GraphMLTest extends TestCase {
 
-	protected void setUp() throws Exception {
+	@Override
+  protected void setUp() throws Exception {
 		super.setUp();
 		ModelBasedTesting.getInstance().reset();
 	}
@@ -340,19 +341,44 @@ public class GraphMLTest extends TestCase {
 		}
 	}
 
-	// Merging with subgraphs containing Stop vertices
-	public void testMergeSubGraphUsingStopVertices() {
-		try {
-			ModelBasedTesting mbt = ModelBasedTesting.getInstance();
-			mbt.readGraph("graphml/test23");
-			assertTrue(mbt.getGraph().getEdges().size() == 14);
-			assertTrue(mbt.getGraph().getVertices().size() == 9);
-			verifyIds(mbt.getGraph());
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-			fail(e.getMessage());
-		}
-	}
+  // Merging with subgraphs containing Stop vertices
+  public void testMergeSubGraphUsingStopVertices() {
+    try {
+      ModelBasedTesting mbt = ModelBasedTesting.getInstance();
+      mbt.readGraph("graphml/test23");
+      assertTrue(mbt.getGraph().getEdges().size() == 14);
+      assertTrue(mbt.getGraph().getVertices().size() == 9);
+      verifyIds(mbt.getGraph());
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
+      fail(e.getMessage());
+    }
+  }
+
+  // 
+  public void testGetDescriptionVertex() {
+    try {
+      ModelBasedTesting mbt = ModelBasedTesting.getInstance();
+      mbt.readGraph("graphml/modelWithDescr.graphml");
+      assertTrue(mbt.getGraph().findVertex("v_WithDescription").getDescriptionKey().equals("<ul>\nA very fine description in a vertex\n</ul>"));
+      assertTrue(mbt.getGraph().findVertex("v_WithNoDescription").getDescriptionKey().isEmpty());
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
+      fail(e.getMessage());
+    }
+  }
+  
+  public void testGetDescriptionEdge() {
+    try {
+      ModelBasedTesting mbt = ModelBasedTesting.getInstance();
+      mbt.readGraph("graphml/modelWithDescr.graphml");
+      assertTrue(mbt.getGraph().findEdge("e_WithDescription").getDescriptionKey().equals("<ul>\nA very fine description in a edge\n</ul>"));
+      assertTrue(mbt.getGraph().findEdge("e_WithNoDescription").getDescriptionKey().isEmpty());
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
+      fail(e.getMessage());
+    }
+  }
 
 	// Verify that all vertices and edges has indexes, and that no duplicates
 	// exists.
@@ -361,11 +387,11 @@ public class GraphMLTest extends TestCase {
 		for (int i = 0; i < vertices1.length; i++) {
 			Vertex v1 = (Vertex) vertices1[i];
 			int hits = 0;
-			Integer index1 = (Integer) v1.getIndexKey();
+			Integer index1 = v1.getIndexKey();
 			Object[] vertices2 = g.getVertices().toArray();
 			for (int j = 0; j < vertices1.length; j++) {
 				Vertex v2 = (Vertex) vertices2[j];
-				Integer index2 = (Integer) v2.getIndexKey();
+				Integer index2 = v2.getIndexKey();
 				if (index1.intValue() == index2.intValue()) {
 					hits++;
 				}
@@ -375,7 +401,7 @@ public class GraphMLTest extends TestCase {
 			Object[] edges = g.getEdges().toArray();
 			for (int j = 0; j < edges.length; j++) {
 				Edge e = (Edge) edges[j];
-				Integer index2 = (Integer) e.getIndexKey();
+				Integer index2 = e.getIndexKey();
 				if (index1.intValue() == index2.intValue()) {
 					hits++;
 				}
@@ -387,11 +413,11 @@ public class GraphMLTest extends TestCase {
 		for (int i = 0; i < edges1.length; i++) {
 			Edge e1 = (Edge) edges1[i];
 			int hits = 0;
-			Integer index1 = (Integer) e1.getIndexKey();
+			Integer index1 = e1.getIndexKey();
 			Object[] edges2 = g.getEdges().toArray();
 			for (int j = 0; j < edges2.length; j++) {
 				Edge e2 = (Edge) edges2[j];
-				Integer index2 = (Integer) e2.getIndexKey();
+				Integer index2 = e2.getIndexKey();
 				if (index1.intValue() == index2.intValue()) {
 					hits++;
 				}
@@ -401,7 +427,7 @@ public class GraphMLTest extends TestCase {
 			Object[] vertices2 = g.getVertices().toArray();
 			for (int j = 0; j < vertices1.length; j++) {
 				Vertex v2 = (Vertex) vertices2[j];
-				Integer index2 = (Integer) v2.getIndexKey();
+				Integer index2 = v2.getIndexKey();
 				if (index1.intValue() == index2.intValue()) {
 					hits++;
 				}

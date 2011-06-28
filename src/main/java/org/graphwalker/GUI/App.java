@@ -327,7 +327,7 @@ public class App extends JFrame implements ActionListener, MbtEvent {
     }
     statisticsTextArea.setText(mbt.getStatisticsString());
 
-    String str = (mbt.getMachine().getLastEdge() == null ? "" : "Edge: " + (String) mbt.getMachine().getLastEdge().getLabelKey())
+    String str = (mbt.getMachine().getLastEdge() == null ? "" : "Edge: " + mbt.getMachine().getLastEdge().getLabelKey())
         + (mbt.getMachine().getCurrentVertex() == null ? "" : "   Vertex: " + mbt.getMachine().getCurrentVertex().getLabelKey());
     getLatestVertexLabel().setText(str);
 
@@ -504,7 +504,8 @@ public class App extends JFrame implements ActionListener, MbtEvent {
   private class ExecuteMBT extends SwingWorker<Void, Void> {
     private Logger log = Util.setupLogger(ExecuteMBT.class);
 
-    protected Void doInBackground() {
+    @Override
+	protected Void doInBackground() {
       try {
         log.debug("GUI is starting to traverse the model");
         mbt.executePath();
@@ -519,7 +520,8 @@ public class App extends JFrame implements ActionListener, MbtEvent {
       return null;
     }
 
-    protected void done() {
+    @Override
+	protected void done() {
       super.done();
       log.debug("GUI is finished traversing the model");
       App.getInstance().stop();
@@ -668,7 +670,8 @@ public class App extends JFrame implements ActionListener, MbtEvent {
     this.graphLayout = graphLayout;
 
     Transformer<Vertex, Point2D> vertexLocation = new Transformer<Vertex, Point2D>() {
-      public Point2D transform(Vertex v) {
+      @Override
+	public Point2D transform(Vertex v) {
         return v.getLocation();
       }
     };
@@ -703,7 +706,8 @@ public class App extends JFrame implements ActionListener, MbtEvent {
   }
 
   public class MyEdgePaintFunction implements Transformer<Edge, Paint> {
-    public Paint transform(Edge e) {
+    @Override
+	public Paint transform(Edge e) {
       if (mbt.getMachine().getLastEdge() != null && mbt.getMachine().getLastEdge().equals(e))
         return Color.RED;
       else if (e.getVisitedKey() > 0)

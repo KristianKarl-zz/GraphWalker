@@ -38,6 +38,7 @@ public class RandomPathGeneratorTest extends TestCase {
 
 	private Logger logger = Util.setupLogger(RandomPathGeneratorTest.class);
 
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 	}

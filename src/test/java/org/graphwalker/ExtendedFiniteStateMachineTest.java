@@ -42,6 +42,7 @@ public class ExtendedFiniteStateMachineTest extends TestCase {
 	Edge e3;
 	Edge e4;
 
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		graph = new Graph();
