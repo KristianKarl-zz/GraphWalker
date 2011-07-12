@@ -25,16 +25,20 @@ public class MultipleModelsTest {
 	
 	@Test
 	public void testGetInstance() {
-		MultipleModels a = MultipleModels.getInstance();
+		MultipleModels a = MultipleModels.getInstance();		
 		MultipleModels b = MultipleModels.getInstance();
 
+    a.reset();
+    b.reset();
+		
 		assertNotNull(a);
 		assertSame(a, b);
 	}
 	
 	@Test
 	public void testGetUniqueName() {
-		MultipleModels mmInstance = MultipleModels.getInstance();
+    MultipleModels mmInstance = MultipleModels.getInstance();
+    mmInstance.reset();
 		
 		String name = "A";
 		mmInstance.getUniqueName("A");
@@ -44,7 +48,9 @@ public class MultipleModelsTest {
 	@Test
 	public void testNameFormat() {
 		MultipleModels mmInstance = MultipleModels.getInstance();
-		String desiredName = "My Model";
+    mmInstance.reset();
+
+    String desiredName = "My Model";
 		assertEquals("My Model", mmInstance.getUniqueName(desiredName));
 		assertEquals("My Model 1", mmInstance.getUniqueName(desiredName));
 	}
@@ -52,6 +58,7 @@ public class MultipleModelsTest {
 	@Test
 	public void testMaxNames() {
 		MultipleModels mmInstance = MultipleModels.getInstance();
+    mmInstance.reset();
 		
 		String name = "Max Name";
 		for (int i = 0; i < 1000; i++) {
@@ -62,6 +69,7 @@ public class MultipleModelsTest {
 	@Test(expected=IndexOutOfBoundsException.class)
 	public void testMaxNamesBounds() {
 		MultipleModels mmInstance = MultipleModels.getInstance();
+    mmInstance.reset();
 		
 		String name = "Bound Name";
 		for (int i = 0; i < 1001; i++) {
@@ -72,7 +80,9 @@ public class MultipleModelsTest {
 	@Test
 	public void testAddAndGetModel() throws StopConditionException, GeneratorException, IOException, JDOMException, InterruptedException {
 		MultipleModels mmInstance = MultipleModels.getInstance();
-		ModelBasedTesting model = Util.getNewMbtFromXml(Util.getFile("xml/multipleA.xml"));
+    mmInstance.reset();
+
+    ModelBasedTesting model = Util.getNewMbtFromXml(Util.getFile("xml/multipleA.xml"));
 		String modelName = mmInstance.getUniqueName("A");
 		
 		mmInstance.addModel(modelName, model);
@@ -82,7 +92,9 @@ public class MultipleModelsTest {
 	@Test(expected=IllegalArgumentException.class)
 	public void testAddSameModelAgain() throws StopConditionException, GeneratorException, IOException, JDOMException, InterruptedException {
 		MultipleModels mmInstance = MultipleModels.getInstance();
-		ModelBasedTesting model1 = Util.getNewMbtFromXml(Util.getFile("xml/multipleA.xml"));
+    mmInstance.reset();
+
+    ModelBasedTesting model1 = Util.getNewMbtFromXml(Util.getFile("xml/multipleA.xml"));
 		ModelBasedTesting model2 = Util.getNewMbtFromXml(Util.getFile("xml/multipleA.xml"));
 
 		String modelName = mmInstance.getUniqueName("A");
@@ -95,10 +107,10 @@ public class MultipleModelsTest {
 	@Test
 	public void testAddNonReservedName() throws StopConditionException, GeneratorException, IOException, JDOMException, InterruptedException {
 		MultipleModels mmInstance = MultipleModels.getInstance();
-		ModelBasedTesting model = Util.getNewMbtFromXml(Util.getFile("xml/multipleA.xml"));
+    mmInstance.reset();
 
+    ModelBasedTesting model = Util.getNewMbtFromXml(Util.getFile("xml/multipleA.xml"));
 		String modelName = "Non reserved";
-		
 		mmInstance.addModel(modelName, model);
 		assertTrue(!modelName.equals(mmInstance.getUniqueName(modelName)));
 	}
@@ -106,7 +118,9 @@ public class MultipleModelsTest {
 	@Test
 	public void testExecuteModel() throws StopConditionException, GeneratorException, IOException, JDOMException, InterruptedException {
 		MultipleModels mmInstance = MultipleModels.getInstance();
-		ModelBasedTesting model = Util.getNewMbtFromXml(Util.getFile("xml/multipleB.xml"));
+    mmInstance.reset();
+
+    ModelBasedTesting model = Util.getNewMbtFromXml(Util.getFile("xml/multipleB.xml"));
 		String modelName = mmInstance.getUniqueName("B");
 		
 		mmInstance.addModel(modelName, model);
@@ -123,7 +137,9 @@ public class MultipleModelsTest {
 	@Test(expected=IllegalStateException.class)
 	public void testExecuteModelTwice() throws StopConditionException, GeneratorException, IOException, JDOMException, InterruptedException {
 		MultipleModels mmInstance = MultipleModels.getInstance();
-		ModelBasedTesting model = Util.getNewMbtFromXml(Util.getFile("xml/multipleB.xml"));
+    mmInstance.reset();
+
+    ModelBasedTesting model = Util.getNewMbtFromXml(Util.getFile("xml/multipleB.xml"));
 		String modelName = mmInstance.getUniqueName("B");
 		
 		mmInstance.addModel(modelName, model);
@@ -134,15 +150,18 @@ public class MultipleModelsTest {
 	@Test(expected=IllegalArgumentException.class)
 	public void testExecuteNonAddedModel() {
 		MultipleModels mmInstance = MultipleModels.getInstance();
-		String modelName = mmInstance.getUniqueName("Non-existing");
-		
+    mmInstance.reset();
+    
+		String modelName = mmInstance.getUniqueName("Non-existing");		
 		mmInstance.executeModel(modelName, new ModelAPI(modelName));
 	}
 
 	@Test
 	public void testMultipleModels() throws StopConditionException, GeneratorException, IOException, JDOMException, InterruptedException {
 		MultipleModels mmInstance = MultipleModels.getInstance();
-		ModelBasedTesting model1 = Util.getNewMbtFromXml(Util.getFile("xml/multipleA.xml"));
+    mmInstance.reset();
+
+    ModelBasedTesting model1 = Util.getNewMbtFromXml(Util.getFile("xml/multipleA.xml"));
 		ModelBasedTesting model2 = Util.getNewMbtFromXml(Util.getFile("xml/multipleA.xml"));
 		String model1Name = mmInstance.getUniqueName("A");
 		String model2Name = mmInstance.getUniqueName("A");
@@ -157,7 +176,9 @@ public class MultipleModelsTest {
 	@Test
 	public void testSpawnMultipleModels() throws StopConditionException, GeneratorException, IOException, JDOMException, InterruptedException {
 		MultipleModels mmInstance = MultipleModels.getInstance();
-		ModelBasedTesting model  = Util.getNewMbtFromXml(Util.getFile("xml/multipleA.xml"));
+    mmInstance.reset();
+
+    ModelBasedTesting model  = Util.getNewMbtFromXml(Util.getFile("xml/multipleA.xml"));
 		String modelName = mmInstance.getUniqueName("A");
 		String spawnedModelName = mmInstance.getUniqueName("B");
 
@@ -171,7 +192,9 @@ public class MultipleModelsTest {
 	@Test
 	public void testPausedMultipleModels() throws StopConditionException, GeneratorException, IOException, JDOMException, InterruptedException, ExecutionException, TimeoutException {
 		MultipleModels mmInstance = MultipleModels.getInstance();
-		ModelBasedTesting model  = Util.getNewMbtFromXml(Util.getFile("xml/multipleA.xml"));
+    mmInstance.reset();
+
+    ModelBasedTesting model  = Util.getNewMbtFromXml(Util.getFile("xml/multipleA.xml"));
 		String modelName = mmInstance.getUniqueName("A");
 		String spawnedModelName = mmInstance.getUniqueName("B");
 
@@ -191,7 +214,9 @@ public class MultipleModelsTest {
 	@Test
 	public void testGetStatistics() throws StopConditionException, GeneratorException, IOException, JDOMException, InterruptedException {
 		MultipleModels mmInstance = MultipleModels.getInstance();
-		ModelBasedTesting model = Util.getNewMbtFromXml(Util.getFile("xml/multipleB.xml"));
+    mmInstance.reset();
+
+    ModelBasedTesting model = Util.getNewMbtFromXml(Util.getFile("xml/multipleB.xml"));
 		String modelName = mmInstance.getUniqueName("B");
 		
 		mmInstance.addModel(modelName, model);
@@ -206,7 +231,9 @@ public class MultipleModelsTest {
 	@Test
 	public void testGetStatisticsMultipleModels() throws StopConditionException, GeneratorException, IOException, JDOMException, InterruptedException {
 		MultipleModels mmInstance = MultipleModels.getInstance();
-		ModelBasedTesting model  = Util.getNewMbtFromXml(Util.getFile("xml/multipleA.xml"));
+    mmInstance.reset();
+
+    ModelBasedTesting model  = Util.getNewMbtFromXml(Util.getFile("xml/multipleA.xml"));
 		String modelName = mmInstance.getUniqueName("A");
 		String spawnedModelName = mmInstance.getUniqueName("B");
 
