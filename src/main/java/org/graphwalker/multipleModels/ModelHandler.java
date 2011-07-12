@@ -237,6 +237,7 @@ public class ModelHandler {
    */
   private void waitForModelToDoSomething(ModelRunnable model) throws InterruptedException {
     while (true) {
+      check4Crash(model);
       if (model.getMbt().isRunning()) {
         break;
       } else if (model.getMbt().isSuspended()) {
