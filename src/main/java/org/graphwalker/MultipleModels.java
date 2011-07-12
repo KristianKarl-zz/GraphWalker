@@ -48,6 +48,18 @@ public class MultipleModels {
 		}
 		return instance;
 	}
+
+	/**
+	 * Creating new lists for the models.
+	 * If an instance of this class is to be 're-used', it may need to clear
+	 * the lists calling this method.
+	 */
+	public void reset() {
+    models = new HashMap<String, ModelBasedTesting>();
+    executingModels = new HashMap<String, ModelBasedTesting>();
+    finishedModels = new HashMap<String, ModelBasedTesting>();
+    reservedNames = new LinkedHashSet<String>();    
+  }
 	
 	/**
 	 * Returns the ModelBasedTesting object for the submitted key.
