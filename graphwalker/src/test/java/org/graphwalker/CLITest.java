@@ -374,10 +374,10 @@ public class CLITest extends TestCase {
 	 * xml/reqtags/mbt_init5.xml
 	 */
 	public void testXmlSetupWithJavaExecutor() {
-		String args[] = { "xml", "-f", "xml/reqtags/mbt_init5.xml" };
+		String args[] = { "xml", "-f", "xml/javaExecutor.xml" };
 		runCommand(args);		
 		assertTrue("No error messages should occur: " + errMsg, errMsg.isEmpty());
-		assertEquals(outMsg, 6, getNumMatches(Pattern.compile("(Vertex:|Edge:)").matcher(outMsg)));
+		assertEquals(outMsg, 76, getNumMatches(Pattern.compile("(Vertex:|Edge:)").matcher(outMsg)));
 	}
 
 	/**
