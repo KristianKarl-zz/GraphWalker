@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE MBTINIT SYSTEM "http://mbt.tigris.org/mbt_setup.dtd" >
+<MBTINIT EXECUTOR="NONE" EXTENDED="false">
+  <MODEL PATH="graphml/org.graphwalker.EventDrivenModels.eventModel.a.graphml"/>
+  <GENERATOR TYPE="SHORTEST_NON_OPTIMIZED">
+    <CONDITION TYPE="EDGE_COVERAGE" VALUE="100"/>
+  </GENERATOR>
+</MBTINIT>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE MBTINIT SYSTEM "http://mbt.tigris.org/mbt_setup.dtd" >
+<MBTINIT EXTENDED="true" EXECUTOR="java:org.graphwalker.ExtendedMain">
+	<MODEL PATH="graphml/reqtags/ExtendedMain.graphml"/>
+    <GENERATOR TYPE="RANDOM">
+  		<CONDITION TYPE="VERTEX_COVERAGE" VALUE="40"/>
+  	</GENERATOR>
+</MBTINIT>

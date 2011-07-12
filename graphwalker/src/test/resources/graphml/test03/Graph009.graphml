@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created by yFiles 2.3.1 -->
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns/graphml"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns/graphml http://www.yworks.com/xml/schema/graphml/1.0/ygraphml.xsd" xmlns:y="http://www.yworks.com/xml/graphml">
+  <key id="d0" for="node" yfiles.type="nodegraphics"/>
+  <key id="d1" for="edge" yfiles.type="edgegraphics"/>
+  <graph id="G" edgedefault="directed">
+    <node id="n0">
+      <data key="d0" >
+        <y:ShapeNode >
+          <y:Geometry  x="513.6428571428571" y="0.0" width="42.0" height="30.0"/>
+          <y:Fill color="#00FF00"  transparent="false"/>
+          <y:BorderStyle type="line" width="1.0" color="#000000" />
+          <y:NodeLabel x="5.0" y="5.036865234375" width="32.0" height="19.92626953125" visible="true" alignment="center" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" modelName="internal" modelPosition="c" autoSizePolicy="content">Start</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n1">
+      <data key="d0" >
+        <y:ShapeNode >
+          <y:Geometry  x="473.1428571428571" y="50.0" width="82.0" height="30.0"/>
+          <y:Fill color="#FFCC00"  transparent="false"/>
+          <y:BorderStyle type="line" width="1.0" color="#000000" />
+          <y:NodeLabel x="5.0" y="5.036865234375" width="72.0" height="19.92626953125" visible="true" alignment="center" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" modelName="internal" modelPosition="c" autoSizePolicy="content">v_Graph009</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n2">
+      <data key="d0" >
+        <y:ShapeNode >
+          <y:Geometry  x="30.35714285714286" y="199.590576171875" width="112.0" height="30.0"/>
+          <y:Fill color="#FFCC00"  transparent="false"/>
+          <y:BorderStyle type="line" width="1.0" color="#000000" />
+          <y:NodeLabel x="5.0" y="5.036865234375" width="102.0" height="19.92626953125" visible="true" alignment="center" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" modelName="internal" modelPosition="c" autoSizePolicy="content">v_Node011</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n3">
+      <data key="d0" >
+        <y:ShapeNode >
+          <y:Geometry  x="343.01785714285717" y="199.590576171875" width="151.0" height="30.0"/>
+          <y:Fill color="#FFCC00"  transparent="false"/>
+          <y:BorderStyle type="line" width="1.0" color="#000000" />
+          <y:NodeLabel x="5.0" y="5.036865234375" width="141.0" height="19.92626953125" visible="true" alignment="center" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" modelName="internal" modelPosition="c" autoSizePolicy="content">v_Node006</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n4">
+      <data key="d0" >
+        <y:ShapeNode >
+          <y:Geometry  x="564.8571428571429" y="199.590576171875" width="108.0" height="30.0"/>
+          <y:Fill color="#FFCC00"  transparent="false"/>
+          <y:BorderStyle type="line" width="1.0" color="#000000" />
+          <y:NodeLabel x="5.0" y="-10.889404296875" width="98.0" height="51.77880859375" visible="true" alignment="center" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" modelName="internal" modelPosition="c" autoSizePolicy="content">v_Node053&#xA;BLOCKED&#xA;Felrapport  2020</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n5">
+      <data key="d0" >
+        <y:ShapeNode >
+          <y:Geometry  x="741.0714285714286" y="199.590576171875" width="108.0" height="30.0"/>
+          <y:Fill color="#FFCC00"  transparent="false"/>
+          <y:BorderStyle type="line" width="1.0" color="#000000" />
+          <y:NodeLabel x="5.0" y="-10.889404296875" width="98.0" height="51.77880859375" visible="true" alignment="center" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" modelName="internal" modelPosition="c" autoSizePolicy="content">v_Node013&#xA;BLOCKED&#xA;Felrapport  2020</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n6">
+      <data key="d0" >
+        <y:ShapeNode >
+          <y:Geometry  x="564.8571428571429" y="290.070556640625" width="108.0" height="30.0"/>
+          <y:Fill color="#FFCC00"  transparent="false"/>
+          <y:BorderStyle type="line" width="1.0" color="#000000" />
+          <y:NodeLabel x="5.0" y="-10.889404296875" width="98.0" height="51.77880859375" visible="true" alignment="center" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" modelName="internal" modelPosition="c" autoSizePolicy="content">v_Node012&#xA;BLOCKED&#xA;Felrapport  2020</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n7">
+      <data key="d0" >
+        <y:ShapeNode >
+          <y:Geometry  x="561.8571428571429" y="380.550537109375" width="114.0" height="30.0"/>
+          <y:Fill color="#FFCC00"  transparent="false"/>
+          <y:BorderStyle type="line" width="1.0" color="#000000" />
+          <y:NodeLabel x="5.0" y="-18.8525390625" width="104.0" height="67.705078125" visible="true" alignment="center" fontFamily="Dialog" fontSize="13" fontStyle="plain" textColor="#000000" modelName="internal" modelPosition="c" autoSizePolicy="content">v_Graph165&#xA;MERGE&#xA;BLOCKED&#xA;Felrapport 2020</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <edge id="e0" source="n0" target="n1">
+      <data key="d1" >
+        <y:PolyLineEdge >
+          <y:Path sx="0.0" sy="15.0" tx="20.5" ty="-15.0"/>
+          <y:LineStyle type="line" width="1.0" color="#000000" />
+          <y:Arrows source="none" target="standard"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e1" source="n1" target="n2">
+      <data key="d1" >
+        <y:PolyLineEdge >
+          <y:Path sx="-35.14285714285711" sy="15.0" tx="-28.0" ty="-15.0">
+            <y:Point x="479.0" y="95.0"/>
+            <y:Point x="0.0" y="95.0"/>
+            <y:Point x="0.0" y="173.701171875"/>
+            <y:Point x="58.35714285714286" y="173.701171875"/>
+          </y:Path>
+          <y:LineStyle type="line" width="1.0" color="#000000" />
+          <y:Arrows source="none" target="standard"/>
+          <y:EdgeLabel x="-574.0" y="59.99999999999994" width="190.0" height="18.701171875" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_Edge062</y:EdgeLabel>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e2" source="n2" target="n1">
+      <data key="d1" >
+        <y:PolyLineEdge >
+          <y:Path sx="28.0" sy="-15.0" tx="-23.428571428571445" ty="15.0">
+            <y:Point x="114.35714285714286" y="173.701171875"/>
+            <y:Point x="172.71428571428572" y="173.701171875"/>
+            <y:Point x="172.71428571428572" y="110.0"/>
+            <y:Point x="490.71428571428567" y="110.0"/>
+          </y:Path>
+          <y:LineStyle type="line" width="1.0" color="#000000" />
+          <y:Arrows source="none" target="standard"/>
+          <y:EdgeLabel x="-7.642853873116621" y="-59.56529235839844" width="132.0" height="18.701171875" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_Edge045</y:EdgeLabel>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e3" source="n1" target="n3">
+      <data key="d1" >
+        <y:PolyLineEdge >
+          <y:Path sx="-11.714285714285722" sy="15.0" tx="-37.75" ty="-15.0">
+            <y:Point x="502.4285714285714" y="125.0"/>
+            <y:Point x="354.92857142857144" y="125.0"/>
+            <y:Point x="354.92857142857144" y="173.701171875"/>
+            <y:Point x="380.76785714285717" y="173.701171875"/>
+          </y:Path>
+          <y:LineStyle type="line" width="1.0" color="#000000" />
+          <y:Arrows source="none" target="standard"/>
+          <y:EdgeLabel x="-251.99998692103793" y="60.0" width="209.0" height="18.701171875" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_Edge055</y:EdgeLabel>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e4" source="n3" target="n1">
+      <data key="d1" >
+        <y:PolyLineEdge >
+          <y:Path sx="37.75" sy="-15.0" tx="0.0" ty="15.0">
+            <y:Point x="456.26785714285717" y="173.701171875"/>
+            <y:Point x="514.1428571428571" y="173.701171875"/>
+          </y:Path>
+          <y:LineStyle type="line" width="1.0" color="#000000" />
+          <y:Arrows source="none" target="standard"/>
+          <y:EdgeLabel x="14.875004359653985" y="-59.56529235839844" width="86.0" height="18.701171875" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_Edge002</y:EdgeLabel>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e5" source="n1" target="n4">
+      <data key="d1" >
+        <y:PolyLineEdge >
+          <y:Path sx="11.714285714285666" sy="15.0" tx="0.0" ty="-15.0">
+            <y:Point x="525.8571428571428" y="125.0"/>
+            <y:Point x="618.8571428571429" y="125.0"/>
+          </y:Path>
+          <y:LineStyle type="line" width="1.0" color="#000000" />
+          <y:Arrows source="none" target="standard"/>
+          <y:EdgeLabel x="43.00002615792414" y="60.0" width="100.0" height="18.701171875" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_Edge052</y:EdgeLabel>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e6" source="n1" target="n5">
+      <data key="d1" >
+        <y:PolyLineEdge >
+          <y:Path sx="23.428571428571445" sy="15.0" tx="-27.0" ty="-15.0">
+            <y:Point x="537.5714285714286" y="110.0"/>
+            <y:Point x="741.5714285714286" y="110.0"/>
+            <y:Point x="741.5714285714286" y="173.701171875"/>
+            <y:Point x="768.0714285714286" y="173.701171875"/>
+          </y:Path>
+          <y:LineStyle type="line" width="1.0" color="#000000" />
+          <y:Arrows source="none" target="standard"/>
+          <y:EdgeLabel x="143.00001743861606" y="60.0" width="122.0" height="18.701171875" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_Edge049</y:EdgeLabel>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e7" source="n5" target="n1">
+      <data key="d1" >
+        <y:PolyLineEdge >
+          <y:Path sx="27.0" sy="-15.0" tx="35.14285714285711" ty="15.0">
+            <y:Point x="822.0714285714286" y="173.701171875"/>
+            <y:Point x="850.7857142857143" y="173.701171875"/>
+            <y:Point x="850.7857142857143" y="95.0"/>
+            <y:Point x="549.2857142857142" y="95.0"/>
+          </y:Path>
+          <y:LineStyle type="line" width="1.0" color="#000000" />
+          <y:Arrows source="none" target="standard"/>
+          <y:EdgeLabel x="-7.785696847098166" y="-59.56529235839844" width="73.0" height="18.701171875" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_Edge035</y:EdgeLabel>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e8" source="n4" target="n6">
+      <data key="d1" >
+        <y:PolyLineEdge >
+          <y:Path sx="0.0" sy="15.0" tx="0.0" ty="-15.0"/>
+          <y:LineStyle type="line" width="1.0" color="#000000" />
+          <y:Arrows source="none" target="standard"/>
+          <y:EdgeLabel x="-45.99997384207586" y="20.889404296875" width="92.0" height="18.701171875" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_Edge007</y:EdgeLabel>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e9" source="n1" target="n1">
+      <data key="d1" >
+        <y:PolyLineEdge >
+          <y:Path sx="-20.5" sy="-15.0" tx="-41.0" ty="0.0">
+            <y:Point x="493.6428571428571" y="34.5"/>
+            <y:Point x="457.6428571428571" y="34.5"/>
+            <y:Point x="457.6428571428571" y="65.0"/>
+          </y:Path>
+          <y:LineStyle type="line" width="1.0" color="#000000" />
+          <y:Arrows source="none" target="standard"/>
+          <y:EdgeLabel x="-128.99999564034601" y="-39.521484375" width="119.0" height="48.103515625" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_Edge050&#xA;BLOCKED&#xA;Felrapport  2020</y:EdgeLabel>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e10" source="n6" target="n7">
+      <data key="d1" >
+        <y:PolyLineEdge >
+          <y:Path sx="0.0" sy="15.0" tx="0.0" ty="-15.0"/>
+          <y:LineStyle type="line" width="1.0" color="#000000" />
+          <y:Arrows source="none" target="standard"/>
+          <y:EdgeLabel x="-36.49997384207586" y="20.889404296875" width="73.0" height="18.701171875" visible="true" alignment="center" fontFamily="Dialog" fontSize="12" fontStyle="plain" textColor="#000000" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" distance="2.0" ratio="0.5">e_Edge035</y:EdgeLabel>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+  </graph>
+</graphml>
