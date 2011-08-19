@@ -64,8 +64,6 @@ public class SoapServices {
 			value = mbt.getDataValue(data);
 		} catch (InvalidDataException e) {
 			logger.error(e);
-		} catch (Exception e) {
-			logger.error(e);
 		}
 		logger.debug("SOAP service getDataValue returning: " + value);
 		return value;
