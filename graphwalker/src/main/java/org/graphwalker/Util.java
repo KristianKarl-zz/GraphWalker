@@ -64,6 +64,7 @@ import org.graphwalker.conditions.VertexCoverage;
 import org.graphwalker.exceptions.GeneratorException;
 import org.graphwalker.exceptions.StopConditionException;
 import org.graphwalker.generators.A_StarPathGenerator;
+import org.graphwalker.generators.AllPathPermutationsGenerator;
 import org.graphwalker.generators.CodeGenerator;
 import org.graphwalker.generators.CombinedPathGenerator;
 import org.graphwalker.generators.ListGenerator;
@@ -95,11 +96,13 @@ public class Util {
 	public static String newline = System.getProperty("line.separator");
 	static private Timer timer = null;
 
-	public static String getCompleteName(AbstractElement element) {
-		if (element instanceof Edge)
+	public static String getCompleteName(final AbstractElement element) {
+		if (element instanceof Edge) {
 			return getCompleteEdgeName((Edge) element);
-		if (element instanceof Vertex)
+		}
+		if (element instanceof Vertex) {
 			return getCompleteVertexName((Vertex) element);
+		}
 		throw new RuntimeException("Element type not supported: '" + element.getClass().getName() + "'");
 	}
 
@@ -121,7 +124,7 @@ public class Util {
 	 *         Please note that the label of an edge can be either null, or empty
 	 *         ("");
 	 */
-	private static String getCompleteEdgeName(Edge edge) {
+	private static String getCompleteEdgeName(final Edge edge) {
 		String str = "Edge: '" + edge.getLabelKey() + "', INDEX=" + edge.getIndexKey();
 		return str;
 	}
@@ -141,18 +144,18 @@ public class Util {
 	 * 
 	 *         Where is the unique index for the vertex.
 	 */
-	private static String getCompleteVertexName(Vertex vertex) {
+	private static String getCompleteVertexName(final Vertex vertex) {
 		String str = "Vertex: '" + vertex.getLabelKey() + "', INDEX=" + vertex.getIndexKey();
 		return str;
 	}
 
-	public static void AbortIf(boolean bool, String message) {
+	public static void AbortIf(final boolean bool, final String message) {
 		if (bool) {
 			throw new RuntimeException(message);
 		}
 	}
 
-	public static Logger setupLogger(@SuppressWarnings("rawtypes") Class classParam) {
+	public static Logger setupLogger(@SuppressWarnings("rawtypes") final Class classParam) {
 		Logger logger = Logger.getLogger(classParam);
 		if (new File("graphwalker.properties").canRead()) {
 			PropertyConfigurator.configure("graphwalker.properties");
@@ -171,11 +174,12 @@ public class Util {
 	 *          The label of the vertex.
 	 * @return The newly created vertex.
 	 */
-	public static Vertex addVertexToGraph(Graph graph, String strLabel) {
+	public static Vertex addVertexToGraph(final Graph graph, final String strLabel) {
 		Vertex retur = new Vertex();
 		retur.setIndexKey(new Integer(graph.getEdgeCount() + graph.getVertexCount() + 1));
-		if (strLabel != null)
+		if (strLabel != null) {
 			retur.setLabelKey(strLabel);
+		}
 		graph.addVertex(retur);
 		return retur;
 	}
@@ -200,18 +204,22 @@ public class Util {
 	 *          The action to be performed.
 	 * @return The newly created edge.
 	 */
-	public static Edge addEdgeToGraph(Graph graph, Vertex vertexFrom, Vertex vertexTo, String strLabel, String strParameter, String strGuard,
-	    String strAction) {
+	public static Edge addEdgeToGraph(final Graph graph, final Vertex vertexFrom, final Vertex vertexTo, final String strLabel,
+	    final String strParameter, final String strGuard, final String strAction) {
 		Edge retur = new Edge();
 		retur.setIndexKey(new Integer(graph.getEdgeCount() + graph.getVertexCount() + 1));
-		if (strLabel != null)
+		if (strLabel != null) {
 			retur.setLabelKey(strLabel);
-		if (strParameter != null)
+		}
+		if (strParameter != null) {
 			retur.setParameterKey(strParameter);
-		if (strGuard != null)
+		}
+		if (strGuard != null) {
 			retur.setGuardKey(strGuard);
-		if (strAction != null)
+		}
+		if (strAction != null) {
 			retur.setActionsKey(strAction);
+		}
 		graph.addEdge(retur, vertexFrom, vertexTo);
 		return retur;
 	}
@@ -226,7 +234,7 @@ public class Util {
 	 * @return The newly created stop condition.
 	 * @throws StopConditionException
 	 */
-	public static StopCondition getCondition(FiniteStateMachine machine, int conditionType, String conditionValue)
+	public static StopCondition getCondition(final FiniteStateMachine machine, final int conditionType, final String conditionValue)
 	    throws StopConditionException {
 		StopCondition condition = null;
 		try {
@@ -276,20 +284,25 @@ public class Util {
 				throw new StopConditionException("Unsupported stop condition selected");
 			}
 		} catch (NumberFormatException e) {
-			if (conditionValue == null || conditionValue.isEmpty())
+			if (conditionValue == null || conditionValue.isEmpty()) {
 				throw new StopConditionException("Stop condition value is missing. ");
-			else
+			} else {
 				throw new StopConditionException("Invalid stop condition value: " + conditionValue);
+			}
 		}
 		return condition;
 	}
 
-	protected static PathGenerator getGenerator(int generatorType) throws GeneratorException {
+	protected static PathGenerator getGenerator(final int generatorType) throws GeneratorException {
 		PathGenerator generator = null;
 
 		switch (generatorType) {
 		case Keywords.GENERATOR_RANDOM:
 			generator = new RandomPathGenerator();
+			break;
+
+		case Keywords.GENERATOR_ALL_PATH_PERMUTATIONS:
+			generator = new AllPathPermutationsGenerator();
 			break;
 
 		case Keywords.GENERATOR_A_STAR:
@@ -316,17 +329,17 @@ public class Util {
 			throw new GeneratorException("Unsupported generator selected.");
 		}
 
-		logger.debug("Added generator: " + generator);
+		Util.logger.debug("Added generator: " + generator + "  " + generatorType);
 
 		return generator;
 	}
 
 	public Util() {
-    super();
-    // TODO Auto-generated constructor stub
-  }
+		super();
+		// TODO Auto-generated constructor stub
+	}
 
-  /**
+	/**
 	 * Load MBT settings from a xml file
 	 * 
 	 * @param fileName
@@ -338,7 +351,7 @@ public class Util {
 	 * @throws JDOMException
 	 * @throws InterruptedException
 	 */
-	public static ModelBasedTesting loadMbtAsWSFromXml(File file) throws StopConditionException, GeneratorException, IOException,
+	public static ModelBasedTesting loadMbtAsWSFromXml(final File file) throws StopConditionException, GeneratorException, IOException,
 	    JDOMException, InterruptedException {
 		return loadXml(file, true, false, false);
 	}
@@ -357,8 +370,8 @@ public class Util {
 	 * @throws JDOMException
 	 * @throws InterruptedException
 	 */
-	protected static ModelBasedTesting loadMbtFromXml(File file, boolean dryRun) throws StopConditionException, GeneratorException,
-	    IOException, JDOMException, InterruptedException {
+	protected static ModelBasedTesting loadMbtFromXml(final File file, final boolean dryRun) throws StopConditionException,
+	    GeneratorException, IOException, JDOMException, InterruptedException {
 		return loadXml(file, false, dryRun, false);
 	}
 
@@ -374,7 +387,7 @@ public class Util {
 	 * @throws JDOMException
 	 * @throws InterruptedException
 	 */
-	public static ModelBasedTesting loadMbtFromXml(File file) throws StopConditionException, GeneratorException, IOException,
+	public static ModelBasedTesting loadMbtFromXml(final File file) throws StopConditionException, GeneratorException, IOException,
 	    JDOMException, InterruptedException {
 		return loadXml(file, false, false, false);
 	}
@@ -391,7 +404,7 @@ public class Util {
 	 * @throws JDOMException
 	 * @throws InterruptedException
 	 */
-	public static ModelBasedTesting getNewMbtFromXml(File file) throws StopConditionException, GeneratorException, IOException,
+	public static ModelBasedTesting getNewMbtFromXml(final File file) throws StopConditionException, GeneratorException, IOException,
 	    JDOMException, InterruptedException {
 		return loadXml(file, false, false, true);
 	}
@@ -408,7 +421,7 @@ public class Util {
 	 * @throws JDOMException
 	 * @throws InterruptedException
 	 */
-	public ModelBasedTesting loadMbtFromXmlNonStatic(File file) throws StopConditionException, GeneratorException, IOException,
+	public ModelBasedTesting loadMbtFromXmlNonStatic(final File file) throws StopConditionException, GeneratorException, IOException,
 	    JDOMException, InterruptedException {
 		return loadXmlNonStatic(file, false, false);
 	}
@@ -422,7 +435,8 @@ public class Util {
 	 *          Is mbt to run in Web Services mode?
 	 * @param dryRun
 	 *          Is mbt to be run in a dry run mode?
-	 * @param generateNewModel TODO
+	 * @param generateNewModel
+	 *          TODO
 	 * @return
 	 * @throws StopConditionException
 	 * @throws GeneratorException
@@ -431,10 +445,10 @@ public class Util {
 	 * @throws InterruptedException
 	 */
 	@SuppressWarnings("unchecked")
-	private static ModelBasedTesting loadXml(File file, boolean runningSoapServices, boolean dryRun, boolean generateNewModel) throws StopConditionException,
-	    GeneratorException, IOException, JDOMException, InterruptedException {
-		
-	  final ModelBasedTesting mbt = new ModelBasedTesting();
+	private static ModelBasedTesting loadXml(final File file, final boolean runningSoapServices, final boolean dryRun,
+	    final boolean generateNewModel) throws StopConditionException, GeneratorException, IOException, JDOMException, InterruptedException {
+
+		final ModelBasedTesting mbt = new ModelBasedTesting();
 		mbt.setDryRun(dryRun);
 
 		SAXBuilder parser = new SAXBuilder();
@@ -443,75 +457,78 @@ public class Util {
 		Element root = doc.getRootElement();
 		List<Element> models = root.getChildren("MODEL");
 
-		if (models.size() == 0)
+		if (models.size() == 0) {
 			throw new RuntimeException("Model is missing from XML");
+		}
 
-		for (Iterator<Element> i = models.iterator(); i.hasNext();) {
-			mbt.readGraph((i.next()).getAttributeValue("PATH"));
+		for (Element element : models) {
+			mbt.readGraph((element).getAttributeValue("PATH"));
 		}
 
 		List<Element> classPath = root.getChildren("CLASS");
-		for (Iterator<Element> i = classPath.iterator(); i.hasNext();) {
-			String classPaths[] = i.next().getAttributeValue("PATH").split(":");
-			for (int j = 0; j < classPaths.length; j++) {
+		for (Element element : classPath) {
+			String classPaths[] = element.getAttributeValue("PATH").split(":");
+			for (String classPath2 : classPaths) {
 				try {
-					ClassPathHack.addFile(getFile(classPaths[j]));
-					logger.debug("Added to classpath: " + classPaths[j]);
+					ClassPathHack.addFile(getFile(classPath2));
+					Util.logger.debug("Added to classpath: " + classPath2);
 				} catch (Exception e) {
-					throw new RuntimeException(e.getMessage() + "\nCould not add: '" + classPaths[j] + "' to CLASSPATH\n"
+					throw new RuntimeException(e.getMessage() + "\nCould not add: '" + classPath2 + "' to CLASSPATH\n"
 					    + "Please review your xml file: '" + file + "' at CLASS PATH", e);
 				}
 			}
 		}
 
 		if (root.getAttributeValue("SCRIPT_ENGINE") != null && root.getAttributeValue("SCRIPT_ENGINE").equalsIgnoreCase("js")) {
-			logger.debug("Enabling JavaScript engine");
+			Util.logger.debug("Enabling JavaScript engine");
 			mbt.enableJsScriptEngine(true);
 		} else {
-			logger.debug("Using BeanShell script engine, if EFSM is enabled.");
+			Util.logger.debug("Using BeanShell script engine, if EFSM is enabled.");
 			mbt.enableJsScriptEngine(false);
 		}
 
 		if (root.getAttributeValue("EXTENDED") != null && root.getAttributeValue("EXTENDED").equalsIgnoreCase("true")) {
-			logger.debug("Enabling extended FSM");
+			Util.logger.debug("Enabling extended FSM");
 			mbt.enableExtended(true);
 			mbt.setStartupScript(getScriptContent(root.getChildren("SCRIPT")));
 		} else {
-			logger.debug("Disabling extended FSM");
+			Util.logger.debug("Disabling extended FSM");
 			mbt.enableExtended(false);
 		}
 
 		if (root.getAttributeValue("WEIGHT") != null && root.getAttributeValue("WEIGHT").equalsIgnoreCase("true")) {
-			logger.debug("Using weighted edges");
+			Util.logger.debug("Using weighted edges");
 			mbt.setWeighted(true);
 		} else {
-			logger.debug("Will not use weighted edges");
+			Util.logger.debug("Will not use weighted edges");
 			mbt.setWeighted(false);
 		}
 
 		List<Element> generators = root.getChildren("GENERATOR");
 
-		if (generators.size() == 0)
+		if (generators.size() == 0) {
 			throw new RuntimeException("Generator is missing from XML");
+		}
 
 		PathGenerator generator;
 		if (generators.size() > 1) {
 			generator = new CombinedPathGenerator();
-			for (Iterator<Element> i = generators.iterator(); i.hasNext();) {
-				((CombinedPathGenerator) generator).addPathGenerator(getGenerator(mbt.getMachine(), i.next()));
+			for (Element element : generators) {
+				((CombinedPathGenerator) generator).addPathGenerator(getGenerator(mbt.getMachine(), element));
 			}
 		} else {
-			generator = getGenerator(mbt.getMachine(), (Element) generators.get(0));
+			generator = getGenerator(mbt.getMachine(), generators.get(0));
 		}
-		if (generator == null)
+		if (generator == null) {
 			throw new RuntimeException("Failed to set generator");
+		}
 		mbt.setGenerator(generator);
 
 		final String reportName = root.getAttributeValue("REPORT");
 		String reportTemplate = root.getAttributeValue("REPORT-TEMPLATE");
 
 		if (reportName != null && reportTemplate != null) {
-			logger.debug("Will use report template: " + reportTemplate);
+			Util.logger.debug("Will use report template: " + reportTemplate);
 			mbt.getStatisticsManager().setReportTemplate(new FileInputStream(new File(reportTemplate)));
 		}
 
@@ -522,6 +539,7 @@ public class Util {
 			TimerTask logTask;
 			if (reportName != null && reportTemplate != null) {
 				logTask = new TimerTask() {
+					@Override
 					public void run() {
 						try {
 							mbt.getStatisticsManager().writeFullReport(new PrintStream(reportName));
@@ -532,20 +550,21 @@ public class Util {
 				};
 			} else {
 				logTask = new TimerTask() {
+					@Override
 					public void run() {
-						logger.info(mbt.getStatisticsCompact());
+						Util.logger.info(mbt.getStatisticsCompact());
 					}
 				};
 			}
-			timer = new Timer();
-			timer.schedule(logTask, 500, seconds * 1000);
+			Util.timer = new Timer();
+			Util.timer.schedule(logTask, 500, seconds * 1000);
 		}
 
 		if (runningSoapServices == false) {
 			try {
 
 				String executor = root.getAttributeValue("EXECUTOR");
-				logger.debug("Executor is: " + executor);
+				Util.logger.debug("Executor is: " + executor);
 				String executorParam = null;
 				if (executor.contains(":")) {
 					executorParam = executor.substring(executor.indexOf(':') + 1);
@@ -597,7 +616,7 @@ public class Util {
 					}
 				} else if (executor.equalsIgnoreCase("online")) {
 					if (mbt.isDryRun()) {
-						logger.debug("Executing a dry run");
+						Util.logger.debug("Executing a dry run");
 						mbt.executePath(null, null);
 					}
 					if (mbt.isUseGUI() == false) {
@@ -611,8 +630,9 @@ public class Util {
 				}
 
 			} finally {
-				if (timer != null)
-					timer.cancel();
+				if (Util.timer != null) {
+					Util.timer.cancel();
+				}
 				if (reportName != null && reportTemplate != null && mbt.isUseGUI() == false) {
 					mbt.getStatisticsManager().writeFullReport(reportName);
 				}
@@ -622,7 +642,7 @@ public class Util {
 	}
 
 	@SuppressWarnings("unchecked")
-  private ModelBasedTesting loadXmlNonStatic(File file, boolean runningSoapServices, boolean dryRun)
+	private ModelBasedTesting loadXmlNonStatic(final File file, final boolean runningSoapServices, final boolean dryRun)
 	    throws StopConditionException, GeneratorException, IOException, JDOMException, InterruptedException {
 		final ModelBasedTesting mbt = new ModelBasedTesting();
 		mbt.setDryRun(dryRun);
@@ -631,77 +651,80 @@ public class Util {
 		Document doc;
 		doc = parser.build(file);
 		Element root = doc.getRootElement();
-    List<Element> models = root.getChildren("MODEL");
+		List<Element> models = root.getChildren("MODEL");
 
-		if (models.size() == 0)
+		if (models.size() == 0) {
 			throw new RuntimeException("Model is missing from XML");
-
-		for (Iterator<Element> i = models.iterator(); i.hasNext();) {
-			mbt.readGraph((i.next()).getAttributeValue("PATH"));
 		}
 
-    List<Element> classPath = root.getChildren("CLASS");
-		for (Iterator<Element> i = classPath.iterator(); i.hasNext();) {
-			String classPaths[] = i.next().getAttributeValue("PATH").split(":");
-			for (int j = 0; j < classPaths.length; j++) {
+		for (Element element : models) {
+			mbt.readGraph((element).getAttributeValue("PATH"));
+		}
+
+		List<Element> classPath = root.getChildren("CLASS");
+		for (Element element : classPath) {
+			String classPaths[] = element.getAttributeValue("PATH").split(":");
+			for (String classPath2 : classPaths) {
 				try {
-					ClassPathHack.addFile(getFile(classPaths[j]));
-					logger.debug("Added to classpath: " + classPaths[j]);
+					ClassPathHack.addFile(getFile(classPath2));
+					Util.logger.debug("Added to classpath: " + classPath2);
 				} catch (Exception e) {
-					throw new RuntimeException(e.getMessage() + "\nCould not add: '" + classPaths[j] + "' to CLASSPATH\n"
+					throw new RuntimeException(e.getMessage() + "\nCould not add: '" + classPath2 + "' to CLASSPATH\n"
 					    + "Please review your xml file: '" + file + "' at CLASS PATH", e);
 				}
 			}
 		}
 
 		if (root.getAttributeValue("SCRIPT_ENGINE") != null && root.getAttributeValue("SCRIPT_ENGINE").equalsIgnoreCase("js")) {
-			logger.debug("Enabling JavaScript engine");
+			Util.logger.debug("Enabling JavaScript engine");
 			mbt.enableJsScriptEngine(true);
 		} else {
-			logger.debug("Using BeanShell script engine, if EFSM is enabled.");
+			Util.logger.debug("Using BeanShell script engine, if EFSM is enabled.");
 			mbt.enableJsScriptEngine(false);
 		}
 
 		if (root.getAttributeValue("EXTENDED") != null && root.getAttributeValue("EXTENDED").equalsIgnoreCase("true")) {
-			logger.debug("Enabling extended FSM");
+			Util.logger.debug("Enabling extended FSM");
 			mbt.enableExtended(true);
 			mbt.setStartupScript(getScriptContent(root.getChildren("SCRIPT")));
 		} else {
-			logger.debug("Disabling extended FSM");
+			Util.logger.debug("Disabling extended FSM");
 			mbt.enableExtended(false);
 		}
 
 		if (root.getAttributeValue("WEIGHT") != null && root.getAttributeValue("WEIGHT").equalsIgnoreCase("true")) {
-			logger.debug("Using weighted edges");
+			Util.logger.debug("Using weighted edges");
 			mbt.setWeighted(true);
 		} else {
-			logger.debug("Will not use weighted edges");
+			Util.logger.debug("Will not use weighted edges");
 			mbt.setWeighted(false);
 		}
 
 		List<Element> generators = root.getChildren("GENERATOR");
 
-		if (generators.size() == 0)
+		if (generators.size() == 0) {
 			throw new RuntimeException("Generator is missing from XML");
+		}
 
 		PathGenerator generator;
 		if (generators.size() > 1) {
 			generator = new CombinedPathGenerator();
-			for (Iterator<Element> i = generators.iterator(); i.hasNext();) {
-				((CombinedPathGenerator) generator).addPathGenerator(getGenerator(mbt.getMachine(), i.next()));
+			for (Element element : generators) {
+				((CombinedPathGenerator) generator).addPathGenerator(getGenerator(mbt.getMachine(), element));
 			}
 		} else {
-			generator = getGenerator(mbt.getMachine(), (Element) generators.get(0));
+			generator = getGenerator(mbt.getMachine(), generators.get(0));
 		}
-		if (generator == null)
+		if (generator == null) {
 			throw new RuntimeException("Failed to set generator");
+		}
 		mbt.setGenerator(generator);
 
 		final String reportName = root.getAttributeValue("REPORT");
 		String reportTemplate = root.getAttributeValue("REPORT-TEMPLATE");
 
 		if (reportName != null && reportTemplate != null) {
-			logger.debug("Will use report template: " + reportTemplate);
+			Util.logger.debug("Will use report template: " + reportTemplate);
 			mbt.getStatisticsManager().setReportTemplate(new FileInputStream(new File(reportTemplate)));
 		}
 
@@ -712,6 +735,7 @@ public class Util {
 			TimerTask logTask;
 			if (reportName != null && reportTemplate != null) {
 				logTask = new TimerTask() {
+					@Override
 					public void run() {
 						try {
 							mbt.getStatisticsManager().writeFullReport(new PrintStream(reportName));
@@ -722,20 +746,21 @@ public class Util {
 				};
 			} else {
 				logTask = new TimerTask() {
+					@Override
 					public void run() {
-						logger.info(mbt.getStatisticsCompact());
+						Util.logger.info(mbt.getStatisticsCompact());
 					}
 				};
 			}
-			timer = new Timer();
-			timer.schedule(logTask, 500, seconds * 1000);
+			Util.timer = new Timer();
+			Util.timer.schedule(logTask, 500, seconds * 1000);
 		}
 
 		if (runningSoapServices == false) {
 			try {
 
 				String executor = root.getAttributeValue("EXECUTOR");
-				logger.debug("Executor is: " + executor);
+				Util.logger.debug("Executor is: " + executor);
 				String executorParam = null;
 				if (executor.contains(":")) {
 					executorParam = executor.substring(executor.indexOf(':') + 1);
@@ -787,7 +812,7 @@ public class Util {
 					}
 				} else if (executor.equalsIgnoreCase("online")) {
 					if (mbt.isDryRun()) {
-						logger.debug("Executing a dry run");
+						Util.logger.debug("Executing a dry run");
 						mbt.executePath(null, null);
 					}
 					if (mbt.isUseGUI() == false) {
@@ -801,8 +826,9 @@ public class Util {
 				}
 
 			} finally {
-				if (timer != null)
-					timer.cancel();
+				if (Util.timer != null) {
+					Util.timer.cancel();
+				}
 				if (reportName != null && reportTemplate != null && mbt.isUseGUI() == false) {
 					mbt.getStatisticsManager().writeFullReport(reportName);
 				}
@@ -811,22 +837,24 @@ public class Util {
 		return mbt;
 	}
 
-	private static String getScriptContent(List<Element> scripts) throws IOException {
+	private static String getScriptContent(final List<Element> scripts) throws IOException {
 		String retur = "";
-		for (Iterator<Element> i = scripts.iterator(); i.hasNext();) {
-			Element script = (Element) i.next();
+		for (Element element : scripts) {
+			Element script = element;
 			String internal = script.getTextTrim();
-			if (internal != null && !internal.equals(""))
+			if (internal != null && !internal.equals("")) {
 				retur += internal + "\n";
+			}
 			String external = script.getAttributeValue("PATH");
-			if (external != null && !external.equals(""))
+			if (external != null && !external.equals("")) {
 				retur += readFile(Util.getFile(external)) + "\n";
+			}
 		}
 		return retur;
 	}
 
 	@SuppressWarnings("unchecked")
-	private static PathGenerator getGenerator(FiniteStateMachine machine, Element generator) throws StopConditionException,
+	private static PathGenerator getGenerator(final FiniteStateMachine machine, final Element generator) throws StopConditionException,
 	    GeneratorException, IOException {
 		int generatorType = Keywords.getGenerator(generator.getAttributeValue("TYPE"));
 		PathGenerator generatorObject = getGenerator(generatorType);
@@ -855,29 +883,32 @@ public class Util {
 		return generatorObject;
 	}
 
-	private static StopCondition getCondition(FiniteStateMachine machine, List<Element> conditions) throws StopConditionException {
+	private static StopCondition getCondition(final FiniteStateMachine machine, final List<Element> conditions) throws StopConditionException {
 		StopCondition condition = null;
 		if (conditions.size() > 1) {
 			condition = new CombinationalCondition();
-			for (Iterator<Element> i = conditions.iterator(); i.hasNext();)
-				((CombinationalCondition) condition).add(getCondition(machine, (Element) i.next()));
+			for (Element element : conditions) {
+				((CombinationalCondition) condition).add(getCondition(machine, element));
+			}
 		} else if (conditions.size() == 1) {
-			condition = getCondition(machine, (Element) conditions.get(0));
+			condition = getCondition(machine, conditions.get(0));
 		}
 		return condition;
 	}
 
 	@SuppressWarnings("unchecked")
-	private static StopCondition getCondition(FiniteStateMachine machine, Element condition) throws StopConditionException {
+	private static StopCondition getCondition(final FiniteStateMachine machine, final Element condition) throws StopConditionException {
 		StopCondition stopCondition = null;
 		if (condition.getName().equalsIgnoreCase("AND")) {
 			stopCondition = new CombinationalCondition();
-			for (Iterator<Element> i = condition.getChildren().iterator(); i.hasNext();)
+			for (Iterator<Element> i = condition.getChildren().iterator(); i.hasNext();) {
 				((CombinationalCondition) stopCondition).add(getCondition(machine, i.next()));
+			}
 		} else if (condition.getName().equalsIgnoreCase("OR")) {
 			stopCondition = new AlternativeCondition();
-			for (Iterator<Element> i = condition.getChildren().iterator(); i.hasNext();)
+			for (Iterator<Element> i = condition.getChildren().iterator(); i.hasNext();) {
 				((AlternativeCondition) stopCondition).add(getCondition(machine, i.next()));
+			}
 		} else if (condition.getName().equalsIgnoreCase("CONDITION")) {
 			int type = Keywords.getStopCondition(condition.getAttributeValue("TYPE"));
 			String value = condition.getAttributeValue("VALUE");
@@ -886,11 +917,12 @@ public class Util {
 		return stopCondition;
 	}
 
-	protected static String readFile(File file) throws IOException {
+	protected static String readFile(final File file) throws IOException {
 		String retur = "";
 		BufferedReader in = new BufferedReader(new FileReader(file));
-		while (in.ready())
+		while (in.ready()) {
 			retur += in.readLine() + "\n";
+		}
 		return retur;
 	}
 
@@ -912,10 +944,10 @@ public class Util {
 	 * @param array
 	 * @return
 	 */
-	public static Object[] shuffle(Object[] array) {
+	public static Object[] shuffle(final Object[] array) {
 		for (int i = 0; i < array.length; i++) {
 			Object leftObject = array[i];
-			int index = random.nextInt(array.length);
+			int index = Util.random.nextInt(array.length);
 			Object rightObject = array[index];
 
 			array[i] = rightObject;
@@ -924,36 +956,36 @@ public class Util {
 		return array;
 	}
 
-	protected static InetAddress getInternetAddr(String nic) {
+	protected static InetAddress getInternetAddr(final String nic) {
 		// Find the real network interface
 		NetworkInterface iface = null;
 		InetAddress ia = null;
 		boolean foundNIC = false;
 		try {
 			for (Enumeration<NetworkInterface> ifaces = NetworkInterface.getNetworkInterfaces(); ifaces.hasMoreElements() && foundNIC == false;) {
-				iface = (NetworkInterface) ifaces.nextElement();
-				logger.debug("Interface: " + iface.getDisplayName());
+				iface = ifaces.nextElement();
+				Util.logger.debug("Interface: " + iface.getDisplayName());
 				for (Enumeration<InetAddress> ips = iface.getInetAddresses(); ips.hasMoreElements() && foundNIC == false;) {
-					ia = (InetAddress) ips.nextElement();
-					logger.debug(ia.getCanonicalHostName() + " " + ia.getHostAddress());
+					ia = ips.nextElement();
+					Util.logger.debug(ia.getCanonicalHostName() + " " + ia.getHostAddress());
 					if (!ia.isLoopbackAddress()) {
-						logger.debug("  Not a loopback address...");
+						Util.logger.debug("  Not a loopback address...");
 						if (ia.getHostAddress().indexOf(":") == -1 && nic.equals(iface.getDisplayName())) {
-							logger.debug("  Host address does not contain ':'");
-							logger.debug("  Interface: " + iface.getName() + " seems to be InternetInterface. I'll take it...");
+							Util.logger.debug("  Host address does not contain ':'");
+							Util.logger.debug("  Interface: " + iface.getName() + " seems to be InternetInterface. I'll take it...");
 							foundNIC = true;
 						}
 					}
 				}
 			}
 		} catch (SocketException e) {
-			logger.error(e.getMessage());
+			Util.logger.error(e.getMessage());
 		} finally {
 			if (foundNIC == false && nic != null) {
-				logger.error("Could not bind to network interface: " + nic);
+				Util.logger.error("Could not bind to network interface: " + nic);
 				throw new RuntimeException("Could not bind to network interface: " + nic);
 			} else if (foundNIC == false && nic == null) {
-				logger.error("Could not bind to any network interface");
+				Util.logger.error("Could not bind to any network interface");
 				throw new RuntimeException("Could not bind to any network interface: ");
 			}
 		}
@@ -966,21 +998,21 @@ public class Util {
 			try {
 				conf = new PropertiesConfiguration("graphwalker.properties");
 			} catch (ConfigurationException e) {
-				logger.error(e.getMessage());
+				Util.logger.error(e.getMessage());
 			}
 		} else {
 			conf = new PropertiesConfiguration();
 			try {
 				conf.load(Util.class.getResourceAsStream("/org/graphwalker/resources/graphwalker.properties"));
 			} catch (ConfigurationException e) {
-				logger.error(e.getMessage());
+				Util.logger.error(e.getMessage());
 			}
 		}
 		String port = conf.getString("graphwalker.ws.port");
-		logger.debug("Read graphwalker.ws.port from graphwalker.properties: " + port);
+		Util.logger.debug("Read graphwalker.ws.port from graphwalker.properties: " + port);
 		if (port == null) {
 			port = "9090";
-			logger.debug("Setting port to: 9090");
+			Util.logger.debug("Setting port to: 9090");
 		}
 		return port;
 	}
@@ -991,52 +1023,52 @@ public class Util {
 			try {
 				conf = new PropertiesConfiguration("graphwalker.properties");
 			} catch (ConfigurationException e) {
-				logger.error(e.getMessage());
+				Util.logger.error(e.getMessage());
 			}
 		} else {
 			conf = new PropertiesConfiguration();
 			try {
 				conf.load(Util.class.getResourceAsStream("/org/graphwalker/resources/graphwalker.properties"));
 			} catch (ConfigurationException e) {
-				logger.error(e.getMessage());
+				Util.logger.error(e.getMessage());
 			}
 		}
 		Boolean soapGuiState = false;
 		try {
 			soapGuiState = conf.getBoolean("org.graphwalker.GUI.startSOAP");
 		} catch (NoSuchElementException e) {
-			logger.debug("org.graphwalker.GUI.startSOAP not found in graphwalker.properties");
+			Util.logger.debug("org.graphwalker.GUI.startSOAP not found in graphwalker.properties");
 			soapGuiState = false;
 		}
-		logger.debug("Read org.graphwalker.GUI.startSOAP from graphwalker.properties: " + soapGuiState);
+		Util.logger.debug("Read org.graphwalker.GUI.startSOAP from graphwalker.properties: " + soapGuiState);
 		return soapGuiState;
 	}
 
-	public static void logStackTraceToError(Exception e) {
+	public static void logStackTraceToError(final Exception e) {
 		StringWriter sw = new StringWriter();
 		PrintWriter pw = new PrintWriter(sw);
 		e.printStackTrace(pw);
 		pw.close();
-		logger.error(sw.toString());
+		Util.logger.error(sw.toString());
 	}
 
-	protected static void logStackTraceToError(Throwable t) {
+	protected static void logStackTraceToError(final Throwable t) {
 		StringWriter sw = new StringWriter();
 		PrintWriter pw = new PrintWriter(sw);
 		t.printStackTrace(pw);
 		pw.close();
-		logger.error(sw.toString());
+		Util.logger.error(sw.toString());
 	}
 
-	public static File getFile(String resourceName) {
-    logger.debug("Try to get file: " + resourceName);
-		File file = new File( resourceName );
-		if ( file.exists() ) {
-	    logger.debug("File exists on file system.");
+	public static File getFile(final String resourceName) {
+		Util.logger.debug("Try to get file: " + resourceName);
+		File file = new File(resourceName);
+		if (file.exists()) {
+			Util.logger.debug("File exists on file system.");
 			return file;
 		}
 		ClassLoader cloader = Thread.currentThread().getContextClassLoader();
-    logger.debug("Class loader class name: " + cloader.getClass().getName());
+		Util.logger.debug("Class loader class name: " + cloader.getClass().getName());
 		URL resource = cloader.getResource(resourceName);
 
 		if (resource == null) {
