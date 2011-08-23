@@ -100,6 +100,7 @@ public class GraphML extends AbstractModelHandler {
 	 * @param fileOrfolder
 	 *          The gramphml file or folder.
 	 */
+	@Override
 	public void load(String fileOrfolder) {
 		if (fileOrfolder != "") {
 			File file = Util.getFile(fileOrfolder);
@@ -109,6 +110,7 @@ public class GraphML extends AbstractModelHandler {
 			} else if (file.isDirectory()) {
 				// Only accepts files which suffix is .graphml
 				FilenameFilter graphmlFilter = new FilenameFilter() {
+					@Override
 					public boolean accept(File dir, String name) {
 						return name.endsWith(".graphml");
 					}
@@ -164,8 +166,6 @@ public class GraphML extends AbstractModelHandler {
 
 					// Used to remember which vertex to store the image location.
 					Vertex currentVertex = null;
-					
-					
 
 					Iterator<Object> iterNodeLabel = element.getDescendants(new org.jdom.filter.ElementFilter("NodeLabel"));
 					while (iterNodeLabel.hasNext()) {
@@ -179,19 +179,19 @@ public class GraphML extends AbstractModelHandler {
 							Vertex v = new Vertex();
 							graph.addVertex(v);
 							currentVertex = v;
-							
-							
-			        // Parse description
+
+							// Parse description
 							Iterator<Object> iter_data = element.getDescendants(new org.jdom.filter.ElementFilter("data"));
-		          while (iter_data.hasNext()) {
-		            Object o3 = iter_data.next();
-		            if (o instanceof org.jdom.Element) {
-		              org.jdom.Element data = (org.jdom.Element) o3;
-		              if (!data.getAttributeValue("key").equals("d5")) continue;
-		              v.setDesctiptionKey(data.getText());
-		              break;
-		            }
-		          }
+							while (iter_data.hasNext()) {
+								Object o3 = iter_data.next();
+								if (o instanceof org.jdom.Element) {
+									org.jdom.Element data = (org.jdom.Element) o3;
+									if (!data.getAttributeValue("key").equals("d5"))
+										continue;
+									v.setDesctiptionKey(data.getText());
+									break;
+								}
+							}
 
 							v.setIdKey(element.getAttributeValue("id"));
 							v.setVisitedKey(new Integer(0));
@@ -203,12 +203,12 @@ public class GraphML extends AbstractModelHandler {
 							v.setNoMergeKey(AbstractElement.isNoMerge(str));
 							v.setBlockedKey(AbstractElement.isBlocked(str));
 							v.setSwitchModelKey(Vertex.isSwitchModel(str));
-							
+
 							Integer index = AbstractElement.getIndex(str);
-							if  ( index != 0 ) {
-								v.setIndexKey( index );
+							if (index != 0) {
+								v.setIndexKey(index);
 							}
-							
+
 							v.setReqTagKey(AbstractElement.getReqTags(str));
 						}
 					}
@@ -221,7 +221,7 @@ public class GraphML extends AbstractModelHandler {
 							org.jdom.Element data = (org.jdom.Element) o2;
 							if (!data.getContent().isEmpty() && data.getContent(0) != null) {
 								String text = data.getContent(0).getValue().trim();
-								if ( !text.isEmpty() ) {
+								if (!text.isEmpty()) {
 									logger.debug("  Data: '" + text + "'");
 									currentVertex.setManualInstructions(text);
 								}
@@ -325,20 +325,20 @@ public class GraphML extends AbstractModelHandler {
 					e.setIdKey(element.getAttributeValue("id"));
 					e.setFileKey(fileName);
 					e.setIndexKey(new Integer(getNewVertexAndEdgeIndex()));
-					
-					
+
 					// Parse description
 					Iterator<Object> iter_data = element.getDescendants(new org.jdom.filter.ElementFilter("data"));
-          while (iter_data.hasNext()) {
-            Object o3 = iter_data.next();
-            if (o instanceof org.jdom.Element) {
-              org.jdom.Element data = (org.jdom.Element) o3;
-              if (!data.getAttributeValue("key").equals("d9")) continue;
-              e.setDesctiptionKey(data.getText());
-              break;
-            }
-          }
-					
+					while (iter_data.hasNext()) {
+						Object o3 = iter_data.next();
+						if (o instanceof org.jdom.Element) {
+							org.jdom.Element data = (org.jdom.Element) o3;
+							if (!data.getAttributeValue("key").equals("d9"))
+								continue;
+							e.setDesctiptionKey(data.getText());
+							break;
+						}
+					}
+
 					if (!graph.addEdge(e, source, dest)) {
 						String msg = "Failed adding edge: " + e + ", to graph: " + graph;
 						logger.error(msg);
@@ -353,22 +353,22 @@ public class GraphML extends AbstractModelHandler {
 						// optional.
 
 						String str = edgeLabel.getText();
-						
+
 						e.setFullLabelKey(str);
-						String[] guardAndAction =  Edge.getGuardAndActions(str);
-						String[] labelAndParameter =  Edge.getLabelAndParameter(str);
+						String[] guardAndAction = Edge.getGuardAndActions(str);
+						String[] labelAndParameter = Edge.getLabelAndParameter(str);
 						e.setGuardKey(guardAndAction[0]);
 						e.setActionsKey(guardAndAction[1]);
 						e.setLabelKey(labelAndParameter[0]);
 						e.setParameterKey(labelAndParameter[1]);
 						e.setWeightKey(Edge.getWeight(str));
 						e.setBlockedKey(AbstractElement.isBlocked(str));
-						
+
 						Integer index = AbstractElement.getIndex(str);
-						if  ( index != 0 ) {
+						if (index != 0) {
 							e.setIndexKey(index);
 						}
-						
+
 						e.setReqTagKey(AbstractElement.getReqTags(str));
 					}
 					e.setVisitedKey(new Integer(0));
@@ -382,7 +382,7 @@ public class GraphML extends AbstractModelHandler {
 							org.jdom.Element data = (org.jdom.Element) o2;
 							if (!data.getContent().isEmpty() && data.getContent(0) != null) {
 								String text = data.getContent(0).getValue().trim();
-								if ( !text.isEmpty() ) {
+								if (!text.isEmpty()) {
 									logger.debug("  Data: '" + text + "'");
 									e.setManualInstructions(text);
 								}
@@ -454,13 +454,13 @@ public class GraphML extends AbstractModelHandler {
 
 	private void setGraphName() {
 		for (Vertex v : graph.getVertices()) {
-			if ( v.getLabelKey().equalsIgnoreCase(Keywords.START_NODE)) {
-				Edge e = (Edge)graph.getOutEdges(v).toArray()[0];
+			if (v.getLabelKey().equalsIgnoreCase(Keywords.START_NODE)) {
+				Edge e = (Edge) graph.getOutEdges(v).toArray()[0];
 				graph.setLabelKey(graph.getDest(e).getLabelKey());
 				graph.getDest(e).setGraphVertex(true);
-			}	    
-    }
-  }
+			}
+		}
+	}
 
 	private void setMerged(boolean merged) {
 		this.merged = merged;
@@ -563,7 +563,7 @@ public class GraphML extends AbstractModelHandler {
 	 */
 	private void checkForDuplicateVerticesInSubgraphs() {
 		for (int i = 0; i < parsedGraphList.size(); i++) {
-			Graph g = (Graph) parsedGraphList.elementAt(i);
+			Graph g = parsedGraphList.elementAt(i);
 
 			// Exclude the mother graph
 			if (graph.hashCode() == g.hashCode()) {
@@ -572,11 +572,11 @@ public class GraphML extends AbstractModelHandler {
 
 			logger.debug("Looking for infinit recursive loop in file: " + g.getFileKey());
 
-			String subgraph_label = (String) g.getLabelKey();
+			String subgraph_label = g.getLabelKey();
 			Object[] vertices = g.getVertices().toArray();
 			for (int j = 0; j < vertices.length; j++) {
 				Vertex v = (Vertex) vertices[j];
-				String label = (String) v.getLabelKey();
+				String label = v.getLabelKey();
 				if (label.equals(subgraph_label)) {
 					if (!v.getSubGraphStartVertexKey().isEmpty()) {
 						continue;
@@ -597,7 +597,7 @@ public class GraphML extends AbstractModelHandler {
 
 	private void mergeSubgraphs() {
 		for (int i = 0; i < parsedGraphList.size(); i++) {
-			Graph g = (Graph) parsedGraphList.elementAt(i);
+			Graph g = parsedGraphList.elementAt(i);
 
 			if (graph.hashCode() == g.hashCode()) {
 				continue;
@@ -728,7 +728,7 @@ public class GraphML extends AbstractModelHandler {
 			new_v.setIndexKey(new Integer(getNewVertexAndEdgeIndex()));
 			dst.addVertex(new_v);
 			logger.debug("Associated vertex: " + v + " to new vertex: " + new_v);
-			map.put((Integer) v.getIndexKey(), new_v);
+			map.put(v.getIndexKey(), new_v);
 		}
 		Object[] edges = src.getEdges().toArray();
 		for (int i = 0; i < edges.length; i++) {
@@ -849,7 +849,7 @@ public class GraphML extends AbstractModelHandler {
 			Vector<Pair<Edge>> mergeList = MergeList(targetVertexOutEdgeList.toArray(), inEdges);
 			for (Iterator<Pair<Edge>> iterator = mergeList.iterator(); iterator.hasNext();) {
 				Pair<Edge> pair = iterator.next();
-				MergeOutEdgeAndInEdge((Edge) pair.getFirst(), (Edge) pair.getSecond(), edgesToBeRemoved, mainGraph);
+				MergeOutEdgeAndInEdge(pair.getFirst(), pair.getSecond(), edgesToBeRemoved, mainGraph);
 			}
 
 			// Now remove the edges that has been copied.
@@ -878,10 +878,10 @@ public class GraphML extends AbstractModelHandler {
 		logger.debug("  Looking for exact matches");
 		for (int i = 0; i < array_A.length; i++) {
 			Edge a = (Edge) array_A[i];
-			String aLabel = (String) a.getLabelKey();
+			String aLabel = a.getLabelKey();
 			for (int j = 0; j < array_B.length; j++) {
 				Edge b = (Edge) array_B[j];
-				String bLabel = (String) b.getLabelKey();
+				String bLabel = b.getLabelKey();
 				if (aLabel != null && aLabel.length() == 0) {
 					aLabel = null;
 				}
@@ -904,13 +904,13 @@ public class GraphML extends AbstractModelHandler {
 		logger.debug("  Matching nulls from the A list with non-matched items in the second list");
 		for (int i = 0; i < array_A.length; i++) {
 			Edge a = (Edge) array_A[i];
-			String aLabel = (String) a.getLabelKey();
+			String aLabel = a.getLabelKey();
 			if (aLabel == null || aLabel.length() == 0) {
 				for (int j = 0; j < array_B.length; j++) {
 					Edge b = (Edge) array_B[j];
-					String bLabel = (String) b.getLabelKey();
+					String bLabel = b.getLabelKey();
 					if (bLabel != null) {
-							boolean alreadyMatched = false;
+						boolean alreadyMatched = false;
 						for (Iterator<Pair<Edge>> iter = matches.iterator(); iter.hasNext();) {
 							Pair<Edge> element = iter.next();
 							if (b.equals(element.getSecond())) {
@@ -932,7 +932,7 @@ public class GraphML extends AbstractModelHandler {
 		logger.debug("  Matching nulls from the B list with non-matched items in the first list");
 		for (int i = 0; i < array_B.length; i++) {
 			Edge b = (Edge) array_B[i];
-			String bLabel = (String) b.getLabelKey();
+			String bLabel = b.getLabelKey();
 			if (bLabel == null || bLabel.length() == 0) {
 				for (int j = 0; j < array_A.length; j++) {
 					Edge a = (Edge) array_A[j];
@@ -986,6 +986,7 @@ public class GraphML extends AbstractModelHandler {
 	/**
 	 * Writes the graph to a PrintStream, using GraphML format.
 	 */
+	@Override
 	public void save(PrintStream ps, boolean printIndex) {
 		Graph g = getModel();
 
@@ -1017,12 +1018,13 @@ public class GraphML extends AbstractModelHandler {
 			ps.println("          <y:BorderStyle type=\"line\" width=\"1.0\" color=\"#000000\" />");
 			ps.print("          <y:NodeLabel x=\"1.5\" y=\"5.6494140625\" width=\"92.0\" height=\"18.701171875\" "
 			    + "visible=\"true\" alignment=\"center\" fontFamily=\"Dialog\" fontSize=\"12\" "
-			    + "fontStyle=\"plain\" textColor=\"#000000\" modelName=\"internal\" modelPosition=\"c\" " + "autoSizePolicy=\"content\">" + v.getFullLabelKey() );
-			if ( printIndex ) {
-				ps.print( "&#xA;INDEX=" + v.getIndexKey() );
+			    + "fontStyle=\"plain\" textColor=\"#000000\" modelName=\"internal\" modelPosition=\"c\" " + "autoSizePolicy=\"content\">"
+			    + v.getFullLabelKey());
+			if (printIndex) {
+				ps.print("&#xA;INDEX=" + v.getIndexKey());
 			}
-				
-			ps.println( "</y:NodeLabel>");
+
+			ps.println("</y:NodeLabel>");
 
 			if (!v.getImageKey().isEmpty()) {
 				ps.println("          <y:Image href=\"" + v.getImageKey() + "\"/>");
@@ -1062,12 +1064,11 @@ public class GraphML extends AbstractModelHandler {
 				label = label.replaceAll("'", "&apos;");
 				label = label.replaceAll("\"", "&quot;");
 
-				ps
-				    .println("          <y:EdgeLabel x=\"-148.25\" y=\"30.000000000000014\" width=\"169.0\" height=\"18.701171875\" "
-				        + "visible=\"true\" alignment=\"center\" fontFamily=\"Dialog\" fontSize=\"12\" "
-				        + "fontStyle=\"plain\" textColor=\"#000000\" modelName=\"free\" modelPosition=\"anywhere\" "
-				        + "preferredPlacement=\"on_edge\" distance=\"2.0\" ratio=\"0.5\">" + label );
-				if ( printIndex ) {
+				ps.println("          <y:EdgeLabel x=\"-148.25\" y=\"30.000000000000014\" width=\"169.0\" height=\"18.701171875\" "
+				    + "visible=\"true\" alignment=\"center\" fontFamily=\"Dialog\" fontSize=\"12\" "
+				    + "fontStyle=\"plain\" textColor=\"#000000\" modelName=\"free\" modelPosition=\"anywhere\" "
+				    + "preferredPlacement=\"on_edge\" distance=\"2.0\" ratio=\"0.5\">" + label);
+				if (printIndex) {
 					ps.print("&#xA;INDEX=" + e.getIndexKey());
 				}
 				ps.println("</y:EdgeLabel>");

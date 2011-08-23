@@ -44,12 +44,12 @@ public class ReachedVertex extends StopCondition {
 	private String subState;
 
 	@Override
-  public boolean isFulfilled() {
+	public boolean isFulfilled() {
 		return getFulfilment() >= 0.99999;
 	}
 
 	@Override
-  public void setMachine(FiniteStateMachine machine) {
+	public void setMachine(FiniteStateMachine machine) {
 		super.setMachine(machine);
 		if (this.endVertex == null)
 			this.endVertex = machine.getModel().findVertex(vertexName);
@@ -66,13 +66,13 @@ public class ReachedVertex extends StopCondition {
 	}
 
 	@Override
-  public double getFulfilment() {
+	public double getFulfilment() {
 		logger.debug("Machine: " + getMachine());
 		int distance = proximity[allVertices.indexOf(getMachine().getCurrentVertex())];
 		if (getMachine() instanceof ExtendedFiniteStateMachine) {
 			String currentVertex = getMachine().getCurrentVertexName();
 			String currentSubState = "";
-			if ( vertexName.equals(Vertex.getLabel(currentVertex))) {
+			if (vertexName.equals(Vertex.getLabel(currentVertex))) {
 				if (currentVertex.contains("/")) {
 					currentSubState = currentVertex.split("/", 2)[1];
 					Pattern actionPattern = Pattern.compile(this.subState);
@@ -131,7 +131,7 @@ public class ReachedVertex extends StopCondition {
 	}
 
 	@Override
-  public String toString() {
+	public String toString() {
 		return "VERTEX='" + endVertex + "'";
 	}
 

@@ -52,32 +52,33 @@ import org.graphwalker.conditions.StopCondition;
 public class CodeGenerator extends ListGenerator {
 
 	public CodeGenerator(StopCondition stopCondition) {
-    super(stopCondition);
-  }
+		super(stopCondition);
+	}
 
-  public CodeGenerator() {
-    super();
-  }
+	public CodeGenerator() {
+		super();
+	}
 
-  private String[] template; // {HEADER, BODY, FOOTER}
+	private String[] template; // {HEADER, BODY, FOOTER}
 	private boolean first = true;
-
 
 	public void setTemplate(String[] template) {
 		this.template = template;
 	}
 
 	@Override
-  public String[] getNext() {
+	public String[] getNext() {
 		String[] retur = super.getNext();
-		if ( retur[0].isEmpty() ) {
+		if (retur[0].isEmpty()) {
 			retur[1] = "";
-			return retur; 
+			return retur;
 		}
 		retur[0] = (first && template[0].length() > 0 ? template[0] + "\n" : "")
 		    + // HEADER
-		    template[1] // BODY
-		        .replaceAll("\\{LABEL\\}", retur[0]).replaceAll("\\{EDGE_VERTEX\\}", retur[1]).replaceAll("\\{DESCRIPTION\\}", retur[2].replaceAll("\n", "\n   * "))
+		    template[1]
+		        // BODY
+		        .replaceAll("\\{LABEL\\}", retur[0]).replaceAll("\\{EDGE_VERTEX\\}", retur[1])
+		        .replaceAll("\\{DESCRIPTION\\}", retur[2].replaceAll("\n", "\n   * "))
 		    + (!hasNext() && template[2].length() > 0 ? "\n" + template[2] : ""); // FOOTER
 		retur[1] = "";
 		first = false;
@@ -85,7 +86,7 @@ public class CodeGenerator extends ListGenerator {
 	}
 
 	@Override
-  public String toString() {
+	public String toString() {
 		return "CODE";
 	}
 }

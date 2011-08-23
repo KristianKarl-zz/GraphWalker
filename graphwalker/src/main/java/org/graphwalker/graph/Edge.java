@@ -71,20 +71,20 @@ public class Edge extends AbstractElement {
 	public void setGuardKey(String guardKey) {
 		this.guardKey = guardKey;
 	}
-	
+
 	/**
-	 * The label of an edge has the following format:
-	 * Label Parameter [Guard] / Action1;Action2;ActionN;
-	 * Keyword
-	 * Where the Label, Parameter. Guard, Actions and Keyword are optional.
+	 * The label of an edge has the following format: Label Parameter [Guard] /
+	 * Action1;Action2;ActionN; Keyword Where the Label, Parameter. Guard, Actions
+	 * and Keyword are optional.
+	 * 
 	 * @param str
 	 * @return
 	 */
-	static public String[] getGuardAndActions( String str ) {
+	static public String[] getGuardAndActions(String str) {
 		Pattern p = Pattern.compile("(.*)", Pattern.MULTILINE);
 		Matcher m = p.matcher(str);
 		String label = null;
-		String[] guardAndAction = {"",""}; 
+		String[] guardAndAction = { "", "" };
 		if (m.find()) {
 			label = m.group(1);
 
@@ -115,18 +115,18 @@ public class Edge extends AbstractElement {
 	}
 
 	/**
-	 * The label of an edge has the following format:
-	 * Label Parameter [Guard] / Action1;Action2;ActionN;
-	 * Keyword
-	 * Where the Label, Parameter. Guard, Actions and Keyword are optional.
+	 * The label of an edge has the following format: Label Parameter [Guard] /
+	 * Action1;Action2;ActionN; Keyword Where the Label, Parameter. Guard, Actions
+	 * and Keyword are optional.
+	 * 
 	 * @param str
 	 * @return
 	 */
-	static public String[] getLabelAndParameter( String str ) {
+	static public String[] getLabelAndParameter(String str) {
 		Pattern p = Pattern.compile("(.*)", Pattern.MULTILINE);
 		Matcher m = p.matcher(str);
 		String label = null;
-		String[] labelAndParameter = {"",""}; 
+		String[] labelAndParameter = { "", "" };
 		if (m.find()) {
 			label = m.group(1);
 
@@ -151,16 +151,16 @@ public class Edge extends AbstractElement {
 		}
 		return labelAndParameter;
 	}
-	
+
 	/**
-	 * If weight is defined, find it...
-	 * weight must be associated with a value, which depicts the
-	 * probability for the edge to be executed.
-	 * A value of 0.05 is the same as 5% chance of going down this road.
+	 * If weight is defined, find it... weight must be associated with a value,
+	 * which depicts the probability for the edge to be executed. A value of 0.05
+	 * is the same as 5% chance of going down this road.
+	 * 
 	 * @param str
 	 * @return
 	 */
-	static public float getWeight( String str ) {
+	static public float getWeight(String str) {
 		Pattern p = Pattern.compile("\\n(weight\\s*=\\s*(.*))", Pattern.MULTILINE);
 		Matcher m = p.matcher(str);
 		Float weight = new Float(0);

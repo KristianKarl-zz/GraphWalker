@@ -72,7 +72,7 @@ public class ReachedStateTest extends TestCase {
 	public void testFulfillment() throws GeneratorException, InterruptedException {
 		ModelBasedTesting mbt = ModelBasedTesting.getInstance();
 		mbt.setGraph(graph);
-    mbt.setGenerator(new RandomPathGenerator(new ReachedVertex("V2")));
+		mbt.setGenerator(new RandomPathGenerator(new ReachedVertex("V2")));
 		assertTrue(mbt.hasNextStep());
 
 		assertEquals(0, mbt.getGenerator().getStopCondition().getFulfilment(), 0.01);
@@ -85,7 +85,7 @@ public class ReachedStateTest extends TestCase {
 	public void testIsFulfilled() throws GeneratorException, InterruptedException {
 		ModelBasedTesting mbt = ModelBasedTesting.getInstance();
 		mbt.setGraph(graph);
-    mbt.setGenerator(new RandomPathGenerator(new ReachedVertex("V2")));
+		mbt.setGenerator(new RandomPathGenerator(new ReachedVertex("V2")));
 		assertTrue(mbt.hasNextStep());
 
 		assertEquals(false, mbt.getGenerator().getStopCondition().isFulfilled());

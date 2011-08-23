@@ -40,21 +40,21 @@ public class VertexCoverage extends StopCondition {
 	}
 
 	@Override
-  public boolean isFulfilled() {
+	public boolean isFulfilled() {
 		double vertices = machine.getAllVertices().size();
 		double covered = machine.getNumOfCoveredVertices();
 		return (covered / vertices) >= limit;
 	}
 
 	@Override
-  public double getFulfilment() {
+	public double getFulfilment() {
 		double vertices = machine.getAllVertices().size();
 		double covered = machine.getNumOfCoveredVertices();
 		return (covered / vertices) / limit;
 	}
 
 	@Override
-  public String toString() {
+	public String toString() {
 		return "SC>=" + (int) (100 * limit);
 	}
 

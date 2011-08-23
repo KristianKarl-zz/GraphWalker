@@ -72,7 +72,7 @@ public class RequirementCoverageStatistics extends Statistics {
 	 * .impl.AbstractElement)
 	 */
 	@Override
-  public void addProgress(AbstractElement element) {
+	public void addProgress(AbstractElement element) {
 		if (element != null && !element.getReqTagKey().isEmpty()) {
 			appendRequirements(usedRequirements, element.getReqTagKey());
 		}
@@ -84,7 +84,7 @@ public class RequirementCoverageStatistics extends Statistics {
 	 * @see org.graphwalker.statistics.Statistics#getCurrent()
 	 */
 	@Override
-  public int getCurrent() {
+	public int getCurrent() {
 		return usedRequirements.size();
 	}
 
@@ -94,7 +94,7 @@ public class RequirementCoverageStatistics extends Statistics {
 	 * @see org.graphwalker.statistics.Statistics#getMax()
 	 */
 	@Override
-  public int getMax() {
+	public int getMax() {
 		return allRequirements.size();
 	}
 

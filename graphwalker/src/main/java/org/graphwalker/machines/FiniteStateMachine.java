@@ -56,7 +56,7 @@ public class FiniteStateMachine {
 	private Stack<Edge> edgeStack;
 	private Stack<Integer> vertexStore;
 	private int numberOfEdgesTravesed = 0;
-	
+
 	private boolean calculatingPath = false;
 	private int numOfCoveredEdges = 0;
 	private int numOfCoveredVertices = 0;
@@ -82,7 +82,7 @@ public class FiniteStateMachine {
 		setAsVisited(e);
 	}
 
-  public AbstractElement findElement(Integer index) {
+	public AbstractElement findElement(Integer index) {
 		for (Vertex vertex : model.getVertices()) {
 			if (vertex.getIndexKey().equals(index)) {
 				return vertex;
@@ -124,18 +124,18 @@ public class FiniteStateMachine {
 		setVertex(Keywords.START_NODE);
 	}
 
-  public Vertex getCurrentVertex() {
-    return currentVertex;
-  }
+	public Vertex getCurrentVertex() {
+		return currentVertex;
+	}
 
-  public Vertex getStartVertex() {
-    for (Vertex vertex : model.getVertices()) {
-      if ( vertex.getLabelKey().equals(Keywords.START_NODE) ) {
-        return vertex;
-      }
-    }
-    return null;
-  }
+	public Vertex getStartVertex() {
+		for (Vertex vertex : model.getVertices()) {
+			if (vertex.getLabelKey().equals(Keywords.START_NODE)) {
+				return vertex;
+			}
+		}
+		return null;
+	}
 
 	public String getLastEdgeName() {
 		return lastEdge.getLabelKey();
@@ -149,16 +149,16 @@ public class FiniteStateMachine {
 		return model.getVertices();
 	}
 
-  public Collection<Edge> getAllEdges() {
-    return model.getEdges();
-  }
+	public Collection<Edge> getAllEdges() {
+		return model.getEdges();
+	}
 
-  public Collection<Edge> getAllEdgesExceptStartEdge() {
-     Vector<Edge> list = new Vector<Edge>(model.getEdges());
-     Edge e = (Edge) model.getOutEdges(getStartVertex()).toArray()[0];
-     list.remove(e);
-     return list;
-  }
+	public Collection<Edge> getAllEdgesExceptStartEdge() {
+		Vector<Edge> list = new Vector<Edge>(model.getEdges());
+		Edge e = (Edge) model.getOutEdges(getStartVertex()).toArray()[0];
+		list.remove(e);
+		return list;
+	}
 
 	public Set<Edge> getCurrentOutEdges() throws FoundNoEdgeException {
 		Set<Edge> retur = new HashSet<Edge>(model.getOutEdges(currentVertex));
@@ -300,32 +300,32 @@ public class FiniteStateMachine {
 		Vector<String> notCovered = new Vector<String>();
 		Hashtable<String, Integer> reqResult = new Hashtable<String, Integer>();
 		Enumeration<String> e = getAllRequirements().keys();
-		while(e.hasMoreElements()) {
+		while (e.hasMoreElements()) {
 			String req = e.nextElement();
 			for (Edge edge : model.getEdges()) {
-				if ( edge.getReqTagKey().contains(req) ) {
-					if ( reqResult.get(req) == null ) {
+				if (edge.getReqTagKey().contains(req)) {
+					if (reqResult.get(req) == null) {
 						reqResult.put(req, edge.getReqTagResult());
-					}	else {
-						if ( edge.getReqTagResult() == 2 ) {
+					} else {
+						if (edge.getReqTagResult() == 2) {
 							reqResult.put(req, 2);
 						}
 					}
-				}				
+				}
 			}
 			for (Vertex vertex : model.getVertices()) {
-				if ( vertex.getReqTagKey().contains(req) ) {
-					if ( reqResult.get(req) == null ) {
+				if (vertex.getReqTagKey().contains(req)) {
+					if (reqResult.get(req) == null) {
 						reqResult.put(req, vertex.getReqTagResult());
-					}	else {
-						if ( vertex.getReqTagResult() == 2 ) {
+					} else {
+						if (vertex.getReqTagResult() == 2) {
 							reqResult.put(req, 2);
 						}
 					}
-				}				
+				}
 			}
 		}
-		
+
 		for (Edge edge : model.getEdges()) {
 			if (edge.getVisitedKey() <= 0) {
 				notCovered.add("Edge not reached: " + edge + newLine);
@@ -344,9 +344,9 @@ public class FiniteStateMachine {
 		}
 		if (reqResult.size() > 0) {
 			e = getAllRequirements().keys();
-			while(e.hasMoreElements()) {
+			while (e.hasMoreElements()) {
 				String req = e.nextElement();
-				switch ( reqResult.get(req) ){
+				switch (reqResult.get(req)) {
 				case 0:
 					retur += "Requirement: " + req + " is not tested." + newLine;
 					break;
@@ -365,7 +365,7 @@ public class FiniteStateMachine {
 	}
 
 	public boolean isCurrentVertex(Vertex vertex) {
-		if (getCurrentVertex() != null )
+		if (getCurrentVertex() != null)
 			return getCurrentVertex().equals(vertex);
 		return false;
 	}
@@ -381,7 +381,7 @@ public class FiniteStateMachine {
 
 		return unique;
 	}
-	
+
 	private int getEdgeCoverage(Collection<Edge> modelItems) {
 		int unique = 0;
 
@@ -583,5 +583,5 @@ public class FiniteStateMachine {
 		for (Edge edge : model.getEdges()) {
 			edge.setVisitedKey(0);
 		}
-  }
+	}
 }

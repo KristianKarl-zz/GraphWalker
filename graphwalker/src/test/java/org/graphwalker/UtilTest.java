@@ -79,7 +79,7 @@ public class UtilTest extends TestCase {
 		logger.debug("Working");
 	}
 
-	public void testReadPropertySOAP_GUI() {		
-		assertEquals(true, Util.readSoapGuiStartupState()==true||Util.readSoapGuiStartupState()==false);
+	public void testReadPropertySOAP_GUI() {
+		assertEquals(true, Util.readSoapGuiStartupState() == true || Util.readSoapGuiStartupState() == false);
 	}
 }

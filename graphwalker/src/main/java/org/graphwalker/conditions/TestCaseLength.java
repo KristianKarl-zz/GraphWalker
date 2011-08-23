@@ -28,7 +28,7 @@ public class TestCaseLength extends StopCondition {
 	private int numberOfEdges;
 
 	@Override
-  public boolean isFulfilled() {
+	public boolean isFulfilled() {
 		return machine.getNumberOfEdgesTravesed() >= numberOfEdges;
 	}
 
@@ -37,12 +37,12 @@ public class TestCaseLength extends StopCondition {
 	}
 
 	@Override
-  public double getFulfilment() {
+	public double getFulfilment() {
 		return machine.getNumberOfEdgesTravesed() / (double) numberOfEdges;
 	}
 
 	@Override
-  public String toString() {
+	public String toString() {
 		return "L=" + numberOfEdges;
 	}
 

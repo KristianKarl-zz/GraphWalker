@@ -73,13 +73,13 @@ public class RequirementCoverageTest extends TestCase {
 
 	public void testConstructor() {
 		ModelBasedTesting mbt = ModelBasedTesting.getInstance();
-    mbt.setGenerator(new RandomPathGenerator(new RequirementCoverage()));
+		mbt.setGenerator(new RandomPathGenerator(new RequirementCoverage()));
 	}
 
 	public void testFulfillment() throws GeneratorException, InterruptedException {
 		ModelBasedTesting mbt = ModelBasedTesting.getInstance();
 		mbt.setGraph(graph);
-    mbt.setGenerator(new RandomPathGenerator(new RequirementCoverage()));
+		mbt.setGenerator(new RandomPathGenerator(new RequirementCoverage()));
 		assertTrue(mbt.hasNextStep());
 
 		assertEquals((double) 0 / 4, mbt.getGenerator().getStopCondition().getFulfilment(), 0.01);
@@ -92,7 +92,7 @@ public class RequirementCoverageTest extends TestCase {
 	public void testIsFulfilled() throws GeneratorException, InterruptedException {
 		ModelBasedTesting mbt = ModelBasedTesting.getInstance();
 		mbt.setGraph(graph);
-    mbt.setGenerator(new RandomPathGenerator(new RequirementCoverage()));
+		mbt.setGenerator(new RandomPathGenerator(new RequirementCoverage()));
 		assertTrue(mbt.hasNextStep());
 
 		assertEquals(false, mbt.getGenerator().getStopCondition().isFulfilled());

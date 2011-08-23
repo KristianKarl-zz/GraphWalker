@@ -210,8 +210,8 @@ public class AbstractElement {
 	 * Associates a requirement to the edge/vertex.
 	 * 
 	 * @param reqTagKey
-	 *            The requirement. It can be one or many, if many that are comma
-	 *            separated.
+	 *          The requirement. It can be one or many, if many that are comma
+	 *          separated.
 	 */
 	public void setReqTagKey(String reqTagKey) {
 		this.reqTagKey = reqTagKey;
@@ -373,23 +373,19 @@ public class AbstractElement {
 		Pattern p;
 		Matcher m;
 		String label = "";
-		p = Pattern.compile("\\<\\!\\[CDATA\\[.*\\]\\]\\>\\</data\\>",
-				Pattern.MULTILINE);
+		p = Pattern.compile("\\<\\!\\[CDATA\\[.*\\]\\]\\>\\</data\\>", Pattern.MULTILINE);
 		{
 			m = p.matcher(str);
 			if (m.find()) {
 				label = m.group(1);
 				if (label.length() <= 0) {
-					throw new RuntimeException(
-							"Vertex is missing mandatory label");
+					throw new RuntimeException("Vertex is missing mandatory label");
 				}
 				if (label.matches(".*[\\s].*")) {
-					throw new RuntimeException("Label of vertex: '" + label
-							+ "', containing whitespaces");
+					throw new RuntimeException("Label of vertex: '" + label + "', containing whitespaces");
 				}
 				if (Keywords.isKeyWord(label)) {
-					throw new RuntimeException("The label of vertex: '" + label
-							+ "', is a reserved keyword");
+					throw new RuntimeException("The label of vertex: '" + label + "', is a reserved keyword");
 				}
 			} else {
 				throw new RuntimeException("Label must be defined for vertex");

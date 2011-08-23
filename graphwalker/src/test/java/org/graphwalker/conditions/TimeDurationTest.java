@@ -66,7 +66,7 @@ public class TimeDurationTest extends TestCase {
 
 	public void testConstructor() {
 		ModelBasedTesting mbt = ModelBasedTesting.getInstance();
-    mbt.setGenerator(new RandomPathGenerator(new TimeDuration(1)));
+		mbt.setGenerator(new RandomPathGenerator(new TimeDuration(1)));
 	}
 
 	public void testFulfillment() throws InterruptedException, GeneratorException {
@@ -74,7 +74,7 @@ public class TimeDurationTest extends TestCase {
 		double startTime = System.currentTimeMillis();
 		mbt.setGraph(graph);
 		mbt.setGenerator(Keywords.GENERATOR_RANDOM);
-    mbt.setGenerator(new RandomPathGenerator(new TimeDuration(1)));
+		mbt.setGenerator(new RandomPathGenerator(new TimeDuration(1)));
 		assertTrue(mbt.hasNextStep());
 
 		while ((System.currentTimeMillis() - startTime) < 10)
@@ -92,7 +92,7 @@ public class TimeDurationTest extends TestCase {
 		ModelBasedTesting mbt = ModelBasedTesting.getInstance();
 		double startTime = System.currentTimeMillis();
 		mbt.setGraph(graph);
-    mbt.setGenerator(new RandomPathGenerator(new TimeDuration(1)));
+		mbt.setGenerator(new RandomPathGenerator(new TimeDuration(1)));
 		assertTrue(mbt.hasNextStep());
 
 		while ((System.currentTimeMillis() - startTime) < 10)

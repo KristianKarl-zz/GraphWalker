@@ -53,7 +53,7 @@ public class Graph extends SparseMultigraph<Vertex, Edge> {
 	}
 
 	@Override
-  public String toString() {
+	public String toString() {
 		String str = "";
 		if (!getFileKey().isEmpty())
 			str += "File: " + getFileKey() + ", ";
@@ -65,31 +65,31 @@ public class Graph extends SparseMultigraph<Vertex, Edge> {
 	}
 
 	@Override
-  public boolean addEdge(Edge e, Vertex source, Vertex dest) {
+	public boolean addEdge(Edge e, Vertex source, Vertex dest) {
 		return super.addEdge(e, source, dest, EdgeType.DIRECTED);
 	}
 
 	public Vertex findVertex(String vertexName) {
-		logger.debug("Looking for vertex: " + vertexName + ", in model: " + this.toString() );
+		logger.debug("Looking for vertex: " + vertexName + ", in model: " + this.toString());
 		for (Vertex vertex : getVertices()) {
-			logger.debug("  " + vertex.getLabelKey() );
+			logger.debug("  " + vertex.getLabelKey());
 			if ((vertex.getLabelKey()).equals(vertexName)) {
-				logger.debug("    Found it: " + vertex );
+				logger.debug("    Found it: " + vertex);
 				return vertex;
 			}
 		}
 		return null;
 	}
-	
-	 public Edge findEdge(String edgeName) {
-	    logger.debug("Looking for edge: " + edgeName + ", in model: " + this.toString() );
-	    for (Edge edge : getEdges()) {
-	      logger.debug("  " + edge.getLabelKey() );
-	      if ((edge.getLabelKey()).equals(edgeName)) {
-	        logger.debug("    Found it: " + edge );
-	        return edge;
-	      }
-	    }
-	    return null;
-	  }
+
+	public Edge findEdge(String edgeName) {
+		logger.debug("Looking for edge: " + edgeName + ", in model: " + this.toString());
+		for (Edge edge : getEdges()) {
+			logger.debug("  " + edge.getLabelKey());
+			if ((edge.getLabelKey()).equals(edgeName)) {
+				logger.debug("    Found it: " + edge);
+				return edge;
+			}
+		}
+		return null;
+	}
 }

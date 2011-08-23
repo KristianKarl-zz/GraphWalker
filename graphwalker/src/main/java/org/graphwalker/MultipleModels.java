@@ -4,29 +4,28 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 
-
 /**
- * A class that handles multiple instances of ModelBasedTesting models
- * and can execute them in parallel. This is only usable for running
- * online since multiple models will be executed at the same time.
- * The method is to add a model and then execute it when appropriate.
+ * A class that handles multiple instances of ModelBasedTesting models and can
+ * execute them in parallel. This is only usable for running online since
+ * multiple models will be executed at the same time. The method is to add a
+ * model and then execute it when appropriate.
  * 
  * @author Ola Sundin
  * @see ModelBasedTesting
- *
+ * 
  */
 public class MultipleModels {
 	/**
 	 * The maximum number of names of the same base.
 	 */
 	private static final int MAX_NAMES = 1000;
-	
+
 	private static MultipleModels instance;
 	private HashMap<String, ModelBasedTesting> models;
 	private HashMap<String, ModelBasedTesting> executingModels;
 	private HashMap<String, ModelBasedTesting> finishedModels;
 	private LinkedHashSet<String> reservedNames;
-	
+
 	/**
 	 * The constructor is private so only one instance exists of the object.
 	 */
@@ -38,8 +37,9 @@ public class MultipleModels {
 	}
 
 	/**
-	 * A static method of getting the only instance of the class. If the instance is
-	 * not initialized a new instance is created.
+	 * A static method of getting the only instance of the class. If the instance
+	 * is not initialized a new instance is created.
+	 * 
 	 * @return the only instance of the class
 	 */
 	public static MultipleModels getInstance() {
@@ -50,34 +50,40 @@ public class MultipleModels {
 	}
 
 	/**
-	 * Creating new lists for the models.
-	 * If an instance of this class is to be 're-used', it may need to clear
-	 * the lists calling this method.
+	 * Creating new lists for the models. If an instance of this class is to be
+	 * 're-used', it may need to clear the lists calling this method.
 	 */
 	public void reset() {
-    models = new HashMap<String, ModelBasedTesting>();
-    executingModels = new HashMap<String, ModelBasedTesting>();
-    finishedModels = new HashMap<String, ModelBasedTesting>();
-    reservedNames = new LinkedHashSet<String>();    
-  }
-	
+		models = new HashMap<String, ModelBasedTesting>();
+		executingModels = new HashMap<String, ModelBasedTesting>();
+		finishedModels = new HashMap<String, ModelBasedTesting>();
+		reservedNames = new LinkedHashSet<String>();
+	}
+
 	/**
-	 * Returns the ModelBasedTesting object for the submitted key.
-	 * If not such key was found null is returned.
-	 * @param modelName the key which corresponds to the wanted model
-	 * @return the ModelBasedTesting object for that key or null if key was not found
+	 * Returns the ModelBasedTesting object for the submitted key. If not such key
+	 * was found null is returned.
+	 * 
+	 * @param modelName
+	 *          the key which corresponds to the wanted model
+	 * @return the ModelBasedTesting object for that key or null if key was not
+	 *         found
 	 */
 	public ModelBasedTesting getModel(String modelName) {
 		return models.get(modelName);
 	}
-	
+
 	/**
 	 * Adds a new model to the set of models. If the submitted name already exists
-	 * in the set an exception is thrown. In order to guarantee uniqueness of the 
-	 * model name use the helper function {@link #getUniqueName(String)}. 
-	 * @param modelName the name of the model
-	 * @param model the model to be added
-	 * @throws IllegalArgumentException if the given name has all ready been used.
+	 * in the set an exception is thrown. In order to guarantee uniqueness of the
+	 * model name use the helper function {@link #getUniqueName(String)}.
+	 * 
+	 * @param modelName
+	 *          the name of the model
+	 * @param model
+	 *          the model to be added
+	 * @throws IllegalArgumentException
+	 *           if the given name has all ready been used.
 	 */
 	public synchronized void addModel(String modelName, ModelBasedTesting model) throws IllegalArgumentException {
 		if (models.containsKey(modelName)) {
@@ -91,33 +97,39 @@ public class MultipleModels {
 
 	/**
 	 * Checks whether a model is executing or not.
-	 * @param modelName the name of the model
+	 * 
+	 * @param modelName
+	 *          the name of the model
 	 * @return true if the model is being executed
 	 */
 	public boolean isExecuting(String modelName) {
 		return executingModels.containsKey(modelName);
 	}
-	
+
 	/**
 	 * Checks whether a model is finished or not.
-	 * @param modelName the name of the model
+	 * 
+	 * @param modelName
+	 *          the name of the model
 	 * @return true if the model is finished
 	 */
 	public boolean isFinished(String modelName) {
 		return finishedModels.containsKey(modelName);
 	}
-	
+
 	/**
 	 * Checks if all models are finished.
+	 * 
 	 * @return true if all models are finished
 	 */
 	public boolean isFinished() {
 		return finishedModels.size() > 0 && executingModels.size() == 0;
 	}
-	
+
 	/**
-	 * Returns the statistics from all models.
-	 * This methods is blocking and will wait until all models are finished before returning
+	 * Returns the statistics from all models. This methods is blocking and will
+	 * wait until all models are finished before returning
+	 * 
 	 * @return the aggregated statistics for all models
 	 */
 	public String getStatistics() throws InterruptedException {
@@ -125,7 +137,7 @@ public class MultipleModels {
 		while (!isFinished()) {
 			Thread.sleep(10);
 		}
-		
+
 		Iterator<String> iterator = finishedModels.keySet().iterator();
 		while (iterator.hasNext()) {
 			String currentModelName = iterator.next();
@@ -134,13 +146,18 @@ public class MultipleModels {
 		}
 		return statistics.toString();
 	}
-	
+
 	/**
 	 * Will start the execution of the given model in a separate thread.
-	 * @param modelName the name of the model to start the execution for
-	 * @param modelAPI an instance of the class that the model should call
-	 * @throws IllegalArgumentException if no model with the given name exists
-	 * @throws IllegalStateException if the given model is already being executed
+	 * 
+	 * @param modelName
+	 *          the name of the model to start the execution for
+	 * @param modelAPI
+	 *          an instance of the class that the model should call
+	 * @throws IllegalArgumentException
+	 *           if no model with the given name exists
+	 * @throws IllegalStateException
+	 *           if the given model is already being executed
 	 */
 	public void executeModel(String modelName, Object modelAPI) throws IllegalArgumentException, IllegalStateException {
 		if (!models.containsKey(modelName)) {
@@ -153,32 +170,40 @@ public class MultipleModels {
 		Thread t = new Thread(new ModelThread(modelName, models.get(modelName), modelAPI));
 		t.start();
 	}
-	
+
 	/**
 	 * Marks the model as finished
-	 * @param modelName the name of the model to finish
+	 * 
+	 * @param modelName
+	 *          the name of the model to finish
 	 */
 	private void finishModel(String modelName) {
 		executingModels.remove(modelName);
 		finishedModels.put(modelName, models.get(modelName));
 	}
-	
+
 	/**
 	 * Marks a model as interrupted
-	 * @param modelName the name of the model that was interrupted
+	 * 
+	 * @param modelName
+	 *          the name of the model that was interrupted
 	 */
 	private void interruptModel(String modelName) {
 		// TODO Add interruption handling
 		executingModels.remove(modelName);
 	}
-	
+
 	/**
-	 * Helper method to create unique names in a Set of keys. The format of the names will be
-	 * <i>&lt;name&gt;_&lt;index&gt;</i>.
-	 * The first name will be the name only and the second will get the index 1.
-	 * @param desiredName the desired name
-	 * @param existingKeys the set of keys that should contain the name
-	 * @return the actual name that is unique, could be the same as the desired name
+	 * Helper method to create unique names in a Set of keys. The format of the
+	 * names will be <i>&lt;name&gt;_&lt;index&gt;</i>. The first name will be the
+	 * name only and the second will get the index 1.
+	 * 
+	 * @param desiredName
+	 *          the desired name
+	 * @param existingKeys
+	 *          the set of keys that should contain the name
+	 * @return the actual name that is unique, could be the same as the desired
+	 *         name
 	 */
 	public synchronized String getUniqueName(String desiredName) throws IndexOutOfBoundsException {
 		String actualName = desiredName;
@@ -191,23 +216,24 @@ public class MultipleModels {
 		reservedNames.add(actualName);
 		return actualName;
 	}
-	
+
 	/**
 	 * Private class for execution of models in a seperate thread.
+	 * 
 	 * @author Ola Sundin
-	 *
+	 * 
 	 */
 	private class ModelThread implements Runnable {
 		private String modelName;
 		private ModelBasedTesting model;
 		private Object modelAPI;
-		
+
 		public ModelThread(String modelName, ModelBasedTesting model, Object modelAPI) {
 			this.modelName = modelName;
 			this.model = model;
 			this.modelAPI = modelAPI;
 		}
-		
+
 		@Override
 		public void run() {
 			try {
@@ -217,10 +243,9 @@ public class MultipleModels {
 				interruptModel(modelName);
 				Thread.currentThread().interrupt();
 			}
-			
+
 		}
-		
+
 	}
-	
-	
+
 }

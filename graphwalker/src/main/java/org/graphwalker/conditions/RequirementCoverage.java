@@ -39,7 +39,7 @@ public class RequirementCoverage extends StopCondition {
 	}
 
 	@Override
-  public boolean isFulfilled() {
+	public boolean isFulfilled() {
 		int stats[] = machine.getStatistics();
 		double requirements = stats[5];
 		double covered = stats[6];
@@ -47,7 +47,7 @@ public class RequirementCoverage extends StopCondition {
 	}
 
 	@Override
-  public double getFulfilment() {
+	public double getFulfilment() {
 		int stats[] = machine.getStatistics();
 		double requirements = stats[5];
 		double covered = stats[6];
@@ -55,7 +55,7 @@ public class RequirementCoverage extends StopCondition {
 	}
 
 	@Override
-  public String toString() {
+	public String toString() {
 		return "RC>=" + (int) (100 * limit);
 	}
 

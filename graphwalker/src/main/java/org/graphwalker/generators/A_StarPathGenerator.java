@@ -40,23 +40,23 @@ import org.graphwalker.machines.FiniteStateMachine;
 public class A_StarPathGenerator extends PathGenerator {
 
 	public A_StarPathGenerator(StopCondition stopCondition) {
-    super(stopCondition);
-  }
+		super(stopCondition);
+	}
 
-  private Stack<Edge> preCalculatedPath = null;
+	private Stack<Edge> preCalculatedPath = null;
 	private Vertex lastVertex;
 
 	@Override
-  public void setMachine(FiniteStateMachine machine) {
+	public void setMachine(FiniteStateMachine machine) {
 		super.setMachine(machine);
 	}
 
 	public A_StarPathGenerator() {
-    super();
-  }
+		super();
+	}
 
-  @Override
-  public String[] getNext() throws InterruptedException {
+	@Override
+	public String[] getNext() throws InterruptedException {
 		Util.AbortIf(!hasNext(), "Finished");
 		if (lastVertex == null || lastVertex != getMachine().getCurrentVertex() || preCalculatedPath == null || preCalculatedPath.size() == 0) {
 			boolean oldCalculatingPathValue = getMachine().isCalculatingPath();
@@ -91,7 +91,7 @@ public class A_StarPathGenerator extends PathGenerator {
 
 		PriorityQueue<WeightedPath> a_starPath = new PriorityQueue<WeightedPath>(10, new Comparator<WeightedPath>() {
 			@Override
-      public int compare(WeightedPath arg0, WeightedPath arg1) {
+			public int compare(WeightedPath arg0, WeightedPath arg1) {
 				int retur = Double.compare(arg0.getWeight(), arg1.getWeight());
 				if (retur == 0)
 					retur = arg0.getPath().size() - arg1.getPath().size();
@@ -113,7 +113,7 @@ public class A_StarPathGenerator extends PathGenerator {
 		double maxWeight = 0;
 		while (a_starPath.size() > 0) {
 			if (Thread.interrupted()) {
-		    throw new InterruptedException();
+				throw new InterruptedException();
 			}
 
 			WeightedPath path = a_starPath.poll();
@@ -180,12 +180,12 @@ public class A_StarPathGenerator extends PathGenerator {
 	 * Will reset the generator to its initial vertex.
 	 */
 	@Override
-  public void reset() {
+	public void reset() {
 		preCalculatedPath = null;
 	}
 
 	@Override
-  public String toString() {
+	public String toString() {
 		return "A_STAR{" + super.toString() + "}";
 	}
 

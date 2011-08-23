@@ -37,10 +37,10 @@ public abstract class PathGenerator {
 	public abstract String[] getNext() throws InterruptedException;
 
 	public PathGenerator(StopCondition stopCondition) {
-    this.stopCondition = stopCondition;
-  }
+		this.stopCondition = stopCondition;
+	}
 
-  public boolean hasNext() {
+	public boolean hasNext() {
 		return !stopCondition.isFulfilled();
 	}
 
@@ -81,7 +81,7 @@ public abstract class PathGenerator {
 	}
 
 	@Override
-  public String toString() {
+	public String toString() {
 		if (getStopCondition() != null)
 			return getStopCondition().toString();
 		return "";

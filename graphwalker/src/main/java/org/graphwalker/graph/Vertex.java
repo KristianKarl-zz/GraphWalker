@@ -34,17 +34,17 @@ import org.graphwalker.Util;
 
 public class Vertex extends AbstractElement {
 
-  static Logger logger = Util.setupLogger(Vertex.class);
+	static Logger logger = Util.setupLogger(Vertex.class);
 	private String motherStartVertexKey = new String();
 	private String subGraphStartVertexKey = new String();
 	private Color fillColor = new Color(0);
 	private Point2D location = new Point2D.Float();
 	private float width = 0;
 	private float height = 0;
-  private boolean switchModelKey = false;
-  private boolean graphVertex = false;
+	private boolean switchModelKey = false;
+	private boolean graphVertex = false;
 
-  public float getWidth() {
+	public float getWidth() {
 		return width;
 	}
 
@@ -88,28 +88,29 @@ public class Vertex extends AbstractElement {
 		this.location = vertex.location;
 		this.width = vertex.width;
 		this.height = vertex.height;
-    this.switchModelKey = vertex.switchModelKey;
-    this.graphVertex = vertex.graphVertex;
+		this.switchModelKey = vertex.switchModelKey;
+		this.graphVertex = vertex.graphVertex;
 	}
 
 	/**
-	 * If SWITCH_MODEL is defined, find it...
-	 * If defined, it means that the vertex can be a point for switching to another model
-   * using the same label, see org.graphwalker.graph.Graph.getLabelKey().
+	 * If SWITCH_MODEL is defined, find it... If defined, it means that the vertex
+	 * can be a point for switching to another model using the same label, see
+	 * org.graphwalker.graph.Graph.getLabelKey().
+	 * 
 	 * @param str
 	 * @return
 	 */
-	static public Boolean isSwitchModel( String str ) {
+	static public Boolean isSwitchModel(String str) {
 		Pattern p = Pattern.compile("\\n(SWITCH_MODEL)", Pattern.MULTILINE);
 		Matcher m = p.matcher(str);
 		if (m.find()) {
-		  logger.debug("Found keyword SWITCH_MODEL");
+			logger.debug("Found keyword SWITCH_MODEL");
 			return true;
 		}
 		return false;
 	}
 
-  public String getSubGraphStartVertexKey() {
+	public String getSubGraphStartVertexKey() {
 		return subGraphStartVertexKey;
 	}
 
@@ -129,15 +130,14 @@ public class Vertex extends AbstractElement {
 	 * @param str
 	 * @return
 	 */
-	static public String getLabel( String str ) {
+	static public String getLabel(String str) {
 		Pattern p;
 		Matcher m;
 		String label = "";
-		if ( str.split("/").length > 1 ||
-				 str.split("\\[").length > 1 ) {
+		if (str.split("/").length > 1 || str.split("\\[").length > 1) {
 			p = Pattern.compile("^([\\w\\.]+)\\s?([^/^\\[]+)?", Pattern.MULTILINE);
 		} else {
-			p = Pattern.compile("(.*)", Pattern.MULTILINE);			
+			p = Pattern.compile("(.*)", Pattern.MULTILINE);
 		}
 		m = p.matcher(str);
 		if (m.find()) {
@@ -157,19 +157,19 @@ public class Vertex extends AbstractElement {
 		return label;
 	}
 
-  public boolean isSwitchModelKey() {
-    return switchModelKey;
-  }
+	public boolean isSwitchModelKey() {
+		return switchModelKey;
+	}
 
-  public void setSwitchModelKey(Boolean switchModel) {
-    this.switchModelKey = switchModel;
-  }
-	
-  public boolean isGraphVertex() {
-    return graphVertex;
-  }
+	public void setSwitchModelKey(Boolean switchModel) {
+		this.switchModelKey = switchModel;
+	}
 
-  public void setGraphVertex(boolean graphVertex) {
-    this.graphVertex = graphVertex;
-  }
+	public boolean isGraphVertex() {
+		return graphVertex;
+	}
+
+	public void setGraphVertex(boolean graphVertex) {
+		this.graphVertex = graphVertex;
+	}
 }

@@ -64,9 +64,8 @@ import org.jdom.JDOMException;
  * java -jar graphwalker.jar COMMAND <options>
  * </pre>
  * 
- * Where graphwalker.jar is the whole package org.graphwalker built using the tool Fat
- * Jar from http://fjep.sourceforge.net/ using org.graphwalker.CLI as the main
- * class<br>
+ * Where graphwalker.jar is the whole package org.graphwalker using org.graphwalker.CLI as
+ * the main class<br>
  * <br>
  * <strong>Example:</strong> Print help for graphwalker.jar<br>
  * 
@@ -123,6 +122,7 @@ public class CLI {
 			this.mbt = modelBasedTesting;
 		}
 
+		@Override
 		public void run() {
 			logger.info(mbt.getStatisticsVerbose());
 		}
@@ -135,7 +135,7 @@ public class CLI {
 	private static Endpoint endpoint = null;
 
 	public CLI() {
-    mbt = new ModelBasedTesting();
+		mbt = new ModelBasedTesting();
 	}
 
 	private ModelBasedTesting getMbt() {
@@ -357,8 +357,8 @@ public class CLI {
 			buildOnlineCLI();
 			header = "Run the test online.\n" + "MBT will return a test sequence, one line at a time to standard output, "
 			    + "it will wait until a line is fed back via standard input. The data fed back can be:\n"
-			    + "  '0' which means, continue the test as normal\n"
-			    + "  '2' will end the test normally\n" + "anything else will abort the execution.\n";
+			    + "  '0' which means, continue the test as normal\n" + "  '2' will end the test normally\n"
+			    + "anything else will abort the execution.\n";
 		} else if (helpSection.equalsIgnoreCase("requirements")) {
 			buildRequirementsCLI();
 			header = "Print a list of requiremnts found in the model.\n";
@@ -398,8 +398,8 @@ public class CLI {
 		} else if (helpSection.equalsIgnoreCase("log")) {
 			buildLogCLI();
 			header = "This will start MBT's GUI, and load a model and it's log file.\n"
-				+ "MBT parses the log file and shows the user how it traversed the model." 
-				+ " This is usefull when the user whishes to debug a session, and analyze the test.";
+			    + "MBT parses the log file and shows the user how it traversed the model."
+			    + " This is usefull when the user whishes to debug a session, and analyze the test.";
 		} else {
 			System.err.println("Type 'java -jar graphwalker.jar help' for usage.");
 			return;
@@ -411,8 +411,8 @@ public class CLI {
 
 	@SuppressWarnings("static-access")
 	private void buildRequirementsCLI() {
-		opt.addOption(OptionBuilder.isRequired().withArgName("file|folder").withDescription(
-		    "The file (or folder) containing graphml formatted files.").hasArg().withLongOpt("input_graphml").create("f"));
+		opt.addOption(OptionBuilder.isRequired().withArgName("file|folder")
+		    .withDescription("The file (or folder) containing graphml formatted files.").hasArg().withLongOpt("input_graphml").create("f"));
 	}
 
 	private String generateListOfValidStopConditions() {
@@ -437,25 +437,33 @@ public class CLI {
 		opt.addOption("a", "statistics", false, "Prints the statistics of the test, at the end of the run.");
 		opt.addOption("x", "extended", false, "Use an extended finite state machine to handle the model.");
 		opt.addOption("j", false, "Enable JavaScript engine");
-		opt.addOption(OptionBuilder.isRequired().withArgName("stop-condition").withDescription(
-		    "Defines the stop condition(s).\nHalts the generation after the specified stop-conditon(s) has been met. "
-		        + "At least 1 condition must be given. If more than 1 is given, the condition that meets "
-		        + "it's stop-condition first, will cause the generation to halt. "
-		        + "To separate multiple conditions, the separator pipe-character | is used. "
-		        + "A list of valid stop-conditions are:\n -------------------\n" + generateListOfValidStopConditions()
-		        + " -------------------\nFor more extensive examples, " + "see http://mbt.tigris.org/wiki/All_about_stop_conditions").hasArg()
-		    .create("s"));
-		opt.addOption(OptionBuilder.isRequired().withArgName("generator").withDescription(
-		    "The generator to be used when traversing the model. At least 1 generator must be given. "
-		        + "To separate multiple generators, the separator pipe-character | is used. "
-		        + "A list of valid generators are:\n -------------------\n" + generateListOfValidGenerators()
-		        + " -------------------\nFor more extensive examples, " + "see http://mbt.tigris.org/wiki/All_about_generators").hasArg()
+		opt.addOption(OptionBuilder
+		    .isRequired()
+		    .withArgName("stop-condition")
+		    .withDescription(
+		        "Defines the stop condition(s).\nHalts the generation after the specified stop-conditon(s) has been met. "
+		            + "At least 1 condition must be given. If more than 1 is given, the condition that meets "
+		            + "it's stop-condition first, will cause the generation to halt. "
+		            + "To separate multiple conditions, the separator pipe-character | is used. "
+		            + "A list of valid stop-conditions are:\n -------------------\n" + generateListOfValidStopConditions()
+		            + " -------------------\nFor more extensive examples, " + "see http://mbt.tigris.org/wiki/All_about_stop_conditions")
+		    .hasArg().create("s"));
+		opt.addOption(OptionBuilder
+		    .isRequired()
+		    .withArgName("generator")
+		    .withDescription(
+		        "The generator to be used when traversing the model. At least 1 generator must be given. "
+		            + "To separate multiple generators, the separator pipe-character | is used. "
+		            + "A list of valid generators are:\n -------------------\n" + generateListOfValidGenerators()
+		            + " -------------------\nFor more extensive examples, " + "see http://mbt.tigris.org/wiki/All_about_generators").hasArg()
 		    .create("g"));
-		opt.addOption(OptionBuilder.isRequired().withArgName("file|folder").withDescription(
-		    "The file (or folder) containing graphml formatted files.").hasArg().withLongOpt("input_graphml").create("f"));
-		opt.addOption(OptionBuilder.withArgName("seconds").withDescription(
-		    "Prints the test coverage of the graph during execution every <n second>. The printout goes to the log file defined in "
-		        + "mbt.properties, and only, if at least INFO level is set in " + "that same file.").hasArg().withLongOpt("log-coverage")
+		opt.addOption(OptionBuilder.isRequired().withArgName("file|folder")
+		    .withDescription("The file (or folder) containing graphml formatted files.").hasArg().withLongOpt("input_graphml").create("f"));
+		opt.addOption(OptionBuilder
+		    .withArgName("seconds")
+		    .withDescription(
+		        "Prints the test coverage of the graph during execution every <n second>. The printout goes to the log file defined in "
+		            + "mbt.properties, and only, if at least INFO level is set in " + "that same file.").hasArg().withLongOpt("log-coverage")
 		    .create("o"));
 		opt.addOption("c", "class_name", true, "Optional class name to use for test execution.");
 		opt.addOption("t", "report-template", true, "Optional report template to use. (Also requires option -r) (To be better documented)");
@@ -473,25 +481,33 @@ public class CLI {
 		opt.addOption("a", false, "Prints the statistics of the test, at the end of the run.");
 		opt.addOption("x", false, "Use an extended finite state machine to handle the model.");
 		opt.addOption("j", false, "Enable JavaScript engine");
-		opt.addOption(OptionBuilder.isRequired().withArgName("stop-condition").withDescription(
-		    "Defines the stop condition(s).\nHalts the generation after the specified stop-conditon(s) has been met. "
-		        + "At least 1 condition must be given. If more than 1 is given, the condition that meets "
-		        + "it's stop-condition first, will cause the generation to halt. "
-		        + "To separate multiple conditions, the separator pipe-character | is used. "
-		        + "A list of valid stop-conditions are:\n -------------------\n" + generateListOfValidStopConditions()
-		        + " -------------------\nFor more extensive examples, " + "see http://mbt.tigris.org/wiki/All_about_stop_conditions").hasArg()
-		    .create("s"));
-		opt.addOption(OptionBuilder.isRequired().withArgName("generator").withDescription(
-		    "The generator to be used when traversing the model. At least 1 generator must be given. "
-		        + "To separate multiple generators, the separator pipe-character | is used. "
-		        + "A list of valid generators are:\n -------------------\n" + generateListOfValidGenerators()
-		        + " -------------------\nFor more extensive examples, " + "see http://mbt.tigris.org/wiki/All_about_generators").hasArg()
+		opt.addOption(OptionBuilder
+		    .isRequired()
+		    .withArgName("stop-condition")
+		    .withDescription(
+		        "Defines the stop condition(s).\nHalts the generation after the specified stop-conditon(s) has been met. "
+		            + "At least 1 condition must be given. If more than 1 is given, the condition that meets "
+		            + "it's stop-condition first, will cause the generation to halt. "
+		            + "To separate multiple conditions, the separator pipe-character | is used. "
+		            + "A list of valid stop-conditions are:\n -------------------\n" + generateListOfValidStopConditions()
+		            + " -------------------\nFor more extensive examples, " + "see http://mbt.tigris.org/wiki/All_about_stop_conditions")
+		    .hasArg().create("s"));
+		opt.addOption(OptionBuilder
+		    .isRequired()
+		    .withArgName("generator")
+		    .withDescription(
+		        "The generator to be used when traversing the model. At least 1 generator must be given. "
+		            + "To separate multiple generators, the separator pipe-character | is used. "
+		            + "A list of valid generators are:\n -------------------\n" + generateListOfValidGenerators()
+		            + " -------------------\nFor more extensive examples, " + "see http://mbt.tigris.org/wiki/All_about_generators").hasArg()
 		    .create("g"));
-		opt.addOption(OptionBuilder.isRequired().withArgName("file|folder").withDescription(
-		    "The file (or folder) containing graphml formatted files.").hasArg().create("f"));
-		opt.addOption(OptionBuilder.withArgName("seconds").withDescription(
-		    "Prints the test coverage of the graph during execution every <n second>. The printout goes to the log file defined in "
-		        + "mbt.properties, and only, if at least INFO level is set in " + "that same file.").hasArg().create("o"));
+		opt.addOption(OptionBuilder.isRequired().withArgName("file|folder")
+		    .withDescription("The file (or folder) containing graphml formatted files.").hasArg().create("f"));
+		opt.addOption(OptionBuilder
+		    .withArgName("seconds")
+		    .withDescription(
+		        "Prints the test coverage of the graph during execution every <n second>. The printout goes to the log file defined in "
+		            + "mbt.properties, and only, if at least INFO level is set in " + "that same file.").hasArg().create("o"));
 		opt.addOption("t", "report-template", true, "Optional report template to use. (Also requires option -r) (To be better documented)");
 		opt.addOption("r", "report-output", true,
 		    "Optional report filename to save report to. (Also requires option -t)  (To be better documented)");
@@ -505,29 +521,35 @@ public class CLI {
 	private void buildManualCLI() {
 		opt.addOption("x", false, "Use an extended finite state machine to handle the model.");
 		opt.addOption("j", false, "Enable JavaScript engine");
-		opt.addOption(OptionBuilder.isRequired().withArgName("stop-condition").withDescription(
-		    "Defines the stop condition(s).\nHalts the generation after the specified stop-conditon(s) has been met. "
-		        + "At least 1 condition must be given. If more than 1 is given, the condition that meets "
-		        + "it's stop-condition first, will cause the generation to halt. "
-		        + "To separate multiple conditions, the separator pipe-character | is used. "
-		        + "A list of valid stop-conditions are:\n -------------------\n" + generateListOfValidStopConditions()
-		        + " -------------------\nFor more extensive examples, " + "see http://mbt.tigris.org/wiki/All_about_stop_conditions").hasArg()
-		    .create("s"));
-		opt.addOption(OptionBuilder.isRequired().withArgName("generator").withDescription(
-		    "The generator to be used when traversing the model. At least 1 generator must be given. "
-		        + "To separate multiple generators, the separator pipe-character | is used. "
-		        + "A list of valid generators are:\n -------------------\n" + generateListOfValidGenerators()
-		        + " -------------------\nFor more extensive examples, " + "see http://mbt.tigris.org/wiki/All_about_generators").hasArg()
+		opt.addOption(OptionBuilder
+		    .isRequired()
+		    .withArgName("stop-condition")
+		    .withDescription(
+		        "Defines the stop condition(s).\nHalts the generation after the specified stop-conditon(s) has been met. "
+		            + "At least 1 condition must be given. If more than 1 is given, the condition that meets "
+		            + "it's stop-condition first, will cause the generation to halt. "
+		            + "To separate multiple conditions, the separator pipe-character | is used. "
+		            + "A list of valid stop-conditions are:\n -------------------\n" + generateListOfValidStopConditions()
+		            + " -------------------\nFor more extensive examples, " + "see http://mbt.tigris.org/wiki/All_about_stop_conditions")
+		    .hasArg().create("s"));
+		opt.addOption(OptionBuilder
+		    .isRequired()
+		    .withArgName("generator")
+		    .withDescription(
+		        "The generator to be used when traversing the model. At least 1 generator must be given. "
+		            + "To separate multiple generators, the separator pipe-character | is used. "
+		            + "A list of valid generators are:\n -------------------\n" + generateListOfValidGenerators()
+		            + " -------------------\nFor more extensive examples, " + "see http://mbt.tigris.org/wiki/All_about_generators").hasArg()
 		    .create("g"));
-		opt.addOption(OptionBuilder.isRequired().withArgName("file|folder").withDescription(
-		    "The file (or folder) containing graphml formatted files.").hasArg().create("f"));
+		opt.addOption(OptionBuilder.isRequired().withArgName("file|folder")
+		    .withDescription("The file (or folder) containing graphml formatted files.").hasArg().create("f"));
 		opt.addOption("w", "weighted", false, "Use weighted values if they exist in the model, and the generator is RANDOM.");
 	}
 
 	@SuppressWarnings("static-access")
 	private void buildMethodsCLI() {
-		opt.addOption(OptionBuilder.isRequired().withArgName("file|folder").withDescription(
-		    "The file (or folder) containing graphml formatted files.").hasArg().withLongOpt("input_graphml").create("f"));
+		opt.addOption(OptionBuilder.isRequired().withArgName("file|folder")
+		    .withDescription("The file (or folder) containing graphml formatted files.").hasArg().withLongOpt("input_graphml").create("f"));
 	}
 
 	/**
@@ -535,8 +557,8 @@ public class CLI {
 	 */
 	@SuppressWarnings("static-access")
 	private void buildMergeCLI() {
-		opt.addOption(OptionBuilder.isRequired().withArgName("file|folder").withDescription(
-		    "The file (or folder) containing graphml formatted files.").hasArg().withLongOpt("input_graphml").create("f"));
+		opt.addOption(OptionBuilder.isRequired().withArgName("file|folder")
+		    .withDescription("The file (or folder) containing graphml formatted files.").hasArg().withLongOpt("input_graphml").create("f"));
 		opt.addOption("i", "index", true, "Print out the INDEX value when merging models. Default is true");
 	}
 
@@ -545,8 +567,8 @@ public class CLI {
 	 */
 	@SuppressWarnings("static-access")
 	private void buildSourceCLI() {
-		opt.addOption(OptionBuilder.isRequired().withArgName("file|folder").withDescription(
-		    "The file (or folder) containing graphml formatted files.").hasArg().withLongOpt("input_graphml").create("f"));
+		opt.addOption(OptionBuilder.isRequired().withArgName("file|folder")
+		    .withDescription("The file (or folder) containing graphml formatted files.").hasArg().withLongOpt("input_graphml").create("f"));
 		opt.addOption(OptionBuilder.isRequired().withArgName("file").withDescription("The template file").hasArg().withLongOpt("template")
 		    .create("t"));
 	}
@@ -559,9 +581,11 @@ public class CLI {
 		opt.addOption("a", false, "Prints the statistics of the test, at the end of the run.");
 		opt.addOption(OptionBuilder.isRequired().withArgName("file").withDescription("The xml file containing the mbt settings.").hasArg()
 		    .create("f"));
-		opt.addOption(OptionBuilder.withArgName("seconds").withDescription(
-		    "Prints the test coverage of the graph during execution every <n second>. The printout goes to the log file defined in "
-		        + "mbt.properties, and only, if at least INFO level is set in " + "that same file.").hasArg().create("o"));
+		opt.addOption(OptionBuilder
+		    .withArgName("seconds")
+		    .withDescription(
+		        "Prints the test coverage of the graph during execution every <n second>. The printout goes to the log file defined in "
+		            + "mbt.properties, and only, if at least INFO level is set in " + "that same file.").hasArg().create("o"));
 		opt.addOption("d", "dry-run", false, "Will execute a dry-run of the model. Dialog will pop up for every edge and vertex.");
 	}
 
@@ -570,12 +594,13 @@ public class CLI {
 	 */
 	@SuppressWarnings("static-access")
 	private void buildSoapCLI() {
-		opt.addOption(OptionBuilder.withArgName("file").withDescription("The xml file containing the mbt model and settings.").hasArg().create(
-		    "f"));
-		opt.addOption(OptionBuilder.withArgName("interface").withDescription(
-		    "The network interface to which mbt should bind to. " + "If not given, the default is 0.0.0.0").hasArg().create("i"));
-		opt.addOption(OptionBuilder.withArgName("port").withDescription(
-		    "The port to which mbt should listen to. " + "If not given, the default is 9090").hasArg().create("p"));
+		opt.addOption(OptionBuilder.withArgName("file").withDescription("The xml file containing the mbt model and settings.").hasArg()
+		    .create("f"));
+		opt.addOption(OptionBuilder.withArgName("interface")
+		    .withDescription("The network interface to which mbt should bind to. " + "If not given, the default is 0.0.0.0").hasArg()
+		    .create("i"));
+		opt.addOption(OptionBuilder.withArgName("port")
+		    .withDescription("The port to which mbt should listen to. " + "If not given, the default is 9090").hasArg().create("p"));
 	}
 
 	/**
@@ -591,8 +616,8 @@ public class CLI {
 	 */
 	@SuppressWarnings("static-access")
 	private void buildLogCLI() {
-		opt.addOption(OptionBuilder.isRequired().withArgName("file|folder").withDescription(
-		    "The file (or folder) containing graphml formatted files.").hasArg().withLongOpt("input_graphml").create("f"));
+		opt.addOption(OptionBuilder.isRequired().withArgName("file|folder")
+		    .withDescription("The file (or folder) containing graphml formatted files.").hasArg().withLongOpt("input_graphml").create("f"));
 		opt.addOption(OptionBuilder.withArgName("log").withDescription("The log file from a previuos run.").hasArg().create("l"));
 	}
 
@@ -600,10 +625,11 @@ public class CLI {
 	 * Print version information
 	 */
 	private void printVersionInformation() {
-		System.out.println("org.graphwalker version "+mbt.getVersionString()+"\n");
+		System.out.println("org.graphwalker version " + mbt.getVersionString() + "\n");
 		System.out.println("org.graphwalker is open source software licensed under MIT licens");
 		System.out.println("The software (and it's source) can be downloaded from http://graphwalker.org");
-		System.out.println("For a complete list of this package software dependencies, see http://graphwalker.org:8080/job/graphwalker/site/dependencies.html");
+		System.out
+		    .println("For a complete list of this package software dependencies, see http://graphwalker.org:8080/job/graphwalker/site/dependencies.html");
 	}
 
 	/**
@@ -612,9 +638,10 @@ public class CLI {
 	 * @throws StopConditionException
 	 * @throws GeneratorException
 	 * @throws InterruptedException
-	 * @throws FileNotFoundException 
+	 * @throws FileNotFoundException
 	 */
-	private void RunCommandOffline(CommandLine cl) throws StopConditionException, GeneratorException, InterruptedException, FileNotFoundException {
+	private void RunCommandOffline(CommandLine cl) throws StopConditionException, GeneratorException, InterruptedException,
+	    FileNotFoundException {
 		/**
 		 * Get the model from the graphml file (or folder)
 		 */
@@ -635,12 +662,14 @@ public class CLI {
 		/*
 		 * Set the stop-conditions(s)
 		 */
-		AlternativeCondition alternativeCondition =  new AlternativeCondition();
+		AlternativeCondition alternativeCondition = new AlternativeCondition();
 		String[] stopConditions = cl.getOptionValue("s").split("\\|");
 		for (int i = 0; i < stopConditions.length; i++) {
 			String[] sc = stopConditions[i].trim().split(":");
-			alternativeCondition.add(Util.getCondition( null, Keywords.getStopCondition(sc[0].trim()), // Stop condition
-			    (sc.length == 1 ? "" : sc[1].trim()))); // Optional condition parameter
+			alternativeCondition.add(Util.getCondition(null, Keywords.getStopCondition(sc[0].trim()), // Stop
+																																																// condition
+			    (sc.length == 1 ? "" : sc[1].trim()))); // Optional condition
+			                                            // parameter
 		}
 
 		/*
@@ -660,9 +689,10 @@ public class CLI {
 			TimerTask logTask;
 			if (cl.hasOption("t") && cl.hasOption("r")) {
 				getMbt().setUseStatisticsManager(true);
-				getMbt().getStatisticsManager().setReportTemplate(new FileInputStream(  new File(cl.getOptionValue('t'))));
+				getMbt().getStatisticsManager().setReportTemplate(new FileInputStream(new File(cl.getOptionValue('t'))));
 				final String reportName = cl.getOptionValue('r');
 				logTask = new TimerTask() {
+					@Override
 					public void run() {
 						try {
 							getMbt().getStatisticsManager().writeFullReport(new PrintStream(reportName));
@@ -673,6 +703,7 @@ public class CLI {
 				};
 			} else {
 				logTask = new TimerTask() {
+					@Override
 					public void run() {
 						logger.info(getMbt().getStatisticsCompact());
 					}
@@ -691,7 +722,7 @@ public class CLI {
 			logger.info(mbt.getStatisticsCompact());
 		}
 		if (cl.hasOption("t") && cl.hasOption("r")) {
-			getMbt().getStatisticsManager().setReportTemplate(new FileInputStream(  new File(cl.getOptionValue('t'))));
+			getMbt().getStatisticsManager().setReportTemplate(new FileInputStream(new File(cl.getOptionValue('t'))));
 			getMbt().getStatisticsManager().writeFullReport(cl.getOptionValue('r'));
 		}
 
@@ -722,12 +753,14 @@ public class CLI {
 		/*
 		 * Set the stop-conditions(s)
 		 */
-		AlternativeCondition alternativeCondition =  new AlternativeCondition();
+		AlternativeCondition alternativeCondition = new AlternativeCondition();
 		String[] stopConditions = cl.getOptionValue("s").split("\\|");
 		for (int i = 0; i < stopConditions.length; i++) {
 			String[] sc = stopConditions[i].trim().split(":");
-			alternativeCondition.add(Util.getCondition( null, Keywords.getStopCondition(sc[0].trim()), // Stop condition
-			    (sc.length == 1 ? "" : sc[1].trim()))); // Optional condition parameter
+			alternativeCondition.add(Util.getCondition(null, Keywords.getStopCondition(sc[0].trim()), // Stop
+																																																// condition
+			    (sc.length == 1 ? "" : sc[1].trim()))); // Optional condition
+			                                            // parameter
 		}
 
 		/*
@@ -751,9 +784,10 @@ public class CLI {
 	 * @throws StopConditionException
 	 * @throws GeneratorException
 	 * @throws InterruptedException
-	 * @throws FileNotFoundException 
+	 * @throws FileNotFoundException
 	 */
-	private void RunCommandOnline(CommandLine cl) throws StopConditionException, GeneratorException, InterruptedException, FileNotFoundException {
+	private void RunCommandOnline(CommandLine cl) throws StopConditionException, GeneratorException, InterruptedException,
+	    FileNotFoundException {
 		/**
 		 * Get the model from the graphml file (or folder)
 		 */
@@ -774,12 +808,14 @@ public class CLI {
 		/*
 		 * Set the stop-conditions(s)
 		 */
-		AlternativeCondition alternativeCondition =  new AlternativeCondition();
+		AlternativeCondition alternativeCondition = new AlternativeCondition();
 		String[] stopConditions = cl.getOptionValue("s").split("\\|");
 		for (int i = 0; i < stopConditions.length; i++) {
 			String[] sc = stopConditions[i].trim().split(":");
-			alternativeCondition.add(Util.getCondition( null, Keywords.getStopCondition(sc[0].trim()), // Stop condition
-			    (sc.length == 1 ? "" : sc[1].trim()))); // Optional condition parameter
+			alternativeCondition.add(Util.getCondition(null, Keywords.getStopCondition(sc[0].trim()), // Stop
+																																																// condition
+			    (sc.length == 1 ? "" : sc[1].trim()))); // Optional condition
+			                                            // parameter
 		}
 
 		/*
@@ -804,9 +840,10 @@ public class CLI {
 			TimerTask logTask;
 			if (cl.hasOption("t") && cl.hasOption("r")) {
 				getMbt().setUseStatisticsManager(true);
-				getMbt().getStatisticsManager().setReportTemplate(new FileInputStream(  new File(cl.getOptionValue('t'))));
+				getMbt().getStatisticsManager().setReportTemplate(new FileInputStream(new File(cl.getOptionValue('t'))));
 				final String reportName = cl.getOptionValue('r');
 				logTask = new TimerTask() {
+					@Override
 					public void run() {
 						try {
 							getMbt().getStatisticsManager().writeFullReport(new PrintStream(reportName));
@@ -817,6 +854,7 @@ public class CLI {
 				};
 			} else {
 				logTask = new TimerTask() {
+					@Override
 					public void run() {
 						logger.info(getMbt().getStatisticsCompact());
 					}
@@ -841,7 +879,7 @@ public class CLI {
 			logger.info(mbt.getStatisticsCompact());
 		}
 		if (cl.hasOption("t") && cl.hasOption("r")) {
-			getMbt().getStatisticsManager().setReportTemplate(new FileInputStream(  new File(cl.getOptionValue('t'))));
+			getMbt().getStatisticsManager().setReportTemplate(new FileInputStream(new File(cl.getOptionValue('t'))));
 			getMbt().getStatisticsManager().writeFullReport(cl.getOptionValue('r'));
 		}
 
@@ -908,7 +946,7 @@ public class CLI {
 			return;
 
 		getMbt().readGraph(cl.getOptionValue("f"));
-		getMbt().writeModel(System.out,	!cl.hasOption("i"));
+		getMbt().writeModel(System.out, !cl.hasOption("i"));
 	}
 
 	/**
@@ -957,19 +995,18 @@ public class CLI {
 		} else {
 			nicAddr = "0.0.0.0";
 		}
-		
+
 		String file = cl.getOptionValue("f");
-		if ( file == null || file.isEmpty() ) {
-		  setMbt( new ModelBasedTesting() );
+		if (file == null || file.isEmpty()) {
+			setMbt(new ModelBasedTesting());
 		} else {
-	    setMbt(Util.loadMbtAsWSFromXml(Util.getFile(file)));		  
+			setMbt(Util.loadMbtAsWSFromXml(Util.getFile(file)));
 		}
 
 		String wsURL = "http://" + nicAddr + ":" + port + "/mbt-services";
 		SoapServices soapService = new SoapServices(getMbt());
-    soapService.xmlFile = file;
+		soapService.xmlFile = file;
 
-		
 		endpoint = Endpoint.publish(wsURL, soapService);
 
 		if (nicAddr.equals("0.0.0.0")) {
@@ -1002,8 +1039,8 @@ public class CLI {
 		if (helpNeeded("log", !cl.hasOption("f"), "Missing the input graphml file (folder), See -f (--input_graphml)")
 		    || helpNeeded("log", !cl.hasOption("l"), "Missing the log file. See -l"))
 			return;
-		
-		App.main(new String[] { cl.getOptionValue("f"), cl.getOptionValue("l") });		
+
+		App.main(new String[] { cl.getOptionValue("f"), cl.getOptionValue("l") });
 	}
 
 	private boolean helpNeeded(String module, boolean condition, String message) {

@@ -30,7 +30,7 @@ import org.graphwalker.exceptions.StopConditionException;
 public class EdgeCoverage extends StopCondition {
 
 	private double limit;
-  static Logger logger = Util.setupLogger(EdgeCoverage.class);
+	static Logger logger = Util.setupLogger(EdgeCoverage.class);
 
 	public EdgeCoverage() throws StopConditionException {
 		this(1);
@@ -43,22 +43,22 @@ public class EdgeCoverage extends StopCondition {
 	}
 
 	@Override
-  public boolean isFulfilled() {
+	public boolean isFulfilled() {
 		double edges = machine.getAllEdges().size();
 		double covered = machine.getNumOfCoveredEdges();
-    logger.debug("Edges/covered (limit): " + edges + "/" + covered + " (" + limit + ")");
+		logger.debug("Edges/covered (limit): " + edges + "/" + covered + " (" + limit + ")");
 		return (covered / edges) >= limit;
 	}
 
 	@Override
-  public double getFulfilment() {
+	public double getFulfilment() {
 		double edges = machine.getAllEdges().size();
 		double covered = machine.getNumOfCoveredEdges();
 		return (covered / edges) / limit;
 	}
 
 	@Override
-  public String toString() {
+	public String toString() {
 		return "EC>=" + (int) (100 * limit);
 	}
 

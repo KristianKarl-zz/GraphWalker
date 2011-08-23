@@ -72,7 +72,7 @@ public class TestCaseLengthTest extends TestCase {
 	public void testFulfillment() throws GeneratorException, InterruptedException {
 		ModelBasedTesting mbt = ModelBasedTesting.getInstance();
 		mbt.setGraph(graph);
-    mbt.setGenerator(new RandomPathGenerator(new TestCaseLength(2)));
+		mbt.setGenerator(new RandomPathGenerator(new TestCaseLength(2)));
 		assertTrue(mbt.hasNextStep());
 
 		assertEquals((double) 0 / 2, mbt.getGenerator().getStopCondition().getFulfilment(), 0.01);
@@ -85,7 +85,7 @@ public class TestCaseLengthTest extends TestCase {
 	public void testIsFulfilled() throws GeneratorException, InterruptedException {
 		ModelBasedTesting mbt = ModelBasedTesting.getInstance();
 		mbt.setGraph(graph);
-    mbt.setGenerator(new RandomPathGenerator(new TestCaseLength(2)));
+		mbt.setGenerator(new RandomPathGenerator(new TestCaseLength(2)));
 		assertTrue(mbt.hasNextStep());
 
 		assertEquals(false, mbt.getGenerator().getStopCondition().isFulfilled());

@@ -40,19 +40,19 @@ public class ReachedRequirement extends StopCondition {
 	}
 
 	@Override
-  public boolean isFulfilled() {
+	public boolean isFulfilled() {
 		return machine.getCoveredRequirements().containsAll(requirements);
 	}
 
 	@Override
-  public double getFulfilment() {
+	public double getFulfilment() {
 		Collection<String> covered = machine.getCoveredRequirements();
 		covered.retainAll(requirements);
 		return covered.size() / (double) requirements.size();
 	}
 
 	@Override
-  public String toString() {
+	public String toString() {
 		return "RC=" + Arrays.deepToString(requirements.toArray());
 	}
 

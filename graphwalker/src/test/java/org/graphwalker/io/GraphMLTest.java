@@ -34,7 +34,7 @@ import junit.framework.TestCase;
 public class GraphMLTest extends TestCase {
 
 	@Override
-  protected void setUp() throws Exception {
+	protected void setUp() throws Exception {
 		super.setUp();
 		ModelBasedTesting.getInstance().reset();
 	}
@@ -43,17 +43,17 @@ public class GraphMLTest extends TestCase {
 		try {
 			GraphML modelHandler = new GraphML();
 			modelHandler.load("graphml/multiple/switch/A.graphml");
-			assertEquals( modelHandler.getModel().getVertexCount(), 5 );
-			assertEquals( modelHandler.getModel().getEdgeCount(), 8 );
-			assertEquals( modelHandler.getModel().getLabelKey(), "v_ClientNotRunning"  );
+			assertEquals(modelHandler.getModel().getVertexCount(), 5);
+			assertEquals(modelHandler.getModel().getEdgeCount(), 8);
+			assertEquals(modelHandler.getModel().getLabelKey(), "v_ClientNotRunning");
 
-      Vertex clientNotRunning = modelHandler.getModel().findVertex("v_ClientNotRunning");
-      assertNotNull(clientNotRunning);
-      assertTrue(clientNotRunning.isGraphVertex());
+			Vertex clientNotRunning = modelHandler.getModel().findVertex("v_ClientNotRunning");
+			assertNotNull(clientNotRunning);
+			assertTrue(clientNotRunning.isGraphVertex());
 
-      Vertex whatsNew = modelHandler.getModel().findVertex("v_WhatsNew");
-      assertNotNull(whatsNew);
-      assertFalse(whatsNew.isGraphVertex());
+			Vertex whatsNew = modelHandler.getModel().findVertex("v_WhatsNew");
+			assertNotNull(whatsNew);
+			assertFalse(whatsNew.isGraphVertex());
 
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
@@ -61,36 +61,36 @@ public class GraphMLTest extends TestCase {
 		}
 	}
 
-  public void testSwitchModelKeyWord() {
-    try {
-      GraphML modelHandler = new GraphML();
-      modelHandler.load("graphml/multiple/switch/A.graphml");
-      assertEquals( modelHandler.getModel().getVertexCount(), 5 );
-      assertEquals( modelHandler.getModel().getEdgeCount(), 8 );
-      assertEquals( modelHandler.getModel().getLabelKey(), "v_ClientNotRunning"  );
+	public void testSwitchModelKeyWord() {
+		try {
+			GraphML modelHandler = new GraphML();
+			modelHandler.load("graphml/multiple/switch/A.graphml");
+			assertEquals(modelHandler.getModel().getVertexCount(), 5);
+			assertEquals(modelHandler.getModel().getEdgeCount(), 8);
+			assertEquals(modelHandler.getModel().getLabelKey(), "v_ClientNotRunning");
 
-      Vertex clientNotRunning = modelHandler.getModel().findVertex("v_ClientNotRunning");
-      assertNotNull(clientNotRunning);
-      assertFalse(clientNotRunning.isSwitchModelKey());
+			Vertex clientNotRunning = modelHandler.getModel().findVertex("v_ClientNotRunning");
+			assertNotNull(clientNotRunning);
+			assertFalse(clientNotRunning.isSwitchModelKey());
 
-      Vertex whatsNew = modelHandler.getModel().findVertex("v_WhatsNew");
-      assertNotNull(whatsNew);
-      assertTrue(whatsNew.isSwitchModelKey());
+			Vertex whatsNew = modelHandler.getModel().findVertex("v_WhatsNew");
+			assertNotNull(whatsNew);
+			assertTrue(whatsNew.isSwitchModelKey());
 
-    } catch (Exception e) {
-      System.out.println(e.getMessage());
-      fail(e.getMessage());
-    }
-  }
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			fail(e.getMessage());
+		}
+	}
 
 	// Test various types of efsm labels
 	public void testMergeFiles() {
 		try {
 			GraphML modelHandler = new GraphML();
 			modelHandler.load("graphml/merging");
-			assertEquals( modelHandler.getModel().getVertexCount(), 37 );
-			assertEquals( modelHandler.getModel().getEdgeCount(), 92 );
-			assertEquals( modelHandler.getModel().getLabelKey(), "v_A"  );
+			assertEquals(modelHandler.getModel().getVertexCount(), 37);
+			assertEquals(modelHandler.getModel().getEdgeCount(), 92);
+			assertEquals(modelHandler.getModel().getLabelKey(), "v_A");
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 			fail(e.getMessage());
@@ -341,44 +341,45 @@ public class GraphMLTest extends TestCase {
 		}
 	}
 
-  // Merging with subgraphs containing Stop vertices
-  public void testMergeSubGraphUsingStopVertices() {
-    try {
-      ModelBasedTesting mbt = ModelBasedTesting.getInstance();
-      mbt.readGraph("graphml/test23");
-      assertTrue(mbt.getGraph().getEdges().size() == 14);
-      assertTrue(mbt.getGraph().getVertices().size() == 9);
-      verifyIds(mbt.getGraph());
-    } catch (Exception e) {
-      System.out.println(e.getMessage());
-      fail(e.getMessage());
-    }
-  }
+	// Merging with subgraphs containing Stop vertices
+	public void testMergeSubGraphUsingStopVertices() {
+		try {
+			ModelBasedTesting mbt = ModelBasedTesting.getInstance();
+			mbt.readGraph("graphml/test23");
+			assertTrue(mbt.getGraph().getEdges().size() == 14);
+			assertTrue(mbt.getGraph().getVertices().size() == 9);
+			verifyIds(mbt.getGraph());
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			fail(e.getMessage());
+		}
+	}
 
-  // 
-  public void testGetDescriptionVertex() {
-    try {
-      ModelBasedTesting mbt = ModelBasedTesting.getInstance();
-      mbt.readGraph("graphml/modelWithDescr.graphml");
-      assertTrue(mbt.getGraph().findVertex("v_WithDescription").getDescriptionKey().equals("<ul>\nA very fine description in a vertex\n</ul>"));
-      assertTrue(mbt.getGraph().findVertex("v_WithNoDescription").getDescriptionKey().isEmpty());
-    } catch (Exception e) {
-      System.out.println(e.getMessage());
-      fail(e.getMessage());
-    }
-  }
-  
-  public void testGetDescriptionEdge() {
-    try {
-      ModelBasedTesting mbt = ModelBasedTesting.getInstance();
-      mbt.readGraph("graphml/modelWithDescr.graphml");
-      assertTrue(mbt.getGraph().findEdge("e_WithDescription").getDescriptionKey().equals("<ul>\nA very fine description in a edge\n</ul>"));
-      assertTrue(mbt.getGraph().findEdge("e_WithNoDescription").getDescriptionKey().isEmpty());
-    } catch (Exception e) {
-      System.out.println(e.getMessage());
-      fail(e.getMessage());
-    }
-  }
+	//
+	public void testGetDescriptionVertex() {
+		try {
+			ModelBasedTesting mbt = ModelBasedTesting.getInstance();
+			mbt.readGraph("graphml/modelWithDescr.graphml");
+			assertTrue(mbt.getGraph().findVertex("v_WithDescription").getDescriptionKey()
+			    .equals("<ul>\nA very fine description in a vertex\n</ul>"));
+			assertTrue(mbt.getGraph().findVertex("v_WithNoDescription").getDescriptionKey().isEmpty());
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			fail(e.getMessage());
+		}
+	}
+
+	public void testGetDescriptionEdge() {
+		try {
+			ModelBasedTesting mbt = ModelBasedTesting.getInstance();
+			mbt.readGraph("graphml/modelWithDescr.graphml");
+			assertTrue(mbt.getGraph().findEdge("e_WithDescription").getDescriptionKey().equals("<ul>\nA very fine description in a edge\n</ul>"));
+			assertTrue(mbt.getGraph().findEdge("e_WithNoDescription").getDescriptionKey().isEmpty());
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			fail(e.getMessage());
+		}
+	}
 
 	// Verify that all vertices and edges has indexes, and that no duplicates
 	// exists.

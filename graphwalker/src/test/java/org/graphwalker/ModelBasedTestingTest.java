@@ -80,9 +80,9 @@ public class ModelBasedTestingTest extends TestCase {
 	}
 
 	@SuppressWarnings("static-access")
-  public void testXmlLoading_Advanced() throws StopConditionException, GeneratorException, IOException, JDOMException, InterruptedException {
-		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment(); 
-		if ( ge.isHeadless() )
+	public void testXmlLoading_Advanced() throws StopConditionException, GeneratorException, IOException, JDOMException, InterruptedException {
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		if (ge.isHeadless())
 			return;
 
 		ModelBasedTesting mbt = Util.loadMbtFromXml(Util.getFile("xml/reqtags/mbt_init3.xml"));
@@ -90,10 +90,10 @@ public class ModelBasedTestingTest extends TestCase {
 	}
 
 	@SuppressWarnings("static-access")
-  public void testXmlLoading_OfflineStub() throws StopConditionException, GeneratorException, IOException, JDOMException,
+	public void testXmlLoading_OfflineStub() throws StopConditionException, GeneratorException, IOException, JDOMException,
 	    InterruptedException {
-		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment(); 
-		if ( ge.isHeadless() )
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		if (ge.isHeadless())
 			return;
 
 		ModelBasedTesting mbt = Util.loadMbtFromXml(Util.getFile("xml/reqtags/mbt_init4.xml"));
@@ -105,10 +105,10 @@ public class ModelBasedTestingTest extends TestCase {
 	}
 
 	@SuppressWarnings("static-access")
-  public void testXmlLoading_JavaExecution() throws StopConditionException, GeneratorException, IOException, JDOMException,
+	public void testXmlLoading_JavaExecution() throws StopConditionException, GeneratorException, IOException, JDOMException,
 	    InterruptedException {
-		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment(); 
-		if ( ge.isHeadless() )
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		if (ge.isHeadless())
 			return;
 
 		ModelBasedTesting mbt = Util.loadMbtFromXml(Util.getFile("xml/reqtags/mbt_init5.xml"));
@@ -128,7 +128,8 @@ public class ModelBasedTestingTest extends TestCase {
 		assertEquals(6, getNumMatches(Pattern.compile("req[ \\d]+").matcher(innerOut.toString())));
 	}
 
-	public void testXmlLoading_OnlineRequirements() throws StopConditionException, GeneratorException, IOException, JDOMException, InterruptedException {
+	public void testXmlLoading_OnlineRequirements() throws StopConditionException, GeneratorException, IOException, JDOMException,
+	    InterruptedException {
 		InputStream oldIn = System.in;
 		PrintStream oldOut = System.out;
 		ByteArrayOutputStream innerOut = new ByteArrayOutputStream();
@@ -144,10 +145,10 @@ public class ModelBasedTestingTest extends TestCase {
 	}
 
 	@SuppressWarnings("static-access")
-  public void testGetdataValue() throws InvalidDataException, StopConditionException, GeneratorException, IOException, JDOMException,
+	public void testGetdataValue() throws InvalidDataException, StopConditionException, GeneratorException, IOException, JDOMException,
 	    InterruptedException {
-		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment(); 
-		if ( ge.isHeadless() )
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		if (ge.isHeadless())
 			return;
 
 		InputStream oldIn = System.in;
@@ -173,10 +174,10 @@ public class ModelBasedTestingTest extends TestCase {
 	}
 
 	@SuppressWarnings("static-access")
-  public void testExecAction() throws InvalidDataException, StopConditionException, GeneratorException, IOException, JDOMException,
+	public void testExecAction() throws InvalidDataException, StopConditionException, GeneratorException, IOException, JDOMException,
 	    InterruptedException {
-		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment(); 
-		if ( ge.isHeadless() )
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		if (ge.isHeadless())
 			return;
 
 		InputStream oldIn = System.in;
@@ -195,9 +196,9 @@ public class ModelBasedTestingTest extends TestCase {
 	}
 
 	@SuppressWarnings("static-access")
-  public void testPassRequirement() throws StopConditionException, GeneratorException, IOException, JDOMException, InterruptedException {
-		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment(); 
-		if ( ge.isHeadless() )
+	public void testPassRequirement() throws StopConditionException, GeneratorException, IOException, JDOMException, InterruptedException {
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		if (ge.isHeadless())
 			return;
 
 		ModelBasedTesting mbt;
@@ -212,7 +213,8 @@ public class ModelBasedTestingTest extends TestCase {
 		mbt.readGraph("graphml/ModelBasedTestingTest.testNewState.graphml");
 		mbt.enableExtended(false);
 		mbt.setWeighted(false);
-		NonOptimizedShortestPath generator = new NonOptimizedShortestPath(Util.getCondition(mbt.getMachine(), Keywords.CONDITION_EDGE_COVERAGE, "100"));
+		NonOptimizedShortestPath generator = new NonOptimizedShortestPath(Util.getCondition(mbt.getMachine(), Keywords.CONDITION_EDGE_COVERAGE,
+		    "100"));
 		mbt.setGenerator(generator);
 
 		String[] pair = mbt.getNextStep();

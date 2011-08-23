@@ -66,13 +66,13 @@ public class StateCoverageTest extends TestCase {
 
 	public void testConstructor() throws StopConditionException {
 		ModelBasedTesting mbt = ModelBasedTesting.getInstance();
-    mbt.setGenerator(new RandomPathGenerator(new VertexCoverage()));
+		mbt.setGenerator(new RandomPathGenerator(new VertexCoverage()));
 	}
 
 	public void testFulfillment() throws StopConditionException, GeneratorException, InterruptedException {
 		ModelBasedTesting mbt = ModelBasedTesting.getInstance();
 		mbt.setGraph(graph);
-    mbt.setGenerator(new RandomPathGenerator(new VertexCoverage()));
+		mbt.setGenerator(new RandomPathGenerator(new VertexCoverage()));
 		assertTrue(mbt.hasNextStep());
 
 		assertEquals((double) 1 / 3, mbt.getGenerator().getStopCondition().getFulfilment(), 0.01);
@@ -85,7 +85,7 @@ public class StateCoverageTest extends TestCase {
 	public void testIsFulfilled() throws StopConditionException, GeneratorException, InterruptedException {
 		ModelBasedTesting mbt = ModelBasedTesting.getInstance();
 		mbt.setGraph(graph);
-    mbt.setGenerator(new RandomPathGenerator(new VertexCoverage()));
+		mbt.setGenerator(new RandomPathGenerator(new VertexCoverage()));
 		assertTrue(mbt.hasNextStep());
 
 		assertEquals(false, mbt.getGenerator().getStopCondition().isFulfilled());

@@ -68,7 +68,7 @@ public class EdgeCoverageTest extends TestCase {
 	public void testFulfillment() throws StopConditionException, GeneratorException, InterruptedException {
 		ModelBasedTesting mbt = ModelBasedTesting.getInstance();
 		mbt.setGraph(graph);
-    mbt.setGenerator( new RandomPathGenerator(new EdgeCoverage()));
+		mbt.setGenerator(new RandomPathGenerator(new EdgeCoverage()));
 		assertTrue(mbt.hasNextStep());
 
 		assertEquals((double) 0 / 2, mbt.getGenerator().getStopCondition().getFulfilment(), 0.01);
@@ -81,7 +81,7 @@ public class EdgeCoverageTest extends TestCase {
 	public void testIsFulfilled() throws StopConditionException, GeneratorException, InterruptedException {
 		ModelBasedTesting mbt = ModelBasedTesting.getInstance();
 		mbt.setGraph(graph);
-    mbt.setGenerator( new RandomPathGenerator(new EdgeCoverage()));
+		mbt.setGenerator(new RandomPathGenerator(new EdgeCoverage()));
 		assertTrue(mbt.hasNextStep());
 
 		assertEquals(false, mbt.getGenerator().getStopCondition().isFulfilled());

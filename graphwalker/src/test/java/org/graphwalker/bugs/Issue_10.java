@@ -95,7 +95,7 @@ public class Issue_10 extends TestCase {
 		logger.debug("stderr: " + errMsg);
 	}
 
-	// 
+	//
 	public void testIssue_10() {
 		String args[] = { "xml", "-f", "xml/bugs/Issue_10.xml" };
 		runCommand(args);

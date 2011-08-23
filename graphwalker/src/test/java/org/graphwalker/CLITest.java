@@ -48,6 +48,7 @@ public class CLITest extends TestCase {
 	String errMsg;
 	static Logger logger = Util.setupLogger(CLITest.class);
 
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		ModelBasedTesting.getInstance().reset();
@@ -55,6 +56,7 @@ public class CLITest extends TestCase {
 
 	private OutputStream redirectOut() {
 		return new OutputStream() {
+			@Override
 			public void write(int b) throws IOException {
 				stdOutput.append(Character.toString((char) b));
 			}
@@ -63,6 +65,7 @@ public class CLITest extends TestCase {
 
 	private OutputStream redirectErr() {
 		return new OutputStream() {
+			@Override
 			public void write(int b) throws IOException {
 				errOutput.append(Character.toString((char) b));
 			}
@@ -71,6 +74,7 @@ public class CLITest extends TestCase {
 
 	private InputStream redirectIn() {
 		return new InputStream() {
+			@Override
 			public int read() throws IOException {
 				try {
 					Thread.sleep(300);
@@ -127,8 +131,7 @@ public class CLITest extends TestCase {
 	public void testNoArgs() {
 		String args[] = {};
 		runCommand(args);
-		pattern = Pattern.compile(
-		    "Type 'java -jar graphwalker.jar help' for usage.", Pattern.MULTILINE);
+		pattern = Pattern.compile("Type 'java -jar graphwalker.jar help' for usage.", Pattern.MULTILINE);
 		matcher = pattern.matcher(errMsg);
 		assertTrue(matcher.find());
 		assertTrue("Nothing should be written to standard output: " + outMsg, outMsg.isEmpty());
@@ -154,8 +157,7 @@ public class CLITest extends TestCase {
 		moveMbtPropertiesFile();
 		runCommand(args);
 		restoreMbtPropertiesFile();
-		pattern = Pattern.compile(
-		    "Type 'java -jar graphwalker.jar help' for usage.", Pattern.MULTILINE);
+		pattern = Pattern.compile("Type 'java -jar graphwalker.jar help' for usage.", Pattern.MULTILINE);
 		matcher = pattern.matcher(errMsg);
 		assertTrue(matcher.find());
 		assertTrue("Nothing should be written to standard output: " + outMsg, outMsg.isEmpty());
@@ -235,7 +237,7 @@ public class CLITest extends TestCase {
 		String args[] = { "offline", "-f", "graphml/reqtags/ExtendedMain.graphml", "-g", "A_STAR", "-s", "VERTEX_COVERAGE:100" };
 		runCommand(args);
 		assertEquals("No error messages should occur.", "", errMsg);
-		assertTrue(outMsg, getNumMatches(Pattern.compile("INFO").matcher(outMsg)) <= 21 );
+		assertTrue(outMsg, getNumMatches(Pattern.compile("INFO").matcher(outMsg)) <= 21);
 	}
 
 	/**
@@ -370,12 +372,12 @@ public class CLITest extends TestCase {
 	}
 
 	/**
-	 * Check that xml with java executor.  Test command: java -jar mbt.jar xml -f
+	 * Check that xml with java executor. Test command: java -jar mbt.jar xml -f
 	 * xml/reqtags/mbt_init5.xml
 	 */
 	public void testXmlSetupWithJavaExecutor() {
 		String args[] = { "xml", "-f", "xml/javaExecutor.xml" };
-		runCommand(args);		
+		runCommand(args);
 		assertTrue("No error messages should occur: " + errMsg, errMsg.isEmpty());
 		assertEquals(outMsg, 76, getNumMatches(Pattern.compile("(Vertex:|Edge:)").matcher(outMsg)));
 	}
@@ -387,8 +389,10 @@ public class CLITest extends TestCase {
 		String args[] = { "soap", "-f", "xml/reqtags/mbt_init6.xml" };
 		runCommand(args);
 		assertTrue("No error messages should occur: " + errMsg, errMsg.isEmpty());
-		assertTrue(outMsg, outMsg
-		    .matches("(?s).*Now running as a SOAP server. For the WSDL file, see: http://.*:9090/mbt-services\\?WSDL\\s+Press Ctrl\\+C to quit\\s+"));
+		assertTrue(
+		    outMsg,
+		    outMsg
+		        .matches("(?s).*Now running as a SOAP server. For the WSDL file, see: http://.*:9090/mbt-services\\?WSDL\\s+Press Ctrl\\+C to quit\\s+"));
 	}
 
 	/**
@@ -398,8 +402,10 @@ public class CLITest extends TestCase {
 		String args[] = { "soap" };
 		runCommand(args);
 		assertTrue("No error messages should occur: " + errMsg, errMsg.isEmpty());
-		assertEquals(true, outMsg
-		    .matches("Now running as a SOAP server. For the WSDL file, see: http://.*:9090/mbt-services\\?WSDL\\s+Press Ctrl\\+C to quit\\s+"));
+		assertEquals(
+		    true,
+		    outMsg
+		        .matches("Now running as a SOAP server. For the WSDL file, see: http://.*:9090/mbt-services\\?WSDL\\s+Press Ctrl\\+C to quit\\s+"));
 	}
 
 	/**
@@ -409,8 +415,10 @@ public class CLITest extends TestCase {
 		String args[] = { "soap", "-f", "xml/reqtags/mbt_init8.xml" };
 		runCommand(args);
 		assertTrue("No error messages should occur: " + errMsg, errMsg.isEmpty());
-		assertTrue(outMsg, outMsg
-			    .matches("(?s).*Now running as a SOAP server. For the WSDL file, see: http://.*:9090/mbt-services\\?WSDL\\s+Press Ctrl\\+C to quit\\s+"));
+		assertTrue(
+		    outMsg,
+		    outMsg
+		        .matches("(?s).*Now running as a SOAP server. For the WSDL file, see: http://.*:9090/mbt-services\\?WSDL\\s+Press Ctrl\\+C to quit\\s+"));
 	}
 
 	/**

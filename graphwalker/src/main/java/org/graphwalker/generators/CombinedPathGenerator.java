@@ -38,27 +38,27 @@ public class CombinedPathGenerator extends PathGenerator {
 	private int currentGenerator = 0;
 
 	public CombinedPathGenerator() {
-    super();
-  }
+		super();
+	}
 
-  public CombinedPathGenerator(StopCondition stopCondition) {
-    super(stopCondition);
-  }
+	public CombinedPathGenerator(StopCondition stopCondition) {
+		super(stopCondition);
+	}
 
-  public void addPathGenerator(PathGenerator generator) {
+	public void addPathGenerator(PathGenerator generator) {
 		logger.debug("Adding PathGenerator: " + generator);
 		generatorList.add(generator);
 	}
 
 	@Override
-  public void setMachine(FiniteStateMachine machine) {
+	public void setMachine(FiniteStateMachine machine) {
 		for (Iterator<PathGenerator> i = generatorList.iterator(); i.hasNext();) {
 			i.next().setMachine(machine);
 		}
 	}
 
 	@Override
-  public void setStopCondition(StopCondition stopCondition) {
+	public void setStopCondition(StopCondition stopCondition) {
 		for (Iterator<PathGenerator> i = generatorList.iterator(); i.hasNext();) {
 			i.next().setStopCondition(stopCondition);
 		}
@@ -78,7 +78,7 @@ public class CombinedPathGenerator extends PathGenerator {
 	}
 
 	@Override
-  public boolean hasNext() {
+	public boolean hasNext() {
 		boolean nextIsAvailable = false;
 		while (hasPath() && !nextIsAvailable) {
 			nextIsAvailable = getActivePathGenerator().hasNext();
@@ -89,7 +89,7 @@ public class CombinedPathGenerator extends PathGenerator {
 	}
 
 	@Override
-  public String[] getNext() throws InterruptedException {
+	public String[] getNext() throws InterruptedException {
 		String[] retur = { "", "" };
 
 		boolean nextIsAvailable = false;
@@ -104,7 +104,7 @@ public class CombinedPathGenerator extends PathGenerator {
 	}
 
 	@Override
-  public String toString() {
+	public String toString() {
 		String retur = "";
 		for (Iterator<PathGenerator> i = generatorList.iterator(); i.hasNext();) {
 			retur += i.next().toString() + "\n";

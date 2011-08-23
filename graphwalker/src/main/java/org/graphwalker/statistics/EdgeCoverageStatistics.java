@@ -54,7 +54,7 @@ public class EdgeCoverageStatistics extends Statistics {
 	 * .impl.AbstractElement)
 	 */
 	@Override
-  public void addProgress(AbstractElement element) {
+	public void addProgress(AbstractElement element) {
 		if (element instanceof Edge)
 			usedEdges.add(element.toString());
 	}
@@ -65,7 +65,7 @@ public class EdgeCoverageStatistics extends Statistics {
 	 * @see org.graphwalker.statistics.Statistics#getCurrent()
 	 */
 	@Override
-  public int getCurrent() {
+	public int getCurrent() {
 		return usedEdges.size();
 	}
 
@@ -75,7 +75,7 @@ public class EdgeCoverageStatistics extends Statistics {
 	 * @see org.graphwalker.statistics.Statistics#getMax()
 	 */
 	@Override
-  public int getMax() {
+	public int getMax() {
 		return max;
 	}
 

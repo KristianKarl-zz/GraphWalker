@@ -38,7 +38,7 @@ public class PrintHTMLTestSequence {
 
 		int index = 1;
 		for (String[] string : testSequence) {
-			
+
 			out.println("<p>");
 			out.println("<table class=\"example\" width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">");
 			out.println("<tbody><tr><td>");
@@ -63,7 +63,6 @@ public class PrintHTMLTestSequence {
 			out.println("</td></tr></tbody></table>");
 			out.println("</p>");
 		}
-
 
 		footer(out);
 	}

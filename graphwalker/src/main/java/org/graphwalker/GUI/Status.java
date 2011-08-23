@@ -99,68 +99,68 @@ public class Status {
 		log.debug("Reset the state to initial");
 		state = initial;
 	}
-	
-	public String toStr( int state ) {
-	  String str = "";
-	  if ( (state & initial) == initial ) {	    
-	    str += "inital";
-	  }
-    if ( (state & running) == running ) {
-      if ( str.isEmpty() ) {
-        str += "running";        
-      } else {
-        str += " | running";        
-      }      
-    }
-    if ( (state & previous) == previous ) {     
-      if ( str.isEmpty() ) {
-        str += "previous";        
-      } else {
-        str += " | previous";        
-      }      
-    }
-    if ( (state & next) == next ) {     
-      if ( str.isEmpty() ) {
-        str += "next";        
-      } else {
-        str += " | next";        
-      }      
-    }
-    if ( (state & paused) == paused ) {     
-      if ( str.isEmpty() ) {
-        str += "paused";        
-      } else {
-        str += " | paused";        
-      }      
-    }
-    if ( (state & stopped) == stopped ) {     
-      if ( str.isEmpty() ) {
-        str += "stopped";        
-      } else {
-        str += " | stopped";        
-      }      
-    }
-    if ( (state & executingJavaTest) == executingJavaTest ) {     
-      if ( str.isEmpty() ) {
-        str += "executingJavaTest";        
-      } else {
-        str += " | executingJavaTest";        
-      }      
-    }
-    if ( (state & executingSoapTest) == executingSoapTest ) {     
-      if ( str.isEmpty() ) {
-        str += "executingSoapTest";        
-      } else {
-        str += " | executingSoapTest";        
-      }      
-    }
-    if ( (state & executingLogTest) == executingLogTest ) {     
-      if ( str.isEmpty() ) {
-        str += "executingLogTest";        
-      } else {
-        str += " | executingLogTest";        
-      }      
-    }
-    return str;
- 	}
+
+	public String toStr(int state) {
+		String str = "";
+		if ((state & initial) == initial) {
+			str += "inital";
+		}
+		if ((state & running) == running) {
+			if (str.isEmpty()) {
+				str += "running";
+			} else {
+				str += " | running";
+			}
+		}
+		if ((state & previous) == previous) {
+			if (str.isEmpty()) {
+				str += "previous";
+			} else {
+				str += " | previous";
+			}
+		}
+		if ((state & next) == next) {
+			if (str.isEmpty()) {
+				str += "next";
+			} else {
+				str += " | next";
+			}
+		}
+		if ((state & paused) == paused) {
+			if (str.isEmpty()) {
+				str += "paused";
+			} else {
+				str += " | paused";
+			}
+		}
+		if ((state & stopped) == stopped) {
+			if (str.isEmpty()) {
+				str += "stopped";
+			} else {
+				str += " | stopped";
+			}
+		}
+		if ((state & executingJavaTest) == executingJavaTest) {
+			if (str.isEmpty()) {
+				str += "executingJavaTest";
+			} else {
+				str += " | executingJavaTest";
+			}
+		}
+		if ((state & executingSoapTest) == executingSoapTest) {
+			if (str.isEmpty()) {
+				str += "executingSoapTest";
+			} else {
+				str += " | executingSoapTest";
+			}
+		}
+		if ((state & executingLogTest) == executingLogTest) {
+			if (str.isEmpty()) {
+				str += "executingLogTest";
+			} else {
+				str += " | executingLogTest";
+			}
+		}
+		return str;
+	}
 }

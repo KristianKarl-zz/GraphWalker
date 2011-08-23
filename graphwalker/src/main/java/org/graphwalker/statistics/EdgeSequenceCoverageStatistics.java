@@ -102,7 +102,7 @@ public class EdgeSequenceCoverageStatistics extends Statistics {
 	 * .impl.AbstractElement)
 	 */
 	@Override
-  public void addProgress(AbstractElement element) {
+	public void addProgress(AbstractElement element) {
 		if (element instanceof Edge)
 			pathHistory.add(element);
 		if (pathHistory.size() > this.length)
@@ -117,7 +117,7 @@ public class EdgeSequenceCoverageStatistics extends Statistics {
 	 * @see org.graphwalker.statistics.Statistics#getCurrent()
 	 */
 	@Override
-  public int getCurrent() {
+	public int getCurrent() {
 		return usedSequences.size();
 	}
 
@@ -127,7 +127,7 @@ public class EdgeSequenceCoverageStatistics extends Statistics {
 	 * @see org.graphwalker.statistics.Statistics#getMax()
 	 */
 	@Override
-  public int getMax() {
+	public int getMax() {
 		return allSequences.size();
 	}
 

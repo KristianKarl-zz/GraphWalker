@@ -40,17 +40,17 @@ public class SoapServices {
 	private Vector<String> stepPair = new Vector<String>();
 	public String xmlFile = "";
 	private boolean hardStop = false;
-  public ModelBasedTesting mbt;
+	public ModelBasedTesting mbt;
 
-  public SoapServices() {
+	public SoapServices() {
 	}
 
 	public SoapServices(ModelBasedTesting mbt) {
-	  this.mbt = mbt;
-	  Reset();
-  }
+		this.mbt = mbt;
+		Reset();
+	}
 
-  public boolean SetCurrentVertex(String newVertex) {
+	public boolean SetCurrentVertex(String newVertex) {
 		logger.debug("SOAP service SetCurrentVertex recieving: " + newVertex);
 		boolean value = mbt.setCurrentVertex(newVertex);
 		logger.debug("SOAP service SetCurrentVertex returning: " + value);
@@ -123,8 +123,7 @@ public class SoapServices {
 			} else {
 				mbt.logExecution(mbt.getMachine().getCurrentVertex(), addInfo);
 				if (mbt.isUseStatisticsManager()) {
-					mbt.getStatisticsManager()
-					    .addProgress(mbt.getMachine().getCurrentVertex());
+					mbt.getStatisticsManager().addProgress(mbt.getMachine().getCurrentVertex());
 				}
 			}
 			return value;
@@ -159,22 +158,22 @@ public class SoapServices {
 		boolean retValue = true;
 		boolean useGui = mbt.isUseGUI();
 		try {
-		  if ( this.xmlFile.isEmpty() == false ) {
-		    mbt = Util.loadMbtAsWSFromXml(Util.getFile(this.xmlFile));
-		    if ( useGui ) {
-		      mbt.setUseGUI();
-		    }
-		  }
+			if (this.xmlFile.isEmpty() == false) {
+				mbt = Util.loadMbtAsWSFromXml(Util.getFile(this.xmlFile));
+				if (useGui) {
+					mbt.setUseGUI();
+				}
+			}
 		} catch (Exception e) {
 			Util.logStackTraceToError(e);
 			retValue = false;
 		} finally {
-      if (mbt.isUseGUI()) {
-        App.getInstance().setMbt(mbt);
-        App.getInstance().setButtons();
-        App.getInstance().updateLayout();
-      }
-    }
+			if (mbt.isUseGUI()) {
+				App.getInstance().setMbt(mbt);
+				App.getInstance().setButtons();
+				App.getInstance().updateLayout();
+			}
+		}
 		Reset();
 		logger.debug("SOAP service reload returning: " + retValue);
 		return retValue;
@@ -182,34 +181,34 @@ public class SoapServices {
 
 	public boolean Load(String xmlFile) {
 		logger.debug("SOAP service load recieving: " + xmlFile);
-		if ( xmlFile == null ) {
-			logger.error( "Web service 'Load' needs a valid xml file name." );
+		if (xmlFile == null) {
+			logger.error("Web service 'Load' needs a valid xml file name.");
 			logger.debug("SOAP service load returning: false");
 			return false;
 		}
-		if (new File(xmlFile).canRead()==false) {
-			logger.error( "Web service 'Load' needs a readable xml file name. Check the file: '" + xmlFile + "'" );
+		if (new File(xmlFile).canRead() == false) {
+			logger.error("Web service 'Load' needs a readable xml file name. Check the file: '" + xmlFile + "'");
 			logger.debug("SOAP service load returning: false");
 			return false;
 		}
 		this.xmlFile = xmlFile;
 		boolean retValue = true;
-    boolean useGui = mbt.isUseGUI();
+		boolean useGui = mbt.isUseGUI();
 		try {
 			mbt = Util.loadMbtAsWSFromXml(Util.getFile(this.xmlFile));
-      if ( useGui ) {
-        mbt.setUseGUI();
-      }
+			if (useGui) {
+				mbt.setUseGUI();
+			}
 		} catch (Exception e) {
 			Util.logStackTraceToError(e);
 			retValue = false;
 		} finally {
-      if (mbt.isUseGUI()) {
-        App.getInstance().setMbt(mbt);
-        App.getInstance().setButtons();
-        App.getInstance().updateLayout();
-      }
-    }
+			if (mbt.isUseGUI()) {
+				App.getInstance().setMbt(mbt);
+				App.getInstance().setButtons();
+				App.getInstance().updateLayout();
+			}
+		}
 		Reset();
 		logger.debug("SOAP service load returning: " + retValue);
 		return retValue;

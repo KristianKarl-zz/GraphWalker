@@ -28,17 +28,17 @@ public class NeverCondition extends StopCondition {
 	}
 
 	@Override
-  public boolean isFulfilled() {
+	public boolean isFulfilled() {
 		return false;
 	}
 
 	@Override
-  public double getFulfilment() {
+	public double getFulfilment() {
 		return 0;
 	}
 
 	@Override
-  public String toString() {
+	public String toString() {
 		return "FALSE";
 	}
 

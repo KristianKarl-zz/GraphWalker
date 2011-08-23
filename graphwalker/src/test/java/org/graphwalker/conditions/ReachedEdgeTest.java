@@ -86,7 +86,7 @@ public class ReachedEdgeTest extends TestCase {
 	public void testIsFulfilled() throws GeneratorException, InterruptedException {
 		ModelBasedTesting mbt = ModelBasedTesting.getInstance();
 		mbt.setGraph(graph);
-    mbt.setGenerator(new RandomPathGenerator(new ReachedEdge("E1")));
+		mbt.setGenerator(new RandomPathGenerator(new ReachedEdge("E1")));
 		assertTrue(mbt.hasNextStep());
 
 		assertEquals(false, mbt.getGenerator().getStopCondition().isFulfilled());

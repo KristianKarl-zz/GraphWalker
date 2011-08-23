@@ -31,7 +31,7 @@ import org.apache.log4j.Logger;
 public class EventDrivenModels {
 	private static Logger logger = Util.setupLogger(EventDrivenModels.class);
 	Vector<ModelBasedTesting> models = new Vector<ModelBasedTesting>();
-	Stack<ThreadWrapper> pausedModels = new Stack<ThreadWrapper>(); 
+	Stack<ThreadWrapper> pausedModels = new Stack<ThreadWrapper>();
 	private Object executionClass = null;
 	private ThreadWrapper executingModel = null;
 	static Object lockbox = new Object();
@@ -97,16 +97,16 @@ public class EventDrivenModels {
 			while (true) {
 				synchronized (lockbox) {
 
-					if ( executingModel == null ) {
-						if ( pausedModels.isEmpty() ) {
+					if (executingModel == null) {
+						if (pausedModels.isEmpty()) {
 							logger.debug("All threads terminated");
-							return;							
-						} 
+							return;
+						}
 						logger.debug("Found suspended model: " + pausedModels.peek());
 						executingModel = pausedModels.pop();
-						executingModel.getModel().resume();							
+						executingModel.getModel().resume();
 					} else {
-						if ( executingModel.getState() == Thread.State.TERMINATED ) {
+						if (executingModel.getState() == Thread.State.TERMINATED) {
 							logger.debug("Terminated: " + executingModel);
 							executingModel = null;
 						}
@@ -137,7 +137,7 @@ public class EventDrivenModels {
 		}
 
 		@Override
-    public void run() {
+		public void run() {
 			try {
 				model.setCurrentVertex("Start");
 				model.reload();

@@ -37,12 +37,12 @@ public class ReachedEdge extends StopCondition {
 	private String edgeName;
 
 	@Override
-  public boolean isFulfilled() {
+	public boolean isFulfilled() {
 		return getFulfilment() >= 0.99999;
 	}
 
 	@Override
-  public void setMachine(FiniteStateMachine machine) {
+	public void setMachine(FiniteStateMachine machine) {
 		super.setMachine(machine);
 		if (this.endEdge == null)
 			this.endEdge = machine.findEdge(edgeName);
@@ -58,7 +58,7 @@ public class ReachedEdge extends StopCondition {
 	}
 
 	@Override
-  public double getFulfilment() {
+	public double getFulfilment() {
 		int distance = this.maxDistance;
 		if (getMachine().getLastEdge() != null)
 			distance = proximity[allEdges.indexOf(getMachine().getLastEdge())];
@@ -109,7 +109,7 @@ public class ReachedEdge extends StopCondition {
 	}
 
 	@Override
-  public String toString() {
+	public String toString() {
 		return "EDGE='" + endEdge + "'";
 	}
 }

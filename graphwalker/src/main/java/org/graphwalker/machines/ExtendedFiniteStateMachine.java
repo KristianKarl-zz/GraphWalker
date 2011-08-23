@@ -109,12 +109,12 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 	}
 
 	@Override
-  public String getCurrentVertexName() {
+	public String getCurrentVertexName() {
 		return super.getCurrentVertexName() + (hasInternalVariables() ? "/" + getCurrentDataString() : "");
 	}
 
 	@Override
-  public Set<Edge> getCurrentOutEdges() throws FoundNoEdgeException {
+	public Set<Edge> getCurrentOutEdges() throws FoundNoEdgeException {
 		Set<Edge> retur = super.getCurrentOutEdges();
 		for (Iterator<Edge> i = retur.iterator(); i.hasNext();) {
 			Edge e = i.next();
@@ -132,7 +132,7 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 	}
 
 	@Override
-  public boolean hasInternalVariables() {
+	public boolean hasInternalVariables() {
 		if (jsEngine != null) {
 			return !jsEngine.getBindings(ScriptContext.ENGINE_SCOPE).isEmpty();
 		} else if (beanShellEngine != null) {
@@ -202,7 +202,7 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 	 *           is thrown if the data is not found in the data space
 	 */
 	public String execAction(String action) throws InvalidDataException {
-	  logger.debug("Will try to execute: " + action);
+		logger.debug("Will try to execute: " + action);
 		Object res = null;
 		if (jsEngine != null) {
 			try {
@@ -221,7 +221,7 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 	}
 
 	@Override
-  public String getCurrentDataString() {
+	public String getCurrentDataString() {
 		String retur = "";
 
 		if (jsEngine != null) {
@@ -248,7 +248,7 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 	}
 
 	@Override
-  public boolean walkEdge(Edge edge) {
+	public boolean walkEdge(Edge edge) {
 		boolean hasWalkedEdge = super.walkEdge(edge);
 		if (hasWalkedEdge) {
 			if (hasAction(edge)) {
@@ -294,7 +294,7 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 	}
 
 	@Override
-  protected void track() {
+	protected void track() {
 		super.track();
 		if (jsEngine != null) {
 		} else if (beanShellEngine != null) {
@@ -303,7 +303,7 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 	}
 
 	@Override
-  protected void popVertex() {
+	protected void popVertex() {
 		super.popVertex();
 		if (jsEngine != null) {
 		} else if (beanShellEngine != null) {
@@ -341,7 +341,7 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 	}
 
 	@Override
-  public void setCalculatingPath(boolean calculatingPath) {
+	public void setCalculatingPath(boolean calculatingPath) {
 		super.setCalculatingPath(calculatingPath);
 		if (calculatingPath && this.oldPrintStream != System.out) {
 			this.oldPrintStream = System.out;
@@ -357,14 +357,14 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 		}
 
 		@Override
-    public void write(byte[] buf, int off, int len) {
+		public void write(byte[] buf, int off, int len) {
 		}
 	}
-	
+
 	public boolean isJsEnabled() {
 		return jsEngine != null;
 	}
-	
+
 	public boolean isBeanShellEnabled() {
 		return beanShellEngine != null;
 	}

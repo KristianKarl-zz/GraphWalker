@@ -36,26 +36,26 @@ import org.graphwalker.graph.Vertex;
 import edu.uci.ics.jung.algorithms.shortestpath.DijkstraShortestPath;
 
 public class NonOptimizedShortestPath extends RandomPathGenerator {
-  
-  private boolean toggleAllOrUnvisited = true; 
 
-  public NonOptimizedShortestPath(StopCondition stopCondition) {
-    super(stopCondition);
-  }
+	private boolean toggleAllOrUnvisited = true;
 
-  private static Logger logger = Util.setupLogger(NonOptimizedShortestPath.class);
+	public NonOptimizedShortestPath(StopCondition stopCondition) {
+		super(stopCondition);
+	}
+
+	private static Logger logger = Util.setupLogger(NonOptimizedShortestPath.class);
 	private List<Edge> dijkstraShortestPath;
 
 	public NonOptimizedShortestPath() {
-    super();
-  }
+		super();
+	}
 
-  @Override
-  public String[] getNext() throws InterruptedException {
+	@Override
+	public String[] getNext() throws InterruptedException {
 		Util.AbortIf(!hasNext(), "Finished");
 
 		if (Thread.interrupted()) {
-	    throw new InterruptedException();
+			throw new InterruptedException();
 		}
 		Edge edge = null;
 		do {
@@ -81,13 +81,13 @@ public class NonOptimizedShortestPath extends RandomPathGenerator {
 				return false;
 			} else {
 				Object[] shuffledList = null;
-				if ( toggleAllOrUnvisited ) {
-				  shuffledList = Util.shuffle(unvisitedEdges.toArray());				  
+				if (toggleAllOrUnvisited) {
+					shuffledList = Util.shuffle(unvisitedEdges.toArray());
 				} else {
-          shuffledList = Util.shuffle( getMachine().getAllEdgesExceptStartEdge().toArray());          
+					shuffledList = Util.shuffle(getMachine().getAllEdgesExceptStartEdge().toArray());
 				}
 				toggleAllOrUnvisited = !toggleAllOrUnvisited;
-			
+
 				e = (Edge) shuffledList[0];
 			}
 
@@ -104,11 +104,11 @@ public class NonOptimizedShortestPath extends RandomPathGenerator {
 			// an edge there (self-loop). So we have to check for that.
 			if (dijkstraShortestPath.size() == 0) {
 				if (getMachine().getCurrentVertex().getIndexKey() != getMachine().getModel().getSource(e).getIndexKey()) {
-				  if ( !toggleAllOrUnvisited ) { 
-  					String msg = "There is no way to reach: " + e + ", from: " + getMachine().getCurrentVertex();
-  					logger.error(msg);
-  					throw new RuntimeException(msg);
-				  }
+					if (!toggleAllOrUnvisited) {
+						String msg = "There is no way to reach: " + e + ", from: " + getMachine().getCurrentVertex();
+						logger.error(msg);
+						throw new RuntimeException(msg);
+					}
 				}
 			}
 
@@ -129,9 +129,9 @@ public class NonOptimizedShortestPath extends RandomPathGenerator {
 		}
 		dijkstraShortestPath = null;
 	}
-	
+
 	@Override
-  public String toString() {
+	public String toString() {
 		if (getStopCondition() == null) {
 			return "SHORTESTNONOPT";
 		} else {
