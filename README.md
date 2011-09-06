@@ -17,7 +17,9 @@ The way to tell GraphWalker to stop generating test sequences are done by means 
 
 ### Online ###
 
-GraphWalker supports online test sequence generation. Using the online mode, the tool is capable of  testing non-deterministic systems. In essence, this means that the path walked through the model is decided runtime, during the actual test execution. This is very helpful if your test execution tool needs to communicate with the model during the test.
+GraphWalker is a Model-Based Testing tool. It parses models [finite-state machines] which are designed
+using the yEd, http://www.yworks.com/en/products_yed_about.html, and generates test sequences.
+It supports online test sequence generation. Using the online mode, the tool is capable of testing non-deterministic systems. In essence, this means that the path walked through the model is decided runtime, during the actual test execution. This is very helpful if your test execution tool needs to communicate with the model during the test.
 
 ### Event-driven ###
 
