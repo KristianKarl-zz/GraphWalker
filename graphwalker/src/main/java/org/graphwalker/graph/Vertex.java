@@ -35,8 +35,8 @@ import org.graphwalker.Util;
 public class Vertex extends AbstractElement {
 
 	static Logger logger = Util.setupLogger(Vertex.class);
-	private String motherStartVertexKey = new String();
-	private String subGraphStartVertexKey = new String();
+	private String motherStartVertexKey = "";
+	private String subGraphStartVertexKey = "";
 	private Color fillColor = new Color(0);
 	private Point2D location = new Point2D.Float();
 	private float width = 0;

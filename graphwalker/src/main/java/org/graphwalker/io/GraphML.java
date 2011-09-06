@@ -102,7 +102,7 @@ public class GraphML extends AbstractModelHandler {
 	 */
 	@Override
 	public void load(String fileOrfolder) {
-		if (fileOrfolder != "") {
+		if (!"".equals(fileOrfolder)) {
 			File file = Util.getFile(fileOrfolder);
 			if (file.isFile()) {
 				parsedGraphList.add(parseFile(fileOrfolder));
@@ -117,8 +117,8 @@ public class GraphML extends AbstractModelHandler {
 				};
 
 				File[] allChildren = file.listFiles(graphmlFilter);
-				for (int i = 0; i < allChildren.length; ++i) {
-					parsedGraphList.add(parseFile(allChildren[i].getAbsolutePath()));
+				for (File anAllChildren : allChildren) {
+					parsedGraphList.add(parseFile(anAllChildren.getAbsolutePath()));
 					setMerged(false);
 				}
 			} else {
@@ -194,10 +194,10 @@ public class GraphML extends AbstractModelHandler {
 							}
 
 							v.setIdKey(element.getAttributeValue("id"));
-							v.setVisitedKey(new Integer(0));
+							v.setVisitedKey(0);
 							v.setFileKey(fileName);
 							v.setFullLabelKey(str);
-							v.setIndexKey(new Integer(getNewVertexAndEdgeIndex()));
+							v.setIndexKey(getNewVertexAndEdgeIndex());
 							v.setLabelKey(Vertex.getLabel(str));
 							v.setMergeKey(AbstractElement.isMerged(str));
 							v.setNoMergeKey(AbstractElement.isNoMerge(str));
@@ -298,8 +298,8 @@ public class GraphML extends AbstractModelHandler {
 					Vertex source = null;
 					Vertex dest = null;
 
-					for (int i = 0; i < vertices.length; i++) {
-						Vertex vertex = (Vertex) vertices[i];
+					for (Object vertice : vertices) {
+						Vertex vertex = (Vertex) vertice;
 
 						// Find source vertex
 						if (vertex.getIdKey().equals(element.getAttributeValue("source")) && vertex.getFileKey().equals(fileName)) {
@@ -324,7 +324,7 @@ public class GraphML extends AbstractModelHandler {
 					Edge e = new Edge();
 					e.setIdKey(element.getAttributeValue("id"));
 					e.setFileKey(fileName);
-					e.setIndexKey(new Integer(getNewVertexAndEdgeIndex()));
+					e.setIndexKey(getNewVertexAndEdgeIndex());
 
 					// Parse description
 					Iterator<Object> iter_data = element.getDescendants(new org.jdom.filter.ElementFilter("data"));
@@ -371,7 +371,7 @@ public class GraphML extends AbstractModelHandler {
 
 						e.setReqTagKey(AbstractElement.getReqTags(str));
 					}
-					e.setVisitedKey(new Integer(0));
+					e.setVisitedKey(0);
 					logger.debug("  Added edge: '" + e.getLabelKey() + "', with id: " + e.getIndexKey());
 
 					// Extract any manual test instructions
@@ -408,6 +408,8 @@ public class GraphML extends AbstractModelHandler {
 
 	/**
 	 * Increment and return the unique index for a vertex or edge.
+	 * 
+	 * @return
 	 */
 	private int getNewVertexAndEdgeIndex() {
 		return ++vertexAndEdgeIndex;
@@ -415,19 +417,21 @@ public class GraphML extends AbstractModelHandler {
 
 	/**
 	 * Removes any edges, and any vertices that contains the key word BLOCKED
+	 * 
+	 * @param graph
 	 */
 	private void removeBlockedEntities(Graph graph) {
 		Object[] vertices = graph.getVertices().toArray();
-		for (int i = 0; i < vertices.length; i++) {
-			Vertex v = (Vertex) vertices[i];
+		for (Object vertice : vertices) {
+			Vertex v = (Vertex) vertice;
 			if (v.isBlockedKey()) {
 				logger.debug("Removing this vertex because it is BLOCKED: '" + v.getLabelKey() + "'");
 				graph.removeVertex(v);
 			}
 		}
 		Object[] edges = graph.getEdges().toArray();
-		for (int i = 0; i < edges.length; i++) {
-			Edge e = (Edge) edges[i];
+		for (Object edge : edges) {
+			Edge e = (Edge) edge;
 			if (e.isBlockedKey()) {
 				logger.debug("Removing this edge because it is BLOCKED: '" + e.getLabelKey() + "'");
 				graph.removeEdge(e);
@@ -485,8 +489,8 @@ public class GraphML extends AbstractModelHandler {
 			logger.debug("Analyzing graph: " + g.getFileKey());
 
 			Object[] vertices = g.getVertices().toArray();
-			for (int i = 0; i < vertices.length; i++) {
-				Vertex v = (Vertex) vertices[i];
+			for (Object vertice : vertices) {
+				Vertex v = (Vertex) vertice;
 
 				// Find all vertices that are start nodes (START_NODE)
 				if (v.getLabelKey().equalsIgnoreCase(Keywords.START_NODE)) {
@@ -503,7 +507,7 @@ public class GraphML extends AbstractModelHandler {
 								    + g.getFileKey());
 							}
 						}
-						if (foundSubStartGraph == true) {
+						if (foundSubStartGraph) {
 							throw new RuntimeException("Only one Start vertex can exist in one file, see file '" + g.getFileKey() + "'");
 						}
 
@@ -512,7 +516,7 @@ public class GraphML extends AbstractModelHandler {
 						g.getDest(edge).setMotherStartVertexKey(Keywords.MOTHER_GRAPH_START_VERTEX);
 						logger.debug("Found the mother graph in the file: " + graph.getFileKey());
 					} else {
-						if (foundSubStartGraph == true) {
+						if (foundSubStartGraph) {
 							throw new RuntimeException("Only one Start vertex can exist in one file, see file '" + g.getFileKey() + "'");
 						}
 
@@ -532,7 +536,7 @@ public class GraphML extends AbstractModelHandler {
 							}
 						}
 
-						if (foundMotherStartGraph == true) {
+						if (foundMotherStartGraph) {
 							if (graph.getFileKey().equals(g.getFileKey())) {
 								throw new RuntimeException("Only one Start vertex can exist in one file, see file '" + graph.getFileKey() + "'");
 							}
@@ -574,8 +578,8 @@ public class GraphML extends AbstractModelHandler {
 
 			String subgraph_label = g.getLabelKey();
 			Object[] vertices = g.getVertices().toArray();
-			for (int j = 0; j < vertices.length; j++) {
-				Vertex v = (Vertex) vertices[j];
+			for (Object vertice : vertices) {
+				Vertex v = (Vertex) vertice;
 				String label = v.getLabelKey();
 				if (label.equals(subgraph_label)) {
 					if (!v.getSubGraphStartVertexKey().isEmpty()) {
@@ -642,25 +646,25 @@ public class GraphML extends AbstractModelHandler {
 	 */
 	private void mergeVerticesMarked_MERGE() {
 		Object[] list1 = graph.getVertices().toArray();
-		for (int i = 0; i < list1.length; i++) {
-			Vertex v1 = (Vertex) list1[i];
+		for (Object aList1 : list1) {
+			Vertex v1 = (Vertex) aList1;
 
-			if (v1.isMergeKey() == false) {
+			if (!v1.isMergeKey()) {
 				continue;
 			}
 
 			Object[] list2 = graph.getVertices().toArray();
 			Vector<Vertex> mergedVertices = new Vector<Vertex>();
-			for (int j = 0; j < list2.length; j++) {
-				Vertex v2 = (Vertex) list2[j];
+			for (Object aList2 : list2) {
+				Vertex v2 = (Vertex) aList2;
 
-				if (v1.getLabelKey().equals(v2.getLabelKey()) == false) {
+				if (!v1.getLabelKey().equals(v2.getLabelKey())) {
 					continue;
 				}
 				if (v2.isNoMergeKey()) {
 					continue;
 				}
-				if (v1.getIndexKey() == v2.getIndexKey()) {
+				if (v1.getIndexKey().equals(v2.getIndexKey())) {
 					continue;
 				}
 				if (mergedVertices.contains(v1)) {
@@ -670,23 +674,23 @@ public class GraphML extends AbstractModelHandler {
 				logger.debug("Merging vertex(" + v1.getIndexKey() + "): '" + v1.getLabelKey() + "' with vertex (" + v2.getIndexKey() + ")");
 
 				Object[] inEdges = graph.getInEdges(v1).toArray();
-				for (int x = 0; x < inEdges.length; x++) {
-					Edge edge = (Edge) inEdges[x];
+				for (Object inEdge : inEdges) {
+					Edge edge = (Edge) inEdge;
 					Edge new_edge = new Edge(edge);
-					new_edge.setIndexKey(new Integer(getNewVertexAndEdgeIndex()));
+					new_edge.setIndexKey(getNewVertexAndEdgeIndex());
 					graph.addEdge(new_edge, graph.getSource(edge), v2);
 				}
 				Object[] outEdges = graph.getOutEdges(v1).toArray();
-				for (int x = 0; x < outEdges.length; x++) {
-					Edge edge = (Edge) outEdges[x];
+				for (Object outEdge : outEdges) {
+					Edge edge = (Edge) outEdge;
 					Edge new_edge = new Edge(edge);
-					new_edge.setIndexKey(new Integer(getNewVertexAndEdgeIndex()));
+					new_edge.setIndexKey(getNewVertexAndEdgeIndex());
 					graph.addEdge(new_edge, v2, graph.getDest(edge));
 				}
 				mergedVertices.add(v1);
 			}
 
-			if (mergedVertices.isEmpty() == false) {
+			if (!mergedVertices.isEmpty()) {
 				logger.debug("Remvoing merged vertex(" + v1.getIndexKey() + ")");
 				graph.removeVertex(v1);
 			}
@@ -695,11 +699,13 @@ public class GraphML extends AbstractModelHandler {
 
 	/**
 	 * Search for any vertices with no in edges
+	 * 
+	 * @throws RuntimeException
 	 */
 	private void checkForVerticesWithZeroInEdges() throws RuntimeException {
 		Object[] vs = graph.getVertices().toArray();
-		for (int i = 0; i < vs.length; i++) {
-			Vertex v = (Vertex) vs[i];
+		for (Object v1 : vs) {
+			Vertex v = (Vertex) v1;
 			if (!v.getLabelKey().equalsIgnoreCase(Keywords.START_NODE)) {
 				if (graph.getInEdges(v).toArray().length == 0) {
 					String msg = "No in-edges! " + v + " is not reachable," + " from file: '" + v.getFileKey() + "'";
@@ -719,20 +725,20 @@ public class GraphML extends AbstractModelHandler {
 	private void appendGraph(Graph dst, Graph src) {
 		HashMap<Integer, Vertex> map = new HashMap<Integer, Vertex>();
 		Object[] vertices = src.getVertices().toArray();
-		for (int i = 0; i < vertices.length; i++) {
-			Vertex v = (Vertex) vertices[i];
+		for (Object vertice : vertices) {
+			Vertex v = (Vertex) vertice;
 			if (v.getLabelKey().equalsIgnoreCase(Keywords.START_NODE)) {
 				continue;
 			}
 			Vertex new_v = new Vertex(v);
-			new_v.setIndexKey(new Integer(getNewVertexAndEdgeIndex()));
+			new_v.setIndexKey(getNewVertexAndEdgeIndex());
 			dst.addVertex(new_v);
 			logger.debug("Associated vertex: " + v + " to new vertex: " + new_v);
 			map.put(v.getIndexKey(), new_v);
 		}
 		Object[] edges = src.getEdges().toArray();
-		for (int i = 0; i < edges.length; i++) {
-			Edge e = (Edge) edges[i];
+		for (Object edge : edges) {
+			Edge e = (Edge) edge;
 			Vertex v1 = map.get(src.getSource(e).getIndexKey());
 			Vertex v2 = map.get(src.getDest(e).getIndexKey());
 			if (v1 == null || v2 == null) {
@@ -740,7 +746,7 @@ public class GraphML extends AbstractModelHandler {
 			}
 			Edge new_e = new Edge(e);
 			dst.addEdge(new_e, v1, v2);
-			new_e.setIndexKey(new Integer(getNewVertexAndEdgeIndex()));
+			new_e.setIndexKey(getNewVertexAndEdgeIndex());
 		}
 	}
 
@@ -756,16 +762,15 @@ public class GraphML extends AbstractModelHandler {
 		// Save the target vertex out-edge list
 		Vector<Edge> targetVertexOutEdgeList = new Vector<Edge>();
 		logger.debug("Target vertex (" + targetVertex + ") out-edge list");
-		for (Iterator<Edge> iter = mainGraph.getOutEdges(targetVertex).iterator(); iter.hasNext();) {
-			Edge element = iter.next();
+		for (Edge element : mainGraph.getOutEdges(targetVertex)) {
 			logger.debug("  " + element);
 			targetVertexOutEdgeList.add(element);
 		}
 
 		Vertex sourceVertex = null;
 		Object[] vertices = mainGraph.getVertices().toArray();
-		for (int i = 0; i < vertices.length; i++) {
-			Vertex v = (Vertex) vertices[i];
+		for (Object vertice : vertices) {
+			Vertex v = (Vertex) vertice;
 			if (v.getLabelKey().equals(targetVertex.getLabelKey())) {
 				if (v.getSubGraphStartVertexKey().isEmpty()) {
 					continue;
@@ -779,7 +784,7 @@ public class GraphML extends AbstractModelHandler {
 				if (v.isMergedMbtKey()) {
 					continue;
 				}
-				if (v.getIndexKey() == targetVertex.getIndexKey()) {
+				if (v.getIndexKey().equals(targetVertex.getIndexKey())) {
 					continue;
 				}
 
@@ -795,18 +800,18 @@ public class GraphML extends AbstractModelHandler {
 		logger.debug("Start merging target vertex: " + targetVertex + " with source vertex: " + sourceVertex);
 
 		Object[] inEdges = mainGraph.getInEdges(sourceVertex).toArray();
-		for (int i = 0; i < inEdges.length; i++) {
-			Edge edge = (Edge) inEdges[i];
+		for (Object inEdge : inEdges) {
+			Edge edge = (Edge) inEdge;
 			Edge new_edge = new Edge(edge);
 			mainGraph.addEdge(new_edge, mainGraph.getSource(edge), targetVertex);
-			new_edge.setIndexKey(new Integer(getNewVertexAndEdgeIndex()));
+			new_edge.setIndexKey(getNewVertexAndEdgeIndex());
 		}
 		Object[] outEdges = mainGraph.getOutEdges(sourceVertex).toArray();
-		for (int i = 0; i < outEdges.length; i++) {
-			Edge edge = (Edge) outEdges[i];
+		for (Object outEdge : outEdges) {
+			Edge edge = (Edge) outEdge;
 			Edge new_edge = new Edge(edge);
 			mainGraph.addEdge(new_edge, targetVertex, mainGraph.getDest(edge));
-			new_edge.setIndexKey(new Integer(getNewVertexAndEdgeIndex()));
+			new_edge.setIndexKey(getNewVertexAndEdgeIndex());
 		}
 		logger.debug("Remvoing source vertex: " + sourceVertex);
 		mainGraph.removeVertex(sourceVertex);
@@ -816,8 +821,8 @@ public class GraphML extends AbstractModelHandler {
 		// Also check if there is only one.
 		Vertex stopVertex = null;
 		vertices = mainGraph.getVertices().toArray();
-		for (int i = 0; i < vertices.length; i++) {
-			Vertex v = (Vertex) vertices[i];
+		for (Object vertice : vertices) {
+			Vertex v = (Vertex) vertice;
 			if (v.getLabelKey().equalsIgnoreCase(Keywords.STOP_NODE)) {
 				if (stopVertex != null) {
 					throw new RuntimeException("Found more than 1 Stop vertex in file (Only one Stop vertex per file is allowed): '"
@@ -836,32 +841,29 @@ public class GraphML extends AbstractModelHandler {
 			inEdges = mainGraph.getInEdges(stopVertex).toArray();
 
 			logger.debug("Stop vertex in-edge list");
-			for (Iterator<Edge> iter = mainGraph.getInEdges(stopVertex).iterator(); iter.hasNext();) {
-				Edge element = iter.next();
+			for (Edge element : mainGraph.getInEdges(stopVertex)) {
 				logger.debug("  " + element);
 			}
 			logger.debug("Target vertex (" + targetVertex + ") out-edge list");
-			for (Iterator<Edge> iter = targetVertexOutEdgeList.iterator(); iter.hasNext();) {
-				Edge element = iter.next();
+			for (Edge element : targetVertexOutEdgeList) {
 				logger.debug("  " + element);
 			}
 
 			Vector<Pair<Edge>> mergeList = MergeList(targetVertexOutEdgeList.toArray(), inEdges);
-			for (Iterator<Pair<Edge>> iterator = mergeList.iterator(); iterator.hasNext();) {
-				Pair<Edge> pair = iterator.next();
+			for (Pair<Edge> pair : mergeList) {
 				MergeOutEdgeAndInEdge(pair.getFirst(), pair.getSecond(), edgesToBeRemoved, mainGraph);
 			}
 
 			// Now remove the edges that has been copied.
 			Object[] list = edgesToBeRemoved.toArray();
-			for (int i = 0; i < list.length; i++) {
-				Edge element = (Edge) list[i];
+			for (Object aList : list) {
+				Edge element = (Edge) aList;
 				if (mainGraph.containsEdge(element)) {
 					try {
 						logger.debug("Removing edge: " + element);
 						logger.debug(element + ", was found and removed from graph,: '" + mainGraph.getFileKey() + "'");
 						mainGraph.removeEdge(element);
-					} catch (java.lang.IllegalArgumentException e) {
+					} catch (IllegalArgumentException e) {
 						logger.debug(element + ", was not found in graph: '" + mainGraph.getFileKey()
 						    + "', this is ok, since it probably been removed before. (I know, not ver good progamming practice here)");
 					}
@@ -876,11 +878,11 @@ public class GraphML extends AbstractModelHandler {
 		logger.debug("Vector twoLists( Object[] array_A, Object[] array_B )");
 		Vector<Pair<Edge>> matches = new Vector<Pair<Edge>>();
 		logger.debug("  Looking for exact matches");
-		for (int i = 0; i < array_A.length; i++) {
-			Edge a = (Edge) array_A[i];
+		for (Object anArray_A : array_A) {
+			Edge a = (Edge) anArray_A;
 			String aLabel = a.getLabelKey();
-			for (int j = 0; j < array_B.length; j++) {
-				Edge b = (Edge) array_B[j];
+			for (Object anArray_B : array_B) {
+				Edge b = (Edge) anArray_B;
 				String bLabel = b.getLabelKey();
 				if (aLabel != null && aLabel.length() == 0) {
 					aLabel = null;
@@ -902,24 +904,23 @@ public class GraphML extends AbstractModelHandler {
 
 		Vector<Pair<Edge>> null_matches_from_A_list = new Vector<Pair<Edge>>();
 		logger.debug("  Matching nulls from the A list with non-matched items in the second list");
-		for (int i = 0; i < array_A.length; i++) {
-			Edge a = (Edge) array_A[i];
+		for (Object anArray_A : array_A) {
+			Edge a = (Edge) anArray_A;
 			String aLabel = a.getLabelKey();
 			if (aLabel == null || aLabel.length() == 0) {
-				for (int j = 0; j < array_B.length; j++) {
-					Edge b = (Edge) array_B[j];
+				for (Object anArray_B : array_B) {
+					Edge b = (Edge) anArray_B;
 					String bLabel = b.getLabelKey();
 					if (bLabel != null) {
 						boolean alreadyMatched = false;
-						for (Iterator<Pair<Edge>> iter = matches.iterator(); iter.hasNext();) {
-							Pair<Edge> element = iter.next();
+						for (Pair<Edge> element : matches) {
 							if (b.equals(element.getSecond())) {
 								alreadyMatched = true;
 								break;
 							}
 						}
 
-						if (alreadyMatched == false) {
+						if (!alreadyMatched) {
 							logger.debug("    adding: " + a + " and " + b);
 							null_matches_from_A_list.add(new Pair<Edge>(a, b));
 						}
@@ -930,24 +931,23 @@ public class GraphML extends AbstractModelHandler {
 
 		Vector<Pair<Edge>> null_matches_from_B_list = new Vector<Pair<Edge>>();
 		logger.debug("  Matching nulls from the B list with non-matched items in the first list");
-		for (int i = 0; i < array_B.length; i++) {
-			Edge b = (Edge) array_B[i];
+		for (Object anArray_B : array_B) {
+			Edge b = (Edge) anArray_B;
 			String bLabel = b.getLabelKey();
 			if (bLabel == null || bLabel.length() == 0) {
-				for (int j = 0; j < array_A.length; j++) {
-					Edge a = (Edge) array_A[j];
+				for (Object anArray_A : array_A) {
+					Edge a = (Edge) anArray_A;
 					String aLabel = a.getLabelKey();
 					if (aLabel != null) {
 						boolean alreadyMatched = false;
-						for (Iterator<Pair<Edge>> iter = matches.iterator(); iter.hasNext();) {
-							Pair<Edge> element = iter.next();
+						for (Pair<Edge> element : matches) {
 							if (a.equals(element.getFirst())) {
 								alreadyMatched = true;
 								break;
 							}
 						}
 
-						if (alreadyMatched == false) {
+						if (!alreadyMatched) {
 							logger.debug("    adding: " + a + " and " + b);
 							null_matches_from_B_list.add(new Pair<Edge>(a, b));
 						}
@@ -976,7 +976,7 @@ public class GraphML extends AbstractModelHandler {
 		Edge new_edge = new Edge(inEdge, outEdge);
 		graph.addEdge(new_edge, graph.getSource(inEdge), graph.getDest(outEdge));
 
-		new_edge.setIndexKey(new Integer(getNewVertexAndEdgeIndex()));
+		new_edge.setIndexKey(getNewVertexAndEdgeIndex());
 		logger.debug("  Replacing the target vertex out-edge: " + outEdge + " (old) with: " + new_edge + "(new), using: " + inEdge);
 
 		edgesToBeRemoved.add(inEdge);
@@ -999,9 +999,7 @@ public class GraphML extends AbstractModelHandler {
 		ps.println("  <key id=\"d1\" for=\"edge\" yfiles.type=\"edgegraphics\"/>");
 		ps.println("  <graph id=\"G\" edgedefault=\"directed\">");
 
-		for (Iterator<Vertex> vertexIterator = g.getVertices().iterator(); vertexIterator.hasNext();) {
-			Vertex v = vertexIterator.next();
-
+		for (Vertex v : g.getVertices()) {
 			ps.println("    <node id=\"n" + v.getIndexKey() + "\">");
 			ps.println("      <data key=\"d0\" >");
 
@@ -1038,8 +1036,7 @@ public class GraphML extends AbstractModelHandler {
 			ps.println("    </node>");
 		}
 
-		for (Iterator<Edge> edgeIterator = g.getEdges().iterator(); edgeIterator.hasNext();) {
-			Edge e = edgeIterator.next();
+		for (Edge e : g.getEdges()) {
 			Pair<Vertex> p = graph.getEndpoints(e);
 			Vertex src = p.getFirst();
 			Vertex dest = p.getSecond();

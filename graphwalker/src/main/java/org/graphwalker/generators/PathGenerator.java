@@ -50,14 +50,16 @@ public abstract class PathGenerator {
 
 	public void setMachine(FiniteStateMachine machine) {
 		this.machine = machine;
-		if (this.stopCondition != null)
+		if (this.stopCondition != null) {
 			this.stopCondition.setMachine(machine);
+		}
 	}
 
 	public void setStopCondition(StopCondition stopCondition) {
 		this.stopCondition = stopCondition;
-		if (this.machine != null)
+		if (this.machine != null) {
 			this.stopCondition.setMachine(this.machine);
+		}
 	}
 
 	public StopCondition getStopCondition() {
@@ -94,10 +96,7 @@ public abstract class PathGenerator {
 		} catch (FoundNoEdgeException e) {
 			throw new RuntimeException("No possible edges available for path", e);
 		}
-		if (availableEdges.contains(edge)) {
-			return true;
-		}
+		return availableEdges.contains(edge);
 
-		return false;
 	}
 }

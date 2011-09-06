@@ -23,7 +23,6 @@
 
 package org.graphwalker.generators;
 
-import java.util.Iterator;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
@@ -52,15 +51,15 @@ public class CombinedPathGenerator extends PathGenerator {
 
 	@Override
 	public void setMachine(FiniteStateMachine machine) {
-		for (Iterator<PathGenerator> i = generatorList.iterator(); i.hasNext();) {
-			i.next().setMachine(machine);
+		for (PathGenerator aGeneratorList : generatorList) {
+			aGeneratorList.setMachine(machine);
 		}
 	}
 
 	@Override
 	public void setStopCondition(StopCondition stopCondition) {
-		for (Iterator<PathGenerator> i = generatorList.iterator(); i.hasNext();) {
-			i.next().setStopCondition(stopCondition);
+		for (PathGenerator aGeneratorList : generatorList) {
+			aGeneratorList.setStopCondition(stopCondition);
 		}
 	}
 
@@ -105,11 +104,12 @@ public class CombinedPathGenerator extends PathGenerator {
 
 	@Override
 	public String toString() {
-		String retur = "";
-		for (Iterator<PathGenerator> i = generatorList.iterator(); i.hasNext();) {
-			retur += i.next().toString() + "\n";
+		StringBuilder stringBuilder = new StringBuilder();
+		for (PathGenerator aGeneratorList : generatorList) {
+			stringBuilder.append(aGeneratorList.toString());
+			stringBuilder.append(System.getProperty("line.separator"));
 		}
-		return retur.trim();
+		return stringBuilder.toString().trim();
 	}
 
 }

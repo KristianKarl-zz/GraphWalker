@@ -91,6 +91,8 @@ public class ModelBasedTesting {
 	private Thread thisThread = null;
 	private Future<?> future;
 
+	private static final Object lock = new Object();
+
 	/**
 	 * Do not verify labels for edges and vertices. This is used when creating
 	 * manual test sequences.
@@ -177,8 +179,9 @@ public class ModelBasedTesting {
 	private StatisticsManager statisticsManager;
 
 	private void setupStatisticsManager() {
-		if (this.statisticsManager == null)
+		if (this.statisticsManager == null) {
 			this.statisticsManager = new StatisticsManager();
+		}
 		this.statisticsManager.addStatisicsCounter("Vertex Coverage", new VertexCoverageStatistics(getGraph()));
 		this.statisticsManager.addStatisicsCounter("Edge Coverage", new EdgeCoverageStatistics(getGraph()));
 		this.statisticsManager.addStatisicsCounter("2-Edge Sequence Coverage", new EdgeSequenceCoverageStatistics(getGraph(), 2));
@@ -193,8 +196,9 @@ public class ModelBasedTesting {
 	public StatisticsManager getStatisticsManager() {
 		if (this.statisticsManager == null) {
 			this.statisticsManager = new StatisticsManager();
-			if (this.machine != null)
+			if (this.machine != null) {
 				setupStatisticsManager();
+			}
 		}
 		return this.statisticsManager;
 	}
@@ -216,6 +220,8 @@ public class ModelBasedTesting {
 
 	/**
 	 * Return the instance of the graph
+	 * 
+	 * @return
 	 */
 	public Graph getGraph() {
 		if (this.modelHandler == null)
@@ -234,6 +240,8 @@ public class ModelBasedTesting {
 
 	/**
 	 * Returns the current future object in the test.
+	 * 
+	 * @return
 	 */
 	public Future<?> getFuture() {
 		return future;
@@ -242,6 +250,8 @@ public class ModelBasedTesting {
 	/**
 	 * Sets the future for the model. The execution of the path will be paused
 	 * until the future is done.
+	 * 
+	 * @param future
 	 */
 	public void setFuture(Future<?> future) {
 		this.future = future;
@@ -291,9 +301,10 @@ public class ModelBasedTesting {
 	}
 
 	/**
-	 * Tells mbt that a requirement (if any), has passed or failed. MBT will look at the most recent vertex and
-	 * check if they have requirement. All the requirements found will get the new value according to the pass parameter
-	 * and saved into the reqs hashmap inside the machine. 
+	 * Tells mbt that a requirement (if any), has passed or failed. MBT will look
+	 * at the most recent vertex and check if they have requirement. All the
+	 * requirements found will get the new value according to the pass parameter
+	 * and saved into the reqs hashmap inside the machine.
 	 * 
 	 * @param pass
 	 *          Tells mbt if the requirement has pass (true), or failed (false).
@@ -302,55 +313,56 @@ public class ModelBasedTesting {
 		Util.AbortIf(this.machine == null, "No machine has been defined!");
 		Vertex v = getMachine().getCurrentVertex();
 		String reqTag = v.getReqTagKey();
-		String str ="";
+		String str = "";
 		String[] tmp = reqTag.split(",");
-		for(int i =0;i<tmp.length;i++){
-			if(tmp[i].length() ==0)
+		for (int i = 0; i < tmp.length; i++) {
+			if (tmp[i].length() == 0)
 				continue;
-	    	if(tmp[i].matches("[$][{].*[}]")){
-	    		try{
-	    			String reqVar = tmp[i].substring(2, tmp[i].length()-1);
-	    			String[] reqVarVals = getDataValue(reqVar).split(",");
-	    			for(String reqVarVal : reqVarVals){
-	    				if(reqVarVal.length() ==0)
-	    					continue;
-		    			Boolean reqValue = (getMachine().getValueFromReqs(reqVarVal));
-		    			if( reqValue == null || reqValue.booleanValue() != false){
-		    				getMachine().setValueForReq(reqVarVal, pass);
-		    				str = "REQUIREMENT: '" + reqVarVal + "' has ";
-		    				if (pass) 
-		    					str += "PASSED, at " + v;
-		    				else
-		    					str += "FAILED, at " + v;
-		    				logger.info(str);
-		    			}
-	    			}
-	    		}catch(Exception e){
-	    			logger.error(e.getMessage());
-	    		}
-	    	}else{
-	    		
-				Boolean reqValue = (getMachine().getValueFromReqs(tmp[i]));
-				if( reqValue == null || reqValue.booleanValue() != false){
-					getMachine().setValueForReq(tmp[i], pass);
-    				str = "REQUIREMENT: '" + tmp[i] + "' has ";
-    				if (pass) 
-    					str += "PASSED, at " + v;
-    				else
-    					str += "FAILED, at " + v;
-    				logger.info(str);
+			if (tmp[i].matches("[$][{].*[}]")) {
+				try {
+					String reqVar = tmp[i].substring(2, tmp[i].length() - 1);
+					String[] reqVarVals = getDataValue(reqVar).split(",");
+					for (String reqVarVal : reqVarVals) {
+						if (reqVarVal.length() == 0)
+							continue;
+						Boolean reqValue = (getMachine().getValueFromReqs(reqVarVal));
+						if (reqValue == null || reqValue.booleanValue() != false) {
+							getMachine().setValueForReq(reqVarVal, pass);
+							str = "REQUIREMENT: '" + reqVarVal + "' has ";
+							if (pass)
+								str += "PASSED, at " + v;
+							else
+								str += "FAILED, at " + v;
+							logger.info(str);
+						}
+					}
+				} catch (Exception e) {
+					logger.error(e.getMessage());
 				}
-	    	}
-	    }
+			} else {
+
+				Boolean reqValue = (getMachine().getValueFromReqs(tmp[i]));
+				if (reqValue == null || reqValue.booleanValue() != false) {
+					getMachine().setValueForReq(tmp[i], pass);
+					str = "REQUIREMENT: '" + tmp[i] + "' has ";
+					if (pass)
+						str += "PASSED, at " + v;
+					else
+						str += "FAILED, at " + v;
+					logger.info(str);
+				}
+			}
+		}
 	}
-	
+
 	/**
-	 * This method calls the populateReqHashMap() for its machine, in order to populate the requirement hashmap
+	 * This method calls the populateReqHashMap() for its machine, in order to
+	 * populate the requirement hashmap
 	 */
-	public void populateMachineRequirementHashTable(){
+	public void populateMachineRequirementHashTable() {
 		getMachine().populateReqHashMap();
 	}
-	  
+
 	protected void enableJsScriptEngine(boolean enableJs) {
 		if (enableJs)
 			useJsScriptEngine = true;
@@ -405,7 +417,7 @@ public class ModelBasedTesting {
 
 				if (App.getInstance().getStatus().isNext() || App.getInstance().getStatus().isRunning()
 				    || App.getInstance().getStatus().isExecutingJavaTest() || App.getInstance().getStatus().isExecutingSoapTest()
-				    && App.getInstance().getStatus().isPaused() == false) {
+				    && !App.getInstance().getStatus().isPaused()) {
 					break;
 				}
 				Thread.sleep(500);
@@ -414,9 +426,10 @@ public class ModelBasedTesting {
 
 		if (threadSuspended) {
 			logger.debug("Execution is now suspended: " + getGraph().getLabelKey());
-			synchronized (this) {
-				while (threadSuspended)
+			synchronized (lock) {
+				while (threadSuspended) {
 					wait();
+				}
 			}
 			logger.debug("Executions is now resumed: " + getGraph().getLabelKey());
 		}
@@ -456,8 +469,9 @@ public class ModelBasedTesting {
 				notifyApp.getNextEvent();
 			}
 			if (isUseGUI()) {
-				if (App.getInstance().getStatus().isStopped())
-					new GuiStoppedExecution();
+				if (App.getInstance().getStatus().isStopped()) {
+					throw new GuiStoppedExecution();
+				}
 
 				if (App.getInstance().getStatus().isNext()) {
 					App.getInstance().getStatus().unsetState(Status.next);
@@ -510,14 +524,33 @@ public class ModelBasedTesting {
 
 	public String getVersionString() {
 		Properties properties = new Properties();
+		InputStream inputStream = null;
 		try {
-			properties.load(getClass().getResourceAsStream("/org/graphwalker/resources/version.properties"));
-			return properties.getProperty("version.major") + "." + properties.getProperty("version.minor") + "."
-			    + properties.getProperty("version.fix") + ", svn rev. " + properties.getProperty("version.svn.rev");
+			inputStream = getClass().getResourceAsStream("/org/graphwalker/resources/version.properties");
+			properties.load(inputStream);
+			inputStream.close();
 		} catch (IOException e) {
 			Util.logStackTraceToError(e);
+		} finally {
+			Util.closeQuietly(inputStream);
 		}
-		return "";
+		StringBuilder stringBuilder = new StringBuilder();
+		if (properties.containsKey("version.major")) {
+			stringBuilder.append(properties.getProperty("version.major"));
+		}
+		if (properties.containsKey("version.minor")) {
+			stringBuilder.append(".");
+			stringBuilder.append(properties.getProperty("version.minor"));
+		}
+		if (properties.containsKey("version.fix")) {
+			stringBuilder.append(".");
+			stringBuilder.append(properties.getProperty("version.fix"));
+		}
+		if (properties.containsKey("version.svn.rev")) {
+			stringBuilder.append(", svn rev. ");
+			stringBuilder.append(properties.getProperty("version.svn.rev"));
+		}
+		return stringBuilder.toString();
 	}
 
 	public String getStatisticsCompact() {
@@ -537,7 +570,7 @@ public class ModelBasedTesting {
 	}
 
 	public void setTemplate(String[] template) {
-		this.template = template;
+		this.template = template.clone();
 
 		if (getGenerator() != null && getGenerator() instanceof CodeGenerator)
 			((CodeGenerator) getGenerator()).setTemplate(this.template);
@@ -634,11 +667,9 @@ public class ModelBasedTesting {
 		String req = " " + getRequirement(element);
 		if (element instanceof Edge) {
 			logger.info(getMachine().getLastEdge() + req + additionalInfo);
-			return;
 		} else if (element instanceof Vertex) {
 			logger.info(getMachine().getCurrentVertex() + req
 			    + (getMachine().hasInternalVariables() ? " DATA: " + getMachine().getCurrentDataString() : "") + additionalInfo);
-			return;
 		}
 	}
 
@@ -660,13 +691,13 @@ public class ModelBasedTesting {
 		while (hasNextStep()) {
 			String[] stepPair = getNextStep();
 
-			if (stepPair[0].trim() != "") {
+			if (!"".equals(stepPair[0].trim())) {
 				logExecution(getMachine().getLastEdge(), "");
 				if (isUseStatisticsManager()) {
 					getStatisticsManager().addProgress(getMachine().getLastEdge());
 				}
 			}
-			if (stepPair[1].trim() != "") {
+			if (!"".equals(stepPair[1].trim())) {
 				logExecution(getMachine().getCurrentVertex(), "");
 				if (isUseStatisticsManager()) {
 					getStatisticsManager().addProgress(getMachine().getCurrentVertex());
@@ -676,14 +707,16 @@ public class ModelBasedTesting {
 	}
 
 	public void executePath(Class<?> clsClass) throws InterruptedException {
-		if (clsClass == null)
+		if (clsClass == null) {
 			throw new RuntimeException("Needed execution class is missing as parameter.");
+		}
 		executePath(clsClass, null);
 	}
 
 	public void executePath(Object objInstance) throws InterruptedException {
-		if (objInstance == null)
+		if (objInstance == null) {
 			throw new RuntimeException("Needed execution instance is missing as parameter.");
+		}
 		if (isUseGUI()) {
 			App.getInstance().pause();
 			App.getInstance().updateLayout();
@@ -748,6 +781,7 @@ public class ModelBasedTesting {
 					try {
 						System.in.read();
 					} catch (IOException e) {
+						//
 					}
 					if (isUseStatisticsManager()) {
 						getStatisticsManager().addProgress(getMachine().getLastEdge());
@@ -759,6 +793,7 @@ public class ModelBasedTesting {
 					try {
 						System.in.read();
 					} catch (IOException e) {
+						//
 					}
 					if (isUseStatisticsManager()) {
 						getStatisticsManager().addProgress(getMachine().getCurrentVertex());
@@ -778,7 +813,7 @@ public class ModelBasedTesting {
 			if (objInstance == null) {
 				logger.debug("Got class: " + clsClass.getName() + ", but object instance null");
 				try {
-					objInstance = clsClass.getConstructor(new Class[] { ModelBasedTesting.class }).newInstance(new Object[] { this });
+					objInstance = clsClass.getConstructor(new Class[] { ModelBasedTesting.class }).newInstance(this);
 				} catch (SecurityException e) {
 					throw new RuntimeException("SecurityException: " + e.getMessage(), e);
 				} catch (NoSuchMethodException e) {
@@ -873,16 +908,16 @@ public class ModelBasedTesting {
 	private void executeMethod(Class<?> clsClass, Object objInstance, String strMethod, boolean isEdge) throws IllegalArgumentException,
 	    SecurityException, IllegalAccessException {
 		if (strMethod.contains("/")) {
-			strMethod = strMethod.substring(0, strMethod.indexOf("/"));
+			strMethod = strMethod.substring(0, strMethod.indexOf('/'));
 		}
 
 		if (strMethod.contains("[")) {
-			strMethod = strMethod.substring(0, strMethod.indexOf("["));
+			strMethod = strMethod.substring(0, strMethod.indexOf('['));
 		}
 
 		if (strMethod.contains(" ")) {
-			String s1 = strMethod.substring(0, strMethod.indexOf(" "));
-			String s2 = strMethod.substring(strMethod.indexOf(" ") + 1);
+			String s1 = strMethod.substring(0, strMethod.indexOf(' '));
+			String s2 = strMethod.substring(strMethod.indexOf(' ') + 1);
 			Class<?>[] paramTypes = { String.class };
 			Object[] paramValues = { s2 };
 
@@ -980,10 +1015,10 @@ public class ModelBasedTesting {
 		if (this.machine == null) {
 			getMachine();
 		}
-		
+
 		while (hasNextStep()) {
 			String[] stepPair = getNextStep();
-			
+
 			if (stepPair[0].trim() != "") {
 				out.println(stepPair[0]);
 				logExecution(getMachine().getLastEdge(), "");
@@ -1063,7 +1098,7 @@ public class ModelBasedTesting {
 				    + " beacuse it is an empty string.");
 				return false;
 			}
-			if (getMachine().hasVertex(newVertex) == false) {
+			if (!getMachine().hasVertex(newVertex)) {
 				logger.error("Could not manually change the vertex from: " + getMachine().getCurrentVertexName() + " to: " + newVertex
 				    + " beacuse it does not exist in the model.");
 				return false;
@@ -1139,7 +1174,7 @@ public class ModelBasedTesting {
 	public boolean isRunning() {
 		if (hasStartedExecution) {
 			if (stopFlag == thisThread) {
-				if (threadSuspended == false) {
+				if (!threadSuspended) {
 					return true;
 				}
 			}
@@ -1157,17 +1192,11 @@ public class ModelBasedTesting {
 	}
 
 	public boolean isFinished() {
-		if (hasStartedExecution && finishedFlag) {
-			return true;
-		}
-		return false;
+		return hasStartedExecution && finishedFlag;
 	}
 
 	public boolean hasNotStartedExecution() {
-		if (!hasStartedExecution) {
-			return true;
-		}
-		return false;
+		return !hasStartedExecution;
 	}
 
 	public ModelHandler getMultiModelHandler() {

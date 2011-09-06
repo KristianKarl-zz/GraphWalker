@@ -23,21 +23,12 @@
 
 package org.graphwalker;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import java.io.*;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.URL;
 import java.util.Enumeration;
-import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Random;
@@ -125,8 +116,7 @@ public class Util {
 	 *         ("");
 	 */
 	private static String getCompleteEdgeName(final Edge edge) {
-		String str = "Edge: '" + edge.getLabelKey() + "', INDEX=" + edge.getIndexKey();
-		return str;
+		return "Edge: '" + edge.getLabelKey() + "', INDEX=" + edge.getIndexKey();
 	}
 
 	/**
@@ -145,8 +135,7 @@ public class Util {
 	 *         Where is the unique index for the vertex.
 	 */
 	private static String getCompleteVertexName(final Vertex vertex) {
-		String str = "Vertex: '" + vertex.getLabelKey() + "', INDEX=" + vertex.getIndexKey();
-		return str;
+		return "Vertex: '" + vertex.getLabelKey() + "', INDEX=" + vertex.getIndexKey();
 	}
 
 	public static void AbortIf(final boolean bool, final String message) {
@@ -176,7 +165,7 @@ public class Util {
 	 */
 	public static Vertex addVertexToGraph(final Graph graph, final String strLabel) {
 		Vertex retur = new Vertex();
-		retur.setIndexKey(new Integer(graph.getEdgeCount() + graph.getVertexCount() + 1));
+		retur.setIndexKey(graph.getEdgeCount() + graph.getVertexCount() + 1);
 		if (strLabel != null) {
 			retur.setLabelKey(strLabel);
 		}
@@ -207,7 +196,7 @@ public class Util {
 	public static Edge addEdgeToGraph(final Graph graph, final Vertex vertexFrom, final Vertex vertexTo, final String strLabel,
 	    final String strParameter, final String strGuard, final String strAction) {
 		Edge retur = new Edge();
-		retur.setIndexKey(new Integer(graph.getEdgeCount() + graph.getVertexCount() + 1));
+		retur.setIndexKey(graph.getEdgeCount() + graph.getVertexCount() + 1);
 		if (strLabel != null) {
 			retur.setLabelKey(strLabel);
 		}
@@ -227,6 +216,7 @@ public class Util {
 	/**
 	 * Adds a stop condition for the model.
 	 * 
+	 * @param machine
 	 * @param conditionType
 	 *          The condition type.
 	 * @param conditionValue
@@ -342,8 +332,7 @@ public class Util {
 	/**
 	 * Load MBT settings from a xml file
 	 * 
-	 * @param fileName
-	 *          The XML settings file
+	 * @param file
 	 * @return
 	 * @throws StopConditionException
 	 * @throws GeneratorException
@@ -359,8 +348,7 @@ public class Util {
 	/**
 	 * Load MBT settings from a xml file
 	 * 
-	 * @param fileName
-	 *          The XML settings file
+	 * @param file
 	 * @param dryRun
 	 *          Is mbt to be run in a dry run mode?
 	 * @return
@@ -436,7 +424,6 @@ public class Util {
 	 * @param dryRun
 	 *          Is mbt to be run in a dry run mode?
 	 * @param generateNewModel
-	 *          TODO
 	 * @return
 	 * @throws StopConditionException
 	 * @throws GeneratorException
@@ -560,7 +547,7 @@ public class Util {
 			Util.timer.schedule(logTask, 500, seconds * 1000);
 		}
 
-		if (runningSoapServices == false) {
+		if (!runningSoapServices) {
 			try {
 
 				String executor = root.getAttributeValue("EXECUTOR");
@@ -580,7 +567,7 @@ public class Util {
 							throw new RuntimeException("file '" + executorParam + "' could not be created or is writeprotected.", e);
 						}
 					}
-					if (mbt.isUseGUI() == false) {
+					if (!mbt.isUseGUI()) {
 						mbt.writePath(out);
 						if (out != System.out) {
 							out.close();
@@ -595,7 +582,7 @@ public class Util {
 							throw new RuntimeException("file '" + executorParam + "' could not be created or is writeprotected.", e);
 						}
 					}
-					if (mbt.isUseGUI() == false) {
+					if (!mbt.isUseGUI()) {
 						Vector<String[]> testSequence = new Vector<String[]>();
 						mbt.writePath(testSequence);
 
@@ -609,7 +596,7 @@ public class Util {
 						throw new RuntimeException("No java class specified for execution");
 					}
 
-					if (mbt.isUseGUI() == false) {
+					if (!mbt.isUseGUI()) {
 						mbt.executePath(executorParam);
 					} else {
 						mbt.setJavaExecutorClass(executorParam);
@@ -619,7 +606,7 @@ public class Util {
 						Util.logger.debug("Executing a dry run");
 						mbt.executePath(null, null);
 					}
-					if (mbt.isUseGUI() == false) {
+					if (!mbt.isUseGUI()) {
 						mbt.interractivePath();
 					}
 
@@ -633,7 +620,7 @@ public class Util {
 				if (Util.timer != null) {
 					Util.timer.cancel();
 				}
-				if (reportName != null && reportTemplate != null && mbt.isUseGUI() == false) {
+				if (reportName != null && reportTemplate != null && !mbt.isUseGUI()) {
 					mbt.getStatisticsManager().writeFullReport(reportName);
 				}
 			}
@@ -756,7 +743,7 @@ public class Util {
 			Util.timer.schedule(logTask, 500, seconds * 1000);
 		}
 
-		if (runningSoapServices == false) {
+		if (!runningSoapServices) {
 			try {
 
 				String executor = root.getAttributeValue("EXECUTOR");
@@ -776,7 +763,7 @@ public class Util {
 							throw new RuntimeException("file '" + executorParam + "' could not be created or is writeprotected.", e);
 						}
 					}
-					if (mbt.isUseGUI() == false) {
+					if (!mbt.isUseGUI()) {
 						mbt.writePath(out);
 						if (out != System.out) {
 							out.close();
@@ -791,7 +778,7 @@ public class Util {
 							throw new RuntimeException("file '" + executorParam + "' could not be created or is writeprotected.", e);
 						}
 					}
-					if (mbt.isUseGUI() == false) {
+					if (!mbt.isUseGUI()) {
 						Vector<String[]> testSequence = new Vector<String[]>();
 						mbt.writePath(testSequence);
 
@@ -805,7 +792,7 @@ public class Util {
 						throw new RuntimeException("No java class specified for execution");
 					}
 
-					if (mbt.isUseGUI() == false) {
+					if (!mbt.isUseGUI()) {
 						mbt.executePath(executorParam);
 					} else {
 						mbt.setJavaExecutorClass(executorParam);
@@ -815,11 +802,12 @@ public class Util {
 						Util.logger.debug("Executing a dry run");
 						mbt.executePath(null, null);
 					}
-					if (mbt.isUseGUI() == false) {
+					if (!mbt.isUseGUI()) {
 						mbt.interractivePath();
 					}
 
-				} else if (executor.equalsIgnoreCase("none") || executor.equals("")) {
+					// } else if (executor.equalsIgnoreCase("none") ||
+					// executor.equals("")) {
 					// no execution (for debug purpose)
 				} else {
 					throw new RuntimeException("Unknown executor '" + executor + "'");
@@ -829,7 +817,7 @@ public class Util {
 				if (Util.timer != null) {
 					Util.timer.cancel();
 				}
-				if (reportName != null && reportTemplate != null && mbt.isUseGUI() == false) {
+				if (reportName != null && reportTemplate != null && !mbt.isUseGUI()) {
 					mbt.getStatisticsManager().writeFullReport(reportName);
 				}
 			}
@@ -838,19 +826,20 @@ public class Util {
 	}
 
 	private static String getScriptContent(final List<Element> scripts) throws IOException {
-		String retur = "";
+		StringBuilder stringBuilder = new StringBuilder();
 		for (Element element : scripts) {
-			Element script = element;
-			String internal = script.getTextTrim();
+			String internal = element.getTextTrim();
 			if (internal != null && !internal.equals("")) {
-				retur += internal + "\n";
+				stringBuilder.append(internal);
+				stringBuilder.append(System.getProperty("line.separator"));
 			}
-			String external = script.getAttributeValue("PATH");
+			String external = element.getAttributeValue("PATH");
 			if (external != null && !external.equals("")) {
-				retur += readFile(Util.getFile(external)) + "\n";
+				stringBuilder.append(readFile(Util.getFile(external)));
+				stringBuilder.append(System.getProperty("line.separator"));
 			}
 		}
-		return retur;
+		return stringBuilder.toString();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -901,13 +890,13 @@ public class Util {
 		StopCondition stopCondition = null;
 		if (condition.getName().equalsIgnoreCase("AND")) {
 			stopCondition = new CombinationalCondition();
-			for (Iterator<Element> i = condition.getChildren().iterator(); i.hasNext();) {
-				((CombinationalCondition) stopCondition).add(getCondition(machine, i.next()));
+			for (Element element : (Iterable<Element>) condition.getChildren()) {
+				((CombinationalCondition) stopCondition).add(getCondition(machine, element));
 			}
 		} else if (condition.getName().equalsIgnoreCase("OR")) {
 			stopCondition = new AlternativeCondition();
-			for (Iterator<Element> i = condition.getChildren().iterator(); i.hasNext();) {
-				((AlternativeCondition) stopCondition).add(getCondition(machine, i.next()));
+			for (Element element : (Iterable<Element>) condition.getChildren()) {
+				((AlternativeCondition) stopCondition).add(getCondition(machine, element));
 			}
 		} else if (condition.getName().equalsIgnoreCase("CONDITION")) {
 			int type = Keywords.getStopCondition(condition.getAttributeValue("TYPE"));
@@ -918,12 +907,23 @@ public class Util {
 	}
 
 	protected static String readFile(final File file) throws IOException {
-		String retur = "";
-		BufferedReader in = new BufferedReader(new FileReader(file));
-		while (in.ready()) {
-			retur += in.readLine() + "\n";
+		StringBuilder stringBuilder = new StringBuilder();
+		FileReader reader = null;
+		try {
+			reader = new FileReader(file);
+			BufferedReader bufferedReader = new BufferedReader(reader);
+			while (bufferedReader.ready()) {
+				stringBuilder.append(bufferedReader.readLine());
+				stringBuilder.append(System.getProperty("line.separator"));
+			}
+			bufferedReader.close();
+		} catch (IOException e) {
+			throw e; // TODO: remove the IOE from method signature and throw a new
+							 // exception extending runtime
+		} finally {
+			closeQuietly(reader);
 		}
-		return retur;
+		return stringBuilder.toString();
 	}
 
 	protected static char getInput() {
@@ -934,6 +934,7 @@ public class Util {
 				c = (char) tmp;
 			}
 		} catch (IOException e) {
+			//
 		}
 		return c;
 	}
@@ -970,7 +971,7 @@ public class Util {
 					Util.logger.debug(ia.getCanonicalHostName() + " " + ia.getHostAddress());
 					if (!ia.isLoopbackAddress()) {
 						Util.logger.debug("  Not a loopback address...");
-						if (ia.getHostAddress().indexOf(":") == -1 && nic.equals(iface.getDisplayName())) {
+						if (!ia.getHostAddress().contains(":") && nic.equals(iface.getDisplayName())) {
 							Util.logger.debug("  Host address does not contain ':'");
 							Util.logger.debug("  Interface: " + iface.getName() + " seems to be InternetInterface. I'll take it...");
 							foundNIC = true;
@@ -981,10 +982,10 @@ public class Util {
 		} catch (SocketException e) {
 			Util.logger.error(e.getMessage());
 		} finally {
-			if (foundNIC == false && nic != null) {
+			if (!foundNIC && nic != null) {
 				Util.logger.error("Could not bind to network interface: " + nic);
 				throw new RuntimeException("Could not bind to network interface: " + nic);
-			} else if (foundNIC == false && nic == null) {
+			} else if (!foundNIC) {
 				Util.logger.error("Could not bind to any network interface");
 				throw new RuntimeException("Could not bind to any network interface: ");
 			}
@@ -1078,4 +1079,23 @@ public class Util {
 		return new File(resource.getPath());
 	}
 
+	public static void closeQuietly(Reader reader) {
+		if (null != reader) {
+			try {
+				reader.close();
+			} catch (Exception e) {
+				// ignore all exceptions
+			}
+		}
+	}
+
+	public static void closeQuietly(InputStream inputStream) {
+		if (null != inputStream) {
+			try {
+				inputStream.close();
+			} catch (Exception e) {
+				// ignore all exceptions
+			}
+		}
+	}
 }

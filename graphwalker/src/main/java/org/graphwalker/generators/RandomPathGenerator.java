@@ -23,8 +23,7 @@
 
 package org.graphwalker.generators;
 
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 import org.apache.log4j.Logger;
 import org.graphwalker.Util;
@@ -61,56 +60,52 @@ public class RandomPathGenerator extends PathGenerator {
 		getMachine().walkEdge(edge);
 		logger.debug(edge.getFullLabelKey());
 		logger.debug(edge);
-		String[] retur = { getMachine().getEdgeName(edge), getMachine().getCurrentVertexName() };
-		return retur;
+		return new String[] { getMachine().getEdgeName(edge), getMachine().getCurrentVertexName() };
 	}
 
 	private Edge getWeightedEdge(Set<Edge> availableEdges) {
-		Object[] edges = availableEdges.toArray();
-		Edge edge = null;
-		float probabilities[] = new float[availableEdges.size()];
+
+		Map<Edge, Double> probabilities = new HashMap<Edge, Double>();
 		int numberOfZeros = 0;
-		float sum = 0;
+		double sum = 0;
 
-		for (int i = 0; i < edges.length; i++) {
-			edge = (Edge) edges[i];
-
+		for (Edge edge : availableEdges) {
 			if (edge.getWeightKey() > 0) {
-				Float weight = edge.getWeightKey();
-				probabilities[i] = weight.floatValue();
-				sum += probabilities[i];
+				probabilities.put(edge, (double) edge.getWeightKey());
+				sum += edge.getWeightKey();
+				if (sum > 1) {
+					throw new RuntimeException("The sum of all weights in edges from vertex: '"
+					    + getMachine().getModel().getSource(edge).getLabelKey() + "', adds up to more than 1.00");
+				}
 			} else {
 				numberOfZeros++;
-				probabilities[i] = 0;
+				probabilities.put(edge, 0d);
 			}
 		}
 
-		if (sum > 1) {
-			throw new RuntimeException("The sum of all weights in edges from vertex: '" + getMachine().getModel().getSource(edge).getLabelKey()
-			    + "', adds up to more than 1.00");
-		}
-
-		float rest = (1 - sum) / numberOfZeros;
+		double rest = (1 - sum) / numberOfZeros;
 		int index = random.nextInt(100);
 		logger.debug("Randomized integer index = " + index);
 
-		float weight = 0;
-		for (int i = 0; i < edges.length; i++) {
-			if (probabilities[i] == 0) {
-				probabilities[i] = rest;
-			}
-			logger.debug("The edge: '" + ((Edge) edges[i]).getLabelKey() + "' is given the probability of " + probabilities[i] * 100 + "%");
+		double weight = 0;
 
-			weight = weight + probabilities[i] * 100;
+		for (Edge edge : availableEdges) {
+
+			if (probabilities.get(edge) == 0) {
+				probabilities.put(edge, rest);
+			}
+
+			logger.debug("The edge: '" + edge.getLabelKey() + "' is given the probability of " + probabilities.get(edge) * 100 + "%");
+
+			weight = weight + probabilities.get(edge) * 100;
 			logger.debug("Current weight is: " + weight);
 			if (index < weight) {
-				edge = (Edge) edges[i];
 				logger.debug("Selected edge is: " + edge);
-				break;
+				return edge;
 			}
 		}
 
-		return edge;
+		throw new RuntimeException("No edge found");
 	}
 
 	private Edge getRandomEdge(Set<Edge> availableEdges) {

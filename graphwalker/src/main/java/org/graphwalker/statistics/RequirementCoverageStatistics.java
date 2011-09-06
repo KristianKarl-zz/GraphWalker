@@ -23,8 +23,8 @@
 
 package org.graphwalker.statistics;
 
+import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Vector;
 
 import org.graphwalker.graph.AbstractElement;
@@ -41,6 +41,7 @@ public class RequirementCoverageStatistics extends Statistics {
 
 	/**
 	 * 
+	 * @param model
 	 */
 	public RequirementCoverageStatistics(Graph model) {
 		usedRequirements = new HashSet<String>();
@@ -49,8 +50,7 @@ public class RequirementCoverageStatistics extends Statistics {
 		Vector<AbstractElement> allElements = new Vector<AbstractElement>();
 		allElements.addAll(model.getEdges());
 		allElements.addAll(model.getVertices());
-		for (Iterator<AbstractElement> i = allElements.iterator(); i.hasNext();) {
-			AbstractElement e = i.next();
+		for (AbstractElement e : allElements) {
 			if (!e.getReqTagKey().isEmpty()) {
 				appendRequirements(allRequirements, e.getReqTagKey());
 			}
@@ -59,9 +59,7 @@ public class RequirementCoverageStatistics extends Statistics {
 
 	private void appendRequirements(HashSet<String> set, String requirements) {
 		String[] tags = requirements.split(",");
-		for (int i = 0; i < tags.length; i++) {
-			set.add(tags[i]);
-		}
+		Collections.addAll(set, tags);
 	}
 
 	/*

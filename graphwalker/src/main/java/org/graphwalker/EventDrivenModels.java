@@ -34,7 +34,7 @@ public class EventDrivenModels {
 	Stack<ThreadWrapper> pausedModels = new Stack<ThreadWrapper>();
 	private Object executionClass = null;
 	private ThreadWrapper executingModel = null;
-	static Object lockbox = new Object();
+	private static final Object lockbox = new Object();
 
 	public EventDrivenModels(Object executionClass) {
 		this.executionClass = executionClass;
@@ -96,7 +96,6 @@ public class EventDrivenModels {
 		try {
 			while (true) {
 				synchronized (lockbox) {
-
 					if (executingModel == null) {
 						if (pausedModels.isEmpty()) {
 							logger.debug("All threads terminated");
@@ -111,9 +110,8 @@ public class EventDrivenModels {
 							executingModel = null;
 						}
 					}
-
-					Thread.sleep(100);
 				}
+				Thread.sleep(100);
 			}
 		} catch (InterruptedException e) {
 			Util.logStackTraceToError(e);

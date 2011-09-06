@@ -51,10 +51,12 @@ public class ReachedVertex extends StopCondition {
 	@Override
 	public void setMachine(FiniteStateMachine machine) {
 		super.setMachine(machine);
-		if (this.endVertex == null)
+		if (this.endVertex == null) {
 			this.endVertex = machine.getModel().findVertex(vertexName);
-		if (this.endVertex == null)
+		}
+		if (this.endVertex == null) {
 			throw new RuntimeException("Vertex '" + vertexName + "' not found in model");
+		}
 		this.proximity = getFloydWarshall();
 		this.maxDistance = max(this.proximity);
 	}
@@ -102,7 +104,7 @@ public class ReachedVertex extends StopCondition {
 		allVertices = new ArrayList<Vertex>(getMachine().getAllVertices());
 		int n = allVertices.size();
 		int[][] retur = new int[n][n];
-		for (int i = 0; i < n; i++)
+		for (int i = 0; i < n; i++) {
 			for (int j = 0; j < n; j++) {
 				int x = 99999;
 				if (i == j) {
@@ -112,6 +114,7 @@ public class ReachedVertex extends StopCondition {
 				}
 				retur[i][j] = x;
 			}
+		}
 		return retur;
 	}
 
@@ -119,14 +122,16 @@ public class ReachedVertex extends StopCondition {
 		int path[][] = getFloydWarshallMatrix();
 		int n = path.length;
 		for (int k = 0; k < n; k++) {
-			for (int i = 0; i < n; i++)
+			for (int i = 0; i < n; i++) {
 				for (int j = 0; j < n; j++) {
 					path[i][j] = Math.min(path[i][j], path[i][k] + path[k][j]);
 				}
+			}
 		}
 		int startIndex = allVertices.indexOf(endVertex);
-		if (startIndex >= 0)
+		if (startIndex >= 0) {
 			return path[startIndex];
+		}
 		throw new RuntimeException("vertex no longer in Graph!");
 	}
 

@@ -33,8 +33,8 @@ public class Graph extends SparseMultigraph<Vertex, Edge> {
 	private static final long serialVersionUID = 4744840850614032582L;
 	private static Logger logger = Util.setupLogger(Graph.class);
 
-	private String fileKey = new String();
-	private String labelKey = new String();
+	private String fileKey = "";
+	private String labelKey = "";
 
 	public String getLabelKey() {
 		return labelKey;

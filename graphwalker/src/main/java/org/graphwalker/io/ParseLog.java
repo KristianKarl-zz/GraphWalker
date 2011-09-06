@@ -23,6 +23,8 @@
 
 package org.graphwalker.io;
 
+import org.graphwalker.Util;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -40,27 +42,33 @@ public class ParseLog {
 
 	public static Vector<LoggedItem> readLog(File logFile) throws IOException {
 		Vector<LoggedItem> list = new Vector<LoggedItem>();
-
-		BufferedReader file = new BufferedReader(new FileReader(logFile));
-		String line = file.readLine();
-		while (line != null) {
-			Pattern p = Pattern.compile("INFO  - (Vertex|Edge): '(\\S*)', INDEX=(\\d+) ");
-			Matcher m = p.matcher(line);
-			if (m.find()) {
-				LoggedItem item = new LoggedItem();
-				item.index = new Integer(m.group(3));
-				if (m.group(1).equals("Vertex")) {
-					p = Pattern.compile("DATA: (.*)");
-					m = p.matcher(line);
-					if (m.find()) {
-						item.data = m.group(1);
+		FileReader reader = null;
+		try {
+			reader = new FileReader(logFile);
+			BufferedReader file = new BufferedReader(reader);
+			String line;
+			while ((line = file.readLine()) != null) {
+				Pattern p = Pattern.compile("INFO  - (Vertex|Edge): '(\\S*)', INDEX=(\\d+) ");
+				Matcher m = p.matcher(line);
+				if (m.find()) {
+					LoggedItem item = new LoggedItem();
+					item.index = Integer.valueOf(m.group(3));
+					if (m.group(1).equals("Vertex")) {
+						p = Pattern.compile("DATA: (.*)");
+						m = p.matcher(line);
+						if (m.find()) {
+							item.data = m.group(1);
+						}
 					}
+					list.add(item);
 				}
-				list.add(item);
 			}
-			line = file.readLine();
+			file.close();
+		} catch (IOException e) {
+			throw e; // TODO:
+		} finally {
+			Util.closeQuietly(reader);
 		}
-
 		return list;
 	}
 }

@@ -30,8 +30,8 @@ import org.graphwalker.Keywords;
 
 public class Edge extends AbstractElement {
 
-	private String guardKey = new String();
-	private Float weightKey = new Float(0);
+	private String guardKey = "";
+	private Float weightKey = 0f;
 
 	public Edge() {
 		super();
@@ -163,7 +163,7 @@ public class Edge extends AbstractElement {
 	static public float getWeight(String str) {
 		Pattern p = Pattern.compile("\\n(weight\\s*=\\s*(.*))", Pattern.MULTILINE);
 		Matcher m = p.matcher(str);
-		Float weight = new Float(0);
+		Float weight = 0f;
 		if (m.find()) {
 			String value = m.group(2);
 			try {

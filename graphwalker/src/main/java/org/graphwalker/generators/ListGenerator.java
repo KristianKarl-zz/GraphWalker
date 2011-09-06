@@ -24,7 +24,6 @@
 package org.graphwalker.generators;
 
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.Stack;
 import java.util.TreeSet;
 import java.util.Vector;
@@ -73,8 +72,7 @@ public class ListGenerator extends PathGenerator {
 		abstractElements.addAll(getMachine().getAllVertices());
 		abstractElements.addAll(getMachine().getAllEdges());
 
-		for (Iterator<AbstractElement> i = abstractElements.iterator(); i.hasNext();) {
-			AbstractElement ae = i.next();
+		for (AbstractElement ae : abstractElements) {
 			if (!ae.getLabelKey().equalsIgnoreCase(Keywords.START_NODE)) {
 				String[] value = { ae.getLabelKey(), (ae instanceof Edge ? "Edge" : "Vertex"), ae.getDescriptionKey() };
 				tempList.add(value);

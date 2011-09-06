@@ -44,10 +44,12 @@ public class ReachedEdge extends StopCondition {
 	@Override
 	public void setMachine(FiniteStateMachine machine) {
 		super.setMachine(machine);
-		if (this.endEdge == null)
+		if (this.endEdge == null) {
 			this.endEdge = machine.findEdge(edgeName);
-		if (this.endEdge == null)
+		}
+		if (this.endEdge == null) {
 			throw new RuntimeException("Vertex '" + edgeName + "' not found in model");
+		}
 		this.proximity = getFloydWarshall();
 		this.maxDistance = max(this.proximity);
 	}
@@ -60,9 +62,9 @@ public class ReachedEdge extends StopCondition {
 	@Override
 	public double getFulfilment() {
 		int distance = this.maxDistance;
-		if (getMachine().getLastEdge() != null)
+		if (getMachine().getLastEdge() != null) {
 			distance = proximity[allEdges.indexOf(getMachine().getLastEdge())];
-
+		}
 		return (1) - ((double) distance / (double) maxDistance);
 	}
 
@@ -80,7 +82,7 @@ public class ReachedEdge extends StopCondition {
 		allEdges = new ArrayList<Edge>(getMachine().getAllEdges());
 		int n = allEdges.size();
 		int[][] retur = new int[n][n];
-		for (int i = 0; i < n; i++)
+		for (int i = 0; i < n; i++) {
 			for (int j = 0; j < n; j++) {
 				int x = 99999;
 				if (i == j) {
@@ -90,6 +92,7 @@ public class ReachedEdge extends StopCondition {
 				}
 				retur[i][j] = x;
 			}
+		}
 		return retur;
 	}
 
@@ -97,14 +100,16 @@ public class ReachedEdge extends StopCondition {
 		int path[][] = getFloydWarshallMatrix();
 		int n = path.length;
 		for (int k = 0; k < n; k++) {
-			for (int i = 0; i < n; i++)
+			for (int i = 0; i < n; i++) {
 				for (int j = 0; j < n; j++) {
 					path[i][j] = Math.min(path[i][j], path[i][k] + path[k][j]);
 				}
+			}
 		}
 		int startIndex = allEdges.indexOf(endEdge);
-		if (startIndex >= 0)
+		if (startIndex >= 0) {
 			return path[startIndex];
+		}
 		throw new RuntimeException("edge no longer in Graph!");
 	}
 

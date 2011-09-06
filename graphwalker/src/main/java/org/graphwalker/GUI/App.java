@@ -124,9 +124,9 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 	private VisualizationViewer<Vertex, Edge> vv;
 	private Layout<Vertex, Edge> graphLayout;
 
-	private static File xmlFile = null;
-	private static File graphmlFile = null;
-	private static File logFile = null;
+	private File xmlFile = null;
+	private File graphmlFile = null;
+	private File logFile = null;
 	private ExecuteMBT executeMBT = null;
 	private Timer updateColorLatestVertexLabel = new Timer();
 
@@ -190,7 +190,7 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 		layouts.add(SpringLayout.class);
 		layouts.add(SpringLayout2.class);
 		layouts.add(ISOMLayout.class);
-		return layouts.toArray(new Class[0]);
+		return layouts.toArray(new Class[layouts.size()]);
 	}
 
 	private void stopSoap() {
@@ -233,7 +233,7 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 			String msg = "Now running as a SOAP server. For the WSDL file, see: "
 			    + wsURL.replace("0.0.0.0", InetAddress.getLocalHost().getHostName()) + "?WSDL";
 			logger.info(msg);
-			if (Util.readSoapGuiStartupState() == false) {
+			if (!Util.readSoapGuiStartupState()) {
 				JOptionPane.showMessageDialog(App.getInstance(), msg);
 			}
 			status.unsetState(Status.stopped);
@@ -315,8 +315,9 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 			xmlFile = fileChooser.getSelectedFile();
 			logger.debug("Got file: " + xmlFile.getAbsolutePath());
 			loadModel();
-			if (appEvent != null)
+			if (appEvent != null) {
 				appEvent.getLoadEvent();
+			}
 		}
 	}
 
@@ -333,10 +334,11 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 		getLatestVertexLabel().setText(str);
 
 		if (status.isExecutingLogTest()) {
-			if (parsedLogFile.get(currentStep).data != null)
+			if (parsedLogFile.get(currentStep).data != null) {
 				str = parsedLogFile.get(currentStep).data;
-			else
+			} else {
 				str = variablesTextArea.getText();
+			}
 		} else {
 			str = mbt.getMachine().getCurrentDataString();
 		}
@@ -457,7 +459,7 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 		centerOnVertex();
 		updateLayout();
 
-		if (soapButton.isSelected() == false) {
+		if (!soapButton.isSelected()) {
 			if (executeMBT != null) {
 				executeMBT = null;
 			}
@@ -493,7 +495,7 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 	}
 
 	public void executingJavaTest(boolean executingJavaTest) {
-		if (executingJavaTest == true) {
+		if (executingJavaTest) {
 			status.setState(Status.executingJavaTest);
 			statusBar.setMessage("Executing a Java test");
 		} else {
@@ -511,7 +513,9 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 				log.debug("GUI is starting to traverse the model");
 				mbt.executePath();
 			} catch (InterruptedException e) {
+				//
 			} catch (GuiStoppedExecution e) {
+				//
 			} catch (Exception e) {
 				Util.logStackTraceToError(e);
 				log.error(e.getMessage());
@@ -605,7 +609,6 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 			if (centerOnVertexButton.isSelected())
 				centerOnVertex();
 			getVv().repaint();
-			return;
 		}
 	}
 
@@ -628,7 +631,7 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 			getVv().repaint();
 			return;
 		}
-		if (mbt.hasNextStep() == false) {
+		if (!mbt.hasNextStep()) {
 			status.setState(Status.stopped);
 			statusBar.setMessage("Stopped");
 			setButtons();
@@ -780,8 +783,7 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 		Transformer<Vertex, Shape> vertexShape = new Transformer<Vertex, Shape>() {
 			@Override
 			public Shape transform(Vertex v) {
-				Shape shape = new Rectangle2D.Float(0, 0, v.getWidth(), v.getHeight());
-				return shape;
+				return new Rectangle2D.Float(0, 0, v.getWidth(), v.getHeight());
 			}
 		};
 		vv.getRenderContext().setVertexShapeTransformer(vertexShape);
@@ -1023,7 +1025,7 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 			}
 			try {
 				parsedLogFile = ParseLog.readLog(logFile);
-				currentStep = new Integer(0);
+				currentStep = 0;
 			} catch (IOException e) {
 				Util.logStackTraceToError(e);
 				JOptionPane.showMessageDialog(App.getInstance(), "Failed to load log file. " + e.getMessage());
@@ -1069,16 +1071,18 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 		return AppHolder.INSTANCE;
 	}
 
+	public static void main() {
+		App.getInstance();
+	}
+
 	public static void main(String args[]) {
-
 		if (args != null && args.length == 1) {
-			xmlFile = new File(args[0]);
+			App.getInstance().setXmlFile(new File(args[0]));
 		} else if (args != null && args.length == 2) {
-			graphmlFile = new File(args[0]);
-			logFile = new File(args[1]);
+			App.getInstance().setGraphmlFile(new File(args[0]));
+			App.getInstance().setLogFile(new File(args[1]));
 		}
-
-		getInstance();
+		App.getInstance();
 	}
 
 	public void setLatestVertexLabel(JLabel latestVertexLabel) {
@@ -1097,8 +1101,15 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 		return graphLayout;
 	}
 
-	@SuppressWarnings("static-access")
 	public void setXmlFile(File xmlFile) {
 		this.xmlFile = xmlFile;
+	}
+
+	public void setGraphmlFile(File graphmlFile) {
+		this.graphmlFile = graphmlFile;
+	}
+
+	public void setLogFile(File logFile) {
+		this.logFile = logFile;
 	}
 }

@@ -66,8 +66,8 @@ import org.jdom.JDOMException;
  * java -jar graphwalker.jar COMMAND <options>
  * </pre>
  * 
- * Where graphwalker.jar is the whole package org.graphwalker using org.graphwalker.CLI as
- * the main class<br>
+ * Where graphwalker.jar is the whole package org.graphwalker using
+ * org.graphwalker.CLI as the main class<br>
  * <br>
  * <strong>Example:</strong> Print help for graphwalker.jar<br>
  * 
@@ -117,6 +117,7 @@ import org.jdom.JDOMException;
  * 
  */
 public class CLI {
+
 	public static class VerboseStatisticsLogger extends Thread {
 		private ModelBasedTesting mbt = null;
 
@@ -418,20 +419,23 @@ public class CLI {
 	}
 
 	private String generateListOfValidStopConditions() {
-		String list = "";
+		StringBuilder stringBuilder = new StringBuilder();
 		for (StopCondition sc : Keywords.getStopConditions()) {
-			list += sc.getDescription() + "\n";
+			stringBuilder.append(sc.getDescription());
+			stringBuilder.append(System.getProperty("line.separator"));
 		}
-		return list;
+		return stringBuilder.toString();
 	}
 
 	private String generateListOfValidGenerators() {
-		String list = "";
+		StringBuilder stringBuilder = new StringBuilder();
 		for (Generator g : Keywords.getGenerators()) {
-			if (g.isPublished())
-				list += g.getDescription() + System.getProperty("line.separator");
+			if (g.isPublished()) {
+				stringBuilder.append(g.getDescription());
+				stringBuilder.append(System.getProperty("line.separator"));
+			}
 		}
-		return list;
+		return stringBuilder.toString();
 	}
 
 	@SuppressWarnings("static-access")
@@ -637,6 +641,7 @@ public class CLI {
 	/**
 	 * Run the offline command
 	 * 
+	 * @param cl
 	 * @throws StopConditionException
 	 * @throws GeneratorException
 	 * @throws InterruptedException
@@ -666,20 +671,20 @@ public class CLI {
 		 */
 		AlternativeCondition alternativeCondition = new AlternativeCondition();
 		String[] stopConditions = cl.getOptionValue("s").split("\\|");
-		for (int i = 0; i < stopConditions.length; i++) {
-			String[] sc = stopConditions[i].trim().split(":");
-			alternativeCondition.add(Util.getCondition(null, Keywords.getStopCondition(sc[0].trim()), // Stop
-																																																// condition
-			    (sc.length == 1 ? "" : sc[1].trim()))); // Optional condition
-			                                            // parameter
+		for (String stopCondition : stopConditions) {
+			String[] sc = stopCondition.trim().split(":");
+			alternativeCondition.add(Util.getCondition(null, Keywords.getStopCondition(sc[0].trim()) // Stop
+																																															 // condition
+			    , (sc.length == 1 ? "" : sc[1].trim()))); // Optional condition
+																										// parameter
 		}
 
 		/*
 		 * Set the generators(s)
 		 */
-		String[] genrators = cl.getOptionValue("g").split("\\|");
-		for (int i = 0; i < genrators.length; i++) {
-			getMbt().setGenerator(Keywords.getGenerator(genrators[0].trim()));
+		String[] generators = cl.getOptionValue("g").split("\\|");
+		for (String genrator : generators) {
+			getMbt().setGenerator(Keywords.getGenerator(genrator.trim()));
 		}
 		getMbt().getGenerator().setStopCondition(alternativeCondition);
 
@@ -733,6 +738,7 @@ public class CLI {
 	/**
 	 * Run the manual command
 	 * 
+	 * @param cl
 	 * @throws StopConditionException
 	 * @throws GeneratorException
 	 * @throws InterruptedException
@@ -757,20 +763,20 @@ public class CLI {
 		 */
 		AlternativeCondition alternativeCondition = new AlternativeCondition();
 		String[] stopConditions = cl.getOptionValue("s").split("\\|");
-		for (int i = 0; i < stopConditions.length; i++) {
-			String[] sc = stopConditions[i].trim().split(":");
-			alternativeCondition.add(Util.getCondition(null, Keywords.getStopCondition(sc[0].trim()), // Stop
-																																																// condition
-			    (sc.length == 1 ? "" : sc[1].trim()))); // Optional condition
-			                                            // parameter
+		for (String stopCondition : stopConditions) {
+			String[] sc = stopCondition.trim().split(":");
+			alternativeCondition.add(Util.getCondition(null, Keywords.getStopCondition(sc[0].trim()) // Stop
+																																															 // condition
+			    , (sc.length == 1 ? "" : sc[1].trim()))); // Optional condition
+																										// parameter
 		}
 
 		/*
 		 * Set the generators(s)
 		 */
-		String[] genrators = cl.getOptionValue("g").split("\\|");
-		for (int i = 0; i < genrators.length; i++) {
-			getMbt().setGenerator(Keywords.getGenerator(genrators[0].trim()));
+		String[] generators = cl.getOptionValue("g").split("\\|");
+		for (String genrator : generators) {
+			getMbt().setGenerator(Keywords.getGenerator(genrator.trim()));
 		}
 		getMbt().getGenerator().setStopCondition(alternativeCondition);
 
@@ -783,6 +789,7 @@ public class CLI {
 	/**
 	 * Run the online command
 	 * 
+	 * @param cl
 	 * @throws StopConditionException
 	 * @throws GeneratorException
 	 * @throws InterruptedException
@@ -812,20 +819,20 @@ public class CLI {
 		 */
 		AlternativeCondition alternativeCondition = new AlternativeCondition();
 		String[] stopConditions = cl.getOptionValue("s").split("\\|");
-		for (int i = 0; i < stopConditions.length; i++) {
-			String[] sc = stopConditions[i].trim().split(":");
-			alternativeCondition.add(Util.getCondition(null, Keywords.getStopCondition(sc[0].trim()), // Stop
-																																																// condition
-			    (sc.length == 1 ? "" : sc[1].trim()))); // Optional condition
-			                                            // parameter
+		for (String stopCondition : stopConditions) {
+			String[] sc = stopCondition.trim().split(":");
+			alternativeCondition.add(Util.getCondition(null, Keywords.getStopCondition(sc[0].trim()) // Stop
+																																															 // condition
+			    , (sc.length == 1 ? "" : sc[1].trim()))); // Optional condition
+																										// parameter
 		}
 
 		/*
 		 * Set the generators(s)
 		 */
 		String[] genrators = cl.getOptionValue("g").split("\\|");
-		for (int i = 0; i < genrators.length; i++) {
-			getMbt().setGenerator(Keywords.getGenerator(genrators[0].trim()));
+		for (String genrator : genrators) {
+			getMbt().setGenerator(Keywords.getGenerator(genrator.trim()));
 		}
 		getMbt().getGenerator().setStopCondition(alternativeCondition);
 
@@ -894,6 +901,7 @@ public class CLI {
 	/**
 	 * Run the source command
 	 * 
+	 * @param cl
 	 * @throws GeneratorException
 	 * @throws IOException
 	 * @throws InterruptedException
@@ -910,9 +918,9 @@ public class CLI {
 	}
 
 	/**
-	 * Run the requirements command
-	 * This method prints out all the Requirements found in the graph.
-	 *  
+	 * Run the requirements command This method prints out all the Requirements
+	 * found in the graph.
+	 * 
 	 * @throws GeneratorException
 	 * @throws InterruptedException
 	 */
@@ -922,9 +930,9 @@ public class CLI {
 
 		getMbt().readGraph(cl.getOptionValue("f"));
 		getMbt().getMachine().populateReqHashMap();
-		
+
 		Iterator<Entry<String, Boolean>> it = getMbt().getMachine().getReqs().entrySet().iterator();
-		while(it.hasNext()){
+		while (it.hasNext()) {
 			Entry<String, Boolean> pairs = it.next();
 			System.out.println(pairs.getKey());
 		}
@@ -933,6 +941,7 @@ public class CLI {
 	/**
 	 * Run the methods command
 	 * 
+	 * @param cl
 	 * @throws GeneratorException
 	 * @throws InterruptedException
 	 */
@@ -948,6 +957,8 @@ public class CLI {
 
 	/**
 	 * Run the merge command
+	 * 
+	 * @param cl
 	 */
 	private void RunCommandMerge(CommandLine cl) {
 		if (helpNeeded("merge", !cl.hasOption("f"), "Missing the input graphml file (folder), See -f (--input_graphml)"))
@@ -960,6 +971,7 @@ public class CLI {
 	/**
 	 * Run the xml command
 	 * 
+	 * @param cl
 	 * @throws StopConditionException
 	 * @throws GeneratorException
 	 * @throws IOException
@@ -982,6 +994,7 @@ public class CLI {
 	/**
 	 * Run the soap command
 	 * 
+	 * @param cl
 	 * @throws StopConditionException
 	 * @throws GeneratorException
 	 * @throws IOException
@@ -1029,18 +1042,21 @@ public class CLI {
 	/**
 	 * Run the gui command
 	 * 
+	 * @param cl
 	 * @throws IOException
 	 */
 	private void RunCommandGui(CommandLine cl) throws IOException {
-		if (cl.hasOption("f"))
+		if (cl.hasOption("f")) {
 			App.main(new String[] { cl.getOptionValue("f") });
-		else
-			App.main(null);
+		} else {
+			App.main();
+		}
 	}
 
 	/**
 	 * Run the log command
 	 * 
+	 * @param cl
 	 * @throws IOException
 	 */
 	private void RunCommandLog(CommandLine cl) throws IOException {

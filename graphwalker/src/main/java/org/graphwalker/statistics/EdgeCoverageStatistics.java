@@ -40,6 +40,7 @@ public class EdgeCoverageStatistics extends Statistics {
 
 	/**
 	 * 
+	 * @param model
 	 */
 	public EdgeCoverageStatistics(Graph model) {
 		max = model.getEdges().size();

@@ -63,7 +63,7 @@ public class CodeGenerator extends ListGenerator {
 	private boolean first = true;
 
 	public void setTemplate(String[] template) {
-		this.template = template;
+		this.template = template.clone();
 	}
 
 	@Override

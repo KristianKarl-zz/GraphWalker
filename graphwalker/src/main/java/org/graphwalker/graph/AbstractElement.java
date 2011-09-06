@@ -33,23 +33,23 @@ import org.graphwalker.Util;
 public class AbstractElement {
 
 	static Logger logger = Util.setupLogger(AbstractElement.class);
-	private String labelKey = new String();
-	private String fullLabelKey = new String();
-	private String reqTagKey = new String();
+	private String labelKey = "";
+	private String fullLabelKey = "";
+	private String reqTagKey = "";
 	private Integer reqTagResult = 0;
-	private String parameterKey = new String();
-	private Integer visitedKey = new Integer(0);
-	private String actionsKey = new String();
-	private Integer indexKey = new Integer(0);
-	private String idKey = new String();
-	private String fileKey = new String();
+	private String parameterKey = "";
+	private Integer visitedKey = 0;
+	private String actionsKey = "";
+	private Integer indexKey = 0;
+	private String idKey = "";
+	private String fileKey = "";
 	private boolean mergeKey = false;
 	private boolean noMergeKey = false;
 	private boolean blockedKey = false;
-	private String imageKey = new String();
+	private String imageKey = "";
 	private boolean mergedMbtKey = false;
 	private String manualInstructions = "";
-	private String descriptionKey = new String();
+	private String descriptionKey = "";
 
 	public AbstractElement() {
 	}
@@ -327,7 +327,7 @@ public class AbstractElement {
 		if (m.find()) {
 			String index_key = m.group(2);
 			logger.debug("Found INDEX: " + index_key);
-			return new Integer(index_key);
+			return Integer.valueOf(index_key);
 		}
 		return 0;
 	}

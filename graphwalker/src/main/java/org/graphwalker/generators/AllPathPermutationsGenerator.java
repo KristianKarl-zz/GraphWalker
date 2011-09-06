@@ -149,8 +149,7 @@ public class AllPathPermutationsGenerator extends PathGenerator {
 		AllPathPermutationsGenerator.logger.trace("Current Path: " + printPath());
 		AllPathPermutationsGenerator.logger.debug("Hash size: " + pathWalked.size());
 		AllPathPermutationsGenerator.logger.trace("Hash: " + printHash());
-		String[] retur = { getMachine().getEdgeName(selectedEdge), getMachine().getCurrentVertexName() };
-		return retur;
+		return new String[] { getMachine().getEdgeName(selectedEdge), getMachine().getCurrentVertexName() };
 	}
 
 	private boolean checkCompletionFirst() {
@@ -172,19 +171,20 @@ public class AllPathPermutationsGenerator extends PathGenerator {
 	}
 
 	private String printPath() {
-		String out = new String();
+		StringBuilder stringBuilder = new StringBuilder();
 		for (Edge edge : savedEdges) {
-			out += edge.getFullLabelKey();
+			stringBuilder.append(edge.getFullLabelKey());
 		}
-		return out;
+		return stringBuilder.toString();
 	}
 
 	private String printHash() {
-		String out = new String();
+		StringBuilder stringBuilder = new StringBuilder();
 		for (Integer value : pathWalked.values()) {
-			out += value + " ";
+			stringBuilder.append(value);
+			stringBuilder.append(" ");
 		}
-		return out;
+		return stringBuilder.toString();
 
 	}
 

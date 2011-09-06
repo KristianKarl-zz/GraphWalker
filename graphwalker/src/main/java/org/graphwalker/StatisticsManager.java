@@ -82,8 +82,7 @@ public class StatisticsManager {
 
 	private int[] getStatistic(String key) {
 		Statistics stats = counters.get(key);
-		int[] retur = { stats.getCurrent(), stats.getMax() };
-		return retur;
+		return new int[] { stats.getCurrent(), stats.getMax() };
 	}
 
 	public String getCurrentStatisticXml() {

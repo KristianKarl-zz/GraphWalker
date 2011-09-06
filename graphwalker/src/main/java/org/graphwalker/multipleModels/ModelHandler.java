@@ -24,7 +24,6 @@
 package org.graphwalker.multipleModels;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Random;
 
 import org.apache.log4j.Logger;
@@ -71,7 +70,7 @@ public class ModelHandler {
 	static private Random random = new Random();
 	private String currentVertex;
 
-	private class ModelRunnable implements Runnable {
+	private static class ModelRunnable implements Runnable {
 
 		private String name;
 		private ModelBasedTesting mbt;
@@ -132,10 +131,7 @@ public class ModelHandler {
 	 *          The name of the model. This is not the same as the name of the
 	 *          {@link Graph#getLabelKey() graph}. It's a logical name of the
 	 *          model, and it may not already be used by the handler.
-	 * @param mbt
-	 *          The model.
-	 * @param object
-	 *          The model's java class implementing the API for the model.
+	 * @param modelAPI
 	 */
 	public synchronized void add(String name, ModelAPI modelAPI) {
 		if (hasModel(name)) {
@@ -260,9 +256,7 @@ public class ModelHandler {
 	private ArrayList<ModelRunnable> getModelMatchingCurrentVertex() {
 		logger.debug("Looking for paused or not started model matching current vertex: " + currentVertex);
 		ArrayList<ModelRunnable> array = new ArrayList<ModelRunnable>();
-		Iterator<ModelRunnable> itr = models.iterator();
-		while (itr.hasNext()) {
-			ModelRunnable model = itr.next();
+		for (ModelRunnable model : models) {
 			logger.debug("Examining model: " + model.getName());
 			logger.debug("  Current vertex of graph: " + model.getMbt().getCurrentVertex());
 
@@ -315,9 +309,7 @@ public class ModelHandler {
 	 * @return The model that matches the logical name.
 	 */
 	private ModelRunnable getModel(String name) {
-		Iterator<ModelRunnable> itr = models.iterator();
-		while (itr.hasNext()) {
-			ModelRunnable model = itr.next();
+		for (ModelRunnable model : models) {
 			check4Crash(model);
 			if (model.getName().equals(name)) {
 				return model;
@@ -333,9 +325,7 @@ public class ModelHandler {
 	 *         returned.
 	 */
 	private boolean isAnyModelRunning() {
-		Iterator<ModelRunnable> itr = models.iterator();
-		while (itr.hasNext()) {
-			ModelRunnable model = itr.next();
+		for (ModelRunnable model : models) {
 			check4Crash(model);
 			if (model.getMbt().isRunning()) {
 				return true;
@@ -354,17 +344,13 @@ public class ModelHandler {
 	 * @return
 	 */
 	public boolean isAllModelsDone() {
-		Iterator<ModelRunnable> itr = models.iterator();
-		while (itr.hasNext()) {
-			ModelRunnable model = itr.next();
+		for (ModelRunnable model : models) {
 			logger.debug("Examining model: " + model.getMbt().getGraph());
 			check4Crash(model);
 			if (model.getMbt().getGenerator().getStopCondition() instanceof NeverCondition) {
 				logger.debug("  Model: " + model.getName() + ", has a NeverCondition, thus by definition finished.");
-				continue;
-			} else if (model.getMbt().hasNextStep() == false) {
+			} else if (!model.getMbt().hasNextStep()) {
 				logger.debug("  Model: " + model.getName() + ", has reached it's stop condition");
-				continue;
 			} else {
 				logger.debug("  Model: " + model.getName() + ", is not done: " + model.getMbt().getStatisticsString());
 				return false;
@@ -383,9 +369,7 @@ public class ModelHandler {
 	 * @return True if the handler already has a model with matching logical name.
 	 */
 	private boolean hasModel(String name) {
-		Iterator<ModelRunnable> itr = models.iterator();
-		while (itr.hasNext()) {
-			ModelRunnable model = itr.next();
+		for (ModelRunnable model : models) {
 			check4Crash(model);
 			if (model.getName().equals(name)) {
 				return true;
@@ -405,13 +389,12 @@ public class ModelHandler {
 	 * Returns the statistics from all models.
 	 * 
 	 * @return The aggregated statistics for all models
+	 * @throws InterruptedException
 	 */
 	public String getStatistics() throws InterruptedException {
-		StringBuffer statistics = new StringBuffer("Statistics for multiple models");
-		Iterator<ModelRunnable> itr = models.iterator();
-		while (itr.hasNext()) {
-			ModelRunnable model = itr.next();
-			statistics.append("\n\nStatistics for " + model.getName() + ":\n");
+		StringBuilder statistics = new StringBuilder("Statistics for multiple models");
+		for (ModelRunnable model : models) {
+			statistics.append("\n\nStatistics for ").append(model.getName()).append(":\n");
 			statistics.append(model.mbt.getStatisticsString());
 		}
 		return statistics.toString();

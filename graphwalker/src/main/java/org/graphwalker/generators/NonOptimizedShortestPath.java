@@ -23,7 +23,6 @@
 
 package org.graphwalker.generators;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
@@ -59,15 +58,14 @@ public class NonOptimizedShortestPath extends RandomPathGenerator {
 		}
 		Edge edge = null;
 		do {
-			if (setDijkstraPath() == false) {
+			if (!setDijkstraPath()) {
 				return super.getNext();
 			}
 			edge = dijkstraShortestPath.remove(0);
 		} while (!isEdgeAvailable(edge));
 
 		getMachine().walkEdge(edge);
-		String[] retur = { getMachine().getEdgeName(edge), getMachine().getCurrentVertexName() };
-		return retur;
+		return new String[] { getMachine().getEdgeName(edge), getMachine().getCurrentVertexName() };
 	}
 
 	private boolean setDijkstraPath() {
@@ -103,7 +101,7 @@ public class NonOptimizedShortestPath extends RandomPathGenerator {
 			// destination vertex are the same, even if there is
 			// an edge there (self-loop). So we have to check for that.
 			if (dijkstraShortestPath.size() == 0) {
-				if (getMachine().getCurrentVertex().getIndexKey() != getMachine().getModel().getSource(e).getIndexKey()) {
+				if (!getMachine().getCurrentVertex().getIndexKey().equals(getMachine().getModel().getSource(e).getIndexKey())) {
 					if (!toggleAllOrUnvisited) {
 						String msg = "There is no way to reach: " + e + ", from: " + getMachine().getCurrentVertex();
 						logger.error(msg);
@@ -115,8 +113,7 @@ public class NonOptimizedShortestPath extends RandomPathGenerator {
 			dijkstraShortestPath.add(e);
 			logger.debug("Dijkstra path length to that edge: " + dijkstraShortestPath.size());
 			logger.debug("Dijksta path:");
-			for (Iterator<Edge> iterator = dijkstraShortestPath.iterator(); iterator.hasNext();) {
-				Edge object = iterator.next();
+			for (Edge object : dijkstraShortestPath) {
 				logger.debug("  " + object);
 			}
 		}

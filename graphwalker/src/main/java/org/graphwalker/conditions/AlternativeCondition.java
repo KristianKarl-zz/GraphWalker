@@ -34,8 +34,8 @@ public class AlternativeCondition extends StopCondition {
 
 	@Override
 	public boolean isFulfilled() {
-		for (Iterator<StopCondition> i = conditions.iterator(); i.hasNext();) {
-			if (i.next().isFulfilled())
+		for (StopCondition condition : conditions) {
+			if (condition.isFulfilled())
 				return true;
 		}
 		return false;
@@ -45,36 +45,40 @@ public class AlternativeCondition extends StopCondition {
 		this.conditions = new Vector<StopCondition>();
 	}
 
-	public void add(StopCondition conditon) {
-		this.conditions.add(conditon);
+	public void add(StopCondition condition) {
+		this.conditions.add(condition);
 	}
 
 	@Override
 	public void setMachine(FiniteStateMachine machine) {
 		super.setMachine(machine);
-		for (Iterator<StopCondition> i = conditions.iterator(); i.hasNext();)
-			i.next().setMachine(machine);
+		for (StopCondition condition : conditions) {
+			condition.setMachine(machine);
+		}
 	}
 
 	@Override
 	public double getFulfilment() {
 		double retur = 0;
-		for (Iterator<StopCondition> i = conditions.iterator(); i.hasNext();) {
-			double newFullfillment = i.next().getFulfilment();
-			if (newFullfillment > retur)
+		for (StopCondition condition : conditions) {
+			double newFullfillment = condition.getFulfilment();
+			if (newFullfillment > retur) {
 				retur = newFullfillment;
+			}
 		}
 		return retur;
 	}
 
 	@Override
 	public String toString() {
-		String retur = "(";
+		StringBuilder stringBuilder = new StringBuilder("(");
 		for (Iterator<StopCondition> i = conditions.iterator(); i.hasNext();) {
-			retur += i.next().toString();
-			if (i.hasNext())
-				retur += " OR ";
+			stringBuilder.append(i.next().toString());
+			if (i.hasNext()) {
+				stringBuilder.append(" OR ");
+			}
 		}
-		return retur + ")";
+		stringBuilder.append(")");
+		return stringBuilder.toString();
 	}
 }

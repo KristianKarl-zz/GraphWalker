@@ -373,7 +373,7 @@ public class Keywords {
 	 */
 	static public int getStopCondition(final String stopCondition) throws StopConditionException {
 		if (!isStopCondition(stopCondition)) {
-			if (stopCondition == null | stopCondition.isEmpty()) {
+			if (stopCondition == null || stopCondition.isEmpty()) {
 				throw new StopConditionException("No stop condition is given.");
 			} else {
 				throw new StopConditionException("Invalid stop condition: " + stopCondition);
@@ -381,7 +381,7 @@ public class Keywords {
 		}
 		for (StopCondition sc : Keywords.stopConditions) {
 			if (sc.getName().equalsIgnoreCase(stopCondition)) {
-				return sc.getId().intValue();
+				return sc.getId();
 			}
 		}
 		return -1;
@@ -477,7 +477,7 @@ public class Keywords {
 	 */
 	static public int getGenerator(final String generator) throws GeneratorException {
 		if (!isGenerator(generator)) {
-			if (generator == null | generator.isEmpty()) {
+			if (generator == null || generator.isEmpty()) {
 				throw new GeneratorException("No generator is given.");
 			} else {
 				throw new GeneratorException("Invalid generator: " + generator);
@@ -485,7 +485,7 @@ public class Keywords {
 		}
 		for (Generator g : Keywords.generators) {
 			if (g.getName().equalsIgnoreCase(generator)) {
-				return g.getId().intValue();
+				return g.getId();
 			}
 		}
 		return -1;

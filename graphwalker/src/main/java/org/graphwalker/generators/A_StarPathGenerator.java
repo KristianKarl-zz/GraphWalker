@@ -189,7 +189,7 @@ public class A_StarPathGenerator extends PathGenerator {
 		return "A_STAR{" + super.toString() + "}";
 	}
 
-	private class WeightedPath {
+	private static class WeightedPath {
 		private double weight;
 		private Stack<Edge> path;
 		private String subState;

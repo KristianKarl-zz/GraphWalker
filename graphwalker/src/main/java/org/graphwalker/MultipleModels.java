@@ -42,7 +42,7 @@ public class MultipleModels {
 	 * 
 	 * @return the only instance of the class
 	 */
-	public static MultipleModels getInstance() {
+	public static synchronized MultipleModels getInstance() {
 		if (instance == null) {
 			instance = new MultipleModels();
 		}

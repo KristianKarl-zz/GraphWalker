@@ -46,15 +46,17 @@ public class RequirementsGenerator extends PathGenerator {
 
 	@Override
 	public boolean hasNext() {
-		if (list == null)
+		if (list == null) {
 			generateList();
+		}
 		return !list.isEmpty();
 	}
 
 	@Override
 	public String[] getNext() {
-		if (list == null)
+		if (list == null) {
 			generateList();
+		}
 		return list.pop();
 	}
 

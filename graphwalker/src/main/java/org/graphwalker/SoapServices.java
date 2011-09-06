@@ -85,12 +85,13 @@ public class SoapServices {
 
 	public void PassRequirement(String pass) {
 		logger.debug("SOAP service PassRequirement recieving: " + pass);
-		if (pass.equalsIgnoreCase("TRUE"))
+		if ("TRUE".equalsIgnoreCase(pass)) {
 			mbt.passRequirement(true);
-		else if (pass.equalsIgnoreCase("FALSE"))
+		} else if ("FALSE".equalsIgnoreCase(pass)) {
 			mbt.passRequirement(false);
-		else
+		} else {
 			logger.error("SOAP service PassRequirement dont know how to handle: " + pass + "\nOnly the strings true or false are permitted");
+		}
 	}
 
 	public String GetNextStep() {
@@ -141,15 +142,12 @@ public class SoapServices {
 		if (hardStop) {
 			value = false;
 		} else {
-			if (stepPair.size() != 0) {
-				value = true;
-			} else {
-				value = mbt.hasNextStep();
-			}
+			value = stepPair.size() != 0 || mbt.hasNextStep();
 		}
 		logger.debug("SOAP service hasNextStep returning: " + value);
-		if (value == false)
+		if (!value) {
 			logger.info(mbt.getStatisticsString());
+		}
 		return value;
 	}
 
@@ -158,7 +156,7 @@ public class SoapServices {
 		boolean retValue = true;
 		boolean useGui = mbt.isUseGUI();
 		try {
-			if (this.xmlFile.isEmpty() == false) {
+			if (!this.xmlFile.isEmpty()) {
 				mbt = Util.loadMbtAsWSFromXml(Util.getFile(this.xmlFile));
 				if (useGui) {
 					mbt.setUseGUI();
@@ -186,7 +184,7 @@ public class SoapServices {
 			logger.debug("SOAP service load returning: false");
 			return false;
 		}
-		if (new File(xmlFile).canRead() == false) {
+		if (!new File(xmlFile).canRead()) {
 			logger.error("Web service 'Load' needs a readable xml file name. Check the file: '" + xmlFile + "'");
 			logger.debug("SOAP service load returning: false");
 			return false;

@@ -43,6 +43,8 @@ public class EdgeSequenceCoverageStatistics extends Statistics {
 
 	/**
 	 * 
+	 * @param model
+	 * @param sequenceLength
 	 */
 	@SuppressWarnings("unchecked")
 	public EdgeSequenceCoverageStatistics(Graph model, int sequenceLength) {
@@ -52,8 +54,9 @@ public class EdgeSequenceCoverageStatistics extends Statistics {
 		pathHistory = new Stack<AbstractElement>();
 
 		Stack<Edge>[] possibilities = new Stack[sequenceLength];
-		for (int i = 0; i < sequenceLength; i++)
+		for (int i = 0; i < sequenceLength; i++) {
 			possibilities[i] = new Stack<Edge>();
+		}
 		possibilities[0].addAll(model.getEdges());
 		while (possibilities[0].size() > 0) {
 			for (int i = 0; i < sequenceLength - 1; i++) {
@@ -66,9 +69,11 @@ public class EdgeSequenceCoverageStatistics extends Statistics {
 				allSequences.add(getSequenceName(possibilities));
 				possibilities[sequenceLength - 1].pop();
 			}
-			for (int i = sequenceLength - 1; i > 0; i--)
-				if (possibilities[i].size() == 0)
+			for (int i = sequenceLength - 1; i > 0; i--) {
+				if (possibilities[i].size() == 0) {
 					possibilities[i - 1].pop();
+				}
+			}
 		}
 	}
 
@@ -77,21 +82,24 @@ public class EdgeSequenceCoverageStatistics extends Statistics {
 	 * @return
 	 */
 	private String getSequenceName(Stack<Edge>[] possibilities) {
-		String retur = "";
-		for (int i = 0; i < possibilities.length; i++)
-			retur += possibilities[i].peek().hashCode() + " ";
-		return retur.trim();
+		StringBuilder stringBuilder = new StringBuilder();
+		for (Stack<Edge> possibility : possibilities) {
+			stringBuilder.append(possibility.peek().hashCode());
+			stringBuilder.append(" ");
+		}
+		return stringBuilder.toString().trim();
 	}
 
 	/**
-	 * @param pathHistory
 	 * @return
 	 */
 	private String getCurrentSequenceName() {
-		String retur = "";
-		for (int i = 0; i < pathHistory.size(); i++)
-			retur += pathHistory.elementAt(i).hashCode() + " ";
-		return retur.trim();
+		StringBuilder stringBuilder = new StringBuilder();
+		for (int i = 0; i < pathHistory.size(); i++) {
+			stringBuilder.append(pathHistory.elementAt(i).hashCode());
+			stringBuilder.append(" ");
+		}
+		return stringBuilder.toString().trim();
 	}
 
 	/*
@@ -103,12 +111,15 @@ public class EdgeSequenceCoverageStatistics extends Statistics {
 	 */
 	@Override
 	public void addProgress(AbstractElement element) {
-		if (element instanceof Edge)
+		if (element instanceof Edge) {
 			pathHistory.add(element);
-		if (pathHistory.size() > this.length)
+		}
+		if (pathHistory.size() > this.length) {
 			pathHistory.remove(0);
-		if (pathHistory.size() == this.length)
+		}
+		if (pathHistory.size() == this.length) {
 			usedSequences.add(getCurrentSequenceName());
+		}
 	}
 
 	/*

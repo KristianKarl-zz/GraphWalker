@@ -34,8 +34,9 @@ public class VertexCoverage extends StopCondition {
 	}
 
 	public VertexCoverage(double limit) throws StopConditionException {
-		if (limit > 1 || limit < 0)
+		if (limit > 1 || limit < 0) {
 			throw new StopConditionException("Excpeted a vertex coverage between 0 and 100. Actual: " + limit * 100);
+		}
 		this.limit = limit;
 	}
 

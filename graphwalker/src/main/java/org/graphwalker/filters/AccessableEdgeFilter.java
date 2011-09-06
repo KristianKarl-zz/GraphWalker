@@ -41,12 +41,10 @@ public class AccessableEdgeFilter {
 	private Interpreter beanShellEngine = null;
 
 	public AccessableEdgeFilter(ScriptEngine sciptEngine) {
-		super();
 		this.jsEngine = sciptEngine;
 	}
 
 	public AccessableEdgeFilter(Interpreter beanShellEngine) {
-		super();
 		this.beanShellEngine = beanShellEngine;
 	}
 
@@ -57,14 +55,14 @@ public class AccessableEdgeFilter {
 
 		if (jsEngine != null) {
 			try {
-				return ((Boolean) jsEngine.eval(edge.getGuardKey())).booleanValue();
+				return (Boolean) jsEngine.eval(edge.getGuardKey());
 			} catch (ScriptException e) {
 				throw new RuntimeException("Malformed Edge guard\n\t" + edge + "\n\tGuard: " + edge.getGuardKey()
 				    + "\n\tBeanShell error message: '" + e.getMessage() + "'");
 			}
 		} else if (beanShellEngine != null) {
 			try {
-				return ((Boolean) beanShellEngine.eval(edge.getGuardKey())).booleanValue();
+				return (Boolean) beanShellEngine.eval(edge.getGuardKey());
 			} catch (EvalError e) {
 				throw new RuntimeException("Malformed Edge guard\n\t" + edge + "\n\tGuard: " + edge.getGuardKey()
 				    + "\n\tBeanShell error message: '" + e.getMessage() + "'");

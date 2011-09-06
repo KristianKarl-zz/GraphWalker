@@ -40,6 +40,7 @@ public class VertexCoverageStatistics extends Statistics {
 
 	/**
 	 * 
+	 * @param model
 	 */
 	public VertexCoverageStatistics(Graph model) {
 		max = model.getVertices().size();
@@ -55,8 +56,9 @@ public class VertexCoverageStatistics extends Statistics {
 	 */
 	@Override
 	public void addProgress(AbstractElement element) {
-		if (element instanceof Vertex)
+		if (element instanceof Vertex) {
 			usedVertices.add(element.toString());
+		}
 	}
 
 	/*

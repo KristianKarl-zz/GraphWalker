@@ -34,9 +34,10 @@ public class CombinationalCondition extends StopCondition {
 
 	@Override
 	public boolean isFulfilled() {
-		for (Iterator<StopCondition> i = conditions.iterator(); i.hasNext();) {
-			if (!i.next().isFulfilled())
+		for (StopCondition condition : conditions) {
+			if (!condition.isFulfilled()) {
 				return false;
+			}
 		}
 		return true;
 	}
@@ -45,35 +46,38 @@ public class CombinationalCondition extends StopCondition {
 		this.conditions = new Vector<StopCondition>();
 	}
 
-	public void add(StopCondition conditon) {
-		this.conditions.add(conditon);
+	public void add(StopCondition condition) {
+		this.conditions.add(condition);
 	}
 
 	@Override
 	public void setMachine(FiniteStateMachine machine) {
 		super.setMachine(machine);
-		for (Iterator<StopCondition> i = conditions.iterator(); i.hasNext();)
-			i.next().setMachine(machine);
+		for (StopCondition condition : conditions) {
+			condition.setMachine(machine);
+		}
 	}
 
 	@Override
 	public double getFulfilment() {
 		double retur = 0;
-		for (Iterator<StopCondition> i = conditions.iterator(); i.hasNext();) {
-			retur += i.next().getFulfilment();
+		for (StopCondition condition : conditions) {
+			retur += condition.getFulfilment();
 		}
 		return retur / conditions.size();
 	}
 
 	@Override
 	public String toString() {
-		String retur = "(";
+		StringBuilder stringBuilder = new StringBuilder("(");
 		for (Iterator<StopCondition> i = conditions.iterator(); i.hasNext();) {
-			retur += i.next().toString();
-			if (i.hasNext())
-				retur += " AND ";
+			stringBuilder.append(i.next().toString());
+			if (i.hasNext()) {
+				stringBuilder.append(" AND ");
+			}
 		}
-		return retur + ")";
+		stringBuilder.append(")");
+		return stringBuilder.toString();
 	}
 
 }
