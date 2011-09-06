@@ -523,7 +523,7 @@ public class Util {
 			throw new RuntimeException("Failed to set generator");
 		}
 		mbt.setGenerator(generator);
-
+		mbt.populateMachineRequirementHashTable();
 		final String reportName = root.getAttributeValue("REPORT");
 		String reportTemplate = root.getAttributeValue("REPORT-TEMPLATE");
 

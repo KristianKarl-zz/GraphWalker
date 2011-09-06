@@ -199,37 +199,6 @@ public class ModelBasedTesting {
 		return this.statisticsManager;
 	}
 
-	// protected void addAlternativeCondition(int conditionType, String
-	// conditionValue) throws StopConditionException {
-	// StopCondition condition = null;
-	// condition = Util.getCondition(getMachine(), conditionType, conditionValue);
-	//
-	// // If requirement stop condition, check if requirement exists in model
-	// if (condition instanceof ReachedRequirement) {
-	// Collection<String> reqs = ((ReachedRequirement)
-	// condition).getRequirements();
-	// for (Iterator<String> iterator = reqs.iterator(); iterator.hasNext();) {
-	// String req = iterator.next();
-	// if (getMachine().getAllRequirements().containsKey(req) == false) {
-	// throw new StopConditionException("Requirement: '" + req +
-	// "' do not exist in the model");
-	// }
-	// }
-	// }
-	//
-	// if (getGenerator().getStopCondition() == null) {
-	// getGenerator().setStopCondition(new AlternativeCondition());
-	// ((AlternativeCondition) getGenerator().getStopCondition()).add(condition);
-	// } else {
-	// if (!(getGenerator().getStopCondition() instanceof AlternativeCondition)) {
-	// StopCondition old = getGenerator().getStopCondition();
-	// getGenerator().setStopCondition(new AlternativeCondition());
-	// ((AlternativeCondition) getGenerator().getStopCondition()).add(old);
-	// }
-	// ((AlternativeCondition) getGenerator().getStopCondition()).add(condition);
-	// }
-	// }
-
 	public FiniteStateMachine getMachine() {
 		if (this.machine == null) {
 			setMachine(new FiniteStateMachine());
@@ -322,10 +291,9 @@ public class ModelBasedTesting {
 	}
 
 	/**
-	 * Tells mbt that a requirement (if any), has passed or failed. MBT will look
-	 * at the most recent edge or vertex and check if they have requirement. If
-	 * none is found, then no action is taken. If req. is found mbt will log the
-	 * information using the logger.
+	 * Tells mbt that a requirement (if any), has passed or failed. MBT will look at the most recent vertex and
+	 * check if they have requirement. All the requirements found will get the new value according to the pass parameter
+	 * and saved into the reqs hashmap inside the machine. 
 	 * 
 	 * @param pass
 	 *          Tells mbt if the requirement has pass (true), or failed (false).
@@ -333,23 +301,56 @@ public class ModelBasedTesting {
 	public void passRequirement(boolean pass) {
 		Util.AbortIf(this.machine == null, "No machine has been defined!");
 		Vertex v = getMachine().getCurrentVertex();
-		if (!v.getReqTagKey().isEmpty()) {
-			String str = "REQUIREMENT: '" + v.getReqTagKey() + "' has ";
-			if (pass) {
-				str += "PASSED, at " + v;
-				if (v.getReqTagResult() == 0) {
-					v.setReqTagResult(1);
+		String reqTag = v.getReqTagKey();
+		String str ="";
+		String[] tmp = reqTag.split(",");
+		for(int i =0;i<tmp.length;i++){
+			if(tmp[i].length() ==0)
+				continue;
+	    	if(tmp[i].matches("[$][{].*[}]")){
+	    		try{
+	    			String reqVar = tmp[i].substring(2, tmp[i].length()-1);
+	    			String[] reqVarVals = getDataValue(reqVar).split(",");
+	    			for(String reqVarVal : reqVarVals){
+	    				if(reqVarVal.length() ==0)
+	    					continue;
+		    			Boolean reqValue = (getMachine().getValueFromReqs(reqVarVal));
+		    			if( reqValue == null || reqValue.booleanValue() != false){
+		    				getMachine().setValueForReq(reqVarVal, pass);
+		    				str = "REQUIREMENT: '" + reqVarVal + "' has ";
+		    				if (pass) 
+		    					str += "PASSED, at " + v;
+		    				else
+		    					str += "FAILED, at " + v;
+		    				logger.info(str);
+		    			}
+	    			}
+	    		}catch(Exception e){
+	    			logger.error(e.getMessage());
+	    		}
+	    	}else{
+	    		
+				Boolean reqValue = (getMachine().getValueFromReqs(tmp[i]));
+				if( reqValue == null || reqValue.booleanValue() != false){
+					getMachine().setValueForReq(tmp[i], pass);
+    				str = "REQUIREMENT: '" + tmp[i] + "' has ";
+    				if (pass) 
+    					str += "PASSED, at " + v;
+    				else
+    					str += "FAILED, at " + v;
+    				logger.info(str);
 				}
-			} else {
-				str += "FAILED, at " + v;
-				if (v.getReqTagResult() != 2) {
-					v.setReqTagResult(2);
-				}
-			}
-			logger.info(str);
-		}
+	    	}
+	    }
 	}
-
+	
+	/**
+	 * This method calls the populateReqHashMap() for its machine, in order to populate the requirement hashmap
+	 */
+	public void populateMachineRequirementHashTable(){
+		getMachine().populateReqHashMap();
+	}
+	  
 	protected void enableJsScriptEngine(boolean enableJs) {
 		if (enableJs)
 			useJsScriptEngine = true;
@@ -979,9 +980,10 @@ public class ModelBasedTesting {
 		if (this.machine == null) {
 			getMachine();
 		}
+		
 		while (hasNextStep()) {
 			String[] stepPair = getNextStep();
-
+			
 			if (stepPair[0].trim() != "") {
 				out.println(stepPair[0]);
 				logExecution(getMachine().getLastEdge(), "");

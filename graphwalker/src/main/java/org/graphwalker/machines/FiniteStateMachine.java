@@ -25,9 +25,11 @@ package org.graphwalker.machines;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Stack;
 import java.util.Vector;
@@ -56,7 +58,7 @@ public class FiniteStateMachine {
 	private Stack<Edge> edgeStack;
 	private Stack<Integer> vertexStore;
 	private int numberOfEdgesTravesed = 0;
-
+	private HashMap<String, Boolean> reqs = new HashMap<String, Boolean>();
 	private boolean calculatingPath = false;
 	private int numOfCoveredEdges = 0;
 	private int numOfCoveredVertices = 0;
@@ -293,38 +295,73 @@ public class FiniteStateMachine {
 		return retur;
 	}
 
+	public Boolean getValueFromReqs(String key){
+		return reqs.get(key);
+	}
+	
+	public void setValueForReq(String key, Boolean b){
+		reqs.put(key, b);
+	}
+	
+	/**
+	 * This method returns all requirements and its values as a hashmap
+	 * @return reqs hashmap containing requirement name as the key, and requirement status as the value
+	 */
+	public HashMap<String, Boolean> getReqs(){
+		return reqs;
+	}
+	
+	/**
+	 * This method initiates and populates the hashmap reqs, with all requirements in the graph.
+	 * There are two types of requirements: Ordinary and Variable. All of them are fetched by
+	 * calling getReqTagKey for all the edges and vertexes in the graph
+	 * The Ordinary requirements are directly put into the reqs hashmap.
+	 * The Variable requirements are used as a lookup in the list of all the variable values returned by getAllVariableValues and
+	 * the value matching the the Variable requirement are splitted with colon and put as keys into the reqs hashmap.
+	 * The value for each entity in the reqs hashmap will be set to null, since no requirement are tested yet.
+	 * Its never needed to call this method more than once.
+	 */
+	public void populateReqHashMap(){
+		reqs = new HashMap<String, Boolean>();
+		Hashtable<String, String> reqsVariables = getAllVariableValues();
+
+		for (Edge edge : model.getEdges()) {
+			String reqTag = edge.getReqTagKey();
+			if(reqTag.length() ==0)
+				continue;
+			String[] tmp = reqTag.split(",");
+			for(int i =0;i<tmp.length;i++){
+				if(tmp[i].matches("[$][{].*[}]")){
+					String[] reqNames = reqsVariables.get(tmp[i].substring(2, tmp[i].length()-1)).split(":");
+					for(String reqVar : reqNames)
+						this.reqs.put(reqVar, null);
+				}else
+					this.reqs.put(tmp[i], null);
+			}	
+		}
+		for (Vertex vertex : model.getVertices()) {
+			String reqTag = vertex.getReqTagKey();
+			if(reqTag.length() ==0)
+				continue;
+			String[] tmp = reqTag.split(",");
+			for(int i =0;i<tmp.length;i++){
+				if(tmp[i].matches("[$][{].*[}]")){
+					String savedReq = reqsVariables.get(tmp[i].substring(2, tmp[i].length()-1));
+					if(savedReq==null)
+						continue;
+					String[] reqNames = savedReq.split(":");
+					for(String reqVar : reqNames)
+						this.reqs.put(reqVar,null);
+				}else
+					this.reqs.put(tmp[i],null);
+			}
+		}		
+	}
+	
 	public String getStatisticsVerbose() {
 		String retur = "";
 		String newLine = "\n";
-
 		Vector<String> notCovered = new Vector<String>();
-		Hashtable<String, Integer> reqResult = new Hashtable<String, Integer>();
-		Enumeration<String> e = getAllRequirements().keys();
-		while (e.hasMoreElements()) {
-			String req = e.nextElement();
-			for (Edge edge : model.getEdges()) {
-				if (edge.getReqTagKey().contains(req)) {
-					if (reqResult.get(req) == null) {
-						reqResult.put(req, edge.getReqTagResult());
-					} else {
-						if (edge.getReqTagResult() == 2) {
-							reqResult.put(req, 2);
-						}
-					}
-				}
-			}
-			for (Vertex vertex : model.getVertices()) {
-				if (vertex.getReqTagKey().contains(req)) {
-					if (reqResult.get(req) == null) {
-						reqResult.put(req, vertex.getReqTagResult());
-					} else {
-						if (vertex.getReqTagResult() == 2) {
-							reqResult.put(req, 2);
-						}
-					}
-				}
-			}
-		}
 
 		for (Edge edge : model.getEdges()) {
 			if (edge.getVisitedKey() <= 0) {
@@ -342,26 +379,91 @@ public class FiniteStateMachine {
 				retur += string;
 			}
 		}
-		if (reqResult.size() > 0) {
-			e = getAllRequirements().keys();
-			while (e.hasMoreElements()) {
-				String req = e.nextElement();
-				switch (reqResult.get(req)) {
-				case 0:
-					retur += "Requirement: " + req + " is not tested." + newLine;
-					break;
-				case 1:
-					retur += "Requirement: " + req + " has passed." + newLine;
-					break;
-				case 2:
-					retur += "Requirement: " + req + " has failed." + newLine;
-					break;
-				}
+		
+		Iterator<Entry<String, Boolean>> it = reqs.entrySet().iterator();
+		while(it.hasNext()){
+			Entry<String, Boolean> pairs = it.next();
+			 
+			if(pairs.getValue()== null){
+				retur += "Requirement: " + pairs.getKey() + " is not tested." + newLine;
+				continue;
+			}
+			if(((Boolean)pairs.getValue()).booleanValue()== true){
+				retur += "Requirement: " + pairs.getKey() + " has passed." + newLine;
+				continue;
+			}
+			if(((Boolean)pairs.getValue()).booleanValue()== false){
+				retur += "Requirement: " + pairs.getKey() + " has failed." + newLine;
+				continue;
 			}
 		}
+		
 		retur += getStatisticsString() + newLine;
 		retur += "Execution time: " + ((System.currentTimeMillis() - start_time) / 1000) + " seconds";
 		return retur;
+	}
+	
+	/**
+	 * This method finds and returns all the strings found in the graph used to give a variable its value.  
+	 * Each found string will be splitted with comma and the results will be treated as unique values. 
+	 * For example
+	 * In graph:
+	 * reqtag1 = "REQ1" + ",REQ2,"
+	 * reqtag1 = reqtag1 + "REQ3"
+	 * reqtag2 = "REQ3,REQ4"
+	 * reqtag3 = "RE" + "Q5,"
+	 * reqtag4 = getValueFromExternalFunction("REQ6");
+	 * 
+	 * @return Hashmap with the variable name as key, and a string containing 1 to many colon separated values, as the value
+	 *  For example
+	 *  In HashMap ({key,value}
+	 *  {
+	 *  reqtag1,"REQ1:REQ2:REQ3"
+	 *  reqtag2,"REQ3:REQ4"
+	 *  reqtag3,"RE:Q5"
+	 *  reqtag4,"REQ6"
+	 */
+	public Hashtable<String, String> getAllVariableValues() {
+		
+		Hashtable<String, String> varVal = new Hashtable<String, String>();
+
+		Vector<AbstractElement> abstractElements = new Vector<AbstractElement>();
+		abstractElements.addAll(getAllVertices());
+		abstractElements.addAll(getAllEdges());
+
+		for (AbstractElement abstractElement : abstractElements) {
+			String actionkey = abstractElement.getActionsKey();
+			if (!actionkey.isEmpty()) {
+				String[] tags = actionkey.split(";");
+				for (int j = 0; j < tags.length; j++) {
+					if(!tags[j].contains("="))
+						continue;
+					String[] variableAndValue = tags[j].split("=");
+					variableAndValue[0] = variableAndValue[0].replaceAll("[ ]*", "");
+					while(variableAndValue[1].contains("\"")){
+						
+						String[]splittedValue = variableAndValue[1].split("\"", 3);
+						String[]reqs = splittedValue[1].split(",");
+						for(String s : reqs){
+							
+							if(s.length()==0)
+								continue;
+							//fetching previously stored values for this variable
+							String tmpVal = varVal.get(variableAndValue[0]);
+							String newValue;
+							if(tmpVal==null){
+								newValue=s;
+							}else	
+								newValue= tmpVal +":"+ s;
+			
+							varVal.put(variableAndValue[0], newValue);
+						}
+						variableAndValue[1] = splittedValue[2];
+					}
+				}
+			}
+		}
+		return varVal;
 	}
 
 	public boolean isCurrentVertex(Vertex vertex) {
@@ -378,7 +480,6 @@ public class FiniteStateMachine {
 				unique++;
 			}
 		}
-
 		return unique;
 	}
 
@@ -390,7 +491,6 @@ public class FiniteStateMachine {
 				unique++;
 			}
 		}
-
 		return unique;
 	}
 
@@ -463,7 +563,7 @@ public class FiniteStateMachine {
 		} else {
 			currentVertex = model.getSource(lastEdge);
 		}
-		lastEdge = (edgeStack.size() > 0 ? (Edge) edgeStack.peek() : null);
+		lastEdge = (edgeStack.size() > 0 ? edgeStack.peek() : null);
 		numberOfEdgesTravesed--;
 	}
 

@@ -29,6 +29,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.InetAddress;
+import java.util.Iterator;
+import java.util.Map.Entry;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Vector;
@@ -909,7 +911,8 @@ public class CLI {
 
 	/**
 	 * Run the requirements command
-	 * 
+	 * This method prints out all the Requirements found in the graph.
+	 *  
 	 * @throws GeneratorException
 	 * @throws InterruptedException
 	 */
@@ -918,8 +921,13 @@ public class CLI {
 			return;
 
 		getMbt().readGraph(cl.getOptionValue("f"));
-		getMbt().setGenerator(Keywords.GENERATOR_REQUIREMENTS);
-		getMbt().writePath(System.out);
+		getMbt().getMachine().populateReqHashMap();
+		
+		Iterator<Entry<String, Boolean>> it = getMbt().getMachine().getReqs().entrySet().iterator();
+		while(it.hasNext()){
+			Entry<String, Boolean> pairs = it.next();
+			System.out.println(pairs.getKey());
+		}
 	}
 
 	/**
