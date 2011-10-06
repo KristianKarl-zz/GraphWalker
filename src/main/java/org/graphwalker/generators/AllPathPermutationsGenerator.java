@@ -101,7 +101,6 @@ public class AllPathPermutationsGenerator extends PathGenerator {
 			// Never walked path
 			if (hashValue == null) {
 				fewestVisits = 0;
-				selectedEdges.clear();
 				selectedEdges.add(edge);
 
 				// Has been traversed but fewer times
