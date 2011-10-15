@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE MBTINIT SYSTEM "http://mbt.tigris.org/mbt_setup.dtd" >
-<MBTINIT EXECUTOR="NONE" EXTENDED="false">
-  <MODEL PATH="graphml/org.graphwalker.EventDrivenModels.switchModels.B.graphml"/>
-  <GENERATOR TYPE="RANDOM">
-    <CONDITION TYPE="TEST_DURATION" VALUE="10"/>
-  </GENERATOR>
-</MBTINIT>

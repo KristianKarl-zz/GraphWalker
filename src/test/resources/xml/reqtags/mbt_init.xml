@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE MBTINIT SYSTEM "http://mbt.tigris.org/mbt_setup.dtd" >
-<MBTINIT EXECUTOR="none">
-  <MODEL PATH="graphml/reqtags/ExtendedMain.graphml"/>
-  <GENERATOR TYPE="RANDOM">
-  	<CONDITION TYPE="EDGE_COVERAGE" VALUE="100"/>
-  </GENERATOR>
-</MBTINIT>
