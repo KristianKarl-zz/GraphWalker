@@ -55,7 +55,6 @@ import java.util.Vector;
 import javax.jws.WebService;
 
 import org.apache.log4j.Logger;
-import org.graphwalker.GUI.App;
 import org.graphwalker.exceptions.InvalidDataException;
 
 @WebService
@@ -155,8 +154,8 @@ public class SoapServices {
 			return value;
 		} finally {
 			if (mbt.isUseGUI()) {
-				App.getInstance().setButtons();
-				App.getInstance().updateLayout();
+                mbt.getGui().setButtons();
+                mbt.getGui().updateLayout();
 			}
 		}
 	}
@@ -183,18 +182,18 @@ public class SoapServices {
 		try {
 			if (!this.xmlFile.isEmpty()) {
 				mbt = Util.loadMbtAsWSFromXml(Util.getFile(this.xmlFile));
-				if (useGui) {
-					mbt.setUseGUI();
-				}
+				//if (useGui) {
+				//	mbt.setUseGUI();
+				//}
 			}
 		} catch (Exception e) {
 			Util.logStackTraceToError(e);
 			retValue = false;
 		} finally {
 			if (mbt.isUseGUI()) {
-				App.getInstance().setMbt(mbt);
-				App.getInstance().setButtons();
-				App.getInstance().updateLayout();
+				//mbt.getGui().setMbt(mbt);
+				mbt.getGui().setButtons();
+				mbt.getGui().updateLayout();
 			}
 		}
 		Reset();
@@ -219,17 +218,17 @@ public class SoapServices {
 		boolean useGui = mbt.isUseGUI();
 		try {
 			mbt = Util.loadMbtAsWSFromXml(Util.getFile(this.xmlFile));
-			if (useGui) {
-				mbt.setUseGUI();
-			}
+			//if (useGui) {
+			//	mbt.setUseGUI();
+			//}
 		} catch (Exception e) {
 			Util.logStackTraceToError(e);
 			retValue = false;
 		} finally {
 			if (mbt.isUseGUI()) {
-				App.getInstance().setMbt(mbt);
-				App.getInstance().setButtons();
-				App.getInstance().updateLayout();
+				//mbt.getGui().setMbt(mbt);
+				mbt.getGui().setButtons();
+				mbt.getGui().updateLayout();
 			}
 		}
 		Reset();

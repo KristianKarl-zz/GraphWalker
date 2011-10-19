@@ -57,9 +57,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
-import org.graphwalker.CLI;
-import org.graphwalker.ModelBasedTesting;
-import org.graphwalker.Util;
 
 import junit.framework.TestCase;
 

@@ -61,8 +61,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
-import org.graphwalker.GUI.App;
-import org.graphwalker.GUI.Status;
 import org.graphwalker.conditions.TimeDuration;
 import org.graphwalker.events.MbtEvent;
 import org.graphwalker.exceptions.FoundNoEdgeException;
@@ -105,6 +103,7 @@ public class ModelBasedTesting {
 	private boolean useJsScriptEngine = false;
 	private boolean useGUI = false;
 	private MbtEvent notifyApp = null;
+    private Application application;
 	private String javaExecutorClass = null;
 	private volatile Thread stopFlag = null;
 	private volatile boolean finishedFlag = false;
@@ -186,10 +185,15 @@ public class ModelBasedTesting {
 		return useGUI;
 	}
 
-	public void setUseGUI() {
+	public void setUseGUI(Application application) {
 		useGUI = true;
-		notifyApp = App.getInstance();
+		notifyApp = (MbtEvent)application;
+        this.application = application;
 	}
+
+    public Application getGui() {
+        return application;
+    }
 
 	public boolean isDryRun() {
 		return dryRun;
@@ -437,12 +441,12 @@ public class ModelBasedTesting {
 		if (isUseGUI()) {
 
 			while (true) {
-				if (App.getInstance().getStatus().isStopped())
+				if (application.getStatus().isStopped())
 					throw new GuiStoppedExecution();
 
-				if (App.getInstance().getStatus().isNext() || App.getInstance().getStatus().isRunning()
-				    || App.getInstance().getStatus().isExecutingJavaTest() || App.getInstance().getStatus().isExecutingSoapTest()
-				    && !App.getInstance().getStatus().isPaused()) {
+				if (application.getStatus().isNext() || application.getStatus().isRunning()
+				    || application.getStatus().isExecutingJavaTest() || application.getStatus().isExecutingSoapTest()
+				    && !application.getStatus().isPaused()) {
 					break;
 				}
 				Thread.sleep(500);
@@ -494,13 +498,13 @@ public class ModelBasedTesting {
 				notifyApp.getNextEvent();
 			}
 			if (isUseGUI()) {
-				if (App.getInstance().getStatus().isStopped()) {
+				if (application.getStatus().isStopped()) {
 					throw new GuiStoppedExecution();
 				}
 
-				if (App.getInstance().getStatus().isNext()) {
-					App.getInstance().getStatus().unsetState(Status.next);
-					App.getInstance().setButtons();
+				if (application.getStatus().isNext()) {
+					application.getStatus().unsetState(Status.next);
+					application.setButtons();
 				}
 			}
 		}
@@ -530,8 +534,8 @@ public class ModelBasedTesting {
 			getMachine().setModel(getGraph());
 		}
 
-		if (isUseGUI() && App.getInstance() != null) {
-			App.getInstance().updateLayout();
+		if (isUseGUI() && application != null) {
+			application.updateLayout();
 		}
 	}
 
@@ -551,7 +555,7 @@ public class ModelBasedTesting {
 		Properties properties = new Properties();
 		InputStream inputStream = null;
 		try {
-			inputStream = getClass().getResourceAsStream("/org/graphwalker/resources/version.properties");
+			inputStream = getClass().getResourceAsStream("/version.properties");
 			properties.load(inputStream);
 			inputStream.close();
 		} catch (IOException e) {
@@ -743,8 +747,8 @@ public class ModelBasedTesting {
 			throw new RuntimeException("Needed execution instance is missing as parameter.");
 		}
 		if (isUseGUI()) {
-			App.getInstance().pause();
-			App.getInstance().updateLayout();
+			application.pause();
+			application.updateLayout();
 		}
 		executePath(null, objInstance);
 	}
@@ -970,7 +974,7 @@ public class ModelBasedTesting {
 			}
 			try {
 				if (isUseGUI()) {
-					App.getInstance().executingJavaTest(true);
+					application.executingJavaTest(true);
 				}
 				Method m = clsClass.getMethod(strMethod, null);
 				m.invoke(objInstance, null);
@@ -992,7 +996,7 @@ public class ModelBasedTesting {
 				throw new RuntimeException("NoSuchMethodException.", e);
 			} finally {
 				if (isUseGUI()) {
-					App.getInstance().executingJavaTest(false);
+					application.executingJavaTest(false);
 				}
 			}
 		}
@@ -1044,14 +1048,14 @@ public class ModelBasedTesting {
 		while (hasNextStep()) {
 			String[] stepPair = getNextStep();
 
-			if (stepPair[0].trim() != "") {
+			if (!"".equals(stepPair[0].trim())) {
 				out.println(stepPair[0]);
 				logExecution(getMachine().getLastEdge(), "");
 				if (isUseStatisticsManager()) {
 					getStatisticsManager().addProgress(getMachine().getLastEdge());
 				}
 			}
-			if (stepPair[1].trim() != "") {
+			if (!"".equals(stepPair[1].trim())) {
 				out.println(stepPair[1]);
 				logExecution(getMachine().getCurrentVertex(), "");
 				if (isUseStatisticsManager()) {

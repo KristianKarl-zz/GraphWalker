@@ -46,10 +46,9 @@
 //OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //THE SOFTWARE.
 
-package org.graphwalker.GUI;
+package org.graphwalker;
 
 import org.apache.log4j.Logger;
-import org.graphwalker.Util;
 
 public class Status {
 	static private Logger log = Util.setupLogger(Status.class);
@@ -115,12 +114,12 @@ public class Status {
 		log.debug("State: " + toStr(this.state));
 	}
 
-	protected void setStopped() {
+	public void setStopped() {
 		log.debug("Set the state to stopped");
 		state = stopped;
 	}
 
-	protected void reset() {
+	public void reset() {
 		log.debug("Reset the state to initial");
 		state = initial;
 	}

@@ -174,7 +174,7 @@ public class Util {
 		if (new File("graphwalker.properties").canRead()) {
 			PropertyConfigurator.configure("graphwalker.properties");
 		} else {
-			PropertyConfigurator.configure(classParam.getResource("/org/graphwalker/resources/graphwalker.properties"));
+			PropertyConfigurator.configure(classParam.getResource("/graphwalker.properties"));
 		}
 		return logger;
 	}
@@ -1029,7 +1029,7 @@ public class Util {
 		} else {
 			conf = new PropertiesConfiguration();
 			try {
-				conf.load(Util.class.getResourceAsStream("/org/graphwalker/resources/graphwalker.properties"));
+				conf.load(Util.class.getResourceAsStream("/graphwalker.properties"));
 			} catch (ConfigurationException e) {
 				Util.logger.error(e.getMessage());
 			}
@@ -1054,7 +1054,7 @@ public class Util {
 		} else {
 			conf = new PropertiesConfiguration();
 			try {
-				conf.load(Util.class.getResourceAsStream("/org/graphwalker/resources/graphwalker.properties"));
+				conf.load(Util.class.getResourceAsStream("/graphwalker.properties"));
 			} catch (ConfigurationException e) {
 				Util.logger.error(e.getMessage());
 			}

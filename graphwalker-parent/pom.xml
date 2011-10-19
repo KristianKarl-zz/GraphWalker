@@ -72,20 +72,37 @@
 
     <modules>
         <module>../graphwalker-core</module>
+        <module>../graphwalker-cli</module>
+        <module>../graphwalker-gui</module>
         <module>../graphwalker-standalone</module>
+        <module>../graphwalker-webservice</module>
     </modules>
 
     <dependencyManagement>
         <dependencies>
             <dependency>
                 <groupId>org.graphwalker</groupId>
-                <artifactId>graphwalker</artifactId>
+                <artifactId>graphwalker-cli</artifactId>
                 <version>${project.version}</version>
-                <type>pom</type>
             </dependency>
             <dependency>
                 <groupId>org.graphwalker</groupId>
                 <artifactId>graphwalker-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.graphwalker</groupId>
+                <artifactId>graphwalker-gui</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.graphwalker</groupId>
+                <artifactId>graphwalker-standalone</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.graphwalker</groupId>
+                <artifactId>graphwalker-webservice</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

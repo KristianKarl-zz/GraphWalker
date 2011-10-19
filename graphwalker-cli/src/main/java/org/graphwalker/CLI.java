@@ -72,7 +72,7 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.PosixParser;
 import org.apache.commons.cli.UnrecognizedOptionException;
 import org.apache.log4j.Logger;
-import org.graphwalker.GUI.App;
+import org.graphwalker.gui.App;
 import org.graphwalker.Keywords.Generator;
 import org.graphwalker.Keywords.StopCondition;
 import org.graphwalker.conditions.AlternativeCondition;

@@ -46,7 +46,7 @@
 //OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //THE SOFTWARE.
 
-package org.graphwalker.GUI;
+package org.graphwalker.gui;
 
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
@@ -97,9 +97,7 @@ import javax.xml.ws.Endpoint;
 
 import org.apache.commons.collections15.Transformer;
 import org.apache.log4j.Logger;
-import org.graphwalker.ModelBasedTesting;
-import org.graphwalker.SoapServices;
-import org.graphwalker.Util;
+import org.graphwalker.*;
 import org.graphwalker.events.AppEvent;
 import org.graphwalker.events.MbtEvent;
 import org.graphwalker.exceptions.GeneratorException;
@@ -128,7 +126,7 @@ import edu.uci.ics.jung.visualization.picking.ShapePickSupport;
 import edu.uci.ics.jung.visualization.renderers.Renderer;
 import edu.uci.ics.jung.visualization.util.Animator;
 
-public class App extends JFrame implements ActionListener, MbtEvent {
+public class App extends JFrame implements ActionListener, MbtEvent, Application {
 	/**
 	 * 
 	 */
@@ -241,7 +239,7 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 		String wsURL = "http://0.0.0.0:" + Util.readWSPort() + "/mbt-services";
 		try {
 			mbt = Util.loadMbtAsWSFromXml(Util.getFile(xmlFile.getAbsolutePath()));
-			mbt.setUseGUI();
+			mbt.setUseGUI(this);
 			soapService = new SoapServices(mbt);
 			soapService.xmlFile = xmlFile.getAbsolutePath();
 		} catch (Exception e) {
@@ -433,7 +431,7 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 		try {
 			if (soapButton.isSelected()) {
 				mbt = Util.loadMbtAsWSFromXml(Util.getFile(xmlFile.getAbsolutePath()));
-				mbt.setUseGUI();
+				mbt.setUseGUI(this);
 				soapService.mbt = mbt;
 			} else {
 				mbt = Util.loadMbtFromXml(Util.getFile(xmlFile.getAbsolutePath()));
@@ -480,7 +478,7 @@ public class App extends JFrame implements ActionListener, MbtEvent {
 			reset();
 			return;
 		}
-		mbt.setUseGUI();
+		mbt.setUseGUI(this);
 		centerOnVertex();
 		updateLayout();
 
