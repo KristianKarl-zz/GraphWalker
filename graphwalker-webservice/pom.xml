@@ -37,7 +37,7 @@
 							<goal>wsgen</goal>
 						</goals>
 						<configuration>
-							<sei>org.graphwalker.SoapServices</sei>
+							<sei>org.graphwalker.webservice.SoapServices</sei>
 						</configuration>
 					</execution>
 				</executions>

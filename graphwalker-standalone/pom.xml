@@ -52,7 +52,7 @@
                             </descriptors>
                             <archive>
                                 <manifest>
-                                    <mainClass>org.graphwalker.CLI</mainClass>
+                                    <mainClass>org.graphwalker.cli.CLI</mainClass>
                                 </manifest>
                             </archive>
                         </configuration>

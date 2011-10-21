@@ -27,7 +27,7 @@
 
 <!DOCTYPE MBTINIT SYSTEM "http://mbt.tigris.org/mbt_setup.dtd" >
 <MBTINIT EXECUTOR="NONE" EXTENDED="false">
-  <MODEL PATH="graphml/org.graphwalker.EventDrivenModels.switchModels.C.graphml"/>
+  <MODEL PATH="graphml/org.graphwalker.core.EventDrivenModels.switchModels.C.graphml"/>
   <GENERATOR TYPE="RANDOM">
     <CONDITION TYPE="EDGE_COVERAGE" VALUE="10"/>
   </GENERATOR>
