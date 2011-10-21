@@ -4,6 +4,14 @@
 .project
 .settings/
 
+# Intellij stuff #
+##################
+*.iml
+*.ipr
+*.iws
+.idea/
+
+
 # Build and unit tests stuff #
 #############################
 logs/

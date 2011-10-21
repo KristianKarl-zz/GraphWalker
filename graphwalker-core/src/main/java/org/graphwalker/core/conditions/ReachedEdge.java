@@ -1,0 +1,138 @@
+/*
+ * #%L
+ * GraphWalker Core
+ * %%
+ * Copyright (C) 2011 GraphWalker
+ * %%
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ * #L%
+ */
+
+package org.graphwalker.core.conditions;
+
+import org.graphwalker.core.graph.Edge;
+import org.graphwalker.core.machines.FiniteStateMachine;
+
+import java.util.ArrayList;
+
+/**
+ * <p>ReachedEdge class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
+public class ReachedEdge extends AbstractStopCondition {
+
+    private ArrayList<Edge> allEdges;
+    private Edge endEdge;
+    private int[] proximity;
+    private int maxDistance;
+    private String edgeName;
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean isFulfilled() {
+        return getFulfilment() >= 0.99999;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setMachine(FiniteStateMachine machine) {
+        super.setMachine(machine);
+        if (this.endEdge == null) {
+            this.endEdge = machine.findEdge(edgeName);
+        }
+        if (this.endEdge == null) {
+            throw new RuntimeException("Vertex '" + edgeName + "' not found in model");
+        }
+        this.proximity = getFloydWarshall();
+        this.maxDistance = max(this.proximity);
+    }
+
+    /**
+     * <p>Constructor for ReachedEdge.</p>
+     *
+     * @param edgeName a {@link java.lang.String} object.
+     */
+    public ReachedEdge(String edgeName) {
+        String[] vertex = edgeName.split("/", 2);
+        this.edgeName = vertex[0];
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public double getFulfilment() {
+        int distance = this.maxDistance;
+        if (getMachine().getLastEdge() != null) {
+            distance = proximity[allEdges.indexOf(getMachine().getLastEdge())];
+        }
+        return (1) - ((double) distance / (double) maxDistance);
+    }
+
+    private int max(int[] t) {
+        int maximum = t[0];
+        for (int i = 1; i < t.length; i++) {
+            if (t[i] > maximum) {
+                maximum = t[i];
+            }
+        }
+        return maximum;
+    }
+
+    private int[][] getFloydWarshallMatrix() {
+        allEdges = new ArrayList<Edge>(getMachine().getAllEdges());
+        int n = allEdges.size();
+        int[][] retur = new int[n][n];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                int x = 99999;
+                if (i == j) {
+                    x = 0;
+                } else if (getMachine().getModel().isSource(getMachine().getModel().getDest(allEdges.get(j)), allEdges.get(i))) {
+                    x = 1;
+                }
+                retur[i][j] = x;
+            }
+        }
+        return retur;
+    }
+
+    private int[] getFloydWarshall() {
+        int path[][] = getFloydWarshallMatrix();
+        int n = path.length;
+        for (int k = 0; k < n; k++) {
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < n; j++) {
+                    path[i][j] = Math.min(path[i][j], path[i][k] + path[k][j]);
+                }
+            }
+        }
+        int startIndex = allEdges.indexOf(endEdge);
+        if (startIndex >= 0) {
+            return path[startIndex];
+        }
+        throw new RuntimeException("edge no longer in Graph!");
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String toString() {
+        return "EDGE='" + endEdge + "'";
+    }
+}
