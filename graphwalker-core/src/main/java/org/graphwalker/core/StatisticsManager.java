@@ -47,7 +47,10 @@ import java.util.Hashtable;
 import java.util.Set;
 
 /**
+ * <p>StatisticsManager class.</p>
+ *
  * @author Johan Tejle
+ * @version $Id: $
  */
 public class StatisticsManager {
 
@@ -57,17 +60,28 @@ public class StatisticsManager {
     private Transformer styleTemplate;
 
     /**
-     *
+     * <p>Constructor for StatisticsManager.</p>
      */
     public StatisticsManager() {
         this.counters = new Hashtable<String, Statistics>();
         this.progress = new Document(new Element("Statistics"));
     }
 
+    /**
+     * <p>addStatisicsCounter.</p>
+     *
+     * @param name a {@link java.lang.String} object.
+     * @param statisicsCounter a {@link org.graphwalker.core.statistics.Statistics} object.
+     */
     public void addStatisicsCounter(String name, Statistics statisicsCounter) {
         counters.put(name, statisicsCounter);
     }
 
+    /**
+     * <p>addProgress.</p>
+     *
+     * @param element a {@link org.graphwalker.core.graph.AbstractElement} object.
+     */
     public void addProgress(AbstractElement element) {
         for (Enumeration<String> e = counters.keys(); e.hasMoreElements(); ) {
             String key = e.nextElement();
@@ -82,16 +96,31 @@ public class StatisticsManager {
         return new int[]{stats.getCurrent(), stats.getMax()};
     }
 
+    /**
+     * <p>getCurrentStatisticXml.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getCurrentStatisticXml() {
         XMLOutputter outputter = new XMLOutputter();
         return outputter.outputString(getCurrentStatistic());
     }
 
+    /**
+     * <p>getFullProgressXml.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getFullProgressXml() {
         XMLOutputter outputter = new XMLOutputter();
         return outputter.outputString(this.progress);
     }
 
+    /**
+     * <p>getCurrentStatistic.</p>
+     *
+     * @return a {@link org.jdom.Document} object.
+     */
     public Document getCurrentStatistic() {
         Element root = new Element("Statistic");
         Document doc = new Document(root);
@@ -108,6 +137,11 @@ public class StatisticsManager {
         return doc;
     }
 
+    /**
+     * <p>setReportTemplate.</p>
+     *
+     * @param inputStream a {@link java.io.InputStream} object.
+     */
     public void setReportTemplate(InputStream inputStream) {
         log.info("Setting template to '" + inputStream + "'");
         try {
@@ -119,6 +153,11 @@ public class StatisticsManager {
         }
     }
 
+    /**
+     * <p>writeFullReport.</p>
+     *
+     * @param fileName a {@link java.lang.String} object.
+     */
     public void writeFullReport(String fileName) {
         try {
             writeFullReport(new PrintStream(new File(fileName)));
@@ -127,6 +166,11 @@ public class StatisticsManager {
         }
     }
 
+    /**
+     * <p>writeFullReport.</p>
+     *
+     * @param out a {@link java.io.PrintStream} object.
+     */
     public void writeFullReport(PrintStream out) {
         log.info("Writing full report");
         try {
@@ -138,6 +182,8 @@ public class StatisticsManager {
     }
 
     /**
+     * <p>getCounterNames.</p>
+     *
      * @return the available Statistics counter names used by this manager
      */
     public Set<String> getCounterNames() {

@@ -31,21 +31,41 @@ import org.graphwalker.core.Keywords;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * <p>Edge class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public class Edge extends AbstractElement {
 
     private String guardKey = "";
     private Float weightKey = 0f;
 
+    /**
+     * <p>Constructor for Edge.</p>
+     */
     public Edge() {
         super();
     }
 
+    /**
+     * <p>Constructor for Edge.</p>
+     *
+     * @param edge a {@link org.graphwalker.core.graph.Edge} object.
+     */
     public Edge(Edge edge) {
         super(edge);
         this.guardKey = edge.guardKey;
         this.weightKey = edge.weightKey;
     }
 
+    /**
+     * <p>Constructor for Edge.</p>
+     *
+     * @param A a {@link org.graphwalker.core.graph.Edge} object.
+     * @param B a {@link org.graphwalker.core.graph.Edge} object.
+     */
     public Edge(Edge A, Edge B) {
         super(A, B);
         if (A.getFullLabelKey().length() > B.getFullLabelKey().length()) {
@@ -57,20 +77,40 @@ public class Edge extends AbstractElement {
         }
     }
 
+    /**
+     * <p>Getter for the field <code>weightKey</code>.</p>
+     *
+     * @return a float.
+     */
     public float getWeightKey() {
         return weightKey;
     }
 
+    /**
+     * <p>Setter for the field <code>weightKey</code>.</p>
+     *
+     * @param weightKey a float.
+     */
     public void setWeightKey(float weightKey) {
         if (weightKey < 0 || weightKey > 1)
             throw new RuntimeException("The value of weight, must be between 0 <= weight <= 1");
         this.weightKey = weightKey;
     }
 
+    /**
+     * <p>Getter for the field <code>guardKey</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getGuardKey() {
         return guardKey;
     }
 
+    /**
+     * <p>Setter for the field <code>guardKey</code>.</p>
+     *
+     * @param guardKey a {@link java.lang.String} object.
+     */
     public void setGuardKey(String guardKey) {
         this.guardKey = guardKey;
     }
@@ -80,8 +120,8 @@ public class Edge extends AbstractElement {
      * Action1;Action2;ActionN; Keyword Where the Label, Parameter. Guard, Actions
      * and Keyword are optional.
      *
-     * @param str
-     * @return
+     * @param str a {@link java.lang.String} object.
+     * @return an array of {@link java.lang.String} objects.
      */
     static public String[] getGuardAndActions(String str) {
         Pattern p = Pattern.compile("(.*)", Pattern.MULTILINE);
@@ -122,8 +162,8 @@ public class Edge extends AbstractElement {
      * Action1;Action2;ActionN; Keyword Where the Label, Parameter. Guard, Actions
      * and Keyword are optional.
      *
-     * @param str
-     * @return
+     * @param str a {@link java.lang.String} object.
+     * @return an array of {@link java.lang.String} objects.
      */
     static public String[] getLabelAndParameter(String str) {
         Pattern p = Pattern.compile("(.*)", Pattern.MULTILINE);
@@ -160,8 +200,8 @@ public class Edge extends AbstractElement {
      * which depicts the probability for the edge to be executed. A value of 0.05
      * is the same as 5% chance of going down this road.
      *
-     * @param str
-     * @return
+     * @param str a {@link java.lang.String} object.
+     * @return a float.
      */
     static public float getWeight(String str) {
         Pattern p = Pattern.compile("\\n(weight\\s*=\\s*(.*))", Pattern.MULTILINE);

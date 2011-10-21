@@ -36,6 +36,9 @@ import java.util.Vector;
  * Handles the common constants for the org.graphwalker package. This includes
  * reserved key words, and text strings used for storing custom data as
  * UserDatum in graphs, vertices and edges.
+ *
+ * @author nilols
+ * @version $Id: $
  */
 public class Keywords {
 
@@ -233,38 +236,55 @@ public class Keywords {
      */
     public static final String DIJKSTRA = "dijkstra";
 
+    /** Constant <code>CONDITION_REACHED_EDGE=1001</code> */
     public static final int CONDITION_REACHED_EDGE = 1001;
 
+    /** Constant <code>CONDITION_REACHED_VERTEX=1002</code> */
     public static final int CONDITION_REACHED_VERTEX = 1002;
 
+    /** Constant <code>CONDITION_EDGE_COVERAGE=1003</code> */
     public static final int CONDITION_EDGE_COVERAGE = 1003;
 
+    /** Constant <code>CONDITION_VERTEX_COVERAGE=1004</code> */
     public static final int CONDITION_VERTEX_COVERAGE = 1004;
 
+    /** Constant <code>CONDITION_TEST_LENGTH=1005</code> */
     public static final int CONDITION_TEST_LENGTH = 1005;
 
+    /** Constant <code>CONDITION_TEST_DURATION=1006</code> */
     public static final int CONDITION_TEST_DURATION = 1006;
 
+    /** Constant <code>CONDITION_REQUIREMENT_COVERAGE=1007</code> */
     public static final int CONDITION_REQUIREMENT_COVERAGE = 1007;
 
+    /** Constant <code>CONDITION_REACHED_REQUIREMENT=1008</code> */
     public static final int CONDITION_REACHED_REQUIREMENT = 1008;
 
+    /** Constant <code>CONDITION_NEVER=1009</code> */
     public static final int CONDITION_NEVER = 1009;
 
+    /** Constant <code>GENERATOR_RANDOM=2001</code> */
     public static final int GENERATOR_RANDOM = 2001;
 
+    /** Constant <code>GENERATOR_A_STAR=2002</code> */
     public static final int GENERATOR_A_STAR = 2002;
 
+    /** Constant <code>GENERATOR_LIST=2003</code> */
     public static final int GENERATOR_LIST = 2003;
 
+    /** Constant <code>GENERATOR_STUB=2004</code> */
     public static final int GENERATOR_STUB = 2004;
 
+    /** Constant <code>GENERATOR_REQUIREMENTS=2005</code> */
     public static final int GENERATOR_REQUIREMENTS = 2005;
 
+    /** Constant <code>GENERATOR_SHORTEST_NON_OPTIMIZED=2006</code> */
     public static final int GENERATOR_SHORTEST_NON_OPTIMIZED = 2006;
 
+    /** Constant <code>GENERATOR_MANUAL_HTML=2007</code> */
     public static final int GENERATOR_MANUAL_HTML = 2007;
 
+    /** Constant <code>GENERATOR_ALL_PATH_PERMUTATIONS=2008</code> */
     public static final int GENERATOR_ALL_PATH_PERMUTATIONS = 2008;
 
     /**
@@ -285,6 +305,9 @@ public class Keywords {
 
     /**
      * Returns true if the wordToCheck is a pre-defined key word.
+     *
+     * @param wordToCheck a {@link java.lang.String} object.
+     * @return a boolean.
      */
     public static boolean isKeyWord(final String wordToCheck) {
         return Keywords.reservedKeyWords.contains(wordToCheck.toUpperCase());
@@ -333,6 +356,8 @@ public class Keywords {
 
     /**
      * Defines the stop-condition strings
+     *
+     * @return a {@link java.util.Vector} object.
      */
     static {
         Keywords.stopConditions.add(new StopCondition("REACHED_EDGE", "REACHED_EDGE:<Edge label>", Keywords.CONDITION_REACHED_EDGE));
@@ -351,7 +376,6 @@ public class Keywords {
                 Keywords.CONDITION_REACHED_REQUIREMENT));
         Keywords.stopConditions.add(new StopCondition("NEVER", "NEVER", Keywords.CONDITION_NEVER));
     }
-
     static public Vector<StopCondition> getStopConditions() {
         return Keywords.stopConditions;
     }
@@ -369,10 +393,12 @@ public class Keywords {
     }
 
     /**
-     * @param stopCondition
+     * <p>getStopCondition.</p>
+     *
+     * @param stopCondition a {@link java.lang.String} object.
      * @return if supplied with a valid stop condition returns its constant value.
      *         returns -1 if supplied with false value.
-     * @throws StopConditionException
+     * @throws org.graphwalker.core.exceptions.StopConditionException if any.
      */
     static public int getStopCondition(final String stopCondition) throws StopConditionException {
         if (!isStopCondition(stopCondition)) {
@@ -443,6 +469,8 @@ public class Keywords {
 
     /**
      * Defines the generators strings
+     *
+     * @return a {@link java.util.Vector} object.
      */
     static {
         Keywords.generators.add(new Generator("RANDOM", "RANDOM", Keywords.GENERATOR_RANDOM, true));
@@ -455,7 +483,6 @@ public class Keywords {
         Keywords.generators
                 .add(new Generator("ALL_PATH_PERMUTATIONS", "ALL_PATH_PERMUTATIONS", Keywords.GENERATOR_ALL_PATH_PERMUTATIONS, true));
     }
-
     static public Vector<Generator> getGenerators() {
         return Keywords.generators;
     }
@@ -473,10 +500,12 @@ public class Keywords {
     }
 
     /**
-     * @param generator
+     * <p>getGenerator.</p>
+     *
+     * @param generator a {@link java.lang.String} object.
      * @return if supplied with a valid generator returns its constant value.
      *         returns -1 if supplied with false value.
-     * @throws GeneratorException
+     * @throws org.graphwalker.core.exceptions.GeneratorException if any.
      */
     static public int getGenerator(final String generator) throws GeneratorException {
         if (!isGenerator(generator)) {

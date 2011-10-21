@@ -33,6 +33,12 @@ import org.graphwalker.core.Util;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * <p>AbstractElement class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public class AbstractElement {
 
     static Logger logger = Util.setupLogger(AbstractElement.class);
@@ -54,9 +60,17 @@ public class AbstractElement {
     private String manualInstructions = "";
     private String descriptionKey = "";
 
+    /**
+     * <p>Constructor for AbstractElement.</p>
+     */
     public AbstractElement() {
     }
 
+    /**
+     * <p>Constructor for AbstractElement.</p>
+     *
+     * @param ae a {@link org.graphwalker.core.graph.AbstractElement} object.
+     */
     protected AbstractElement(AbstractElement ae) {
         this.labelKey = ae.labelKey;
         this.fullLabelKey = ae.fullLabelKey;
@@ -77,6 +91,12 @@ public class AbstractElement {
         this.descriptionKey = ae.descriptionKey;
     }
 
+    /**
+     * <p>Constructor for AbstractElement.</p>
+     *
+     * @param A a {@link org.graphwalker.core.graph.AbstractElement} object.
+     * @param B a {@link org.graphwalker.core.graph.AbstractElement} object.
+     */
     protected AbstractElement(AbstractElement A, AbstractElement B) {
         if (A.fullLabelKey.length() > B.fullLabelKey.length()) {
             this.labelKey = A.labelKey;
@@ -117,94 +137,209 @@ public class AbstractElement {
         }
     }
 
+    /**
+     * <p>isMergedMbtKey.</p>
+     *
+     * @return a boolean.
+     */
     public boolean isMergedMbtKey() {
         return mergedMbtKey;
     }
 
+    /**
+     * <p>Setter for the field <code>mergedMbtKey</code>.</p>
+     *
+     * @param mergedMbtKey a boolean.
+     */
     public void setMergedMbtKey(boolean mergedMbtKey) {
         this.mergedMbtKey = mergedMbtKey;
     }
 
+    /**
+     * <p>Getter for the field <code>imageKey</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getImageKey() {
         return imageKey;
     }
 
+    /**
+     * <p>Setter for the field <code>imageKey</code>.</p>
+     *
+     * @param imageKey a {@link java.lang.String} object.
+     */
     public void setImageKey(String imageKey) {
         this.imageKey = imageKey;
     }
 
+    /**
+     * <p>isBlockedKey.</p>
+     *
+     * @return a boolean.
+     */
     public boolean isBlockedKey() {
         return blockedKey;
     }
 
+    /**
+     * <p>Setter for the field <code>blockedKey</code>.</p>
+     *
+     * @param blockedKey a boolean.
+     */
     public void setBlockedKey(boolean blockedKey) {
         this.blockedKey = blockedKey;
     }
 
+    /**
+     * <p>isNoMergeKey.</p>
+     *
+     * @return a boolean.
+     */
     public boolean isNoMergeKey() {
         return noMergeKey;
     }
 
+    /**
+     * <p>Setter for the field <code>noMergeKey</code>.</p>
+     *
+     * @param noMergeKey a boolean.
+     */
     public void setNoMergeKey(boolean noMergeKey) {
         this.noMergeKey = noMergeKey;
     }
 
+    /**
+     * <p>isMergeKey.</p>
+     *
+     * @return a boolean.
+     */
     public boolean isMergeKey() {
         return mergeKey;
     }
 
+    /**
+     * <p>Setter for the field <code>mergeKey</code>.</p>
+     *
+     * @param mergeKey a boolean.
+     */
     public void setMergeKey(boolean mergeKey) {
         this.mergeKey = mergeKey;
     }
 
+    /**
+     * <p>Getter for the field <code>fileKey</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getFileKey() {
         return fileKey;
     }
 
+    /**
+     * <p>Setter for the field <code>fileKey</code>.</p>
+     *
+     * @param fileKey a {@link java.lang.String} object.
+     */
     public void setFileKey(String fileKey) {
         this.fileKey = fileKey;
     }
 
+    /**
+     * <p>Getter for the field <code>idKey</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getIdKey() {
         return idKey;
     }
 
+    /**
+     * <p>Setter for the field <code>idKey</code>.</p>
+     *
+     * @param idKey a {@link java.lang.String} object.
+     */
     public void setIdKey(String idKey) {
         this.idKey = idKey;
     }
 
+    /**
+     * <p>Getter for the field <code>indexKey</code>.</p>
+     *
+     * @return a {@link java.lang.Integer} object.
+     */
     public Integer getIndexKey() {
         return indexKey;
     }
 
+    /**
+     * <p>Setter for the field <code>indexKey</code>.</p>
+     *
+     * @param indexKey a {@link java.lang.Integer} object.
+     */
     public void setIndexKey(Integer indexKey) {
         this.indexKey = indexKey;
     }
 
+    /**
+     * <p>Getter for the field <code>actionsKey</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getActionsKey() {
         return actionsKey;
     }
 
+    /**
+     * <p>Setter for the field <code>actionsKey</code>.</p>
+     *
+     * @param actionsKey a {@link java.lang.String} object.
+     */
     public void setActionsKey(String actionsKey) {
         this.actionsKey = actionsKey;
     }
 
+    /**
+     * <p>Getter for the field <code>visitedKey</code>.</p>
+     *
+     * @return a {@link java.lang.Integer} object.
+     */
     public Integer getVisitedKey() {
         return visitedKey;
     }
 
+    /**
+     * <p>Setter for the field <code>visitedKey</code>.</p>
+     *
+     * @param visitedKey a {@link java.lang.Integer} object.
+     */
     public void setVisitedKey(Integer visitedKey) {
         this.visitedKey = visitedKey;
     }
 
+    /**
+     * <p>Getter for the field <code>parameterKey</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getParameterKey() {
         return parameterKey;
     }
 
+    /**
+     * <p>Setter for the field <code>parameterKey</code>.</p>
+     *
+     * @param parameterKey a {@link java.lang.String} object.
+     */
     public void setParameterKey(String parameterKey) {
         this.parameterKey = parameterKey;
     }
 
+    /**
+     * <p>Getter for the field <code>reqTagKey</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getReqTagKey() {
         return reqTagKey;
     }
@@ -220,6 +355,8 @@ public class AbstractElement {
     }
 
     /**
+     * <p>Getter for the field <code>reqTagResult</code>.</p>
+     *
      * @return 0 is the requirement is untested.<br>
      *         1 if requirement tested ok<br>
      *         2 if the requirement has failed the test.
@@ -228,35 +365,71 @@ public class AbstractElement {
         return reqTagResult;
     }
 
+    /**
+     * <p>Setter for the field <code>reqTagResult</code>.</p>
+     *
+     * @param reqTagResult a {@link java.lang.Integer} object.
+     */
     public void setReqTagResult(Integer reqTagResult) {
         this.reqTagResult = reqTagResult;
     }
 
+    /**
+     * <p>Getter for the field <code>fullLabelKey</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getFullLabelKey() {
         return fullLabelKey;
     }
 
+    /**
+     * <p>Setter for the field <code>fullLabelKey</code>.</p>
+     *
+     * @param fullLabelKey a {@link java.lang.String} object.
+     */
     public void setFullLabelKey(String fullLabelKey) {
         this.fullLabelKey = fullLabelKey;
     }
 
+    /**
+     * <p>Getter for the field <code>labelKey</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getLabelKey() {
         return labelKey;
     }
 
+    /**
+     * <p>Setter for the field <code>labelKey</code>.</p>
+     *
+     * @param labelKey a {@link java.lang.String} object.
+     */
     public void setLabelKey(String labelKey) {
         this.labelKey = labelKey;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return Util.getCompleteName(this);
     }
 
+    /**
+     * <p>Getter for the field <code>manualInstructions</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getManualInstructions() {
         return manualInstructions;
     }
 
+    /**
+     * <p>Setter for the field <code>manualInstructions</code>.</p>
+     *
+     * @param attributeValue a {@link java.lang.String} object.
+     */
     public void setManualInstructions(String attributeValue) {
         this.manualInstructions = attributeValue;
     }
@@ -266,8 +439,8 @@ public class AbstractElement {
      * it means that the node will be merged with all other nodes wit the same
      * name, but not replaced by any subgraphs
      *
-     * @param str
-     * @return
+     * @param str a {@link java.lang.String} object.
+     * @return a {@link java.lang.Boolean} object.
      */
     static public Boolean isMerged(String str) {
         Pattern p = Pattern.compile("\\n(MERGE)", Pattern.MULTILINE);
@@ -284,8 +457,8 @@ public class AbstractElement {
      * graphs, this specific vertex will not be merged or replaced by any
      * subgraphs
      *
-     * @param str
-     * @return
+     * @param str a {@link java.lang.String} object.
+     * @return a {@link java.lang.Boolean} object.
      */
     static public Boolean isNoMerge(String str) {
         Pattern p = Pattern.compile("\\n(NO_MERGE)", Pattern.MULTILINE);
@@ -303,8 +476,8 @@ public class AbstractElement {
      * to mark vertices as BLOCKED due to bugs in the system you test. When the
      * bug is removed, the BLOCKED tag can be removed.
      *
-     * @param str
-     * @return
+     * @param str a {@link java.lang.String} object.
+     * @return a {@link java.lang.Boolean} object.
      */
     static public Boolean isBlocked(String str) {
         Pattern p = Pattern.compile("\\n(BLOCKED)", Pattern.MULTILINE);
@@ -320,8 +493,8 @@ public class AbstractElement {
      * If INDEX is defined, find it... If defined, it means that this vertex has
      * already a unique id generated by mbt before, so we use this instead..
      *
-     * @param str
-     * @return
+     * @param str a {@link java.lang.String} object.
+     * @return a {@link java.lang.Integer} object.
      */
     static public Integer getIndex(String str) {
         Pattern p = Pattern.compile("\\n(INDEX=(.*))", Pattern.MULTILINE);
@@ -337,8 +510,8 @@ public class AbstractElement {
     /**
      * If the REQTAG is defined, find it...
      *
-     * @param str
-     * @return
+     * @param str a {@link java.lang.String} object.
+     * @return a {@link java.lang.String} object.
      */
     static public String getReqTags(String str) {
         Pattern p = Pattern.compile("\\n(REQTAG=(.*))", Pattern.MULTILINE);
@@ -363,14 +536,30 @@ public class AbstractElement {
         return "";
     }
 
+    /**
+     * <p>setDesctiptionKey.</p>
+     *
+     * @param str a {@link java.lang.String} object.
+     */
     public void setDesctiptionKey(String str) {
         this.descriptionKey = str;
     }
 
+    /**
+     * <p>Getter for the field <code>descriptionKey</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getDescriptionKey() {
         return this.descriptionKey;
     }
 
+    /**
+     * <p>getDescription.</p>
+     *
+     * @param str a {@link java.lang.String} object.
+     * @return a {@link java.lang.String} object.
+     */
     public String getDescription(String str) {
         Pattern p;
         Matcher m;

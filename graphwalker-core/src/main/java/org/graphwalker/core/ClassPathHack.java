@@ -31,15 +31,33 @@ import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
 
+/**
+ * <p>ClassPathHack class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public class ClassPathHack {
     private static final Class<?>[] parameters = new Class[]{URL.class};
 
+    /**
+     * <p>addFile.</p>
+     *
+     * @param f a {@link java.io.File} object.
+     * @throws java.io.IOException if any.
+     */
     @SuppressWarnings("deprecation")
     public static void addFile(File f) throws IOException {
         // f.toURL is deprecated
         addURL(f.toURL());
     }
 
+    /**
+     * <p>addURL.</p>
+     *
+     * @param u a {@link java.net.URL} object.
+     * @throws java.io.IOException if any.
+     */
     protected static void addURL(URL u) throws IOException {
         URLClassLoader sysloader = (URLClassLoader) ClassLoader.getSystemClassLoader();
         Class<?> sysclass = URLClassLoader.class;

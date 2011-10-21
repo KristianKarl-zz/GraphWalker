@@ -26,21 +26,33 @@
 
 package org.graphwalker.core.conditions;
 
+/**
+ * <p>NeverCondition class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public class NeverCondition extends AbstractStopCondition {
 
+    /**
+     * <p>Constructor for NeverCondition.</p>
+     */
     public NeverCondition() {
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean isFulfilled() {
         return false;
     }
 
+    /** {@inheritDoc} */
     @Override
     public double getFulfilment() {
         return 0;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return "FALSE";

@@ -36,6 +36,12 @@ import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * <p>ParseLog class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public class ParseLog {
 
     public static class LoggedItem {
@@ -43,6 +49,13 @@ public class ParseLog {
         public String data = null;
     }
 
+    /**
+     * <p>readLog.</p>
+     *
+     * @param logFile a {@link java.io.File} object.
+     * @return a {@link java.util.Vector} object.
+     * @throws java.io.IOException if any.
+     */
     public static Vector<LoggedItem> readLog(File logFile) throws IOException {
         Vector<LoggedItem> list = new Vector<LoggedItem>();
         FileReader reader = null;

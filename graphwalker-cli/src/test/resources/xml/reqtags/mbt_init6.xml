@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   #%L
-  GraphWalker Core
+  GraphWalker CLI
   %%
   Copyright (C) 2011 GraphWalker
   %%
@@ -27,6 +27,6 @@
 
 <!DOCTYPE MBTINIT SYSTEM "http://mbt.tigris.org/mbt_setup.dtd" >
 <MBTINIT>
-    <MODEL PATH="graphml/reqtags/ExtendedMain.graphml"/>
-    <GENERATOR TYPE="REQUIREMENTS"/>
+	<MODEL PATH="graphml/reqtags/ExtendedMain.graphml"/>
+    <GENERATOR TYPE="REQUIREMENTS" />
 </MBTINIT>

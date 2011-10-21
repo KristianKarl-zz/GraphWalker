@@ -28,6 +28,9 @@ package org.graphwalker.core.exceptions;
 
 /**
  * This exception indicats to MBT that GUI wants to stop execution of MBT
+ *
+ * @author nilols
+ * @version $Id: $
  */
 public class GuiStoppedExecution extends RuntimeException {
 

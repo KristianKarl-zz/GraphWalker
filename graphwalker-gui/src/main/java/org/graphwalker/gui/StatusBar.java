@@ -30,15 +30,28 @@ import java.awt.Dimension;
 
 import javax.swing.JLabel;
 
+/**
+ * <p>StatusBar class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 @SuppressWarnings("serial")
 public class StatusBar extends JLabel {
 
-	/** Creates a new instance of StatusBar */
+	/**
+	 * Creates a new instance of StatusBar
+	 */
 	public StatusBar() {
 		super.setPreferredSize(new Dimension(100, 16));
 		setMessage("Ready");
 	}
 
+	/**
+	 * <p>setMessage.</p>
+	 *
+	 * @param message a {@link java.lang.String} object.
+	 */
 	public void setMessage(String message) {
 		setText(" " + message);
 	}

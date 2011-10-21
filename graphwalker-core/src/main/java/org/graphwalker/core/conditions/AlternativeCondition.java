@@ -31,10 +31,17 @@ import org.graphwalker.core.machines.FiniteStateMachine;
 import java.util.Iterator;
 import java.util.Vector;
 
+/**
+ * <p>AlternativeCondition class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public class AlternativeCondition extends AbstractStopCondition {
 
     private Vector<StopCondition> conditions;
 
+    /** {@inheritDoc} */
     @Override
     public boolean isFulfilled() {
         for (StopCondition condition : conditions) {
@@ -44,14 +51,23 @@ public class AlternativeCondition extends AbstractStopCondition {
         return false;
     }
 
+    /**
+     * <p>Constructor for AlternativeCondition.</p>
+     */
     public AlternativeCondition() {
         this.conditions = new Vector<StopCondition>();
     }
 
+    /**
+     * <p>add.</p>
+     *
+     * @param condition a {@link org.graphwalker.core.conditions.StopCondition} object.
+     */
     public void add(StopCondition condition) {
         this.conditions.add(condition);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setMachine(FiniteStateMachine machine) {
         super.setMachine(machine);
@@ -60,6 +76,7 @@ public class AlternativeCondition extends AbstractStopCondition {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public double getFulfilment() {
         double retur = 0;
@@ -72,6 +89,7 @@ public class AlternativeCondition extends AbstractStopCondition {
         return retur;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder("(");

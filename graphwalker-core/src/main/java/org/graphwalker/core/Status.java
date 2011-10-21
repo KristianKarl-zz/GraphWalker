@@ -28,62 +28,132 @@ package org.graphwalker.core;
 
 import org.apache.log4j.Logger;
 
+/**
+ * <p>Status class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public class Status {
     static private Logger log = Util.setupLogger(Status.class);
     private int state = stopped;
 
+    /** Constant <code>initial=1</code> */
     public static final int initial = 1;
+    /** Constant <code>running=2</code> */
     public static final int running = 2;
+    /** Constant <code>previous=4</code> */
     public static final int previous = 4;
+    /** Constant <code>next=8</code> */
     public static final int next = 8;
+    /** Constant <code>paused=16</code> */
     public static final int paused = 16;
+    /** Constant <code>stopped=32</code> */
     public static final int stopped = 32;
+    /** Constant <code>executingJavaTest=64</code> */
     public static final int executingJavaTest = 64;
+    /** Constant <code>executingSoapTest=128</code> */
     public static final int executingSoapTest = 128;
+    /** Constant <code>executingLogTest=256</code> */
     public static final int executingLogTest = 256;
 
+    /**
+     * <p>isExecutingLogTest.</p>
+     *
+     * @return a boolean.
+     */
     public boolean isExecutingLogTest() {
         return (state & executingLogTest) == executingLogTest;
     }
 
+    /**
+     * <p>isExecutingSoapTest.</p>
+     *
+     * @return a boolean.
+     */
     public boolean isExecutingSoapTest() {
         return (state & executingSoapTest) == executingSoapTest;
     }
 
+    /**
+     * <p>isExecutingJavaTest.</p>
+     *
+     * @return a boolean.
+     */
     public boolean isExecutingJavaTest() {
         return (state & executingJavaTest) == executingJavaTest;
     }
 
+    /**
+     * <p>isInitial.</p>
+     *
+     * @return a boolean.
+     */
     public boolean isInitial() {
         return (state & initial) == initial;
     }
 
+    /**
+     * <p>isStopped.</p>
+     *
+     * @return a boolean.
+     */
     public boolean isStopped() {
         return (state & stopped) == stopped;
     }
 
+    /**
+     * <p>isPrevious.</p>
+     *
+     * @return a boolean.
+     */
     public boolean isPrevious() {
         return (state & previous) == previous;
     }
 
+    /**
+     * <p>isNext.</p>
+     *
+     * @return a boolean.
+     */
     public boolean isNext() {
         return (state & next) == next;
     }
 
+    /**
+     * <p>isRunning.</p>
+     *
+     * @return a boolean.
+     */
     public boolean isRunning() {
         return (state & running) == running;
     }
 
+    /**
+     * <p>isPaused.</p>
+     *
+     * @return a boolean.
+     */
     public boolean isPaused() {
         return (state & paused) == paused;
     }
 
+    /**
+     * <p>Setter for the field <code>state</code>.</p>
+     *
+     * @param state a int.
+     */
     public void setState(int state) {
         log.debug("Set the state with: " + toStr(state));
         this.state |= state;
         log.debug("State: " + toStr(this.state));
     }
 
+    /**
+     * <p>unsetState.</p>
+     *
+     * @param state a int.
+     */
     public void unsetState(int state) {
         log.debug("Unset the state with: " + toStr(state));
         if ((this.state & state) == state) {
@@ -92,16 +162,28 @@ public class Status {
         log.debug("State: " + toStr(this.state));
     }
 
+    /**
+     * <p>Setter for the field <code>stopped</code>.</p>
+     */
     public void setStopped() {
         log.debug("Set the state to stopped");
         state = stopped;
     }
 
+    /**
+     * <p>reset.</p>
+     */
     public void reset() {
         log.debug("Reset the state to initial");
         state = initial;
     }
 
+    /**
+     * <p>toStr.</p>
+     *
+     * @param state a int.
+     * @return a {@link java.lang.String} object.
+     */
     public String toStr(int state) {
         String str = "";
         if ((state & initial) == initial) {

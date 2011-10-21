@@ -37,20 +37,35 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
+/**
+ * <p>RandomPathGenerator class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public class RandomPathGenerator extends AbstractPathGenerator {
 
     private static Logger logger = Util.setupLogger(RandomPathGenerator.class);
 
     private Random random = new Random();
 
+    /**
+     * <p>Constructor for RandomPathGenerator.</p>
+     *
+     * @param stopCondition a {@link org.graphwalker.core.conditions.StopCondition} object.
+     */
     public RandomPathGenerator(StopCondition stopCondition) {
         super(stopCondition);
     }
 
+    /**
+     * <p>Constructor for RandomPathGenerator.</p>
+     */
     public RandomPathGenerator() {
         super();
     }
 
+    /** {@inheritDoc} */
     @Override
     public String[] getNext() throws InterruptedException {
         Set<Edge> availableEdges;
@@ -118,6 +133,7 @@ public class RandomPathGenerator extends AbstractPathGenerator {
         return (Edge) availableEdges.toArray()[random.nextInt(availableEdges.size())];
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return "RANDOM{" + super.toString() + "}";

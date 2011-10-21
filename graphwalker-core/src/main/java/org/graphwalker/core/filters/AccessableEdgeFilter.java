@@ -34,21 +34,41 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptException;
 
 /**
+ * <p>AccessableEdgeFilter class.</p>
+ *
  * @author Johan Tejle
+ * @version $Id: $
  */
 public class AccessableEdgeFilter {
 
     private ScriptEngine jsEngine = null;
     private Interpreter beanShellEngine = null;
 
+    /**
+     * <p>Constructor for AccessableEdgeFilter.</p>
+     *
+     * @param sciptEngine a {@link javax.script.ScriptEngine} object.
+     */
     public AccessableEdgeFilter(ScriptEngine sciptEngine) {
         this.jsEngine = sciptEngine;
     }
 
+    /**
+     * <p>Constructor for AccessableEdgeFilter.</p>
+     *
+     * @param beanShellEngine a {@link bsh.Interpreter} object.
+     */
     public AccessableEdgeFilter(Interpreter beanShellEngine) {
         this.beanShellEngine = beanShellEngine;
     }
 
+    /**
+     * <p>acceptEdge.</p>
+     *
+     * @param graph a {@link org.graphwalker.core.graph.Graph} object.
+     * @param edge a {@link org.graphwalker.core.graph.Edge} object.
+     * @return a boolean.
+     */
     public boolean acceptEdge(org.graphwalker.core.graph.Graph graph, Edge edge) {
         if (edge.getGuardKey().isEmpty()) {
             return true;
@@ -72,6 +92,11 @@ public class AccessableEdgeFilter {
         return false;
     }
 
+    /**
+     * <p>getName.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getName() {
         return "AccessableEdgeFilter";
     }

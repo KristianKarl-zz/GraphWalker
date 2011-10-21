@@ -57,14 +57,24 @@ import java.util.*;
  * functionality is:<br>
  * * Getting names with extra info for vertices and edges<br>
  * * Setting up the logger for classes<br>
+ *
+ * @author nilols
+ * @version $Id: $
  */
 public class Util {
 
     private static Logger logger = setupLogger(Util.class);
     static private Random random = new Random();
+    /** Constant <code>newline="System.getProperty(line.separator)"</code> */
     public static String newline = System.getProperty("line.separator");
     static private Timer timer = null;
 
+    /**
+     * <p>getCompleteName.</p>
+     *
+     * @param element a {@link org.graphwalker.core.graph.AbstractElement} object.
+     * @return a {@link java.lang.String} object.
+     */
     public static String getCompleteName(final AbstractElement element) {
         if (element instanceof Edge) {
             return getCompleteEdgeName((Edge) element);
@@ -114,12 +124,24 @@ public class Util {
         return "Vertex: '" + vertex.getLabelKey() + "', INDEX=" + vertex.getIndexKey();
     }
 
+    /**
+     * <p>AbortIf.</p>
+     *
+     * @param bool a boolean.
+     * @param message a {@link java.lang.String} object.
+     */
     public static void AbortIf(final boolean bool, final String message) {
         if (bool) {
             throw new RuntimeException(message);
         }
     }
 
+    /**
+     * <p>setupLogger.</p>
+     *
+     * @param classParam a {@link java.lang.Class} object.
+     * @return a {@link org.apache.log4j.Logger} object.
+     */
     public static Logger setupLogger(@SuppressWarnings("rawtypes") final Class classParam) {
         Logger logger = Logger.getLogger(classParam);
         if (new File("graphwalker.properties").canRead()) {
@@ -183,11 +205,11 @@ public class Util {
     /**
      * Adds a stop condition for the model.
      *
-     * @param machine
+     * @param machine a {@link org.graphwalker.core.machines.FiniteStateMachine} object.
      * @param conditionType  The condition type.
      * @param conditionValue The value of the condition.
      * @return The newly created stop condition.
-     * @throws StopConditionException
+     * @throws org.graphwalker.core.exceptions.StopConditionException if any.
      */
     public static StopCondition getCondition(final FiniteStateMachine machine, final int conditionType, final String conditionValue)
             throws StopConditionException {
@@ -248,6 +270,13 @@ public class Util {
         return condition;
     }
 
+    /**
+     * <p>getGenerator.</p>
+     *
+     * @param generatorType a int.
+     * @return a {@link org.graphwalker.core.generators.PathGenerator} object.
+     * @throws org.graphwalker.core.exceptions.GeneratorException if any.
+     */
     public static PathGenerator getGenerator(final int generatorType) throws GeneratorException {
         PathGenerator generator = null;
 
@@ -289,6 +318,9 @@ public class Util {
         return generator;
     }
 
+    /**
+     * <p>Constructor for Util.</p>
+     */
     public Util() {
         super();
         // TODO Auto-generated constructor stub
@@ -297,13 +329,13 @@ public class Util {
     /**
      * Load MBT settings from a xml file
      *
-     * @param file
-     * @return
-     * @throws StopConditionException
-     * @throws GeneratorException
-     * @throws IOException
-     * @throws JDOMException
-     * @throws InterruptedException
+     * @param file a {@link java.io.File} object.
+     * @throws org.graphwalker.core.exceptions.StopConditionException if any.
+     * @throws org.graphwalker.core.exceptions.GeneratorException if any.
+     * @throws java.io.IOException if any.
+     * @throws org.jdom.JDOMException if any.
+     * @throws java.lang.InterruptedException if any.
+     * @return a {@link org.graphwalker.core.ModelBasedTesting} object.
      */
     public static ModelBasedTesting loadMbtAsWSFromXml(final File file) throws StopConditionException, GeneratorException, IOException,
             JDOMException, InterruptedException {
@@ -313,14 +345,14 @@ public class Util {
     /**
      * Load MBT settings from a xml file
      *
-     * @param file
+     * @param file a {@link java.io.File} object.
      * @param dryRun Is mbt to be run in a dry run mode?
-     * @return
-     * @throws StopConditionException
-     * @throws GeneratorException
-     * @throws IOException
-     * @throws JDOMException
-     * @throws InterruptedException
+     * @throws org.graphwalker.core.exceptions.StopConditionException if any.
+     * @throws org.graphwalker.core.exceptions.GeneratorException if any.
+     * @throws java.io.IOException if any.
+     * @throws org.jdom.JDOMException if any.
+     * @throws java.lang.InterruptedException if any.
+     * @return a {@link org.graphwalker.core.ModelBasedTesting} object.
      */
     public static ModelBasedTesting loadMbtFromXml(final File file, final boolean dryRun) throws StopConditionException,
             GeneratorException, IOException, JDOMException, InterruptedException {
@@ -331,12 +363,12 @@ public class Util {
      * Load MBT settings from a xml file
      *
      * @param file The XML settings file
-     * @return
-     * @throws StopConditionException
-     * @throws GeneratorException
-     * @throws IOException
-     * @throws JDOMException
-     * @throws InterruptedException
+     * @throws org.graphwalker.core.exceptions.StopConditionException if any.
+     * @throws org.graphwalker.core.exceptions.GeneratorException if any.
+     * @throws java.io.IOException if any.
+     * @throws org.jdom.JDOMException if any.
+     * @throws java.lang.InterruptedException if any.
+     * @return a {@link org.graphwalker.core.ModelBasedTesting} object.
      */
     public static ModelBasedTesting loadMbtFromXml(final File file) throws StopConditionException, GeneratorException, IOException,
             JDOMException, InterruptedException {
@@ -347,12 +379,12 @@ public class Util {
      * Creates a new instance of MBT and loads the settings from a xml file
      *
      * @param file The XML settings file
-     * @return
-     * @throws StopConditionException
-     * @throws GeneratorException
-     * @throws IOException
-     * @throws JDOMException
-     * @throws InterruptedException
+     * @throws org.graphwalker.core.exceptions.StopConditionException if any.
+     * @throws org.graphwalker.core.exceptions.GeneratorException if any.
+     * @throws java.io.IOException if any.
+     * @throws org.jdom.JDOMException if any.
+     * @throws java.lang.InterruptedException if any.
+     * @return a {@link org.graphwalker.core.ModelBasedTesting} object.
      */
     public static ModelBasedTesting getNewMbtFromXml(final File file) throws StopConditionException, GeneratorException, IOException,
             JDOMException, InterruptedException {
@@ -363,12 +395,12 @@ public class Util {
      * Load MBT settings from a xml file
      *
      * @param file The XML settings file
-     * @return
-     * @throws StopConditionException
-     * @throws GeneratorException
-     * @throws IOException
-     * @throws JDOMException
-     * @throws InterruptedException
+     * @throws org.graphwalker.core.exceptions.StopConditionException if any.
+     * @throws org.graphwalker.core.exceptions.GeneratorException if any.
+     * @throws java.io.IOException if any.
+     * @throws org.jdom.JDOMException if any.
+     * @throws java.lang.InterruptedException if any.
+     * @return a {@link org.graphwalker.core.ModelBasedTesting} object.
      */
     public ModelBasedTesting loadMbtFromXmlNonStatic(final File file) throws StopConditionException, GeneratorException, IOException,
             JDOMException, InterruptedException {
@@ -864,6 +896,13 @@ public class Util {
         return stopCondition;
     }
 
+    /**
+     * <p>readFile.</p>
+     *
+     * @param file a {@link java.io.File} object.
+     * @return a {@link java.lang.String} object.
+     * @throws java.io.IOException if any.
+     */
     public static String readFile(final File file) throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
         FileReader reader = null;
@@ -884,6 +923,11 @@ public class Util {
         return stringBuilder.toString();
     }
 
+    /**
+     * <p>getInput.</p>
+     *
+     * @return a char.
+     */
     public static char getInput() {
         char c = 0;
         try {
@@ -900,8 +944,8 @@ public class Util {
     /**
      * This functions shuffle the array, and returns the shuffled array
      *
-     * @param array
-     * @return
+     * @param array an array of {@link java.lang.Object} objects.
+     * @return an array of {@link java.lang.Object} objects.
      */
     public static Object[] shuffle(final Object[] array) {
         for (int i = 0; i < array.length; i++) {
@@ -915,6 +959,12 @@ public class Util {
         return array;
     }
 
+    /**
+     * <p>getInternetAddr.</p>
+     *
+     * @param nic a {@link java.lang.String} object.
+     * @return a {@link java.net.InetAddress} object.
+     */
     public static InetAddress getInternetAddr(final String nic) {
         // Find the real network interface
         NetworkInterface iface = null;
@@ -951,6 +1001,11 @@ public class Util {
         return ia;
     }
 
+    /**
+     * <p>readWSPort.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public static String readWSPort() {
         PropertiesConfiguration conf = null;
         if (new File("graphwalker.properties").canRead()) {
@@ -976,6 +1031,11 @@ public class Util {
         return port;
     }
 
+    /**
+     * <p>readSoapGuiStartupState.</p>
+     *
+     * @return a {@link java.lang.Boolean} object.
+     */
     public static Boolean readSoapGuiStartupState() {
         PropertiesConfiguration conf = null;
         if (new File("graphwalker.properties").canRead()) {
@@ -1003,6 +1063,11 @@ public class Util {
         return soapGuiState;
     }
 
+    /**
+     * <p>logStackTraceToError.</p>
+     *
+     * @param e a {@link java.lang.Exception} object.
+     */
     public static void logStackTraceToError(final Exception e) {
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
@@ -1011,6 +1076,11 @@ public class Util {
         Util.logger.error(sw.toString());
     }
 
+    /**
+     * <p>logStackTraceToError.</p>
+     *
+     * @param t a {@link java.lang.Throwable} object.
+     */
     public static void logStackTraceToError(final Throwable t) {
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
@@ -1019,6 +1089,12 @@ public class Util {
         Util.logger.error(sw.toString());
     }
 
+    /**
+     * <p>getFile.</p>
+     *
+     * @param resourceName a {@link java.lang.String} object.
+     * @return a {@link java.io.File} object.
+     */
     public static File getFile(final String resourceName) {
         Util.logger.debug("Try to get file: " + resourceName);
         File file = new File(resourceName);
@@ -1037,6 +1113,11 @@ public class Util {
         return new File(resource.getPath());
     }
 
+    /**
+     * <p>closeQuietly.</p>
+     *
+     * @param reader a {@link java.io.Reader} object.
+     */
     public static void closeQuietly(Reader reader) {
         if (null != reader) {
             try {
@@ -1047,6 +1128,11 @@ public class Util {
         }
     }
 
+    /**
+     * <p>closeQuietly.</p>
+     *
+     * @param inputStream a {@link java.io.InputStream} object.
+     */
     public static void closeQuietly(InputStream inputStream) {
         if (null != inputStream) {
             try {

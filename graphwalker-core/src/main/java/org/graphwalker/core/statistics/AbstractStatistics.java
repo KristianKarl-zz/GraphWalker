@@ -23,20 +23,13 @@
  * THE SOFTWARE.
  * #L%
  */
-
-package org.graphwalker.core.events;
+package org.graphwalker.core.statistics;
 
 /**
- * <p>MbtEvent interface.</p>
+ * <p>Abstract AbstractStatistics class.</p>
  *
  * @author nilols
  * @version $Id: $
  */
-public interface MbtEvent {
-
-    /**
-     * <p>getNextEvent.</p>
-     */
-    public void getNextEvent();
-
+public abstract class AbstractStatistics implements Statistics {
 }

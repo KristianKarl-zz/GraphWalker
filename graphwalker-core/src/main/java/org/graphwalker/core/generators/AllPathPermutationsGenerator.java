@@ -48,6 +48,9 @@ import java.util.*;
  * The algorithm always tries the "path less traveled" where a path is a list of
  * n edges. If several paths are available with the same number of traversals on
  * is chosen by random.
+ *
+ * @author nilols
+ * @version $Id: $
  */
 public class AllPathPermutationsGenerator extends AbstractPathGenerator {
 
@@ -63,16 +66,25 @@ public class AllPathPermutationsGenerator extends AbstractPathGenerator {
 
     private int currentDepth;
 
+    /**
+     * <p>Constructor for AllPathPermutationsGenerator.</p>
+     *
+     * @param stopCondition a {@link org.graphwalker.core.conditions.StopCondition} object.
+     */
     public AllPathPermutationsGenerator(final StopCondition stopCondition) {
         super(stopCondition);
         currentDepth = 0;
     }
 
+    /**
+     * <p>Constructor for AllPathPermutationsGenerator.</p>
+     */
     public AllPathPermutationsGenerator() {
         super();
         currentDepth = 0;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String[] getNext() throws InterruptedException {
         Set<Edge> availableEdges;
@@ -189,11 +201,17 @@ public class AllPathPermutationsGenerator extends AbstractPathGenerator {
         return (Edge) availableEdges.toArray()[random.nextInt(availableEdges.size())];
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return "COMBINATIONS{" + super.toString() + "}";
     }
 
+    /**
+     * <p>getDepth.</p>
+     *
+     * @return a int.
+     */
     public int getDepth() {
         return currentDepth;
     }

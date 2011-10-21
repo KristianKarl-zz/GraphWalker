@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   #%L
-  GraphWalker Core
+  GraphWalker CLI
   %%
   Copyright (C) 2011 GraphWalker
   %%
@@ -27,8 +27,8 @@
 
 <!DOCTYPE MBTINIT SYSTEM "http://mbt.tigris.org/mbt_setup.dtd" >
 <MBTINIT EXTENDED="false" EXECUTOR="java:org.graphwalker.core.ExtendedMain">
-    <MODEL PATH="graphml/reqtags/ExtendedMain.graphml"/>
+	<MODEL PATH="graphml/reqtags/ExtendedMain.graphml"/>
     <GENERATOR TYPE="A_STAR">
-        <CONDITION TYPE="EDGE_COVERAGE" VALUE="100"/>
-    </GENERATOR>
+  		<CONDITION TYPE="EDGE_COVERAGE" VALUE="100"/>
+  	</GENERATOR>
 </MBTINIT>

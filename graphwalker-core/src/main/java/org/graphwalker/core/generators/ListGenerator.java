@@ -36,18 +36,33 @@ import java.util.Stack;
 import java.util.TreeSet;
 import java.util.Vector;
 
+/**
+ * <p>ListGenerator class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public class ListGenerator extends AbstractPathGenerator {
 
     private Stack<String[]> list = null;
 
+    /**
+     * <p>Constructor for ListGenerator.</p>
+     *
+     * @param stopCondition a {@link org.graphwalker.core.conditions.StopCondition} object.
+     */
     public ListGenerator(StopCondition stopCondition) {
         super(stopCondition);
     }
 
+    /**
+     * <p>Constructor for ListGenerator.</p>
+     */
     public ListGenerator() {
         super();
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean hasNext() {
         if (list == null)
@@ -55,6 +70,7 @@ public class ListGenerator extends AbstractPathGenerator {
         return !list.isEmpty();
     }
 
+    /** {@inheritDoc} */
     @Override
     public String[] getNext() {
         if (list == null)
@@ -84,6 +100,7 @@ public class ListGenerator extends AbstractPathGenerator {
         list.addAll(tempList);
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return "LIST";

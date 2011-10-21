@@ -30,21 +30,39 @@ import org.apache.log4j.Logger;
 import org.graphwalker.core.Util;
 import org.graphwalker.core.exceptions.StopConditionException;
 
+/**
+ * <p>EdgeCoverage class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public class EdgeCoverage extends AbstractStopCondition {
 
     private double limit;
     static Logger logger = Util.setupLogger(EdgeCoverage.class);
 
+    /**
+     * <p>Constructor for EdgeCoverage.</p>
+     *
+     * @throws org.graphwalker.core.exceptions.StopConditionException if any.
+     */
     public EdgeCoverage() throws StopConditionException {
         this(1);
     }
 
+    /**
+     * <p>Constructor for EdgeCoverage.</p>
+     *
+     * @param limit a double.
+     * @throws org.graphwalker.core.exceptions.StopConditionException if any.
+     */
     public EdgeCoverage(double limit) throws StopConditionException {
         if (limit > 1 || limit < 0)
             throw new StopConditionException("Excpeted an edge coverage between 0 and 100. Actual: " + limit * 100);
         this.limit = limit;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean isFulfilled() {
         double edges = getMachine().getAllEdges().size();
@@ -53,6 +71,7 @@ public class EdgeCoverage extends AbstractStopCondition {
         return (covered / edges) >= limit;
     }
 
+    /** {@inheritDoc} */
     @Override
     public double getFulfilment() {
         double edges = getMachine().getAllEdges().size();
@@ -60,6 +79,7 @@ public class EdgeCoverage extends AbstractStopCondition {
         return (covered / edges) / limit;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return "EC>=" + (int) (100 * limit);

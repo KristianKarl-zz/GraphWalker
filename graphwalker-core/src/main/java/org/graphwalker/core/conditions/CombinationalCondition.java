@@ -31,10 +31,17 @@ import org.graphwalker.core.machines.FiniteStateMachine;
 import java.util.Iterator;
 import java.util.Vector;
 
+/**
+ * <p>CombinationalCondition class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public class CombinationalCondition extends AbstractStopCondition {
 
     private Vector<StopCondition> conditions;
 
+    /** {@inheritDoc} */
     @Override
     public boolean isFulfilled() {
         for (StopCondition condition : conditions) {
@@ -45,14 +52,23 @@ public class CombinationalCondition extends AbstractStopCondition {
         return true;
     }
 
+    /**
+     * <p>Constructor for CombinationalCondition.</p>
+     */
     public CombinationalCondition() {
         this.conditions = new Vector<StopCondition>();
     }
 
+    /**
+     * <p>add.</p>
+     *
+     * @param condition a {@link org.graphwalker.core.conditions.StopCondition} object.
+     */
     public void add(StopCondition condition) {
         this.conditions.add(condition);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setMachine(FiniteStateMachine machine) {
         super.setMachine(machine);
@@ -61,6 +77,7 @@ public class CombinationalCondition extends AbstractStopCondition {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public double getFulfilment() {
         double retur = 0;
@@ -70,6 +87,7 @@ public class CombinationalCondition extends AbstractStopCondition {
         return retur / conditions.size();
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder("(");

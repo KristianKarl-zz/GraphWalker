@@ -42,8 +42,8 @@ import org.graphwalker.core.conditions.StopCondition;
  * <strong>Below is an example of a template.</strong>
  * <p/>
  * <pre>
- * /**
- * * This method implements the {EDGE_VERTEX} '{LABEL}'
+/**
+ * * * This method implements the {EDGE_VERTEX} '{LABEL}'
  * * /
  * public void {LABEL}()
  * {
@@ -51,13 +51,24 @@ import org.graphwalker.core.conditions.StopCondition;
  *    throw new RuntimeException( "Not implemented" );
  * }
  * </pre>
+ *
+ * @author nilols
+ * @version $Id: $
  */
 public class CodeGenerator extends ListGenerator {
 
+    /**
+     * <p>Constructor for CodeGenerator.</p>
+     *
+     * @param stopCondition a {@link org.graphwalker.core.conditions.StopCondition} object.
+     */
     public CodeGenerator(StopCondition stopCondition) {
         super(stopCondition);
     }
 
+    /**
+     * <p>Constructor for CodeGenerator.</p>
+     */
     public CodeGenerator() {
         super();
     }
@@ -65,10 +76,16 @@ public class CodeGenerator extends ListGenerator {
     private String[] template; // {HEADER, BODY, FOOTER}
     private boolean first = true;
 
+    /**
+     * <p>Setter for the field <code>template</code>.</p>
+     *
+     * @param template an array of {@link java.lang.String} objects.
+     */
     public void setTemplate(String[] template) {
         this.template = template.clone();
     }
 
+    /** {@inheritDoc} */
     @Override
     public String[] getNext() {
         String[] retur = super.getNext();
@@ -88,6 +105,7 @@ public class CodeGenerator extends ListGenerator {
         return retur;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return "CODE";

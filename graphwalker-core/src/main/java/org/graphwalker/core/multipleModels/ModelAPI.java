@@ -29,11 +29,22 @@ import org.graphwalker.core.ModelBasedTesting;
 import org.graphwalker.core.generators.PathGenerator;
 
 /**
+ * <p>ModelAPI class.</p>
+ *
  * @author krikar Any test should extend this class.
+ * @version $Id: $
  */
 public class ModelAPI {
     private ModelBasedTesting mbt = null;
 
+    /**
+     * <p>Constructor for ModelAPI.</p>
+     *
+     * @param model a {@link java.lang.String} object.
+     * @param efsm a boolean.
+     * @param generator a {@link org.graphwalker.core.generators.PathGenerator} object.
+     * @param weight a boolean.
+     */
     public ModelAPI(String model, boolean efsm, PathGenerator generator, boolean weight) {
         mbt = new ModelBasedTesting();
         mbt.readGraph(model);
@@ -42,10 +53,20 @@ public class ModelAPI {
         mbt.setWeighted(weight);
     }
 
+    /**
+     * <p>Setter for the field <code>mbt</code>.</p>
+     *
+     * @param mbt a {@link org.graphwalker.core.ModelBasedTesting} object.
+     */
     public void setMbt(ModelBasedTesting mbt) {
         this.mbt = mbt;
     }
 
+    /**
+     * <p>Getter for the field <code>mbt</code>.</p>
+     *
+     * @return a {@link org.graphwalker.core.ModelBasedTesting} object.
+     */
     public ModelBasedTesting getMbt() {
         return mbt;
     }

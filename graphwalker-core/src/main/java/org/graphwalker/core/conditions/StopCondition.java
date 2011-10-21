@@ -28,19 +28,39 @@ package org.graphwalker.core.conditions;
 
 import org.graphwalker.core.machines.FiniteStateMachine;
 
+/**
+ * <p>StopCondition interface.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public interface StopCondition {
 
 
+    /**
+     * <p>getMachine.</p>
+     *
+     * @return a {@link org.graphwalker.core.machines.FiniteStateMachine} object.
+     */
     FiniteStateMachine getMachine();
 
+    /**
+     * <p>setMachine.</p>
+     *
+     * @param machine a {@link org.graphwalker.core.machines.FiniteStateMachine} object.
+     */
     void setMachine(FiniteStateMachine machine);
 
     /**
+     * <p>isFulfilled.</p>
+     *
      * @return true if the condition is fulfilled
      */
     boolean isFulfilled();
 
     /**
+     * <p>getFulfilment.</p>
+     *
      * @return the condition fulfilment
      */
     double getFulfilment();

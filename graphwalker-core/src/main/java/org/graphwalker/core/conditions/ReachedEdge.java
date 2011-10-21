@@ -31,6 +31,12 @@ import org.graphwalker.core.machines.FiniteStateMachine;
 
 import java.util.ArrayList;
 
+/**
+ * <p>ReachedEdge class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public class ReachedEdge extends AbstractStopCondition {
 
     private ArrayList<Edge> allEdges;
@@ -39,11 +45,13 @@ public class ReachedEdge extends AbstractStopCondition {
     private int maxDistance;
     private String edgeName;
 
+    /** {@inheritDoc} */
     @Override
     public boolean isFulfilled() {
         return getFulfilment() >= 0.99999;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setMachine(FiniteStateMachine machine) {
         super.setMachine(machine);
@@ -57,11 +65,17 @@ public class ReachedEdge extends AbstractStopCondition {
         this.maxDistance = max(this.proximity);
     }
 
+    /**
+     * <p>Constructor for ReachedEdge.</p>
+     *
+     * @param edgeName a {@link java.lang.String} object.
+     */
     public ReachedEdge(String edgeName) {
         String[] vertex = edgeName.split("/", 2);
         this.edgeName = vertex[0];
     }
 
+    /** {@inheritDoc} */
     @Override
     public double getFulfilment() {
         int distance = this.maxDistance;
@@ -116,6 +130,7 @@ public class ReachedEdge extends AbstractStopCondition {
         throw new RuntimeException("edge no longer in Graph!");
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return "EDGE='" + endEdge + "'";

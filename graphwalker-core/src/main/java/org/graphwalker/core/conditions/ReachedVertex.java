@@ -36,6 +36,12 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * <p>ReachedVertex class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public class ReachedVertex extends AbstractStopCondition {
 
     private static Logger logger = Util.setupLogger(ReachedVertex.class);
@@ -46,11 +52,13 @@ public class ReachedVertex extends AbstractStopCondition {
     private String vertexName;
     private String subState;
 
+    /** {@inheritDoc} */
     @Override
     public boolean isFulfilled() {
         return getFulfilment() >= 0.99999;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setMachine(FiniteStateMachine machine) {
         super.setMachine(machine);
@@ -64,12 +72,18 @@ public class ReachedVertex extends AbstractStopCondition {
         this.maxDistance = max(this.proximity);
     }
 
+    /**
+     * <p>Constructor for ReachedVertex.</p>
+     *
+     * @param vertexName a {@link java.lang.String} object.
+     */
     public ReachedVertex(String vertexName) {
         String[] vertex = vertexName.split("/", 2);
         this.vertexName = vertex[0];
         this.subState = (vertex.length > 1 ? vertex[1] : "");
     }
 
+    /** {@inheritDoc} */
     @Override
     public double getFulfilment() {
         logger.debug("Machine: " + getMachine());
@@ -138,6 +152,7 @@ public class ReachedVertex extends AbstractStopCondition {
         throw new RuntimeException("vertex no longer in Graph!");
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return "VERTEX='" + endVertex + "'";

@@ -33,15 +33,20 @@ import org.graphwalker.core.graph.Vertex;
 import java.util.HashSet;
 
 /**
+ * <p>VertexCoverageStatistics class.</p>
+ *
  * @author Johan Tejle
+ * @version $Id: $
  */
-public class VertexCoverageStatistics extends Statistics {
+public class VertexCoverageStatistics extends AbstractStatistics {
 
     private int max;
     private HashSet<String> usedVertices;
 
     /**
-     * @param model
+     * <p>Constructor for VertexCoverageStatistics.</p>
+     *
+     * @param model a {@link org.graphwalker.core.graph.Graph} object.
      */
     public VertexCoverageStatistics(Graph model) {
         max = model.getVertices().size();
@@ -55,6 +60,7 @@ public class VertexCoverageStatistics extends Statistics {
       * org.graphwalker.statistics.Statistics#addProgress(edu.uci.ics.jung.graph
       * .impl.AbstractElement)
       */
+    /** {@inheritDoc} */
     @Override
     public void addProgress(AbstractElement element) {
         if (element instanceof Vertex) {
@@ -67,6 +73,7 @@ public class VertexCoverageStatistics extends Statistics {
       *
       * @see org.graphwalker.statistics.Statistics#getCurrent()
       */
+    /** {@inheritDoc} */
     @Override
     public int getCurrent() {
         return usedVertices.size();
@@ -77,6 +84,7 @@ public class VertexCoverageStatistics extends Statistics {
       *
       * @see org.graphwalker.statistics.Statistics#getMax()
       */
+    /** {@inheritDoc} */
     @Override
     public int getMax() {
         return max;

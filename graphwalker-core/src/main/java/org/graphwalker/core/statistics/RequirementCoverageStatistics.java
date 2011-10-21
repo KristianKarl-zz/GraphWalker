@@ -34,15 +34,20 @@ import java.util.HashSet;
 import java.util.Vector;
 
 /**
+ * <p>RequirementCoverageStatistics class.</p>
+ *
  * @author Johan Tejle
+ * @version $Id: $
  */
-public class RequirementCoverageStatistics extends Statistics {
+public class RequirementCoverageStatistics extends AbstractStatistics {
 
     private HashSet<String> usedRequirements;
     private HashSet<String> allRequirements;
 
     /**
-     * @param model
+     * <p>Constructor for RequirementCoverageStatistics.</p>
+     *
+     * @param model a {@link org.graphwalker.core.graph.Graph} object.
      */
     public RequirementCoverageStatistics(Graph model) {
         usedRequirements = new HashSet<String>();
@@ -70,6 +75,7 @@ public class RequirementCoverageStatistics extends Statistics {
       * org.graphwalker.statistics.Statistics#addProgress(edu.uci.ics.jung.graph
       * .impl.AbstractElement)
       */
+    /** {@inheritDoc} */
     @Override
     public void addProgress(AbstractElement element) {
         if (element != null && !element.getReqTagKey().isEmpty()) {
@@ -82,6 +88,7 @@ public class RequirementCoverageStatistics extends Statistics {
       *
       * @see org.graphwalker.statistics.Statistics#getCurrent()
       */
+    /** {@inheritDoc} */
     @Override
     public int getCurrent() {
         return usedRequirements.size();
@@ -92,6 +99,7 @@ public class RequirementCoverageStatistics extends Statistics {
       *
       * @see org.graphwalker.statistics.Statistics#getMax()
       */
+    /** {@inheritDoc} */
     @Override
     public int getMax() {
         return allRequirements.size();

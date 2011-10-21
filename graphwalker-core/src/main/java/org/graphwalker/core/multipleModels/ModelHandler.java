@@ -86,6 +86,7 @@ import java.util.Random;
  * @author Kristian Karl
  * @see SWITCH_MODEL
  * @see GRAPH_VERTEX
+ * @version $Id: $
  */
 public class ModelHandler {
 
@@ -142,6 +143,8 @@ public class ModelHandler {
     }
 
     /**
+     * <p>Getter for the field <code>models</code>.</p>
+     *
      * @return All models currently loaded.
      */
     public ArrayList<ModelRunnable> getModels() {
@@ -154,7 +157,7 @@ public class ModelHandler {
      * @param name     The name of the model. This is not the same as the name of the
      *                 {@link Graph#getLabelKey() graph}. It's a logical name of the
      *                 model, and it may not already be used by the handler.
-     * @param modelAPI
+     * @param modelAPI a {@link org.graphwalker.core.multipleModels.ModelAPI} object.
      */
     public synchronized void add(String name, ModelAPI modelAPI) {
         if (hasModel(name)) {
@@ -189,7 +192,7 @@ public class ModelHandler {
      * stop criteria are reached.
      *
      * @param name The logical name of the model which will start the execution.
-     * @throws InterruptedException
+     * @throws java.lang.InterruptedException if any.
      */
     public void execute(String name) throws InterruptedException {
         if (!hasModel(name)) {
@@ -359,7 +362,9 @@ public class ModelHandler {
      *         returned.
      */
     /**
-     * @return
+     * <p>isAllModelsDone.</p>
+     *
+     * @return a boolean.
      */
     public boolean isAllModelsDone() {
         for (ModelRunnable model : models) {
@@ -406,7 +411,7 @@ public class ModelHandler {
      * Returns the statistics from all models.
      *
      * @return The aggregated statistics for all models
-     * @throws InterruptedException
+     * @throws java.lang.InterruptedException if any.
      */
     public String getStatistics() throws InterruptedException {
         StringBuilder statistics = new StringBuilder("Statistics for multiple models");
@@ -417,10 +422,20 @@ public class ModelHandler {
         return statistics.toString();
     }
 
+    /**
+     * <p>Getter for the field <code>currentVertex</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public synchronized String getCurrentVertex() {
         return currentVertex;
     }
 
+    /**
+     * <p>Setter for the field <code>currentVertex</code>.</p>
+     *
+     * @param currentVertex a {@link java.lang.String} object.
+     */
     public synchronized void setCurrentVertex(String currentVertex) {
         logger.debug("Changing current vertex from: " + this.currentVertex + ", to: " + currentVertex);
         this.currentVertex = currentVertex;

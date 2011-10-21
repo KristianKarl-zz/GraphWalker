@@ -29,10 +29,15 @@ package org.graphwalker.core.exceptions;
 /**
  * This exception should be used whenever there is something wrong with the stop
  * condition.
+ *
+ * @author nilols
+ * @version $Id: $
  */
 public class StopConditionException extends Exception {
 
     /**
+     * <p>Constructor for StopConditionException.</p>
+     *
      * @param message A string containing a message describing the failure in detail.
      */
     public StopConditionException(String message) {

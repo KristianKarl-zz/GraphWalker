@@ -30,18 +30,45 @@ import org.graphwalker.core.graph.Graph;
 
 import java.io.PrintStream;
 
+/**
+ * <p>Abstract AbstractModelHandler class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public abstract class AbstractModelHandler {
 
     protected Graph graph;
 
+    /**
+     * <p>load.</p>
+     *
+     * @param fileName a {@link java.lang.String} object.
+     */
     public abstract void load(String fileName);
 
+    /**
+     * <p>save.</p>
+     *
+     * @param ps a {@link java.io.PrintStream} object.
+     * @param printIndex a boolean.
+     */
     public abstract void save(PrintStream ps, boolean printIndex);
 
+    /**
+     * <p>getModel.</p>
+     *
+     * @return a {@link org.graphwalker.core.graph.Graph} object.
+     */
     public Graph getModel() {
         return graph;
     }
 
+    /**
+     * <p>setModel.</p>
+     *
+     * @param graph a {@link org.graphwalker.core.graph.Graph} object.
+     */
     public void setModel(Graph graph) {
         this.graph = graph;
     }

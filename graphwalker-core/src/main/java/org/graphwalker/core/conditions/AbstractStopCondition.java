@@ -27,14 +27,26 @@ package org.graphwalker.core.conditions;
 
 import org.graphwalker.core.machines.FiniteStateMachine;
 
+/**
+ * <p>Abstract AbstractStopCondition class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public abstract class AbstractStopCondition implements StopCondition {
 
     private FiniteStateMachine machine;
 
+    /**
+     * <p>Getter for the field <code>machine</code>.</p>
+     *
+     * @return a {@link org.graphwalker.core.machines.FiniteStateMachine} object.
+     */
     public FiniteStateMachine getMachine() {
         return machine;
     }
 
+    /** {@inheritDoc} */
     public void setMachine(FiniteStateMachine machine) {
         this.machine = machine;
     }

@@ -33,15 +33,20 @@ import org.graphwalker.core.graph.Graph;
 import java.util.HashSet;
 
 /**
+ * <p>EdgeCoverageStatistics class.</p>
+ *
  * @author Johan Tejle
+ * @version $Id: $
  */
-public class EdgeCoverageStatistics extends Statistics {
+public class EdgeCoverageStatistics extends AbstractStatistics {
 
     private int max;
     private HashSet<String> usedEdges;
 
     /**
-     * @param model
+     * <p>Constructor for EdgeCoverageStatistics.</p>
+     *
+     * @param model a {@link org.graphwalker.core.graph.Graph} object.
      */
     public EdgeCoverageStatistics(Graph model) {
         max = model.getEdges().size();
@@ -55,6 +60,7 @@ public class EdgeCoverageStatistics extends Statistics {
       * org.graphwalker.statistics.Statistics#addProgress(edu.uci.ics.jung.graph
       * .impl.AbstractElement)
       */
+    /** {@inheritDoc} */
     @Override
     public void addProgress(AbstractElement element) {
         if (element instanceof Edge)
@@ -66,6 +72,7 @@ public class EdgeCoverageStatistics extends Statistics {
       *
       * @see org.graphwalker.statistics.Statistics#getCurrent()
       */
+    /** {@inheritDoc} */
     @Override
     public int getCurrent() {
         return usedEdges.size();
@@ -76,6 +83,7 @@ public class EdgeCoverageStatistics extends Statistics {
       *
       * @see org.graphwalker.statistics.Statistics#getMax()
       */
+    /** {@inheritDoc} */
     @Override
     public int getMax() {
         return max;

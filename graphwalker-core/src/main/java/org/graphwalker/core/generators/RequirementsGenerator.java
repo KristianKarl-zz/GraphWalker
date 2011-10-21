@@ -31,18 +31,33 @@ import org.graphwalker.core.graph.AbstractElement;
 
 import java.util.*;
 
+/**
+ * <p>RequirementsGenerator class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public class RequirementsGenerator extends AbstractPathGenerator {
 
     private Stack<String[]> list = null;
 
+    /**
+     * <p>Constructor for RequirementsGenerator.</p>
+     *
+     * @param stopCondition a {@link org.graphwalker.core.conditions.StopCondition} object.
+     */
     public RequirementsGenerator(StopCondition stopCondition) {
         super(stopCondition);
     }
 
+    /**
+     * <p>Constructor for RequirementsGenerator.</p>
+     */
     public RequirementsGenerator() {
         super();
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean hasNext() {
         if (list == null) {
@@ -51,6 +66,7 @@ public class RequirementsGenerator extends AbstractPathGenerator {
         return !list.isEmpty();
     }
 
+    /** {@inheritDoc} */
     @Override
     public String[] getNext() {
         if (list == null) {
@@ -86,6 +102,7 @@ public class RequirementsGenerator extends AbstractPathGenerator {
         list.addAll(tempList);
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return "REQUIREMENTS";

@@ -31,6 +31,12 @@ import org.apache.log4j.Logger;
 import java.util.Stack;
 import java.util.Vector;
 
+/**
+ * <p>EventDrivenModels class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public class EventDrivenModels {
     private static Logger logger = Util.setupLogger(EventDrivenModels.class);
     Vector<ModelBasedTesting> models = new Vector<ModelBasedTesting>();
@@ -39,25 +45,53 @@ public class EventDrivenModels {
     private ThreadWrapper executingModel = null;
     private static final Object lockbox = new Object();
 
+    /**
+     * <p>Constructor for EventDrivenModels.</p>
+     *
+     * @param executionClass a {@link java.lang.Object} object.
+     */
     public EventDrivenModels(Object executionClass) {
         this.executionClass = executionClass;
     }
 
+    /**
+     * <p>Constructor for EventDrivenModels.</p>
+     */
     public EventDrivenModels() {
     }
 
+    /**
+     * <p>Getter for the field <code>models</code>.</p>
+     *
+     * @return a {@link java.util.Vector} object.
+     */
     public Vector<ModelBasedTesting> getModels() {
         return models;
     }
 
+    /**
+     * <p>addModel.</p>
+     *
+     * @param model a {@link org.graphwalker.core.ModelBasedTesting} object.
+     */
     public void addModel(ModelBasedTesting model) {
         models.add(model);
     }
 
+    /**
+     * <p>runModel.</p>
+     *
+     * @param modelName a {@link java.lang.String} object.
+     */
     public void runModel(String modelName) {
         stopAndSwitchModel(modelName);
     }
 
+    /**
+     * <p>stopAndSwitchModel.</p>
+     *
+     * @param modelName a {@link java.lang.String} object.
+     */
     public void stopAndSwitchModel(String modelName) {
         logger.debug("Will switch to model: " + modelName);
         if (executingModel != null) {
@@ -76,6 +110,11 @@ public class EventDrivenModels {
         throw new RuntimeException("Did not find a model: " + modelName);
     }
 
+    /**
+     * <p>pauseAndSwitchModel.</p>
+     *
+     * @param modelName a {@link java.lang.String} object.
+     */
     public void pauseAndSwitchModel(String modelName) {
         logger.debug("Will switch to model: " + modelName);
         if (executingModel != null) {
@@ -95,6 +134,9 @@ public class EventDrivenModels {
         throw new RuntimeException("Did not find a model: " + modelName);
     }
 
+    /**
+     * <p>waitToFinish.</p>
+     */
     public void waitToFinish() {
         try {
             while (true) {

@@ -35,6 +35,12 @@ import java.awt.geom.Point2D;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * <p>Vertex class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public class Vertex extends AbstractElement {
 
     static Logger logger = Util.setupLogger(Vertex.class);
@@ -47,42 +53,90 @@ public class Vertex extends AbstractElement {
     private boolean switchModelKey = false;
     private boolean graphVertex = false;
 
+    /**
+     * <p>Getter for the field <code>width</code>.</p>
+     *
+     * @return a float.
+     */
     public float getWidth() {
         return width;
     }
 
+    /**
+     * <p>Setter for the field <code>width</code>.</p>
+     *
+     * @param width a float.
+     */
     public void setWidth(float width) {
         this.width = width;
     }
 
+    /**
+     * <p>Getter for the field <code>height</code>.</p>
+     *
+     * @return a float.
+     */
     public float getHeight() {
         return height;
     }
 
+    /**
+     * <p>Setter for the field <code>height</code>.</p>
+     *
+     * @param height a float.
+     */
     public void setHeight(float height) {
         this.height = height;
     }
 
+    /**
+     * <p>Setter for the field <code>location</code>.</p>
+     *
+     * @param location a {@link java.awt.geom.Point2D} object.
+     */
     public void setLocation(Point2D location) {
         this.location = location;
     }
 
+    /**
+     * <p>Getter for the field <code>location</code>.</p>
+     *
+     * @return a {@link java.awt.geom.Point2D} object.
+     */
     public Point2D getLocation() {
         return location;
     }
 
+    /**
+     * <p>Getter for the field <code>fillColor</code>.</p>
+     *
+     * @return a {@link java.awt.Color} object.
+     */
     public Color getFillColor() {
         return fillColor;
     }
 
+    /**
+     * <p>Setter for the field <code>fillColor</code>.</p>
+     *
+     * @param fillColor a {@link java.awt.Color} object.
+     */
     public void setFillColor(Color fillColor) {
         this.fillColor = fillColor;
     }
 
+    /**
+     * <p>Constructor for Vertex.</p>
+     */
     public Vertex() {
         super();
     }
 
+    /**
+     * <p>Constructor for Vertex.</p>
+     *
+     * @param vertex a {@link org.graphwalker.core.graph.Vertex} object.
+     */
     public Vertex(Vertex vertex) {
         super(vertex);
         this.motherStartVertexKey = vertex.motherStartVertexKey;
@@ -100,8 +154,8 @@ public class Vertex extends AbstractElement {
      * can be a point for switching to another model using the same label, see
      * org.graphwalker.graph.Graph.getLabelKey().
      *
-     * @param str
-     * @return
+     * @param str a {@link java.lang.String} object.
+     * @return a {@link java.lang.Boolean} object.
      */
     static public Boolean isSwitchModel(String str) {
         Pattern p = Pattern.compile("\\n(SWITCH_MODEL)", Pattern.MULTILINE);
@@ -113,25 +167,47 @@ public class Vertex extends AbstractElement {
         return false;
     }
 
+    /**
+     * <p>Getter for the field <code>subGraphStartVertexKey</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getSubGraphStartVertexKey() {
         return subGraphStartVertexKey;
     }
 
+    /**
+     * <p>Setter for the field <code>subGraphStartVertexKey</code>.</p>
+     *
+     * @param subGraphStartVertexKey a {@link java.lang.String} object.
+     */
     public void setSubGraphStartVertexKey(String subGraphStartVertexKey) {
         this.subGraphStartVertexKey = subGraphStartVertexKey;
     }
 
+    /**
+     * <p>Getter for the field <code>motherStartVertexKey</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getMotherStartVertexKey() {
         return motherStartVertexKey;
     }
 
+    /**
+     * <p>Setter for the field <code>motherStartVertexKey</code>.</p>
+     *
+     * @param motherStartVertexKey a {@link java.lang.String} object.
+     */
     public void setMotherStartVertexKey(String motherStartVertexKey) {
         this.motherStartVertexKey = motherStartVertexKey;
     }
 
     /**
-     * @param str
-     * @return
+     * <p>getLabel.</p>
+     *
+     * @param str a {@link java.lang.String} object.
+     * @return a {@link java.lang.String} object.
      */
     static public String getLabel(String str) {
         Pattern p;
@@ -160,18 +236,38 @@ public class Vertex extends AbstractElement {
         return label;
     }
 
+    /**
+     * <p>isSwitchModelKey.</p>
+     *
+     * @return a boolean.
+     */
     public boolean isSwitchModelKey() {
         return switchModelKey;
     }
 
+    /**
+     * <p>Setter for the field <code>switchModelKey</code>.</p>
+     *
+     * @param switchModel a {@link java.lang.Boolean} object.
+     */
     public void setSwitchModelKey(Boolean switchModel) {
         this.switchModelKey = switchModel;
     }
 
+    /**
+     * <p>isGraphVertex.</p>
+     *
+     * @return a boolean.
+     */
     public boolean isGraphVertex() {
         return graphVertex;
     }
 
+    /**
+     * <p>Setter for the field <code>graphVertex</code>.</p>
+     *
+     * @param graphVertex a boolean.
+     */
     public void setGraphVertex(boolean graphVertex) {
         this.graphVertex = graphVertex;
     }

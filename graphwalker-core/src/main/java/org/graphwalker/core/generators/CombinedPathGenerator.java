@@ -32,6 +32,12 @@ import org.graphwalker.core.machines.FiniteStateMachine;
 
 import java.util.Vector;
 
+/**
+ * <p>CombinedPathGenerator class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public class CombinedPathGenerator extends AbstractPathGenerator {
 
     private static Logger logger = Logger.getLogger(CombinedPathGenerator.class);
@@ -39,19 +45,33 @@ public class CombinedPathGenerator extends AbstractPathGenerator {
     private Vector<PathGenerator> generatorList = new Vector<PathGenerator>();
     private int currentGenerator = 0;
 
+    /**
+     * <p>Constructor for CombinedPathGenerator.</p>
+     */
     public CombinedPathGenerator() {
         super();
     }
 
+    /**
+     * <p>Constructor for CombinedPathGenerator.</p>
+     *
+     * @param stopCondition a {@link org.graphwalker.core.conditions.StopCondition} object.
+     */
     public CombinedPathGenerator(StopCondition stopCondition) {
         super(stopCondition);
     }
 
+    /**
+     * <p>addPathGenerator.</p>
+     *
+     * @param generator a {@link org.graphwalker.core.generators.PathGenerator} object.
+     */
     public void addPathGenerator(PathGenerator generator) {
         logger.debug("Adding PathGenerator: " + generator);
         generatorList.add(generator);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setMachine(FiniteStateMachine machine) {
         for (PathGenerator aGeneratorList : generatorList) {
@@ -59,6 +79,7 @@ public class CombinedPathGenerator extends AbstractPathGenerator {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setStopCondition(StopCondition stopCondition) {
         for (PathGenerator aGeneratorList : generatorList) {
@@ -79,6 +100,7 @@ public class CombinedPathGenerator extends AbstractPathGenerator {
         currentGenerator++;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean hasNext() {
         boolean nextIsAvailable = false;
@@ -90,6 +112,7 @@ public class CombinedPathGenerator extends AbstractPathGenerator {
         return nextIsAvailable;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String[] getNext() throws InterruptedException {
         String[] retur = {"", ""};
@@ -105,6 +128,7 @@ public class CombinedPathGenerator extends AbstractPathGenerator {
         return getActivePathGenerator().getNext();
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();

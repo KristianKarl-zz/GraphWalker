@@ -66,6 +66,7 @@ import java.util.regex.Pattern;
  * The object handles the test case generation, both online and offline.
  *
  * @author krikar
+ * @version $Id: $
  */
 public class ModelBasedTesting {
     private static Logger logger = Util.setupLogger(ModelBasedTesting.class);
@@ -100,14 +101,27 @@ public class ModelBasedTesting {
      */
     private boolean manualTestSequence = false;
 
+    /**
+     * <p>isManualTestSequence.</p>
+     *
+     * @return a boolean.
+     */
     public boolean isManualTestSequence() {
         return manualTestSequence;
     }
 
+    /**
+     * <p>Setter for the field <code>manualTestSequence</code>.</p>
+     *
+     * @param manualTestSequence a boolean.
+     */
     public void setManualTestSequence(boolean manualTestSequence) {
         this.manualTestSequence = manualTestSequence;
     }
 
+    /**
+     * <p>Constructor for ModelBasedTesting.</p>
+     */
     public ModelBasedTesting() {
     }
 
@@ -121,6 +135,11 @@ public class ModelBasedTesting {
         private static final ModelBasedTesting INSTANCE = new ModelBasedTesting();
     }
 
+    /**
+     * <p>getInstance.</p>
+     *
+     * @return a {@link org.graphwalker.core.ModelBasedTesting} object.
+     */
     @SuppressWarnings("synthetic-access")
     public static ModelBasedTesting getInstance() {
         return ModelBasedTestingHolder.INSTANCE;
@@ -154,28 +173,56 @@ public class ModelBasedTesting {
         thisThread = null;
     }
 
+    /**
+     * <p>reload.</p>
+     */
     public void reload() {
         machine.setAllUnvisited();
     }
 
+    /**
+     * <p>isUseGUI.</p>
+     *
+     * @return a boolean.
+     */
     public boolean isUseGUI() {
         return useGUI;
     }
 
+    /**
+     * <p>Setter for the field <code>useGUI</code>.</p>
+     *
+     * @param application a {@link org.graphwalker.core.Application} object.
+     */
     public void setUseGUI(Application application) {
         useGUI = true;
         notifyApp = (MbtEvent) application;
         this.application = application;
     }
 
+    /**
+     * <p>getGui.</p>
+     *
+     * @return a {@link org.graphwalker.core.Application} object.
+     */
     public Application getGui() {
         return application;
     }
 
+    /**
+     * <p>isDryRun.</p>
+     *
+     * @return a boolean.
+     */
     public boolean isDryRun() {
         return dryRun;
     }
 
+    /**
+     * <p>Setter for the field <code>dryRun</code>.</p>
+     *
+     * @param dryRun a boolean.
+     */
     public void setDryRun(boolean dryRun) {
         this.dryRun = dryRun;
     }
@@ -197,6 +244,8 @@ public class ModelBasedTesting {
     }
 
     /**
+     * <p>Getter for the field <code>statisticsManager</code>.</p>
+     *
      * @return the statisticsManager
      */
     public StatisticsManager getStatisticsManager() {
@@ -209,6 +258,11 @@ public class ModelBasedTesting {
         return this.statisticsManager;
     }
 
+    /**
+     * <p>Getter for the field <code>machine</code>.</p>
+     *
+     * @return a {@link org.graphwalker.core.machines.FiniteStateMachine} object.
+     */
     public FiniteStateMachine getMachine() {
         if (this.machine == null) {
             setMachine(new FiniteStateMachine());
@@ -227,7 +281,7 @@ public class ModelBasedTesting {
     /**
      * Return the instance of the graph
      *
-     * @return
+     * @return a {@link org.graphwalker.core.graph.Graph} object.
      */
     public Graph getGraph() {
         if (this.modelHandler == null)
@@ -235,6 +289,11 @@ public class ModelBasedTesting {
         return this.modelHandler.getModel();
     }
 
+    /**
+     * <p>setGraph.</p>
+     *
+     * @param graph a {@link org.graphwalker.core.graph.Graph} object.
+     */
     public void setGraph(Graph graph) {
         if (this.modelHandler == null) {
             this.modelHandler = new GraphML();
@@ -247,7 +306,7 @@ public class ModelBasedTesting {
     /**
      * Returns the current future object in the test.
      *
-     * @return
+     * @return a {@link java.util.concurrent.Future} object.
      */
     public Future<?> getFuture() {
         return future;
@@ -257,7 +316,7 @@ public class ModelBasedTesting {
      * Sets the future for the model. The execution of the path will be paused
      * until the future is done.
      *
-     * @param future
+     * @param future a {@link java.util.concurrent.Future} object.
      */
     public void setFuture(Future<?> future) {
         this.future = future;
@@ -270,7 +329,7 @@ public class ModelBasedTesting {
      * @return The value of the data object. The value is always returned a s
      *         string. It is the calling parties task to parse the string and
      *         convert it to correct type.
-     * @throws InvalidDataException If the retrieval of the data fails, the InvalidDataException is
+     * @throws org.graphwalker.core.exceptions.InvalidDataException If the retrieval of the data fails, the org.graphwalker.core.exceptions.InvalidDataException is
      *                              thrown. For example if a FiniteStateMachine is used, which has no
      *                              data space, the exception is thrown.
      */
@@ -290,7 +349,7 @@ public class ModelBasedTesting {
      * @return The value of the data object's method. The value is always returned
      *         a s string. It is the calling parties task to parse the string and
      *         convert it to correct type.
-     * @throws InvalidDataException If the retrieval of the data fails, the InvalidDataException is
+     * @throws org.graphwalker.core.exceptions.InvalidDataException If the retrieval of the data fails, the org.graphwalker.core.exceptions.InvalidDataException is
      *                              thrown. For example if a FiniteStateMachine is used, which has no
      *                              data space, the exception is thrown.
      */
@@ -364,6 +423,11 @@ public class ModelBasedTesting {
         getMachine().populateReqHashMap();
     }
 
+    /**
+     * <p>enableJsScriptEngine.</p>
+     *
+     * @param enableJs a boolean.
+     */
     public void enableJsScriptEngine(boolean enableJs) {
         if (enableJs)
             useJsScriptEngine = true;
@@ -371,6 +435,11 @@ public class ModelBasedTesting {
             useJsScriptEngine = false;
     }
 
+    /**
+     * <p>enableExtended.</p>
+     *
+     * @param extended a boolean.
+     */
     public void enableExtended(boolean extended) {
         if (extended) {
             setMachine(new ExtendedFiniteStateMachine(useJsScriptEngine));
@@ -383,6 +452,11 @@ public class ModelBasedTesting {
         }
     }
 
+    /**
+     * <p>Setter for the field <code>generator</code>.</p>
+     *
+     * @param generator a {@link org.graphwalker.core.generators.PathGenerator} object.
+     */
     public void setGenerator(PathGenerator generator) {
         this.generator = generator;
 
@@ -392,14 +466,30 @@ public class ModelBasedTesting {
             ((CodeGenerator) generator).setTemplate(this.template);
     }
 
+    /**
+     * <p>Setter for the field <code>generator</code>.</p>
+     *
+     * @param generatorType a int.
+     * @throws org.graphwalker.core.exceptions.GeneratorException if any.
+     */
     public void setGenerator(int generatorType) throws GeneratorException {
         setGenerator(Util.getGenerator(generatorType));
     }
 
+    /**
+     * <p>Getter for the field <code>generator</code>.</p>
+     *
+     * @return a {@link org.graphwalker.core.generators.PathGenerator} object.
+     */
     public PathGenerator getGenerator() {
         return this.generator;
     }
 
+    /**
+     * <p>hasNextStep.</p>
+     *
+     * @return a boolean.
+     */
     public boolean hasNextStep() {
         if (this.machine == null) {
             getMachine();
@@ -409,6 +499,12 @@ public class ModelBasedTesting {
         return getGenerator().hasNext();
     }
 
+    /**
+     * <p>getNextStep.</p>
+     *
+     * @return an array of {@link java.lang.String} objects.
+     * @throws java.lang.InterruptedException if any.
+     */
     public String[] getNextStep() throws InterruptedException {
         if (isUseGUI()) {
 
@@ -482,6 +578,11 @@ public class ModelBasedTesting {
         }
     }
 
+    /**
+     * <p>getCurrentVertexName.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getCurrentVertexName() {
         if (this.machine != null)
             return getMachine().getCurrentVertexName();
@@ -489,6 +590,11 @@ public class ModelBasedTesting {
         return "";
     }
 
+    /**
+     * <p>getCurrentEdgeName.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getCurrentEdgeName() {
         if (this.machine != null)
             return getMachine().getLastEdgeName();
@@ -496,6 +602,11 @@ public class ModelBasedTesting {
         return "";
     }
 
+    /**
+     * <p>readGraph.</p>
+     *
+     * @param graphmlFileName a {@link java.lang.String} object.
+     */
     public void readGraph(String graphmlFileName) {
         if (this.modelHandler == null) {
             this.modelHandler = new GraphML();
@@ -511,10 +622,21 @@ public class ModelBasedTesting {
         }
     }
 
+    /**
+     * <p>writeModel.</p>
+     *
+     * @param ps a {@link java.io.PrintStream} object.
+     * @param printIndex a boolean.
+     */
     public void writeModel(PrintStream ps, boolean printIndex) {
         this.modelHandler.save(ps, printIndex);
     }
 
+    /**
+     * <p>getStatisticsString.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getStatisticsString() {
         if (this.machine != null) {
             return getMachine().getStatisticsString();
@@ -523,6 +645,11 @@ public class ModelBasedTesting {
         return "";
     }
 
+    /**
+     * <p>getVersionString.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getVersionString() {
         Properties properties = new Properties();
         InputStream inputStream = null;
@@ -554,6 +681,11 @@ public class ModelBasedTesting {
         return stringBuilder.toString();
     }
 
+    /**
+     * <p>getStatisticsCompact.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getStatisticsCompact() {
         if (this.machine != null) {
             return getMachine().getStatisticsStringCompact();
@@ -562,6 +694,11 @@ public class ModelBasedTesting {
         return "";
     }
 
+    /**
+     * <p>getStatisticsVerbose.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getStatisticsVerbose() {
         if (this.machine != null) {
             return getMachine().getStatisticsVerbose();
@@ -570,6 +707,11 @@ public class ModelBasedTesting {
         return "";
     }
 
+    /**
+     * <p>Setter for the field <code>template</code>.</p>
+     *
+     * @param template an array of {@link java.lang.String} objects.
+     */
     public void setTemplate(String[] template) {
         this.template = template.clone();
 
@@ -578,6 +720,12 @@ public class ModelBasedTesting {
 
     }
 
+    /**
+     * <p>Setter for the field <code>template</code>.</p>
+     *
+     * @param templateFile a {@link java.lang.String} object.
+     * @throws java.io.IOException if any.
+     */
     public void setTemplate(String templateFile) throws IOException {
         String template = Util.readFile(Util.getFile(templateFile));
         String header = "", body = "", footer = "";
@@ -593,6 +741,11 @@ public class ModelBasedTesting {
         }
     }
 
+    /**
+     * <p>interractivePath.</p>
+     *
+     * @throws java.lang.InterruptedException if any.
+     */
     public void interractivePath() throws InterruptedException {
         interractivePath(System.in);
     }
@@ -664,6 +817,12 @@ public class ModelBasedTesting {
         return "";
     }
 
+    /**
+     * <p>logExecution.</p>
+     *
+     * @param element a {@link org.graphwalker.core.graph.AbstractElement} object.
+     * @param additionalInfo a {@link java.lang.String} object.
+     */
     public void logExecution(AbstractElement element, String additionalInfo) {
         String req = " " + getRequirement(element);
         if (element instanceof Edge) {
@@ -674,14 +833,29 @@ public class ModelBasedTesting {
         }
     }
 
+    /**
+     * <p>Setter for the field <code>javaExecutorClass</code>.</p>
+     *
+     * @param executorClass a {@link java.lang.String} object.
+     */
     public void setJavaExecutorClass(String executorClass) {
         javaExecutorClass = executorClass;
     }
 
+    /**
+     * <p>Getter for the field <code>javaExecutorClass</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getJavaExecutorClass() {
         return javaExecutorClass;
     }
 
+    /**
+     * <p>executePath.</p>
+     *
+     * @throws java.lang.InterruptedException if any.
+     */
     public void executePath() throws InterruptedException {
         if (getJavaExecutorClass() != null) {
             logger.debug("Start executing, using the java class: " + getJavaExecutorClass());
@@ -707,6 +881,12 @@ public class ModelBasedTesting {
         }
     }
 
+    /**
+     * <p>executePath.</p>
+     *
+     * @param clsClass a {@link java.lang.Class} object.
+     * @throws java.lang.InterruptedException if any.
+     */
     public void executePath(Class<?> clsClass) throws InterruptedException {
         if (clsClass == null) {
             throw new RuntimeException("Needed execution class is missing as parameter.");
@@ -714,6 +894,12 @@ public class ModelBasedTesting {
         executePath(clsClass, null);
     }
 
+    /**
+     * <p>executePath.</p>
+     *
+     * @param objInstance a {@link java.lang.Object} object.
+     * @throws java.lang.InterruptedException if any.
+     */
     public void executePath(Object objInstance) throws InterruptedException {
         if (objInstance == null) {
             throw new RuntimeException("Needed execution instance is missing as parameter.");
@@ -725,6 +911,12 @@ public class ModelBasedTesting {
         executePath(null, objInstance);
     }
 
+    /**
+     * <p>executePath.</p>
+     *
+     * @param strClassName a {@link java.lang.String} object.
+     * @throws java.lang.InterruptedException if any.
+     */
     public void executePath(String strClassName) throws InterruptedException {
         if (getJavaExecutorClass() == null) {
             setJavaExecutorClass(strClassName);
@@ -759,6 +951,13 @@ public class ModelBasedTesting {
         executePath(clsClass, null);
     }
 
+    /**
+     * <p>executePath.</p>
+     *
+     * @param clsClass a {@link java.lang.Class} object.
+     * @param objInstance a {@link java.lang.Object} object.
+     * @throws java.lang.InterruptedException if any.
+     */
     public void executePath(Class<?> clsClass, Object objInstance) throws InterruptedException {
         try {
             thisThread = Thread.currentThread();
@@ -974,10 +1173,21 @@ public class ModelBasedTesting {
         }
     }
 
+    /**
+     * <p>writePath.</p>
+     *
+     * @throws java.lang.InterruptedException if any.
+     */
     public void writePath() throws InterruptedException {
         writePath(System.out);
     }
 
+    /**
+     * <p>writePath.</p>
+     *
+     * @param testSequence a {@link java.util.Vector} object.
+     * @throws java.lang.InterruptedException if any.
+     */
     public void writePath(Vector<String[]> testSequence) throws InterruptedException {
         if (this.machine == null) {
             getMachine();
@@ -1012,6 +1222,12 @@ public class ModelBasedTesting {
         return parsedStr;
     }
 
+    /**
+     * <p>writePath.</p>
+     *
+     * @param out a {@link java.io.PrintStream} object.
+     * @throws java.lang.InterruptedException if any.
+     */
     public void writePath(PrintStream out) throws InterruptedException {
         if (this.machine == null) {
             getMachine();
@@ -1038,7 +1254,9 @@ public class ModelBasedTesting {
     }
 
     /**
-     * @param script
+     * <p>Setter for the field <code>startupScript</code>.</p>
+     *
+     * @param script a {@link java.lang.String} object.
      */
     public void setStartupScript(String script) {
         this.startupScript = script;
@@ -1052,21 +1270,34 @@ public class ModelBasedTesting {
     }
 
     /**
+     * <p>Getter for the field <code>startupScript</code>.</p>
+     *
      * @return the startupScript
      */
     public String getStartupScript() {
         return this.startupScript;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return getGenerator().toString();
     }
 
+    /**
+     * <p>setWeighted.</p>
+     *
+     * @param b a boolean.
+     */
     public void setWeighted(boolean b) {
         getMachine().setWeighted(b);
     }
 
+    /**
+     * <p>getCurrentEdge.</p>
+     *
+     * @return a {@link org.graphwalker.core.graph.Edge} object.
+     */
     public Edge getCurrentEdge() {
         if (this.machine != null)
             return getMachine().getLastEdge();
@@ -1074,6 +1305,11 @@ public class ModelBasedTesting {
         return null;
     }
 
+    /**
+     * <p>getCurrentVertex.</p>
+     *
+     * @return a {@link org.graphwalker.core.graph.Vertex} object.
+     */
     public Vertex getCurrentVertex() {
         if (this.machine != null)
             return getMachine().getCurrentVertex();
@@ -1117,24 +1353,51 @@ public class ModelBasedTesting {
         return false;
     }
 
+    /**
+     * <p>isUseStatisticsManager.</p>
+     *
+     * @return a boolean.
+     */
     public boolean isUseStatisticsManager() {
         return useStatisticsManager;
     }
 
+    /**
+     * <p>Setter for the field <code>useStatisticsManager</code>.</p>
+     *
+     * @param useStatisticsManager a boolean.
+     */
     public void setUseStatisticsManager(boolean useStatisticsManager) {
         this.useStatisticsManager = useStatisticsManager;
     }
 
+    /**
+     * <p>setAsVisited.</p>
+     *
+     * @param index a {@link java.lang.Integer} object.
+     * @return a {@link org.graphwalker.core.graph.AbstractElement} object.
+     */
     public AbstractElement setAsVisited(Integer index) {
         AbstractElement e = getMachine().findElement(index);
         e.setVisitedKey(e.getVisitedKey() + 1);
         return e;
     }
 
+    /**
+     * <p>setCurrentVertex.</p>
+     *
+     * @param vertex a {@link org.graphwalker.core.graph.Vertex} object.
+     */
     public void setCurrentVertex(Vertex vertex) {
         getMachine().setVertex(vertex);
     }
 
+    /**
+     * <p>decrementVisited.</p>
+     *
+     * @param index a {@link java.lang.Integer} object.
+     * @return a {@link org.graphwalker.core.graph.AbstractElement} object.
+     */
     public AbstractElement decrementVisited(Integer index) {
         AbstractElement e = getMachine().findElement(index);
         if (e.getVisitedKey() > 0)
@@ -1142,10 +1405,16 @@ public class ModelBasedTesting {
         return e;
     }
 
+    /**
+     * <p>setAllUnvisited.</p>
+     */
     public void setAllUnvisited() {
         getMachine().setAllUnvisited();
     }
 
+    /**
+     * <p>stop.</p>
+     */
     public synchronized void stop() {
         logger.debug("Will stop the excution of the model: " + getGraph());
         finishedFlag = true;
@@ -1153,24 +1422,38 @@ public class ModelBasedTesting {
         notifyAll();
     }
 
+    /**
+     * <p>suspend.</p>
+     */
     public synchronized void suspend() {
         logger.debug("Will suspend the excution of the model.");
         threadSuspended = true;
         notifyAll();
     }
 
+    /**
+     * <p>resume.</p>
+     */
     public synchronized void resume() {
         logger.debug("Will resume the excution of the model " + getGraph());
         threadSuspended = false;
         notifyAll();
     }
 
+    /**
+     * <p>setRunning.</p>
+     */
     public synchronized void setRunning() {
         thisThread = Thread.currentThread();
         stopFlag = thisThread;
         notifyAll();
     }
 
+    /**
+     * <p>isRunning.</p>
+     *
+     * @return a boolean.
+     */
     public boolean isRunning() {
         if (hasStartedExecution) {
             if (stopFlag == thisThread) {
@@ -1182,6 +1465,11 @@ public class ModelBasedTesting {
         return false;
     }
 
+    /**
+     * <p>isSuspended.</p>
+     *
+     * @return a boolean.
+     */
     public boolean isSuspended() {
         if (stopFlag == thisThread) {
             if (threadSuspended) {
@@ -1191,23 +1479,48 @@ public class ModelBasedTesting {
         return false;
     }
 
+    /**
+     * <p>isFinished.</p>
+     *
+     * @return a boolean.
+     */
     public boolean isFinished() {
         return hasStartedExecution && finishedFlag;
     }
 
+    /**
+     * <p>hasNotStartedExecution.</p>
+     *
+     * @return a boolean.
+     */
     public boolean hasNotStartedExecution() {
         return !hasStartedExecution;
     }
 
+    /**
+     * <p>Getter for the field <code>multiModelHandler</code>.</p>
+     *
+     * @return a {@link org.graphwalker.core.multipleModels.ModelHandler} object.
+     */
     public ModelHandler getMultiModelHandler() {
         return multiModelHandler;
     }
 
+    /**
+     * <p>Setter for the field <code>multiModelHandler</code>.</p>
+     *
+     * @param modelHandler a {@link org.graphwalker.core.multipleModels.ModelHandler} object.
+     */
     public void setMultiModelHandler(ModelHandler modelHandler) {
         logger.debug("Will change multiModelHandler from: " + this.multiModelHandler + ", to: " + modelHandler);
         this.multiModelHandler = modelHandler;
     }
 
+    /**
+     * <p>isCulDeSac.</p>
+     *
+     * @return a boolean.
+     */
     public boolean isCulDeSac() {
         try {
             getMachine().getCurrentOutEdges();

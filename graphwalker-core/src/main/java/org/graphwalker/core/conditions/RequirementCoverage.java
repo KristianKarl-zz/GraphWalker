@@ -28,19 +28,34 @@ package org.graphwalker.core.conditions;
 
 import org.graphwalker.core.Util;
 
+/**
+ * <p>RequirementCoverage class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public class RequirementCoverage extends AbstractStopCondition {
 
     private double limit;
 
+    /**
+     * <p>Constructor for RequirementCoverage.</p>
+     */
     public RequirementCoverage() {
         this(1);
     }
 
+    /**
+     * <p>Constructor for RequirementCoverage.</p>
+     *
+     * @param limit a double.
+     */
     public RequirementCoverage(double limit) {
         Util.AbortIf((limit > 1 || limit < 0), "Requirement coverage must be between 0 and 100");
         this.limit = limit;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean isFulfilled() {
         int stats[] = getMachine().getStatistics();
@@ -49,6 +64,7 @@ public class RequirementCoverage extends AbstractStopCondition {
         return (covered / requirements) >= limit;
     }
 
+    /** {@inheritDoc} */
     @Override
     public double getFulfilment() {
         int stats[] = getMachine().getStatistics();
@@ -57,6 +73,7 @@ public class RequirementCoverage extends AbstractStopCondition {
         return (covered / requirements) / limit;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return "RC>=" + (int) (100 * limit);

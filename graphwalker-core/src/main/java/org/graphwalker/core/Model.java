@@ -29,20 +29,37 @@ package org.graphwalker.core;
 import java.util.Observable;
 import java.util.Observer;
 
+/**
+ * <p>Model class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public class Model implements Observer {
 
     ModelBasedTesting mbt;
 
+    /** {@inheritDoc} */
     @Override
     public void update(Observable o, Object arg) {
         // TODO Auto-generated method stub
 
     }
 
+    /**
+     * <p>Getter for the field <code>mbt</code>.</p>
+     *
+     * @return a {@link org.graphwalker.core.ModelBasedTesting} object.
+     */
     public ModelBasedTesting getMbt() {
         return mbt;
     }
 
+    /**
+     * <p>Setter for the field <code>mbt</code>.</p>
+     *
+     * @param mbt a {@link org.graphwalker.core.ModelBasedTesting} object.
+     */
     public void setMbt(ModelBasedTesting mbt) {
         this.mbt = mbt;
     }

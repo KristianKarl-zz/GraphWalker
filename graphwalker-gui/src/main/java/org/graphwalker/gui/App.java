@@ -108,6 +108,12 @@ import edu.uci.ics.jung.visualization.picking.ShapePickSupport;
 import edu.uci.ics.jung.visualization.renderers.Renderer;
 import edu.uci.ics.jung.visualization.util.Animator;
 
+/**
+ * <p>App class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public class App extends JFrame implements ActionListener, MbtEvent, Application {
 	/**
 	 * 
@@ -154,19 +160,39 @@ public class App extends JFrame implements ActionListener, MbtEvent, Application
 	private Vector<ParseLog.LoggedItem> parsedLogFile = null;
 	private Integer currentStep = null;
 
+	/**
+	 * <p>Getter for the field <code>status</code>.</p>
+	 *
+	 * @return a {@link org.graphwalker.core.Status} object.
+	 */
 	public Status getStatus() {
 		return status;
 	}
 
+	/**
+	 * <p>Setter for the field <code>status</code>.</p>
+	 *
+	 * @param status a {@link org.graphwalker.core.Status} object.
+	 */
 	public void setStatus(Status status) {
 		this.status = status;
 		setButtons();
 	}
 
+	/**
+	 * <p>Getter for the field <code>mbt</code>.</p>
+	 *
+	 * @return a {@link org.graphwalker.core.ModelBasedTesting} object.
+	 */
 	public ModelBasedTesting getMbt() {
 		return mbt;
 	}
 
+	/**
+	 * <p>Setter for the field <code>mbt</code>.</p>
+	 *
+	 * @param mbt a {@link org.graphwalker.core.ModelBasedTesting} object.
+	 */
 	public void setMbt(ModelBasedTesting mbt) {
 		this.mbt = mbt;
 	}
@@ -258,6 +284,7 @@ public class App extends JFrame implements ActionListener, MbtEvent, Application
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void getNextEvent() {
 		updateUI();
@@ -267,6 +294,7 @@ public class App extends JFrame implements ActionListener, MbtEvent, Application
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		String cmd = e.getActionCommand();
@@ -351,6 +379,9 @@ public class App extends JFrame implements ActionListener, MbtEvent, Application
 		variablesTextArea.setText(str);
 	}
 
+	/**
+	 * <p>setButtons.</p>
+	 */
 	public void setButtons() {
 		if (status.isStopped()) {
 			loadButton.setEnabled(true);
@@ -488,6 +519,9 @@ public class App extends JFrame implements ActionListener, MbtEvent, Application
 		setDefaultCursor();
 	}
 
+	/**
+	 * <p>run.</p>
+	 */
 	public void run() {
 		status.unsetState(Status.stopped);
 		if (status.isExecutingSoapTest()) {
@@ -499,6 +533,7 @@ public class App extends JFrame implements ActionListener, MbtEvent, Application
 		setButtons();
 	}
 
+	/** {@inheritDoc} */
 	public void executingJavaTest(boolean executingJavaTest) {
 		if (executingJavaTest) {
 			status.setState(Status.executingJavaTest);
@@ -544,6 +579,9 @@ public class App extends JFrame implements ActionListener, MbtEvent, Application
 		setButtons();
 	}
 
+	/**
+	 * <p>pause.</p>
+	 */
 	public void pause() {
 		status.unsetState(Status.stopped);
 		status.unsetState(Status.running);
@@ -674,6 +712,11 @@ public class App extends JFrame implements ActionListener, MbtEvent, Application
 		loadModel();
 	}
 
+	/**
+	 * <p>Setter for the field <code>graphLayout</code>.</p>
+	 *
+	 * @param graphLayout a {@link edu.uci.ics.jung.algorithms.layout.Layout} object.
+	 */
 	public void setGraphLayout(Layout<Vertex, Edge> graphLayout) {
 		logger.debug("setLayout using: " + graphLayout.toString());
 		this.graphLayout = graphLayout;
@@ -688,6 +731,11 @@ public class App extends JFrame implements ActionListener, MbtEvent, Application
 		this.graphLayout.setInitializer(vertexLocation);
 	}
 
+	/**
+	 * <p>Getter for the field <code>vv</code>.</p>
+	 *
+	 * @return a {@link edu.uci.ics.jung.visualization.VisualizationViewer} object.
+	 */
 	public VisualizationViewer<Vertex, Edge> getVv() {
 		return vv;
 	}
@@ -700,6 +748,9 @@ public class App extends JFrame implements ActionListener, MbtEvent, Application
 		setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 	}
 
+	/**
+	 * <p>updateLayout.</p>
+	 */
 	public void updateLayout() {
 		if (mbt == null || mbt.getGraph() == null) {
 			return;
@@ -1071,15 +1122,28 @@ public class App extends JFrame implements ActionListener, MbtEvent, Application
 		private static final App INSTANCE = new App();
 	}
 
+	/**
+	 * <p>getInstance.</p>
+	 *
+	 * @return a {@link org.graphwalker.gui.App} object.
+	 */
 	@SuppressWarnings("synthetic-access")
 	public static App getInstance() {
 		return AppHolder.INSTANCE;
 	}
 
+	/**
+	 * <p>main.</p>
+	 */
 	public static void main() {
 		App.getInstance();
 	}
 
+	/**
+	 * <p>main.</p>
+	 *
+	 * @param args an array of {@link java.lang.String} objects.
+	 */
 	public static void main(String args[]) {
 		if (args != null && args.length == 1) {
 			App.getInstance().setXmlFile(new File(args[0]));
@@ -1090,30 +1154,65 @@ public class App extends JFrame implements ActionListener, MbtEvent, Application
 		App.getInstance();
 	}
 
+	/**
+	 * <p>Setter for the field <code>latestVertexLabel</code>.</p>
+	 *
+	 * @param latestVertexLabel a {@link javax.swing.JLabel} object.
+	 */
 	public void setLatestVertexLabel(JLabel latestVertexLabel) {
 		this.latestVertexLabel = latestVertexLabel;
 	}
 
+	/**
+	 * <p>Getter for the field <code>latestVertexLabel</code>.</p>
+	 *
+	 * @return a {@link javax.swing.JLabel} object.
+	 */
 	public JLabel getLatestVertexLabel() {
 		return latestVertexLabel;
 	}
 
+	/**
+	 * <p>Getter for the field <code>xmlFile</code>.</p>
+	 *
+	 * @return a {@link java.io.File} object.
+	 */
 	public File getXmlFile() {
 		return xmlFile;
 	}
 
+	/**
+	 * <p>Getter for the field <code>graphLayout</code>.</p>
+	 *
+	 * @return a {@link edu.uci.ics.jung.algorithms.layout.Layout} object.
+	 */
 	public Layout<Vertex, Edge> getGraphLayout() {
 		return graphLayout;
 	}
 
+	/**
+	 * <p>Setter for the field <code>xmlFile</code>.</p>
+	 *
+	 * @param xmlFile a {@link java.io.File} object.
+	 */
 	public void setXmlFile(File xmlFile) {
 		this.xmlFile = xmlFile;
 	}
 
+	/**
+	 * <p>Setter for the field <code>graphmlFile</code>.</p>
+	 *
+	 * @param graphmlFile a {@link java.io.File} object.
+	 */
 	public void setGraphmlFile(File graphmlFile) {
 		this.graphmlFile = graphmlFile;
 	}
 
+	/**
+	 * <p>Setter for the field <code>logFile</code>.</p>
+	 *
+	 * @param logFile a {@link java.io.File} object.
+	 */
 	public void setLogFile(File logFile) {
 		this.logFile = logFile;
 	}

@@ -32,28 +32,59 @@ import org.graphwalker.core.machines.FiniteStateMachine;
 
 import java.util.Set;
 
+/**
+ * <p>Abstract AbstractPathGenerator class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public abstract class AbstractPathGenerator implements PathGenerator {
 
     private FiniteStateMachine machine;
     private StopCondition stopCondition;
 
+    /**
+     * <p>getNext.</p>
+     *
+     * @return an array of {@link java.lang.String} objects.
+     * @throws java.lang.InterruptedException if any.
+     */
     public abstract String[] getNext() throws InterruptedException;
 
+    /**
+     * <p>Constructor for AbstractPathGenerator.</p>
+     */
     public AbstractPathGenerator() {
     }
 
+    /**
+     * <p>Constructor for AbstractPathGenerator.</p>
+     *
+     * @param stopCondition a {@link org.graphwalker.core.conditions.StopCondition} object.
+     */
     public AbstractPathGenerator(StopCondition stopCondition) {
         this.stopCondition = stopCondition;
     }
 
+    /**
+     * <p>hasNext.</p>
+     *
+     * @return a boolean.
+     */
     public boolean hasNext() {
         return !stopCondition.isFulfilled();
     }
 
+    /**
+     * <p>Getter for the field <code>machine</code>.</p>
+     *
+     * @return a {@link org.graphwalker.core.machines.FiniteStateMachine} object.
+     */
     public FiniteStateMachine getMachine() {
         return machine;
     }
 
+    /** {@inheritDoc} */
     public void setMachine(FiniteStateMachine machine) {
         this.machine = machine;
         if (this.stopCondition != null) {
@@ -61,6 +92,7 @@ public abstract class AbstractPathGenerator implements PathGenerator {
         }
     }
 
+    /** {@inheritDoc} */
     public void setStopCondition(StopCondition stopCondition) {
         this.stopCondition = stopCondition;
         if (this.machine != null) {
@@ -68,11 +100,18 @@ public abstract class AbstractPathGenerator implements PathGenerator {
         }
     }
 
+    /**
+     * <p>Getter for the field <code>stopCondition</code>.</p>
+     *
+     * @return a {@link org.graphwalker.core.conditions.StopCondition} object.
+     */
     public StopCondition getStopCondition() {
         return stopCondition;
     }
 
     /**
+     * <p>getConditionFulfilment.</p>
+     *
      * @return the condition fulfilment
      */
     public double getConditionFulfilment() {
@@ -85,6 +124,7 @@ public abstract class AbstractPathGenerator implements PathGenerator {
     public void reset() {
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         if (getStopCondition() != null)
@@ -92,6 +132,7 @@ public abstract class AbstractPathGenerator implements PathGenerator {
         return "";
     }
 
+    /** {@inheritDoc} */
     public boolean isEdgeAvailable(Edge edge) {
         Set<Edge> availableEdges;
         try {

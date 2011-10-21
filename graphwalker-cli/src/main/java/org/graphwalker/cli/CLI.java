@@ -107,6 +107,9 @@ import java.util.Vector;
  * </pre>
  * <p/>
  * <br>
+ *
+ * @author nilols
+ * @version $Id: $
  */
 public class CLI {
 
@@ -129,6 +132,9 @@ public class CLI {
     private Options opt = new Options();
     private static Endpoint endpoint = null;
 
+    /**
+     * <p>Constructor for CLI.</p>
+     */
     public CLI() {
         mbt = new ModelBasedTesting();
     }
@@ -144,6 +150,11 @@ public class CLI {
         this.mbt = mbt;
     }
 
+    /**
+     * <p>main.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     */
     public static void main(String[] args) {
         CLI cli = new CLI();
         Thread shutDownThread = new CLI.VerboseStatisticsLogger(cli.getMbt());
@@ -1052,6 +1063,15 @@ public class CLI {
      * @param cl
      * @throws IOException
      */
+    /*
+	private void RunCommandLog(CommandLine cl) throws IOException {
+		if (helpNeeded("log", !cl.hasOption("f"), "Missing the input graphml file (folder), See -f (--input_graphml)")
+		    || helpNeeded("log", !cl.hasOption("l"), "Missing the log file. See -l"))
+			return;
+
+		App.main(new String[] { cl.getOptionValue("f"), cl.getOptionValue("l") });
+	}
+    */
     /*
 	private void RunCommandLog(CommandLine cl) throws IOException {
 		if (helpNeeded("log", !cl.hasOption("f"), "Missing the input graphml file (folder), See -f (--input_graphml)")

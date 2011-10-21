@@ -38,6 +38,12 @@ import org.graphwalker.core.Util;
 import org.graphwalker.core.exceptions.InvalidDataException;
 
 @WebService
+/**
+ * <p>SoapServices class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public class SoapServices {
 
 	private static Logger logger = Util.setupLogger(SoapServices.class);
@@ -46,14 +52,28 @@ public class SoapServices {
 	private boolean hardStop = false;
 	public ModelBasedTesting mbt;
 
+	/**
+	 * <p>Constructor for SoapServices.</p>
+	 */
 	public SoapServices() {
 	}
 
+	/**
+	 * <p>Constructor for SoapServices.</p>
+	 *
+	 * @param mbt a {@link org.graphwalker.core.ModelBasedTesting} object.
+	 */
 	public SoapServices(ModelBasedTesting mbt) {
 		this.mbt = mbt;
 		Reset();
 	}
 
+	/**
+	 * <p>SetCurrentVertex.</p>
+	 *
+	 * @param newVertex a {@link java.lang.String} object.
+	 * @return a boolean.
+	 */
 	public boolean SetCurrentVertex(String newVertex) {
 		logger.debug("SOAP service SetCurrentVertex recieving: " + newVertex);
 		boolean value = mbt.setCurrentVertex(newVertex);
@@ -61,6 +81,12 @@ public class SoapServices {
 		return value;
 	}
 
+	/**
+	 * <p>GetDataValue.</p>
+	 *
+	 * @param data a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String GetDataValue(String data) {
 		logger.debug("SOAP service getDataValue recieving: " + data);
 		String value = "";
@@ -73,6 +99,12 @@ public class SoapServices {
 		return value;
 	}
 
+	/**
+	 * <p>ExecAction.</p>
+	 *
+	 * @param action a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String ExecAction(String action) {
 		logger.debug("SOAP service ExecAction recieving: " + action);
 		String value = "";
@@ -87,6 +119,11 @@ public class SoapServices {
 		return value;
 	}
 
+	/**
+	 * <p>PassRequirement.</p>
+	 *
+	 * @param pass a {@link java.lang.String} object.
+	 */
 	public void PassRequirement(String pass) {
 		logger.debug("SOAP service PassRequirement recieving: " + pass);
 		if ("TRUE".equalsIgnoreCase(pass)) {
@@ -98,6 +135,11 @@ public class SoapServices {
 		}
 	}
 
+	/**
+	 * <p>GetNextStep.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String GetNextStep() {
 		logger.debug("SOAP service getNextStep");
 		try {
@@ -140,6 +182,11 @@ public class SoapServices {
 		}
 	}
 
+	/**
+	 * <p>HasNextStep.</p>
+	 *
+	 * @return a boolean.
+	 */
 	public boolean HasNextStep() {
 		logger.debug("SOAP service hasNextStep");
 		boolean value = false;
@@ -155,6 +202,11 @@ public class SoapServices {
 		return value;
 	}
 
+	/**
+	 * <p>Reload.</p>
+	 *
+	 * @return a boolean.
+	 */
 	public boolean Reload() {
 		logger.debug("SOAP service reload");
 		boolean retValue = true;
@@ -181,6 +233,12 @@ public class SoapServices {
 		return retValue;
 	}
 
+	/**
+	 * <p>Load.</p>
+	 *
+	 * @param xmlFile a {@link java.lang.String} object.
+	 * @return a boolean.
+	 */
 	public boolean Load(String xmlFile) {
 		logger.debug("SOAP service load recieving: " + xmlFile);
 		if (xmlFile == null) {
@@ -216,6 +274,11 @@ public class SoapServices {
 		return retValue;
 	}
 
+	/**
+	 * <p>GetStatistics.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String GetStatistics() {
 		logger.debug("SOAP service getStatistics");
 		return mbt.getStatisticsVerbose();

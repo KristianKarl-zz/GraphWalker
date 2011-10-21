@@ -35,8 +35,19 @@ import org.graphwalker.core.machines.FiniteStateMachine;
 
 import java.util.*;
 
+/**
+ * <p>A_StarPathGenerator class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public class A_StarPathGenerator extends AbstractPathGenerator {
 
+    /**
+     * <p>Constructor for A_StarPathGenerator.</p>
+     *
+     * @param stopCondition a {@link org.graphwalker.core.conditions.StopCondition} object.
+     */
     public A_StarPathGenerator(StopCondition stopCondition) {
         super(stopCondition);
     }
@@ -44,15 +55,20 @@ public class A_StarPathGenerator extends AbstractPathGenerator {
     private Stack<Edge> preCalculatedPath = null;
     private Vertex lastVertex;
 
+    /** {@inheritDoc} */
     @Override
     public void setMachine(FiniteStateMachine machine) {
         super.setMachine(machine);
     }
 
+    /**
+     * <p>Constructor for A_StarPathGenerator.</p>
+     */
     public A_StarPathGenerator() {
         super();
     }
 
+    /** {@inheritDoc} */
     @Override
     public String[] getNext() throws InterruptedException {
         Util.AbortIf(!hasNext(), "Finished");
@@ -175,6 +191,8 @@ public class A_StarPathGenerator extends AbstractPathGenerator {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Will reset the generator to its initial vertex.
      */
     @Override
@@ -182,6 +200,7 @@ public class A_StarPathGenerator extends AbstractPathGenerator {
         preCalculatedPath = null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return "A_STAR{" + super.toString() + "}";

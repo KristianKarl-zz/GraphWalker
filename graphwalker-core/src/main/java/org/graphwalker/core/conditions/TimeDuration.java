@@ -30,32 +30,44 @@ package org.graphwalker.core.conditions;
  * Stops test execution after a certain amount of time has passed.
  *
  * @author Johan Tejle
+ * @version $Id: $
  */
 public class TimeDuration extends AbstractStopCondition {
 
     private double duration;
     private double start_time;
 
+    /** {@inheritDoc} */
     @Override
     public boolean isFulfilled() {
         return getFulfilment() >= 0.99999;
     }
 
+    /**
+     * <p>Constructor for TimeDuration.</p>
+     *
+     * @param seconds a long.
+     */
     public TimeDuration(long seconds) {
         this.start_time = System.currentTimeMillis();
         this.duration = seconds * 1000;
     }
 
+    /** {@inheritDoc} */
     @Override
     public double getFulfilment() {
         return (System.currentTimeMillis() - this.start_time) / this.duration;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return "DURATION=" + (duration / 1000) + "s";
     }
 
+    /**
+     * <p>restartTime.</p>
+     */
     public void restartTime() {
         start_time = System.currentTimeMillis();
     }

@@ -34,9 +34,12 @@ import java.util.HashSet;
 import java.util.Stack;
 
 /**
+ * <p>EdgeSequenceCoverageStatistics class.</p>
+ *
  * @author Johan Tejle
+ * @version $Id: $
  */
-public class EdgeSequenceCoverageStatistics extends Statistics {
+public class EdgeSequenceCoverageStatistics extends AbstractStatistics {
 
     private HashSet<String> usedSequences;
     private HashSet<String> allSequences;
@@ -44,8 +47,10 @@ public class EdgeSequenceCoverageStatistics extends Statistics {
     private int length;
 
     /**
-     * @param model
-     * @param sequenceLength
+     * <p>Constructor for EdgeSequenceCoverageStatistics.</p>
+     *
+     * @param model a {@link org.graphwalker.core.graph.Graph} object.
+     * @param sequenceLength a int.
      */
     @SuppressWarnings("unchecked")
     public EdgeSequenceCoverageStatistics(Graph model, int sequenceLength) {
@@ -110,6 +115,7 @@ public class EdgeSequenceCoverageStatistics extends Statistics {
       * org.graphwalker.statistics.Statistics#addProgress(edu.uci.ics.jung.graph
       * .impl.AbstractElement)
       */
+    /** {@inheritDoc} */
     @Override
     public void addProgress(AbstractElement element) {
         if (element instanceof Edge) {
@@ -128,6 +134,7 @@ public class EdgeSequenceCoverageStatistics extends Statistics {
       *
       * @see org.graphwalker.statistics.Statistics#getCurrent()
       */
+    /** {@inheritDoc} */
     @Override
     public int getCurrent() {
         return usedSequences.size();
@@ -138,6 +145,7 @@ public class EdgeSequenceCoverageStatistics extends Statistics {
       *
       * @see org.graphwalker.statistics.Statistics#getMax()
       */
+    /** {@inheritDoc} */
     @Override
     public int getMax() {
         return allSequences.size();

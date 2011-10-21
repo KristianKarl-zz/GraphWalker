@@ -26,24 +26,38 @@
 
 package org.graphwalker.core.conditions;
 
+/**
+ * <p>TestCaseLength class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public class TestCaseLength extends AbstractStopCondition {
 
     private int numberOfEdges;
 
+    /** {@inheritDoc} */
     @Override
     public boolean isFulfilled() {
         return getMachine().getNumberOfEdgesTravesed() >= numberOfEdges;
     }
 
+    /**
+     * <p>Constructor for TestCaseLength.</p>
+     *
+     * @param numberOfEdges a int.
+     */
     public TestCaseLength(int numberOfEdges) {
         this.numberOfEdges = numberOfEdges;
     }
 
+    /** {@inheritDoc} */
     @Override
     public double getFulfilment() {
         return getMachine().getNumberOfEdgesTravesed() / (double) numberOfEdges;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return "L=" + numberOfEdges;

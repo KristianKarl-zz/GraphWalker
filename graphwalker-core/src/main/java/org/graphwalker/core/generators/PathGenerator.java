@@ -30,21 +30,60 @@ import org.graphwalker.core.conditions.StopCondition;
 import org.graphwalker.core.graph.Edge;
 import org.graphwalker.core.machines.FiniteStateMachine;
 
+/**
+ * <p>PathGenerator interface.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public interface PathGenerator {
 
+    /**
+     * <p>getNext.</p>
+     *
+     * @return an array of {@link java.lang.String} objects.
+     * @throws java.lang.InterruptedException if any.
+     */
     String[] getNext() throws InterruptedException;
 
+    /**
+     * <p>hasNext.</p>
+     *
+     * @return a boolean.
+     */
     boolean hasNext();
 
+    /**
+     * <p>getMachine.</p>
+     *
+     * @return a {@link org.graphwalker.core.machines.FiniteStateMachine} object.
+     */
     FiniteStateMachine getMachine();
 
+    /**
+     * <p>setMachine.</p>
+     *
+     * @param machine a {@link org.graphwalker.core.machines.FiniteStateMachine} object.
+     */
     void setMachine(FiniteStateMachine machine);
 
+    /**
+     * <p>setStopCondition.</p>
+     *
+     * @param stopCondition a {@link org.graphwalker.core.conditions.StopCondition} object.
+     */
     void setStopCondition(StopCondition stopCondition);
 
+    /**
+     * <p>getStopCondition.</p>
+     *
+     * @return a {@link org.graphwalker.core.conditions.StopCondition} object.
+     */
     StopCondition getStopCondition();
 
     /**
+     * <p>getConditionFulfilment.</p>
+     *
      * @return the condition fulfilment
      */
     double getConditionFulfilment();
@@ -54,5 +93,11 @@ public interface PathGenerator {
      */
     void reset();
 
+    /**
+     * <p>isEdgeAvailable.</p>
+     *
+     * @param edge a {@link org.graphwalker.core.graph.Edge} object.
+     * @return a boolean.
+     */
     boolean isEdgeAvailable(Edge edge);
 }

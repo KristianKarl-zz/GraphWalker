@@ -30,10 +30,21 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 
+/**
+ * <p>ReachedRequirement class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public class ReachedRequirement extends AbstractStopCondition {
 
     private Collection<String> requirements;
 
+    /**
+     * <p>Constructor for ReachedRequirement.</p>
+     *
+     * @param requirements a {@link java.lang.String} object.
+     */
     public ReachedRequirement(String requirements) {
         String[] list = requirements.split(",");
         for (int i = 0; i < list.length; i++) {
@@ -42,11 +53,13 @@ public class ReachedRequirement extends AbstractStopCondition {
         this.requirements = new HashSet<String>(Arrays.asList(list));
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean isFulfilled() {
         return getMachine().getCoveredRequirements().containsAll(requirements);
     }
 
+    /** {@inheritDoc} */
     @Override
     public double getFulfilment() {
         Collection<String> covered = getMachine().getCoveredRequirements();
@@ -54,11 +67,17 @@ public class ReachedRequirement extends AbstractStopCondition {
         return covered.size() / (double) requirements.size();
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return "RC=" + Arrays.deepToString(requirements.toArray());
     }
 
+    /**
+     * <p>Getter for the field <code>requirements</code>.</p>
+     *
+     * @return a {@link java.util.Collection} object.
+     */
     public Collection<String> getRequirements() {
         return requirements;
     }

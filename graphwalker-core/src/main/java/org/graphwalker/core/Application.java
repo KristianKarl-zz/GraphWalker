@@ -25,14 +25,39 @@
  */
 package org.graphwalker.core;
 
+/**
+ * <p>Application interface.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public interface Application {
+    /**
+     * <p>getStatus.</p>
+     *
+     * @return a {@link org.graphwalker.core.Status} object.
+     */
     Status getStatus();
 
+    /**
+     * <p>setButtons.</p>
+     */
     void setButtons();
 
+    /**
+     * <p>updateLayout.</p>
+     */
     void updateLayout();
 
+    /**
+     * <p>pause.</p>
+     */
     void pause();
 
+    /**
+     * <p>executingJavaTest.</p>
+     *
+     * @param flag a boolean.
+     */
     void executingJavaTest(boolean flag);
 }

@@ -28,14 +28,31 @@ package org.graphwalker.core.conditions;
 
 import org.graphwalker.core.exceptions.StopConditionException;
 
+/**
+ * <p>VertexCoverage class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public class VertexCoverage extends AbstractStopCondition {
 
     private double limit;
 
+    /**
+     * <p>Constructor for VertexCoverage.</p>
+     *
+     * @throws org.graphwalker.core.exceptions.StopConditionException if any.
+     */
     public VertexCoverage() throws StopConditionException {
         this(1);
     }
 
+    /**
+     * <p>Constructor for VertexCoverage.</p>
+     *
+     * @param limit a double.
+     * @throws org.graphwalker.core.exceptions.StopConditionException if any.
+     */
     public VertexCoverage(double limit) throws StopConditionException {
         if (limit > 1 || limit < 0) {
             throw new StopConditionException("Excpeted a vertex coverage between 0 and 100. Actual: " + limit * 100);
@@ -43,6 +60,7 @@ public class VertexCoverage extends AbstractStopCondition {
         this.limit = limit;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean isFulfilled() {
         double vertices = getMachine().getAllVertices().size();
@@ -50,6 +68,7 @@ public class VertexCoverage extends AbstractStopCondition {
         return (covered / vertices) >= limit;
     }
 
+    /** {@inheritDoc} */
     @Override
     public double getFulfilment() {
         double vertices = getMachine().getAllVertices().size();
@@ -57,6 +76,7 @@ public class VertexCoverage extends AbstractStopCondition {
         return (covered / vertices) / limit;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return "SC>=" + (int) (100 * limit);

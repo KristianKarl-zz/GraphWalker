@@ -29,12 +29,31 @@ package org.graphwalker.core.statistics;
 import org.graphwalker.core.graph.AbstractElement;
 
 /**
+ * <p>Statistics interface.</p>
+ *
  * @author Johan Tejle
+ * @version $Id: $
  */
-public abstract class Statistics {
-    public abstract void addProgress(AbstractElement element);
+public interface Statistics {
 
-    public abstract int getCurrent();
+    /**
+     * <p>addProgress.</p>
+     *
+     * @param element a {@link org.graphwalker.core.graph.AbstractElement} object.
+     */
+    void addProgress(AbstractElement element);
 
-    public abstract int getMax();
+    /**
+     * <p>getCurrent.</p>
+     *
+     * @return a int.
+     */
+    int getCurrent();
+
+    /**
+     * <p>getMax.</p>
+     *
+     * @return a int.
+     */
+    int getMax();
 }

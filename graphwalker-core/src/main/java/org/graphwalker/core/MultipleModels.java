@@ -37,6 +37,7 @@ import java.util.LinkedHashSet;
  *
  * @author Ola Sundin
  * @see ModelBasedTesting
+ * @version $Id: $
  */
 public class MultipleModels {
     /**
@@ -102,8 +103,13 @@ public class MultipleModels {
      * model name use the helper function {@link #getUniqueName(String)}.
      *
      * @param modelName the name of the model
+     * @param modelName the name of the model
+     * @param modelName the name of the model
+     * @param modelName the name of the model
+     * @param modelName the name of the model
+     * @param modelName the name of the model
      * @param model     the model to be added
-     * @throws IllegalArgumentException if the given name has all ready been used.
+     * @throws java.lang.IllegalArgumentException if the given name has all ready been used.
      */
     public synchronized void addModel(String modelName, ModelBasedTesting model) throws IllegalArgumentException {
         if (models.containsKey(modelName)) {
@@ -149,6 +155,7 @@ public class MultipleModels {
      * wait until all models are finished before returning
      *
      * @return the aggregated statistics for all models
+     * @throws java.lang.InterruptedException if any.
      */
     public String getStatistics() throws InterruptedException {
         StringBuffer statistics = new StringBuffer("Statistics for multiple models");
@@ -170,8 +177,8 @@ public class MultipleModels {
      *
      * @param modelName the name of the model to start the execution for
      * @param modelAPI  an instance of the class that the model should call
-     * @throws IllegalArgumentException if no model with the given name exists
-     * @throws IllegalStateException    if the given model is already being executed
+     * @throws java.lang.IllegalArgumentException if no model with the given name exists
+     * @throws java.lang.IllegalStateException    if the given model is already being executed
      */
     public void executeModel(String modelName, Object modelAPI) throws IllegalArgumentException, IllegalStateException {
         if (!models.containsKey(modelName)) {
@@ -211,9 +218,9 @@ public class MultipleModels {
      * name only and the second will get the index 1.
      *
      * @param desiredName  the desired name
-     * @param existingKeys the set of keys that should contain the name
      * @return the actual name that is unique, could be the same as the desired
      *         name
+     * @throws java.lang.IndexOutOfBoundsException if any.
      */
     public synchronized String getUniqueName(String desiredName) throws IndexOutOfBoundsException {
         String actualName = desiredName;

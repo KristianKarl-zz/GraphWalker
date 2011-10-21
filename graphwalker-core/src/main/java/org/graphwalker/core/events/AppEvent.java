@@ -26,7 +26,16 @@
 
 package org.graphwalker.core.events;
 
+/**
+ * <p>AppEvent interface.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public interface AppEvent {
 
+    /**
+     * <p>getLoadEvent.</p>
+     */
     public void getLoadEvent();
 }

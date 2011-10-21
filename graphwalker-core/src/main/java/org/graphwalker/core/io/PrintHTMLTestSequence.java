@@ -29,8 +29,20 @@ package org.graphwalker.core.io;
 import java.io.PrintStream;
 import java.util.Vector;
 
+/**
+ * <p>PrintHTMLTestSequence class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public class PrintHTMLTestSequence {
 
+    /**
+     * <p>Constructor for PrintHTMLTestSequence.</p>
+     *
+     * @param testSequence a {@link java.util.Vector} object.
+     * @param out a {@link java.io.PrintStream} object.
+     */
     public PrintHTMLTestSequence(Vector<String[]> testSequence, PrintStream out) {
         writeHTML(testSequence, out);
     }

@@ -61,6 +61,9 @@ import java.util.Vector;
  * <strong>Example: Folder containing several graphml files</strong><br>
  * GraphML graphML = new GraphML();<br>
  * Graph graph = graphML.load( "/home/user/graphml_folder/" );<br>
+ *
+ * @author nilols
+ * @version $Id: $
  */
 public class GraphML extends AbstractModelHandler {
     /**
@@ -94,10 +97,10 @@ public class GraphML extends AbstractModelHandler {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Reads one single graph, or a folder containing several graphs to be merged
      * into one graph.
-     *
-     * @param fileOrfolder The gramphml file or folder.
      * @see org.graphwalker.core.io.AbstractModelHandler#load(java.lang.String)
      */
     @Override
@@ -983,6 +986,8 @@ public class GraphML extends AbstractModelHandler {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Writes the graph to a PrintStream, using GraphML format.
      */
     @Override

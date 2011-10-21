@@ -31,6 +31,12 @@ import edu.uci.ics.jung.graph.util.EdgeType;
 import org.apache.log4j.Logger;
 import org.graphwalker.core.Util;
 
+/**
+ * <p>Graph class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public class Graph extends SparseMultigraph<Vertex, Edge> {
 
     private static final long serialVersionUID = 4744840850614032582L;
@@ -39,22 +45,43 @@ public class Graph extends SparseMultigraph<Vertex, Edge> {
     private String fileKey = "";
     private String labelKey = "";
 
+    /**
+     * <p>Getter for the field <code>labelKey</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getLabelKey() {
         return labelKey;
     }
 
+    /**
+     * <p>Setter for the field <code>labelKey</code>.</p>
+     *
+     * @param labelKey a {@link java.lang.String} object.
+     */
     public void setLabelKey(String labelKey) {
         this.labelKey = labelKey;
     }
 
+    /**
+     * <p>Getter for the field <code>fileKey</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getFileKey() {
         return fileKey;
     }
 
+    /**
+     * <p>Setter for the field <code>fileKey</code>.</p>
+     *
+     * @param fileKey a {@link java.lang.String} object.
+     */
     public void setFileKey(String fileKey) {
         this.fileKey = fileKey;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         String str = "";
@@ -67,11 +94,18 @@ public class Graph extends SparseMultigraph<Vertex, Edge> {
         return str;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean addEdge(Edge e, Vertex source, Vertex dest) {
         return super.addEdge(e, source, dest, EdgeType.DIRECTED);
     }
 
+    /**
+     * <p>findVertex.</p>
+     *
+     * @param vertexName a {@link java.lang.String} object.
+     * @return a {@link org.graphwalker.core.graph.Vertex} object.
+     */
     public Vertex findVertex(String vertexName) {
         logger.debug("Looking for vertex: " + vertexName + ", in model: " + this.toString());
         for (Vertex vertex : getVertices()) {
@@ -84,6 +118,12 @@ public class Graph extends SparseMultigraph<Vertex, Edge> {
         return null;
     }
 
+    /**
+     * <p>findEdge.</p>
+     *
+     * @param edgeName a {@link java.lang.String} object.
+     * @return a {@link org.graphwalker.core.graph.Edge} object.
+     */
     public Edge findEdge(String edgeName) {
         logger.debug("Looking for edge: " + edgeName + ", in model: " + this.toString());
         for (Edge edge : getEdges()) {

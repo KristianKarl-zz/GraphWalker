@@ -39,7 +39,10 @@ import java.util.*;
 import java.util.Map.Entry;
 
 /**
+ * <p>FiniteStateMachine class.</p>
+ *
  * @author Johan Tejle
+ * @version $Id: $
  */
 public class FiniteStateMachine {
 
@@ -61,14 +64,29 @@ public class FiniteStateMachine {
 
     private Hashtable<String, Integer> associatedRequirements;
 
+    /**
+     * <p>Getter for the field <code>numOfCoveredEdges</code>.</p>
+     *
+     * @return a int.
+     */
     public int getNumOfCoveredEdges() {
         return numOfCoveredEdges;
     }
 
+    /**
+     * <p>Getter for the field <code>numOfCoveredVertices</code>.</p>
+     *
+     * @return a int.
+     */
     public int getNumOfCoveredVertices() {
         return numOfCoveredVertices;
     }
 
+    /**
+     * <p>setVertex.</p>
+     *
+     * @param vertexName a {@link java.lang.String} object.
+     */
     public void setVertex(String vertexName) {
         logger.debug("Setting vertex to: '" + vertexName + "'");
         Vertex e = model.findVertex(vertexName);
@@ -78,6 +96,12 @@ public class FiniteStateMachine {
         setAsVisited(e);
     }
 
+    /**
+     * <p>findElement.</p>
+     *
+     * @param index a {@link java.lang.Integer} object.
+     * @return a {@link org.graphwalker.core.graph.AbstractElement} object.
+     */
     public AbstractElement findElement(Integer index) {
         for (Vertex vertex : model.getVertices()) {
             if (vertex.getIndexKey().equals(index)) {
@@ -92,10 +116,22 @@ public class FiniteStateMachine {
         return null;
     }
 
+    /**
+     * <p>hasVertex.</p>
+     *
+     * @param vertexName a {@link java.lang.String} object.
+     * @return a boolean.
+     */
     public boolean hasVertex(String vertexName) {
         return model.findVertex(vertexName) != null;
     }
 
+    /**
+     * <p>findEdge.</p>
+     *
+     * @param edgeName a {@link java.lang.String} object.
+     * @return a {@link org.graphwalker.core.graph.Edge} object.
+     */
     public Edge findEdge(String edgeName) {
         for (Edge edge : model.getEdges()) {
             if ((edge.getLabelKey()).equals(edgeName)) {
@@ -105,22 +141,40 @@ public class FiniteStateMachine {
         return null;
     }
 
+    /**
+     * <p>Constructor for FiniteStateMachine.</p>
+     */
     public FiniteStateMachine() {
         logger.debug("Initializing");
         edgeStack = new Stack<Edge>();
         start_time = System.currentTimeMillis();
     }
 
+    /**
+     * <p>Setter for the field <code>model</code>.</p>
+     *
+     * @param model a {@link org.graphwalker.core.graph.Graph} object.
+     */
     public void setModel(Graph model) {
         reset();
         this.model = model;
         setVertex(Keywords.START_NODE);
     }
 
+    /**
+     * <p>Getter for the field <code>currentVertex</code>.</p>
+     *
+     * @return a {@link org.graphwalker.core.graph.Vertex} object.
+     */
     public Vertex getCurrentVertex() {
         return currentVertex;
     }
 
+    /**
+     * <p>getStartVertex.</p>
+     *
+     * @return a {@link org.graphwalker.core.graph.Vertex} object.
+     */
     public Vertex getStartVertex() {
         for (Vertex vertex : model.getVertices()) {
             if (vertex.getLabelKey().equals(Keywords.START_NODE)) {
@@ -130,22 +184,47 @@ public class FiniteStateMachine {
         return null;
     }
 
+    /**
+     * <p>getLastEdgeName.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getLastEdgeName() {
         return lastEdge.getLabelKey();
     }
 
+    /**
+     * <p>getCurrentVertexName.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getCurrentVertexName() {
         return currentVertex.getLabelKey();
     }
 
+    /**
+     * <p>getAllVertices.</p>
+     *
+     * @return a {@link java.util.Collection} object.
+     */
     public Collection<Vertex> getAllVertices() {
         return model.getVertices();
     }
 
+    /**
+     * <p>getAllEdges.</p>
+     *
+     * @return a {@link java.util.Collection} object.
+     */
     public Collection<Edge> getAllEdges() {
         return model.getEdges();
     }
 
+    /**
+     * <p>getAllEdgesExceptStartEdge.</p>
+     *
+     * @return a {@link java.util.Collection} object.
+     */
     public Collection<Edge> getAllEdgesExceptStartEdge() {
         Vector<Edge> list = new Vector<Edge>(model.getEdges());
         Edge e = (Edge) model.getOutEdges(getStartVertex()).toArray()[0];
@@ -153,6 +232,12 @@ public class FiniteStateMachine {
         return list;
     }
 
+    /**
+     * <p>getCurrentOutEdges.</p>
+     *
+     * @return a {@link java.util.Set} object.
+     * @throws org.graphwalker.core.exceptions.FoundNoEdgeException if any.
+     */
     public Set<Edge> getCurrentOutEdges() throws FoundNoEdgeException {
         Set<Edge> retur = new HashSet<Edge>(model.getOutEdges(currentVertex));
         if (retur.size() == 0) {
@@ -161,6 +246,11 @@ public class FiniteStateMachine {
         return retur;
     }
 
+    /**
+     * <p>setAsVisited.</p>
+     *
+     * @param e a {@link org.graphwalker.core.graph.AbstractElement} object.
+     */
     public void setAsVisited(AbstractElement e) {
         if (e instanceof Edge) {
             if (e.getVisitedKey() < 1) {
@@ -183,6 +273,11 @@ public class FiniteStateMachine {
         }
     }
 
+    /**
+     * <p>setAsUnvisited.</p>
+     *
+     * @param e a {@link org.graphwalker.core.graph.AbstractElement} object.
+     */
     public void setAsUnvisited(AbstractElement e) {
         Integer visits = e.getVisitedKey();
         e.setVisitedKey(e.getVisitedKey() - 1);
@@ -208,12 +303,23 @@ public class FiniteStateMachine {
         }
     }
 
+    /**
+     * <p>walkPath.</p>
+     *
+     * @param path a {@link java.util.Stack} object.
+     */
     public void walkPath(Stack<Edge> path) {
         for (Edge edge : path) {
             walkEdge(edge);
         }
     }
 
+    /**
+     * <p>walkEdge.</p>
+     *
+     * @param edge a {@link org.graphwalker.core.graph.Edge} object.
+     * @return a boolean.
+     */
     public boolean walkEdge(Edge edge) {
         if (model.isSource(currentVertex, edge)) {
             lastEdge = edge;
@@ -233,14 +339,29 @@ public class FiniteStateMachine {
         return false;
     }
 
+    /**
+     * <p>Getter for the field <code>lastEdge</code>.</p>
+     *
+     * @return a {@link org.graphwalker.core.graph.Edge} object.
+     */
     public Edge getLastEdge() {
         return lastEdge;
     }
 
+    /**
+     * <p>Setter for the field <code>lastEdge</code>.</p>
+     *
+     * @param e a {@link org.graphwalker.core.graph.Edge} object.
+     */
     public void setLastEdge(Edge e) {
         lastEdge = e;
     }
 
+    /**
+     * <p>getStatisticsStringCompact.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getStatisticsStringCompact() {
         int stats[] = getStatistics();
         int e = stats[0];
@@ -255,6 +376,11 @@ public class FiniteStateMachine {
                 / e + "% " + "SC: " + vc + "/" + v + " => " + (100 * vc) / v + "% " + "L: " + len;
     }
 
+    /**
+     * <p>getStatisticsString.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getStatisticsString() {
         int stats[] = getStatistics();
         int e = stats[0];
@@ -278,6 +404,11 @@ public class FiniteStateMachine {
         return str;
     }
 
+    /**
+     * <p>getStatistics.</p>
+     *
+     * @return an array of int.
+     */
     public int[] getStatistics() {
         Collection<Edge> e = model.getEdges();
         Collection<Vertex> v = model.getVertices();
@@ -287,10 +418,22 @@ public class FiniteStateMachine {
         return retur;
     }
 
+    /**
+     * <p>getValueFromReqs.</p>
+     *
+     * @param key a {@link java.lang.String} object.
+     * @return a {@link java.lang.Boolean} object.
+     */
     public Boolean getValueFromReqs(String key) {
         return reqs.get(key);
     }
 
+    /**
+     * <p>setValueForReq.</p>
+     *
+     * @param key a {@link java.lang.String} object.
+     * @param b a {@link java.lang.Boolean} object.
+     */
     public void setValueForReq(String key, Boolean b) {
         reqs.put(key, b);
     }
@@ -354,6 +497,11 @@ public class FiniteStateMachine {
         }
     }
 
+    /**
+     * <p>getStatisticsVerbose.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getStatisticsVerbose() {
         String retur = "";
         String newLine = "\n";
@@ -455,6 +603,12 @@ public class FiniteStateMachine {
         return varVal;
     }
 
+    /**
+     * <p>isCurrentVertex.</p>
+     *
+     * @param vertex a {@link org.graphwalker.core.graph.Vertex} object.
+     * @return a boolean.
+     */
     public boolean isCurrentVertex(Vertex vertex) {
         if (getCurrentVertex() != null)
             return getCurrentVertex().equals(vertex);
@@ -483,6 +637,11 @@ public class FiniteStateMachine {
         return unique;
     }
 
+    /**
+     * <p>getAllRequirements.</p>
+     *
+     * @return a {@link java.util.Hashtable} object.
+     */
     public Hashtable<String, Integer> getAllRequirements() {
         if (associatedRequirements == null) {
             associatedRequirements = new Hashtable<String, Integer>();
@@ -504,6 +663,11 @@ public class FiniteStateMachine {
         return associatedRequirements;
     }
 
+    /**
+     * <p>getCoveredRequirements.</p>
+     *
+     * @return a {@link java.util.Set} object.
+     */
     @SuppressWarnings("unchecked")
     public Set<String> getCoveredRequirements() {
         Vector<Integer> notCoveredValues = new Vector<Integer>();
@@ -513,6 +677,12 @@ public class FiniteStateMachine {
         return allRequirements.keySet();
     }
 
+    /**
+     * <p>getEdgeName.</p>
+     *
+     * @param edge a {@link org.graphwalker.core.graph.Edge} object.
+     * @return a {@link java.lang.String} object.
+     */
     public String getEdgeName(Edge edge) {
         if (edge.getParameterKey().isEmpty()) {
             return edge.getLabelKey();
@@ -521,12 +691,18 @@ public class FiniteStateMachine {
         return edge.getLabelKey() + " " + edge.getParameterKey();
     }
 
+    /**
+     * <p>storeVertex.</p>
+     */
     public void storeVertex() {
         if (this.vertexStore == null)
             this.vertexStore = new Stack<Integer>();
         this.vertexStore.push(edgeStack.size());
     }
 
+    /**
+     * <p>restoreVertex.</p>
+     */
     public void restoreVertex() {
         if (this.vertexStore == null || this.vertexStore.size() == 0)
             throw new RuntimeException("Nothing to restore");
@@ -538,10 +714,16 @@ public class FiniteStateMachine {
         }
     }
 
+    /**
+     * <p>track.</p>
+     */
     protected void track() {
         edgeStack.push(getLastEdge());
     }
 
+    /**
+     * <p>popVertex.</p>
+     */
     protected void popVertex() {
         setAsUnvisited(getLastEdge());
         setAsUnvisited(getCurrentVertex());
@@ -557,6 +739,8 @@ public class FiniteStateMachine {
     }
 
     /**
+     * <p>Setter for the field <code>weighted</code>.</p>
+     *
      * @param weighted if edge weights are to be considered
      */
     public void setWeighted(boolean weighted) {
@@ -564,6 +748,8 @@ public class FiniteStateMachine {
     }
 
     /**
+     * <p>isWeighted.</p>
+     *
      * @return true if the edge weights is considered
      */
     public boolean isWeighted() {
@@ -571,20 +757,37 @@ public class FiniteStateMachine {
     }
 
     /**
+     * <p>Getter for the field <code>numberOfEdgesTravesed</code>.</p>
+     *
      * @return the number of edges traversed
      */
     public int getNumberOfEdgesTravesed() {
         return numberOfEdgesTravesed;
     }
 
+    /**
+     * <p>isBacktrackPossible.</p>
+     *
+     * @return a boolean.
+     */
     public boolean isBacktrackPossible() {
         return isCalculatingPath();
     }
 
+    /**
+     * <p>isCalculatingPath.</p>
+     *
+     * @return a boolean.
+     */
     public boolean isCalculatingPath() {
         return calculatingPath;
     }
 
+    /**
+     * <p>Setter for the field <code>calculatingPath</code>.</p>
+     *
+     * @param calculatingPath a boolean.
+     */
     public void setCalculatingPath(boolean calculatingPath) {
         this.calculatingPath = calculatingPath;
     }
@@ -592,7 +795,7 @@ public class FiniteStateMachine {
     /**
      * This functions returns a list of edges, which has not yet been covered
      *
-     * @return
+     * @return a {@link java.util.Vector} object.
      */
     public Vector<Edge> getUncoveredEdges() {
         Vector<Edge> retur = new Vector<Edge>();
@@ -607,7 +810,7 @@ public class FiniteStateMachine {
     /**
      * This functions returns a list of edges, which has been covered
      *
-     * @return
+     * @return a {@link java.util.Vector} object.
      */
     public Vector<Edge> getCoveredEdges() {
         Vector<Edge> retur = new Vector<Edge>(getAllEdges());
@@ -615,6 +818,11 @@ public class FiniteStateMachine {
         return retur;
     }
 
+    /**
+     * <p>getUncoveredVertices.</p>
+     *
+     * @return a {@link java.util.Vector} object.
+     */
     public Vector<Vertex> getUncoveredVertices() {
         Vector<Vertex> retur = new Vector<Vertex>();
         for (Vertex vertex : getAllVertices()) {
@@ -625,32 +833,62 @@ public class FiniteStateMachine {
         return retur;
     }
 
+    /**
+     * <p>getCoveredVertices.</p>
+     *
+     * @return a {@link java.util.Vector} object.
+     */
     public Vector<Vertex> getCoveredVertices() {
         Vector<Vertex> retur = new Vector<Vertex>(getAllVertices());
         retur.removeAll(getUncoveredVertices());
         return retur;
     }
 
+    /**
+     * <p>getUncoveredElements.</p>
+     *
+     * @return a {@link java.util.Vector} object.
+     */
     public Vector<AbstractElement> getUncoveredElements() {
         Vector<AbstractElement> retur = new Vector<AbstractElement>(getUncoveredEdges());
         retur.addAll(getUncoveredVertices());
         return retur;
     }
 
+    /**
+     * <p>getCoveredElements.</p>
+     *
+     * @return a {@link java.util.Vector} object.
+     */
     public Vector<AbstractElement> getCoveredElements() {
         Vector<AbstractElement> retur = new Vector<AbstractElement>(getCoveredEdges());
         retur.addAll(getCoveredVertices());
         return retur;
     }
 
+    /**
+     * <p>Getter for the field <code>model</code>.</p>
+     *
+     * @return a {@link org.graphwalker.core.graph.Graph} object.
+     */
     public Graph getModel() {
         return model;
     }
 
+    /**
+     * <p>getCurrentDataString.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getCurrentDataString() {
         return "";
     }
 
+    /**
+     * <p>hasInternalVariables.</p>
+     *
+     * @return a boolean.
+     */
     public boolean hasInternalVariables() {
         return false;
     }
@@ -662,10 +900,18 @@ public class FiniteStateMachine {
         numOfCoveredVertices = 0;
     }
 
+    /**
+     * <p>setVertex.</p>
+     *
+     * @param vertex a {@link org.graphwalker.core.graph.Vertex} object.
+     */
     public void setVertex(Vertex vertex) {
         currentVertex = vertex;
     }
 
+    /**
+     * <p>setAllUnvisited.</p>
+     */
     public void setAllUnvisited() {
         logger.debug("setAllUnvisited");
         reset();

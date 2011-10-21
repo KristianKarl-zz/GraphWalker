@@ -36,10 +36,21 @@ import org.graphwalker.core.graph.Vertex;
 import java.util.List;
 import java.util.Vector;
 
+/**
+ * <p>NonOptimizedShortestPath class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public class NonOptimizedShortestPath extends RandomPathGenerator {
 
     private boolean toggleAllOrUnvisited = true;
 
+    /**
+     * <p>Constructor for NonOptimizedShortestPath.</p>
+     *
+     * @param stopCondition a {@link org.graphwalker.core.conditions.StopCondition} object.
+     */
     public NonOptimizedShortestPath(StopCondition stopCondition) {
         super(stopCondition);
     }
@@ -47,10 +58,14 @@ public class NonOptimizedShortestPath extends RandomPathGenerator {
     private static Logger logger = Util.setupLogger(NonOptimizedShortestPath.class);
     private List<Edge> dijkstraShortestPath;
 
+    /**
+     * <p>Constructor for NonOptimizedShortestPath.</p>
+     */
     public NonOptimizedShortestPath() {
         super();
     }
 
+    /** {@inheritDoc} */
     @Override
     public String[] getNext() throws InterruptedException {
         Util.AbortIf(!hasNext(), "Finished");
@@ -122,6 +137,9 @@ public class NonOptimizedShortestPath extends RandomPathGenerator {
         return true;
     }
 
+    /**
+     * <p>emptyCurrentPath.</p>
+     */
     public void emptyCurrentPath() {
         if (dijkstraShortestPath == null || dijkstraShortestPath.size() == 0) {
             return;
@@ -129,6 +147,7 @@ public class NonOptimizedShortestPath extends RandomPathGenerator {
         dijkstraShortestPath = null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         if (getStopCondition() == null) {

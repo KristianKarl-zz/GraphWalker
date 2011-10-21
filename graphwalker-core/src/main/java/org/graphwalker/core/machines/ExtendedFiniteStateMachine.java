@@ -39,6 +39,12 @@ import java.io.*;
 import java.util.*;
 import java.util.Map.Entry;
 
+/**
+ * <p>ExtendedFiniteStateMachine class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 
     private PrintStream Void;
@@ -55,6 +61,11 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 
     private PrintStream oldPrintStream;
 
+    /**
+     * <p>Constructor for ExtendedFiniteStateMachine.</p>
+     *
+     * @param usingJsEngine a boolean.
+     */
     public ExtendedFiniteStateMachine(boolean usingJsEngine) {
         super();
         namespaceStack = new Stack<CannedNameSpace>();
@@ -69,6 +80,11 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
         Void = new VoidPrintStream();
     }
 
+    /**
+     * <p>eval.</p>
+     *
+     * @param script a {@link java.lang.String} object.
+     */
     public void eval(String script) {
         if (jsEngine != null) {
             try {
@@ -91,11 +107,13 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getCurrentVertexName() {
         return super.getCurrentVertexName() + (hasInternalVariables() ? "/" + getCurrentDataString() : "");
     }
 
+    /** {@inheritDoc} */
     @Override
     public Set<Edge> getCurrentOutEdges() throws FoundNoEdgeException {
         Set<Edge> retur = super.getCurrentOutEdges();
@@ -114,6 +132,7 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
         return retur;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean hasInternalVariables() {
         if (jsEngine != null) {
@@ -124,11 +143,21 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
         return false;
     }
 
+    /**
+     * <p>getCurrentJsEngineData.</p>
+     *
+     * @return a {@link java.util.Set} object.
+     */
     public Set<Entry<String, Object>> getCurrentJsEngineData() {
         Bindings bindings = jsEngine.getBindings(ScriptContext.ENGINE_SCOPE);
         return bindings.entrySet();
     }
 
+    /**
+     * <p>getCurrentBeanShellData.</p>
+     *
+     * @return a {@link java.util.Hashtable} object.
+     */
     public Hashtable<String, Object> getCurrentBeanShellData() {
         Hashtable<String, Object> retur = new Hashtable<String, Object>();
         if (!hasInternalVariables())
@@ -155,9 +184,9 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
     /**
      * Walks the data space, and return the value of the data, if found.
      *
-     * @param dataName
-     * @return
+     * @param dataName a {@link java.lang.String} object.
      * @throws InvalidDataException is thrown if the data is not found in the data space
+     * @return a {@link java.lang.String} object.
      */
     public String getDataValue(String dataName) {
         if (jsEngine != null) {
@@ -178,9 +207,9 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
     /**
      * Executes an action, and returns any outcome as a string.
      *
-     * @param action
-     * @return
-     * @throws InvalidDataException is thrown if the data is not found in the data space
+     * @param action a {@link java.lang.String} object.
+     * @throws org.graphwalker.core.exceptions.InvalidDataException is thrown if the data is not found in the data space
+     * @return a {@link java.lang.String} object.
      */
     public String execAction(String action) throws InvalidDataException {
         logger.debug("Will try to execute: " + action);
@@ -201,6 +230,7 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
         return res.toString();
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getCurrentDataString() {
         String retur = "";
@@ -228,6 +258,7 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
         return retur;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean walkEdge(Edge edge) {
         boolean hasWalkedEdge = super.walkEdge(edge);
@@ -274,6 +305,7 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
         return (edge == null ? false : !edge.getActionsKey().isEmpty());
     }
 
+    /** {@inheritDoc} */
     @Override
     protected void track() {
         super.track();
@@ -283,6 +315,7 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     protected void popVertex() {
         super.popVertex();
@@ -321,6 +354,7 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setCalculatingPath(boolean calculatingPath) {
         super.setCalculatingPath(calculatingPath);
@@ -342,10 +376,20 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
         }
     }
 
+    /**
+     * <p>isJsEnabled.</p>
+     *
+     * @return a boolean.
+     */
     public boolean isJsEnabled() {
         return jsEngine != null;
     }
 
+    /**
+     * <p>isBeanShellEnabled.</p>
+     *
+     * @return a boolean.
+     */
     public boolean isBeanShellEnabled() {
         return beanShellEngine != null;
     }
