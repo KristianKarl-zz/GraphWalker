@@ -23,14 +23,19 @@
  * THE SOFTWARE.
  * #L%
  */
+package org.graphwalker.core.conditions;
 
-package org.graphwalker.core.exceptions;
+import org.graphwalker.core.machines.FiniteStateMachine;
 
-/**
- * This exception indicats to MBT that GUI wants to stop execution of MBT
- * 
- */
-public class GuiStoppedExecution extends RuntimeException {
+public abstract class AbstractStopCondition implements StopCondition {
 
-	private static final long serialVersionUID = -2445201301297201999L;
+	private FiniteStateMachine machine;
+
+	public FiniteStateMachine getMachine() {
+		return machine;
+	}
+
+	public void setMachine(FiniteStateMachine machine) {
+		this.machine = machine;
+	}
 }
