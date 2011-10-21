@@ -33,66 +33,66 @@ import org.graphwalker.core.Util;
 
 public class Graph extends SparseMultigraph<Vertex, Edge> {
 
-	private static final long serialVersionUID = 4744840850614032582L;
-	private static Logger logger = Util.setupLogger(Graph.class);
+    private static final long serialVersionUID = 4744840850614032582L;
+    private static Logger logger = Util.setupLogger(Graph.class);
 
-	private String fileKey = "";
-	private String labelKey = "";
+    private String fileKey = "";
+    private String labelKey = "";
 
-	public String getLabelKey() {
-		return labelKey;
-	}
+    public String getLabelKey() {
+        return labelKey;
+    }
 
-	public void setLabelKey(String labelKey) {
-		this.labelKey = labelKey;
-	}
+    public void setLabelKey(String labelKey) {
+        this.labelKey = labelKey;
+    }
 
-	public String getFileKey() {
-		return fileKey;
-	}
+    public String getFileKey() {
+        return fileKey;
+    }
 
-	public void setFileKey(String fileKey) {
-		this.fileKey = fileKey;
-	}
+    public void setFileKey(String fileKey) {
+        this.fileKey = fileKey;
+    }
 
-	@Override
-	public String toString() {
-		String str = "";
-		if (!getFileKey().isEmpty())
-			str += "File: " + getFileKey() + ", ";
-		if (!getLabelKey().isEmpty())
-			str += "Label: " + getLabelKey() + ", ";
-		str += "Num of vertices: " + getVertexCount() + ", ";
-		str += "Num of edges: " + getEdgeCount();
-		return str;
-	}
+    @Override
+    public String toString() {
+        String str = "";
+        if (!getFileKey().isEmpty())
+            str += "File: " + getFileKey() + ", ";
+        if (!getLabelKey().isEmpty())
+            str += "Label: " + getLabelKey() + ", ";
+        str += "Num of vertices: " + getVertexCount() + ", ";
+        str += "Num of edges: " + getEdgeCount();
+        return str;
+    }
 
-	@Override
-	public boolean addEdge(Edge e, Vertex source, Vertex dest) {
-		return super.addEdge(e, source, dest, EdgeType.DIRECTED);
-	}
+    @Override
+    public boolean addEdge(Edge e, Vertex source, Vertex dest) {
+        return super.addEdge(e, source, dest, EdgeType.DIRECTED);
+    }
 
-	public Vertex findVertex(String vertexName) {
-		logger.debug("Looking for vertex: " + vertexName + ", in model: " + this.toString());
-		for (Vertex vertex : getVertices()) {
-			logger.debug("  " + vertex.getLabelKey());
-			if ((vertex.getLabelKey()).equals(vertexName)) {
-				logger.debug("    Found it: " + vertex);
-				return vertex;
-			}
-		}
-		return null;
-	}
+    public Vertex findVertex(String vertexName) {
+        logger.debug("Looking for vertex: " + vertexName + ", in model: " + this.toString());
+        for (Vertex vertex : getVertices()) {
+            logger.debug("  " + vertex.getLabelKey());
+            if ((vertex.getLabelKey()).equals(vertexName)) {
+                logger.debug("    Found it: " + vertex);
+                return vertex;
+            }
+        }
+        return null;
+    }
 
-	public Edge findEdge(String edgeName) {
-		logger.debug("Looking for edge: " + edgeName + ", in model: " + this.toString());
-		for (Edge edge : getEdges()) {
-			logger.debug("  " + edge.getLabelKey());
-			if ((edge.getLabelKey()).equals(edgeName)) {
-				logger.debug("    Found it: " + edge);
-				return edge;
-			}
-		}
-		return null;
-	}
+    public Edge findEdge(String edgeName) {
+        logger.debug("Looking for edge: " + edgeName + ", in model: " + this.toString());
+        for (Edge edge : getEdges()) {
+            logger.debug("  " + edge.getLabelKey());
+            if ((edge.getLabelKey()).equals(edgeName)) {
+                logger.debug("    Found it: " + edge);
+                return edge;
+            }
+        }
+        return null;
+    }
 }

@@ -27,8 +27,8 @@
 
 <!DOCTYPE MBTINIT SYSTEM "http://mbt.tigris.org/mbt_setup.dtd" >
 <MBTINIT EXECUTOR="offline" EXTENDED="true">
-  <MODEL PATH="graphml/bugs/Issue_9.graphml"/>
-  <GENERATOR TYPE="SHORTEST_NON_OPTIMIZED">
-    <CONDITION TYPE="TEST_DURATION" VALUE="35"/>
-  </GENERATOR>
+    <MODEL PATH="graphml/bugs/Issue_9.graphml"/>
+    <GENERATOR TYPE="SHORTEST_NON_OPTIMIZED">
+        <CONDITION TYPE="TEST_DURATION" VALUE="35"/>
+    </GENERATOR>
 </MBTINIT>

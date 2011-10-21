@@ -27,8 +27,12 @@ package org.graphwalker.core;
 
 public interface Application {
     Status getStatus();
+
     void setButtons();
+
     void updateLayout();
+
     void pause();
+
     void executingJavaTest(boolean flag);
 }

@@ -26,97 +26,100 @@
 
 package org.graphwalker.core.generators;
 
-import java.util.*;
-
 import org.apache.log4j.Logger;
 import org.graphwalker.core.Util;
 import org.graphwalker.core.conditions.StopCondition;
 import org.graphwalker.core.exceptions.FoundNoEdgeException;
 import org.graphwalker.core.graph.Edge;
 
-public class RandomPathGenerator extends PathGenerator {
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
+import java.util.Set;
 
-	private static Logger logger = Util.setupLogger(RandomPathGenerator.class);
+public class RandomPathGenerator extends AbstractPathGenerator {
 
-	private Random random = new Random();
+    private static Logger logger = Util.setupLogger(RandomPathGenerator.class);
 
-	public RandomPathGenerator(StopCondition stopCondition) {
-		super(stopCondition);
-	}
+    private Random random = new Random();
 
-	public RandomPathGenerator() {
-		super();
-	}
+    public RandomPathGenerator(StopCondition stopCondition) {
+        super(stopCondition);
+    }
 
-	@Override
-	public String[] getNext() throws InterruptedException {
-		Set<Edge> availableEdges;
-		try {
-			availableEdges = getMachine().getCurrentOutEdges();
-		} catch (FoundNoEdgeException e) {
-			throw new RuntimeException("No possible edges available for path", e);
-		}
-		if (Thread.interrupted()) {
-			throw new InterruptedException();
-		}
-		Edge edge = (getMachine().isWeighted() ? getWeightedEdge(availableEdges) : getRandomEdge(availableEdges));
-		getMachine().walkEdge(edge);
-		logger.debug(edge.getFullLabelKey());
-		logger.debug(edge);
-		return new String[] { getMachine().getEdgeName(edge), getMachine().getCurrentVertexName() };
-	}
+    public RandomPathGenerator() {
+        super();
+    }
 
-	private Edge getWeightedEdge(Set<Edge> availableEdges) {
+    @Override
+    public String[] getNext() throws InterruptedException {
+        Set<Edge> availableEdges;
+        try {
+            availableEdges = getMachine().getCurrentOutEdges();
+        } catch (FoundNoEdgeException e) {
+            throw new RuntimeException("No possible edges available for path", e);
+        }
+        if (Thread.interrupted()) {
+            throw new InterruptedException();
+        }
+        Edge edge = (getMachine().isWeighted() ? getWeightedEdge(availableEdges) : getRandomEdge(availableEdges));
+        getMachine().walkEdge(edge);
+        logger.debug(edge.getFullLabelKey());
+        logger.debug(edge);
+        return new String[]{getMachine().getEdgeName(edge), getMachine().getCurrentVertexName()};
+    }
 
-		Map<Edge, Double> probabilities = new HashMap<Edge, Double>();
-		int numberOfZeros = 0;
-		double sum = 0;
+    private Edge getWeightedEdge(Set<Edge> availableEdges) {
 
-		for (Edge edge : availableEdges) {
-			if (edge.getWeightKey() > 0) {
-				probabilities.put(edge, (double) edge.getWeightKey());
-				sum += edge.getWeightKey();
-				if (sum > 1) {
-					throw new RuntimeException("The sum of all weights in edges from vertex: '"
-					    + getMachine().getModel().getSource(edge).getLabelKey() + "', adds up to more than 1.00");
-				}
-			} else {
-				numberOfZeros++;
-				probabilities.put(edge, 0d);
-			}
-		}
+        Map<Edge, Double> probabilities = new HashMap<Edge, Double>();
+        int numberOfZeros = 0;
+        double sum = 0;
 
-		double rest = (1 - sum) / numberOfZeros;
-		int index = random.nextInt(100);
-		logger.debug("Randomized integer index = " + index);
+        for (Edge edge : availableEdges) {
+            if (edge.getWeightKey() > 0) {
+                probabilities.put(edge, (double) edge.getWeightKey());
+                sum += edge.getWeightKey();
+                if (sum > 1) {
+                    throw new RuntimeException("The sum of all weights in edges from vertex: '"
+                            + getMachine().getModel().getSource(edge).getLabelKey() + "', adds up to more than 1.00");
+                }
+            } else {
+                numberOfZeros++;
+                probabilities.put(edge, 0d);
+            }
+        }
 
-		double weight = 0;
+        double rest = (1 - sum) / numberOfZeros;
+        int index = random.nextInt(100);
+        logger.debug("Randomized integer index = " + index);
 
-		for (Edge edge : availableEdges) {
+        double weight = 0;
 
-			if (probabilities.get(edge) == 0) {
-				probabilities.put(edge, rest);
-			}
+        for (Edge edge : availableEdges) {
 
-			logger.debug("The edge: '" + edge.getLabelKey() + "' is given the probability of " + probabilities.get(edge) * 100 + "%");
+            if (probabilities.get(edge) == 0) {
+                probabilities.put(edge, rest);
+            }
 
-			weight = weight + probabilities.get(edge) * 100;
-			logger.debug("Current weight is: " + weight);
-			if (index < weight) {
-				logger.debug("Selected edge is: " + edge);
-				return edge;
-			}
-		}
+            logger.debug("The edge: '" + edge.getLabelKey() + "' is given the probability of " + probabilities.get(edge) * 100 + "%");
 
-		throw new RuntimeException("No edge found");
-	}
+            weight = weight + probabilities.get(edge) * 100;
+            logger.debug("Current weight is: " + weight);
+            if (index < weight) {
+                logger.debug("Selected edge is: " + edge);
+                return edge;
+            }
+        }
 
-	private Edge getRandomEdge(Set<Edge> availableEdges) {
-		return (Edge) availableEdges.toArray()[random.nextInt(availableEdges.size())];
-	}
+        throw new RuntimeException("No edge found");
+    }
 
-	@Override
-	public String toString() {
-		return "RANDOM{" + super.toString() + "}";
-	}
+    private Edge getRandomEdge(Set<Edge> availableEdges) {
+        return (Edge) availableEdges.toArray()[random.nextInt(availableEdges.size())];
+    }
+
+    @Override
+    public String toString() {
+        return "RANDOM{" + super.toString() + "}";
+    }
 }

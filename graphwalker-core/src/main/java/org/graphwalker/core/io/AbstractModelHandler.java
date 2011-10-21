@@ -26,23 +26,23 @@
 
 package org.graphwalker.core.io;
 
-import java.io.PrintStream;
-
 import org.graphwalker.core.graph.Graph;
+
+import java.io.PrintStream;
 
 public abstract class AbstractModelHandler {
 
-	protected Graph graph;
+    protected Graph graph;
 
-	public abstract void load(String fileName);
+    public abstract void load(String fileName);
 
-	public abstract void save(PrintStream ps, boolean printIndex);
+    public abstract void save(PrintStream ps, boolean printIndex);
 
-	public Graph getModel() {
-		return graph;
-	}
+    public Graph getModel() {
+        return graph;
+    }
 
-	public void setModel(Graph graph) {
-		this.graph = graph;
-	}
+    public void setModel(Graph graph) {
+        this.graph = graph;
+    }
 }

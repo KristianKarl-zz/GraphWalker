@@ -32,35 +32,35 @@ import java.util.HashSet;
 
 public class ReachedRequirement extends AbstractStopCondition {
 
-	private Collection<String> requirements;
+    private Collection<String> requirements;
 
-	public ReachedRequirement(String requirements) {
-		String[] list = requirements.split(",");
-		for (int i = 0; i < list.length; i++) {
-			list[i] = list[i].trim();
-		}
-		this.requirements = new HashSet<String>(Arrays.asList(list));
-	}
+    public ReachedRequirement(String requirements) {
+        String[] list = requirements.split(",");
+        for (int i = 0; i < list.length; i++) {
+            list[i] = list[i].trim();
+        }
+        this.requirements = new HashSet<String>(Arrays.asList(list));
+    }
 
-	@Override
-	public boolean isFulfilled() {
-		return getMachine().getCoveredRequirements().containsAll(requirements);
-	}
+    @Override
+    public boolean isFulfilled() {
+        return getMachine().getCoveredRequirements().containsAll(requirements);
+    }
 
-	@Override
-	public double getFulfilment() {
-		Collection<String> covered = getMachine().getCoveredRequirements();
-		covered.retainAll(requirements);
-		return covered.size() / (double) requirements.size();
-	}
+    @Override
+    public double getFulfilment() {
+        Collection<String> covered = getMachine().getCoveredRequirements();
+        covered.retainAll(requirements);
+        return covered.size() / (double) requirements.size();
+    }
 
-	@Override
-	public String toString() {
-		return "RC=" + Arrays.deepToString(requirements.toArray());
-	}
+    @Override
+    public String toString() {
+        return "RC=" + Arrays.deepToString(requirements.toArray());
+    }
 
-	public Collection<String> getRequirements() {
-		return requirements;
-	}
+    public Collection<String> getRequirements() {
+        return requirements;
+    }
 
 }

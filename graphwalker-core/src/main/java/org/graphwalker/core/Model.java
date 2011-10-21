@@ -31,20 +31,20 @@ import java.util.Observer;
 
 public class Model implements Observer {
 
-	ModelBasedTesting mbt;
+    ModelBasedTesting mbt;
 
-	@Override
-	public void update(Observable o, Object arg) {
-		// TODO Auto-generated method stub
+    @Override
+    public void update(Observable o, Object arg) {
+        // TODO Auto-generated method stub
 
-	}
+    }
 
-	public ModelBasedTesting getMbt() {
-		return mbt;
-	}
+    public ModelBasedTesting getMbt() {
+        return mbt;
+    }
 
-	public void setMbt(ModelBasedTesting mbt) {
-		this.mbt = mbt;
-	}
+    public void setMbt(ModelBasedTesting mbt) {
+        this.mbt = mbt;
+    }
 
 }

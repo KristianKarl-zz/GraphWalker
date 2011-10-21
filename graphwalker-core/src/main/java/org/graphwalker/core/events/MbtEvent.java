@@ -28,6 +28,6 @@ package org.graphwalker.core.events;
 
 public interface MbtEvent {
 
-	public void getNextEvent();
+    public void getNextEvent();
 
 }

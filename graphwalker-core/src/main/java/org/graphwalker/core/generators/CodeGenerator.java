@@ -40,7 +40,7 @@ import org.graphwalker.core.conditions.StopCondition;
  * 'Vertex'.<br>
  * <br>
  * <strong>Below is an example of a template.</strong>
- * 
+ * <p/>
  * <pre>
  * /**
  * * This method implements the {EDGE_VERTEX} '{LABEL}'
@@ -54,42 +54,42 @@ import org.graphwalker.core.conditions.StopCondition;
  */
 public class CodeGenerator extends ListGenerator {
 
-	public CodeGenerator(StopCondition stopCondition) {
-		super(stopCondition);
-	}
+    public CodeGenerator(StopCondition stopCondition) {
+        super(stopCondition);
+    }
 
-	public CodeGenerator() {
-		super();
-	}
+    public CodeGenerator() {
+        super();
+    }
 
-	private String[] template; // {HEADER, BODY, FOOTER}
-	private boolean first = true;
+    private String[] template; // {HEADER, BODY, FOOTER}
+    private boolean first = true;
 
-	public void setTemplate(String[] template) {
-		this.template = template.clone();
-	}
+    public void setTemplate(String[] template) {
+        this.template = template.clone();
+    }
 
-	@Override
-	public String[] getNext() {
-		String[] retur = super.getNext();
-		if (retur[0].isEmpty()) {
-			retur[1] = "";
-			return retur;
-		}
-		retur[0] = (first && template[0].length() > 0 ? template[0] + "\n" : "")
-		    + // HEADER
-		    template[1]
-		        // BODY
-		        .replaceAll("\\{LABEL\\}", retur[0]).replaceAll("\\{EDGE_VERTEX\\}", retur[1])
-		        .replaceAll("\\{DESCRIPTION\\}", retur[2].replaceAll("\n", "\n   * "))
-		    + (!hasNext() && template[2].length() > 0 ? "\n" + template[2] : ""); // FOOTER
-		retur[1] = "";
-		first = false;
-		return retur;
-	}
+    @Override
+    public String[] getNext() {
+        String[] retur = super.getNext();
+        if (retur[0].isEmpty()) {
+            retur[1] = "";
+            return retur;
+        }
+        retur[0] = (first && template[0].length() > 0 ? template[0] + "\n" : "")
+                + // HEADER
+                template[1]
+                        // BODY
+                        .replaceAll("\\{LABEL\\}", retur[0]).replaceAll("\\{EDGE_VERTEX\\}", retur[1])
+                        .replaceAll("\\{DESCRIPTION\\}", retur[2].replaceAll("\n", "\n   * "))
+                + (!hasNext() && template[2].length() > 0 ? "\n" + template[2] : ""); // FOOTER
+        retur[1] = "";
+        first = false;
+        return retur;
+    }
 
-	@Override
-	public String toString() {
-		return "CODE";
-	}
+    @Override
+    public String toString() {
+        return "CODE";
+    }
 }

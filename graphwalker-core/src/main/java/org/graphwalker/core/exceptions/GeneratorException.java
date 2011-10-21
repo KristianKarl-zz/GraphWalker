@@ -27,9 +27,9 @@
 package org.graphwalker.core.exceptions;
 
 public class GeneratorException extends Exception {
-	private static final long serialVersionUID = -6355062559015580205L;
+    private static final long serialVersionUID = -6355062559015580205L;
 
-	public GeneratorException(String message) {
-		super(message);
-	}
+    public GeneratorException(String message) {
+        super(message);
+    }
 }

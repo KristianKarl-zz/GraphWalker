@@ -29,13 +29,13 @@ import org.graphwalker.core.machines.FiniteStateMachine;
 
 public abstract class AbstractStopCondition implements StopCondition {
 
-	private FiniteStateMachine machine;
+    private FiniteStateMachine machine;
 
-	public FiniteStateMachine getMachine() {
-		return machine;
-	}
+    public FiniteStateMachine getMachine() {
+        return machine;
+    }
 
-	public void setMachine(FiniteStateMachine machine) {
-		this.machine = machine;
-	}
+    public void setMachine(FiniteStateMachine machine) {
+        this.machine = machine;
+    }
 }

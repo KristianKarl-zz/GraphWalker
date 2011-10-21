@@ -26,180 +26,175 @@
 
 package org.graphwalker.core.generators;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
-
 import org.apache.log4j.Logger;
 import org.graphwalker.core.Util;
 import org.graphwalker.core.conditions.StopCondition;
 import org.graphwalker.core.exceptions.FoundNoEdgeException;
 import org.graphwalker.core.graph.Edge;
 
+import java.util.*;
+
 /**
  * The generator generates paths through the model in a way that makes sure all
  * path permutations of ever increasing depth is tested.
- * 
+ * <p/>
  * The first pass through the model finishes when a cycle in the model is found.
  * The second pass traverses the model until all edges have been visited twice
  * or more. The third pass traverses the model until all available combinations
  * of 2 edges have been visited twice or more . . . The n:th pass traverses the
  * model until all available combinations of n edges have been visited twice or
  * more
- * 
+ * <p/>
  * The algorithm always tries the "path less traveled" where a path is a list of
  * n edges. If several paths are available with the same number of traversals on
  * is chosen by random.
  */
-public class AllPathPermutationsGenerator extends PathGenerator {
+public class AllPathPermutationsGenerator extends AbstractPathGenerator {
 
-	private static Logger logger = Util.setupLogger(AllPathPermutationsGenerator.class);
+    private static Logger logger = Util.setupLogger(AllPathPermutationsGenerator.class);
 
-	private final Random random = new Random();
+    private final Random random = new Random();
 
-	/* Contains all walked paths for a specific depth */
-	private final HashMap<Integer, Integer> pathWalked = new HashMap<Integer, Integer>();
+    /* Contains all walked paths for a specific depth */
+    private final HashMap<Integer, Integer> pathWalked = new HashMap<Integer, Integer>();
 
-	/* List of edges comprising the current path */
-	private final List<Edge> savedEdges = new ArrayList<Edge>();
+    /* List of edges comprising the current path */
+    private final List<Edge> savedEdges = new ArrayList<Edge>();
 
-	private int currentDepth;
+    private int currentDepth;
 
-	public AllPathPermutationsGenerator(final StopCondition stopCondition) {
-		super(stopCondition);
-		currentDepth = 0;
-	}
+    public AllPathPermutationsGenerator(final StopCondition stopCondition) {
+        super(stopCondition);
+        currentDepth = 0;
+    }
 
-	public AllPathPermutationsGenerator() {
-		super();
-		currentDepth = 0;
-	}
+    public AllPathPermutationsGenerator() {
+        super();
+        currentDepth = 0;
+    }
 
-	@Override
-	public String[] getNext() throws InterruptedException {
-		Set<Edge> availableEdges;
+    @Override
+    public String[] getNext() throws InterruptedException {
+        Set<Edge> availableEdges;
 
-		try {
-			availableEdges = getMachine().getCurrentOutEdges();
-		} catch (FoundNoEdgeException e) {
-			throw new RuntimeException("No possible edges available for path", e);
-		}
+        try {
+            availableEdges = getMachine().getCurrentOutEdges();
+        } catch (FoundNoEdgeException e) {
+            throw new RuntimeException("No possible edges available for path", e);
+        }
 
-		Set<Edge> selectedEdges = new HashSet<Edge>();
-		int fewestVisits = -1;
+        Set<Edge> selectedEdges = new HashSet<Edge>();
+        int fewestVisits = -1;
 
-		// Loop through available edges and pick the one which results in a path
-		// least traversed.
-		for (Edge edge : availableEdges) {
+        // Loop through available edges and pick the one which results in a path
+        // least traversed.
+        for (Edge edge : availableEdges) {
 
-			// Add available edge to the current path
-			savedEdges.add(edge);
+            // Add available edge to the current path
+            savedEdges.add(edge);
 
-			// Has it been traversed before and if so how many times
-			Integer hashValue = pathWalked.get(savedEdges.hashCode());
+            // Has it been traversed before and if so how many times
+            Integer hashValue = pathWalked.get(savedEdges.hashCode());
 
-			// Never walked path
-			if (hashValue == null) {
-				fewestVisits = 0;
-				selectedEdges.add(edge);
+            // Never walked path
+            if (hashValue == null) {
+                fewestVisits = 0;
+                selectedEdges.add(edge);
 
-				// Has been traversed but fewer times
-			} else if (hashValue < fewestVisits || fewestVisits == -1) {
-				fewestVisits = hashValue;
-				selectedEdges.clear();
-				selectedEdges.add(edge);
+                // Has been traversed but fewer times
+            } else if (hashValue < fewestVisits || fewestVisits == -1) {
+                fewestVisits = hashValue;
+                selectedEdges.clear();
+                selectedEdges.add(edge);
 
-				// Has been traversed but equal times
-			} else if (hashValue == fewestVisits) {
-				selectedEdges.add(edge);
-			}
+                // Has been traversed but equal times
+            } else if (hashValue == fewestVisits) {
+                selectedEdges.add(edge);
+            }
 
-			// Remove the edge from the current path
-			savedEdges.remove(edge);
-		}
-		Edge selectedEdge = getRandomEdge(selectedEdges);
+            // Remove the edge from the current path
+            savedEdges.remove(edge);
+        }
+        Edge selectedEdge = getRandomEdge(selectedEdges);
 
-		// Add the selected edge to the current path
-		savedEdges.add(selectedEdge);
+        // Add the selected edge to the current path
+        savedEdges.add(selectedEdge);
 
-		// Update number of traversals of this path
-		pathWalked.put(savedEdges.hashCode(), fewestVisits + 1);
+        // Update number of traversals of this path
+        pathWalked.put(savedEdges.hashCode(), fewestVisits + 1);
 
-		// Check if all paths have been traversed twice or more
-		// If so, increase the length of the path by 1 and clear the hash
-		if (checkCompletion()) {
-			currentDepth++;
-			AllPathPermutationsGenerator.logger.debug("All combinations done, changing look back depth to: " + currentDepth);
-			pathWalked.clear();
-		} else if (currentDepth == 0 && checkCompletionFirst()) {
-			currentDepth++;
-			AllPathPermutationsGenerator.logger.debug("Cycle detected, starting algorithm with depth: " + currentDepth);
-			pathWalked.clear();
-			savedEdges.remove(0);
+        // Check if all paths have been traversed twice or more
+        // If so, increase the length of the path by 1 and clear the hash
+        if (checkCompletion()) {
+            currentDepth++;
+            AllPathPermutationsGenerator.logger.debug("All combinations done, changing look back depth to: " + currentDepth);
+            pathWalked.clear();
+        } else if (currentDepth == 0 && checkCompletionFirst()) {
+            currentDepth++;
+            AllPathPermutationsGenerator.logger.debug("Cycle detected, starting algorithm with depth: " + currentDepth);
+            pathWalked.clear();
+            savedEdges.remove(0);
 
-			// If not, remove the first edge in the path
-		} else {
-			savedEdges.remove(0);
-		}
+            // If not, remove the first edge in the path
+        } else {
+            savedEdges.remove(0);
+        }
 
-		getMachine().walkEdge(selectedEdge);
-		AllPathPermutationsGenerator.logger.debug(selectedEdge.getFullLabelKey());
-		AllPathPermutationsGenerator.logger.debug(selectedEdge);
-		AllPathPermutationsGenerator.logger.trace("Current Path: " + printPath());
-		AllPathPermutationsGenerator.logger.debug("Hash size: " + pathWalked.size());
-		AllPathPermutationsGenerator.logger.trace("Hash: " + printHash());
-		return new String[] { getMachine().getEdgeName(selectedEdge), getMachine().getCurrentVertexName() };
-	}
+        getMachine().walkEdge(selectedEdge);
+        AllPathPermutationsGenerator.logger.debug(selectedEdge.getFullLabelKey());
+        AllPathPermutationsGenerator.logger.debug(selectedEdge);
+        AllPathPermutationsGenerator.logger.trace("Current Path: " + printPath());
+        AllPathPermutationsGenerator.logger.debug("Hash size: " + pathWalked.size());
+        AllPathPermutationsGenerator.logger.trace("Hash: " + printHash());
+        return new String[]{getMachine().getEdgeName(selectedEdge), getMachine().getCurrentVertexName()};
+    }
 
-	private boolean checkCompletionFirst() {
-		for (Integer value : pathWalked.values()) {
-			if (value == 2) {
-				return true;
-			}
-		}
-		return false;
-	}
+    private boolean checkCompletionFirst() {
+        for (Integer value : pathWalked.values()) {
+            if (value == 2) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-	private boolean checkCompletion() {
-		for (Integer value : pathWalked.values()) {
-			if (value == 1) {
-				return false;
-			}
-		}
-		return true;
-	}
+    private boolean checkCompletion() {
+        for (Integer value : pathWalked.values()) {
+            if (value == 1) {
+                return false;
+            }
+        }
+        return true;
+    }
 
-	private String printPath() {
-		StringBuilder stringBuilder = new StringBuilder();
-		for (Edge edge : savedEdges) {
-			stringBuilder.append(edge.getFullLabelKey());
-		}
-		return stringBuilder.toString();
-	}
+    private String printPath() {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (Edge edge : savedEdges) {
+            stringBuilder.append(edge.getFullLabelKey());
+        }
+        return stringBuilder.toString();
+    }
 
-	private String printHash() {
-		StringBuilder stringBuilder = new StringBuilder();
-		for (Integer value : pathWalked.values()) {
-			stringBuilder.append(value);
-			stringBuilder.append(" ");
-		}
-		return stringBuilder.toString();
+    private String printHash() {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (Integer value : pathWalked.values()) {
+            stringBuilder.append(value);
+            stringBuilder.append(" ");
+        }
+        return stringBuilder.toString();
 
-	}
+    }
 
-	private Edge getRandomEdge(final Set<Edge> availableEdges) {
-		return (Edge) availableEdges.toArray()[random.nextInt(availableEdges.size())];
-	}
+    private Edge getRandomEdge(final Set<Edge> availableEdges) {
+        return (Edge) availableEdges.toArray()[random.nextInt(availableEdges.size())];
+    }
 
-	@Override
-	public String toString() {
-		return "COMBINATIONS{" + super.toString() + "}";
-	}
+    @Override
+    public String toString() {
+        return "COMBINATIONS{" + super.toString() + "}";
+    }
 
-	public int getDepth() {
-		return currentDepth;
-	}
+    public int getDepth() {
+        return currentDepth;
+    }
 }

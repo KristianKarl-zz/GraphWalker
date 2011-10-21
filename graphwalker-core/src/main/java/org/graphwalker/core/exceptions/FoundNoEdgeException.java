@@ -30,15 +30,14 @@ package org.graphwalker.core.exceptions;
  * This exception is thrown during test sequence generation, when no out edge is
  * found from a given vertex. This could be due to a cul-de-sac, which may or
  * may not be perfectly all right.
- * 
  */
 public class FoundNoEdgeException extends Exception {
-	/**
-	 * @param string
-	 */
-	public FoundNoEdgeException(String string) {
-		super(string);
-	}
+    /**
+     * @param string
+     */
+    public FoundNoEdgeException(String string) {
+        super(string);
+    }
 
-	private static final long serialVersionUID = -2597269122921601356L;
+    private static final long serialVersionUID = -2597269122921601356L;
 }

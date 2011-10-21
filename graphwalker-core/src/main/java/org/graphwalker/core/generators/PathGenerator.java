@@ -26,80 +26,33 @@
 
 package org.graphwalker.core.generators;
 
-import java.util.Set;
-
 import org.graphwalker.core.conditions.StopCondition;
-import org.graphwalker.core.exceptions.FoundNoEdgeException;
 import org.graphwalker.core.graph.Edge;
 import org.graphwalker.core.machines.FiniteStateMachine;
 
-public abstract class PathGenerator {
-	private FiniteStateMachine machine;
-	private StopCondition stopCondition;
+public interface PathGenerator {
 
-	public abstract String[] getNext() throws InterruptedException;
+    String[] getNext() throws InterruptedException;
 
-	public PathGenerator(StopCondition stopCondition) {
-		this.stopCondition = stopCondition;
-	}
+    boolean hasNext();
 
-	public boolean hasNext() {
-		return !stopCondition.isFulfilled();
-	}
+    FiniteStateMachine getMachine();
 
-	public FiniteStateMachine getMachine() {
-		return machine;
-	}
+    void setMachine(FiniteStateMachine machine);
 
-	public void setMachine(FiniteStateMachine machine) {
-		this.machine = machine;
-		if (this.stopCondition != null) {
-			this.stopCondition.setMachine(machine);
-		}
-	}
+    void setStopCondition(StopCondition stopCondition);
 
-	public void setStopCondition(StopCondition stopCondition) {
-		this.stopCondition = stopCondition;
-		if (this.machine != null) {
-			this.stopCondition.setMachine(this.machine);
-		}
-	}
+    StopCondition getStopCondition();
 
-	public StopCondition getStopCondition() {
-		return stopCondition;
-	}
+    /**
+     * @return the condition fulfilment
+     */
+    double getConditionFulfilment();
 
-	/**
-	 * @return the condition fulfilment
-	 */
-	public double getConditionFulfilment() {
-		return stopCondition.getFulfilment();
-	}
+    /**
+     * Will reset the generator to its initial vertex.
+     */
+    void reset();
 
-	/**
-	 * Will reset the generator to its initial vertex.
-	 */
-	public void reset() {
-	}
-
-	PathGenerator() {
-	}
-
-	@Override
-	public String toString() {
-		if (getStopCondition() != null)
-			return getStopCondition().toString();
-		return "";
-	}
-
-	protected boolean isEdgeAvailable(Edge edge) {
-		Set<Edge> availableEdges;
-		try {
-			availableEdges = getMachine().getCurrentOutEdges();
-		} catch (FoundNoEdgeException e) {
-			throw new RuntimeException("No possible edges available for path", e);
-		}
-		return availableEdges.contains(edge);
-
-	}
+    boolean isEdgeAvailable(Edge edge);
 }

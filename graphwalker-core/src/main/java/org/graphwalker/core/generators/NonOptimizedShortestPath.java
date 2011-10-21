@@ -26,116 +26,115 @@
 
 package org.graphwalker.core.generators;
 
-import java.util.List;
-import java.util.Vector;
-
+import edu.uci.ics.jung.algorithms.shortestpath.DijkstraShortestPath;
 import org.apache.log4j.Logger;
 import org.graphwalker.core.Util;
 import org.graphwalker.core.conditions.StopCondition;
 import org.graphwalker.core.graph.Edge;
 import org.graphwalker.core.graph.Vertex;
 
-import edu.uci.ics.jung.algorithms.shortestpath.DijkstraShortestPath;
+import java.util.List;
+import java.util.Vector;
 
 public class NonOptimizedShortestPath extends RandomPathGenerator {
 
-	private boolean toggleAllOrUnvisited = true;
+    private boolean toggleAllOrUnvisited = true;
 
-	public NonOptimizedShortestPath(StopCondition stopCondition) {
-		super(stopCondition);
-	}
+    public NonOptimizedShortestPath(StopCondition stopCondition) {
+        super(stopCondition);
+    }
 
-	private static Logger logger = Util.setupLogger(NonOptimizedShortestPath.class);
-	private List<Edge> dijkstraShortestPath;
+    private static Logger logger = Util.setupLogger(NonOptimizedShortestPath.class);
+    private List<Edge> dijkstraShortestPath;
 
-	public NonOptimizedShortestPath() {
-		super();
-	}
+    public NonOptimizedShortestPath() {
+        super();
+    }
 
-	@Override
-	public String[] getNext() throws InterruptedException {
-		Util.AbortIf(!hasNext(), "Finished");
+    @Override
+    public String[] getNext() throws InterruptedException {
+        Util.AbortIf(!hasNext(), "Finished");
 
-		if (Thread.interrupted()) {
-			throw new InterruptedException();
-		}
-		Edge edge = null;
-		do {
-			if (!setDijkstraPath()) {
-				return super.getNext();
-			}
-			edge = dijkstraShortestPath.remove(0);
-		} while (!isEdgeAvailable(edge));
+        if (Thread.interrupted()) {
+            throw new InterruptedException();
+        }
+        Edge edge = null;
+        do {
+            if (!setDijkstraPath()) {
+                return super.getNext();
+            }
+            edge = dijkstraShortestPath.remove(0);
+        } while (!isEdgeAvailable(edge));
 
-		getMachine().walkEdge(edge);
-		return new String[] { getMachine().getEdgeName(edge), getMachine().getCurrentVertexName() };
-	}
+        getMachine().walkEdge(edge);
+        return new String[]{getMachine().getEdgeName(edge), getMachine().getCurrentVertexName()};
+    }
 
-	private boolean setDijkstraPath() {
-		// Is there a path to walk, given from DijkstraShortestPath?
-		if (dijkstraShortestPath == null || dijkstraShortestPath.size() == 0) {
-			Vector<Edge> unvisitedEdges = getMachine().getUncoveredEdges();
-			logger.debug("Number of unvisited edges: " + unvisitedEdges.size());
+    private boolean setDijkstraPath() {
+        // Is there a path to walk, given from DijkstraShortestPath?
+        if (dijkstraShortestPath == null || dijkstraShortestPath.size() == 0) {
+            Vector<Edge> unvisitedEdges = getMachine().getUncoveredEdges();
+            logger.debug("Number of unvisited edges: " + unvisitedEdges.size());
 
-			Edge e = null;
-			if (unvisitedEdges.size() == 0) {
-				return false;
-			} else {
-				Object[] shuffledList = null;
-				if (toggleAllOrUnvisited) {
-					shuffledList = Util.shuffle(unvisitedEdges.toArray());
-				} else {
-					shuffledList = Util.shuffle(getMachine().getAllEdgesExceptStartEdge().toArray());
-				}
-				toggleAllOrUnvisited = !toggleAllOrUnvisited;
+            Edge e = null;
+            if (unvisitedEdges.size() == 0) {
+                return false;
+            } else {
+                Object[] shuffledList = null;
+                if (toggleAllOrUnvisited) {
+                    shuffledList = Util.shuffle(unvisitedEdges.toArray());
+                } else {
+                    shuffledList = Util.shuffle(getMachine().getAllEdgesExceptStartEdge().toArray());
+                }
+                toggleAllOrUnvisited = !toggleAllOrUnvisited;
 
-				e = (Edge) shuffledList[0];
-			}
+                e = (Edge) shuffledList[0];
+            }
 
-			logger.debug("Current vertex: " + getMachine().getCurrentVertex());
-			logger.debug("Will try to reach unvisited edge: " + e);
+            logger.debug("Current vertex: " + getMachine().getCurrentVertex());
+            logger.debug("Will try to reach unvisited edge: " + e);
 
-			dijkstraShortestPath = new DijkstraShortestPath<Vertex, Edge>(getMachine().getModel()).getPath(getMachine().getCurrentVertex(),
-			    getMachine().getModel().getSource(e));
+            dijkstraShortestPath = new DijkstraShortestPath<Vertex, Edge>(getMachine().getModel()).getPath(getMachine().getCurrentVertex(),
+                    getMachine().getModel().getSource(e));
 
-			// DijkstraShortestPath.getPath returns 0 if there is no way to reach the
-			// destination. But,
-			// DijkstraShortestPath.getPath also returns 0 paths if the the source and
-			// destination vertex are the same, even if there is
-			// an edge there (self-loop). So we have to check for that.
-			if (dijkstraShortestPath.size() == 0) {
-				if (!getMachine().getCurrentVertex().getIndexKey().equals(getMachine().getModel().getSource(e).getIndexKey())) {
-					if (!toggleAllOrUnvisited) {
-						String msg = "There is no way to reach: " + e + ", from: " + getMachine().getCurrentVertex();
-						logger.error(msg);
-						throw new RuntimeException(msg);
-					}
-				}
-			}
+            // DijkstraShortestPath.getPath returns 0 if there is no way to reach the
+            // destination. But,
+            // DijkstraShortestPath.getPath also returns 0 paths if the the source and
+            // destination vertex are the same, even if there is
+            // an edge there (self-loop). So we have to check for that.
+            if (dijkstraShortestPath.size() == 0) {
+                if (!getMachine().getCurrentVertex().getIndexKey().equals(getMachine().getModel().getSource(e).getIndexKey())) {
+                    if (!toggleAllOrUnvisited) {
+                        String msg = "There is no way to reach: " + e + ", from: " + getMachine().getCurrentVertex();
+                        logger.error(msg);
+                        throw new RuntimeException(msg);
+                    }
+                }
+            }
 
-			dijkstraShortestPath.add(e);
-			logger.debug("Dijkstra path length to that edge: " + dijkstraShortestPath.size());
-			logger.debug("Dijksta path:");
-			for (Edge object : dijkstraShortestPath) {
-				logger.debug("  " + object);
-			}
-		}
-		return true;
-	}
+            dijkstraShortestPath.add(e);
+            logger.debug("Dijkstra path length to that edge: " + dijkstraShortestPath.size());
+            logger.debug("Dijksta path:");
+            for (Edge object : dijkstraShortestPath) {
+                logger.debug("  " + object);
+            }
+        }
+        return true;
+    }
 
-	public void emptyCurrentPath() {
-		if (dijkstraShortestPath == null || dijkstraShortestPath.size() == 0) {
-			return;
-		}
-		dijkstraShortestPath = null;
-	}
+    public void emptyCurrentPath() {
+        if (dijkstraShortestPath == null || dijkstraShortestPath.size() == 0) {
+            return;
+        }
+        dijkstraShortestPath = null;
+    }
 
-	@Override
-	public String toString() {
-		if (getStopCondition() == null) {
-			return "SHORTESTNONOPT";
-		} else {
-			return "SHORTESTNONOPT{" + getStopCondition().toString() + "}";
-		}
-	}
+    @Override
+    public String toString() {
+        if (getStopCondition() == null) {
+            return "SHORTESTNONOPT";
+        } else {
+            return "SHORTESTNONOPT{" + getStopCondition().toString() + "}";
+        }
+    }
 }

@@ -38,40 +38,40 @@ import java.util.regex.Pattern;
 
 public class ParseLog {
 
-	public static class LoggedItem {
-		public Integer index = null;
-		public String data = null;
-	}
+    public static class LoggedItem {
+        public Integer index = null;
+        public String data = null;
+    }
 
-	public static Vector<LoggedItem> readLog(File logFile) throws IOException {
-		Vector<LoggedItem> list = new Vector<LoggedItem>();
-		FileReader reader = null;
-		try {
-			reader = new FileReader(logFile);
-			BufferedReader file = new BufferedReader(reader);
-			String line;
-			while ((line = file.readLine()) != null) {
-				Pattern p = Pattern.compile("INFO  - (Vertex|Edge): '(\\S*)', INDEX=(\\d+) ");
-				Matcher m = p.matcher(line);
-				if (m.find()) {
-					LoggedItem item = new LoggedItem();
-					item.index = Integer.valueOf(m.group(3));
-					if (m.group(1).equals("Vertex")) {
-						p = Pattern.compile("DATA: (.*)");
-						m = p.matcher(line);
-						if (m.find()) {
-							item.data = m.group(1);
-						}
-					}
-					list.add(item);
-				}
-			}
-			file.close();
-		} catch (IOException e) {
-			throw e; // TODO:
-		} finally {
-			Util.closeQuietly(reader);
-		}
-		return list;
-	}
+    public static Vector<LoggedItem> readLog(File logFile) throws IOException {
+        Vector<LoggedItem> list = new Vector<LoggedItem>();
+        FileReader reader = null;
+        try {
+            reader = new FileReader(logFile);
+            BufferedReader file = new BufferedReader(reader);
+            String line;
+            while ((line = file.readLine()) != null) {
+                Pattern p = Pattern.compile("INFO  - (Vertex|Edge): '(\\S*)', INDEX=(\\d+) ");
+                Matcher m = p.matcher(line);
+                if (m.find()) {
+                    LoggedItem item = new LoggedItem();
+                    item.index = Integer.valueOf(m.group(3));
+                    if (m.group(1).equals("Vertex")) {
+                        p = Pattern.compile("DATA: (.*)");
+                        m = p.matcher(line);
+                        if (m.find()) {
+                            item.data = m.group(1);
+                        }
+                    }
+                    list.add(item);
+                }
+            }
+            file.close();
+        } catch (IOException e) {
+            throw e; // TODO:
+        } finally {
+            Util.closeQuietly(reader);
+        }
+        return list;
+    }
 }

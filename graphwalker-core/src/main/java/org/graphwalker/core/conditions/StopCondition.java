@@ -31,17 +31,17 @@ import org.graphwalker.core.machines.FiniteStateMachine;
 public interface StopCondition {
 
 
-	FiniteStateMachine getMachine();
+    FiniteStateMachine getMachine();
 
-	void setMachine(FiniteStateMachine machine);
+    void setMachine(FiniteStateMachine machine);
 
-	/**
-	 * @return true if the condition is fulfilled
-	 */
-	boolean isFulfilled();
+    /**
+     * @return true if the condition is fulfilled
+     */
+    boolean isFulfilled();
 
-	/**
-	 * @return the condition fulfilment
-	 */
-	double getFulfilment();
+    /**
+     * @return the condition fulfilment
+     */
+    double getFulfilment();
 }

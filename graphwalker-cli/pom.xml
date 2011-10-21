@@ -15,10 +15,10 @@
     <name>GraphWalker CLI</name>
 
     <dependencies>
-		<dependency>
-			<groupId>org.graphwalker</groupId>
-			<artifactId>graphwalker-core</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.graphwalker</groupId>
+            <artifactId>graphwalker-core</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.graphwalker</groupId>
             <artifactId>graphwalker-webservice</artifactId>

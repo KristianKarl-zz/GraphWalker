@@ -26,8 +26,6 @@
 
 package org.graphwalker.core.generators;
 
-import junit.framework.TestCase;
-
 import org.apache.log4j.Logger;
 import org.graphwalker.core.Util;
 import org.graphwalker.core.conditions.TestCaseLength;
@@ -38,28 +36,28 @@ import org.junit.Assert;
 
 public class AllPathPermutationsGeneratorTest { //extends TestCase {
 
-	private final Logger logger = Util.setupLogger(AllPathPermutationsGeneratorTest.class);
+    private final Logger logger = Util.setupLogger(AllPathPermutationsGeneratorTest.class);
 
-	public void test_AllPathPermutationsGeneratior() throws StopConditionException, InterruptedException {
-		logger.info("TEST: test_AllPathPermutationsGeneration");
-		logger.info("=======================================================================");
-		GraphML gml = new GraphML();
-		gml.load("graphml/permutations/simple.graphml");
-		FiniteStateMachine FSM = new FiniteStateMachine();
-		FSM.setModel(gml.getModel());
-		FSM.setWeighted(false);
+    public void test_AllPathPermutationsGeneratior() throws StopConditionException, InterruptedException {
+        logger.info("TEST: test_AllPathPermutationsGeneration");
+        logger.info("=======================================================================");
+        GraphML gml = new GraphML();
+        gml.load("graphml/permutations/simple.graphml");
+        FiniteStateMachine FSM = new FiniteStateMachine();
+        FSM.setModel(gml.getModel());
+        FSM.setWeighted(false);
 
-		PathGenerator pathGenerator = new AllPathPermutationsGenerator(new TestCaseLength(42));
-		pathGenerator.setMachine(FSM);
+        PathGenerator pathGenerator = new AllPathPermutationsGenerator(new TestCaseLength(42));
+        pathGenerator.setMachine(FSM);
 
-		while (pathGenerator.hasNext()) {
-			String[] stepPair = pathGenerator.getNext();
-			int stats[] = FSM.getStatistics();
-			int ec = 100 * stats[1] / stats[0];
+        while (pathGenerator.hasNext()) {
+            String[] stepPair = pathGenerator.getNext();
+            int stats[] = FSM.getStatistics();
+            int ec = 100 * stats[1] / stats[0];
 
-			logger.debug("call( " + stepPair[0] + " ) then verify( " + stepPair[1] + " ) --> Edge coverage @ " + ec + "%");
-		}
+            logger.debug("call( " + stepPair[0] + " ) then verify( " + stepPair[1] + " ) --> Edge coverage @ " + ec + "%");
+        }
         Assert.assertEquals(3, ((AllPathPermutationsGenerator) pathGenerator).getDepth());
-		logger.debug("==============================");
-	}
+        logger.debug("==============================");
+    }
 }

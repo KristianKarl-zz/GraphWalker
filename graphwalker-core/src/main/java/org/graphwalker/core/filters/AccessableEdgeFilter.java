@@ -26,56 +26,54 @@
 
 package org.graphwalker.core.filters;
 
+import bsh.EvalError;
+import bsh.Interpreter;
+import org.graphwalker.core.graph.Edge;
+
 import javax.script.ScriptEngine;
 import javax.script.ScriptException;
 
-import org.graphwalker.core.graph.Edge;
-
-import bsh.EvalError;
-import bsh.Interpreter;
-
 /**
  * @author Johan Tejle
- * 
  */
 public class AccessableEdgeFilter {
 
-	private ScriptEngine jsEngine = null;
-	private Interpreter beanShellEngine = null;
+    private ScriptEngine jsEngine = null;
+    private Interpreter beanShellEngine = null;
 
-	public AccessableEdgeFilter(ScriptEngine sciptEngine) {
-		this.jsEngine = sciptEngine;
-	}
+    public AccessableEdgeFilter(ScriptEngine sciptEngine) {
+        this.jsEngine = sciptEngine;
+    }
 
-	public AccessableEdgeFilter(Interpreter beanShellEngine) {
-		this.beanShellEngine = beanShellEngine;
-	}
+    public AccessableEdgeFilter(Interpreter beanShellEngine) {
+        this.beanShellEngine = beanShellEngine;
+    }
 
-	public boolean acceptEdge(org.graphwalker.core.graph.Graph graph, Edge edge) {
-		if (edge.getGuardKey().isEmpty()) {
-			return true;
-		}
+    public boolean acceptEdge(org.graphwalker.core.graph.Graph graph, Edge edge) {
+        if (edge.getGuardKey().isEmpty()) {
+            return true;
+        }
 
-		if (jsEngine != null) {
-			try {
-				return (Boolean) jsEngine.eval(edge.getGuardKey());
-			} catch (ScriptException e) {
-				throw new RuntimeException("Malformed Edge guard\n\t" + edge + "\n\tGuard: " + edge.getGuardKey()
-				    + "\n\tBeanShell error message: '" + e.getMessage() + "'");
-			}
-		} else if (beanShellEngine != null) {
-			try {
-				return (Boolean) beanShellEngine.eval(edge.getGuardKey());
-			} catch (EvalError e) {
-				throw new RuntimeException("Malformed Edge guard\n\t" + edge + "\n\tGuard: " + edge.getGuardKey()
-				    + "\n\tBeanShell error message: '" + e.getMessage() + "'");
-			}
-		}
-		return false;
-	}
+        if (jsEngine != null) {
+            try {
+                return (Boolean) jsEngine.eval(edge.getGuardKey());
+            } catch (ScriptException e) {
+                throw new RuntimeException("Malformed Edge guard\n\t" + edge + "\n\tGuard: " + edge.getGuardKey()
+                        + "\n\tBeanShell error message: '" + e.getMessage() + "'");
+            }
+        } else if (beanShellEngine != null) {
+            try {
+                return (Boolean) beanShellEngine.eval(edge.getGuardKey());
+            } catch (EvalError e) {
+                throw new RuntimeException("Malformed Edge guard\n\t" + edge + "\n\tGuard: " + edge.getGuardKey()
+                        + "\n\tBeanShell error message: '" + e.getMessage() + "'");
+            }
+        }
+        return false;
+    }
 
-	public String getName() {
-		return "AccessableEdgeFilter";
-	}
+    public String getName() {
+        return "AccessableEdgeFilter";
+    }
 
 }

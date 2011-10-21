@@ -27,8 +27,8 @@
 
 <!DOCTYPE MBTINIT SYSTEM "http://mbt.tigris.org/mbt_setup.dtd" >
 <MBTINIT EXTENDED="true" EXECUTOR="java:org.graphwalker.core.ExtendedMain">
-	<MODEL PATH="graphml/reqtags/ExtendedMain.graphml"/>
+    <MODEL PATH="graphml/reqtags/ExtendedMain.graphml"/>
     <GENERATOR TYPE="RANDOM">
-  		<CONDITION TYPE="VERTEX_COVERAGE" VALUE="40"/>
-  	</GENERATOR>
+        <CONDITION TYPE="VERTEX_COVERAGE" VALUE="40"/>
+    </GENERATOR>
 </MBTINIT>

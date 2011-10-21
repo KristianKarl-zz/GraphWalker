@@ -26,6 +26,7 @@
 
 package org.graphwalker.core.generators;
 
+import junit.framework.TestCase;
 import org.apache.log4j.Logger;
 import org.graphwalker.core.Util;
 import org.graphwalker.core.graph.Edge;
@@ -33,40 +34,38 @@ import org.graphwalker.core.graph.Graph;
 import org.graphwalker.core.graph.Vertex;
 import org.graphwalker.core.machines.FiniteStateMachine;
 
-import junit.framework.TestCase;
-
 public class ListGeneratorTest extends TestCase {
-	Logger logger = Util.setupLogger(ListGeneratorTest.class);
+    Logger logger = Util.setupLogger(ListGeneratorTest.class);
 
-	public void testGetNext() {
-		Graph graph = new Graph();
+    public void testGetNext() {
+        Graph graph = new Graph();
 
-		Vertex v1 = new Vertex();
-		v1.setIndexKey(new Integer(1));
-		v1.setLabelKey("Start");
-		graph.addVertex(v1);
+        Vertex v1 = new Vertex();
+        v1.setIndexKey(new Integer(1));
+        v1.setLabelKey("Start");
+        graph.addVertex(v1);
 
-		Vertex v2 = new Vertex();
-		v2.setIndexKey(new Integer(2));
-		v2.setLabelKey("V2");
-		graph.addVertex(v2);
+        Vertex v2 = new Vertex();
+        v2.setIndexKey(new Integer(2));
+        v2.setLabelKey("V2");
+        graph.addVertex(v2);
 
-		Edge edge = new Edge();
-		edge.setIndexKey(new Integer(3));
-		edge.setLabelKey("E1");
-		graph.addEdge(edge, v1, v2);
+        Edge edge = new Edge();
+        edge.setIndexKey(new Integer(3));
+        edge.setLabelKey("E1");
+        graph.addEdge(edge, v1, v2);
 
-		ListGenerator generator = new ListGenerator();
-		FiniteStateMachine fsm = new FiniteStateMachine();
-		fsm.setModel(graph);
-		generator.setMachine(fsm);
+        ListGenerator generator = new ListGenerator();
+        FiniteStateMachine fsm = new FiniteStateMachine();
+        fsm.setModel(graph);
+        generator.setMachine(fsm);
 
-		String[] s = generator.getNext();
-		assertEquals("E1", s[0]);
-		assertEquals("Edge", s[1]);
-		s = generator.getNext();
-		assertEquals("V2", s[0]);
-		assertEquals("Vertex", s[1]);
-		assertFalse(generator.hasNext());
-	}
+        String[] s = generator.getNext();
+        assertEquals("E1", s[0]);
+        assertEquals("Edge", s[1]);
+        s = generator.getNext();
+        assertEquals("V2", s[0]);
+        assertEquals("Vertex", s[1]);
+        assertFalse(generator.hasNext());
+    }
 }

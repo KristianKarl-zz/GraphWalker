@@ -26,61 +26,59 @@
 
 package org.graphwalker.core.statistics;
 
-import java.util.HashSet;
-
 import org.graphwalker.core.graph.AbstractElement;
 import org.graphwalker.core.graph.Edge;
 import org.graphwalker.core.graph.Graph;
 
+import java.util.HashSet;
+
 /**
  * @author Johan Tejle
- * 
  */
 public class EdgeCoverageStatistics extends Statistics {
 
-	private int max;
-	private HashSet<String> usedEdges;
+    private int max;
+    private HashSet<String> usedEdges;
 
-	/**
-	 * 
-	 * @param model
-	 */
-	public EdgeCoverageStatistics(Graph model) {
-		max = model.getEdges().size();
-		usedEdges = new HashSet<String>();
-	}
+    /**
+     * @param model
+     */
+    public EdgeCoverageStatistics(Graph model) {
+        max = model.getEdges().size();
+        usedEdges = new HashSet<String>();
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.graphwalker.statistics.Statistics#addProgress(edu.uci.ics.jung.graph
-	 * .impl.AbstractElement)
-	 */
-	@Override
-	public void addProgress(AbstractElement element) {
-		if (element instanceof Edge)
-			usedEdges.add(element.toString());
-	}
+    /*
+      * (non-Javadoc)
+      *
+      * @see
+      * org.graphwalker.statistics.Statistics#addProgress(edu.uci.ics.jung.graph
+      * .impl.AbstractElement)
+      */
+    @Override
+    public void addProgress(AbstractElement element) {
+        if (element instanceof Edge)
+            usedEdges.add(element.toString());
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.graphwalker.statistics.Statistics#getCurrent()
-	 */
-	@Override
-	public int getCurrent() {
-		return usedEdges.size();
-	}
+    /*
+      * (non-Javadoc)
+      *
+      * @see org.graphwalker.statistics.Statistics#getCurrent()
+      */
+    @Override
+    public int getCurrent() {
+        return usedEdges.size();
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.graphwalker.statistics.Statistics#getMax()
-	 */
-	@Override
-	public int getMax() {
-		return max;
-	}
+    /*
+      * (non-Javadoc)
+      *
+      * @see org.graphwalker.statistics.Statistics#getMax()
+      */
+    @Override
+    public int getMax() {
+        return max;
+    }
 
 }

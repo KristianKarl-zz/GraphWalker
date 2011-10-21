@@ -27,20 +27,20 @@
 
 <!DOCTYPE MBTINIT SYSTEM "http://mbt.tigris.org/mbt_setup.dtd" >
 <MBTINIT EXTENDED="true" EXECUTOR="none">
-	<MODEL PATH="graphml/reqtags/ExtendedMain.graphml"/>
-	<SCRIPT PATH="bsh/reqtags/graph.bsh"/>
-	<SCRIPT PATH="bsh/reqtags/mbt_startup.bsh"/>
-	<SCRIPT>
-		v.add("Option 1");
-		x = 0;
-	</SCRIPT>
-	<GENERATOR TYPE="RANDOM">
-		<CONDITION TYPE="EDGE_COVERAGE" VALUE="10"/>
-	</GENERATOR>
-	<GENERATOR TYPE="RANDOM">
-	 	<AND>
-			<CONDITION TYPE="VERTEX_COVERAGE" VALUE="30"/>
-			<CONDITION TYPE="EDGE_COVERAGE" VALUE="10"/>
-		</AND>
-	</GENERATOR>
+    <MODEL PATH="graphml/reqtags/ExtendedMain.graphml"/>
+    <SCRIPT PATH="bsh/reqtags/graph.bsh"/>
+    <SCRIPT PATH="bsh/reqtags/mbt_startup.bsh"/>
+    <SCRIPT>
+        v.add("Option 1");
+        x = 0;
+    </SCRIPT>
+    <GENERATOR TYPE="RANDOM">
+        <CONDITION TYPE="EDGE_COVERAGE" VALUE="10"/>
+    </GENERATOR>
+    <GENERATOR TYPE="RANDOM">
+        <AND>
+            <CONDITION TYPE="VERTEX_COVERAGE" VALUE="30"/>
+            <CONDITION TYPE="EDGE_COVERAGE" VALUE="10"/>
+        </AND>
+    </GENERATOR>
 </MBTINIT>

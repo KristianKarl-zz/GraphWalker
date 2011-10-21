@@ -29,140 +29,140 @@ package org.graphwalker.core;
 import org.apache.log4j.Logger;
 
 public class Status {
-	static private Logger log = Util.setupLogger(Status.class);
-	private int state = stopped;
+    static private Logger log = Util.setupLogger(Status.class);
+    private int state = stopped;
 
-	public static final int initial = 1;
-	public static final int running = 2;
-	public static final int previous = 4;
-	public static final int next = 8;
-	public static final int paused = 16;
-	public static final int stopped = 32;
-	public static final int executingJavaTest = 64;
-	public static final int executingSoapTest = 128;
-	public static final int executingLogTest = 256;
+    public static final int initial = 1;
+    public static final int running = 2;
+    public static final int previous = 4;
+    public static final int next = 8;
+    public static final int paused = 16;
+    public static final int stopped = 32;
+    public static final int executingJavaTest = 64;
+    public static final int executingSoapTest = 128;
+    public static final int executingLogTest = 256;
 
-	public boolean isExecutingLogTest() {
-		return (state & executingLogTest) == executingLogTest;
-	}
+    public boolean isExecutingLogTest() {
+        return (state & executingLogTest) == executingLogTest;
+    }
 
-	public boolean isExecutingSoapTest() {
-		return (state & executingSoapTest) == executingSoapTest;
-	}
+    public boolean isExecutingSoapTest() {
+        return (state & executingSoapTest) == executingSoapTest;
+    }
 
-	public boolean isExecutingJavaTest() {
-		return (state & executingJavaTest) == executingJavaTest;
-	}
+    public boolean isExecutingJavaTest() {
+        return (state & executingJavaTest) == executingJavaTest;
+    }
 
-	public boolean isInitial() {
-		return (state & initial) == initial;
-	}
+    public boolean isInitial() {
+        return (state & initial) == initial;
+    }
 
-	public boolean isStopped() {
-		return (state & stopped) == stopped;
-	}
+    public boolean isStopped() {
+        return (state & stopped) == stopped;
+    }
 
-	public boolean isPrevious() {
-		return (state & previous) == previous;
-	}
+    public boolean isPrevious() {
+        return (state & previous) == previous;
+    }
 
-	public boolean isNext() {
-		return (state & next) == next;
-	}
+    public boolean isNext() {
+        return (state & next) == next;
+    }
 
-	public boolean isRunning() {
-		return (state & running) == running;
-	}
+    public boolean isRunning() {
+        return (state & running) == running;
+    }
 
-	public boolean isPaused() {
-		return (state & paused) == paused;
-	}
+    public boolean isPaused() {
+        return (state & paused) == paused;
+    }
 
-	public void setState(int state) {
-		log.debug("Set the state with: " + toStr(state));
-		this.state |= state;
-		log.debug("State: " + toStr(this.state));
-	}
+    public void setState(int state) {
+        log.debug("Set the state with: " + toStr(state));
+        this.state |= state;
+        log.debug("State: " + toStr(this.state));
+    }
 
-	public void unsetState(int state) {
-		log.debug("Unset the state with: " + toStr(state));
-		if ((this.state & state) == state) {
-			this.state ^= state;
-		}
-		log.debug("State: " + toStr(this.state));
-	}
+    public void unsetState(int state) {
+        log.debug("Unset the state with: " + toStr(state));
+        if ((this.state & state) == state) {
+            this.state ^= state;
+        }
+        log.debug("State: " + toStr(this.state));
+    }
 
-	public void setStopped() {
-		log.debug("Set the state to stopped");
-		state = stopped;
-	}
+    public void setStopped() {
+        log.debug("Set the state to stopped");
+        state = stopped;
+    }
 
-	public void reset() {
-		log.debug("Reset the state to initial");
-		state = initial;
-	}
+    public void reset() {
+        log.debug("Reset the state to initial");
+        state = initial;
+    }
 
-	public String toStr(int state) {
-		String str = "";
-		if ((state & initial) == initial) {
-			str += "inital";
-		}
-		if ((state & running) == running) {
-			if (str.isEmpty()) {
-				str += "running";
-			} else {
-				str += " | running";
-			}
-		}
-		if ((state & previous) == previous) {
-			if (str.isEmpty()) {
-				str += "previous";
-			} else {
-				str += " | previous";
-			}
-		}
-		if ((state & next) == next) {
-			if (str.isEmpty()) {
-				str += "next";
-			} else {
-				str += " | next";
-			}
-		}
-		if ((state & paused) == paused) {
-			if (str.isEmpty()) {
-				str += "paused";
-			} else {
-				str += " | paused";
-			}
-		}
-		if ((state & stopped) == stopped) {
-			if (str.isEmpty()) {
-				str += "stopped";
-			} else {
-				str += " | stopped";
-			}
-		}
-		if ((state & executingJavaTest) == executingJavaTest) {
-			if (str.isEmpty()) {
-				str += "executingJavaTest";
-			} else {
-				str += " | executingJavaTest";
-			}
-		}
-		if ((state & executingSoapTest) == executingSoapTest) {
-			if (str.isEmpty()) {
-				str += "executingSoapTest";
-			} else {
-				str += " | executingSoapTest";
-			}
-		}
-		if ((state & executingLogTest) == executingLogTest) {
-			if (str.isEmpty()) {
-				str += "executingLogTest";
-			} else {
-				str += " | executingLogTest";
-			}
-		}
-		return str;
-	}
+    public String toStr(int state) {
+        String str = "";
+        if ((state & initial) == initial) {
+            str += "inital";
+        }
+        if ((state & running) == running) {
+            if (str.isEmpty()) {
+                str += "running";
+            } else {
+                str += " | running";
+            }
+        }
+        if ((state & previous) == previous) {
+            if (str.isEmpty()) {
+                str += "previous";
+            } else {
+                str += " | previous";
+            }
+        }
+        if ((state & next) == next) {
+            if (str.isEmpty()) {
+                str += "next";
+            } else {
+                str += " | next";
+            }
+        }
+        if ((state & paused) == paused) {
+            if (str.isEmpty()) {
+                str += "paused";
+            } else {
+                str += " | paused";
+            }
+        }
+        if ((state & stopped) == stopped) {
+            if (str.isEmpty()) {
+                str += "stopped";
+            } else {
+                str += " | stopped";
+            }
+        }
+        if ((state & executingJavaTest) == executingJavaTest) {
+            if (str.isEmpty()) {
+                str += "executingJavaTest";
+            } else {
+                str += " | executingJavaTest";
+            }
+        }
+        if ((state & executingSoapTest) == executingSoapTest) {
+            if (str.isEmpty()) {
+                str += "executingSoapTest";
+            } else {
+                str += " | executingSoapTest";
+            }
+        }
+        if ((state & executingLogTest) == executingLogTest) {
+            if (str.isEmpty()) {
+                str += "executingLogTest";
+            } else {
+                str += " | executingLogTest";
+            }
+        }
+        return str;
+    }
 }

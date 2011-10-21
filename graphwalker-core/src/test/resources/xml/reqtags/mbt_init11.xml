@@ -26,9 +26,9 @@
   -->
 
 <!DOCTYPE MBTINIT SYSTEM "http://mbt.tigris.org/mbt_setup.dtd" >
-<MBTINIT EXTENDED="true" >
-  <MODEL PATH="graphml/reqtags/execAction.graphml"/>
-	<GENERATOR TYPE="SHORTEST_NON_OPTIMIZED">
-		<CONDITION TYPE="EDGE_COVERAGE" VALUE="100"/>
-	</GENERATOR>
+<MBTINIT EXTENDED="true">
+    <MODEL PATH="graphml/reqtags/execAction.graphml"/>
+    <GENERATOR TYPE="SHORTEST_NON_OPTIMIZED">
+        <CONDITION TYPE="EDGE_COVERAGE" VALUE="100"/>
+    </GENERATOR>
 </MBTINIT>

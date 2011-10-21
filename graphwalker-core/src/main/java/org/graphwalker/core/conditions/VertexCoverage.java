@@ -30,36 +30,36 @@ import org.graphwalker.core.exceptions.StopConditionException;
 
 public class VertexCoverage extends AbstractStopCondition {
 
-	private double limit;
+    private double limit;
 
-	public VertexCoverage() throws StopConditionException {
-		this(1);
-	}
+    public VertexCoverage() throws StopConditionException {
+        this(1);
+    }
 
-	public VertexCoverage(double limit) throws StopConditionException {
-		if (limit > 1 || limit < 0) {
-			throw new StopConditionException("Excpeted a vertex coverage between 0 and 100. Actual: " + limit * 100);
-		}
-		this.limit = limit;
-	}
+    public VertexCoverage(double limit) throws StopConditionException {
+        if (limit > 1 || limit < 0) {
+            throw new StopConditionException("Excpeted a vertex coverage between 0 and 100. Actual: " + limit * 100);
+        }
+        this.limit = limit;
+    }
 
-	@Override
-	public boolean isFulfilled() {
-		double vertices = getMachine().getAllVertices().size();
-		double covered = getMachine().getNumOfCoveredVertices();
-		return (covered / vertices) >= limit;
-	}
+    @Override
+    public boolean isFulfilled() {
+        double vertices = getMachine().getAllVertices().size();
+        double covered = getMachine().getNumOfCoveredVertices();
+        return (covered / vertices) >= limit;
+    }
 
-	@Override
-	public double getFulfilment() {
-		double vertices = getMachine().getAllVertices().size();
-		double covered = getMachine().getNumOfCoveredVertices();
-		return (covered / vertices) / limit;
-	}
+    @Override
+    public double getFulfilment() {
+        double vertices = getMachine().getAllVertices().size();
+        double covered = getMachine().getNumOfCoveredVertices();
+        return (covered / vertices) / limit;
+    }
 
-	@Override
-	public String toString() {
-		return "SC>=" + (int) (100 * limit);
-	}
+    @Override
+    public String toString() {
+        return "SC>=" + (int) (100 * limit);
+    }
 
 }

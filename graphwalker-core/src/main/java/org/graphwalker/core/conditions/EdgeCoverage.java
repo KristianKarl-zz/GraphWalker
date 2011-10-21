@@ -32,37 +32,37 @@ import org.graphwalker.core.exceptions.StopConditionException;
 
 public class EdgeCoverage extends AbstractStopCondition {
 
-	private double limit;
-	static Logger logger = Util.setupLogger(EdgeCoverage.class);
+    private double limit;
+    static Logger logger = Util.setupLogger(EdgeCoverage.class);
 
-	public EdgeCoverage() throws StopConditionException {
-		this(1);
-	}
+    public EdgeCoverage() throws StopConditionException {
+        this(1);
+    }
 
-	public EdgeCoverage(double limit) throws StopConditionException {
-		if (limit > 1 || limit < 0)
-			throw new StopConditionException("Excpeted an edge coverage between 0 and 100. Actual: " + limit * 100);
-		this.limit = limit;
-	}
+    public EdgeCoverage(double limit) throws StopConditionException {
+        if (limit > 1 || limit < 0)
+            throw new StopConditionException("Excpeted an edge coverage between 0 and 100. Actual: " + limit * 100);
+        this.limit = limit;
+    }
 
-	@Override
-	public boolean isFulfilled() {
-		double edges = getMachine().getAllEdges().size();
-		double covered = getMachine().getNumOfCoveredEdges();
-		logger.debug("Edges/covered (limit): " + edges + "/" + covered + " (" + limit + ")");
-		return (covered / edges) >= limit;
-	}
+    @Override
+    public boolean isFulfilled() {
+        double edges = getMachine().getAllEdges().size();
+        double covered = getMachine().getNumOfCoveredEdges();
+        logger.debug("Edges/covered (limit): " + edges + "/" + covered + " (" + limit + ")");
+        return (covered / edges) >= limit;
+    }
 
-	@Override
-	public double getFulfilment() {
-		double edges = getMachine().getAllEdges().size();
-		double covered = getMachine().getNumOfCoveredEdges();
-		return (covered / edges) / limit;
-	}
+    @Override
+    public double getFulfilment() {
+        double edges = getMachine().getAllEdges().size();
+        double covered = getMachine().getNumOfCoveredEdges();
+        return (covered / edges) / limit;
+    }
 
-	@Override
-	public String toString() {
-		return "EC>=" + (int) (100 * limit);
-	}
+    @Override
+    public String toString() {
+        return "EC>=" + (int) (100 * limit);
+    }
 
 }

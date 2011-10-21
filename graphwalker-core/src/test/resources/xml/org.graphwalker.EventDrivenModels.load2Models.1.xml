@@ -27,8 +27,8 @@
 
 <!DOCTYPE MBTINIT SYSTEM "http://mbt.tigris.org/mbt_setup.dtd" >
 <MBTINIT EXECUTOR="none" EXTENDED="false">
-  <MODEL PATH="graphml/org.graphwalker.core.EventDrivenModels.load2Models.1.graphml"/>
-  <GENERATOR TYPE="SHORTEST_NON_OPTIMIZED">
-    <CONDITION TYPE="EDGE_COVERAGE" VALUE="100"/>
-  </GENERATOR>
+    <MODEL PATH="graphml/org.graphwalker.core.EventDrivenModels.load2Models.1.graphml"/>
+    <GENERATOR TYPE="SHORTEST_NON_OPTIMIZED">
+        <CONDITION TYPE="EDGE_COVERAGE" VALUE="100"/>
+    </GENERATOR>
 </MBTINIT>

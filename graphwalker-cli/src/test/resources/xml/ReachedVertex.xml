@@ -27,8 +27,8 @@
 
 <!DOCTYPE MBTINIT SYSTEM "http://mbt.tigris.org/mbt_setup.dtd" >
 <MBTINIT EXECUTOR="offline" EXTENDED="true">
-  <MODEL PATH="graphml/UC01.graphml"/>
-  <GENERATOR TYPE="RANDOM">
-    <CONDITION TYPE="REACHED_VERTEX" VALUE="v_SearchResult/num_of_books=6;MAX_BOOKS=5;"/>
-  </GENERATOR>
+    <MODEL PATH="graphml/UC01.graphml"/>
+    <GENERATOR TYPE="RANDOM">
+        <CONDITION TYPE="REACHED_VERTEX" VALUE="v_SearchResult/num_of_books=6;MAX_BOOKS=5;"/>
+    </GENERATOR>
 </MBTINIT>

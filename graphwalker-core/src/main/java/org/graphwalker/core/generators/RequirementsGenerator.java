@@ -26,73 +26,69 @@
 
 package org.graphwalker.core.generators;
 
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.Stack;
-import java.util.TreeSet;
-import java.util.Vector;
-
 import org.graphwalker.core.conditions.StopCondition;
 import org.graphwalker.core.graph.AbstractElement;
 
-public class RequirementsGenerator extends PathGenerator {
+import java.util.*;
 
-	private Stack<String[]> list = null;
+public class RequirementsGenerator extends AbstractPathGenerator {
 
-	public RequirementsGenerator(StopCondition stopCondition) {
-		super(stopCondition);
-	}
+    private Stack<String[]> list = null;
 
-	public RequirementsGenerator() {
-		super();
-	}
+    public RequirementsGenerator(StopCondition stopCondition) {
+        super(stopCondition);
+    }
 
-	@Override
-	public boolean hasNext() {
-		if (list == null) {
-			generateList();
-		}
-		return !list.isEmpty();
-	}
+    public RequirementsGenerator() {
+        super();
+    }
 
-	@Override
-	public String[] getNext() {
-		if (list == null) {
-			generateList();
-		}
-		return list.pop();
-	}
+    @Override
+    public boolean hasNext() {
+        if (list == null) {
+            generateList();
+        }
+        return !list.isEmpty();
+    }
 
-	private void generateList() {
-		list = new Stack<String[]>();
-		TreeSet<String[]> tempList = new TreeSet<String[]>(new Comparator<String[]>() {
-			@Override
-			public int compare(String[] arg0, String[] arg1) {
-				return arg1[0].compareTo(arg0[0]);
-			}
-		});
+    @Override
+    public String[] getNext() {
+        if (list == null) {
+            generateList();
+        }
+        return list.pop();
+    }
 
-		Vector<AbstractElement> abstractElements = new Vector<AbstractElement>();
-		abstractElements.addAll(getMachine().getAllVertices());
-		abstractElements.addAll(getMachine().getAllEdges());
+    private void generateList() {
+        list = new Stack<String[]>();
+        TreeSet<String[]> tempList = new TreeSet<String[]>(new Comparator<String[]>() {
+            @Override
+            public int compare(String[] arg0, String[] arg1) {
+                return arg1[0].compareTo(arg0[0]);
+            }
+        });
 
-		for (Iterator<AbstractElement> i = abstractElements.iterator(); i.hasNext();) {
-			AbstractElement ae = i.next();
-			String reqtags = ae.getReqTagKey();
-			if (!reqtags.isEmpty()) {
-				String[] tags = reqtags.split(",");
-				for (int j = 0; j < tags.length; j++) {
-					String[] value = { tags[j], "" };
-					tempList.add(value);
-				}
-			}
-		}
-		list.addAll(tempList);
-	}
+        Vector<AbstractElement> abstractElements = new Vector<AbstractElement>();
+        abstractElements.addAll(getMachine().getAllVertices());
+        abstractElements.addAll(getMachine().getAllEdges());
 
-	@Override
-	public String toString() {
-		return "REQUIREMENTS";
-	}
+        for (Iterator<AbstractElement> i = abstractElements.iterator(); i.hasNext(); ) {
+            AbstractElement ae = i.next();
+            String reqtags = ae.getReqTagKey();
+            if (!reqtags.isEmpty()) {
+                String[] tags = reqtags.split(",");
+                for (int j = 0; j < tags.length; j++) {
+                    String[] value = {tags[j], ""};
+                    tempList.add(value);
+                }
+            }
+        }
+        list.addAll(tempList);
+    }
+
+    @Override
+    public String toString() {
+        return "REQUIREMENTS";
+    }
 
 }

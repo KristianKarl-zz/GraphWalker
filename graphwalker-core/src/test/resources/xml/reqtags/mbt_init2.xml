@@ -26,15 +26,15 @@
   -->
 
 <!DOCTYPE MBTINIT SYSTEM "http://mbt.tigris.org/mbt_setup.dtd" >
-<MBTINIT LOG-INTERVAL="1" >
-  <MODEL PATH="graphml/reqtags/ExtendedMain.graphml"/>
-  <GENERATOR TYPE="RANDOM">
-  	<OR>
-	  	<AND>
-	  		<CONDITION TYPE="EDGE_COVERAGE" VALUE="100"/>
-	  		<CONDITION TYPE="VERTEX_COVERAGE" VALUE="100"/>
-	  	</AND>
-  		<CONDITION TYPE="TEST_LENGTH" VALUE="50"/>
-  	</OR>
-  </GENERATOR>
+<MBTINIT LOG-INTERVAL="1">
+    <MODEL PATH="graphml/reqtags/ExtendedMain.graphml"/>
+    <GENERATOR TYPE="RANDOM">
+        <OR>
+            <AND>
+                <CONDITION TYPE="EDGE_COVERAGE" VALUE="100"/>
+                <CONDITION TYPE="VERTEX_COVERAGE" VALUE="100"/>
+            </AND>
+            <CONDITION TYPE="TEST_LENGTH" VALUE="50"/>
+        </OR>
+    </GENERATOR>
 </MBTINIT>

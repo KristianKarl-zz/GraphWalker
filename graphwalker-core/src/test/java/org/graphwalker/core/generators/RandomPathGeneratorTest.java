@@ -26,6 +26,7 @@
 
 package org.graphwalker.core.generators;
 
+import junit.framework.TestCase;
 import org.apache.log4j.Logger;
 import org.graphwalker.core.Util;
 import org.graphwalker.core.conditions.EdgeCoverage;
@@ -33,59 +34,57 @@ import org.graphwalker.core.exceptions.StopConditionException;
 import org.graphwalker.core.io.GraphML;
 import org.graphwalker.core.machines.FiniteStateMachine;
 
-import junit.framework.TestCase;
-
 public class RandomPathGeneratorTest extends TestCase {
 
-	private Logger logger = Util.setupLogger(RandomPathGeneratorTest.class);
+    private Logger logger = Util.setupLogger(RandomPathGeneratorTest.class);
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-	}
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+    }
 
-	public void test_WeightedRandomGeneration() throws StopConditionException, InterruptedException {
-		logger.info("TEST: test_WeightedRandomGeneration");
-		logger.info("=======================================================================");
-		GraphML gml = new GraphML();
-		gml.load("graphml/weight/FSM.graphml");
-		FiniteStateMachine FSM = new FiniteStateMachine();
-		FSM.setModel(gml.getModel());
-		FSM.setWeighted(true);
+    public void test_WeightedRandomGeneration() throws StopConditionException, InterruptedException {
+        logger.info("TEST: test_WeightedRandomGeneration");
+        logger.info("=======================================================================");
+        GraphML gml = new GraphML();
+        gml.load("graphml/weight/FSM.graphml");
+        FiniteStateMachine FSM = new FiniteStateMachine();
+        FSM.setModel(gml.getModel());
+        FSM.setWeighted(true);
 
-		PathGenerator pathGenerator = new RandomPathGenerator(new EdgeCoverage(1.0));
-		pathGenerator.setMachine(FSM);
+        PathGenerator pathGenerator = new RandomPathGenerator(new EdgeCoverage(1.0));
+        pathGenerator.setMachine(FSM);
 
-		while (pathGenerator.hasNext()) {
-			String[] stepPair = pathGenerator.getNext();
+        while (pathGenerator.hasNext()) {
+            String[] stepPair = pathGenerator.getNext();
 
-			int stats[] = FSM.getStatistics();
-			int ec = 100 * stats[1] / stats[0];
+            int stats[] = FSM.getStatistics();
+            int ec = 100 * stats[1] / stats[0];
 
-			logger.debug("call( " + stepPair[0] + " ) then verify( " + stepPair[1] + " ) --> Edge coverage @ " + ec + "%");
-		}
-		logger.debug("==============================");
-	}
+            logger.debug("call( " + stepPair[0] + " ) then verify( " + stepPair[1] + " ) --> Edge coverage @ " + ec + "%");
+        }
+        logger.debug("==============================");
+    }
 
-	public void test_RandomGeneration() throws StopConditionException, InterruptedException {
-		logger.info("TEST: test_RandomGeneration");
-		logger.info("=======================================================================");
-		GraphML gml = new GraphML();
-		gml.load("graphml/weight/FSM.graphml");
-		FiniteStateMachine FSM = new FiniteStateMachine();
-		FSM.setModel(gml.getModel());
-		FSM.setWeighted(false);
-		PathGenerator pathGenerator = new RandomPathGenerator(new EdgeCoverage(1.0));
-		pathGenerator.setMachine(FSM);
+    public void test_RandomGeneration() throws StopConditionException, InterruptedException {
+        logger.info("TEST: test_RandomGeneration");
+        logger.info("=======================================================================");
+        GraphML gml = new GraphML();
+        gml.load("graphml/weight/FSM.graphml");
+        FiniteStateMachine FSM = new FiniteStateMachine();
+        FSM.setModel(gml.getModel());
+        FSM.setWeighted(false);
+        PathGenerator pathGenerator = new RandomPathGenerator(new EdgeCoverage(1.0));
+        pathGenerator.setMachine(FSM);
 
-		while (pathGenerator.hasNext()) {
-			String[] stepPair = pathGenerator.getNext();
+        while (pathGenerator.hasNext()) {
+            String[] stepPair = pathGenerator.getNext();
 
-			int stats[] = FSM.getStatistics();
-			int ec = 100 * stats[1] / stats[0];
+            int stats[] = FSM.getStatistics();
+            int ec = 100 * stats[1] / stats[0];
 
-			logger.debug("call( " + stepPair[0] + " ) then verify( " + stepPair[1] + " ) --> Edge coverage @ " + ec + "%");
-		}
-		logger.debug("==============================");
-	}
+            logger.debug("call( " + stepPair[0] + " ) then verify( " + stepPair[1] + " ) --> Edge coverage @ " + ec + "%");
+        }
+        logger.debug("==============================");
+    }
 }

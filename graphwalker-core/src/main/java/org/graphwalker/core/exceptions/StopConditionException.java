@@ -32,13 +32,12 @@ package org.graphwalker.core.exceptions;
  */
 public class StopConditionException extends Exception {
 
-	/**
-	 * @param message
-	 *          A string containing a message describing the failure in detail.
-	 */
-	public StopConditionException(String message) {
-		super(message);
-	}
+    /**
+     * @param message A string containing a message describing the failure in detail.
+     */
+    public StopConditionException(String message) {
+        super(message);
+    }
 
-	private static final long serialVersionUID = -5843521571692420560L;
+    private static final long serialVersionUID = -5843521571692420560L;
 }

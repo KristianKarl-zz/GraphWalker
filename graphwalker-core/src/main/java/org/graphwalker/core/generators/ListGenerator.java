@@ -26,66 +26,66 @@
 
 package org.graphwalker.core.generators;
 
-import java.util.Comparator;
-import java.util.Stack;
-import java.util.TreeSet;
-import java.util.Vector;
-
 import org.graphwalker.core.Keywords;
 import org.graphwalker.core.conditions.StopCondition;
 import org.graphwalker.core.graph.AbstractElement;
 import org.graphwalker.core.graph.Edge;
 
-public class ListGenerator extends PathGenerator {
+import java.util.Comparator;
+import java.util.Stack;
+import java.util.TreeSet;
+import java.util.Vector;
 
-	private Stack<String[]> list = null;
+public class ListGenerator extends AbstractPathGenerator {
 
-	public ListGenerator(StopCondition stopCondition) {
-		super(stopCondition);
-	}
+    private Stack<String[]> list = null;
 
-	public ListGenerator() {
-		super();
-	}
+    public ListGenerator(StopCondition stopCondition) {
+        super(stopCondition);
+    }
 
-	@Override
-	public boolean hasNext() {
-		if (list == null)
-			generateList();
-		return !list.isEmpty();
-	}
+    public ListGenerator() {
+        super();
+    }
 
-	@Override
-	public String[] getNext() {
-		if (list == null)
-			generateList();
-		return list.pop();
-	}
+    @Override
+    public boolean hasNext() {
+        if (list == null)
+            generateList();
+        return !list.isEmpty();
+    }
 
-	private void generateList() {
-		list = new Stack<String[]>();
-		TreeSet<String[]> tempList = new TreeSet<String[]>(new Comparator<String[]>() {
-			@Override
-			public int compare(String[] arg0, String[] arg1) {
-				return (arg1)[0].compareTo((arg0)[0]);
-			}
-		});
+    @Override
+    public String[] getNext() {
+        if (list == null)
+            generateList();
+        return list.pop();
+    }
 
-		Vector<AbstractElement> abstractElements = new Vector<AbstractElement>();
-		abstractElements.addAll(getMachine().getAllVertices());
-		abstractElements.addAll(getMachine().getAllEdges());
+    private void generateList() {
+        list = new Stack<String[]>();
+        TreeSet<String[]> tempList = new TreeSet<String[]>(new Comparator<String[]>() {
+            @Override
+            public int compare(String[] arg0, String[] arg1) {
+                return (arg1)[0].compareTo((arg0)[0]);
+            }
+        });
 
-		for (AbstractElement ae : abstractElements) {
-			if (!ae.getLabelKey().equalsIgnoreCase(Keywords.START_NODE)) {
-				String[] value = { ae.getLabelKey(), (ae instanceof Edge ? "Edge" : "Vertex"), ae.getDescriptionKey() };
-				tempList.add(value);
-			}
-		}
-		list.addAll(tempList);
-	}
+        Vector<AbstractElement> abstractElements = new Vector<AbstractElement>();
+        abstractElements.addAll(getMachine().getAllVertices());
+        abstractElements.addAll(getMachine().getAllEdges());
 
-	@Override
-	public String toString() {
-		return "LIST";
-	}
+        for (AbstractElement ae : abstractElements) {
+            if (!ae.getLabelKey().equalsIgnoreCase(Keywords.START_NODE)) {
+                String[] value = {ae.getLabelKey(), (ae instanceof Edge ? "Edge" : "Vertex"), ae.getDescriptionKey()};
+                tempList.add(value);
+            }
+        }
+        list.addAll(tempList);
+    }
+
+    @Override
+    public String toString() {
+        return "LIST";
+    }
 }

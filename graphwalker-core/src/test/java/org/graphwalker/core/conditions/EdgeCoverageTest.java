@@ -26,6 +26,7 @@
 
 package org.graphwalker.core.conditions;
 
+import junit.framework.TestCase;
 import org.graphwalker.core.ModelBasedTesting;
 import org.graphwalker.core.Util;
 import org.graphwalker.core.exceptions.GeneratorException;
@@ -35,62 +36,60 @@ import org.graphwalker.core.graph.Edge;
 import org.graphwalker.core.graph.Graph;
 import org.graphwalker.core.graph.Vertex;
 
-import junit.framework.TestCase;
-
 public class EdgeCoverageTest extends TestCase {
 
-	Graph graph;
-	Vertex start;
-	Vertex v1;
-	Vertex v2;
-	Edge e0;
-	Edge e1;
+    Graph graph;
+    Vertex start;
+    Vertex v1;
+    Vertex v2;
+    Edge e0;
+    Edge e1;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-		graph = new Graph();
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        graph = new Graph();
 
-		start = Util.addVertexToGraph(graph, "Start");
-		v1 = Util.addVertexToGraph(graph, "V1");
-		v2 = Util.addVertexToGraph(graph, "V2");
+        start = Util.addVertexToGraph(graph, "Start");
+        v1 = Util.addVertexToGraph(graph, "V1");
+        v2 = Util.addVertexToGraph(graph, "V2");
 
-		e0 = Util.addEdgeToGraph(graph, start, v1, "E0", null, null, null);
-		e1 = Util.addEdgeToGraph(graph, v1, v2, "E1", null, null, null);
-	}
+        e0 = Util.addEdgeToGraph(graph, start, v1, "E0", null, null, null);
+        e1 = Util.addEdgeToGraph(graph, v1, v2, "E1", null, null, null);
+    }
 
-	@Override
-	protected void tearDown() throws Exception {
-		super.tearDown();
-		graph = null;
-		start = v1 = v2 = null;
-		e0 = e1 = null;
-	}
+    @Override
+    protected void tearDown() throws Exception {
+        super.tearDown();
+        graph = null;
+        start = v1 = v2 = null;
+        e0 = e1 = null;
+    }
 
-	public void testFulfillment() throws StopConditionException, GeneratorException, InterruptedException {
-		ModelBasedTesting mbt = ModelBasedTesting.getInstance();
-		mbt.setGraph(graph);
-		mbt.setGenerator(new RandomPathGenerator(new EdgeCoverage()));
-		assertTrue(mbt.hasNextStep());
+    public void testFulfillment() throws StopConditionException, GeneratorException, InterruptedException {
+        ModelBasedTesting mbt = ModelBasedTesting.getInstance();
+        mbt.setGraph(graph);
+        mbt.setGenerator(new RandomPathGenerator(new EdgeCoverage()));
+        assertTrue(mbt.hasNextStep());
 
-		assertEquals((double) 0 / 2, mbt.getGenerator().getStopCondition().getFulfilment(), 0.01);
-		mbt.getNextStep();
-		assertEquals((double) 1 / 2, mbt.getGenerator().getStopCondition().getFulfilment(), 0.01);
-		mbt.getNextStep();
-		assertEquals((double) 2 / 2, mbt.getGenerator().getStopCondition().getFulfilment(), 0.01);
-	}
+        assertEquals((double) 0 / 2, mbt.getGenerator().getStopCondition().getFulfilment(), 0.01);
+        mbt.getNextStep();
+        assertEquals((double) 1 / 2, mbt.getGenerator().getStopCondition().getFulfilment(), 0.01);
+        mbt.getNextStep();
+        assertEquals((double) 2 / 2, mbt.getGenerator().getStopCondition().getFulfilment(), 0.01);
+    }
 
-	public void testIsFulfilled() throws StopConditionException, GeneratorException, InterruptedException {
-		ModelBasedTesting mbt = ModelBasedTesting.getInstance();
-		mbt.setGraph(graph);
-		mbt.setGenerator(new RandomPathGenerator(new EdgeCoverage()));
-		assertTrue(mbt.hasNextStep());
+    public void testIsFulfilled() throws StopConditionException, GeneratorException, InterruptedException {
+        ModelBasedTesting mbt = ModelBasedTesting.getInstance();
+        mbt.setGraph(graph);
+        mbt.setGenerator(new RandomPathGenerator(new EdgeCoverage()));
+        assertTrue(mbt.hasNextStep());
 
-		assertEquals(false, mbt.getGenerator().getStopCondition().isFulfilled());
-		mbt.getNextStep();
-		assertEquals(false, mbt.getGenerator().getStopCondition().isFulfilled());
-		mbt.getNextStep();
-		assertEquals(true, mbt.getGenerator().getStopCondition().isFulfilled());
-	}
+        assertEquals(false, mbt.getGenerator().getStopCondition().isFulfilled());
+        mbt.getNextStep();
+        assertEquals(false, mbt.getGenerator().getStopCondition().isFulfilled());
+        mbt.getNextStep();
+        assertEquals(true, mbt.getGenerator().getStopCondition().isFulfilled());
+    }
 
 }

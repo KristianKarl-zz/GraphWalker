@@ -26,77 +26,75 @@
 
 package org.graphwalker.core.statistics;
 
+import org.graphwalker.core.graph.AbstractElement;
+import org.graphwalker.core.graph.Graph;
+
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Vector;
 
-import org.graphwalker.core.graph.AbstractElement;
-import org.graphwalker.core.graph.Graph;
-
 /**
  * @author Johan Tejle
- * 
  */
 public class RequirementCoverageStatistics extends Statistics {
 
-	private HashSet<String> usedRequirements;
-	private HashSet<String> allRequirements;
+    private HashSet<String> usedRequirements;
+    private HashSet<String> allRequirements;
 
-	/**
-	 * 
-	 * @param model
-	 */
-	public RequirementCoverageStatistics(Graph model) {
-		usedRequirements = new HashSet<String>();
-		allRequirements = new HashSet<String>();
+    /**
+     * @param model
+     */
+    public RequirementCoverageStatistics(Graph model) {
+        usedRequirements = new HashSet<String>();
+        allRequirements = new HashSet<String>();
 
-		Vector<AbstractElement> allElements = new Vector<AbstractElement>();
-		allElements.addAll(model.getEdges());
-		allElements.addAll(model.getVertices());
-		for (AbstractElement e : allElements) {
-			if (!e.getReqTagKey().isEmpty()) {
-				appendRequirements(allRequirements, e.getReqTagKey());
-			}
-		}
-	}
+        Vector<AbstractElement> allElements = new Vector<AbstractElement>();
+        allElements.addAll(model.getEdges());
+        allElements.addAll(model.getVertices());
+        for (AbstractElement e : allElements) {
+            if (!e.getReqTagKey().isEmpty()) {
+                appendRequirements(allRequirements, e.getReqTagKey());
+            }
+        }
+    }
 
-	private void appendRequirements(HashSet<String> set, String requirements) {
-		String[] tags = requirements.split(",");
-		Collections.addAll(set, tags);
-	}
+    private void appendRequirements(HashSet<String> set, String requirements) {
+        String[] tags = requirements.split(",");
+        Collections.addAll(set, tags);
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.graphwalker.statistics.Statistics#addProgress(edu.uci.ics.jung.graph
-	 * .impl.AbstractElement)
-	 */
-	@Override
-	public void addProgress(AbstractElement element) {
-		if (element != null && !element.getReqTagKey().isEmpty()) {
-			appendRequirements(usedRequirements, element.getReqTagKey());
-		}
-	}
+    /*
+      * (non-Javadoc)
+      *
+      * @see
+      * org.graphwalker.statistics.Statistics#addProgress(edu.uci.ics.jung.graph
+      * .impl.AbstractElement)
+      */
+    @Override
+    public void addProgress(AbstractElement element) {
+        if (element != null && !element.getReqTagKey().isEmpty()) {
+            appendRequirements(usedRequirements, element.getReqTagKey());
+        }
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.graphwalker.statistics.Statistics#getCurrent()
-	 */
-	@Override
-	public int getCurrent() {
-		return usedRequirements.size();
-	}
+    /*
+      * (non-Javadoc)
+      *
+      * @see org.graphwalker.statistics.Statistics#getCurrent()
+      */
+    @Override
+    public int getCurrent() {
+        return usedRequirements.size();
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.graphwalker.statistics.Statistics#getMax()
-	 */
-	@Override
-	public int getMax() {
-		return allRequirements.size();
-	}
+    /*
+      * (non-Javadoc)
+      *
+      * @see org.graphwalker.statistics.Statistics#getMax()
+      */
+    @Override
+    public int getMax() {
+        return allRequirements.size();
+    }
 
 }

@@ -26,12 +26,6 @@
 
 package org.graphwalker.core.generators;
 
-import java.util.Comparator;
-import java.util.PriorityQueue;
-import java.util.Set;
-import java.util.Stack;
-import java.util.Vector;
-
 import org.graphwalker.core.Util;
 import org.graphwalker.core.conditions.StopCondition;
 import org.graphwalker.core.exceptions.FoundNoEdgeException;
@@ -39,191 +33,193 @@ import org.graphwalker.core.graph.Edge;
 import org.graphwalker.core.graph.Vertex;
 import org.graphwalker.core.machines.FiniteStateMachine;
 
-public class A_StarPathGenerator extends PathGenerator {
+import java.util.*;
 
-	public A_StarPathGenerator(StopCondition stopCondition) {
-		super(stopCondition);
-	}
+public class A_StarPathGenerator extends AbstractPathGenerator {
 
-	private Stack<Edge> preCalculatedPath = null;
-	private Vertex lastVertex;
+    public A_StarPathGenerator(StopCondition stopCondition) {
+        super(stopCondition);
+    }
 
-	@Override
-	public void setMachine(FiniteStateMachine machine) {
-		super.setMachine(machine);
-	}
+    private Stack<Edge> preCalculatedPath = null;
+    private Vertex lastVertex;
 
-	public A_StarPathGenerator() {
-		super();
-	}
+    @Override
+    public void setMachine(FiniteStateMachine machine) {
+        super.setMachine(machine);
+    }
 
-	@Override
-	public String[] getNext() throws InterruptedException {
-		Util.AbortIf(!hasNext(), "Finished");
-		if (lastVertex == null || lastVertex != getMachine().getCurrentVertex() || preCalculatedPath == null || preCalculatedPath.size() == 0) {
-			boolean oldCalculatingPathValue = getMachine().isCalculatingPath();
-			getMachine().setCalculatingPath(true);
+    public A_StarPathGenerator() {
+        super();
+    }
 
-			preCalculatedPath = a_star();
+    @Override
+    public String[] getNext() throws InterruptedException {
+        Util.AbortIf(!hasNext(), "Finished");
+        if (lastVertex == null || lastVertex != getMachine().getCurrentVertex() || preCalculatedPath == null || preCalculatedPath.size() == 0) {
+            boolean oldCalculatingPathValue = getMachine().isCalculatingPath();
+            getMachine().setCalculatingPath(true);
 
-			getMachine().setCalculatingPath(oldCalculatingPathValue);
+            preCalculatedPath = a_star();
 
-			if (preCalculatedPath == null) {
-				throw new RuntimeException("No path found to " + this.getStopCondition());
-			}
+            getMachine().setCalculatingPath(oldCalculatingPathValue);
 
-			// reverse path
-			Stack<Edge> temp = new Stack<Edge>();
-			while (preCalculatedPath.size() > 0) {
-				temp.push(preCalculatedPath.pop());
-			}
-			preCalculatedPath = temp;
-		}
+            if (preCalculatedPath == null) {
+                throw new RuntimeException("No path found to " + this.getStopCondition());
+            }
 
-		Edge edge = preCalculatedPath.pop();
-		getMachine().walkEdge(edge);
-		lastVertex = getMachine().getCurrentVertex();
-		String[] retur = { getMachine().getEdgeName(edge), getMachine().getCurrentVertexName() };
-		return retur;
-	}
+            // reverse path
+            Stack<Edge> temp = new Stack<Edge>();
+            while (preCalculatedPath.size() > 0) {
+                temp.push(preCalculatedPath.pop());
+            }
+            preCalculatedPath = temp;
+        }
 
-	@SuppressWarnings("unchecked")
-	private Stack<Edge> a_star() throws InterruptedException {
-		Vector<String> closed = new Vector<String>();
+        Edge edge = preCalculatedPath.pop();
+        getMachine().walkEdge(edge);
+        lastVertex = getMachine().getCurrentVertex();
+        String[] retur = {getMachine().getEdgeName(edge), getMachine().getCurrentVertexName()};
+        return retur;
+    }
 
-		PriorityQueue<WeightedPath> a_starPath = new PriorityQueue<WeightedPath>(10, new Comparator<WeightedPath>() {
-			@Override
-			public int compare(WeightedPath arg0, WeightedPath arg1) {
-				int retur = Double.compare(arg0.getWeight(), arg1.getWeight());
-				if (retur == 0)
-					retur = arg0.getPath().size() - arg1.getPath().size();
-				return retur;
-			}
-		});
+    @SuppressWarnings("unchecked")
+    private Stack<Edge> a_star() throws InterruptedException {
+        Vector<String> closed = new Vector<String>();
 
-		Set<Edge> availableOutEdges;
-		try {
-			availableOutEdges = getMachine().getCurrentOutEdges();
-		} catch (FoundNoEdgeException e) {
-			throw new RuntimeException("No available edges found at " + getMachine().getCurrentVertexName(), e);
-		}
-		for (Edge edge : availableOutEdges) {
-			Stack<Edge> path = new Stack<Edge>();
-			path.push(edge);
-			a_starPath.add(getWeightedPath(path));
-		}
-		double maxWeight = 0;
-		while (a_starPath.size() > 0) {
-			if (Thread.interrupted()) {
-				throw new InterruptedException();
-			}
+        PriorityQueue<WeightedPath> a_starPath = new PriorityQueue<WeightedPath>(10, new Comparator<WeightedPath>() {
+            @Override
+            public int compare(WeightedPath arg0, WeightedPath arg1) {
+                int retur = Double.compare(arg0.getWeight(), arg1.getWeight());
+                if (retur == 0)
+                    retur = arg0.getPath().size() - arg1.getPath().size();
+                return retur;
+            }
+        });
 
-			WeightedPath path = a_starPath.poll();
-			if (path.getWeight() > maxWeight)
-				maxWeight = path.getWeight();
-			if (path.getWeight() > 0.99999) // are we done yet?
-				return path.getPath();
+        Set<Edge> availableOutEdges;
+        try {
+            availableOutEdges = getMachine().getCurrentOutEdges();
+        } catch (FoundNoEdgeException e) {
+            throw new RuntimeException("No available edges found at " + getMachine().getCurrentVertexName(), e);
+        }
+        for (Edge edge : availableOutEdges) {
+            Stack<Edge> path = new Stack<Edge>();
+            path.push(edge);
+            a_starPath.add(getWeightedPath(path));
+        }
+        double maxWeight = 0;
+        while (a_starPath.size() > 0) {
+            if (Thread.interrupted()) {
+                throw new InterruptedException();
+            }
 
-			Edge possibleDuplicate = path.getPath().peek();
+            WeightedPath path = a_starPath.poll();
+            if (path.getWeight() > maxWeight)
+                maxWeight = path.getWeight();
+            if (path.getWeight() > 0.99999) // are we done yet?
+                return path.getPath();
 
-			// have we been here before?
-			if (closed.contains(possibleDuplicate.hashCode() + "." + path.getSubState().hashCode() + "." + path.getWeight()))
-				continue; // ignore this and move on
+            Edge possibleDuplicate = path.getPath().peek();
 
-			// We don't want to use this edge again as this path is
-			// the fastest, and if we come here again we have used more
-			// steps to get here than we used this time.
-			closed.add(possibleDuplicate.hashCode() + "." + path.getSubState().hashCode() + "." + path.getWeight());
+            // have we been here before?
+            if (closed.contains(possibleDuplicate.hashCode() + "." + path.getSubState().hashCode() + "." + path.getWeight()))
+                continue; // ignore this and move on
 
-			availableOutEdges = getPathOutEdges(path.getPath());
-			if (availableOutEdges != null && availableOutEdges.size() > 0) {
-				for (Edge edge : availableOutEdges) {
-					Stack<Edge> newStack = (Stack<Edge>) path.getPath().clone();
-					newStack.push(edge);
-					a_starPath.add(getWeightedPath(newStack));
-				}
-			}
-		}
-		throw new RuntimeException("No path found to satisfy stop condition " + getStopCondition() + ", best path satified only "
-		    + (int) (maxWeight * 100) + "% of condition.");
-	}
+            // We don't want to use this edge again as this path is
+            // the fastest, and if we come here again we have used more
+            // steps to get here than we used this time.
+            closed.add(possibleDuplicate.hashCode() + "." + path.getSubState().hashCode() + "." + path.getWeight());
 
-	private WeightedPath getWeightedPath(Stack<Edge> path) {
-		double weight = 0;
-		String subState = "";
+            availableOutEdges = getPathOutEdges(path.getPath());
+            if (availableOutEdges != null && availableOutEdges.size() > 0) {
+                for (Edge edge : availableOutEdges) {
+                    Stack<Edge> newStack = (Stack<Edge>) path.getPath().clone();
+                    newStack.push(edge);
+                    a_starPath.add(getWeightedPath(newStack));
+                }
+            }
+        }
+        throw new RuntimeException("No path found to satisfy stop condition " + getStopCondition() + ", best path satified only "
+                + (int) (maxWeight * 100) + "% of condition.");
+    }
 
-		getMachine().storeVertex();
-		getMachine().walkPath(path);
-		weight = getConditionFulfilment();
-		String currentState = getMachine().getCurrentVertexName();
-		if (currentState.contains("/")) {
-			subState = currentState.split("/", 2)[1];
-		}
-		getMachine().restoreVertex();
+    private WeightedPath getWeightedPath(Stack<Edge> path) {
+        double weight = 0;
+        String subState = "";
 
-		return new WeightedPath(path, weight, subState);
-	}
+        getMachine().storeVertex();
+        getMachine().walkPath(path);
+        weight = getConditionFulfilment();
+        String currentState = getMachine().getCurrentVertexName();
+        if (currentState.contains("/")) {
+            subState = currentState.split("/", 2)[1];
+        }
+        getMachine().restoreVertex();
 
-	private Set<Edge> getPathOutEdges(Stack<Edge> path) {
-		Set<Edge> retur = null;
-		getMachine().storeVertex();
-		getMachine().walkPath(path);
-		try {
-			retur = getMachine().getCurrentOutEdges();
-		} catch (FoundNoEdgeException e) {
-			// no edges found? degrade gracefully and return the default value of
-			// null.
-		}
-		getMachine().restoreVertex();
-		return retur;
-	}
+        return new WeightedPath(path, weight, subState);
+    }
 
-	/**
-	 * Will reset the generator to its initial vertex.
-	 */
-	@Override
-	public void reset() {
-		preCalculatedPath = null;
-	}
+    private Set<Edge> getPathOutEdges(Stack<Edge> path) {
+        Set<Edge> retur = null;
+        getMachine().storeVertex();
+        getMachine().walkPath(path);
+        try {
+            retur = getMachine().getCurrentOutEdges();
+        } catch (FoundNoEdgeException e) {
+            // no edges found? degrade gracefully and return the default value of
+            // null.
+        }
+        getMachine().restoreVertex();
+        return retur;
+    }
 
-	@Override
-	public String toString() {
-		return "A_STAR{" + super.toString() + "}";
-	}
+    /**
+     * Will reset the generator to its initial vertex.
+     */
+    @Override
+    public void reset() {
+        preCalculatedPath = null;
+    }
 
-	private static class WeightedPath {
-		private double weight;
-		private Stack<Edge> path;
-		private String subState;
+    @Override
+    public String toString() {
+        return "A_STAR{" + super.toString() + "}";
+    }
 
-		public String getSubState() {
-			return subState;
-		}
+    private static class WeightedPath {
+        private double weight;
+        private Stack<Edge> path;
+        private String subState;
 
-		public void setSubState(String subState) {
-			this.subState = subState;
-		}
+        public String getSubState() {
+            return subState;
+        }
 
-		public Stack<Edge> getPath() {
-			return path;
-		}
+        public void setSubState(String subState) {
+            this.subState = subState;
+        }
 
-		public void setPath(Stack<Edge> path) {
-			this.path = path;
-		}
+        public Stack<Edge> getPath() {
+            return path;
+        }
 
-		public double getWeight() {
-			return weight;
-		}
+        public void setPath(Stack<Edge> path) {
+            this.path = path;
+        }
 
-		public void setWeight(double weight) {
-			this.weight = weight;
-		}
+        public double getWeight() {
+            return weight;
+        }
 
-		public WeightedPath(Stack<Edge> path, double weight, String subState) {
-			setPath(path);
-			setWeight(weight);
-			setSubState(subState);
-		}
-	}
+        public void setWeight(double weight) {
+            this.weight = weight;
+        }
+
+        public WeightedPath(Stack<Edge> path, double weight, String subState) {
+            setPath(path);
+            setWeight(weight);
+            setSubState(subState);
+        }
+    }
 }

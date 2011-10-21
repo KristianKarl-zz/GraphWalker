@@ -28,22 +28,22 @@ package org.graphwalker.core.conditions;
 
 public class NeverCondition extends AbstractStopCondition {
 
-	public NeverCondition() {
-	}
+    public NeverCondition() {
+    }
 
-	@Override
-	public boolean isFulfilled() {
-		return false;
-	}
+    @Override
+    public boolean isFulfilled() {
+        return false;
+    }
 
-	@Override
-	public double getFulfilment() {
-		return 0;
-	}
+    @Override
+    public double getFulfilment() {
+        return 0;
+    }
 
-	@Override
-	public String toString() {
-		return "FALSE";
-	}
+    @Override
+    public String toString() {
+        return "FALSE";
+    }
 
 }

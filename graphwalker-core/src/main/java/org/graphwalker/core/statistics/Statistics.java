@@ -30,12 +30,11 @@ import org.graphwalker.core.graph.AbstractElement;
 
 /**
  * @author Johan Tejle
- * 
  */
 public abstract class Statistics {
-	public abstract void addProgress(AbstractElement element);
+    public abstract void addProgress(AbstractElement element);
 
-	public abstract int getCurrent();
+    public abstract int getCurrent();
 
-	public abstract int getMax();
+    public abstract int getMax();
 }

@@ -26,62 +26,62 @@
 
 package org.graphwalker.core.conditions;
 
+import org.graphwalker.core.machines.FiniteStateMachine;
+
 import java.util.Iterator;
 import java.util.Vector;
 
-import org.graphwalker.core.machines.FiniteStateMachine;
-
 public class AlternativeCondition extends AbstractStopCondition {
 
-	private Vector<StopCondition> conditions;
+    private Vector<StopCondition> conditions;
 
-	@Override
-	public boolean isFulfilled() {
-		for (StopCondition condition : conditions) {
-			if (condition.isFulfilled())
-				return true;
-		}
-		return false;
-	}
+    @Override
+    public boolean isFulfilled() {
+        for (StopCondition condition : conditions) {
+            if (condition.isFulfilled())
+                return true;
+        }
+        return false;
+    }
 
-	public AlternativeCondition() {
-		this.conditions = new Vector<StopCondition>();
-	}
+    public AlternativeCondition() {
+        this.conditions = new Vector<StopCondition>();
+    }
 
-	public void add(StopCondition condition) {
-		this.conditions.add(condition);
-	}
+    public void add(StopCondition condition) {
+        this.conditions.add(condition);
+    }
 
-	@Override
-	public void setMachine(FiniteStateMachine machine) {
-		super.setMachine(machine);
-		for (StopCondition condition : conditions) {
-			condition.setMachine(machine);
-		}
-	}
+    @Override
+    public void setMachine(FiniteStateMachine machine) {
+        super.setMachine(machine);
+        for (StopCondition condition : conditions) {
+            condition.setMachine(machine);
+        }
+    }
 
-	@Override
-	public double getFulfilment() {
-		double retur = 0;
-		for (StopCondition condition : conditions) {
-			double newFullfillment = condition.getFulfilment();
-			if (newFullfillment > retur) {
-				retur = newFullfillment;
-			}
-		}
-		return retur;
-	}
+    @Override
+    public double getFulfilment() {
+        double retur = 0;
+        for (StopCondition condition : conditions) {
+            double newFullfillment = condition.getFulfilment();
+            if (newFullfillment > retur) {
+                retur = newFullfillment;
+            }
+        }
+        return retur;
+    }
 
-	@Override
-	public String toString() {
-		StringBuilder stringBuilder = new StringBuilder("(");
-		for (Iterator<StopCondition> i = conditions.iterator(); i.hasNext();) {
-			stringBuilder.append(i.next().toString());
-			if (i.hasNext()) {
-				stringBuilder.append(" OR ");
-			}
-		}
-		stringBuilder.append(")");
-		return stringBuilder.toString();
-	}
+    @Override
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder("(");
+        for (Iterator<StopCondition> i = conditions.iterator(); i.hasNext(); ) {
+            stringBuilder.append(i.next().toString());
+            if (i.hasNext()) {
+                stringBuilder.append(" OR ");
+            }
+        }
+        stringBuilder.append(")");
+        return stringBuilder.toString();
+    }
 }

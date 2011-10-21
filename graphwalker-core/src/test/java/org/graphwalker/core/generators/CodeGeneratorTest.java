@@ -26,6 +26,7 @@
 
 package org.graphwalker.core.generators;
 
+import junit.framework.TestCase;
 import org.apache.log4j.Logger;
 import org.graphwalker.core.Util;
 import org.graphwalker.core.graph.Edge;
@@ -33,73 +34,71 @@ import org.graphwalker.core.graph.Graph;
 import org.graphwalker.core.graph.Vertex;
 import org.graphwalker.core.machines.FiniteStateMachine;
 
-import junit.framework.TestCase;
-
 public class CodeGeneratorTest extends TestCase {
-	Logger logger = Util.setupLogger(CodeGeneratorTest.class);
+    Logger logger = Util.setupLogger(CodeGeneratorTest.class);
 
-	public void testGetNext() {
-		Graph graph = new Graph();
+    public void testGetNext() {
+        Graph graph = new Graph();
 
-		Vertex v1 = new Vertex();
-		v1.setIndexKey(new Integer(1));
-		v1.setLabelKey("Start");
-		graph.addVertex(v1);
+        Vertex v1 = new Vertex();
+        v1.setIndexKey(new Integer(1));
+        v1.setLabelKey("Start");
+        graph.addVertex(v1);
 
-		Vertex v2 = new Vertex();
-		v2.setIndexKey(new Integer(2));
-		v2.setLabelKey("V2");
-		graph.addVertex(v2);
+        Vertex v2 = new Vertex();
+        v2.setIndexKey(new Integer(2));
+        v2.setLabelKey("V2");
+        graph.addVertex(v2);
 
-		Edge edge = new Edge();
-		graph.addEdge(edge, v1, v2);
-		edge.setIndexKey(new Integer(3));
-		edge.setLabelKey("E1");
+        Edge edge = new Edge();
+        graph.addEdge(edge, v1, v2);
+        edge.setIndexKey(new Integer(3));
+        edge.setLabelKey("E1");
 
-		FiniteStateMachine FSM = new FiniteStateMachine();
-		FSM.setModel(graph);
+        FiniteStateMachine FSM = new FiniteStateMachine();
+        FSM.setModel(graph);
 
-		String[] template = { "", "{EDGE_VERTEX}: {LABEL}", "" };
-		CodeGenerator generator = new CodeGenerator();
-		generator.setTemplate(template);
-		generator.setMachine(FSM);
+        String[] template = {"", "{EDGE_VERTEX}: {LABEL}", ""};
+        CodeGenerator generator = new CodeGenerator();
+        generator.setTemplate(template);
+        generator.setMachine(FSM);
 
-		assertEquals("Edge: E1", generator.getNext()[0]);
-		assertEquals("Vertex: V2", generator.getNext()[0]);
-		assertFalse(generator.hasNext());
-	}
+        assertEquals("Edge: E1", generator.getNext()[0]);
+        assertEquals("Vertex: V2", generator.getNext()[0]);
+        assertFalse(generator.hasNext());
+    }
 
-	public void testHeaderFooter() {
-		Graph graph = new Graph();
+    public void testHeaderFooter() {
+        Graph graph = new Graph();
 
-		Vertex v1 = new Vertex();
-		v1.setIndexKey(new Integer(1));
-		v1.setLabelKey("Start");
-		graph.addVertex(v1);
+        Vertex v1 = new Vertex();
+        v1.setIndexKey(new Integer(1));
+        v1.setLabelKey("Start");
+        graph.addVertex(v1);
 
-		Vertex v2 = new Vertex();
-		v2.setIndexKey(new Integer(2));
-		v2.setLabelKey("V2");
-		graph.addVertex(v2);
+        Vertex v2 = new Vertex();
+        v2.setIndexKey(new Integer(2));
+        v2.setLabelKey("V2");
+        graph.addVertex(v2);
 
-		Edge edge = new Edge();
-		graph.addEdge(edge, v1, v2);
-		edge.setIndexKey(new Integer(3));
-		edge.setLabelKey("E1");
+        Edge edge = new Edge();
+        graph.addEdge(edge, v1, v2);
+        edge.setIndexKey(new Integer(3));
+        edge.setLabelKey("E1");
 
-		FiniteStateMachine FSM = new FiniteStateMachine();
-		FSM.setModel(graph);
+        FiniteStateMachine FSM = new FiniteStateMachine();
+        FSM.setModel(graph);
 
-		String[] template = { "This is the HEADER", "{EDGE_VERTEX}: {LABEL}", "This is the FOOTER" };
-		CodeGenerator generator = new CodeGenerator();
-		generator.setTemplate(template);
-		generator.setMachine(FSM);
+        String[] template = {"This is the HEADER", "{EDGE_VERTEX}: {LABEL}", "This is the FOOTER"};
+        CodeGenerator generator = new CodeGenerator();
+        generator.setTemplate(template);
+        generator.setMachine(FSM);
 
-		StringBuffer str = new StringBuffer();
-		while (generator.hasNext()) {
-			str.append(generator.getNext()[0]);
-		}
-		System.out.println(str.toString());
-	}
+        StringBuffer str = new StringBuffer();
+        while (generator.hasNext()) {
+            str.append(generator.getNext()[0]);
+        }
+        System.out.println(str.toString());
+    }
 
 }

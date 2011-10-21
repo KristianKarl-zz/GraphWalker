@@ -28,5 +28,5 @@ package org.graphwalker.core.events;
 
 public interface AppEvent {
 
-	public void getLoadEvent();
+    public void getLoadEvent();
 }

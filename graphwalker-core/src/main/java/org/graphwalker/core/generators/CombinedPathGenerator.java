@@ -26,93 +26,93 @@
 
 package org.graphwalker.core.generators;
 
-import java.util.Vector;
-
 import org.apache.log4j.Logger;
 import org.graphwalker.core.conditions.StopCondition;
 import org.graphwalker.core.machines.FiniteStateMachine;
 
-public class CombinedPathGenerator extends PathGenerator {
+import java.util.Vector;
 
-	private static Logger logger = Logger.getLogger(CombinedPathGenerator.class);
+public class CombinedPathGenerator extends AbstractPathGenerator {
 
-	private Vector<PathGenerator> generatorList = new Vector<PathGenerator>();
-	private int currentGenerator = 0;
+    private static Logger logger = Logger.getLogger(CombinedPathGenerator.class);
 
-	public CombinedPathGenerator() {
-		super();
-	}
+    private Vector<PathGenerator> generatorList = new Vector<PathGenerator>();
+    private int currentGenerator = 0;
 
-	public CombinedPathGenerator(StopCondition stopCondition) {
-		super(stopCondition);
-	}
+    public CombinedPathGenerator() {
+        super();
+    }
 
-	public void addPathGenerator(PathGenerator generator) {
-		logger.debug("Adding PathGenerator: " + generator);
-		generatorList.add(generator);
-	}
+    public CombinedPathGenerator(StopCondition stopCondition) {
+        super(stopCondition);
+    }
 
-	@Override
-	public void setMachine(FiniteStateMachine machine) {
-		for (PathGenerator aGeneratorList : generatorList) {
-			aGeneratorList.setMachine(machine);
-		}
-	}
+    public void addPathGenerator(PathGenerator generator) {
+        logger.debug("Adding PathGenerator: " + generator);
+        generatorList.add(generator);
+    }
 
-	@Override
-	public void setStopCondition(StopCondition stopCondition) {
-		for (PathGenerator aGeneratorList : generatorList) {
-			aGeneratorList.setStopCondition(stopCondition);
-		}
-	}
+    @Override
+    public void setMachine(FiniteStateMachine machine) {
+        for (PathGenerator aGeneratorList : generatorList) {
+            aGeneratorList.setMachine(machine);
+        }
+    }
 
-	private PathGenerator getActivePathGenerator() {
-		return generatorList.get(currentGenerator);
-	}
+    @Override
+    public void setStopCondition(StopCondition stopCondition) {
+        for (PathGenerator aGeneratorList : generatorList) {
+            aGeneratorList.setStopCondition(stopCondition);
+        }
+    }
 
-	private boolean hasPath() {
-		return generatorList.size() > currentGenerator;
-	}
+    private PathGenerator getActivePathGenerator() {
+        return generatorList.get(currentGenerator);
+    }
 
-	private void scrapActivePathGenerator() {
-		logger.debug("Removing PathGenerator: " + getActivePathGenerator());
-		currentGenerator++;
-	}
+    private boolean hasPath() {
+        return generatorList.size() > currentGenerator;
+    }
 
-	@Override
-	public boolean hasNext() {
-		boolean nextIsAvailable = false;
-		while (hasPath() && !nextIsAvailable) {
-			nextIsAvailable = getActivePathGenerator().hasNext();
-			if (!nextIsAvailable)
-				scrapActivePathGenerator();
-		}
-		return nextIsAvailable;
-	}
+    private void scrapActivePathGenerator() {
+        logger.debug("Removing PathGenerator: " + getActivePathGenerator());
+        currentGenerator++;
+    }
 
-	@Override
-	public String[] getNext() throws InterruptedException {
-		String[] retur = { "", "" };
+    @Override
+    public boolean hasNext() {
+        boolean nextIsAvailable = false;
+        while (hasPath() && !nextIsAvailable) {
+            nextIsAvailable = getActivePathGenerator().hasNext();
+            if (!nextIsAvailable)
+                scrapActivePathGenerator();
+        }
+        return nextIsAvailable;
+    }
 
-		boolean nextIsAvailable = false;
-		while (hasPath() && !nextIsAvailable) {
-			nextIsAvailable = getActivePathGenerator().hasNext();
-			if (!nextIsAvailable)
-				scrapActivePathGenerator();
-		}
-		if (!nextIsAvailable)
-			return retur;
-		return getActivePathGenerator().getNext();
-	}
+    @Override
+    public String[] getNext() throws InterruptedException {
+        String[] retur = {"", ""};
 
-	@Override
-	public String toString() {
-		StringBuilder stringBuilder = new StringBuilder();
-		for (PathGenerator aGeneratorList : generatorList) {
-			stringBuilder.append(aGeneratorList.toString());
-			stringBuilder.append(System.getProperty("line.separator"));
-		}
-		return stringBuilder.toString().trim();
-	}
+        boolean nextIsAvailable = false;
+        while (hasPath() && !nextIsAvailable) {
+            nextIsAvailable = getActivePathGenerator().hasNext();
+            if (!nextIsAvailable)
+                scrapActivePathGenerator();
+        }
+        if (!nextIsAvailable)
+            return retur;
+        return getActivePathGenerator().getNext();
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (PathGenerator aGeneratorList : generatorList) {
+            stringBuilder.append(aGeneratorList.toString());
+            stringBuilder.append(System.getProperty("line.separator"));
+        }
+        return stringBuilder.toString().trim();
+    }
 
 }
