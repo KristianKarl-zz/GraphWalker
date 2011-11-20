@@ -351,8 +351,7 @@ public class Util {
      * @throws java.lang.InterruptedException if any.
      * @return a {@link org.graphwalker.core.ModelBasedTesting} object.
      */
-    public static ModelBasedTesting loadMbtFromXml(final File file, final boolean dryRun) throws StopConditionException,
-            GeneratorException, IOException, JDOMException, InterruptedException {
+    public static ModelBasedTesting loadMbtFromXml(final File file, final boolean dryRun) throws StopConditionException, GeneratorException, IOException, JDOMException, InterruptedException {
         return loadXml(file, false, dryRun, false);
     }
 
@@ -367,8 +366,7 @@ public class Util {
      * @throws java.lang.InterruptedException if any.
      * @return a {@link org.graphwalker.core.ModelBasedTesting} object.
      */
-    public static ModelBasedTesting loadMbtFromXml(final File file) throws StopConditionException, GeneratorException, IOException,
-            JDOMException, InterruptedException {
+    public static ModelBasedTesting loadMbtFromXml(final File file) throws StopConditionException, GeneratorException, IOException, JDOMException, InterruptedException {
         return loadXml(file, false, false, false);
     }
 
@@ -383,8 +381,7 @@ public class Util {
      * @throws java.lang.InterruptedException if any.
      * @return a {@link org.graphwalker.core.ModelBasedTesting} object.
      */
-    public static ModelBasedTesting getNewMbtFromXml(final File file) throws StopConditionException, GeneratorException, IOException,
-            JDOMException, InterruptedException {
+    public static ModelBasedTesting getNewMbtFromXml(final File file) throws StopConditionException, GeneratorException, IOException, JDOMException, InterruptedException {
         return loadXml(file, false, false, true);
     }
 
@@ -399,8 +396,7 @@ public class Util {
      * @throws java.lang.InterruptedException if any.
      * @return a {@link org.graphwalker.core.ModelBasedTesting} object.
      */
-    public ModelBasedTesting loadMbtFromXmlNonStatic(final File file) throws StopConditionException, GeneratorException, IOException,
-            JDOMException, InterruptedException {
+    public ModelBasedTesting loadMbtFromXmlNonStatic(final File file) throws StopConditionException, GeneratorException, IOException, JDOMException, InterruptedException {
         return loadXmlNonStatic(file, false, false);
     }
 
@@ -419,8 +415,7 @@ public class Util {
      * @throws InterruptedException
      */
     @SuppressWarnings("unchecked")
-    private static ModelBasedTesting loadXml(final File file, final boolean runningSoapServices, final boolean dryRun,
-                                             final boolean generateNewModel) throws StopConditionException, GeneratorException, IOException, JDOMException, InterruptedException {
+    private static ModelBasedTesting loadXml(final File file, final boolean runningSoapServices, final boolean dryRun, final boolean generateNewModel) throws StopConditionException, GeneratorException, IOException, JDOMException, InterruptedException {
 
         final ModelBasedTesting mbt = new ModelBasedTesting();
         mbt.setDryRun(dryRun);
@@ -616,8 +611,7 @@ public class Util {
     }
 
     @SuppressWarnings("unchecked")
-    private ModelBasedTesting loadXmlNonStatic(final File file, final boolean runningSoapServices, final boolean dryRun)
-            throws StopConditionException, GeneratorException, IOException, JDOMException, InterruptedException {
+    private ModelBasedTesting loadXmlNonStatic(final File file, final boolean runningSoapServices, final boolean dryRun) throws StopConditionException, GeneratorException, IOException, JDOMException, InterruptedException {
         final ModelBasedTesting mbt = new ModelBasedTesting();
         mbt.setDryRun(dryRun);
 
@@ -830,8 +824,7 @@ public class Util {
     }
 
     @SuppressWarnings("unchecked")
-    private static PathGenerator getGenerator(final FiniteStateMachine machine, final Element generator) throws StopConditionException,
-            GeneratorException, IOException {
+    private static PathGenerator getGenerator(final FiniteStateMachine machine, final Element generator) throws StopConditionException, GeneratorException, IOException {
         int generatorType = Keywords.getGenerator(generator.getAttributeValue("TYPE"));
         PathGenerator generatorObject = getGenerator(generatorType);
         if (generatorObject instanceof CodeGenerator) {
