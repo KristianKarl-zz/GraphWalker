@@ -26,7 +26,7 @@
   -->
 
 <!DOCTYPE MBTINIT SYSTEM "http://mbt.tigris.org/mbt_setup.dtd" >
-<MBTINIT EXTENDED="false" EXECUTOR="java:org.graphwalker.core.ExtendedMain">
+<MBTINIT EXTENDED="false" EXECUTOR="java:org.graphwalker.cli.ExtendedMain">
 	<MODEL PATH="graphml/reqtags/ExtendedMain.graphml"/>
     <GENERATOR TYPE="A_STAR">
   		<CONDITION TYPE="EDGE_COVERAGE" VALUE="100"/>

@@ -99,47 +99,6 @@ public class MultipleModels {
      * model name use the helper function {@link #getUniqueName(String)}.
      *
      * @param modelName the name of the model
-     * @param modelName the name of the model
-     * @param modelName the name of the model
-     * @param modelName the name of the model
-     * @param modelName the name of the model
-     * @param modelName the name of the model
-     * @param modelName the name of the model
-     * @param modelName the name of the model
-     * @param modelName the name of the model
-     * @param modelName the name of the model
-     * @param modelName the name of the model
-     * @param modelName the name of the model
-     * @param modelName the name of the model
-     * @param modelName the name of the model
-     * @param modelName the name of the model
-     * @param modelName the name of the model
-     * @param modelName the name of the model
-     * @param modelName the name of the model
-     * @param modelName the name of the model
-     * @param modelName the name of the model
-     * @param modelName the name of the model
-     * @param modelName the name of the model
-     * @param modelName the name of the model
-     * @param modelName the name of the model
-     * @param modelName the name of the model
-     * @param modelName the name of the model
-     * @param modelName the name of the model
-     * @param modelName the name of the model
-     * @param modelName the name of the model
-     * @param modelName the name of the model
-     * @param modelName the name of the model
-     * @param modelName the name of the model
-     * @param modelName the name of the model
-     * @param modelName the name of the model
-     * @param modelName the name of the model
-     * @param modelName the name of the model
-     * @param modelName the name of the model
-     * @param modelName the name of the model
-     * @param modelName the name of the model
-     * @param modelName the name of the model
-     * @param modelName the name of the model
-     * @param modelName the name of the model
      * @param model     the model to be added
      * @throws java.lang.IllegalArgumentException if the given name has all ready been used.
      */
