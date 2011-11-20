@@ -41,9 +41,6 @@ import java.util.Map.Entry;
 
 /**
  * <p>ExtendedFiniteStateMachine class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public class ExtendedFiniteStateMachine extends FiniteStateMachine {
 

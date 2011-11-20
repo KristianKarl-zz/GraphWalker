@@ -33,9 +33,6 @@ import java.util.regex.Pattern;
 
 /**
  * <p>Edge class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public class Edge extends AbstractElement {
 

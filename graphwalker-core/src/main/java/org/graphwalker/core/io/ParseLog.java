@@ -38,9 +38,6 @@ import java.util.regex.Pattern;
 
 /**
  * <p>ParseLog class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public class ParseLog {
 

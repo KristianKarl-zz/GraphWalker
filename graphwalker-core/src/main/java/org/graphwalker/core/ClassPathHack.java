@@ -33,9 +33,6 @@ import java.net.URLClassLoader;
 
 /**
  * <p>ClassPathHack class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public class ClassPathHack {
     private static final Class<?>[] parameters = new Class[]{URL.class};

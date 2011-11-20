@@ -38,9 +38,6 @@ import org.graphwalker.core.statistics.VertexCoverageStatistics;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
-/**
- * @author Johan Tejle
- */
 public class StatisticsManagerTest extends TestCase {
 
     Graph graph;

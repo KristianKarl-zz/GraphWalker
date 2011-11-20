@@ -57,9 +57,6 @@ import java.util.*;
  * functionality is:<br>
  * * Getting names with extra info for vertices and edges<br>
  * * Setting up the logger for classes<br>
- *
- * @author nilols
- * @version $Id: $
  */
 public class Util {
 

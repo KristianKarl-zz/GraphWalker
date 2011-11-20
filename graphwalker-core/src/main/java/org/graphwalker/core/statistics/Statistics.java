@@ -30,9 +30,6 @@ import org.graphwalker.core.graph.AbstractElement;
 
 /**
  * <p>Statistics interface.</p>
- *
- * @author Johan Tejle
- * @version $Id: $
  */
 public interface Statistics {
 

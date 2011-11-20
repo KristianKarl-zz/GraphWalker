@@ -37,9 +37,6 @@ import java.util.regex.Pattern;
 
 /**
  * <p>Vertex class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public class Vertex extends AbstractElement {
 

@@ -30,9 +30,6 @@ import org.graphwalker.core.exceptions.StopConditionException;
 
 /**
  * <p>VertexCoverage class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public class VertexCoverage extends AbstractStopCondition {
 

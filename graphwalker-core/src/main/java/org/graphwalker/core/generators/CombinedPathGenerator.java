@@ -34,9 +34,6 @@ import java.util.Vector;
 
 /**
  * <p>CombinedPathGenerator class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public class CombinedPathGenerator extends AbstractPathGenerator {
 

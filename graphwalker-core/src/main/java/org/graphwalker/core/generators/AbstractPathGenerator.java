@@ -34,9 +34,6 @@ import java.util.Set;
 
 /**
  * <p>Abstract AbstractPathGenerator class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public abstract class AbstractPathGenerator implements PathGenerator {
 

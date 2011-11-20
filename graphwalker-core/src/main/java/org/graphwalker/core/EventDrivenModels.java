@@ -33,9 +33,6 @@ import java.util.Vector;
 
 /**
  * <p>EventDrivenModels class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public class EventDrivenModels {
     private static Logger logger = Util.setupLogger(EventDrivenModels.class);

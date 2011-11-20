@@ -40,9 +40,6 @@ import org.graphwalker.core.exceptions.InvalidDataException;
 @WebService
 /**
  * <p>SoapServices class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public class SoapServices {
 

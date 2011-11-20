@@ -35,9 +35,6 @@ import org.graphwalker.core.graph.Graph;
 import org.graphwalker.core.graph.Vertex;
 import org.graphwalker.core.machines.FiniteStateMachine;
 
-/**
- * @author Johan Tejle
- */
 public class CombinedPathGeneratorTest extends TestCase {
 
     Graph graph;

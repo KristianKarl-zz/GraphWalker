@@ -39,9 +39,6 @@ import java.util.Set;
 
 /**
  * <p>RandomPathGenerator class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public class RandomPathGenerator extends AbstractPathGenerator {
 

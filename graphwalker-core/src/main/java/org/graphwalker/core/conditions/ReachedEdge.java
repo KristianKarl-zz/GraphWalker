@@ -33,9 +33,6 @@ import java.util.ArrayList;
 
 /**
  * <p>ReachedEdge class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public class ReachedEdge extends AbstractStopCondition {
 

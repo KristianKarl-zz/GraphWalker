@@ -48,9 +48,6 @@ import java.util.*;
  * The algorithm always tries the "path less traveled" where a path is a list of
  * n edges. If several paths are available with the same number of traversals on
  * is chosen by random.
- *
- * @author nilols
- * @version $Id: $
  */
 public class AllPathPermutationsGenerator extends AbstractPathGenerator {
 

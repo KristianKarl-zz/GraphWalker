@@ -30,9 +30,6 @@ import org.graphwalker.core.Util;
 
 /**
  * <p>RequirementCoverage class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public class RequirementCoverage extends AbstractStopCondition {
 

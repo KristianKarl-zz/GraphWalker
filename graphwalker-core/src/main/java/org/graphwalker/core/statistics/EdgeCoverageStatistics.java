@@ -34,9 +34,6 @@ import java.util.HashSet;
 
 /**
  * <p>EdgeCoverageStatistics class.</p>
- *
- * @author Johan Tejle
- * @version $Id: $
  */
 public class EdgeCoverageStatistics extends AbstractStatistics {
 

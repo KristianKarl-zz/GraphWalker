@@ -28,9 +28,6 @@ package org.graphwalker.core.conditions;
 
 /**
  * <p>NeverCondition class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public class NeverCondition extends AbstractStopCondition {
 

@@ -201,6 +201,9 @@
                         </configuration>
                     </execution>
                 </executions>
+                <configuration>
+                    <fixTags>param,return,throws</fixTags>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>

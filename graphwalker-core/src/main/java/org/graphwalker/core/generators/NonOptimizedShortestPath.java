@@ -38,9 +38,6 @@ import java.util.Vector;
 
 /**
  * <p>NonOptimizedShortestPath class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public class NonOptimizedShortestPath extends RandomPathGenerator {
 

@@ -51,9 +51,6 @@ import org.graphwalker.core.conditions.StopCondition;
  *    throw new RuntimeException( "Not implemented" );
  * }
  * </pre>
- *
- * @author nilols
- * @version $Id: $
  */
 public class CodeGenerator extends ListGenerator {
 

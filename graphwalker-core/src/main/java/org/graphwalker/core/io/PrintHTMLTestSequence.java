@@ -31,9 +31,6 @@ import java.util.Vector;
 
 /**
  * <p>PrintHTMLTestSequence class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public class PrintHTMLTestSequence {
 

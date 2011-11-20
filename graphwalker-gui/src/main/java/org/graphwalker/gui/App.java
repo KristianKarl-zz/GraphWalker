@@ -110,9 +110,6 @@ import edu.uci.ics.jung.visualization.util.Animator;
 
 /**
  * <p>App class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public class App extends JFrame implements ActionListener, MbtEvent, Application {
 	/**

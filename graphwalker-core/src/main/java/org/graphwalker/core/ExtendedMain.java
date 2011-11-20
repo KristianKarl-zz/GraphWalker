@@ -31,9 +31,6 @@ package org.graphwalker.core;
 
 /**
  * <p>ExtendedMain class.</p>
- *
- * @author Johan Tejle
- * @version $Id: $
  */
 public class ExtendedMain {
     /**

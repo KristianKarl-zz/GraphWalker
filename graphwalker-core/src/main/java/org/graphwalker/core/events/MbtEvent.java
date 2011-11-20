@@ -28,9 +28,6 @@ package org.graphwalker.core.events;
 
 /**
  * <p>MbtEvent interface.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public interface MbtEvent {
 

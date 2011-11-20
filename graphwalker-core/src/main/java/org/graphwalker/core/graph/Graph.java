@@ -33,9 +33,6 @@ import org.graphwalker.core.Util;
 
 /**
  * <p>Graph class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public class Graph extends SparseMultigraph<Vertex, Edge> {
 

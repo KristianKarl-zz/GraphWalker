@@ -29,9 +29,6 @@ import org.graphwalker.core.machines.FiniteStateMachine;
 
 /**
  * <p>Abstract AbstractStopCondition class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public abstract class AbstractStopCondition implements StopCondition {
 

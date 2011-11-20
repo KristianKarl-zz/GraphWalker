@@ -33,9 +33,6 @@ import java.util.Vector;
 
 /**
  * <p>AlternativeCondition class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public class AlternativeCondition extends AbstractStopCondition {
 

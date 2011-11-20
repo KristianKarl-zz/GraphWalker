@@ -30,9 +30,6 @@ import org.graphwalker.core.machines.FiniteStateMachine;
 
 /**
  * <p>StopCondition interface.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public interface StopCondition {
 

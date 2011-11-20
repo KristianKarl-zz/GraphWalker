@@ -31,9 +31,6 @@ import java.util.Observer;
 
 /**
  * <p>Model class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public class Model implements Observer {
 

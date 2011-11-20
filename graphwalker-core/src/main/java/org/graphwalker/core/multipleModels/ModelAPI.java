@@ -30,9 +30,6 @@ import org.graphwalker.core.generators.PathGenerator;
 
 /**
  * <p>ModelAPI class.</p>
- *
- * @author krikar Any test should extend this class.
- * @version $Id: $
  */
 public class ModelAPI {
     private ModelBasedTesting mbt = null;

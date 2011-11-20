@@ -64,9 +64,6 @@ import java.util.regex.Pattern;
 
 /**
  * The object handles the test case generation, both online and offline.
- *
- * @author krikar
- * @version $Id: $
  */
 public class ModelBasedTesting {
     private static Logger logger = Util.setupLogger(ModelBasedTesting.class);

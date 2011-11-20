@@ -38,9 +38,6 @@ import java.util.Vector;
 
 /**
  * <p>ListGenerator class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public class ListGenerator extends AbstractPathGenerator {
 

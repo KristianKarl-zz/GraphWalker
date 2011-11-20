@@ -38,9 +38,6 @@ import java.io.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * @author Johan Tejle
- */
 public class ModelBasedTestingTest extends TestCase {
 
     @Override

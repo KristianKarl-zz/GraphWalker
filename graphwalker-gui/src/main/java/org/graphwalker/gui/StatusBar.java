@@ -32,9 +32,6 @@ import javax.swing.JLabel;
 
 /**
  * <p>StatusBar class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 @SuppressWarnings("serial")
 public class StatusBar extends JLabel {

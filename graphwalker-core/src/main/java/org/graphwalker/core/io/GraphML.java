@@ -61,9 +61,6 @@ import java.util.Vector;
  * <strong>Example: Folder containing several graphml files</strong><br>
  * GraphML graphML = new GraphML();<br>
  * Graph graph = graphML.load( "/home/user/graphml_folder/" );<br>
- *
- * @author nilols
- * @version $Id: $
  */
 public class GraphML extends AbstractModelHandler {
     /**

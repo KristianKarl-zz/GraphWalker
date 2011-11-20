@@ -27,9 +27,6 @@ package org.graphwalker.core;
 
 /**
  * <p>Application interface.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public interface Application {
     /**

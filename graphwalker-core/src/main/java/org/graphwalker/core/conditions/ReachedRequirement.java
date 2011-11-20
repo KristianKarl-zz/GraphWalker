@@ -32,9 +32,6 @@ import java.util.HashSet;
 
 /**
  * <p>ReachedRequirement class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public class ReachedRequirement extends AbstractStopCondition {
 

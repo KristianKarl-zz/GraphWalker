@@ -38,9 +38,6 @@ import java.util.regex.Pattern;
 
 /**
  * <p>ReachedVertex class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public class ReachedVertex extends AbstractStopCondition {
 

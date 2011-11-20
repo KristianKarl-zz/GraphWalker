@@ -32,9 +32,6 @@ import java.io.PrintStream;
 
 /**
  * <p>Abstract AbstractModelHandler class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public abstract class AbstractModelHandler {
 

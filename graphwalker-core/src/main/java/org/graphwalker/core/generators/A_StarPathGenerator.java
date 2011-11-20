@@ -37,9 +37,6 @@ import java.util.*;
 
 /**
  * <p>A_StarPathGenerator class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public class A_StarPathGenerator extends AbstractPathGenerator {
 

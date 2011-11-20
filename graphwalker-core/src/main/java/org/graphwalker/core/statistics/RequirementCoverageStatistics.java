@@ -35,9 +35,6 @@ import java.util.Vector;
 
 /**
  * <p>RequirementCoverageStatistics class.</p>
- *
- * @author Johan Tejle
- * @version $Id: $
  */
 public class RequirementCoverageStatistics extends AbstractStatistics {
 

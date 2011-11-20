@@ -35,9 +35,6 @@ import java.util.regex.Pattern;
 
 /**
  * <p>AbstractElement class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public class AbstractElement {
 

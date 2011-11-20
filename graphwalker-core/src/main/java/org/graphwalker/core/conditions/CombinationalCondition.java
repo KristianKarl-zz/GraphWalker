@@ -33,9 +33,6 @@ import java.util.Vector;
 
 /**
  * <p>CombinationalCondition class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public class CombinationalCondition extends AbstractStopCondition {
 

@@ -32,9 +32,6 @@ import org.graphwalker.core.machines.FiniteStateMachine;
 
 /**
  * <p>PathGenerator interface.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public interface PathGenerator {
 

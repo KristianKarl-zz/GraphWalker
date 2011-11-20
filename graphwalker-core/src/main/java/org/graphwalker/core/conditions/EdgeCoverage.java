@@ -32,9 +32,6 @@ import org.graphwalker.core.exceptions.StopConditionException;
 
 /**
  * <p>EdgeCoverage class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public class EdgeCoverage extends AbstractStopCondition {
 

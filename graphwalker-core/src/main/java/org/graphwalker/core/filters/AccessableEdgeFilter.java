@@ -35,9 +35,6 @@ import javax.script.ScriptException;
 
 /**
  * <p>AccessableEdgeFilter class.</p>
- *
- * @author Johan Tejle
- * @version $Id: $
  */
 public class AccessableEdgeFilter {
 

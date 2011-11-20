@@ -48,9 +48,6 @@ import java.util.Set;
 
 /**
  * <p>StatisticsManager class.</p>
- *
- * @author Johan Tejle
- * @version $Id: $
  */
 public class StatisticsManager {
 

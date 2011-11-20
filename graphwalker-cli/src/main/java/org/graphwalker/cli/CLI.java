@@ -107,9 +107,6 @@ import java.util.Vector;
  * </pre>
  * <p/>
  * <br>
- *
- * @author nilols
- * @version $Id: $
  */
 public class CLI {
 
@@ -1063,6 +1060,24 @@ public class CLI {
      * @param cl
      * @throws IOException
      */
+    /*
+	private void RunCommandLog(CommandLine cl) throws IOException {
+		if (helpNeeded("log", !cl.hasOption("f"), "Missing the input graphml file (folder), See -f (--input_graphml)")
+		    || helpNeeded("log", !cl.hasOption("l"), "Missing the log file. See -l"))
+			return;
+
+		App.main(new String[] { cl.getOptionValue("f"), cl.getOptionValue("l") });
+	}
+    */
+    /*
+	private void RunCommandLog(CommandLine cl) throws IOException {
+		if (helpNeeded("log", !cl.hasOption("f"), "Missing the input graphml file (folder), See -f (--input_graphml)")
+		    || helpNeeded("log", !cl.hasOption("l"), "Missing the log file. See -l"))
+			return;
+
+		App.main(new String[] { cl.getOptionValue("f"), cl.getOptionValue("l") });
+	}
+    */
     /*
 	private void RunCommandLog(CommandLine cl) throws IOException {
 		if (helpNeeded("log", !cl.hasOption("f"), "Missing the input graphml file (folder), See -f (--input_graphml)")

@@ -82,11 +82,6 @@ import java.util.Random;
  * the current paused model can be resumed.
  * <p/>
  * The executions ends when all models has reached their stop criteria.
- *
- * @author Kristian Karl
- * @see SWITCH_MODEL
- * @see GRAPH_VERTEX
- * @version $Id: $
  */
 public class ModelHandler {
 

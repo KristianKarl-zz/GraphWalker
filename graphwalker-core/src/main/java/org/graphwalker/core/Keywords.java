@@ -36,9 +36,6 @@ import java.util.Vector;
  * Handles the common constants for the org.graphwalker package. This includes
  * reserved key words, and text strings used for storing custom data as
  * UserDatum in graphs, vertices and edges.
- *
- * @author nilols
- * @version $Id: $
  */
 public class Keywords {
 

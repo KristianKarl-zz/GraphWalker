@@ -33,9 +33,6 @@ import java.util.*;
 
 /**
  * <p>RequirementsGenerator class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public class RequirementsGenerator extends AbstractPathGenerator {
 

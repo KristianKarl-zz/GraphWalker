@@ -30,9 +30,6 @@ import org.apache.log4j.Logger;
 
 /**
  * <p>Status class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public class Status {
     static private Logger log = Util.setupLogger(Status.class);

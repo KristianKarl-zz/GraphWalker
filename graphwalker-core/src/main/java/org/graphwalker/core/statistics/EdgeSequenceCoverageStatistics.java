@@ -35,9 +35,6 @@ import java.util.Stack;
 
 /**
  * <p>EdgeSequenceCoverageStatistics class.</p>
- *
- * @author Johan Tejle
- * @version $Id: $
  */
 public class EdgeSequenceCoverageStatistics extends AbstractStatistics {
 

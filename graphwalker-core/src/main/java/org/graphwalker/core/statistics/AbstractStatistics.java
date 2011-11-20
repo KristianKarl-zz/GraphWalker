@@ -27,9 +27,6 @@ package org.graphwalker.core.statistics;
 
 /**
  * <p>Abstract AbstractStatistics class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public abstract class AbstractStatistics implements Statistics {
 }

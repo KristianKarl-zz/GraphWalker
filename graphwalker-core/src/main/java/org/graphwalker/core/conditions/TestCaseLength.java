@@ -28,9 +28,6 @@ package org.graphwalker.core.conditions;
 
 /**
  * <p>TestCaseLength class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public class TestCaseLength extends AbstractStopCondition {
 

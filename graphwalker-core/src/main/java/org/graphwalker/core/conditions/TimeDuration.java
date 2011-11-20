@@ -28,9 +28,6 @@ package org.graphwalker.core.conditions;
 
 /**
  * Stops test execution after a certain amount of time has passed.
- *
- * @author Johan Tejle
- * @version $Id: $
  */
 public class TimeDuration extends AbstractStopCondition {
 

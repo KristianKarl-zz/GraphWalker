@@ -34,10 +34,6 @@ import java.util.LinkedHashSet;
  * execute them in parallel. This is only usable for running online since
  * multiple models will be executed at the same time. The method is to add a
  * model and then execute it when appropriate.
- *
- * @author Ola Sundin
- * @see ModelBasedTesting
- * @version $Id: $
  */
 public class MultipleModels {
     /**
@@ -102,6 +98,42 @@ public class MultipleModels {
      * in the set an exception is thrown. In order to guarantee uniqueness of the
      * model name use the helper function {@link #getUniqueName(String)}.
      *
+     * @param modelName the name of the model
+     * @param modelName the name of the model
+     * @param modelName the name of the model
+     * @param modelName the name of the model
+     * @param modelName the name of the model
+     * @param modelName the name of the model
+     * @param modelName the name of the model
+     * @param modelName the name of the model
+     * @param modelName the name of the model
+     * @param modelName the name of the model
+     * @param modelName the name of the model
+     * @param modelName the name of the model
+     * @param modelName the name of the model
+     * @param modelName the name of the model
+     * @param modelName the name of the model
+     * @param modelName the name of the model
+     * @param modelName the name of the model
+     * @param modelName the name of the model
+     * @param modelName the name of the model
+     * @param modelName the name of the model
+     * @param modelName the name of the model
+     * @param modelName the name of the model
+     * @param modelName the name of the model
+     * @param modelName the name of the model
+     * @param modelName the name of the model
+     * @param modelName the name of the model
+     * @param modelName the name of the model
+     * @param modelName the name of the model
+     * @param modelName the name of the model
+     * @param modelName the name of the model
+     * @param modelName the name of the model
+     * @param modelName the name of the model
+     * @param modelName the name of the model
+     * @param modelName the name of the model
+     * @param modelName the name of the model
+     * @param modelName the name of the model
      * @param modelName the name of the model
      * @param modelName the name of the model
      * @param modelName the name of the model
@@ -237,7 +269,6 @@ public class MultipleModels {
     /**
      * Private class for execution of models in a seperate thread.
      *
-     * @author Ola Sundin
      */
     private class ModelThread implements Runnable {
         private String modelName;

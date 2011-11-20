@@ -29,9 +29,6 @@ package org.graphwalker.core.exceptions;
 /**
  * This exception should be used whenever data extraction from the data space
  * from a EFSM machine fails.
- *
- * @author nilols
- * @version $Id: $
  */
 public class InvalidDataException extends Exception {
 
