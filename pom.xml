@@ -113,6 +113,9 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
+				<configuration>
+					<maxmemory>64m</maxmemory>
+				</configuration>
 			</plugin>
 		</plugins>
 	</reporting>
