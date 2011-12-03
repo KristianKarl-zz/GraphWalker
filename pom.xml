@@ -16,7 +16,7 @@
 	</licenses>
 	<scm>
 		<url>https://github.com/KristianKarl/GraphWalker</url>
-		<developerConnection>git://github.com/KristianKarl/GraphWalker.git</developerConnection>
+		<developerConnection>scm:git:git@github.com/KristianKarl/GraphWalker.git</developerConnection>
 		<connection>scm:git:git://github.com/KristianKarl/GraphWalker.git</connection>
 	</scm>
 	<developers>
