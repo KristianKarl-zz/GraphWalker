@@ -23,6 +23,16 @@
 			<groupId>com.sun.xml.ws</groupId>
 			<artifactId>jaxws-rt</artifactId>
 		</dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
 	<build>
@@ -37,7 +47,7 @@
 							<goal>wsgen</goal>
 						</goals>
 						<configuration>
-							<sei>org.graphwalker.webservice.SoapServices</sei>
+							<sei>org.graphwalker.webservice.SoapServiceImpl</sei>
 						</configuration>
 					</execution>
 				</executions>

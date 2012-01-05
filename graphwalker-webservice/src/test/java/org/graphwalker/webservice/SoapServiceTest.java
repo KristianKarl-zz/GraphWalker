@@ -25,16 +25,38 @@
  */
 package org.graphwalker.webservice;
 
-import org.graphwalker.core.ModelBasedTesting;
-import org.graphwalker.webservice.SoapServices;
+import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 public class SoapServiceTest {
 
-	@Test(expected = RuntimeException.class)
-	public void testGetDataValue() {
-		SoapServices ss = new SoapServices(new ModelBasedTesting());
-		ss.GetDataValue(null);
-	}
+    private SoapService mySoapService;
+    
+    @Before
+    public void startService() {
+        mySoapService = new SoapServiceImpl();
+        mySoapService.load("soapServiceTest.xml");
+    }
+
+    @Test
+    public void hasNextStepTest() {
+        Assert.assertTrue(mySoapService.hasNextStep());
+        Assert.assertEquals("v_0", mySoapService.getNextStep());
+        Assert.assertTrue(mySoapService.hasNextStep());
+        Assert.assertEquals("v_1", mySoapService.getNextStep());
+        Assert.assertTrue(mySoapService.hasNextStep());
+        Assert.assertEquals("v_0", mySoapService.getNextStep());
+        Assert.assertTrue(mySoapService.hasNextStep());
+        Assert.assertEquals("Done", mySoapService.getNextStep());
+        Assert.assertFalse(mySoapService.hasNextStep());
+    }
+
+    @Test
+    public void getNextStepTest() {
+        String nextStep = mySoapService.getNextStep();
+        Assert.assertNotNull(nextStep);
+        Assert.assertEquals("v_0", nextStep);
+    }
 
 }

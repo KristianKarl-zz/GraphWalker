@@ -2,7 +2,7 @@
  * #%L
  * GraphWalker Core
  * %%
- * Copyright (C) 2011 GraphWalker
+ * Copyright (C) 2011 - 2012 GraphWalker
  * %%
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,26 +25,19 @@
  */
 package org.graphwalker.core.conditions;
 
-import org.graphwalker.core.machines.FiniteStateMachine;
-
 /**
  * <p>Abstract AbstractStopCondition class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
  */
 public abstract class AbstractStopCondition implements StopCondition {
 
-    private FiniteStateMachine machine;
+    /** Constant <code>FULFILLMENT_LEVEL=0.99999</code> */
+    static final double FULFILLMENT_LEVEL = 0.99999;
+    /** Constant <code>PERCENTAGE_SCALE=100</code> */
+    static final int PERCENTAGE_SCALE = 100;
+    /** Constant <code>SECOND_SCALE=1000</code> */
+    static final int SECOND_SCALE = 1000;
 
-    /**
-     * <p>Getter for the field <code>machine</code>.</p>
-     *
-     * @return a {@link org.graphwalker.core.machines.FiniteStateMachine} object.
-     */
-    public FiniteStateMachine getMachine() {
-        return machine;
-    }
-
-    /** {@inheritDoc} */
-    public void setMachine(FiniteStateMachine machine) {
-        this.machine = machine;
-    }
 }

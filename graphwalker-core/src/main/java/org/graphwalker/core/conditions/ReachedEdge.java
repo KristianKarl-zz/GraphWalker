@@ -2,7 +2,7 @@
  * #%L
  * GraphWalker Core
  * %%
- * Copyright (C) 2011 GraphWalker
+ * Copyright (C) 2011 - 2012 GraphWalker
  * %%
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,113 +23,51 @@
  * THE SOFTWARE.
  * #L%
  */
-
 package org.graphwalker.core.conditions;
 
-import org.graphwalker.core.graph.Edge;
-import org.graphwalker.core.machines.FiniteStateMachine;
-
-import java.util.ArrayList;
+import org.graphwalker.core.model.Edge;
+import org.graphwalker.core.model.Element;
+import org.graphwalker.core.model.Model;
 
 /**
  * <p>ReachedEdge class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
  */
 public class ReachedEdge extends AbstractStopCondition {
 
-    private ArrayList<Edge> allEdges;
-    private Edge endEdge;
-    private int[] proximity;
-    private int maxDistance;
-    private String edgeName;
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean isFulfilled() {
-        return getFulfilment() >= 0.99999;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void setMachine(FiniteStateMachine machine) {
-        super.setMachine(machine);
-        if (this.endEdge == null) {
-            this.endEdge = machine.findEdge(edgeName);
-        }
-        if (this.endEdge == null) {
-            throw new RuntimeException("Vertex '" + edgeName + "' not found in model");
-        }
-        this.proximity = getFloydWarshall();
-        this.maxDistance = max(this.proximity);
-    }
+    private final String myName;
 
     /**
      * <p>Constructor for ReachedEdge.</p>
      *
-     * @param edgeName a {@link java.lang.String} object.
+     * @param name a {@link java.lang.String} object.
      */
-    public ReachedEdge(String edgeName) {
-        String[] vertex = edgeName.split("/", 2);
-        this.edgeName = vertex[0];
+    public ReachedEdge(String name) {
+        myName = name;
     }
 
     /** {@inheritDoc} */
     @Override
-    public double getFulfilment() {
-        int distance = this.maxDistance;
-        if (getMachine().getLastEdge() != null) {
-            distance = proximity[allEdges.indexOf(getMachine().getLastEdge())];
-        }
-        return (1) - ((double) distance / (double) maxDistance);
-    }
-
-    private int max(int[] t) {
-        int maximum = t[0];
-        for (int i = 1; i < t.length; i++) {
-            if (t[i] > maximum) {
-                maximum = t[i];
-            }
-        }
-        return maximum;
-    }
-
-    private int[][] getFloydWarshallMatrix() {
-        allEdges = new ArrayList<Edge>(getMachine().getAllEdges());
-        int n = allEdges.size();
-        int[][] retur = new int[n][n];
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                int x = 99999;
-                if (i == j) {
-                    x = 0;
-                } else if (getMachine().getModel().isSource(getMachine().getModel().getDest(allEdges.get(j)), allEdges.get(i))) {
-                    x = 1;
-                }
-                retur[i][j] = x;
-            }
-        }
-        return retur;
-    }
-
-    private int[] getFloydWarshall() {
-        int path[][] = getFloydWarshallMatrix();
-        int n = path.length;
-        for (int k = 0; k < n; k++) {
-            for (int i = 0; i < n; i++) {
-                for (int j = 0; j < n; j++) {
-                    path[i][j] = Math.min(path[i][j], path[i][k] + path[k][j]);
-                }
-            }
-        }
-        int startIndex = allEdges.indexOf(endEdge);
-        if (startIndex >= 0) {
-            return path[startIndex];
-        }
-        throw new RuntimeException("edge no longer in Graph!");
+    public boolean isFulfilled(Model model, Element element) {
+        return getFulfilment(model, element) >= FULFILLMENT_LEVEL;
     }
 
     /** {@inheritDoc} */
     @Override
-    public String toString() {
-        return "EDGE='" + endEdge + "'";
+    public double getFulfilment(Model model, Element element) {
+        Edge edge = model.getEdgeByName(myName);
+        if (null != edge) {
+            if (edge.equals(element)) {
+                return 1;
+            } else {
+                int distance = model.getShortestDistance(element, edge);
+                int max = model.getMaximumDistance(edge);
+                return 1 - (double)distance/max;
+            }
+        }
+        return 0;
     }
+
 }

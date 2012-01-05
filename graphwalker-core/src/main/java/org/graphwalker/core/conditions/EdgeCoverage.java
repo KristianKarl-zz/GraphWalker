@@ -2,7 +2,7 @@
  * #%L
  * GraphWalker Core
  * %%
- * Copyright (C) 2011 GraphWalker
+ * Copyright (C) 2011 - 2012 GraphWalker
  * %%
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,63 +23,46 @@
  * THE SOFTWARE.
  * #L%
  */
-
 package org.graphwalker.core.conditions;
 
-import org.apache.log4j.Logger;
-import org.graphwalker.core.Util;
-import org.graphwalker.core.exceptions.StopConditionException;
+import net.sf.oval.constraint.Range;
+import net.sf.oval.guard.Guarded;
+import org.graphwalker.core.model.Element;
+import org.graphwalker.core.model.Model;
 
 /**
  * <p>EdgeCoverage class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
  */
+@Guarded
 public class EdgeCoverage extends AbstractStopCondition {
 
-    private double limit;
-    static Logger logger = Util.setupLogger(EdgeCoverage.class);
+    private final double myLimit;
 
     /**
      * <p>Constructor for EdgeCoverage.</p>
      *
-     * @throws org.graphwalker.core.exceptions.StopConditionException if any.
+     * @param limit a long.
      */
-    public EdgeCoverage() throws StopConditionException {
-        this(1);
-    }
-
-    /**
-     * <p>Constructor for EdgeCoverage.</p>
-     *
-     * @param limit a double.
-     * @throws org.graphwalker.core.exceptions.StopConditionException if any.
-     */
-    public EdgeCoverage(double limit) throws StopConditionException {
-        if (limit > 1 || limit < 0)
-            throw new StopConditionException("Excpeted an edge coverage between 0 and 100. Actual: " + limit * 100);
-        this.limit = limit;
+    public EdgeCoverage(@Range(min = 1, max = 100) long limit) {
+        myLimit = (double)limit/ PERCENTAGE_SCALE;
     }
 
     /** {@inheritDoc} */
     @Override
-    public boolean isFulfilled() {
-        double edges = getMachine().getAllEdges().size();
-        double covered = getMachine().getNumOfCoveredEdges();
-        logger.debug("Edges/covered (limit): " + edges + "/" + covered + " (" + limit + ")");
-        return (covered / edges) >= limit;
+    public boolean isFulfilled(Model model, Element element) {
+        double totalEdgesCount = model.getEdges().size();
+        double visitedEdgesCount = model.getVisitedEdges().size();
+        return (visitedEdgesCount / totalEdgesCount) >= myLimit;
     }
-
+    
     /** {@inheritDoc} */
     @Override
-    public double getFulfilment() {
-        double edges = getMachine().getAllEdges().size();
-        double covered = getMachine().getNumOfCoveredEdges();
-        return (covered / edges) / limit;
+    public double getFulfilment(Model model, Element element) {
+		double totalEdgesCount = model.getEdges().size();
+		double visitedEdgesCount = model.getVisitedEdges().size();
+		return (visitedEdgesCount / totalEdgesCount) / myLimit;
     }
-
-    /** {@inheritDoc} */
-    @Override
-    public String toString() {
-        return "EC>=" + (int) (100 * limit);
-    }
-
 }

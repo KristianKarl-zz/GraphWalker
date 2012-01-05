@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns="http://graphwalker.org/graphwalker.xsd"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="http://graphwalker.org/graphwalker.xsd"
+            attributeFormDefault="unqualified" elementFormDefault="qualified">
+
+    <xsd:element name="graphwalker" type="GraphWalkerType"/>
+
+    <xsd:complexType name="GraphWalkerType">
+        <xsd:all>
+            <xsd:element name="defaultPathGenerator" minOccurs="0" type="PathGeneratorType"/>
+            <xsd:element name="models" type="ModelsType"/>
+        </xsd:all>
+        <xsd:attribute name="defaultModelId" type="xsd:IDREF"/>
+        <xsd:attribute name="scriptLanguage" use="required">
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:string">
+                    <xsd:enumeration value="groovy"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+        </xsd:attribute>
+    </xsd:complexType>
+
+    <xsd:complexType name="PathGeneratorType">
+        <xsd:choice>
+            <xsd:element name="any" type="AnyStopConditionType"/>
+            <xsd:element name="all" type="AllStopConditionsType"/>
+            <xsd:element name="stopCondition" type="StopConditionType"/>
+        </xsd:choice>
+        <xsd:attribute name="type" use="required">
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:string">
+                    <xsd:enumeration value="Random"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+        </xsd:attribute>
+    </xsd:complexType>
+
+    <xsd:complexType name="ModelsType">
+        <xsd:sequence>
+            <xsd:element name="model" minOccurs="1" maxOccurs="unbounded" type="ModelType"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="ModelType">
+        <xsd:all>
+            <xsd:element name="pathGenerator" minOccurs="0" type="PathGeneratorType"/>
+        </xsd:all>
+        <xsd:attribute name="id" type="xsd:ID" use="required"/>
+        <xsd:attribute name="file" type="xsd:string" use="required"/>
+    </xsd:complexType>
+
+    <xsd:complexType name="AnyStopConditionType">
+        <xsd:choice minOccurs="1" maxOccurs="unbounded">
+            <xsd:element name="all" type="AllStopConditionsType"/>
+            <xsd:element name="any" type="AnyStopConditionType"/>
+            <xsd:element name="stopCondition" type="StopConditionType"/>
+        </xsd:choice>
+    </xsd:complexType>
+
+    <xsd:complexType name="AllStopConditionsType">
+        <xsd:choice minOccurs="1" maxOccurs="unbounded">
+            <xsd:element name="all" type="AllStopConditionsType"/>
+            <xsd:element name="any" type="AnyStopConditionType"/>
+            <xsd:element name="stopCondition" type="StopConditionType"/>
+        </xsd:choice>
+    </xsd:complexType>
+
+    <xsd:complexType name="StopConditionType">
+        <xsd:attribute name="type" use="required">
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:string">
+                    <xsd:enumeration value="EdgeCoverage"/>
+                    <xsd:enumeration value="ReachedEdge"/>
+                    <xsd:enumeration value="ReachedVertex"/>
+                    <xsd:enumeration value="VertexCoverage"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+        </xsd:attribute>
+        <xsd:attribute name="value" type="xsd:string" use="optional"/>
+    </xsd:complexType>
+
+</xsd:schema>

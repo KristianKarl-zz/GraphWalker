@@ -2,7 +2,7 @@
  * #%L
  * GraphWalker Core
  * %%
- * Copyright (C) 2011 GraphWalker
+ * Copyright (C) 2011 - 2012 GraphWalker
  * %%
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,136 +23,50 @@
  * THE SOFTWARE.
  * #L%
  */
-
 package org.graphwalker.core.conditions;
 
-import org.apache.log4j.Logger;
-import org.graphwalker.core.Util;
-import org.graphwalker.core.graph.Vertex;
-import org.graphwalker.core.machines.ExtendedFiniteStateMachine;
-import org.graphwalker.core.machines.FiniteStateMachine;
-
-import java.util.ArrayList;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import org.graphwalker.core.model.Element;
+import org.graphwalker.core.model.Model;
+import org.graphwalker.core.model.Vertex;
 
 /**
  * <p>ReachedVertex class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
  */
 public class ReachedVertex extends AbstractStopCondition {
 
-    private static Logger logger = Util.setupLogger(ReachedVertex.class);
-    private ArrayList<Vertex> allVertices;
-    private Vertex endVertex;
-    private int[] proximity;
-    private int maxDistance;
-    private String vertexName;
-    private String subState;
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean isFulfilled() {
-        return getFulfilment() >= 0.99999;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void setMachine(FiniteStateMachine machine) {
-        super.setMachine(machine);
-        if (this.endVertex == null) {
-            this.endVertex = machine.getModel().findVertex(vertexName);
-        }
-        if (this.endVertex == null) {
-            throw new RuntimeException("Vertex '" + vertexName + "' not found in model");
-        }
-        this.proximity = getFloydWarshall();
-        this.maxDistance = max(this.proximity);
-    }
+    private final String myName;
 
     /**
      * <p>Constructor for ReachedVertex.</p>
      *
-     * @param vertexName a {@link java.lang.String} object.
+     * @param name a {@link java.lang.String} object.
      */
-    public ReachedVertex(String vertexName) {
-        String[] vertex = vertexName.split("/", 2);
-        this.vertexName = vertex[0];
-        this.subState = (vertex.length > 1 ? vertex[1] : "");
+    public ReachedVertex(String name) {
+        myName = name;
     }
 
     /** {@inheritDoc} */
     @Override
-    public double getFulfilment() {
-        logger.debug("Machine: " + getMachine());
-        int distance = proximity[allVertices.indexOf(getMachine().getCurrentVertex())];
-        if (getMachine() instanceof ExtendedFiniteStateMachine) {
-            String currentVertex = getMachine().getCurrentVertexName();
-            String currentSubState = "";
-            if (vertexName.equals(Vertex.getLabel(currentVertex))) {
-                if (currentVertex.contains("/")) {
-                    currentSubState = currentVertex.split("/", 2)[1];
-                    Pattern actionPattern = Pattern.compile(this.subState);
-                    Matcher actionMatcher = actionPattern.matcher(currentSubState);
-                    if (actionMatcher.find()) {
-                        return 1;
-                    }
-                }
-            }
-            return 0;
-        }
-
-        return (1) - ((double) distance / (double) maxDistance);
-    }
-
-    private int max(int[] t) {
-        int maximum = t[0];
-        for (int i = 1; i < t.length; i++) {
-            if (t[i] > maximum) {
-                maximum = t[i];
-            }
-        }
-        return maximum;
-    }
-
-    private int[][] getFloydWarshallMatrix() {
-        allVertices = new ArrayList<Vertex>(getMachine().getAllVertices());
-        int n = allVertices.size();
-        int[][] retur = new int[n][n];
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                int x = 99999;
-                if (i == j) {
-                    x = 0;
-                } else if (getMachine().getModel().isPredecessor(allVertices.get(i), allVertices.get(j))) {
-                    x = 1;
-                }
-                retur[i][j] = x;
-            }
-        }
-        return retur;
-    }
-
-    private int[] getFloydWarshall() {
-        int path[][] = getFloydWarshallMatrix();
-        int n = path.length;
-        for (int k = 0; k < n; k++) {
-            for (int i = 0; i < n; i++) {
-                for (int j = 0; j < n; j++) {
-                    path[i][j] = Math.min(path[i][j], path[i][k] + path[k][j]);
-                }
-            }
-        }
-        int startIndex = allVertices.indexOf(endVertex);
-        if (startIndex >= 0) {
-            return path[startIndex];
-        }
-        throw new RuntimeException("vertex no longer in Graph!");
+    public boolean isFulfilled(Model model, Element element) {
+        return getFulfilment(model, element) >= FULFILLMENT_LEVEL;
     }
 
     /** {@inheritDoc} */
     @Override
-    public String toString() {
-        return "VERTEX='" + endVertex + "'";
+    public double getFulfilment(Model model, Element element) {
+        Vertex vertex = model.getVertexByName(myName);
+        if (null != vertex) {
+            if (vertex.equals(element)) {
+                return 1;
+            } else {
+                int distance = model.getShortestDistance(element, vertex);
+                int max = model.getMaximumDistance(vertex);
+                return 1 - (double)distance/max;
+            }
+        }
+        return 0;
     }
-
 }

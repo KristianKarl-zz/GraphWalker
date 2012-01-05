@@ -26,95 +26,14 @@
 
 package org.graphwalker.gui;
 
-import java.awt.BasicStroke;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.Paint;
-import java.awt.Shape;
-import java.awt.Stroke;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.net.InetAddress;
-import java.net.URL;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.Vector;
-
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JSplitPane;
-import javax.swing.JTextArea;
-import javax.swing.JToolBar;
-import javax.swing.SwingConstants;
-import javax.swing.SwingWorker;
-import javax.swing.event.ChangeEvent;
-import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.xml.ws.Endpoint;
 
-import org.apache.commons.collections15.Transformer;
-import org.apache.log4j.Logger;
-import org.graphwalker.core.Application;
-import org.graphwalker.core.ModelBasedTesting;
-import org.graphwalker.core.Status;
-import org.graphwalker.core.Util;
-import org.graphwalker.core.events.AppEvent;
-import org.graphwalker.core.events.MbtEvent;
-import org.graphwalker.core.exceptions.GeneratorException;
-import org.graphwalker.core.exceptions.GuiStoppedExecution;
-import org.graphwalker.core.exceptions.StopConditionException;
-import org.graphwalker.core.graph.AbstractElement;
-import org.graphwalker.core.graph.Edge;
-import org.graphwalker.core.graph.Graph;
-import org.graphwalker.core.graph.Vertex;
-import org.graphwalker.core.io.ParseLog;
-import org.graphwalker.webservice.SoapServices;
-import org.jdom.JDOMException;
-
-import edu.uci.ics.jung.algorithms.layout.CircleLayout;
-import edu.uci.ics.jung.algorithms.layout.FRLayout;
-import edu.uci.ics.jung.algorithms.layout.ISOMLayout;
-import edu.uci.ics.jung.algorithms.layout.KKLayout;
-import edu.uci.ics.jung.algorithms.layout.SpringLayout;
-import edu.uci.ics.jung.algorithms.layout.SpringLayout2;
-import edu.uci.ics.jung.algorithms.layout.StaticLayout;
-import edu.uci.ics.jung.algorithms.layout.Layout;
-import edu.uci.ics.jung.visualization.Layer;
-import edu.uci.ics.jung.visualization.VisualizationViewer;
-import edu.uci.ics.jung.visualization.control.DefaultModalGraphMouse;
-import edu.uci.ics.jung.visualization.layout.LayoutTransition;
-import edu.uci.ics.jung.visualization.picking.ShapePickSupport;
-import edu.uci.ics.jung.visualization.renderers.Renderer;
-import edu.uci.ics.jung.visualization.util.Animator;
 
 /**
  * <p>App class.</p>
  */
-public class App extends JFrame implements ActionListener, MbtEvent, Application {
-	/**
-	 * 
-	 */
+public class App extends JFrame { /*implements ActionListener, MbtEvent, Application {
+
 	private static final long serialVersionUID = -8605452811238545133L;
 	private static final String title = "GraphWalker " + ModelBasedTesting.getInstance().getVersionString();
 
@@ -140,7 +59,7 @@ public class App extends JFrame implements ActionListener, MbtEvent, Application
 
 	static private Logger logger;
 	private Endpoint endpoint = null;
-	private SoapServices soapService = null;
+	private SoapServiceImpl soapService = null;
 
 	private JButton loadButton;
 	private JButton reloadButton;
@@ -161,7 +80,7 @@ public class App extends JFrame implements ActionListener, MbtEvent, Application
 	 * <p>Getter for the field <code>status</code>.</p>
 	 *
 	 * @return a {@link org.graphwalker.core.Status} object.
-	 */
+
 	public Status getStatus() {
 		return status;
 	}
@@ -170,7 +89,7 @@ public class App extends JFrame implements ActionListener, MbtEvent, Application
 	 * <p>Setter for the field <code>status</code>.</p>
 	 *
 	 * @param status a {@link org.graphwalker.core.Status} object.
-	 */
+
 	public void setStatus(Status status) {
 		this.status = status;
 		setButtons();
@@ -180,7 +99,7 @@ public class App extends JFrame implements ActionListener, MbtEvent, Application
 	 * <p>Getter for the field <code>mbt</code>.</p>
 	 *
 	 * @return a {@link org.graphwalker.core.ModelBasedTesting} object.
-	 */
+
 	public ModelBasedTesting getMbt() {
 		return mbt;
 	}
@@ -189,7 +108,7 @@ public class App extends JFrame implements ActionListener, MbtEvent, Application
 	 * <p>Setter for the field <code>mbt</code>.</p>
 	 *
 	 * @param mbt a {@link org.graphwalker.core.ModelBasedTesting} object.
-	 */
+
 	public void setMbt(ModelBasedTesting mbt) {
 		this.mbt = mbt;
 	}
@@ -245,7 +164,7 @@ public class App extends JFrame implements ActionListener, MbtEvent, Application
 		try {
 			mbt = Util.loadMbtAsWSFromXml(Util.getFile(xmlFile.getAbsolutePath()));
 			mbt.setUseGUI(this);
-			soapService = new SoapServices(mbt);
+			soapService = new SoapServiceImpl(mbt);
 			soapService.xmlFile = xmlFile.getAbsolutePath();
 		} catch (Exception e) {
 			logger.error("Failed to start the SOAP service. " + e.getMessage());
@@ -281,7 +200,6 @@ public class App extends JFrame implements ActionListener, MbtEvent, Application
 		}
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public void getNextEvent() {
 		updateUI();
@@ -291,7 +209,6 @@ public class App extends JFrame implements ActionListener, MbtEvent, Application
 		}
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		String cmd = e.getActionCommand();
@@ -378,7 +295,7 @@ public class App extends JFrame implements ActionListener, MbtEvent, Application
 
 	/**
 	 * <p>setButtons.</p>
-	 */
+
 	public void setButtons() {
 		if (status.isStopped()) {
 			loadButton.setEnabled(true);
@@ -518,7 +435,7 @@ public class App extends JFrame implements ActionListener, MbtEvent, Application
 
 	/**
 	 * <p>run.</p>
-	 */
+
 	public void run() {
 		status.unsetState(Status.stopped);
 		if (status.isExecutingSoapTest()) {
@@ -530,7 +447,7 @@ public class App extends JFrame implements ActionListener, MbtEvent, Application
 		setButtons();
 	}
 
-	/** {@inheritDoc} */
+
 	public void executingJavaTest(boolean executingJavaTest) {
 		if (executingJavaTest) {
 			status.setState(Status.executingJavaTest);
@@ -578,7 +495,7 @@ public class App extends JFrame implements ActionListener, MbtEvent, Application
 
 	/**
 	 * <p>pause.</p>
-	 */
+
 	public void pause() {
 		status.unsetState(Status.stopped);
 		status.unsetState(Status.running);
@@ -713,7 +630,7 @@ public class App extends JFrame implements ActionListener, MbtEvent, Application
 	 * <p>Setter for the field <code>graphLayout</code>.</p>
 	 *
 	 * @param graphLayout a {@link edu.uci.ics.jung.algorithms.layout.Layout} object.
-	 */
+
 	public void setGraphLayout(Layout<Vertex, Edge> graphLayout) {
 		logger.debug("setLayout using: " + graphLayout.toString());
 		this.graphLayout = graphLayout;
@@ -732,7 +649,7 @@ public class App extends JFrame implements ActionListener, MbtEvent, Application
 	 * <p>Getter for the field <code>vv</code>.</p>
 	 *
 	 * @return a {@link edu.uci.ics.jung.visualization.VisualizationViewer} object.
-	 */
+
 	public VisualizationViewer<Vertex, Edge> getVv() {
 		return vv;
 	}
@@ -747,7 +664,7 @@ public class App extends JFrame implements ActionListener, MbtEvent, Application
 
 	/**
 	 * <p>updateLayout.</p>
-	 */
+
 	public void updateLayout() {
 		if (mbt == null || mbt.getGraph() == null) {
 			return;
@@ -1113,8 +1030,7 @@ public class App extends JFrame implements ActionListener, MbtEvent, Application
 	/**
 	 * AppHolder is loaded on the first execution of App.getInstance() or the
 	 * first access to AppHolder.INSTANCE, not before.
-	 */
-	@SuppressWarnings("synthetic-access")
+
 	private static class AppHolder {
 		private static final App INSTANCE = new App();
 	}
@@ -1123,15 +1039,14 @@ public class App extends JFrame implements ActionListener, MbtEvent, Application
 	 * <p>getInstance.</p>
 	 *
 	 * @return a {@link org.graphwalker.gui.App} object.
-	 */
-	@SuppressWarnings("synthetic-access")
+
 	public static App getInstance() {
 		return AppHolder.INSTANCE;
 	}
 
 	/**
 	 * <p>main.</p>
-	 */
+
 	public static void main() {
 		App.getInstance();
 	}
@@ -1140,7 +1055,7 @@ public class App extends JFrame implements ActionListener, MbtEvent, Application
 	 * <p>main.</p>
 	 *
 	 * @param args an array of {@link java.lang.String} objects.
-	 */
+
 	public static void main(String args[]) {
 		if (args != null && args.length == 1) {
 			App.getInstance().setXmlFile(new File(args[0]));
@@ -1155,7 +1070,7 @@ public class App extends JFrame implements ActionListener, MbtEvent, Application
 	 * <p>Setter for the field <code>latestVertexLabel</code>.</p>
 	 *
 	 * @param latestVertexLabel a {@link javax.swing.JLabel} object.
-	 */
+
 	public void setLatestVertexLabel(JLabel latestVertexLabel) {
 		this.latestVertexLabel = latestVertexLabel;
 	}
@@ -1164,7 +1079,7 @@ public class App extends JFrame implements ActionListener, MbtEvent, Application
 	 * <p>Getter for the field <code>latestVertexLabel</code>.</p>
 	 *
 	 * @return a {@link javax.swing.JLabel} object.
-	 */
+
 	public JLabel getLatestVertexLabel() {
 		return latestVertexLabel;
 	}
@@ -1173,7 +1088,7 @@ public class App extends JFrame implements ActionListener, MbtEvent, Application
 	 * <p>Getter for the field <code>xmlFile</code>.</p>
 	 *
 	 * @return a {@link java.io.File} object.
-	 */
+
 	public File getXmlFile() {
 		return xmlFile;
 	}
@@ -1182,7 +1097,7 @@ public class App extends JFrame implements ActionListener, MbtEvent, Application
 	 * <p>Getter for the field <code>graphLayout</code>.</p>
 	 *
 	 * @return a {@link edu.uci.ics.jung.algorithms.layout.Layout} object.
-	 */
+
 	public Layout<Vertex, Edge> getGraphLayout() {
 		return graphLayout;
 	}
@@ -1191,7 +1106,7 @@ public class App extends JFrame implements ActionListener, MbtEvent, Application
 	 * <p>Setter for the field <code>xmlFile</code>.</p>
 	 *
 	 * @param xmlFile a {@link java.io.File} object.
-	 */
+
 	public void setXmlFile(File xmlFile) {
 		this.xmlFile = xmlFile;
 	}
@@ -1200,7 +1115,7 @@ public class App extends JFrame implements ActionListener, MbtEvent, Application
 	 * <p>Setter for the field <code>graphmlFile</code>.</p>
 	 *
 	 * @param graphmlFile a {@link java.io.File} object.
-	 */
+
 	public void setGraphmlFile(File graphmlFile) {
 		this.graphmlFile = graphmlFile;
 	}
@@ -1209,8 +1124,9 @@ public class App extends JFrame implements ActionListener, MbtEvent, Application
 	 * <p>Setter for the field <code>logFile</code>.</p>
 	 *
 	 * @param logFile a {@link java.io.File} object.
-	 */
+
 	public void setLogFile(File logFile) {
 		this.logFile = logFile;
 	}
+	*/
 }

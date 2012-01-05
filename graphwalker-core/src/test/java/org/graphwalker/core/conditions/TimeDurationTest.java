@@ -23,89 +23,45 @@
  * THE SOFTWARE.
  * #L%
  */
-
 package org.graphwalker.core.conditions;
 
-import junit.framework.TestCase;
-import org.graphwalker.core.Keywords;
-import org.graphwalker.core.ModelBasedTesting;
-import org.graphwalker.core.Util;
-import org.graphwalker.core.exceptions.GeneratorException;
-import org.graphwalker.core.generators.RandomPathGenerator;
-import org.graphwalker.core.graph.Edge;
-import org.graphwalker.core.graph.Graph;
-import org.graphwalker.core.graph.Vertex;
+import org.graphwalker.core.GraphWalker;
+import org.graphwalker.core.GraphWalkerFactory;
+import org.graphwalker.core.configuration.Configuration;
+import org.graphwalker.core.configuration.ConfigurationImpl;
+import org.graphwalker.core.generators.PathGeneratorFactory;
+import org.graphwalker.core.model.Edge;
+import org.graphwalker.core.model.Model;
+import org.graphwalker.core.model.ModelImpl;
+import org.graphwalker.core.model.Vertex;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
-public class TimeDurationTest extends TestCase {
-    Graph graph;
-    Vertex start;
-    Vertex v1;
-    Vertex v2;
-    Edge e0;
-    Edge e1;
+public class TimeDurationTest {
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        graph = new Graph();
+    private Configuration myConfiguration;
 
-        start = Util.addVertexToGraph(graph, "Start");
-        v1 = Util.addVertexToGraph(graph, "V1");
-        v2 = Util.addVertexToGraph(graph, "V2");
-
-        e0 = Util.addEdgeToGraph(graph, start, v1, "E0", null, null, null);
-        e1 = Util.addEdgeToGraph(graph, v1, v2, "E1", null, null, null);
+    @Before
+    public void createConfiguration() {
+        myConfiguration = new ConfigurationImpl();
+        Model model = myConfiguration.addModel(new ModelImpl("m1"));
+        Vertex v_start = model.addVertex(new Vertex("Start"));
+        Vertex v_1 = model.addVertex(new Vertex("v_1"));
+        model.addEdge(new Edge(), v_start, v_1);
+        model.addEdge(new Edge("e_1"), v_1, v_1);
+        model.setPathGenerator(PathGeneratorFactory.create("Random"));
+        model.getPathGenerator().setStopCondition(StopConditionFactory.create("TimeDuration", 3));
     }
 
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
-        graph = null;
-        start = v1 = v2 = null;
-        e0 = e1 = null;
+    @Test
+    public void executeTest() {
+        long start = System.currentTimeMillis();
+        GraphWalker graphWalker = GraphWalkerFactory.create(myConfiguration);
+        while (graphWalker.hasNextStep()) {
+            graphWalker.getNextStep();
+        }
+        long stop = System.currentTimeMillis();
+        Assert.assertTrue(((stop-start)-3000)<3);
     }
-
-    public void testConstructor() {
-        ModelBasedTesting mbt = ModelBasedTesting.getInstance();
-        mbt.setGenerator(new RandomPathGenerator(new TimeDuration(1)));
-    }
-
-    public void testFulfillment() throws InterruptedException, GeneratorException {
-        ModelBasedTesting mbt = ModelBasedTesting.getInstance();
-        double startTime = System.currentTimeMillis();
-        mbt.setGraph(graph);
-        mbt.setGenerator(Keywords.GENERATOR_RANDOM);
-        mbt.setGenerator(new RandomPathGenerator(new TimeDuration(1)));
-        assertTrue(mbt.hasNextStep());
-
-        while ((System.currentTimeMillis() - startTime) < 10)
-            Thread.sleep(1);
-        assertEquals((System.currentTimeMillis() - startTime) / 1000, mbt.getGenerator().getStopCondition().getFulfilment(), 0.1);
-        while ((System.currentTimeMillis() - startTime) < 900)
-            Thread.sleep(1);
-        assertEquals((System.currentTimeMillis() - startTime) / 1000, mbt.getGenerator().getStopCondition().getFulfilment(), 0.1);
-        while ((System.currentTimeMillis() - startTime) < 1000)
-            Thread.sleep(1);
-        assertEquals((System.currentTimeMillis() - startTime) / 1000, mbt.getGenerator().getStopCondition().getFulfilment(), 0.1);
-    }
-
-    public void testIsFulfilled() throws InterruptedException, GeneratorException {
-        ModelBasedTesting mbt = ModelBasedTesting.getInstance();
-        double startTime = System.currentTimeMillis();
-        mbt.setGraph(graph);
-        mbt.setGenerator(new RandomPathGenerator(new TimeDuration(1)));
-        assertTrue(mbt.hasNextStep());
-
-        while ((System.currentTimeMillis() - startTime) < 10)
-            Thread.sleep(1);
-        assertEquals(false, mbt.getGenerator().getStopCondition().isFulfilled());
-        while ((System.currentTimeMillis() - startTime) < 900)
-            Thread.sleep(1);
-        assertEquals(false, mbt.getGenerator().getStopCondition().isFulfilled());
-        while ((System.currentTimeMillis() - startTime) < 1000)
-            Thread.sleep(1);
-        System.out.println(mbt.getGenerator().getStopCondition().getFulfilment());
-        assertEquals(true, mbt.getGenerator().getStopCondition().isFulfilled());
-    }
-
 }

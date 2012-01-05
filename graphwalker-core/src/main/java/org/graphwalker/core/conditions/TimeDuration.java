@@ -2,7 +2,7 @@
  * #%L
  * GraphWalker Core
  * %%
- * Copyright (C) 2011 GraphWalker
+ * Copyright (C) 2011 - 2012 GraphWalker
  * %%
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,50 +23,44 @@
  * THE SOFTWARE.
  * #L%
  */
-
 package org.graphwalker.core.conditions;
 
+import net.sf.oval.constraint.Min;
+import net.sf.oval.guard.Guarded;
+import org.graphwalker.core.model.Element;
+import org.graphwalker.core.model.Model;
+
+@Guarded
 /**
- * Stops test execution after a certain amount of time has passed.
+ * <p>TimeDuration class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
  */
 public class TimeDuration extends AbstractStopCondition {
 
-    private double duration;
-    private double start_time;
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean isFulfilled() {
-        return getFulfilment() >= 0.99999;
-    }
+    private final long myDuration;
+    private final long myTimestamp;
 
     /**
      * <p>Constructor for TimeDuration.</p>
      *
      * @param seconds a long.
      */
-    public TimeDuration(long seconds) {
-        this.start_time = System.currentTimeMillis();
-        this.duration = seconds * 1000;
+    public TimeDuration(@Min(1) long seconds) {
+        myTimestamp = System.currentTimeMillis();
+        myDuration = seconds * SECOND_SCALE;
     }
 
     /** {@inheritDoc} */
     @Override
-    public double getFulfilment() {
-        return (System.currentTimeMillis() - this.start_time) / this.duration;
+    public boolean isFulfilled(Model model, Element element) {
+        return getFulfilment(model, element) >= FULFILLMENT_LEVEL;
     }
 
     /** {@inheritDoc} */
     @Override
-    public String toString() {
-        return "DURATION=" + (duration / 1000) + "s";
+    public double getFulfilment(Model model, Element element) {
+        return (double) (System.currentTimeMillis() - myTimestamp) / myDuration;
     }
-
-    /**
-     * <p>restartTime.</p>
-     */
-    public void restartTime() {
-        start_time = System.currentTimeMillis();
-    }
-
 }

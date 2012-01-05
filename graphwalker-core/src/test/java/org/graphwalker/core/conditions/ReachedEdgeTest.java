@@ -23,78 +23,67 @@
  * THE SOFTWARE.
  * #L%
  */
-
 package org.graphwalker.core.conditions;
 
-import junit.framework.TestCase;
-import org.graphwalker.core.ModelBasedTesting;
-import org.graphwalker.core.Util;
-import org.graphwalker.core.exceptions.GeneratorException;
-import org.graphwalker.core.generators.RandomPathGenerator;
-import org.graphwalker.core.graph.Edge;
-import org.graphwalker.core.graph.Graph;
-import org.graphwalker.core.graph.Vertex;
+import org.graphwalker.core.GraphWalker;
+import org.graphwalker.core.GraphWalkerFactory;
+import org.graphwalker.core.configuration.Configuration;
+import org.graphwalker.core.configuration.ConfigurationImpl;
+import org.graphwalker.core.generators.PathGeneratorFactory;
+import org.graphwalker.core.model.*;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
-public class ReachedEdgeTest extends TestCase {
+public class ReachedEdgeTest {
 
-    Graph graph;
-    Vertex start;
-    Vertex v1;
-    Vertex v2;
-    Edge e0;
-    Edge e1;
+    private Configuration myConfiguration;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        ModelBasedTesting.getInstance().reset();
-        graph = new Graph();
-
-        start = Util.addVertexToGraph(graph, "Start");
-        v1 = Util.addVertexToGraph(graph, "V1");
-        v2 = Util.addVertexToGraph(graph, "V2");
-
-        e0 = Util.addEdgeToGraph(graph, start, v1, "E0", null, null, null);
-        e1 = Util.addEdgeToGraph(graph, v1, v2, "E1", null, null, null);
+    @Before
+    public void createConfiguration() {
+        myConfiguration = new ConfigurationImpl();
+        Model model = myConfiguration.addModel(new ModelImpl("m1"));
+        Vertex v_start = model.addVertex(new Vertex("Start"));
+        Vertex v_1 = model.addVertex(new Vertex("v_1"));
+        Vertex v_2 = model.addVertex(new Vertex("v_2"));
+        Vertex v_3 = model.addVertex(new Vertex("v_3"));
+        Vertex v_4 = model.addVertex(new Vertex("v_4"));
+        Vertex v_5 = model.addVertex(new Vertex("v_5"));
+        Vertex v_6 = model.addVertex(new Vertex("v_6"));
+        model.addEdge(new Edge(), v_start, v_1);
+        model.addEdge(new Edge("e_1"), v_1, v_2);
+        model.addEdge(new Edge("e_2"), v_2, v_3);
+        model.addEdge(new Edge("e_3"), v_3, v_4);
+        model.addEdge(new Edge("e_4"), v_4, v_5);
+        model.addEdge(new Edge("e_5"), v_5, v_6);
+        model.addEdge(new Edge("e_6"), v_6, v_1);
+        model.setPathGenerator(PathGeneratorFactory.create("Random"));
+        model.getPathGenerator().setStopCondition(StopConditionFactory.create("ReachedEdge", "e_5"));
     }
 
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
-        graph = null;
-        start = v1 = v2 = null;
-        e0 = e1 = null;
+    @Test
+    public void executeTest() {
+        GraphWalker graphWalker = GraphWalkerFactory.create(myConfiguration);
+        Element element = graphWalker.getNextStep();
+        Assert.assertEquals("v_1", element.getName());
+        element = graphWalker.getNextStep();
+        Assert.assertEquals("e_1", element.getName());
+        element = graphWalker.getNextStep();
+        Assert.assertEquals("v_2", element.getName());
+        element = graphWalker.getNextStep();
+        Assert.assertEquals("e_2", element.getName());
+        element = graphWalker.getNextStep();
+        Assert.assertEquals("v_3", element.getName());
+        element = graphWalker.getNextStep();
+        Assert.assertEquals("e_3", element.getName());
+        element = graphWalker.getNextStep();
+        Assert.assertEquals("v_4", element.getName());
+        element = graphWalker.getNextStep();
+        Assert.assertEquals("e_4", element.getName());
+        element = graphWalker.getNextStep();
+        Assert.assertEquals("v_5", element.getName());
+        element = graphWalker.getNextStep();
+        Assert.assertEquals("e_5", element.getName());
+        Assert.assertFalse(graphWalker.hasNextStep());
     }
-
-    public void testConstructor() {
-        ModelBasedTesting mbt = ModelBasedTesting.getInstance();
-        mbt.setGenerator(new RandomPathGenerator(new ReachedEdge("E1")));
-    }
-
-    public void testFulfillment() throws GeneratorException, InterruptedException {
-        ModelBasedTesting mbt = ModelBasedTesting.getInstance();
-        mbt.setGraph(graph);
-        mbt.setGenerator(new RandomPathGenerator(new ReachedEdge("E1")));
-        assertTrue(mbt.hasNextStep());
-
-        assertEquals(0, mbt.getGenerator().getStopCondition().getFulfilment(), 0.01);
-        mbt.getNextStep();
-        assertEquals(0, mbt.getGenerator().getStopCondition().getFulfilment(), 0.01);
-        mbt.getNextStep();
-        assertEquals(1, mbt.getGenerator().getStopCondition().getFulfilment(), 0.01);
-    }
-
-    public void testIsFulfilled() throws GeneratorException, InterruptedException {
-        ModelBasedTesting mbt = ModelBasedTesting.getInstance();
-        mbt.setGraph(graph);
-        mbt.setGenerator(new RandomPathGenerator(new ReachedEdge("E1")));
-        assertTrue(mbt.hasNextStep());
-
-        assertEquals(false, mbt.getGenerator().getStopCondition().isFulfilled());
-        mbt.getNextStep();
-        assertEquals(false, mbt.getGenerator().getStopCondition().isFulfilled());
-        mbt.getNextStep();
-        assertEquals(true, mbt.getGenerator().getStopCondition().isFulfilled());
-    }
-
 }

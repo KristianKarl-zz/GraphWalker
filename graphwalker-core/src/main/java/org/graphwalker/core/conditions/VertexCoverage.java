@@ -2,7 +2,7 @@
  * #%L
  * GraphWalker Core
  * %%
- * Copyright (C) 2011 GraphWalker
+ * Copyright (C) 2011 - 2012 GraphWalker
  * %%
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,60 +23,46 @@
  * THE SOFTWARE.
  * #L%
  */
-
 package org.graphwalker.core.conditions;
 
-import org.graphwalker.core.exceptions.StopConditionException;
+import net.sf.oval.constraint.Range;
+import net.sf.oval.guard.Guarded;
+import org.graphwalker.core.model.Element;
+import org.graphwalker.core.model.Model;
 
 /**
  * <p>VertexCoverage class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
  */
+@Guarded
 public class VertexCoverage extends AbstractStopCondition {
 
-    private double limit;
+    private final double myLimit;
 
     /**
      * <p>Constructor for VertexCoverage.</p>
      *
-     * @throws org.graphwalker.core.exceptions.StopConditionException if any.
+     * @param limit a long.
      */
-    public VertexCoverage() throws StopConditionException {
-        this(1);
-    }
-
-    /**
-     * <p>Constructor for VertexCoverage.</p>
-     *
-     * @param limit a double.
-     * @throws org.graphwalker.core.exceptions.StopConditionException if any.
-     */
-    public VertexCoverage(double limit) throws StopConditionException {
-        if (limit > 1 || limit < 0) {
-            throw new StopConditionException("Excpeted a vertex coverage between 0 and 100. Actual: " + limit * 100);
-        }
-        this.limit = limit;
+    public VertexCoverage(@Range(min = 1, max = 100) long limit) {
+        myLimit = (double)limit/ PERCENTAGE_SCALE;
     }
 
     /** {@inheritDoc} */
     @Override
-    public boolean isFulfilled() {
-        double vertices = getMachine().getAllVertices().size();
-        double covered = getMachine().getNumOfCoveredVertices();
-        return (covered / vertices) >= limit;
+    public boolean isFulfilled(Model model, Element element) {
+        double totalVertexCount = model.getVertices().size();
+        double visitedVertexCount = model.getVisitedVertices().size();
+        return (visitedVertexCount / totalVertexCount) >= myLimit;
     }
 
     /** {@inheritDoc} */
     @Override
-    public double getFulfilment() {
-        double vertices = getMachine().getAllVertices().size();
-        double covered = getMachine().getNumOfCoveredVertices();
-        return (covered / vertices) / limit;
+    public double getFulfilment(Model model, Element element) {
+        double totalVertexCount = model.getVertices().size();
+        double visitedVertexCount = model.getVisitedVertices().size();
+        return (visitedVertexCount / totalVertexCount) / myLimit;
     }
-
-    /** {@inheritDoc} */
-    @Override
-    public String toString() {
-        return "SC>=" + (int) (100 * limit);
-    }
-
 }

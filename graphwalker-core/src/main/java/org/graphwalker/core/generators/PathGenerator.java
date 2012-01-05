@@ -2,7 +2,7 @@
  * #%L
  * GraphWalker Core
  * %%
- * Copyright (C) 2011 GraphWalker
+ * Copyright (C) 2011 - 2012 GraphWalker
  * %%
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,74 +27,34 @@
 package org.graphwalker.core.generators;
 
 import org.graphwalker.core.conditions.StopCondition;
-import org.graphwalker.core.graph.Edge;
-import org.graphwalker.core.machines.FiniteStateMachine;
+import org.graphwalker.core.machine.Machine;
+import org.graphwalker.core.model.Element;
 
 /**
  * <p>PathGenerator interface.</p>
+ *
+ * @author nilols
+ * @version $Id: $
  */
 public interface PathGenerator {
 
     /**
-     * <p>getNext.</p>
+     * <p>getNextStep.</p>
      *
-     * @return an array of {@link java.lang.String} objects.
-     * @throws java.lang.InterruptedException if any.
+     * @param machine a {@link org.graphwalker.core.machine.Machine} object.
+     * @return a {@link org.graphwalker.core.model.Element} object.
      */
-    String[] getNext() throws InterruptedException;
-
-    /**
-     * <p>hasNext.</p>
-     *
-     * @return a boolean.
-     */
-    boolean hasNext();
-
-    /**
-     * <p>getMachine.</p>
-     *
-     * @return a {@link org.graphwalker.core.machines.FiniteStateMachine} object.
-     */
-    FiniteStateMachine getMachine();
-
-    /**
-     * <p>setMachine.</p>
-     *
-     * @param machine a {@link org.graphwalker.core.machines.FiniteStateMachine} object.
-     */
-    void setMachine(FiniteStateMachine machine);
-
-    /**
-     * <p>setStopCondition.</p>
-     *
-     * @param stopCondition a {@link org.graphwalker.core.conditions.StopCondition} object.
-     */
-    void setStopCondition(StopCondition stopCondition);
-
+    Element getNextStep(Machine machine);
     /**
      * <p>getStopCondition.</p>
      *
      * @return a {@link org.graphwalker.core.conditions.StopCondition} object.
      */
     StopCondition getStopCondition();
-
     /**
-     * <p>getConditionFulfilment.</p>
+     * <p>setStopCondition.</p>
      *
-     * @return the condition fulfilment
+     * @param stopCondition a {@link org.graphwalker.core.conditions.StopCondition} object.
      */
-    double getConditionFulfilment();
-
-    /**
-     * Will reset the generator to its initial vertex.
-     */
-    void reset();
-
-    /**
-     * <p>isEdgeAvailable.</p>
-     *
-     * @param edge a {@link org.graphwalker.core.graph.Edge} object.
-     * @return a boolean.
-     */
-    boolean isEdgeAvailable(Edge edge);
+    void setStopCondition(StopCondition stopCondition);
 }

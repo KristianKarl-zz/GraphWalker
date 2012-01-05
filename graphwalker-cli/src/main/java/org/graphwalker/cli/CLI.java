@@ -26,29 +26,6 @@
 
 package org.graphwalker.cli;
 
-import org.apache.commons.cli.*;
-import org.apache.log4j.Logger;
-import org.graphwalker.core.Keywords;
-import org.graphwalker.core.Keywords.Generator;
-import org.graphwalker.core.Keywords.StopCondition;
-import org.graphwalker.core.ModelBasedTesting;
-import org.graphwalker.core.Util;
-import org.graphwalker.core.conditions.AlternativeCondition;
-import org.graphwalker.core.exceptions.GeneratorException;
-import org.graphwalker.core.exceptions.StopConditionException;
-import org.graphwalker.core.io.PrintHTMLTestSequence;
-import org.graphwalker.webservice.SoapServices;
-import org.jdom.JDOMException;
-
-import javax.xml.ws.Endpoint;
-import java.io.*;
-import java.net.InetAddress;
-import java.util.Iterator;
-import java.util.Map.Entry;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.Vector;
-
 /**
  * Command Line Interface object, to the org.graphwalker package. The object
  * provides a way of working with MBT using a Windows DOS, or a console window
@@ -107,9 +84,9 @@ import java.util.Vector;
  * </pre>
  * <p/>
  * <br>
- */
+*/
 public class CLI {
-
+/*
     public static class VerboseStatisticsLogger extends Thread {
         private ModelBasedTesting mbt = null;
 
@@ -131,7 +108,7 @@ public class CLI {
 
     /**
      * <p>Constructor for CLI.</p>
-     */
+
     public CLI() {
         mbt = new ModelBasedTesting();
     }
@@ -142,7 +119,7 @@ public class CLI {
 
     /**
      * @param mbt the ModelBasedTesting to set
-     */
+
     private void setMbt(ModelBasedTesting mbt) {
         this.mbt = mbt;
     }
@@ -151,7 +128,7 @@ public class CLI {
      * <p>main.</p>
      *
      * @param args an array of {@link java.lang.String} objects.
-     */
+
     public static void main(String[] args) {
         CLI cli = new CLI();
         Thread shutDownThread = new CLI.VerboseStatisticsLogger(cli.getMbt());
@@ -222,67 +199,67 @@ public class CLI {
 
             /**
              * Command: requirements
-             */
+
             if (args[0].equalsIgnoreCase("requirements")) {
                 RunCommandRequirements(cl);
             }
             /**
              * Command: online
-             */
+
             if (args[0].equalsIgnoreCase("online")) {
                 RunCommandOnline(cl);
             }
             /**
              * Command: offline
-             */
+
             else if (args[0].equalsIgnoreCase("offline")) {
                 RunCommandOffline(cl);
             }
             /**
              * Command: methods
-             */
+
             else if (args[0].equalsIgnoreCase("methods")) {
                 RunCommandMethods(cl);
             }
             /**
              * Command: merge
-             */
+
             else if (args[0].equalsIgnoreCase("merge")) {
                 RunCommandMerge(cl);
             }
             /**
              * Command: source
-             */
+
             else if (args[0].equalsIgnoreCase("source")) {
                 RunCommandSource(cl);
             }
             /**
              * Command: xml
-             */
+
             else if (args[0].equalsIgnoreCase("xml")) {
                 RunCommandXml(cl);
             }
             /**
              * Command: soap
-             */
+
             else if (args[0].equalsIgnoreCase("soap")) {
                 RunCommandSoap(cl);
             }
             /**
              * Command: gui
-             */
+
             //else if (args[0].equalsIgnoreCase("gui")) {
             //	RunCommandGui(cl);
             //}
             /**
              * Command: log
-             */
+
             //else if (args[0].equalsIgnoreCase("log")) {
             //	RunCommandLog(cl);
             //}
             /**
              * Command: manual
-             */
+
             else if (args[0].equalsIgnoreCase("manual")) {
                 RunCommandManual(cl);
             }
@@ -480,8 +457,7 @@ public class CLI {
 
     /**
      * Build the command offline command line parser
-     */
-    @SuppressWarnings("static-access")
+
     private void buildOfflineCLI() {
         opt.addOption("a", false, "Prints the statistics of the test, at the end of the run.");
         opt.addOption("x", false, "Use an extended finite state machine to handle the model.");
@@ -521,8 +497,7 @@ public class CLI {
 
     /**
      * Build the command manual command line parser
-     */
-    @SuppressWarnings("static-access")
+
     private void buildManualCLI() {
         opt.addOption("x", false, "Use an extended finite state machine to handle the model.");
         opt.addOption("j", false, "Enable JavaScript engine");
@@ -559,8 +534,7 @@ public class CLI {
 
     /**
      * Build the command merge command line parser
-     */
-    @SuppressWarnings("static-access")
+
     private void buildMergeCLI() {
         opt.addOption(OptionBuilder.isRequired().withArgName("file|folder")
                 .withDescription("The file (or folder) containing graphml formatted files.").hasArg().withLongOpt("input_graphml").create("f"));
@@ -569,8 +543,7 @@ public class CLI {
 
     /**
      * Build the command source command line parser
-     */
-    @SuppressWarnings("static-access")
+
     private void buildSourceCLI() {
         opt.addOption(OptionBuilder.isRequired().withArgName("file|folder")
                 .withDescription("The file (or folder) containing graphml formatted files.").hasArg().withLongOpt("input_graphml").create("f"));
@@ -580,8 +553,7 @@ public class CLI {
 
     /**
      * Build the command xml command line parser
-     */
-    @SuppressWarnings("static-access")
+
     private void buildXmlCLI() {
         opt.addOption("a", false, "Prints the statistics of the test, at the end of the run.");
         opt.addOption(OptionBuilder.isRequired().withArgName("file").withDescription("The xml file containing the mbt settings.").hasArg()
@@ -596,8 +568,7 @@ public class CLI {
 
     /**
      * Build the command soap command line parser
-     */
-    @SuppressWarnings("static-access")
+
     private void buildSoapCLI() {
         opt.addOption(OptionBuilder.withArgName("file").withDescription("The xml file containing the mbt model and settings.").hasArg()
                 .create("f"));
@@ -610,16 +581,14 @@ public class CLI {
 
     /**
      * Build the command gui command line parser
-     */
-    @SuppressWarnings("static-access")
+
     private void buildGuiCLI() {
         opt.addOption(OptionBuilder.withArgName("file").withDescription("The xml file containing the mbt settings.").hasArg().create("f"));
     }
 
     /**
      * Build the command log command line parser
-     */
-    @SuppressWarnings("static-access")
+
     private void buildLogCLI() {
         opt.addOption(OptionBuilder.isRequired().withArgName("file|folder")
                 .withDescription("The file (or folder) containing graphml formatted files.").hasArg().withLongOpt("input_graphml").create("f"));
@@ -628,7 +597,7 @@ public class CLI {
 
     /**
      * Print version information
-     */
+
     private void printVersionInformation() {
         System.out.println("org.graphwalker version " + mbt.getVersionString() + "\n");
         System.out.println("org.graphwalker is open source software licensed under MIT licens");
@@ -645,12 +614,12 @@ public class CLI {
      * @throws GeneratorException
      * @throws InterruptedException
      * @throws FileNotFoundException
-     */
+
     private void RunCommandOffline(CommandLine cl) throws StopConditionException, GeneratorException, InterruptedException,
             FileNotFoundException {
         /**
          * Get the model from the graphml file (or folder)
-         */
+
         if (helpNeeded("offline", !cl.hasOption("f"), "Missing the input graphml file (folder), See -f (--input_graphml)")
                 || helpNeeded("offline", !cl.hasOption("s"), "A stop condition must be supplied, See option -s")
                 || helpNeeded("offline", cl.hasOption("t") && !cl.hasOption("r"),
@@ -667,8 +636,8 @@ public class CLI {
 
         /*
            * Set the stop-conditions(s)
-           */
-        AlternativeCondition alternativeCondition = new AlternativeCondition();
+
+        Any alternativeCondition = new Any();
         String[] stopConditions = cl.getOptionValue("s").split("\\|");
         for (String stopCondition : stopConditions) {
             String[] sc = stopCondition.trim().split(":");
@@ -680,7 +649,6 @@ public class CLI {
 
         /*
            * Set the generators(s)
-           */
         String[] generators = cl.getOptionValue("g").split("\\|");
         for (String genrator : generators) {
             getMbt().setGenerator(Keywords.getGenerator(genrator.trim()));
@@ -741,11 +709,10 @@ public class CLI {
      * @throws StopConditionException
      * @throws GeneratorException
      * @throws InterruptedException
-     */
     private void RunCommandManual(CommandLine cl) throws StopConditionException, GeneratorException, InterruptedException {
         /**
          * Get the model from the graphml file (or folder)
-         */
+
         if (helpNeeded("manual", !cl.hasOption("f"), "Missing the input graphml file (folder), See -f (--input_graphml)")
                 || helpNeeded("manual", !cl.hasOption("s"), "A stop condition must be supplied, See option -s")
                 || helpNeeded("manual", !cl.hasOption("g"), "Missing the generator, See option -g"))
@@ -757,10 +724,8 @@ public class CLI {
         getMbt().enableExtended(cl.hasOption("x"));
         getMbt().setWeighted(cl.hasOption("w"));
 
-        /*
-           * Set the stop-conditions(s)
-           */
-        AlternativeCondition alternativeCondition = new AlternativeCondition();
+
+        Any alternativeCondition = new Any();
         String[] stopConditions = cl.getOptionValue("s").split("\\|");
         for (String stopCondition : stopConditions) {
             String[] sc = stopCondition.trim().split(":");
@@ -770,9 +735,7 @@ public class CLI {
             // parameter
         }
 
-        /*
-           * Set the generators(s)
-           */
+
         String[] generators = cl.getOptionValue("g").split("\\|");
         for (String genrator : generators) {
             getMbt().setGenerator(Keywords.getGenerator(genrator.trim()));
@@ -785,7 +748,6 @@ public class CLI {
         new PrintHTMLTestSequence(testSequence, System.out);
     }
 
-    /**
      * Run the online command
      *
      * @param cl
@@ -793,12 +755,14 @@ public class CLI {
      * @throws GeneratorException
      * @throws InterruptedException
      * @throws FileNotFoundException
-     */
+
     private void RunCommandOnline(CommandLine cl) throws StopConditionException, GeneratorException, InterruptedException,
             FileNotFoundException {
+        */
         /**
          * Get the model from the graphml file (or folder)
          */
+        /*
         if (helpNeeded("online", !cl.hasOption("f"), "Missing the input graphml file (folder), See -f (--input_graphml)")
                 || helpNeeded("online", !cl.hasOption("s"), "A stop condition must be supplied, See option -s")
                 || helpNeeded("online", cl.hasOption("t") && !cl.hasOption("r"),
@@ -813,10 +777,9 @@ public class CLI {
         getMbt().enableExtended(cl.hasOption("x"));
         getMbt().setWeighted(cl.hasOption("w"));
 
-        /*
            * Set the stop-conditions(s)
-           */
-        AlternativeCondition alternativeCondition = new AlternativeCondition();
+
+        Any alternativeCondition = new Any();
         String[] stopConditions = cl.getOptionValue("s").split("\\|");
         for (String stopCondition : stopConditions) {
             String[] sc = stopCondition.trim().split(":");
@@ -826,18 +789,16 @@ public class CLI {
             // parameter
         }
 
-        /*
            * Set the generators(s)
-           */
+
         String[] genrators = cl.getOptionValue("g").split("\\|");
         for (String genrator : genrators) {
             getMbt().setGenerator(Keywords.getGenerator(genrator.trim()));
         }
         getMbt().getGenerator().setStopCondition(alternativeCondition);
 
-        /**
          * Set dry-run
-         */
+
         getMbt().setDryRun(cl.hasOption("d"));
 
         if (cl.hasOption("o")) {
@@ -897,14 +858,13 @@ public class CLI {
         out.println(getMbt().getStatisticsVerbose());
     }
 
-    /**
      * Run the source command
      *
      * @param cl
      * @throws GeneratorException
      * @throws IOException
      * @throws InterruptedException
-     */
+
     private void RunCommandSource(CommandLine cl) throws GeneratorException, IOException, InterruptedException {
         if (helpNeeded("source", !cl.hasOption("f"), "Missing the input graphml file (folder), See -f (--input_graphml)")
                 || helpNeeded("source", !cl.hasOption("t"), "Missing the template file. See -t (--template)"))
@@ -916,13 +876,12 @@ public class CLI {
         getMbt().writePath(System.out);
     }
 
-    /**
      * Run the requirements command This method prints out all the Requirements
      * found in the graph.
      *
      * @throws GeneratorException
      * @throws InterruptedException
-     */
+
     private void RunCommandRequirements(CommandLine cl) throws GeneratorException, InterruptedException {
         if (helpNeeded("requirements", !cl.hasOption("f"), "Missing the input graphml file (folder), See -f (--input_graphml)"))
             return;
@@ -937,13 +896,12 @@ public class CLI {
         }
     }
 
-    /**
      * Run the methods command
      *
      * @param cl
      * @throws GeneratorException
      * @throws InterruptedException
-     */
+
     private void RunCommandMethods(CommandLine cl) throws GeneratorException, InterruptedException {
         if (helpNeeded("methods", !cl.hasOption("f"), "Missing the input graphml file (folder), See -f (--input_graphml)"))
             return;
@@ -954,11 +912,10 @@ public class CLI {
         getMbt().writePath(System.out);
     }
 
-    /**
      * Run the merge command
      *
      * @param cl
-     */
+
     private void RunCommandMerge(CommandLine cl) {
         if (helpNeeded("merge", !cl.hasOption("f"), "Missing the input graphml file (folder), See -f (--input_graphml)"))
             return;
@@ -967,7 +924,6 @@ public class CLI {
         getMbt().writeModel(System.out, !cl.hasOption("i"));
     }
 
-    /**
      * Run the xml command
      *
      * @param cl
@@ -976,7 +932,7 @@ public class CLI {
      * @throws IOException
      * @throws JDOMException
      * @throws InterruptedException
-     */
+
     private void RunCommandXml(CommandLine cl) throws StopConditionException, GeneratorException, IOException, JDOMException,
             InterruptedException {
         if (helpNeeded("xml", !cl.hasOption("f"), "Missing the input xml file, See  option -f"))
@@ -990,7 +946,6 @@ public class CLI {
         }
     }
 
-    /**
      * Run the soap command
      *
      * @param cl
@@ -999,7 +954,7 @@ public class CLI {
      * @throws IOException
      * @throws JDOMException
      * @throws InterruptedException
-     */
+
     private void RunCommandSoap(CommandLine cl) throws StopConditionException, GeneratorException, IOException, JDOMException,
             InterruptedException {
         String port = null;
@@ -1024,7 +979,7 @@ public class CLI {
         }
 
         String wsURL = "http://" + nicAddr + ":" + port + "/mbt-services";
-        SoapServices soapService = new SoapServices(getMbt());
+        SoapServiceImpl soapService = new SoapServiceImpl(getMbt());
         soapService.xmlFile = file;
 
         endpoint = Endpoint.publish(wsURL, soapService);
@@ -1038,13 +993,11 @@ public class CLI {
         System.out.println("");
     }
 
-    /**
      * Run the gui command
      *
      * @param cl
      * @throws IOException
-     */
-    /*
+
 	private void RunCommandGui(CommandLine cl) throws IOException {
 		if (cl.hasOption("f")) {
 			App.main(new String[] { cl.getOptionValue("f") });
@@ -1052,15 +1005,12 @@ public class CLI {
 			App.main();
 		}
 	}
-    */
 
-    /**
      * Run the log command
      *
      * @param cl
      * @throws IOException
-     */
-    /*
+
 	private void RunCommandLog(CommandLine cl) throws IOException {
 		if (helpNeeded("log", !cl.hasOption("f"), "Missing the input graphml file (folder), See -f (--input_graphml)")
 		    || helpNeeded("log", !cl.hasOption("l"), "Missing the log file. See -l"))
@@ -1068,8 +1018,7 @@ public class CLI {
 
 		App.main(new String[] { cl.getOptionValue("f"), cl.getOptionValue("l") });
 	}
-    */
-    /*
+
 	private void RunCommandLog(CommandLine cl) throws IOException {
 		if (helpNeeded("log", !cl.hasOption("f"), "Missing the input graphml file (folder), See -f (--input_graphml)")
 		    || helpNeeded("log", !cl.hasOption("l"), "Missing the log file. See -l"))
@@ -1077,8 +1026,7 @@ public class CLI {
 
 		App.main(new String[] { cl.getOptionValue("f"), cl.getOptionValue("l") });
 	}
-    */
-    /*
+
 	private void RunCommandLog(CommandLine cl) throws IOException {
 		if (helpNeeded("log", !cl.hasOption("f"), "Missing the input graphml file (folder), See -f (--input_graphml)")
 		    || helpNeeded("log", !cl.hasOption("l"), "Missing the log file. See -l"))
@@ -1086,8 +1034,7 @@ public class CLI {
 
 		App.main(new String[] { cl.getOptionValue("f"), cl.getOptionValue("l") });
 	}
-    */
-    /*
+
 	private void RunCommandLog(CommandLine cl) throws IOException {
 		if (helpNeeded("log", !cl.hasOption("f"), "Missing the input graphml file (folder), See -f (--input_graphml)")
 		    || helpNeeded("log", !cl.hasOption("l"), "Missing the log file. See -l"))
@@ -1095,7 +1042,7 @@ public class CLI {
 
 		App.main(new String[] { cl.getOptionValue("f"), cl.getOptionValue("l") });
 	}
-    */
+
     private boolean helpNeeded(String module, boolean condition, String message) {
         if (condition) {
             System.out.println(message);
@@ -1107,4 +1054,5 @@ public class CLI {
     private Endpoint GetEndpoint() {
         return endpoint;
     }
+    */
 }

@@ -2,7 +2,7 @@
  * #%L
  * GraphWalker Core
  * %%
- * Copyright (C) 2011 GraphWalker
+ * Copyright (C) 2011 - 2012 GraphWalker
  * %%
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,39 +26,32 @@
 
 package org.graphwalker.core.conditions;
 
-import org.graphwalker.core.machines.FiniteStateMachine;
+import org.graphwalker.core.model.Element;
+import org.graphwalker.core.model.Model;
 
 /**
  * <p>StopCondition interface.</p>
+ *
+ * @author nilols
+ * @version $Id: $
  */
 public interface StopCondition {
-
-
-    /**
-     * <p>getMachine.</p>
-     *
-     * @return a {@link org.graphwalker.core.machines.FiniteStateMachine} object.
-     */
-    FiniteStateMachine getMachine();
-
-    /**
-     * <p>setMachine.</p>
-     *
-     * @param machine a {@link org.graphwalker.core.machines.FiniteStateMachine} object.
-     */
-    void setMachine(FiniteStateMachine machine);
 
     /**
      * <p>isFulfilled.</p>
      *
-     * @return true if the condition is fulfilled
+     * @return a boolean.
+     * @param model a {@link org.graphwalker.core.model.Model} object.
+     * @param element a {@link org.graphwalker.core.model.Element} object.
      */
-    boolean isFulfilled();
+    boolean isFulfilled(Model model, Element element);
 
     /**
      * <p>getFulfilment.</p>
      *
-     * @return the condition fulfilment
+     * @return a double.
+     * @param model a {@link org.graphwalker.core.model.Model} object.
+     * @param element a {@link org.graphwalker.core.model.Element} object.
      */
-    double getFulfilment();
+    double getFulfilment(Model model, Element element);
 }
