@@ -1,8 +1,8 @@
 /*
  * #%L
- * GraphWalker Core
+ * GraphWalker GUI
  * %%
- * Copyright (C) 2011 GraphWalker
+ * Copyright (C) 2011 - 2012 GraphWalker
  * %%
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,33 +23,14 @@
  * THE SOFTWARE.
  * #L%
  */
+package org.graphwalker.gui.components;
 
-package org.graphwalker.gui;
+import javax.swing.*;
+import java.awt.*;
 
-import java.awt.Dimension;
+public class Workspace extends JPanel {
 
-import javax.swing.JLabel;
-
-/**
- * <p>StatusBar class.</p>
- */
-@SuppressWarnings("serial")
-public class StatusBar extends JLabel {
-
-	/**
-	 * Creates a new instance of StatusBar
-	 */
-	public StatusBar() {
-		super.setPreferredSize(new Dimension(100, 16));
-		setMessage("Ready");
-	}
-
-	/**
-	 * <p>setMessage.</p>
-	 *
-	 * @param message a {@link java.lang.String} object.
-	 */
-	public void setMessage(String message) {
-		setText(" " + message);
-	}
+    public Workspace() {
+        setBackground(Color.CYAN);
+    }
 }

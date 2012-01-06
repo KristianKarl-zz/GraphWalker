@@ -128,7 +128,7 @@ public class ModelFactory {
         Matcher matcher = pattern.matcher(text);
         if (matcher.find()) {
             String label = matcher.group(1);
-            if (!"BLOCKED".equals(label)) {  //TODO: Get label from resource
+            if (!Resource.getText("label.blocked").equals(label)) {
                 return label;
             }
         }
@@ -136,7 +136,7 @@ public class ModelFactory {
     }
 
     private void parseSwitchModelId(Vertex vertex, String text) {
-        Pattern pattern = Pattern.compile("SWITCH_MODEL\\((.*)\\)", Pattern.MULTILINE);  //TODO: Get label from resource
+        Pattern pattern = Pattern.compile(Resource.getText("label.switch.model")+"\\((.*)\\)", Pattern.MULTILINE);
         Matcher matcher = pattern.matcher(text);
         if (matcher.find()) {
             vertex.setSwitchModelId(matcher.group(1));
@@ -144,7 +144,7 @@ public class ModelFactory {
     }
     
     private void parseRequirements(Vertex vertex, String text) {
-        Pattern pattern = Pattern.compile("REQ\\((.*)\\)", Pattern.MULTILINE);  //TODO: Get label from resource
+        Pattern pattern = Pattern.compile(Resource.getText("label.requirement")+"\\((.*)\\)", Pattern.MULTILINE);
         Matcher matcher = pattern.matcher(text);
         while (matcher.find()) {
             vertex.addRequirement(new Requirement(matcher.group(1)));
@@ -172,7 +172,7 @@ public class ModelFactory {
     }
     
     private void parseBlocked(Edge edge, String text) {
-        Pattern pattern = Pattern.compile("BLOCKED", Pattern.MULTILINE);   //TODO: Get label from resource
+        Pattern pattern = Pattern.compile(Resource.getText("label.blocked"), Pattern.MULTILINE);
         Matcher matcher = pattern.matcher(text);
         edge.setBlocked(matcher.find());
     }

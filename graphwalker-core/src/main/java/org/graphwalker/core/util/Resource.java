@@ -25,62 +25,68 @@
  */
 package org.graphwalker.core.util;
 
+import net.sf.oval.constraint.MinLength;
+import net.sf.oval.constraint.NotNull;
+import net.sf.oval.guard.Guarded;
+
+import javax.swing.*;
 import java.io.File;
 import java.net.URL;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
 /**
- * <p>MessageBundle class.</p>
  *
  * @author nilols
  * @version $Id: $
  */
+@Guarded
 public class Resource {
 
-    private static final String BUNDLE = "messages.message";
-
+    private static final String DEFAULT_BUNDLE = "core";
+    
     private Resource() {
     }
 
-    /**
-     * <p>getText.</p>
-     *
-     * @param key a {@link java.lang.String} object.
-     * @return a {@link java.lang.String} object.
-     */
-    public static String getText(final String key) {
-        return getText(key, Locale.getDefault());
+    public static String getText(@NotNull @MinLength(1) final String key) {
+        return getText(DEFAULT_BUNDLE, key, Locale.getDefault());
+    }    
+    
+    public static String getText(@NotNull @MinLength(1) final String bundle, @NotNull @MinLength(1) final String key) {
+        return getText(bundle, key, Locale.getDefault());
     }
 
-    private static String getText(final String key, final Locale locale) {
-        return ResourceBundle.getBundle(BUNDLE, locale).getString(key);
+    public static String getText(@NotNull @MinLength(1) final String bundle, @NotNull @MinLength(1) final String key, @NotNull final Locale locale) {
+        return ResourceBundle.getBundle(bundle, locale).getString(key);
     }
 
-    /**
-     * <p>getFile.</p>
-     *
-     * @param filename a {@link java.lang.String} object.
-     * @return a {@link java.io.File} object.
-     */
-    public static File getFile(final String filename) {
+    public static Icon getIcon(@NotNull @MinLength(1) final String bundle, @NotNull @MinLength(1) final String key) {
+        return new ImageIcon(getResource(getText(bundle, key)));
+    }
+
+    public static Icon getIcon(@NotNull @MinLength(1) final String filename) {
+        return new ImageIcon(getResource(filename));
+    }
+
+    public static File getFile(@NotNull @MinLength(1) final String filename) {
         File file = new File(filename);
         if (file.exists()) {
             return file;
         } else {
-            return getResource(filename);
+            return new File(getResource(filename).getFile());
         }
     }
-
-    private static File getResource(final String filename) {
-        URL resource = Resource.class.getResource(filename);
-        if (null == resource) {
-            resource = Resource.class.getResource(File.separator+filename);
+    
+    private static URL getResource(final String filename) {
+        String filenameWithSeparator = filename;
+        if (!filenameWithSeparator.startsWith(System.getProperty("file.separator"))) {
+            filenameWithSeparator = System.getProperty("file.separator")+filename;
         }
+        URL resource = Resource.class.getResource(filenameWithSeparator);
         if (null != resource) {
-            return new File(resource.getFile());
+            return resource;
         }
-        throw new ResourceException(Resource.getText("exception.model.file.missing"));
+        throw new ResourceException(Resource.getText("exception.file.missing"));
     }
 
 }
