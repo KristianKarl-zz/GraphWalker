@@ -76,7 +76,6 @@
         <module>../graphwalker-core</module>
         <module>../graphwalker-cli</module>
         <module>../graphwalker-gui</module>
-        <module>../graphwalker-standalone</module>
         <module>../graphwalker-webservice</module>
     </modules>
 
@@ -203,7 +202,6 @@
                 <version>1.0</version>
                 <configuration>
                     <licenseName>mit</licenseName>
-                    <lastYear>2012</lastYear>
                 </configuration>
                 <executions>
                     <execution>
