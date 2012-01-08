@@ -41,8 +41,15 @@ import java.util.List;
 // TODO: Present model (master detail view to handle multiple models, maybe a "console" output window)
 // TODO: Implements actions
 
+/**
+ * <p>GraphWalkerGUI class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public class GraphWalkerGUI extends JFrame {
 
+    /** Constant <code>BUNDLE="gui"</code> */
     public static final String BUNDLE = "gui";
 
     private final Workspace myWorkspace = new Workspace();
@@ -95,6 +102,11 @@ public class GraphWalkerGUI extends JFrame {
         getContentPane().add(myWorkspace, "grow");
     }
 
+    /**
+     * <p>main.</p>
+     *
+     * @param arguments an array of {@link java.lang.String} objects.
+     */
     public static void main(String[] arguments) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {

@@ -30,12 +30,21 @@ import com.jidesoft.swing.JideSplitPane;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * <p>Workspace class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public class Workspace extends JPanel {
 
     private final MasterView myMasterView = new MasterView();
     private final DetailView myDetailView = new DetailView();
     private final ConsoleView myConsoleView = new ConsoleView();
 
+    /**
+     * <p>Constructor for Workspace.</p>
+     */
     public Workspace() {
         super(new GridLayout(1,1));
         setBorder(BorderFactory.createEmptyBorder(0, 2, 2, 2));

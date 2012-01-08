@@ -39,10 +39,21 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 
+/**
+ * <p>ToolBar class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public class ToolBar extends JToolBar {
 
     private Map<String, List<Action>> myActionGroups = new HashMap<String, List<Action>>();
 
+    /**
+     * <p>Constructor for ToolBar.</p>
+     *
+     * @param actions a {@link java.util.List} object.
+     */
     public ToolBar(List<Action> actions) {
         createActionGroups(actions);
         createToolBar();

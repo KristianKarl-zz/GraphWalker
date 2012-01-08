@@ -30,8 +30,15 @@ import org.graphwalker.core.util.Resource;
 
 import java.io.File;
 
+/**
+ * <p>GraphWalkerCLI class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public class GraphWalkerCLI {
 
+    /** Constant <code>BUNDLE="cli"</code> */
     public static final String BUNDLE = "cli";
 
     private final Options myOptions = new Options();
@@ -76,6 +83,11 @@ public class GraphWalkerCLI {
         helpFormatter.printHelp(Resource.getText(BUNDLE, "options.label"), myOptions);
     }
 
+    /**
+     * <p>main.</p>
+     *
+     * @param arguments an array of {@link java.lang.String} objects.
+     */
     public static void main(String[] arguments) {
         GraphWalkerCLI graphWalkerCLI = new GraphWalkerCLI();
         graphWalkerCLI.parse(arguments);

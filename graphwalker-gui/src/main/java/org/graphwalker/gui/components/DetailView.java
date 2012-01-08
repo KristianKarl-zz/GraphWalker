@@ -30,10 +30,19 @@ import org.jgraph.JGraph;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * <p>DetailView class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public class DetailView extends JGraph {
 
     private static final Dimension PREFERRED_SIZE = new Dimension(600, 800);
 
+    /**
+     * <p>Constructor for DetailView.</p>
+     */
     public DetailView() {
         setBorder(BorderFactory.createLineBorder(UIManager.getColor("controlShadow")));
         setPreferredSize(PREFERRED_SIZE);

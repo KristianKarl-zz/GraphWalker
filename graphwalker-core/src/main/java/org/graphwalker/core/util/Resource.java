@@ -36,6 +36,7 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 /**
+ * <p>Resource class.</p>
  *
  * @author nilols
  * @version $Id: $
@@ -48,26 +49,66 @@ public class Resource {
     private Resource() {
     }
 
+    /**
+     * <p>getText.</p>
+     *
+     * @param key a {@link java.lang.String} object.
+     * @return a {@link java.lang.String} object.
+     */
     public static String getText(@NotNull @MinLength(1) final String key) {
         return getText(DEFAULT_BUNDLE, key, Locale.getDefault());
     }    
     
+    /**
+     * <p>getText.</p>
+     *
+     * @param bundle a {@link java.lang.String} object.
+     * @param key a {@link java.lang.String} object.
+     * @return a {@link java.lang.String} object.
+     */
     public static String getText(@NotNull @MinLength(1) final String bundle, @NotNull @MinLength(1) final String key) {
         return getText(bundle, key, Locale.getDefault());
     }
 
+    /**
+     * <p>getText.</p>
+     *
+     * @param bundle a {@link java.lang.String} object.
+     * @param key a {@link java.lang.String} object.
+     * @param locale a {@link java.util.Locale} object.
+     * @return a {@link java.lang.String} object.
+     */
     public static String getText(@NotNull @MinLength(1) final String bundle, @NotNull @MinLength(1) final String key, @NotNull final Locale locale) {
         return ResourceBundle.getBundle(bundle, locale).getString(key);
     }
 
+    /**
+     * <p>getIcon.</p>
+     *
+     * @param bundle a {@link java.lang.String} object.
+     * @param key a {@link java.lang.String} object.
+     * @return a {@link javax.swing.Icon} object.
+     */
     public static Icon getIcon(@NotNull @MinLength(1) final String bundle, @NotNull @MinLength(1) final String key) {
         return new ImageIcon(getResource(getText(bundle, key)));
     }
 
+    /**
+     * <p>getIcon.</p>
+     *
+     * @param filename a {@link java.lang.String} object.
+     * @return a {@link javax.swing.Icon} object.
+     */
     public static Icon getIcon(@NotNull @MinLength(1) final String filename) {
         return new ImageIcon(getResource(filename));
     }
 
+    /**
+     * <p>getFile.</p>
+     *
+     * @param filename a {@link java.lang.String} object.
+     * @return a {@link java.io.File} object.
+     */
     public static File getFile(@NotNull @MinLength(1) final String filename) {
         File file = new File(filename);
         if (file.exists()) {

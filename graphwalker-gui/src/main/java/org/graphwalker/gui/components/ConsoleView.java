@@ -28,10 +28,19 @@ package org.graphwalker.gui.components;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * <p>ConsoleView class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public class ConsoleView extends JEditorPane {
 
     private static final Dimension PREFERRED_SIZE = new Dimension(200, 100);
 
+    /**
+     * <p>Constructor for ConsoleView.</p>
+     */
     public ConsoleView() {
         setBorder(BorderFactory.createLineBorder(UIManager.getColor("controlShadow")));
         setPreferredSize(PREFERRED_SIZE);

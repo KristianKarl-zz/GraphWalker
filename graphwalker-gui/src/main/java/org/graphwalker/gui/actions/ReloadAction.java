@@ -31,8 +31,17 @@ import org.graphwalker.gui.GraphWalkerGUI;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
+/**
+ * <p>ReloadAction class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public class ReloadAction extends AbstractAction {
 
+    /**
+     * <p>Constructor for ReloadAction.</p>
+     */
     public ReloadAction() {
         putValue(ActionConstants.GROUP, Resource.getText(GraphWalkerGUI.BUNDLE, "menu.reload.group"));
         putValue(ActionConstants.INDEX, Integer.parseInt(Resource.getText(GraphWalkerGUI.BUNDLE, "menu.reload.index")));
@@ -41,6 +50,7 @@ public class ReloadAction extends AbstractAction {
         putValue(ActionConstants.ICON, Resource.getIcon(GraphWalkerGUI.BUNDLE, "menu.reload.icon"));
     }
 
+    /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
         // TODO: Fix me (Auto generated)

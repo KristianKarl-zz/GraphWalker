@@ -31,8 +31,17 @@ import org.graphwalker.gui.GraphWalkerGUI;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
+/**
+ * <p>FirstAction class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public class FirstAction extends AbstractAction {
 
+    /**
+     * <p>Constructor for FirstAction.</p>
+     */
     public FirstAction() {
         putValue(ActionConstants.GROUP, Resource.getText(GraphWalkerGUI.BUNDLE, "menu.first.group"));
         putValue(ActionConstants.INDEX, Integer.parseInt(Resource.getText(GraphWalkerGUI.BUNDLE, "menu.first.index")));
@@ -41,6 +50,7 @@ public class FirstAction extends AbstractAction {
         putValue(ActionConstants.ICON, Resource.getIcon(GraphWalkerGUI.BUNDLE, "menu.first.icon"));
     }
 
+    /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
         // TODO: Fix me (Auto generated)

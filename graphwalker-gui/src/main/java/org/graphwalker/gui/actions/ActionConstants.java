@@ -27,12 +27,23 @@ package org.graphwalker.gui.actions;
 
 import javax.swing.*;
 
+/**
+ * <p>ActionConstants interface.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public interface ActionConstants {
 
+    /** Constant <code>DESCRIPTION="Action.SHORT_DESCRIPTION"</code> */
     String DESCRIPTION = Action.SHORT_DESCRIPTION;
+    /** Constant <code>GROUP="Group"</code> */
     String GROUP = "Group";
+    /** Constant <code>ICON="Action.SMALL_ICON"</code> */
     String ICON = Action.SMALL_ICON;
+    /** Constant <code>INDEX="Index"</code> */
     String INDEX = "Index";
+    /** Constant <code>NAME="Action.NAME"</code> */
     String NAME = Action.NAME;
     
 }

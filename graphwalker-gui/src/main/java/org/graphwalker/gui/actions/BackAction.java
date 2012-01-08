@@ -31,8 +31,17 @@ import org.graphwalker.gui.GraphWalkerGUI;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
+/**
+ * <p>BackAction class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public class BackAction extends AbstractAction {
 
+    /**
+     * <p>Constructor for BackAction.</p>
+     */
     public BackAction() {
         putValue(ActionConstants.GROUP, Resource.getText(GraphWalkerGUI.BUNDLE, "menu.back.group"));
         putValue(ActionConstants.INDEX, Integer.parseInt(Resource.getText(GraphWalkerGUI.BUNDLE, "menu.back.index")));
@@ -41,6 +50,7 @@ public class BackAction extends AbstractAction {
         putValue(ActionConstants.ICON, Resource.getIcon(GraphWalkerGUI.BUNDLE, "menu.back.icon"));
     }
 
+    /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
         // TODO: Fix me (Auto generated)

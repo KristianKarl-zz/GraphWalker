@@ -28,10 +28,19 @@ package org.graphwalker.gui.components;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * <p>MasterView class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public class MasterView extends JTree {
 
     private static final Dimension PREFERRED_SIZE = new Dimension(200, 200);
 
+    /**
+     * <p>Constructor for MasterView.</p>
+     */
     public MasterView() {
         setBorder(BorderFactory.createLineBorder(UIManager.getColor("controlShadow")));
         setPreferredSize(PREFERRED_SIZE);

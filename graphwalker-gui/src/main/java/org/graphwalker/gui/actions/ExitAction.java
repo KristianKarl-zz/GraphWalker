@@ -31,8 +31,17 @@ import org.graphwalker.gui.GraphWalkerGUI;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
+/**
+ * <p>ExitAction class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public class ExitAction extends AbstractAction {
 
+    /**
+     * <p>Constructor for ExitAction.</p>
+     */
     public ExitAction() {
         putValue(ActionConstants.GROUP, Resource.getText(GraphWalkerGUI.BUNDLE, "menu.exit.group"));
         putValue(ActionConstants.INDEX, Integer.parseInt(Resource.getText(GraphWalkerGUI.BUNDLE, "menu.exit.index")));
@@ -41,6 +50,7 @@ public class ExitAction extends AbstractAction {
         putValue(ActionConstants.ICON, Resource.getIcon(GraphWalkerGUI.BUNDLE, "menu.exit.icon"));
     }
     
+    /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
         // TODO: Fix me (Auto generated)

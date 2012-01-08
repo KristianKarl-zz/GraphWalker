@@ -29,11 +29,20 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 
+/**
+ * <p>StatusBar class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public class StatusBar extends JComponent {
 
     private static final Dimension MAX_SIZE = new Dimension(Integer.MAX_VALUE, 23);
     private static final Dimension MIN_SIZE = new Dimension(100, 23);
 
+    /**
+     * <p>Constructor for StatusBar.</p>
+     */
     public StatusBar() {
         Border spaceBorder = BorderFactory.createEmptyBorder(0, 2, 2, 2);
         Border lineBorder = BorderFactory.createLineBorder(UIManager.getColor("controlShadow"));

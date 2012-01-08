@@ -33,22 +33,42 @@ import org.graphwalker.core.model.Element;
 import javax.jws.WebService;
 
 @WebService
+/**
+ * <p>SoapServiceImpl class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public class SoapServiceImpl implements SoapService {
     
     private GraphWalker myGraphWalker;
     
+    /** {@inheritDoc} */
     public void load(String file) {
         myGraphWalker = new GraphWalkerImpl(file);
     }
 
+    /**
+     * <p>reload.</p>
+     */
     public void reload() {
 
     }
 
+    /**
+     * <p>hasNextStep.</p>
+     *
+     * @return a boolean.
+     */
     public boolean hasNextStep() {
         return myGraphWalker.hasNextStep();
     }
     
+    /**
+     * <p>getNextStep.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getNextStep() {
         Element modelElement = myGraphWalker.getNextStep();
         return modelElement.getName();

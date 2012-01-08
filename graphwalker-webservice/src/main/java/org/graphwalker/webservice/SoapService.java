@@ -25,10 +25,34 @@
  */
 package org.graphwalker.webservice;
 
+/**
+ * <p>SoapService interface.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public interface SoapService {
 
+    /**
+     * <p>load.</p>
+     *
+     * @param file a {@link java.lang.String} object.
+     */
     void load(String file);
+    /**
+     * <p>reload.</p>
+     */
     void reload();
+    /**
+     * <p>hasNextStep.</p>
+     *
+     * @return a boolean.
+     */
     boolean hasNextStep();
+    /**
+     * <p>getNextStep.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     String getNextStep();
 }

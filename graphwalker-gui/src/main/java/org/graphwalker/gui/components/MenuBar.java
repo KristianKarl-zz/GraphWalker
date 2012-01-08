@@ -32,10 +32,21 @@ import org.graphwalker.gui.actions.ActionConstants;
 import javax.swing.*;
 import java.util.*;
 
+/**
+ * <p>MenuBar class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public class MenuBar extends JMenuBar {
 
     private Map<String, List<Action>> myActionGroups = new HashMap<String, List<Action>>();
 
+    /**
+     * <p>Constructor for MenuBar.</p>
+     *
+     * @param actions a {@link java.util.List} object.
+     */
     public MenuBar(List<Action> actions) {
         createActionGroups(actions);
         createMenuBar();
