@@ -25,32 +25,51 @@
  */
 package org.graphwalker.gui;
 
+import com.jidesoft.plaf.LookAndFeelFactory;
 import net.miginfocom.swing.MigLayout;
-import org.graphwalker.gui.components.Menu;
+import org.graphwalker.core.util.Resource;
+import org.graphwalker.gui.actions.*;
+import org.graphwalker.gui.components.MenuBar;
 import org.graphwalker.gui.components.StatusBar;
 import org.graphwalker.gui.components.ToolBar;
 import org.graphwalker.gui.components.Workspace;
 
 import javax.swing.*;
+import java.util.ArrayList;
+import java.util.List;
+
+// TODO: Present model (master detail view to handle multiple models, maybe a "console" output window)
+// TODO: Implements actions
 
 public class GraphWalkerGUI extends JFrame {
 
     public static final String BUNDLE = "gui";
-    
-    private final Menu myMenu = new Menu();
-    private final ToolBar myToolBar = new ToolBar();
+
     private final Workspace myWorkspace = new Workspace();
     private final StatusBar myStatusBar = new StatusBar();
+    private final List<Action> myActions = new ArrayList<Action>();
 
     private GraphWalkerGUI() {
-        super("GraphWalker"); //TODO: Get text from resource
+        super(Resource.getText(BUNDLE, "application.label"));
         getContentPane().setLayout(new MigLayout("fill"));
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        createActions();
         createComponents();
         pack();
     }
 
+    private void createActions() {
+        myActions.add(new BackAction());
+        myActions.add(new ExitAction());
+        myActions.add(new FirstAction());
+        myActions.add(new NextAction());
+        myActions.add(new OpenAction());
+        myActions.add(new PauseAction());
+        myActions.add(new ReloadAction());
+        myActions.add(new RunAction());
+    }
+    
     private void createComponents() {
         addMenu();
         addToolBar();
@@ -59,11 +78,13 @@ public class GraphWalkerGUI extends JFrame {
     }
 
     private void addMenu() {
-        setJMenuBar(myMenu);
+        setJMenuBar(new MenuBar(myActions));
     }
 
     private void addToolBar() {
-        getContentPane().add(myToolBar, "north");
+        JToolBar toolBar = new ToolBar(myActions);
+        toolBar.setFloatable(false);
+        getContentPane().add(toolBar, "north");
     }
 
     private void addStatusBar() {
@@ -77,6 +98,7 @@ public class GraphWalkerGUI extends JFrame {
     public static void main(String[] arguments) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
+                LookAndFeelFactory.installDefaultLookAndFeelAndExtension();
                 GraphWalkerGUI gui = new GraphWalkerGUI();
                 gui.setVisible(true);
             }

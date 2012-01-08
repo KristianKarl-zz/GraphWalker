@@ -1,6 +1,6 @@
 /*
  * #%L
- * GraphWalker Core
+ * GraphWalker GUI
  * %%
  * Copyright (C) 2011 - 2012 GraphWalker
  * %%
@@ -23,17 +23,26 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core.aspects;
+package org.graphwalker.gui.actions;
 
-import net.sf.oval.guard.GuardAspect;
-import org.aspectj.lang.annotation.Aspect;
+import org.graphwalker.core.util.Resource;
+import org.graphwalker.gui.GraphWalkerGUI;
 
-/**
- * <p>ValidatorAspect class.</p>
- *
- * @author nilols
- * @version $Id: $
- */
-@Aspect
-public class ValidatorAspect extends GuardAspect {
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+
+public class FirstAction extends AbstractAction {
+
+    public FirstAction() {
+        putValue(ActionConstants.GROUP, Resource.getText(GraphWalkerGUI.BUNDLE, "menu.first.group"));
+        putValue(ActionConstants.INDEX, Integer.parseInt(Resource.getText(GraphWalkerGUI.BUNDLE, "menu.first.index")));
+        putValue(ActionConstants.NAME, Resource.getText(GraphWalkerGUI.BUNDLE, "menu.first.label"));
+        putValue(ActionConstants.DESCRIPTION, Resource.getText(GraphWalkerGUI.BUNDLE, "menu.first.description"));
+        putValue(ActionConstants.ICON, Resource.getIcon(GraphWalkerGUI.BUNDLE, "menu.first.icon"));
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent actionEvent) {
+        // TODO: Fix me (Auto generated)
+    }
 }

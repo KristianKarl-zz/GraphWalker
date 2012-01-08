@@ -26,24 +26,14 @@
 package org.graphwalker.gui.components;
 
 import javax.swing.*;
+import java.awt.*;
 
-public class Menu extends JMenuBar {
+public class MasterView extends JTree {
 
-    //TODO: Add all menu items
+    private static final Dimension PREFERRED_SIZE = new Dimension(200, 200);
 
-    public Menu() {
-        createMenu();
-    }
-
-    private void createMenu() {
-        addFileMenu();
-    }
-
-    private void addFileMenu() {
-        JMenu menu = new JMenu("File"); //TODO: Get text from resources
-        menu.addSeparator();
-        JMenuItem exitMenuItem = new JMenuItem("Exit"); //TODO: Get text from resources
-        menu.add(exitMenuItem);
-        add(menu);
+    public MasterView() {
+        setBorder(BorderFactory.createLineBorder(UIManager.getColor("controlShadow")));
+        setPreferredSize(PREFERRED_SIZE);
     }
 }

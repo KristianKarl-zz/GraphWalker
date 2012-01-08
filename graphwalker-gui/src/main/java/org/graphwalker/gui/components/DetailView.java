@@ -1,6 +1,6 @@
 /*
  * #%L
- * GraphWalker Core
+ * GraphWalker GUI
  * %%
  * Copyright (C) 2011 - 2012 GraphWalker
  * %%
@@ -23,17 +23,19 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core.aspects;
+package org.graphwalker.gui.components;
 
-import net.sf.oval.guard.GuardAspect;
-import org.aspectj.lang.annotation.Aspect;
+import org.jgraph.JGraph;
 
-/**
- * <p>ValidatorAspect class.</p>
- *
- * @author nilols
- * @version $Id: $
- */
-@Aspect
-public class ValidatorAspect extends GuardAspect {
+import javax.swing.*;
+import java.awt.*;
+
+public class DetailView extends JGraph {
+
+    private static final Dimension PREFERRED_SIZE = new Dimension(600, 800);
+
+    public DetailView() {
+        setBorder(BorderFactory.createLineBorder(UIManager.getColor("controlShadow")));
+        setPreferredSize(PREFERRED_SIZE);
+    }
 }

@@ -1,6 +1,6 @@
 /*
  * #%L
- * GraphWalker Core
+ * GraphWalker GUI
  * %%
  * Copyright (C) 2011 - 2012 GraphWalker
  * %%
@@ -23,17 +23,16 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core.aspects;
+package org.graphwalker.gui.actions;
 
-import net.sf.oval.guard.GuardAspect;
-import org.aspectj.lang.annotation.Aspect;
+import javax.swing.*;
 
-/**
- * <p>ValidatorAspect class.</p>
- *
- * @author nilols
- * @version $Id: $
- */
-@Aspect
-public class ValidatorAspect extends GuardAspect {
+public interface ActionConstants {
+
+    String DESCRIPTION = Action.SHORT_DESCRIPTION;
+    String GROUP = "Group";
+    String ICON = Action.SMALL_ICON;
+    String INDEX = "Index";
+    String NAME = Action.NAME;
+    
 }

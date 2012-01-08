@@ -27,12 +27,12 @@ package org.graphwalker.core.aspects;
 
 import org.aspectj.lang.annotation.Aspect;
 
-@Aspect
 /**
  * <p>LoggerAspect class.</p>
  *
  * @author nilols
  * @version $Id: $
  */
+@Aspect
 public class LoggerAspect {
 }

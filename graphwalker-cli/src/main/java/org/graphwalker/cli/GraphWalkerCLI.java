@@ -42,16 +42,22 @@ public class GraphWalkerCLI {
     }
 
     private void createOptions() {
-        myOptions.addOption("f", "file", true, ""); // TODO: Get Strings from resources
-        myOptions.addOption("h", "help", false, "Prints this help"); // TODO: Get Strings from resources
-        
+        myOptions.addOption(Resource.getText(BUNDLE, "option.file.mnemonic")
+                , Resource.getText(BUNDLE, "option.file.label")
+                , true
+                , Resource.getText(BUNDLE, "option.file.description"));
+
+        myOptions.addOption(Resource.getText(BUNDLE, "option.help.mnemonic")
+                , Resource.getText(BUNDLE, "option.help.label")
+                , false
+                , Resource.getText(BUNDLE, "option.help.description"));
     }
 
     private void parse(String[] arguments) {
         try {
             CommandLine commandLine = myParser.parse(myOptions, arguments);
-            if (commandLine.hasOption("f")) { // TODO: Get Strings from resources
-                executeFile(commandLine.getOptionValue("f")); // TODO: Get Strings from resources
+            if (commandLine.hasOption(Resource.getText(BUNDLE, "option.file.mnemonic"))) {
+                executeFile(commandLine.getOptionValue(Resource.getText(BUNDLE, "option.file.mnemonic")));
             } else {
                 printHelp();
             }
@@ -67,7 +73,7 @@ public class GraphWalkerCLI {
     
     private void printHelp() {
         HelpFormatter helpFormatter = new HelpFormatter();
-        helpFormatter.printHelp("Options", myOptions); // TODO: Get Strings from resources
+        helpFormatter.printHelp(Resource.getText(BUNDLE, "options.label"), myOptions);
     }
 
     public static void main(String[] arguments) {

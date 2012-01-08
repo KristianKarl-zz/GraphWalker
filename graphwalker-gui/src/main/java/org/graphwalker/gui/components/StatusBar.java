@@ -26,6 +26,7 @@
 package org.graphwalker.gui.components;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 
 public class StatusBar extends JComponent {
@@ -34,6 +35,9 @@ public class StatusBar extends JComponent {
     private static final Dimension MIN_SIZE = new Dimension(100, 23);
 
     public StatusBar() {
+        Border spaceBorder = BorderFactory.createEmptyBorder(0, 2, 2, 2);
+        Border lineBorder = BorderFactory.createLineBorder(UIManager.getColor("controlShadow"));
+        setBorder(BorderFactory.createCompoundBorder(spaceBorder, lineBorder));
         setMaximumSize(MAX_SIZE);
         setMinimumSize(MIN_SIZE);
     }

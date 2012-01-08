@@ -25,44 +25,37 @@
  */
 package org.graphwalker.gui.components;
 
-import com.jidesoft.swing.JideButton;
 import org.graphwalker.core.util.Resource;
 import org.graphwalker.gui.GraphWalkerGUI;
 import org.graphwalker.gui.actions.ActionConstants;
 
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.border.CompoundBorder;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
-import java.awt.*;
 import java.util.*;
-import java.util.List;
 
-public class ToolBar extends JToolBar {
+public class MenuBar extends JMenuBar {
 
     private Map<String, List<Action>> myActionGroups = new HashMap<String, List<Action>>();
 
-    public ToolBar(List<Action> actions) {
+    public MenuBar(List<Action> actions) {
         createActionGroups(actions);
-        createToolBar();
+        createMenuBar();
     }
-
+    
     private void createActionGroups(List<Action> actions) {
         for (Action action: actions) {
-            String groupKey = (String)action.getValue(ActionConstants.GROUP);
-            if (null != groupKey && !"".equals(groupKey)) {
-                if (!myActionGroups.containsKey(groupKey)) {
-                    myActionGroups.put(groupKey, new ArrayList<Action>());
+            String group = (String)action.getValue(ActionConstants.GROUP);
+            if (null != group && !"".equals(group)) {
+                if (!myActionGroups.containsKey(group)) {
+                    myActionGroups.put(group, new ArrayList<Action>());
                 }
-                addActionToGroup(myActionGroups.get(groupKey), action);
+                addActionToGroup(myActionGroups.get(group), action);
             }
         }
     }
-    
+
     private void addActionToGroup(List<Action> group, Action action) {
         if (group.isEmpty()) {
-            group.add(action);                
+            group.add(action);
         } else {
             Integer actionIndex = (Integer)action.getValue(ActionConstants.INDEX);
             Integer lastActionIndex = (Integer)group.get(group.size()-1).getValue(ActionConstants.INDEX);
@@ -77,34 +70,24 @@ public class ToolBar extends JToolBar {
                     }
                 }
             }
-        }   
-    }
-    
-    private void createToolBar() {
-        String groupOrderString = Resource.getText(GraphWalkerGUI.BUNDLE, "toolbar.group.order");
-        String[] groupOrder = groupOrderString.split(",");        
-        for (int i=0; i<groupOrder.length; i++) {
-            createButtonGroup(myActionGroups.get(groupOrder[i].trim()));
-            if (i<groupOrder.length-1) {
-                addSeparator();
-            }
         }
     }
 
-    private void createButtonGroup(List<Action> actions) {
+    private void createMenuBar() {
+        String groupOrderString = Resource.getText(GraphWalkerGUI.BUNDLE, "menubar.group.order");
+        String[] groupOrder = groupOrderString.split(",");
+        for (String groupKey : groupOrder) {
+            Collections.reverse(myActionGroups.get(groupKey.trim()));
+            createMenuGroup(groupKey, myActionGroups.get(groupKey.trim()));
+        }
+    }
+
+    private void createMenuGroup(String group, List<Action> actions) {
+        JMenu menu = new JMenu(group);
         for (Action action: actions) {
-            add(createButton(action));
+            menu.add(new JMenuItem(action));
         }
+        add(menu);
     }
-
-    private JideButton createButton(Action action) {
-        final JideButton button = new JideButton(action);
-        if (null != button.getIcon()) {
-            button.setText("");
-        }
-        button.setHorizontalAlignment(SwingConstants.LEADING);
-        button.setFocusable(false);
-        return button;
-    }    
 
 }
