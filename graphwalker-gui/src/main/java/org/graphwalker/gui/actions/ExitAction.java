@@ -26,9 +26,9 @@
 package org.graphwalker.gui.actions;
 
 import org.graphwalker.core.util.Resource;
-import org.graphwalker.gui.GraphWalkerGUI;
+import org.graphwalker.gui.GraphWalker;
+import org.graphwalker.gui.GraphWalkerView;
 
-import javax.swing.*;
 import java.awt.event.ActionEvent;
 
 /**
@@ -37,22 +37,23 @@ import java.awt.event.ActionEvent;
  * @author nilols
  * @version $Id: $
  */
-public class ExitAction extends AbstractAction {
+public class ExitAction extends GraphWalkerAbstractAction {
 
     /**
      * <p>Constructor for ExitAction.</p>
      */
-    public ExitAction() {
-        putValue(ActionConstants.GROUP, Resource.getText(GraphWalkerGUI.BUNDLE, "menu.exit.group"));
-        putValue(ActionConstants.INDEX, Integer.parseInt(Resource.getText(GraphWalkerGUI.BUNDLE, "menu.exit.index")));
-        putValue(ActionConstants.NAME, Resource.getText(GraphWalkerGUI.BUNDLE, "menu.exit.label"));
-        putValue(ActionConstants.DESCRIPTION, Resource.getText(GraphWalkerGUI.BUNDLE, "menu.exit.description"));
-        putValue(ActionConstants.ICON, Resource.getIcon(GraphWalkerGUI.BUNDLE, "menu.exit.icon"));
+    public ExitAction(GraphWalkerView view) {
+        super(view);
+        putValue(ActionConstants.GROUP, Resource.getText(GraphWalker.BUNDLE, "menu.exit.group"));
+        putValue(ActionConstants.INDEX, Integer.parseInt(Resource.getText(GraphWalker.BUNDLE, "menu.exit.index")));
+        putValue(ActionConstants.NAME, Resource.getText(GraphWalker.BUNDLE, "menu.exit.label"));
+        putValue(ActionConstants.DESCRIPTION, Resource.getText(GraphWalker.BUNDLE, "menu.exit.description"));
+        putValue(ActionConstants.ICON, Resource.getIcon(GraphWalker.BUNDLE, "menu.exit.icon"));
     }
     
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-        // TODO: Fix me (Auto generated)
+        System.exit(0); //TODO: Do we need to save anything?
     }
 }

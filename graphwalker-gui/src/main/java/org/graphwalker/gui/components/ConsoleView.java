@@ -25,6 +25,8 @@
  */
 package org.graphwalker.gui.components;
 
+import org.graphwalker.gui.GraphWalkerController;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -41,7 +43,7 @@ public class ConsoleView extends JEditorPane {
     /**
      * <p>Constructor for ConsoleView.</p>
      */
-    public ConsoleView() {
+    public ConsoleView(GraphWalkerController controller) {
         setBorder(BorderFactory.createLineBorder(UIManager.getColor("controlShadow")));
         setPreferredSize(PREFERRED_SIZE);
     }

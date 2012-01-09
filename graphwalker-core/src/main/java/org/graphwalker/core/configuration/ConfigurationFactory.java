@@ -70,7 +70,7 @@ public class ConfigurationFactory {
      * @return a configuration that can be used by GraphWalker
      */
     public static Configuration create(File file) {
-        return parse(unmarshal(file));
+        return parse(unmarshal(file), file);
     }
 
     private static GraphWalkerType unmarshal(File file) {
@@ -84,13 +84,15 @@ public class ConfigurationFactory {
         }
     }
 
-    private static Configuration parse(GraphWalkerType graphWalkerType) {
-        return parse(new ConfigurationImpl(), graphWalkerType);
+    private static Configuration parse(GraphWalkerType graphWalkerType, File file) {
+        Configuration configuration = new ConfigurationImpl();
+        configuration.setConfigurationFile(file);
+        return parse(configuration, graphWalkerType);
     }
 
     private static Configuration parse(Configuration configuration, GraphWalkerType graphWalkerType) {
         for (ModelType modelType: graphWalkerType.getModels().getModel()) {
-            configuration.addModel(parse(modelType));
+            configuration.addModel(parse(configuration, modelType));
         }
         if (null != graphWalkerType.getDefaultModelId()) {
             ModelType modelType = (ModelType)graphWalkerType.getDefaultModelId();
@@ -106,8 +108,12 @@ public class ConfigurationFactory {
         return configuration;
     }
 
-    private static Model parse(ModelType modelType) {
-        Model model = ModelFactory.create(modelType.getId(), modelType.getFile());
+    private static Model parse(Configuration configuration, ModelType modelType) {
+        File modelFile = new File(modelType.getFile());
+        if (!modelFile.exists()) {
+            modelFile = new File(configuration.getConfigurationFile().getParentFile(), modelType.getFile());
+        }
+        Model model = ModelFactory.create(modelType.getId(), modelFile.getAbsolutePath());
         if (null != modelType.getPathGenerator()) {
             model.setPathGenerator(parse(modelType.getPathGenerator()));
         }

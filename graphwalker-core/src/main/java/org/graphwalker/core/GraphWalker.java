@@ -25,6 +25,7 @@
  */
 package org.graphwalker.core;
 
+import org.graphwalker.core.configuration.Configuration;
 import org.graphwalker.core.model.Element;
 
 /**
@@ -47,4 +48,6 @@ public interface GraphWalker {
      * @return a {@link org.graphwalker.core.model.Element} object.
      */
     Element getNextStep();
+
+    Configuration getConfiguration();
 }

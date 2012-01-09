@@ -26,6 +26,7 @@
 package org.graphwalker.gui.components;
 
 import com.jidesoft.swing.JideSplitPane;
+import org.graphwalker.gui.GraphWalkerController;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,15 +39,18 @@ import java.awt.*;
  */
 public class Workspace extends JPanel {
 
-    private final MasterView myMasterView = new MasterView();
-    private final DetailView myDetailView = new DetailView();
-    private final ConsoleView myConsoleView = new ConsoleView();
+    private final MasterView myMasterView;
+    private final DetailView myDetailView;
+    private final ConsoleView myConsoleView;
 
     /**
      * <p>Constructor for Workspace.</p>
      */
-    public Workspace() {
+    public Workspace(GraphWalkerController controller) {
         super(new GridLayout(1,1));
+        myMasterView = new MasterView(controller);
+        myDetailView = new DetailView(controller);
+        myConsoleView = new ConsoleView(controller);
         setBorder(BorderFactory.createEmptyBorder(0, 2, 2, 2));
         JideSplitPane hSplitPane = createSplitPane(JideSplitPane.HORIZONTAL_SPLIT, myMasterView, myDetailView);
         JideSplitPane vSplitPane = createSplitPane(JideSplitPane.VERTICAL_SPLIT, hSplitPane, myConsoleView);

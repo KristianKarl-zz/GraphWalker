@@ -26,9 +26,9 @@
 package org.graphwalker.gui.actions;
 
 import org.graphwalker.core.util.Resource;
-import org.graphwalker.gui.GraphWalkerGUI;
+import org.graphwalker.gui.GraphWalker;
+import org.graphwalker.gui.GraphWalkerView;
 
-import javax.swing.*;
 import java.awt.event.ActionEvent;
 
 /**
@@ -37,17 +37,19 @@ import java.awt.event.ActionEvent;
  * @author nilols
  * @version $Id: $
  */
-public class NextAction extends AbstractAction {
+public class NextAction extends GraphWalkerAbstractAction {
 
     /**
      * <p>Constructor for NextAction.</p>
      */
-    public NextAction() {
-        putValue(ActionConstants.GROUP, Resource.getText(GraphWalkerGUI.BUNDLE, "menu.next.group"));
-        putValue(ActionConstants.INDEX, Integer.parseInt(Resource.getText(GraphWalkerGUI.BUNDLE, "menu.next.index")));
-        putValue(ActionConstants.NAME, Resource.getText(GraphWalkerGUI.BUNDLE, "menu.next.label"));
-        putValue(ActionConstants.DESCRIPTION, Resource.getText(GraphWalkerGUI.BUNDLE, "menu.next.description"));
-        putValue(ActionConstants.ICON, Resource.getIcon(GraphWalkerGUI.BUNDLE, "menu.next.icon"));
+    public NextAction(GraphWalkerView view) {
+        super(view);
+        putValue(ActionConstants.GROUP, Resource.getText(GraphWalker.BUNDLE, "menu.next.group"));
+        putValue(ActionConstants.INDEX, Integer.parseInt(Resource.getText(GraphWalker.BUNDLE, "menu.next.index")));
+        putValue(ActionConstants.NAME, Resource.getText(GraphWalker.BUNDLE, "menu.next.label"));
+        putValue(ActionConstants.DESCRIPTION, Resource.getText(GraphWalker.BUNDLE, "menu.next.description"));
+        putValue(ActionConstants.ICON, Resource.getIcon(GraphWalker.BUNDLE, "menu.next.icon"));
+        setEnabled(false);
     }
 
     /** {@inheritDoc} */

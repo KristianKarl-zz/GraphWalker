@@ -46,7 +46,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>org.graphwalker.gui.GraphWalkerGUI</mainClass>
+                            <mainClass>org.graphwalker.gui.GraphWalker</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

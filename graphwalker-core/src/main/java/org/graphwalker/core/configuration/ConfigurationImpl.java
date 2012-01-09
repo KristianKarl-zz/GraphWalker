@@ -31,6 +31,7 @@ import org.graphwalker.core.generators.PathGenerator;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.util.Resource;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,6 +45,7 @@ import java.util.Map;
  */
 public class ConfigurationImpl implements Configuration {
 
+    private File myConfigurationFile;
     private String myDefaultModelId;
     private PathGenerator myDefaultGenerator;
     private final Map<String, Model> myModels = new HashMap<String, Model>();
@@ -54,6 +56,14 @@ public class ConfigurationImpl implements Configuration {
      */
     public ConfigurationImpl() {
         myEdgeFilter = new EdgeFilterImpl(Resource.getText("default.language"));
+    }
+
+    public File getConfigurationFile() {
+        return myConfigurationFile;
+    }
+
+    public void setConfigurationFile(File configurationFile) {
+        myConfigurationFile = configurationFile;
     }
 
     /**

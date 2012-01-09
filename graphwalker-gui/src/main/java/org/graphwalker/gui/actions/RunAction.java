@@ -26,9 +26,9 @@
 package org.graphwalker.gui.actions;
 
 import org.graphwalker.core.util.Resource;
-import org.graphwalker.gui.GraphWalkerGUI;
+import org.graphwalker.gui.GraphWalker;
+import org.graphwalker.gui.GraphWalkerView;
 
-import javax.swing.*;
 import java.awt.event.ActionEvent;
 
 /**
@@ -37,17 +37,19 @@ import java.awt.event.ActionEvent;
  * @author nilols
  * @version $Id: $
  */
-public class RunAction extends AbstractAction {
+public class RunAction extends GraphWalkerAbstractAction {
 
     /**
      * <p>Constructor for RunAction.</p>
      */
-    public RunAction() {
-        putValue(ActionConstants.GROUP, Resource.getText(GraphWalkerGUI.BUNDLE, "menu.run.group"));
-        putValue(ActionConstants.INDEX, Integer.parseInt(Resource.getText(GraphWalkerGUI.BUNDLE, "menu.run.index")));
-        putValue(ActionConstants.NAME, Resource.getText(GraphWalkerGUI.BUNDLE, "menu.run.label"));
-        putValue(ActionConstants.DESCRIPTION, Resource.getText(GraphWalkerGUI.BUNDLE, "menu.run.description"));
-        putValue(ActionConstants.ICON, Resource.getIcon(GraphWalkerGUI.BUNDLE, "menu.run.icon"));
+    public RunAction(GraphWalkerView view) {
+        super(view);
+        putValue(ActionConstants.GROUP, Resource.getText(GraphWalker.BUNDLE, "menu.run.group"));
+        putValue(ActionConstants.INDEX, Integer.parseInt(Resource.getText(GraphWalker.BUNDLE, "menu.run.index")));
+        putValue(ActionConstants.NAME, Resource.getText(GraphWalker.BUNDLE, "menu.run.label"));
+        putValue(ActionConstants.DESCRIPTION, Resource.getText(GraphWalker.BUNDLE, "menu.run.description"));
+        putValue(ActionConstants.ICON, Resource.getIcon(GraphWalker.BUNDLE, "menu.run.icon"));
+        setEnabled(false);
     }
 
     /** {@inheritDoc} */

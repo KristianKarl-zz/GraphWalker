@@ -26,10 +26,13 @@
 package org.graphwalker.gui.actions;
 
 import org.graphwalker.core.util.Resource;
-import org.graphwalker.gui.GraphWalkerGUI;
+import org.graphwalker.gui.GraphWalker;
+import org.graphwalker.gui.GraphWalkerView;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
 import java.awt.event.ActionEvent;
+import java.io.File;
 
 /**
  * <p>OpenAction class.</p>
@@ -37,22 +40,45 @@ import java.awt.event.ActionEvent;
  * @author nilols
  * @version $Id: $
  */
-public class OpenAction extends AbstractAction {
+public class OpenAction extends GraphWalkerAbstractAction {
+
+    private final JFileChooser myFileChooser = new JFileChooser();
 
     /**
      * <p>Constructor for OpenAction.</p>
      */
-    public OpenAction() {
-        putValue(ActionConstants.GROUP, Resource.getText(GraphWalkerGUI.BUNDLE, "menu.open.group"));
-        putValue(ActionConstants.INDEX, Integer.parseInt(Resource.getText(GraphWalkerGUI.BUNDLE, "menu.open.index")));
-        putValue(ActionConstants.NAME, Resource.getText(GraphWalkerGUI.BUNDLE, "menu.open.label"));
-        putValue(ActionConstants.DESCRIPTION, Resource.getText(GraphWalkerGUI.BUNDLE, "menu.open.description"));
-        putValue(ActionConstants.ICON, Resource.getIcon(GraphWalkerGUI.BUNDLE, "menu.open.icon"));
+    public OpenAction(GraphWalkerView view) {
+        super(view);
+        initFileChooser();
+        putValue(ActionConstants.GROUP, Resource.getText(GraphWalker.BUNDLE, "menu.open.group"));
+        putValue(ActionConstants.INDEX, Integer.parseInt(Resource.getText(GraphWalker.BUNDLE, "menu.open.index")));
+        putValue(ActionConstants.NAME, Resource.getText(GraphWalker.BUNDLE, "menu.open.label"));
+        putValue(ActionConstants.DESCRIPTION, Resource.getText(GraphWalker.BUNDLE, "menu.open.description"));
+        putValue(ActionConstants.ICON, Resource.getIcon(GraphWalker.BUNDLE, "menu.open.icon"));
+    }
+
+    private void initFileChooser() {
+        myFileChooser.setFileFilter(new GraphWalkerFileFilter());
     }
 
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-        // TODO: Fix me (Auto generated)
+        if (JFileChooser.APPROVE_OPTION == myFileChooser.showOpenDialog(getView())) {
+            getView().getController().open(myFileChooser.getSelectedFile());
+        }
+    }
+
+    private class GraphWalkerFileFilter extends FileFilter {
+
+        @Override
+        public boolean accept(File file) {
+            return file.isDirectory() || file.getName().endsWith(".xml");
+        }
+
+        @Override
+        public String getDescription() {
+            return "GraphWalker files"; // TODO: Get from properties
+        }
     }
 }

@@ -26,9 +26,9 @@
 package org.graphwalker.gui.actions;
 
 import org.graphwalker.core.util.Resource;
-import org.graphwalker.gui.GraphWalkerGUI;
+import org.graphwalker.gui.GraphWalker;
+import org.graphwalker.gui.GraphWalkerView;
 
-import javax.swing.*;
 import java.awt.event.ActionEvent;
 
 /**
@@ -37,17 +37,19 @@ import java.awt.event.ActionEvent;
  * @author nilols
  * @version $Id: $
  */
-public class ReloadAction extends AbstractAction {
+public class ReloadAction extends GraphWalkerAbstractAction {
 
     /**
      * <p>Constructor for ReloadAction.</p>
      */
-    public ReloadAction() {
-        putValue(ActionConstants.GROUP, Resource.getText(GraphWalkerGUI.BUNDLE, "menu.reload.group"));
-        putValue(ActionConstants.INDEX, Integer.parseInt(Resource.getText(GraphWalkerGUI.BUNDLE, "menu.reload.index")));
-        putValue(ActionConstants.NAME, Resource.getText(GraphWalkerGUI.BUNDLE, "menu.reload.label"));
-        putValue(ActionConstants.DESCRIPTION, Resource.getText(GraphWalkerGUI.BUNDLE, "menu.reload.description"));
-        putValue(ActionConstants.ICON, Resource.getIcon(GraphWalkerGUI.BUNDLE, "menu.reload.icon"));
+    public ReloadAction(GraphWalkerView view) {
+        super(view);
+        putValue(ActionConstants.GROUP, Resource.getText(GraphWalker.BUNDLE, "menu.reload.group"));
+        putValue(ActionConstants.INDEX, Integer.parseInt(Resource.getText(GraphWalker.BUNDLE, "menu.reload.index")));
+        putValue(ActionConstants.NAME, Resource.getText(GraphWalker.BUNDLE, "menu.reload.label"));
+        putValue(ActionConstants.DESCRIPTION, Resource.getText(GraphWalker.BUNDLE, "menu.reload.description"));
+        putValue(ActionConstants.ICON, Resource.getIcon(GraphWalker.BUNDLE, "menu.reload.icon"));
+        setEnabled(false);
     }
 
     /** {@inheritDoc} */

@@ -25,7 +25,6 @@
  */
 package org.graphwalker.gui;
 
-import com.jidesoft.plaf.LookAndFeelFactory;
 import net.miginfocom.swing.MigLayout;
 import org.graphwalker.core.util.Resource;
 import org.graphwalker.gui.actions.*;
@@ -35,48 +34,47 @@ import org.graphwalker.gui.components.ToolBar;
 import org.graphwalker.gui.components.Workspace;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO: Present model (master detail view to handle multiple models, maybe a "console" output window)
-// TODO: Implements actions
+public class GraphWalkerView extends JFrame {
 
-/**
- * <p>GraphWalkerGUI class.</p>
- *
- * @author nilols
- * @version $Id: $
- */
-public class GraphWalkerGUI extends JFrame {
+    private static final Dimension PREFERRED_SIZE = new Dimension(800, 700);
 
-    /** Constant <code>BUNDLE="gui"</code> */
-    public static final String BUNDLE = "gui";
-
-    private final Workspace myWorkspace = new Workspace();
-    private final StatusBar myStatusBar = new StatusBar();
+    private final GraphWalkerController myController;
     private final List<Action> myActions = new ArrayList<Action>();
+    private final Workspace myWorkspace;
+    private final StatusBar myStatusBar = new StatusBar();
 
-    private GraphWalkerGUI() {
-        super(Resource.getText(BUNDLE, "application.label"));
+    GraphWalkerView(GraphWalkerController controller) {
+        super(Resource.getText(GraphWalker.BUNDLE, "application.label"));
+        myController = controller;
+        myWorkspace = new Workspace(myController);
         getContentPane().setLayout(new MigLayout("fill"));
-        setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setPreferredSize(PREFERRED_SIZE);
+        setLocationRelativeTo(null);
         createActions();
         createComponents();
         pack();
     }
 
-    private void createActions() {
-        myActions.add(new BackAction());
-        myActions.add(new ExitAction());
-        myActions.add(new FirstAction());
-        myActions.add(new NextAction());
-        myActions.add(new OpenAction());
-        myActions.add(new PauseAction());
-        myActions.add(new ReloadAction());
-        myActions.add(new RunAction());
+    public GraphWalkerController getController() {
+        return myController;
     }
-    
+
+    private void createActions() {
+        myActions.add(new BackAction(this));
+        myActions.add(new ExitAction(this));
+        myActions.add(new FirstAction(this));
+        myActions.add(new NextAction(this));
+        myActions.add(new OpenAction(this));
+        myActions.add(new PauseAction(this));
+        myActions.add(new ReloadAction(this));
+        myActions.add(new RunAction(this));
+    }
+
     private void createComponents() {
         addMenu();
         addToolBar();
@@ -100,20 +98,5 @@ public class GraphWalkerGUI extends JFrame {
 
     private void addWorkspace() {
         getContentPane().add(myWorkspace, "grow");
-    }
-
-    /**
-     * <p>main.</p>
-     *
-     * @param arguments an array of {@link java.lang.String} objects.
-     */
-    public static void main(String[] arguments) {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                LookAndFeelFactory.installDefaultLookAndFeelAndExtension();
-                GraphWalkerGUI gui = new GraphWalkerGUI();
-                gui.setVisible(true);
-            }
-        });
     }
 }

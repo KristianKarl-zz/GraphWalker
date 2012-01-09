@@ -25,7 +25,16 @@
  */
 package org.graphwalker.gui.components;
 
+import org.graphwalker.core.configuration.Configuration;
+import org.graphwalker.core.model.Model;
+import org.graphwalker.gui.GraphWalkerController;
+import org.graphwalker.gui.events.ControllerEvent;
+import org.graphwalker.gui.events.ControllerListener;
+
 import javax.swing.*;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeModel;
 import java.awt.*;
 
 /**
@@ -34,15 +43,37 @@ import java.awt.*;
  * @author nilols
  * @version $Id: $
  */
-public class MasterView extends JTree {
+public class MasterView extends JTree implements ControllerListener {
 
-    private static final Dimension PREFERRED_SIZE = new Dimension(200, 200);
+    private static final Dimension PREFERRED_SIZE = new Dimension(400, 200);
+
+    private final DefaultMutableTreeNode myRootNode;
+    private final DefaultTreeModel myTreeModel;
+    private final GraphWalkerController myController;
 
     /**
      * <p>Constructor for MasterView.</p>
      */
-    public MasterView() {
+    public MasterView(GraphWalkerController controller) {
+        myController = controller;
+        myController.addControllerListener(this);
+        myRootNode = new DefaultMutableTreeNode("Models"); //TODO: Get root node name from properties
+        myTreeModel = new DefaultTreeModel(myRootNode);
         setBorder(BorderFactory.createLineBorder(UIManager.getColor("controlShadow")));
         setPreferredSize(PREFERRED_SIZE);
+        setRootVisible(false);
+        setModel(myTreeModel);
+    }
+
+    @Override
+    public void instanceAdded(ControllerEvent event) {
+        Configuration configuration = event.getInstance().getConfiguration();
+        DefaultMutableTreeNode modelNode = new DefaultMutableTreeNode(configuration.getConfigurationFile().getName());
+        for (Model model: configuration.getModels()) {
+            modelNode.add(new DefaultMutableTreeNode(model.getId()));
+        }
+        myTreeModel.insertNodeInto(modelNode, myRootNode, myRootNode.getChildCount());
+
+        updateUI();
     }
 }

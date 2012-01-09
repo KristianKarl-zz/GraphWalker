@@ -23,25 +23,38 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.gui.components;
-
-import org.graphwalker.gui.GraphWalkerController;
-import org.jgraph.JGraph;
+package org.graphwalker.gui;
 
 import javax.swing.*;
 
+// TODO: Implements actions
+
 /**
- * <p>DetailView class.</p>
+ * <p>GraphWalker class.</p>
  *
  * @author nilols
  * @version $Id: $
  */
-public class DetailView extends JGraph {
+public class GraphWalker extends JFrame {
+
+    /** Constant <code>BUNDLE="gui"</code> */
+    public static final String BUNDLE = "gui";
+
+    private static void createAndShowGUI() {
+        GraphWalkerView view = new GraphWalkerView(new GraphWalkerController());
+        view.setVisible(true);
+    }
 
     /**
-     * <p>Constructor for DetailView.</p>
+     * <p>main.</p>
+     *
+     * @param arguments an array of {@link java.lang.String} objects.
      */
-    public DetailView(GraphWalkerController controller) {
-        setBorder(BorderFactory.createLineBorder(UIManager.getColor("controlShadow")));
+    public static void main(String[] arguments) {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                createAndShowGUI();
+            }
+        });
     }
 }

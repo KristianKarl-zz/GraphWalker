@@ -29,9 +29,6 @@ import net.sf.oval.constraint.NotEmpty;
 import net.sf.oval.constraint.NotNull;
 import net.sf.oval.guard.Guarded;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * <p>Abstract AbstractElement class.</p>
  *

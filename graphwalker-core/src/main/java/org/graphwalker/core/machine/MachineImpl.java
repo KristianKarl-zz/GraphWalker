@@ -167,4 +167,5 @@ public class MachineImpl implements Machine {
         myCurrentModel = myConfiguration.getModel(modelId);
         myCurrentElement = myCurrentModel.getStartVertex();
     }
+
 }

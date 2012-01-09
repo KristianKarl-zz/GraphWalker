@@ -26,9 +26,9 @@
 package org.graphwalker.gui.actions;
 
 import org.graphwalker.core.util.Resource;
-import org.graphwalker.gui.GraphWalkerGUI;
+import org.graphwalker.gui.GraphWalker;
+import org.graphwalker.gui.GraphWalkerView;
 
-import javax.swing.*;
 import java.awt.event.ActionEvent;
 
 /**
@@ -37,17 +37,19 @@ import java.awt.event.ActionEvent;
  * @author nilols
  * @version $Id: $
  */
-public class PauseAction extends AbstractAction {
+public class PauseAction extends GraphWalkerAbstractAction {
 
     /**
      * <p>Constructor for PauseAction.</p>
      */
-    public PauseAction() {
-        putValue(ActionConstants.GROUP, Resource.getText(GraphWalkerGUI.BUNDLE, "menu.pause.group"));
-        putValue(ActionConstants.INDEX, Integer.parseInt(Resource.getText(GraphWalkerGUI.BUNDLE, "menu.pause.index")));
-        putValue(ActionConstants.NAME, Resource.getText(GraphWalkerGUI.BUNDLE, "menu.pause.label"));
-        putValue(ActionConstants.DESCRIPTION, Resource.getText(GraphWalkerGUI.BUNDLE, "menu.pause.description"));
-        putValue(ActionConstants.ICON, Resource.getIcon(GraphWalkerGUI.BUNDLE, "menu.pause.icon"));
+    public PauseAction(GraphWalkerView view) {
+        super(view);
+        putValue(ActionConstants.GROUP, Resource.getText(GraphWalker.BUNDLE, "menu.pause.group"));
+        putValue(ActionConstants.INDEX, Integer.parseInt(Resource.getText(GraphWalker.BUNDLE, "menu.pause.index")));
+        putValue(ActionConstants.NAME, Resource.getText(GraphWalker.BUNDLE, "menu.pause.label"));
+        putValue(ActionConstants.DESCRIPTION, Resource.getText(GraphWalker.BUNDLE, "menu.pause.description"));
+        putValue(ActionConstants.ICON, Resource.getIcon(GraphWalker.BUNDLE, "menu.pause.icon"));
+        setEnabled(false);
     }
 
     /** {@inheritDoc} */

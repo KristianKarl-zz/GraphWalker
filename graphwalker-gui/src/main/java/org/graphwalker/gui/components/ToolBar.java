@@ -27,17 +27,14 @@ package org.graphwalker.gui.components;
 
 import com.jidesoft.swing.JideButton;
 import org.graphwalker.core.util.Resource;
-import org.graphwalker.gui.GraphWalkerGUI;
+import org.graphwalker.gui.GraphWalker;
 import org.graphwalker.gui.actions.ActionConstants;
 
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.border.CompoundBorder;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
-import java.awt.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>ToolBar class.</p>
@@ -92,7 +89,7 @@ public class ToolBar extends JToolBar {
     }
     
     private void createToolBar() {
-        String groupOrderString = Resource.getText(GraphWalkerGUI.BUNDLE, "toolbar.group.order");
+        String groupOrderString = Resource.getText(GraphWalker.BUNDLE, "toolbar.group.order");
         String[] groupOrder = groupOrderString.split(",");        
         for (int i=0; i<groupOrder.length; i++) {
             createButtonGroup(myActionGroups.get(groupOrder[i].trim()));

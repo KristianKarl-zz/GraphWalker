@@ -23,25 +23,19 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.gui.components;
+package org.graphwalker.gui.events;
 
-import org.graphwalker.gui.GraphWalkerController;
-import org.jgraph.JGraph;
+import org.graphwalker.core.GraphWalker;
 
-import javax.swing.*;
+import java.util.EventObject;
 
-/**
- * <p>DetailView class.</p>
- *
- * @author nilols
- * @version $Id: $
- */
-public class DetailView extends JGraph {
+public class ControllerEvent extends EventObject {
 
-    /**
-     * <p>Constructor for DetailView.</p>
-     */
-    public DetailView(GraphWalkerController controller) {
-        setBorder(BorderFactory.createLineBorder(UIManager.getColor("controlShadow")));
+    public ControllerEvent(GraphWalker instance) {
+        super(instance);
+    }
+
+    public GraphWalker getInstance() {
+        return (GraphWalker)getSource();
     }
 }

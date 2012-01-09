@@ -26,7 +26,7 @@
 package org.graphwalker.gui.components;
 
 import org.graphwalker.core.util.Resource;
-import org.graphwalker.gui.GraphWalkerGUI;
+import org.graphwalker.gui.GraphWalker;
 import org.graphwalker.gui.actions.ActionConstants;
 
 import javax.swing.*;
@@ -85,7 +85,7 @@ public class MenuBar extends JMenuBar {
     }
 
     private void createMenuBar() {
-        String groupOrderString = Resource.getText(GraphWalkerGUI.BUNDLE, "menubar.group.order");
+        String groupOrderString = Resource.getText(GraphWalker.BUNDLE, "menubar.group.order");
         String[] groupOrder = groupOrderString.split(",");
         for (String groupKey : groupOrder) {
             Collections.reverse(myActionGroups.get(groupKey.trim()));

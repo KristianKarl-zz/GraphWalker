@@ -29,6 +29,7 @@ import org.graphwalker.core.filter.EdgeFilter;
 import org.graphwalker.core.generators.PathGenerator;
 import org.graphwalker.core.model.Model;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -39,6 +40,8 @@ import java.util.List;
  */
 public interface Configuration {
 
+    File getConfigurationFile();
+    void setConfigurationFile(File configurationFile);
     /**
      * <p>getDefaultModel.</p>
      *

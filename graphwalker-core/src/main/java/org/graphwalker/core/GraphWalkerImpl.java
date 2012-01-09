@@ -30,8 +30,10 @@ import org.graphwalker.core.configuration.ConfigurationFactory;
 import org.graphwalker.core.machine.Machine;
 import org.graphwalker.core.machine.MachineImpl;
 import org.graphwalker.core.model.Element;
+import org.graphwalker.core.model.Model;
 
 import java.io.File;
+import java.util.List;
 
 // TODO: Logging
 // TODO: Requirements (if model knows "everything" we don't need to iterate elements)
@@ -102,5 +104,9 @@ public class GraphWalkerImpl implements GraphWalker {
      */
     public Element getNextStep() {
         return getMachine().getNextStep();
+    }
+
+    public Configuration getConfiguration() {
+        return getMachine().getConfiguration();
     }
 }
