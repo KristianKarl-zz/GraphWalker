@@ -28,7 +28,6 @@ package org.graphwalker.gui;
 import net.miginfocom.swing.MigLayout;
 import org.graphwalker.core.util.Resource;
 import org.graphwalker.gui.actions.*;
-import org.graphwalker.gui.components.MenuBar;
 import org.graphwalker.gui.components.StatusBar;
 import org.graphwalker.gui.components.ToolBar;
 import org.graphwalker.gui.components.Workspace;
@@ -38,14 +37,22 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * <p>GraphWalkerView class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public class GraphWalkerView extends JFrame {
 
     private static final Dimension PREFERRED_SIZE = new Dimension(800, 700);
 
     private final GraphWalkerController myController;
-    private final List<Action> myActions = new ArrayList<Action>();
     private final Workspace myWorkspace;
     private final StatusBar myStatusBar = new StatusBar();
+
+    private final List<Action> myFileGroup = new ArrayList<Action>();
+    private final List<Action> myActionGroup = new ArrayList<Action>();
 
     GraphWalkerView(GraphWalkerController controller) {
         super(Resource.getText(GraphWalker.BUNDLE, "application.label"));
@@ -60,19 +67,24 @@ public class GraphWalkerView extends JFrame {
         pack();
     }
 
+    /**
+     * <p>getController.</p>
+     *
+     * @return a {@link org.graphwalker.gui.GraphWalkerController} object.
+     */
     public GraphWalkerController getController() {
         return myController;
     }
 
     private void createActions() {
-        myActions.add(new BackAction(this));
-        myActions.add(new ExitAction(this));
-        myActions.add(new FirstAction(this));
-        myActions.add(new NextAction(this));
-        myActions.add(new OpenAction(this));
-        myActions.add(new PauseAction(this));
-        myActions.add(new ReloadAction(this));
-        myActions.add(new RunAction(this));
+        myFileGroup.add(new ExitAction(this));
+        myFileGroup.add(new OpenAction(this));
+        myActionGroup.add(new BackAction(this));
+        myActionGroup.add(new FirstAction(this));
+        myActionGroup.add(new NextAction(this));
+        myActionGroup.add(new PauseAction(this));
+        myActionGroup.add(new ReloadAction(this));
+        myActionGroup.add(new RunAction(this));
     }
 
     private void createComponents() {
@@ -83,12 +95,13 @@ public class GraphWalkerView extends JFrame {
     }
 
     private void addMenu() {
-        setJMenuBar(new MenuBar(myActions));
+        //setJMenuBar(new MenuBar(myActions));
     }
 
     private void addToolBar() {
-        JToolBar toolBar = new ToolBar(myActions);
-        toolBar.setFloatable(false);
+        ToolBar toolBar = new ToolBar();
+        toolBar.addActionGroup(myFileGroup);
+        toolBar.addActionGroup(myActionGroup);
         getContentPane().add(toolBar, "north");
     }
 

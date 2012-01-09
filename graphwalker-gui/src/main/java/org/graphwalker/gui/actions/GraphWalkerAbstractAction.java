@@ -29,6 +29,12 @@ import org.graphwalker.gui.GraphWalkerView;
 
 import javax.swing.*;
 
+/**
+ * <p>Abstract GraphWalkerAbstractAction class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public abstract class GraphWalkerAbstractAction extends AbstractAction {
     
     private final GraphWalkerView myView;

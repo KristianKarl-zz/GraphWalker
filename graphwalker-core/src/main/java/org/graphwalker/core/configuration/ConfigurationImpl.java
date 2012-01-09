@@ -58,10 +58,16 @@ public class ConfigurationImpl implements Configuration {
         myEdgeFilter = new EdgeFilterImpl(Resource.getText("default.language"));
     }
 
+    /**
+     * <p>getConfigurationFile.</p>
+     *
+     * @return a {@link java.io.File} object.
+     */
     public File getConfigurationFile() {
         return myConfigurationFile;
     }
 
+    /** {@inheritDoc} */
     public void setConfigurationFile(File configurationFile) {
         myConfigurationFile = configurationFile;
     }

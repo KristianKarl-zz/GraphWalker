@@ -26,9 +26,11 @@
 package org.graphwalker.gui.components;
 
 import org.graphwalker.gui.GraphWalkerController;
+import org.graphwalker.gui.actions.ExitAction;
 
 import javax.swing.*;
-import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>ConsoleView class.</p>
@@ -36,15 +38,21 @@ import java.awt.*;
  * @author nilols
  * @version $Id: $
  */
-public class ConsoleView extends JEditorPane {
-
-    private static final Dimension PREFERRED_SIZE = new Dimension(200, 100);
+public class ConsoleView extends AbstractView {
 
     /**
      * <p>Constructor for ConsoleView.</p>
+     *
+     * @param controller a {@link org.graphwalker.gui.GraphWalkerController} object.
      */
     public ConsoleView(GraphWalkerController controller) {
-        setBorder(BorderFactory.createLineBorder(UIManager.getColor("controlShadow")));
-        setPreferredSize(PREFERRED_SIZE);
+        super(new JEditorPane(), ToolBarPlacement.WEST);
+        addActionGroup(createActionGroup());
+    }
+    
+    private List<Action> createActionGroup() {
+        List<Action> actionGroup = new ArrayList<Action>();
+        actionGroup.add(new ExitAction(null));
+        return actionGroup;
     }
 }

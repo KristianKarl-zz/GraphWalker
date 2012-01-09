@@ -46,6 +46,8 @@ public class OpenAction extends GraphWalkerAbstractAction {
 
     /**
      * <p>Constructor for OpenAction.</p>
+     *
+     * @param view a {@link org.graphwalker.gui.GraphWalkerView} object.
      */
     public OpenAction(GraphWalkerView view) {
         super(view);

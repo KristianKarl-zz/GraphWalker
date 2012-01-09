@@ -26,9 +26,12 @@
 package org.graphwalker.gui.components;
 
 import org.graphwalker.gui.GraphWalkerController;
+import org.graphwalker.gui.actions.ExitAction;
 import org.jgraph.JGraph;
 
 import javax.swing.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>DetailView class.</p>
@@ -36,12 +39,21 @@ import javax.swing.*;
  * @author nilols
  * @version $Id: $
  */
-public class DetailView extends JGraph {
+public class DetailView extends AbstractView {
 
     /**
      * <p>Constructor for DetailView.</p>
+     *
+     * @param controller a {@link org.graphwalker.gui.GraphWalkerController} object.
      */
     public DetailView(GraphWalkerController controller) {
-        setBorder(BorderFactory.createLineBorder(UIManager.getColor("controlShadow")));
+        super(new JGraph(), ToolBarPlacement.NORTH);
+        addActionGroup(createActionGroup());
+    }
+
+    private List<Action> createActionGroup() {
+        List<Action> actionGroup = new ArrayList<Action>();
+        actionGroup.add(new ExitAction(null));
+        return actionGroup;
     }
 }

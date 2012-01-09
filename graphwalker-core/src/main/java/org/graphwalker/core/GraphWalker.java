@@ -49,5 +49,10 @@ public interface GraphWalker {
      */
     Element getNextStep();
 
+    /**
+     * <p>getConfiguration.</p>
+     *
+     * @return a {@link org.graphwalker.core.configuration.Configuration} object.
+     */
     Configuration getConfiguration();
 }

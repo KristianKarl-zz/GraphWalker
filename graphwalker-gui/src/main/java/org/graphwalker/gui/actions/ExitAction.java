@@ -41,6 +41,8 @@ public class ExitAction extends GraphWalkerAbstractAction {
 
     /**
      * <p>Constructor for ExitAction.</p>
+     *
+     * @param view a {@link org.graphwalker.gui.GraphWalkerView} object.
      */
     public ExitAction(GraphWalkerView view) {
         super(view);

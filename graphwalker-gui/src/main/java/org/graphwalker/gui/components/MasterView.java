@@ -28,14 +28,15 @@ package org.graphwalker.gui.components;
 import org.graphwalker.core.configuration.Configuration;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.gui.GraphWalkerController;
+import org.graphwalker.gui.actions.ExitAction;
 import org.graphwalker.gui.events.ControllerEvent;
 import org.graphwalker.gui.events.ControllerListener;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreeModel;
 import java.awt.*;
+import java.util.ArrayList;
 
 /**
  * <p>MasterView class.</p>
@@ -43,7 +44,7 @@ import java.awt.*;
  * @author nilols
  * @version $Id: $
  */
-public class MasterView extends JTree implements ControllerListener {
+public class MasterView extends AbstractView implements ControllerListener {
 
     private static final Dimension PREFERRED_SIZE = new Dimension(400, 200);
 
@@ -53,18 +54,30 @@ public class MasterView extends JTree implements ControllerListener {
 
     /**
      * <p>Constructor for MasterView.</p>
+     *
+     * @param controller a {@link org.graphwalker.gui.GraphWalkerController} object.
      */
     public MasterView(GraphWalkerController controller) {
+        super(new JTree(), ToolBarPlacement.NORTH);
         myController = controller;
         myController.addControllerListener(this);
         myRootNode = new DefaultMutableTreeNode("Models"); //TODO: Get root node name from properties
         myTreeModel = new DefaultTreeModel(myRootNode);
-        setBorder(BorderFactory.createLineBorder(UIManager.getColor("controlShadow")));
-        setPreferredSize(PREFERRED_SIZE);
-        setRootVisible(false);
-        setModel(myTreeModel);
+        getTree().setModel(myTreeModel);
+        addActionGroup(createActionGroup());
     }
 
+    private JTree getTree() {
+        return (JTree)getComponent();
+    }
+
+    private java.util.List<Action> createActionGroup() {
+        java.util.List<Action> actionGroup = new ArrayList<Action>();
+        actionGroup.add(new ExitAction(null));
+        return actionGroup;
+    }
+
+    /** {@inheritDoc} */
     @Override
     public void instanceAdded(ControllerEvent event) {
         Configuration configuration = event.getInstance().getConfiguration();

@@ -35,6 +35,12 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * <p>GraphWalkerController class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public class GraphWalkerController {
 
     private final List<ControllerListener> myControllerListeners = new ArrayList<ControllerListener>();
@@ -43,6 +49,11 @@ public class GraphWalkerController {
     GraphWalkerController() {
     }
 
+    /**
+     * <p>open.</p>
+     *
+     * @param file a {@link java.io.File} object.
+     */
     public void open(File file) {    //TODO: if the same file is opened twice only one model is created (don't recreate already open configurations)
         addModel(new GraphWalkerImpl(ConfigurationFactory.create(file)));
     }
@@ -52,14 +63,29 @@ public class GraphWalkerController {
         fireInstanceAdded(model);
     }
 
+    /**
+     * <p>addControllerListener.</p>
+     *
+     * @param controllerListener a {@link org.graphwalker.gui.events.ControllerListener} object.
+     */
     public synchronized void addControllerListener(ControllerListener controllerListener) {
         myControllerListeners.add(controllerListener);
     }
 
+    /**
+     * <p>removeControllerListener.</p>
+     *
+     * @param controllerListener a {@link org.graphwalker.gui.events.ControllerListener} object.
+     */
     public synchronized void removeControllerListener(ControllerListener controllerListener) {
         myControllerListeners.remove(controllerListener);
     }
 
+    /**
+     * <p>fireInstanceAdded.</p>
+     *
+     * @param model a {@link org.graphwalker.core.GraphWalker} object.
+     */
     protected void fireInstanceAdded(GraphWalker model) {
         if (myControllerListeners == null) {
             return;

@@ -29,12 +29,28 @@ import org.graphwalker.core.GraphWalker;
 
 import java.util.EventObject;
 
+/**
+ * <p>ControllerEvent class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public class ControllerEvent extends EventObject {
 
+    /**
+     * <p>Constructor for ControllerEvent.</p>
+     *
+     * @param instance a {@link org.graphwalker.core.GraphWalker} object.
+     */
     public ControllerEvent(GraphWalker instance) {
         super(instance);
     }
 
+    /**
+     * <p>getInstance.</p>
+     *
+     * @return a {@link org.graphwalker.core.GraphWalker} object.
+     */
     public GraphWalker getInstance() {
         return (GraphWalker)getSource();
     }

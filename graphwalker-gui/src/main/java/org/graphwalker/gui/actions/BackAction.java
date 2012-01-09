@@ -41,6 +41,8 @@ public class BackAction extends GraphWalkerAbstractAction {
 
     /**
      * <p>Constructor for BackAction.</p>
+     *
+     * @param view a {@link org.graphwalker.gui.GraphWalkerView} object.
      */
     public BackAction(GraphWalkerView view) {
         super(view);

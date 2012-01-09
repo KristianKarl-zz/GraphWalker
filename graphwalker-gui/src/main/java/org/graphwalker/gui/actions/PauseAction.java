@@ -41,6 +41,8 @@ public class PauseAction extends GraphWalkerAbstractAction {
 
     /**
      * <p>Constructor for PauseAction.</p>
+     *
+     * @param view a {@link org.graphwalker.gui.GraphWalkerView} object.
      */
     public PauseAction(GraphWalkerView view) {
         super(view);

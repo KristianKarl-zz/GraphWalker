@@ -106,6 +106,11 @@ public class GraphWalkerImpl implements GraphWalker {
         return getMachine().getNextStep();
     }
 
+    /**
+     * <p>getConfiguration.</p>
+     *
+     * @return a {@link org.graphwalker.core.configuration.Configuration} object.
+     */
     public Configuration getConfiguration() {
         return getMachine().getConfiguration();
     }

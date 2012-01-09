@@ -41,6 +41,8 @@ public class FirstAction extends GraphWalkerAbstractAction {
 
     /**
      * <p>Constructor for FirstAction.</p>
+     *
+     * @param view a {@link org.graphwalker.gui.GraphWalkerView} object.
      */
     public FirstAction(GraphWalkerView view) {
         super(view);

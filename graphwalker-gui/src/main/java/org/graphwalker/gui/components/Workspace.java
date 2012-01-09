@@ -45,13 +45,15 @@ public class Workspace extends JPanel {
 
     /**
      * <p>Constructor for Workspace.</p>
+     *
+     * @param controller a {@link org.graphwalker.gui.GraphWalkerController} object.
      */
     public Workspace(GraphWalkerController controller) {
         super(new GridLayout(1,1));
         myMasterView = new MasterView(controller);
         myDetailView = new DetailView(controller);
         myConsoleView = new ConsoleView(controller);
-        setBorder(BorderFactory.createEmptyBorder(0, 2, 2, 2));
+        setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
         JideSplitPane hSplitPane = createSplitPane(JideSplitPane.HORIZONTAL_SPLIT, myMasterView, myDetailView);
         JideSplitPane vSplitPane = createSplitPane(JideSplitPane.VERTICAL_SPLIT, hSplitPane, myConsoleView);
         add(vSplitPane);
@@ -59,8 +61,8 @@ public class Workspace extends JPanel {
 
     private JideSplitPane createSplitPane(int orientation, Component firstComponent, Component secondComponent) {
         JideSplitPane splitPane = new JideSplitPane(orientation);
-        splitPane.setOneTouchExpandable(true);
-        splitPane.setShowGripper(true);
+        //splitPane.setOneTouchExpandable(true);
+        //splitPane.setShowGripper(true);
         splitPane.add(firstComponent);
         splitPane.add(secondComponent);
         return splitPane;

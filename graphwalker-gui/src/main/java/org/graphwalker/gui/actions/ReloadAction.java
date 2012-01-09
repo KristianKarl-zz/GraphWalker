@@ -41,6 +41,8 @@ public class ReloadAction extends GraphWalkerAbstractAction {
 
     /**
      * <p>Constructor for ReloadAction.</p>
+     *
+     * @param view a {@link org.graphwalker.gui.GraphWalkerView} object.
      */
     public ReloadAction(GraphWalkerView view) {
         super(view);

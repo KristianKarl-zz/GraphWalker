@@ -27,8 +27,19 @@ package org.graphwalker.gui.events;
 
 import java.util.EventListener;
 
+/**
+ * <p>ControllerListener interface.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public interface ControllerListener extends EventListener {
   
+    /**
+     * <p>instanceAdded.</p>
+     *
+     * @param event a {@link org.graphwalker.gui.events.ControllerEvent} object.
+     */
     void instanceAdded(ControllerEvent event);
     //void instanceRemoved(ModelEvent event);
 

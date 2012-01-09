@@ -40,7 +40,17 @@ import java.util.List;
  */
 public interface Configuration {
 
+    /**
+     * <p>getConfigurationFile.</p>
+     *
+     * @return a {@link java.io.File} object.
+     */
     File getConfigurationFile();
+    /**
+     * <p>setConfigurationFile.</p>
+     *
+     * @param configurationFile a {@link java.io.File} object.
+     */
     void setConfigurationFile(File configurationFile);
     /**
      * <p>getDefaultModel.</p>

@@ -41,6 +41,8 @@ public class RunAction extends GraphWalkerAbstractAction {
 
     /**
      * <p>Constructor for RunAction.</p>
+     *
+     * @param view a {@link org.graphwalker.gui.GraphWalkerView} object.
      */
     public RunAction(GraphWalkerView view) {
         super(view);

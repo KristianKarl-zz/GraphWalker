@@ -41,6 +41,8 @@ public class NextAction extends GraphWalkerAbstractAction {
 
     /**
      * <p>Constructor for NextAction.</p>
+     *
+     * @param view a {@link org.graphwalker.gui.GraphWalkerView} object.
      */
     public NextAction(GraphWalkerView view) {
         super(view);
