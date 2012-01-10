@@ -90,7 +90,7 @@ public class Resource {
      * @return a {@link javax.swing.Icon} object.
      */
     public static Icon getIcon(@NotNull @MinLength(1) final String bundle, @NotNull @MinLength(1) final String key) {
-        return new ImageIcon(getResource(getText(bundle, key)));
+        return getIcon(getText(bundle, key));
     }
 
     /**
@@ -100,7 +100,12 @@ public class Resource {
      * @return a {@link javax.swing.Icon} object.
      */
     public static Icon getIcon(@NotNull @MinLength(1) final String filename) {
-        return new ImageIcon(getResource(filename));
+        File file = createFile(filename);
+        if (file.exists()) {
+            return new ImageIcon(file.getPath());
+        } else {
+            return new ImageIcon(getResource(file.getPath()).getPath());
+        }
     }
 
     /**
@@ -110,22 +115,33 @@ public class Resource {
      * @return a {@link java.io.File} object.
      */
     public static File getFile(@NotNull @MinLength(1) final String filename) {
-        File file = new File(filename);
+        File file = createFile(filename);
         if (file.exists()) {
             return file;
         } else {
-            return new File(getResource(filename).getFile());
+            return getResource(file.getPath());
         }
     }
+
+    private static String[] splitPath(String filename) {
+        return filename.split("[\\\\/]");
+    }
     
-    private static URL getResource(final String filename) {
-        String filenameWithSeparator = filename;
-        if (!filenameWithSeparator.startsWith(System.getProperty("file.separator"))) {
-            filenameWithSeparator = System.getProperty("file.separator")+filename;
+    private static File createFile(String filename) {
+        File createdFile = null;
+        for (String part: splitPath(filename)) {
+            createdFile = new File(createdFile, part);
         }
-        URL resource = Resource.class.getResource(filenameWithSeparator);
+        return createdFile;
+    }
+
+    private static File getResource(final String filename) {
+        URL resource = Resource.class.getResource(filename);
+        if (null == resource) {
+            resource = Thread.currentThread().getContextClassLoader().getResource(filename);
+        }
         if (null != resource) {
-            return resource;
+            return new File(resource.getFile());
         }
         throw new ResourceException(Resource.getText("exception.file.missing"));
     }
