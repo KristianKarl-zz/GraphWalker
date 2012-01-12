@@ -25,6 +25,7 @@
  */
 package org.graphwalker.core.model;
 
+import org.graphwalker.core.Bundle;
 import org.graphwalker.core.util.Resource;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -128,7 +129,7 @@ public class ModelFactory {
         Matcher matcher = pattern.matcher(text);
         if (matcher.find()) {
             String label = matcher.group(1);
-            if (!Resource.getText("label.blocked").equals(label)) {
+            if (!Resource.getText(Bundle.NAME, "label.blocked").equals(label)) {
                 return label;
             }
         }
@@ -136,7 +137,7 @@ public class ModelFactory {
     }
 
     private void parseSwitchModelId(Vertex vertex, String text) {
-        Pattern pattern = Pattern.compile(Resource.getText("label.switch.model")+"\\((.*)\\)", Pattern.MULTILINE);
+        Pattern pattern = Pattern.compile(Resource.getText(Bundle.NAME, "label.switch.model")+"\\((.*)\\)", Pattern.MULTILINE);
         Matcher matcher = pattern.matcher(text);
         if (matcher.find()) {
             vertex.setSwitchModelId(matcher.group(1));
@@ -144,7 +145,7 @@ public class ModelFactory {
     }
     
     private void parseRequirements(Vertex vertex, String text) {
-        Pattern pattern = Pattern.compile(Resource.getText("label.requirement")+"\\((.*)\\)", Pattern.MULTILINE);
+        Pattern pattern = Pattern.compile(Resource.getText(Bundle.NAME, "label.requirement")+"\\((.*)\\)", Pattern.MULTILINE);
         Matcher matcher = pattern.matcher(text);
         while (matcher.find()) {
             vertex.addRequirement(new Requirement(matcher.group(1)));
@@ -172,7 +173,7 @@ public class ModelFactory {
     }
     
     private void parseBlocked(Edge edge, String text) {
-        Pattern pattern = Pattern.compile(Resource.getText("label.blocked"), Pattern.MULTILINE);
+        Pattern pattern = Pattern.compile(Resource.getText(Bundle.NAME, "label.blocked"), Pattern.MULTILINE);
         Matcher matcher = pattern.matcher(text);
         edge.setBlocked(matcher.find());
     }

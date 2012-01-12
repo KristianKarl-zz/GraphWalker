@@ -28,6 +28,7 @@ package org.graphwalker.core.model;
 import net.sf.oval.constraint.NotEmpty;
 import net.sf.oval.constraint.NotNull;
 import net.sf.oval.guard.Guarded;
+import org.graphwalker.core.Bundle;
 import org.graphwalker.core.algorithms.FloydWarshall;
 import org.graphwalker.core.generators.PathGenerator;
 import org.graphwalker.core.util.Resource;
@@ -204,11 +205,11 @@ public class ModelImpl implements Model {
      * @return a {@link org.graphwalker.core.model.Vertex} object.
      */
     public Vertex getStartVertex() {
-        Vertex vertex = getVertexByName(Resource.getText("default.vertex"));
+        Vertex vertex = getVertexByName(Resource.getText(Bundle.NAME, "default.vertex"));
         if (null != vertex) {
             return vertex;
         }
-        throw new ModelException(Resource.getText("exception.default.vertex.missing"));
+        throw new ModelException(Resource.getText(Bundle.NAME, "exception.default.vertex.missing"));
     }
     
     /**

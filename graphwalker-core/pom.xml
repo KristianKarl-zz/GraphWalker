@@ -86,6 +86,7 @@
                             <schemaDirectory>${basedir}/src/main/resources</schemaDirectory>
                             <schemaFiles>graphwalker.xsd</schemaFiles>
                             <packageName>org.graphwalker.core.configuration</packageName>
+
                         </configuration>
                     </execution>
                 </executions>

@@ -25,6 +25,7 @@
  */
 package org.graphwalker.core.filter;
 
+import org.graphwalker.core.Bundle;
 import org.graphwalker.core.model.Action;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.util.Resource;
@@ -72,9 +73,9 @@ public class EdgeFilterImpl implements EdgeFilter {
             try {
                 return (Boolean)myScriptEngine.eval(edge.getEdgeGuard().getScript());
             } catch (ScriptException e) {
-                throw new EdgeFilterException(Resource.getText("exception.script.error"));
+                throw new EdgeFilterException(Resource.getText(Bundle.NAME, "exception.script.error"));
             } catch (NullPointerException e) {
-                throw new EdgeFilterException(Resource.getText("exception.script.engine.missing"));
+                throw new EdgeFilterException(Resource.getText(Bundle.NAME, "exception.script.engine.missing"));
             }
         }
         return true;

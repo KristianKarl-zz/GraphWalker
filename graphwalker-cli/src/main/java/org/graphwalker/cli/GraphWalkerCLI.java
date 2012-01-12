@@ -38,9 +38,6 @@ import java.io.File;
  */
 public class GraphWalkerCLI {
 
-    /** Constant <code>BUNDLE="cli"</code> */
-    public static final String BUNDLE = "cli";
-
     private final Options myOptions = new Options();
     private final CommandLineParser myParser = new PosixParser();
 
@@ -49,22 +46,22 @@ public class GraphWalkerCLI {
     }
 
     private void createOptions() {
-        myOptions.addOption(Resource.getText(BUNDLE, "option.file.mnemonic")
-                , Resource.getText(BUNDLE, "option.file.label")
+        myOptions.addOption(Resource.getText(Bundle.NAME, "option.file.mnemonic")
+                , Resource.getText(Bundle.NAME, "option.file.label")
                 , true
-                , Resource.getText(BUNDLE, "option.file.description"));
+                , Resource.getText(Bundle.NAME, "option.file.description"));
 
-        myOptions.addOption(Resource.getText(BUNDLE, "option.help.mnemonic")
-                , Resource.getText(BUNDLE, "option.help.label")
+        myOptions.addOption(Resource.getText(Bundle.NAME, "option.help.mnemonic")
+                , Resource.getText(Bundle.NAME, "option.help.label")
                 , false
-                , Resource.getText(BUNDLE, "option.help.description"));
+                , Resource.getText(Bundle.NAME, "option.help.description"));
     }
 
     private void parse(String[] arguments) {
         try {
             CommandLine commandLine = myParser.parse(myOptions, arguments);
-            if (commandLine.hasOption(Resource.getText(BUNDLE, "option.file.mnemonic"))) {
-                executeFile(commandLine.getOptionValue(Resource.getText(BUNDLE, "option.file.mnemonic")));
+            if (commandLine.hasOption(Resource.getText(Bundle.NAME, "option.file.mnemonic"))) {
+                executeFile(commandLine.getOptionValue(Resource.getText(Bundle.NAME, "option.file.mnemonic")));
             } else {
                 printHelp();
             }
@@ -80,7 +77,7 @@ public class GraphWalkerCLI {
     
     private void printHelp() {
         HelpFormatter helpFormatter = new HelpFormatter();
-        helpFormatter.printHelp(Resource.getText(BUNDLE, "options.label"), myOptions);
+        helpFormatter.printHelp(Resource.getText(Bundle.NAME, "options.label"), myOptions);
     }
 
     /**

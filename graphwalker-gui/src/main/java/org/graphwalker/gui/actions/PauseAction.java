@@ -26,6 +26,7 @@
 package org.graphwalker.gui.actions;
 
 import org.graphwalker.core.util.Resource;
+import org.graphwalker.gui.Bundle;
 import org.graphwalker.gui.GraphWalker;
 import org.graphwalker.gui.GraphWalkerView;
 
@@ -46,11 +47,11 @@ public class PauseAction extends GraphWalkerAbstractAction {
      */
     public PauseAction(GraphWalkerView view) {
         super(view);
-        putValue(ActionConstants.GROUP, Resource.getText(GraphWalker.BUNDLE, "menu.pause.group"));
-        putValue(ActionConstants.INDEX, Integer.parseInt(Resource.getText(GraphWalker.BUNDLE, "menu.pause.index")));
-        putValue(ActionConstants.NAME, Resource.getText(GraphWalker.BUNDLE, "menu.pause.label"));
-        putValue(ActionConstants.DESCRIPTION, Resource.getText(GraphWalker.BUNDLE, "menu.pause.description"));
-        putValue(ActionConstants.ICON, Resource.getIcon(GraphWalker.BUNDLE, "menu.pause.icon"));
+        putValue(ActionConstants.GROUP, Resource.getText(Bundle.NAME, "menu.pause.group"));
+        putValue(ActionConstants.INDEX, Integer.parseInt(Resource.getText(Bundle.NAME, "menu.pause.index")));
+        putValue(ActionConstants.NAME, Resource.getText(Bundle.NAME, "menu.pause.label"));
+        putValue(ActionConstants.DESCRIPTION, Resource.getText(Bundle.NAME, "menu.pause.description"));
+        putValue(ActionConstants.ICON, Resource.getIcon(Bundle.NAME, "menu.pause.icon"));
         setEnabled(false);
     }
 

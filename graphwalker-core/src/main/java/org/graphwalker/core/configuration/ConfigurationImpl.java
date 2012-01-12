@@ -25,6 +25,7 @@
  */
 package org.graphwalker.core.configuration;
 
+import org.graphwalker.core.Bundle;
 import org.graphwalker.core.filter.EdgeFilter;
 import org.graphwalker.core.filter.EdgeFilterImpl;
 import org.graphwalker.core.generators.PathGenerator;
@@ -55,7 +56,7 @@ public class ConfigurationImpl implements Configuration {
      * <p>Constructor for ConfigurationImpl.</p>
      */
     public ConfigurationImpl() {
-        myEdgeFilter = new EdgeFilterImpl(Resource.getText("default.language"));
+        myEdgeFilter = new EdgeFilterImpl(Resource.getText(Bundle.NAME, "default.language"));
     }
 
     /**

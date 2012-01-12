@@ -26,6 +26,7 @@
 package org.graphwalker.gui.actions;
 
 import org.graphwalker.core.util.Resource;
+import org.graphwalker.gui.Bundle;
 import org.graphwalker.gui.GraphWalker;
 import org.graphwalker.gui.GraphWalkerView;
 
@@ -46,11 +47,11 @@ public class ExitAction extends GraphWalkerAbstractAction {
      */
     public ExitAction(GraphWalkerView view) {
         super(view);
-        putValue(ActionConstants.GROUP, Resource.getText(GraphWalker.BUNDLE, "menu.exit.group"));
-        putValue(ActionConstants.INDEX, Integer.parseInt(Resource.getText(GraphWalker.BUNDLE, "menu.exit.index")));
-        putValue(ActionConstants.NAME, Resource.getText(GraphWalker.BUNDLE, "menu.exit.label"));
-        putValue(ActionConstants.DESCRIPTION, Resource.getText(GraphWalker.BUNDLE, "menu.exit.description"));
-        putValue(ActionConstants.ICON, Resource.getIcon(GraphWalker.BUNDLE, "menu.exit.icon"));
+        putValue(ActionConstants.GROUP, Resource.getText(Bundle.NAME, "menu.exit.group"));
+        putValue(ActionConstants.INDEX, Integer.parseInt(Resource.getText(Bundle.NAME, "menu.exit.index")));
+        putValue(ActionConstants.NAME, Resource.getText(Bundle.NAME, "menu.exit.label"));
+        putValue(ActionConstants.DESCRIPTION, Resource.getText(Bundle.NAME, "menu.exit.description"));
+        putValue(ActionConstants.ICON, Resource.getIcon(Bundle.NAME, "menu.exit.icon"));
     }
     
     /** {@inheritDoc} */

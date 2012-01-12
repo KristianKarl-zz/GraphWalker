@@ -37,9 +37,6 @@ import javax.swing.*;
  */
 public class GraphWalker extends JFrame {
 
-    /** Constant <code>BUNDLE="gui"</code> */
-    public static final String BUNDLE = "gui";
-
     private static void createAndShowGUI() {
         GraphWalkerView view = new GraphWalkerView(new GraphWalkerController());
         view.setVisible(true);

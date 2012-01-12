@@ -25,6 +25,7 @@
  */
 package org.graphwalker.core.generators;
 
+import org.graphwalker.core.Bundle;
 import org.graphwalker.core.util.Resource;
 
 /**
@@ -48,6 +49,6 @@ public class PathGeneratorFactory {
         if ("Random".equalsIgnoreCase(type)) {
             return new RandomPath();
         }
-        throw new PathGeneratorException(Resource.getText("exception.generator.unknown"));
+        throw new PathGeneratorException(Resource.getText(Bundle.NAME, "exception.generator.unknown"));
     }
 }

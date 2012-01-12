@@ -26,6 +26,7 @@
 package org.graphwalker.gui.actions;
 
 import org.graphwalker.core.util.Resource;
+import org.graphwalker.gui.Bundle;
 import org.graphwalker.gui.GraphWalker;
 import org.graphwalker.gui.GraphWalkerView;
 
@@ -52,11 +53,11 @@ public class OpenAction extends GraphWalkerAbstractAction {
     public OpenAction(GraphWalkerView view) {
         super(view);
         initFileChooser();
-        putValue(ActionConstants.GROUP, Resource.getText(GraphWalker.BUNDLE, "menu.open.group"));
-        putValue(ActionConstants.INDEX, Integer.parseInt(Resource.getText(GraphWalker.BUNDLE, "menu.open.index")));
-        putValue(ActionConstants.NAME, Resource.getText(GraphWalker.BUNDLE, "menu.open.label"));
-        putValue(ActionConstants.DESCRIPTION, Resource.getText(GraphWalker.BUNDLE, "menu.open.description"));
-        putValue(ActionConstants.ICON, Resource.getIcon(GraphWalker.BUNDLE, "menu.open.icon"));
+        putValue(ActionConstants.GROUP, Resource.getText(Bundle.NAME, "menu.open.group"));
+        putValue(ActionConstants.INDEX, Integer.parseInt(Resource.getText(Bundle.NAME, "menu.open.index")));
+        putValue(ActionConstants.NAME, Resource.getText(Bundle.NAME, "menu.open.label"));
+        putValue(ActionConstants.DESCRIPTION, Resource.getText(Bundle.NAME, "menu.open.description"));
+        putValue(ActionConstants.ICON, Resource.getIcon(Bundle.NAME, "menu.open.icon"));
     }
 
     private void initFileChooser() {

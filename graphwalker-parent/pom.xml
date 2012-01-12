@@ -77,6 +77,8 @@
         <module>../graphwalker-cli</module>
         <module>../graphwalker-gui</module>
         <module>../graphwalker-webservice</module>
+        <module>../maven-graphwalker-plugin</module>
+        <module>../graphwalker-example</module>
     </modules>
 
     <dependencyManagement>

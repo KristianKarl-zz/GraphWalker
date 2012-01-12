@@ -25,6 +25,7 @@
  */
 package org.graphwalker.core.configuration;
 
+import org.graphwalker.core.Bundle;
 import org.graphwalker.core.conditions.All;
 import org.graphwalker.core.conditions.Any;
 import org.graphwalker.core.conditions.StopCondition;
@@ -122,11 +123,11 @@ public class ConfigurationFactory {
                 Class clazz = Class.forName(modelType.getClazz());
                 model.setImplementation(clazz.newInstance());
             } catch (ClassNotFoundException e) {
-                throw new ConfigurationException(Resource.getText("exception.class.missing"));
+                throw new ConfigurationException(Resource.getText(Bundle.NAME, "exception.class.missing"));
             } catch (InstantiationException e) {
-                throw new ConfigurationException(Resource.getText("exception.class.instantiation"));
+                throw new ConfigurationException(Resource.getText(Bundle.NAME, "exception.class.instantiation"));
             } catch (IllegalAccessException e) {
-                throw new ConfigurationException(Resource.getText("exception.class.instantiation"));
+                throw new ConfigurationException(Resource.getText(Bundle.NAME, "exception.class.instantiation"));
             }
         }
         return model;
@@ -141,7 +142,7 @@ public class ConfigurationFactory {
         } else if (null != pathGeneratorType.getStopCondition()) {
             pathGenerator.setStopCondition(parse(pathGeneratorType.getStopCondition()));
         } else {
-            throw new ConfigurationException(Resource.getText("exception.condition.missing"));
+            throw new ConfigurationException(Resource.getText(Bundle.NAME, "exception.condition.missing"));
         }
         return pathGenerator;
     }

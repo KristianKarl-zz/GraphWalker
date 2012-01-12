@@ -25,6 +25,7 @@
  */
 package org.graphwalker.core.machine;
 
+import org.graphwalker.core.Bundle;
 import org.graphwalker.core.conditions.StopCondition;
 import org.graphwalker.core.configuration.Configuration;
 import org.graphwalker.core.filter.EdgeFilter;
@@ -99,14 +100,14 @@ public class MachineImpl implements Machine {
         } else if (null != getConfiguration().getDefaultPathGenerator()) {
             return getConfiguration().getDefaultPathGenerator();
         }
-        throw new MachineException(Resource.getText("exception.generator.missing"));
+        throw new MachineException(Resource.getText(Bundle.NAME, "exception.generator.missing"));
     }
 
     private StopCondition getStopCondition(PathGenerator pathGenerator) {
         if (null != pathGenerator.getStopCondition()) {
             return pathGenerator.getStopCondition();
         }
-        throw new MachineException(Resource.getText("exception.condition.missing"));
+        throw new MachineException(Resource.getText(Bundle.NAME, "exception.condition.missing"));
     }
 
     /**
@@ -185,11 +186,11 @@ public class MachineImpl implements Machine {
                         method.invoke(object);
                     }
                 } catch (InvocationTargetException e) {
-                    throw new MachineException(Resource.getText("exception.method.invocation"));
+                    throw new MachineException(Resource.getText(Bundle.NAME, "exception.method.invocation"));
                 } catch (NoSuchMethodException e) {
-                    throw new MachineException(Resource.getText("exception.method.missing"));
+                    throw new MachineException(Resource.getText(Bundle.NAME, "exception.method.missing"));
                 } catch (IllegalAccessException e) {
-                    throw new MachineException(Resource.getText("exception.method.access"));
+                    throw new MachineException(Resource.getText(Bundle.NAME, "exception.method.access"));
                 }
             }
         }

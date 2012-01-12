@@ -55,7 +55,7 @@ public class GraphWalkerView extends JFrame {
     private final List<Action> myActionGroup = new ArrayList<Action>();
 
     GraphWalkerView(GraphWalkerController controller) {
-        super(Resource.getText(GraphWalker.BUNDLE, "application.label"));
+        super(Resource.getText(Bundle.NAME, "application.label"));
         myController = controller;
         myWorkspace = new Workspace(myController);
         getContentPane().setLayout(new MigLayout("fill"));

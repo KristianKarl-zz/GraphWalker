@@ -26,6 +26,7 @@
 package org.graphwalker.gui.actions;
 
 import org.graphwalker.core.util.Resource;
+import org.graphwalker.gui.Bundle;
 import org.graphwalker.gui.GraphWalker;
 import org.graphwalker.gui.GraphWalkerView;
 
@@ -46,11 +47,11 @@ public class NextAction extends GraphWalkerAbstractAction {
      */
     public NextAction(GraphWalkerView view) {
         super(view);
-        putValue(ActionConstants.GROUP, Resource.getText(GraphWalker.BUNDLE, "menu.next.group"));
-        putValue(ActionConstants.INDEX, Integer.parseInt(Resource.getText(GraphWalker.BUNDLE, "menu.next.index")));
-        putValue(ActionConstants.NAME, Resource.getText(GraphWalker.BUNDLE, "menu.next.label"));
-        putValue(ActionConstants.DESCRIPTION, Resource.getText(GraphWalker.BUNDLE, "menu.next.description"));
-        putValue(ActionConstants.ICON, Resource.getIcon(GraphWalker.BUNDLE, "menu.next.icon"));
+        putValue(ActionConstants.GROUP, Resource.getText(Bundle.NAME, "menu.next.group"));
+        putValue(ActionConstants.INDEX, Integer.parseInt(Resource.getText(Bundle.NAME, "menu.next.index")));
+        putValue(ActionConstants.NAME, Resource.getText(Bundle.NAME, "menu.next.label"));
+        putValue(ActionConstants.DESCRIPTION, Resource.getText(Bundle.NAME, "menu.next.description"));
+        putValue(ActionConstants.ICON, Resource.getIcon(Bundle.NAME, "menu.next.icon"));
         setEnabled(false);
     }
 

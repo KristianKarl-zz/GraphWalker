@@ -25,6 +25,7 @@
  */
 package org.graphwalker.core.generators;
 
+import org.graphwalker.core.Bundle;
 import org.graphwalker.core.machine.Machine;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.util.Resource;
@@ -48,6 +49,6 @@ public class RandomPath extends AbstractPathGenerator {
         if (0<childElements.size()) {
             return childElements.get(myRandomGenerator.nextInt(childElements.size()));
         }
-        throw new PathGeneratorException(Resource.getText("exception.generator.path.missing"));
+        throw new PathGeneratorException(Resource.getText(Bundle.NAME, "exception.generator.path.missing"));
     }
 }

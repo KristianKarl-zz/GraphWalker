@@ -28,10 +28,12 @@ package org.graphwalker.core.util;
 import net.sf.oval.constraint.MinLength;
 import net.sf.oval.constraint.NotNull;
 import net.sf.oval.guard.Guarded;
+import org.graphwalker.core.Bundle;
 
 import javax.swing.*;
 import java.io.File;
 import java.net.URL;
+import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -44,20 +46,8 @@ import java.util.ResourceBundle;
 @Guarded
 public class Resource {
 
-    private static final String DEFAULT_BUNDLE = "core";
-    
     private Resource() {
     }
-
-    /**
-     * <p>getText.</p>
-     *
-     * @param key a {@link java.lang.String} object.
-     * @return a {@link java.lang.String} object.
-     */
-    public static String getText(@NotNull @MinLength(1) final String key) {
-        return getText(DEFAULT_BUNDLE, key, Locale.getDefault());
-    }    
     
     /**
      * <p>getText.</p>
@@ -65,9 +55,10 @@ public class Resource {
      * @param bundle a {@link java.lang.String} object.
      * @param key a {@link java.lang.String} object.
      * @return a {@link java.lang.String} object.
+     * @param params a {@link java.lang.String} object.
      */
-    public static String getText(@NotNull @MinLength(1) final String bundle, @NotNull @MinLength(1) final String key) {
-        return getText(bundle, key, Locale.getDefault());
+    public static String getText(@NotNull @MinLength(1) final String bundle, @NotNull @MinLength(1) final String key, final String... params) {
+        return getText(bundle, Locale.getDefault(), key, params);
     }
 
     /**
@@ -77,9 +68,10 @@ public class Resource {
      * @param key a {@link java.lang.String} object.
      * @param locale a {@link java.util.Locale} object.
      * @return a {@link java.lang.String} object.
+     * @param params a {@link java.lang.String} object.
      */
-    public static String getText(@NotNull @MinLength(1) final String bundle, @NotNull @MinLength(1) final String key, @NotNull final Locale locale) {
-        return ResourceBundle.getBundle(bundle, locale).getString(key);
+    public static String getText(@NotNull @MinLength(1) final String bundle, @NotNull final Locale locale, @NotNull @MinLength(1) final String key, final String... params) {
+        return MessageFormat.format(ResourceBundle.getBundle(bundle, locale).getString(key), params);
     }
 
     /**
@@ -143,7 +135,7 @@ public class Resource {
         if (null != resource) {
             return new File(resource.getFile());
         }
-        throw new ResourceException(Resource.getText("exception.file.missing"));
+        throw new ResourceException(getText(Bundle.NAME, "exception.file.missing", filename));
     }
 
 }
