@@ -188,5 +188,22 @@ public interface Model {
      * @return a {@link java.util.List} object.
      */
     List<Element> getShortestPath(Element source, Vertex target);
-
+    /**
+     * <p>hasImplementation.</p>
+     *
+     * @return a boolean.
+     */
+    boolean hasImplementation();
+    /**
+     * <p>setImplementation.</p>
+     *
+     * @param implementation a {@link java.lang.Object} object.
+     */
+    void setImplementation(Object implementation);
+    /**
+     * <p>getImplementation.</p>
+     *
+     * @return a {@link java.lang.Object} object.
+     */
+    Object getImplementation();
 }

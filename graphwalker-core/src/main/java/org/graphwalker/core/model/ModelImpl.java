@@ -47,10 +47,11 @@ public class ModelImpl implements Model {
     private final Random myIdGenerator = new Random(System.nanoTime());
     private final Map<String, Vertex> myVertexMap = new HashMap<String, Vertex>();
     private final Map<String, Edge> myEdgeMap = new HashMap<String, Edge>();
-
+   
     private FloydWarshall myFloydWarshall;
     private PathGenerator myPathGenerator;
-
+    private Object myImplementation;
+    
     /**
      * <p>Constructor for ModelImpl.</p>
      *
@@ -253,13 +254,7 @@ public class ModelImpl implements Model {
         return visitedVertices;
     }
     
-    /**
-     * {@inheritDoc}
-     *
-     * @param source a {@link org.graphwalker.core.model.Element} object.
-     * @param target a {@link org.graphwalker.core.model.Edge} object.
-     * @return a int.
-     */
+    /** {@inheritDoc} */
     public int getShortestDistance(@NotNull Element source, @NotNull Edge target) {
         return myFloydWarshall.getShortestDistance(source, target);
     }
@@ -298,6 +293,10 @@ public class ModelImpl implements Model {
      * {@inheritDoc}
      *
      * <p>getShortestDistance.</p>
+     *
+     * @param source a {@link org.graphwalker.core.model.Element} object.
+     * @param target a {@link org.graphwalker.core.model.Vertex} object.
+     * @return a int.
      */
     public int getShortestDistance(@NotNull Element source, @NotNull Vertex target) {
         return myFloydWarshall.getShortestDistance(source, target);
@@ -312,4 +311,27 @@ public class ModelImpl implements Model {
         return myFloydWarshall.getShortestPath(source, target);
     }
 
+    /**
+     * <p>hasImplementation.</p>
+     *
+     * @return a boolean.
+     */
+    public boolean hasImplementation() {
+        return null != getImplementation();
+    }
+
+    /** {@inheritDoc} */
+    public void setImplementation(Object implementation) {
+        myImplementation = implementation;    
+    }
+    
+    /**
+     * <p>getImplementation.</p>
+     *
+     * @return a {@link java.lang.Object} object.
+     */
+    public Object getImplementation() {
+        return myImplementation;
+    }
+    
 }

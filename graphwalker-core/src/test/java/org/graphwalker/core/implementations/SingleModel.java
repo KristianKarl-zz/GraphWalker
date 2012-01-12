@@ -23,40 +23,35 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core;
+package org.graphwalker.core.implementations;
 
-import org.graphwalker.core.configuration.Configuration;
-import org.graphwalker.core.model.Element;
+public class SingleModel {
 
-/**
- * <p>GraphWalker interface.</p>
- *
- * @author nilols
- * @version $Id: $
- */
-public interface GraphWalker {
+    public void e_0() {
+        System.out.println("e_0");
+    }
 
-    /**
-     * <p>executePath.</p>
-     */
-    void executePath();
-    /**
-     * <p>hasNextStep.</p>
-     *
-     * @return a boolean.
-     */
-    boolean hasNextStep();
-    /**
-     * <p>getNextStep.</p>
-     *
-     * @return a {@link org.graphwalker.core.model.Element} object.
-     */
-    Element getNextStep();
+    public void v_0() {
+        System.out.println("v_0");
+    }
 
-    /**
-     * <p>getConfiguration.</p>
-     *
-     * @return a {@link org.graphwalker.core.configuration.Configuration} object.
-     */
-    Configuration getConfiguration();
+    public void e_1() {
+        System.out.println("e_1");
+    }
+
+    public void v_1() {
+        System.out.println("v_1");
+    }
+
+    public void e_2() {
+        System.out.println("e_2");
+    }
+
+    public void v_2() {
+        System.out.println("v_2");
+    }
+
+    public void e_3() {
+        System.out.println("e_3");
+    }
 }

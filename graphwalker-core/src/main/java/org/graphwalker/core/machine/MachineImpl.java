@@ -35,6 +35,8 @@ import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Vertex;
 import org.graphwalker.core.util.Resource;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -168,4 +170,28 @@ public class MachineImpl implements Machine {
         myCurrentElement = myCurrentModel.getStartVertex();
     }
 
+    /**
+     * <p>executePath.</p>
+     */
+    public void executePath() {
+        while (hasNextStep()) {
+            Element element = getNextStep();
+            if (getCurrentModel().hasImplementation()) {                
+                Object object = getCurrentModel().getImplementation();
+                Class clazz = object.getClass();
+                try {
+                    Method method = clazz.getMethod(element.getName());
+                    if (null != method) {
+                        method.invoke(object);
+                    }
+                } catch (InvocationTargetException e) {
+                    throw new MachineException(Resource.getText("exception.method.invocation"));
+                } catch (NoSuchMethodException e) {
+                    throw new MachineException(Resource.getText("exception.method.missing"));
+                } catch (IllegalAccessException e) {
+                    throw new MachineException(Resource.getText("exception.method.access"));
+                }
+            }
+        }
+    }
 }

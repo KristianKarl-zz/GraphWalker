@@ -87,6 +87,13 @@ public class GraphWalkerImpl implements GraphWalker {
     }
 
     /**
+     * <p>executePath.</p>
+     */
+    public void executePath() {
+        getMachine().executePath();
+    }
+
+    /**
      * <p>hasNextStep.</p>
      *
      * @return a boolean.

@@ -76,5 +76,9 @@ public interface Machine {
      * @return a {@link org.graphwalker.core.model.Model} object.
      */
     Model getCurrentModel();
+    /**
+     * <p>executePath.</p>
+     */
+    void executePath();
 
 }

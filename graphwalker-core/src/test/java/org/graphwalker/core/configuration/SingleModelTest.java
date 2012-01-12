@@ -33,7 +33,7 @@ import org.junit.Test;
 public class SingleModelTest {
 
     @Test
-    public void executeTest() {
+    public void executeStep() {
         String file = getClass().getResource("/singleModelTest.xml").getFile();
         GraphWalker graphWalker = GraphWalkerFactory.create(file);
         Assert.assertTrue(graphWalker.hasNextStep());
@@ -50,6 +50,15 @@ public class SingleModelTest {
         Assert.assertEquals(graphWalker.getNextStep().getName(), "v_2");
         Assert.assertTrue(graphWalker.hasNextStep());
         Assert.assertEquals(graphWalker.getNextStep().getName(), "e_3");
+        Assert.assertFalse(graphWalker.hasNextStep());
+    }
+
+    @Test
+    public void executePath() {
+        String file = getClass().getResource("/singleModelTest.xml").getFile();
+        GraphWalker graphWalker = GraphWalkerFactory.create(file);
+        Assert.assertTrue(graphWalker.hasNextStep());
+        graphWalker.executePath();
         Assert.assertFalse(graphWalker.hasNextStep());
     }
 }

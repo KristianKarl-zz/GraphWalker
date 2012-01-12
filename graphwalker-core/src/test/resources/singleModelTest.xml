@@ -30,7 +30,7 @@
              scriptLanguage="groovy">
 
     <models>
-        <model id="m1" file="models/singleModel.graphml">
+        <model id="m1" file="models/singleModel.graphml" class="org.graphwalker.core.implementations.SingleModel">
             <pathGenerator type="Random">
                 <stopCondition type="EdgeCoverage" value="100"/>
             </pathGenerator>

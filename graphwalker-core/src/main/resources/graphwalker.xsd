@@ -48,7 +48,14 @@
         </xsd:all>
         <xsd:attribute name="id" type="xsd:ID" use="required"/>
         <xsd:attribute name="file" type="xsd:string" use="required"/>
+        <xsd:attribute name="class" type="classType" use="optional"/>
     </xsd:complexType>
+
+    <xsd:simpleType name="classType">
+        <xsd:restriction base="xsd:string">
+            <xsd:pattern value="([a-zA-Z_$][a-zA-Z\d_$]*\.)*[a-zA-Z_$][a-zA-Z\d_$]*"/>
+        </xsd:restriction>
+    </xsd:simpleType>
 
     <xsd:complexType name="AnyStopConditionType">
         <xsd:choice minOccurs="1" maxOccurs="unbounded">

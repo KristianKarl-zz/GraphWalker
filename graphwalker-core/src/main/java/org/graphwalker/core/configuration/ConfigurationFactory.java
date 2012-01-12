@@ -117,6 +117,18 @@ public class ConfigurationFactory {
         if (null != modelType.getPathGenerator()) {
             model.setPathGenerator(parse(modelType.getPathGenerator()));
         }
+        if (null != modelType.getClazz()) {
+            try {
+                Class clazz = Class.forName(modelType.getClazz());
+                model.setImplementation(clazz.newInstance());
+            } catch (ClassNotFoundException e) {
+                throw new ConfigurationException(Resource.getText("exception.class.missing"));
+            } catch (InstantiationException e) {
+                throw new ConfigurationException(Resource.getText("exception.class.instantiation"));
+            } catch (IllegalAccessException e) {
+                throw new ConfigurationException(Resource.getText("exception.class.instantiation"));
+            }
+        }
         return model;
     }
 
