@@ -31,6 +31,7 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.graphwalker.core.GraphWalker;
 import org.graphwalker.core.GraphWalkerImpl;
 import org.graphwalker.core.configuration.ConfigurationFactory;
+import org.graphwalker.core.util.Resource;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -47,7 +48,6 @@ import java.util.List;
  * @goal test
  * @phase test
  * @requiresDependencyResolution test
- * @threadSafe
  */
 public class ExecuteMojo extends AbstractMojo {
 
@@ -67,6 +67,12 @@ public class ExecuteMojo extends AbstractMojo {
 
     private List<GraphWalker> myGraphWalkers = new ArrayList<GraphWalker>();
 
+    /**
+     * <p>execute.</p>
+     *
+     * @throws org.apache.maven.plugin.MojoExecutionException if any.
+     * @throws org.apache.maven.plugin.MojoFailureException if any.
+     */
     public void execute() throws MojoExecutionException, MojoFailureException {
         ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
         try {
@@ -79,7 +85,7 @@ public class ExecuteMojo extends AbstractMojo {
                 graphWalker.executePath();
             }
         } catch (MalformedURLException e) {
-            e.printStackTrace();
+            throw new MojoExecutionException(Resource.getText(Bundle.NAME, "exception.classloader"));
         } finally {
             Thread.currentThread().setContextClassLoader(contextClassLoader);
         }

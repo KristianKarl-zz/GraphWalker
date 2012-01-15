@@ -27,6 +27,7 @@ package org.graphwalker.core.configuration;
 
 import org.graphwalker.core.GraphWalker;
 import org.graphwalker.core.GraphWalkerFactory;
+import org.graphwalker.core.util.Resource;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -36,8 +37,7 @@ public class StopConditionTest {
 
     @Test
     public void executeTest() {
-        File file = new File(getClass().getResource("/stopConditionTest.xml").getFile());
-        GraphWalker graphWalker = GraphWalkerFactory.create(file);
+        GraphWalker graphWalker = GraphWalkerFactory.create(Resource.getFile("stopConditionTest.xml"));
         Assert.assertTrue(graphWalker.hasNextStep());
         Assert.assertEquals(graphWalker.getNextStep().getName(), "e_0");
         Assert.assertTrue(graphWalker.hasNextStep());

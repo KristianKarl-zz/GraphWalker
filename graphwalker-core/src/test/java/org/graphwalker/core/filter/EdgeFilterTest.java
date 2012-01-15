@@ -28,6 +28,7 @@ package org.graphwalker.core.filter;
 import org.graphwalker.core.GraphWalker;
 import org.graphwalker.core.GraphWalkerFactory;
 import org.graphwalker.core.model.Element;
+import org.graphwalker.core.util.Resource;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -35,8 +36,7 @@ public class EdgeFilterTest {
 
     @Test
     public void executeTest() {
-        String file = getClass().getResource("/edgeFilterTest.xml").getFile();
-        GraphWalker graphWalker = GraphWalkerFactory.create(file);
+        GraphWalker graphWalker = GraphWalkerFactory.create(Resource.getFile("edgeFilterTest.xml"));
         Element modelElement = graphWalker.getNextStep();
         Assert.assertEquals("n1", modelElement.getId());
         modelElement = graphWalker.getNextStep();
