@@ -25,7 +25,13 @@
  */
 package org.graphwalker.core.aspects;
 
+import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
+import org.aspectj.lang.annotation.Pointcut;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>LoggerAspect class.</p>
@@ -35,4 +41,22 @@ import org.aspectj.lang.annotation.Aspect;
  */
 @Aspect
 public class LoggerAspect {
+
+    static final Logger myLogger = LoggerFactory.getLogger(LoggerAspect.class);
+
+    @Pointcut("execution(* org.graphwalker.core..*Factory.create(..))")
+    void anyFactory() {}
+
+    @Pointcut("within(org.graphwalker.core.GraphWalker+)")
+    void anyGraphWalker() {}
+
+    @AfterReturning("anyFactory()")
+    public void monitor(JoinPoint joinPoint) {
+        myLogger.info(joinPoint.toShortString());
+    }
+    
+    @Before("anyGraphWalker()")
+    public void a(JoinPoint joinPoint) {
+        myLogger.info(joinPoint.toShortString());
+    }
 }

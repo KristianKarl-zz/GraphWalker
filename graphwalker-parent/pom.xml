@@ -8,9 +8,7 @@
     <version>2.5.14-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>GraphWalker</name>
-    <description>GraphWalker is a tool for generating offline and online test sequences from Finite State Machines and
-        Extended Finite State Machines.
-    </description>
+    <description>GraphWalker is a tool for generating offline and online test sequences from Finite State Machines and Extended Finite State Machines.</description>
     <url>http://graphwalker.org</url>
     <inceptionYear>2011</inceptionYear>
 
@@ -81,6 +79,31 @@
         <module>../graphwalker-example</module>
     </modules>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.6.4</version>
+        </dependency>
+        <!--
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jcl-over-slf4j</artifactId>
+            <version>1.6.4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>log4j-over-slf4j</artifactId>
+            <version>1.6.4</version>
+        </dependency>
+        -->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+    </dependencies>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -109,9 +132,9 @@
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>log4j</groupId>
-                <artifactId>log4j</artifactId>
-                <version>1.2.16</version>
+                <groupId>org.aspectj</groupId>
+                <artifactId>aspectjrt</artifactId>
+                <version>1.6.11</version>
             </dependency>
             <dependency>
                 <groupId>junit</groupId>
@@ -119,9 +142,9 @@
                 <version>${junit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.sun.xml.ws</groupId>
-                <artifactId>jaxws-rt</artifactId>
-                <version>2.1.3</version>
+                <groupId>org.jdom</groupId>
+                <artifactId>jdom</artifactId>
+                <version>1.1</version>
             </dependency>
             <dependency>
                 <groupId>commons-cli</groupId>
@@ -129,39 +152,9 @@
                 <version>1.2</version>
             </dependency>
             <dependency>
-                <groupId>org.jdom</groupId>
-                <artifactId>jdom</artifactId>
-                <version>1.1</version>
-            </dependency>
-            <dependency>
                 <groupId>commons-configuration</groupId>
                 <artifactId>commons-configuration</artifactId>
                 <version>1.6</version>
-            </dependency>
-            <dependency>
-                <groupId>org.beanshell</groupId>
-                <artifactId>bsh</artifactId>
-                <version>${beanshell.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.codehaus.groovy</groupId>
-                <artifactId>groovy</artifactId>
-                <version>1.9.0-beta-3</version>
-            </dependency>
-            <dependency>
-                <groupId>net.sf.jung</groupId>
-                <artifactId>jung-graph-impl</artifactId>
-                <version>${jung.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>net.sf.jung</groupId>
-                <artifactId>jung-algorithms</artifactId>
-                <version>${jung.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>net.sf.jung</groupId>
-                <artifactId>jung-visualization</artifactId>
-                <version>${jung.version}</version>
             </dependency>
             <dependency>
                 <groupId>net.sf.oval</groupId>
@@ -182,6 +175,38 @@
                 <groupId>com.miglayout</groupId>
                 <artifactId>miglayout-swing</artifactId>
                 <version>4.2</version>
+            </dependency>
+            <!-- runtime -->
+            <dependency>
+                <groupId>org.beanshell</groupId>
+                <artifactId>bsh</artifactId>
+                <version>${beanshell.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.groovy</groupId>
+                <artifactId>groovy</artifactId>
+                <version>1.9.0-beta-3</version>
+            </dependency>
+            <!-- old? -->
+            <dependency>
+                <groupId>net.sf.jung</groupId>
+                <artifactId>jung-graph-impl</artifactId>
+                <version>${jung.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.sf.jung</groupId>
+                <artifactId>jung-algorithms</artifactId>
+                <version>${jung.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.sf.jung</groupId>
+                <artifactId>jung-visualization</artifactId>
+                <version>${jung.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sun.xml.ws</groupId>
+                <artifactId>jaxws-rt</artifactId>
+                <version>2.1.3</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -293,6 +318,11 @@
         </plugins>
         <pluginManagement>
             <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>2.11</version>
+                </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-jar-plugin</artifactId>

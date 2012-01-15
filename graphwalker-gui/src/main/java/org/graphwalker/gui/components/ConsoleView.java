@@ -29,6 +29,11 @@ import org.graphwalker.gui.GraphWalkerController;
 import org.graphwalker.gui.actions.ExitAction;
 
 import javax.swing.*;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,11 +53,51 @@ public class ConsoleView extends AbstractView {
     public ConsoleView(GraphWalkerController controller) {
         super(new JEditorPane(), ToolBarPlacement.WEST);
         addActionGroup(createActionGroup());
+        captureOutput();
     }
-    
+
+    private JEditorPane getEditor() {
+        return (JEditorPane)getComponent();
+    }
+
     private List<Action> createActionGroup() {
         List<Action> actionGroup = new ArrayList<Action>();
         actionGroup.add(new ExitAction(null));
         return actionGroup;
+    }
+
+    private void captureOutput() {
+        OutputStream outputStream = new OutputStream() {
+            @Override
+            public void write(final int b) throws IOException {
+                updateEditor(String.valueOf((char) b));
+            }
+
+            @Override
+            public void write(byte[] b, int off, int len) throws IOException {
+                updateEditor(new String(b, off, len));
+            }
+
+            @Override
+            public void write(byte[] b) throws IOException {
+                write(b, 0, b.length);
+            }
+        };
+        System.setOut(new PrintStream(outputStream, true));
+        System.setErr(new PrintStream(outputStream, true));
+    }
+
+    private void updateEditor(final String text) {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                Document document = getEditor().getDocument();
+                try {
+                    document.insertString(document.getLength(), text, null);
+                } catch (BadLocationException e) {
+                    //TODO: Handle exception
+                }
+                getEditor().setCaretPosition(document.getLength() - 1);
+            }
+        });
     }
 }

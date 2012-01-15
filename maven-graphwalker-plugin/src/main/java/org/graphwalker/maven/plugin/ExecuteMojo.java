@@ -60,6 +60,12 @@ public class ExecuteMojo extends AbstractMojo {
     private List<String> classpathElements;
 
     /**
+     * @parameter property="configPath" default-value="${project.build.testOutputDirectory}"
+     * @required
+     */
+    private String configPath;
+    
+    /**
      * @parameter property="configFiles"
      * @required
      */
@@ -78,8 +84,10 @@ public class ExecuteMojo extends AbstractMojo {
         try {
             URLClassLoader classLoader = new URLClassLoader(convertToURL(classpathElements), getClass().getClassLoader());
             Thread.currentThread().setContextClassLoader(classLoader);
+            File parent = new File(configPath);
             for (String configFile: configFiles) {
-                myGraphWalkers.add(new GraphWalkerImpl(ConfigurationFactory.create(configFile)));
+                File file = new File(parent, configFile);
+                myGraphWalkers.add(new GraphWalkerImpl(ConfigurationFactory.create(file)));
             }
             for (GraphWalker graphWalker: myGraphWalkers) {
                 graphWalker.executePath();
