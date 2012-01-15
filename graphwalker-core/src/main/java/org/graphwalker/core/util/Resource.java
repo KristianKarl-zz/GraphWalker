@@ -114,7 +114,7 @@ public class Resource {
         if (file.exists()) {
             return file;
         } else {
-            return getResource(file.getPath());
+            return getResource(filename);
         }
     }
 

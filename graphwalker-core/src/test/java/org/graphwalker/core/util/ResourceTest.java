@@ -36,18 +36,8 @@ public class ResourceTest {
     }
 
     @Test
-    public void testGetFileWithUnixPathAndMissingLeadingPathSeparator() {
+    public void testGetResourceFile() {
         Resource.getFile("models/brokenModel.graphml");
-    }
-
-    @Test
-    public void testGetFileWithWindowsPath() {
-        Resource.getFile("\\models\\brokenModel.graphml");
-    }
-
-    @Test
-    public void testGetFileWithWindowsPathAndMissingLeadingPathSeparator() {
-        Resource.getFile("models\\brokenModel.graphml");
     }
 
     @Test(expected = ConstraintsViolatedException.class)
