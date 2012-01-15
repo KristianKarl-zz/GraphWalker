@@ -57,7 +57,7 @@ public class Resource {
      * @return a {@link java.lang.String} object.
      * @param params a {@link java.lang.String} object.
      */
-    public static String getText(@NotNull @MinLength(1) final String bundle, @NotNull @MinLength(1) final String key, final String... params) {
+    public static String getText(@NotNull @MinLength(1) final String bundle, @NotNull @MinLength(1) final String key, final Object... params) {
         return getText(bundle, Locale.getDefault(), key, params);
     }
 
@@ -70,8 +70,11 @@ public class Resource {
      * @return a {@link java.lang.String} object.
      * @param params a {@link java.lang.String} object.
      */
-    public static String getText(@NotNull @MinLength(1) final String bundle, @NotNull final Locale locale, @NotNull @MinLength(1) final String key, final String... params) {
-        return MessageFormat.format(ResourceBundle.getBundle(bundle, locale).getString(key), params);
+    public static String getText(@NotNull @MinLength(1) final String bundle, @NotNull final Locale locale, @NotNull @MinLength(1) final String key, final Object... params) {
+        MessageFormat messageFormat = new MessageFormat("");
+        messageFormat.setLocale(locale);
+        messageFormat.applyPattern(ResourceBundle.getBundle(bundle, locale).getString(key));
+        return messageFormat.format(params);
     }
 
     /**

@@ -40,6 +40,7 @@ import org.graphwalker.core.util.Resource;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Unmarshaller;
+import java.awt.*;
 import java.io.File;
 import java.io.FileInputStream;
 
@@ -120,10 +121,11 @@ public class ConfigurationFactory {
         }
         if (null != modelType.getClazz()) {
             try {
-                Class clazz = Class.forName(modelType.getClazz());
+                Class clazz = Thread.currentThread().getContextClassLoader().loadClass(modelType.getClazz());
+                //Class clazz = Class.forName(modelType.getClazz());
                 model.setImplementation(clazz.newInstance());
             } catch (ClassNotFoundException e) {
-                throw new ConfigurationException(Resource.getText(Bundle.NAME, "exception.class.missing"));
+                throw new ConfigurationException(Resource.getText(Bundle.NAME, "exception.class.missing", modelType.getClazz()));
             } catch (InstantiationException e) {
                 throw new ConfigurationException(Resource.getText(Bundle.NAME, "exception.class.instantiation"));
             } catch (IllegalAccessException e) {
