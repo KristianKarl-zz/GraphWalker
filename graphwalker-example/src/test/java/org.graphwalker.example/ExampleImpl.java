@@ -26,7 +26,9 @@
 package org.graphwalker.example;
 
 public class ExampleImpl {
-    
+
+    //TODO: Make a more interesting example
+
     public void e_execute() {
         System.out.println("e_execute");
     }

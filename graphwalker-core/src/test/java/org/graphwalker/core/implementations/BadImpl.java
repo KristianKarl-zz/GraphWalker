@@ -23,35 +23,11 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core.machine;
+package org.graphwalker.core.implementations;
 
-/**
- * <p>MachineException class.</p>
- *
- * @author nilols
- * @version $Id: $
- */
-public class MachineException extends RuntimeException {
+public class BadImpl {
 
-    /**
-     * <p>Constructor for ConfigurationException.</p>
-     *
-     * @param e a {@link java.lang.Exception} object.
-     */
-    public MachineException(Exception e) {
-        super(e);
-    }
-
-    /**
-     * <p>Constructor for ConfigurationException.</p>
-     *
-     * @param cause a {@link java.lang.String} object.
-     */
-    public MachineException(String cause) {
-        super(cause);
-    }
-
-    public MachineException(String cause, Exception e) {
-        super(cause, e);
+    public void v_1() throws Exception {
+        throw new Exception();
     }
 }

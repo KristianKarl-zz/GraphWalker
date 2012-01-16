@@ -122,14 +122,13 @@ public class ConfigurationFactory {
         if (null != modelType.getClazz()) {
             try {
                 Class clazz = Thread.currentThread().getContextClassLoader().loadClass(modelType.getClazz());
-                //Class clazz = Class.forName(modelType.getClazz());
                 model.setImplementation(clazz.newInstance());
             } catch (ClassNotFoundException e) {
                 throw new ConfigurationException(Resource.getText(Bundle.NAME, "exception.class.missing", modelType.getClazz()));
             } catch (InstantiationException e) {
-                throw new ConfigurationException(Resource.getText(Bundle.NAME, "exception.class.instantiation"));
+                throw new ConfigurationException(Resource.getText(Bundle.NAME, "exception.class.instantiation", modelType.getClazz()));
             } catch (IllegalAccessException e) {
-                throw new ConfigurationException(Resource.getText(Bundle.NAME, "exception.class.instantiation"));
+                throw new ConfigurationException(Resource.getText(Bundle.NAME, "exception.class.instantiation", modelType.getClazz()));
             }
         }
         return model;

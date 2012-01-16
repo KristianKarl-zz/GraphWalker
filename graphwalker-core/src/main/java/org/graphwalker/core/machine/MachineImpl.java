@@ -186,12 +186,14 @@ public class MachineImpl implements Machine {
                         method.invoke(object);
                     }
                 } catch (InvocationTargetException e) {
-                    throw new MachineException(Resource.getText(Bundle.NAME, "exception.method.invocation"));
+                    throw new MachineException(Resource.getText(Bundle.NAME, "exception.method.invocation", element.getName()), e);
                 } catch (NoSuchMethodException e) {
-                    throw new MachineException(Resource.getText(Bundle.NAME, "exception.method.missing"));
+                    throw new MachineException(Resource.getText(Bundle.NAME, "exception.method.missing", element.getName()));
                 } catch (IllegalAccessException e) {
-                    throw new MachineException(Resource.getText(Bundle.NAME, "exception.method.access"));
+                    throw new MachineException(Resource.getText(Bundle.NAME, "exception.method.access", element.getName()));
                 }
+            } else {
+                throw new MachineException(Resource.getText(Bundle.NAME, "exception.implementation.missing", getCurrentModel().getId()));
             }
         }
     }

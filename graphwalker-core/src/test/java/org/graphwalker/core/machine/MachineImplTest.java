@@ -2,7 +2,7 @@
  * #%L
  * GraphWalker Core
  * %%
- * Copyright (C) 2011 GraphWalker
+ * Copyright (C) 2011 - 2012 GraphWalker
  * %%
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,6 +29,8 @@ import org.graphwalker.core.conditions.StopConditionFactory;
 import org.graphwalker.core.configuration.Configuration;
 import org.graphwalker.core.configuration.ConfigurationImpl;
 import org.graphwalker.core.generators.PathGeneratorFactory;
+import org.graphwalker.core.implementations.BadImpl;
+import org.graphwalker.core.implementations.EmptyImpl;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.ModelImpl;
@@ -39,32 +41,55 @@ import org.junit.Test;
 
 public class MachineImplTest {
 
-    private Configuration myConfiguration;
-
-    @Before
-    public void createConfiguration() {
-        myConfiguration = new ConfigurationImpl();
-        Model model = myConfiguration.addModel(new ModelImpl("m1"));
+    private Configuration createConfiguration() {
+        Configuration configuration = new ConfigurationImpl();
+        Model model = configuration.addModel(new ModelImpl("m1"));
         Vertex v_start = model.addVertex(new Vertex("Start"));
         Vertex v_1 = model.addVertex(new Vertex("v_1"));
         model.addEdge(new Edge(), v_start, v_1);
         model.setPathGenerator(PathGeneratorFactory.create("Random"));
         model.getPathGenerator().setStopCondition(StopConditionFactory.create("VertexCoverage", 100));
+        return configuration;
     }
 
     @Test
     public void executeTest() {
-        Machine machine = new MachineImpl(myConfiguration);
+        Machine machine = new MachineImpl(createConfiguration());
         Assert.assertTrue(machine.hasNextStep());
     }
 
     @Test(expected = MachineException.class)
     public void exceptionTest() {
         Configuration configuration = new ConfigurationImpl();
-        Model model = myConfiguration.addModel(new ModelImpl("m1"));
+        Model model = configuration.addModel(new ModelImpl("m1"));
         model.addVertex(new Vertex("Start"));
         configuration.addModel(model);
         Machine machine = new MachineImpl(configuration);
         machine.hasNextStep();
     }
+
+    @Test(expected = MachineException.class)
+    public void nullImplTest() {
+        Configuration configuration = createConfiguration();
+        configuration.getModel("m1").setImplementation(null);
+        Machine machine = new MachineImpl(configuration);
+        machine.executePath();
+    }
+
+    @Test(expected = MachineException.class)
+    public void emptyImplTest() {
+        Configuration configuration = createConfiguration();
+        configuration.getModel("m1").setImplementation(new EmptyImpl());
+        Machine machine = new MachineImpl(configuration);
+        machine.executePath();
+    }
+
+    @Test(expected = MachineException.class)
+    public void badImplTest() {
+        Configuration configuration = createConfiguration();
+        configuration.getModel("m1").setImplementation(new BadImpl());
+        Machine machine = new MachineImpl(configuration);
+        machine.executePath();
+    }
+
 }

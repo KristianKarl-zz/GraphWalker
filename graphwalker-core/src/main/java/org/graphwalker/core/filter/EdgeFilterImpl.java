@@ -43,15 +43,16 @@ import javax.script.ScriptException;
 public class EdgeFilterImpl implements EdgeFilter {
 
     private final ScriptEngine myScriptEngine;
-
+    private final String myScriptEngineName;
     /**
      * <p>Constructor for EdgeFilterImpl.</p>
      *
      * @param name a {@link java.lang.String} object.
      */
     public EdgeFilterImpl(String name) {
+        myScriptEngineName = name;
         ScriptEngineManager scriptEngineManager = new ScriptEngineManager();
-        myScriptEngine = scriptEngineManager.getEngineByName(name);
+        myScriptEngine = scriptEngineManager.getEngineByName(myScriptEngineName);
     }
 
     /** {@inheritDoc} */
@@ -61,7 +62,9 @@ public class EdgeFilterImpl implements EdgeFilter {
                 try {
                     myScriptEngine.eval(action.getScript());
                 } catch (ScriptException e) {
-                    throw new EdgeFilterException(e);
+                    throw new EdgeFilterException(Resource.getText(Bundle.NAME, "exception.script.error", e.getMessage()));
+                } catch (NullPointerException e) {
+                    throw new EdgeFilterException(Resource.getText(Bundle.NAME, "exception.script.engine.missing", myScriptEngineName));
                 }
             }
         }
@@ -73,9 +76,9 @@ public class EdgeFilterImpl implements EdgeFilter {
             try {
                 return (Boolean)myScriptEngine.eval(edge.getEdgeGuard().getScript());
             } catch (ScriptException e) {
-                throw new EdgeFilterException(Resource.getText(Bundle.NAME, "exception.script.error"));
+                throw new EdgeFilterException(Resource.getText(Bundle.NAME, "exception.script.error", e.getMessage()));
             } catch (NullPointerException e) {
-                throw new EdgeFilterException(Resource.getText(Bundle.NAME, "exception.script.engine.missing"));
+                throw new EdgeFilterException(Resource.getText(Bundle.NAME, "exception.script.engine.missing", myScriptEngineName));
             }
         }
         return true;

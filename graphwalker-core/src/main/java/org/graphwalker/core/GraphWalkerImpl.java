@@ -33,17 +33,17 @@ import org.graphwalker.core.model.Element;
 
 import java.io.File;
 
-// TODO: Logging
+// TODO: Improve logging messages
 // TODO: Requirements (if model knows "everything" we don't need to iterate elements)
 // TODO: Statistics (eg. how many times a element been traversed)
 // TODO: More stop conditions (Requirement conditions missing)
 // TODO: More path generators (Only random exists)
 // TODO: Reload/Restart (clear statistics?)
 // TODO: Parser for CTE Models (Combined with implementation class and reflection we can execute methods with arguments)
-// TODO: Specify implementation class
 // TODO: possibility to use external properties files
 // TODO: Add support for Event driven models?
-// TODO:
+// TODO: Add interface, abstract class and/or annotation to make implementations GraphWalkerAware and so they will be able to e.g. fail tests
+// TODO: Try to continue executing models when implementation exceptions occurs (maybe block the closest edge, and continue)
 
 /**
  * <p>GraphWalkerImpl class.</p>
