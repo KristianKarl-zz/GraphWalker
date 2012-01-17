@@ -51,6 +51,12 @@ public class MachineException extends RuntimeException {
         super(cause);
     }
 
+    /**
+     * <p>Constructor for MachineException.</p>
+     *
+     * @param cause a {@link java.lang.String} object.
+     * @param e a {@link java.lang.Exception} object.
+     */
     public MachineException(String cause, Exception e) {
         super(cause, e);
     }

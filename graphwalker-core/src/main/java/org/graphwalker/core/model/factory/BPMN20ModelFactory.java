@@ -23,22 +23,40 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core.util;
+package org.graphwalker.core.model.factory;
+
+import org.graphwalker.core.model.Model;
+import org.graphwalker.core.model.ModelFactory;
+import org.graphwalker.core.util.Resource;
+
+import java.io.File;
 
 /**
- * <p>ResourceException class.</p>
+ * <p>BPMN20ModelFactory class.</p>
  *
  * @author nilols
  * @version $Id: $
  */
-public class ResourceException extends RuntimeException {
+public class BPMN20ModelFactory implements ModelFactory {
 
     /**
-     * <p>Constructor for ResourceException.</p>
-     *
-     * @param cause a {@link java.lang.String} object.
+     * <p>Constructor for BPMN20ModelFactory.</p>
      */
-    public ResourceException(String cause) {
-        super(cause);
+    public BPMN20ModelFactory() {}
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean accept(String type) {
+        return "xml".equals(type.toLowerCase());
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Model create(String id, String filename) {
+        return parse(id, Resource.getFile(filename));
+    }
+
+    private Model parse(String id, File file) {
+        return null;
     }
 }

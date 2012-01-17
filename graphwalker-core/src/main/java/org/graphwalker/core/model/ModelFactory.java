@@ -25,31 +25,21 @@
  */
 package org.graphwalker.core.model;
 
-import org.graphwalker.core.Bundle;
-import org.graphwalker.core.util.Resource;
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.filter.ElementFilter;
-import org.jdom.input.SAXBuilder;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 /**
- * <p>ModelFactory class.</p>
+ * <p>ModelFactory interface.</p>
  *
  * @author nilols
  * @version $Id: $
  */
-public class ModelFactory {
-
-    private ModelFactory() {
-    }
-
+public interface ModelFactory {
+    
+    /**
+     * <p>accept.</p>
+     *
+     * @param type a {@link java.lang.String} object.
+     * @return a boolean.
+     */
+    boolean accept(String type);
     /**
      * <p>create.</p>
      *
@@ -57,125 +47,5 @@ public class ModelFactory {
      * @param filename a {@link java.lang.String} object.
      * @return a {@link org.graphwalker.core.model.Model} object.
      */
-    public static Model create(String id, String filename) {
-        return new ModelFactory().parse(id, Resource.getFile(filename));
-    }
-
-    private Model parse(String id, File file) {
-        Model model = new ModelImpl(id);
-        SAXBuilder saxBuilder = new SAXBuilder();
-        Document document;
-
-        try {
-            document = saxBuilder.build(file);
-        } catch (Exception e) {
-            throw new ModelException(e);
-        }
-
-        if (null != document) {
-            for (Iterator nodeElements = document.getDescendants(new ElementFilter("node")); nodeElements.hasNext();) {
-                Element nodeElement = (Element)nodeElements.next();
-                String text = null;
-                for (Iterator nodeLabels = nodeElement.getDescendants(new ElementFilter("NodeLabel")); nodeLabels.hasNext();) {
-                    Element nodeLabel = (Element)nodeLabels.next();
-                    text = nodeLabel.getTextTrim();
-                }
-                Vertex vertex = new Vertex();
-                vertex.setId(nodeElement.getAttribute("id").getValue());
-                if (null != text && !"".equals(text)) {
-                    parseName(vertex, getLabel(text));
-                    parseSwitchModelId(vertex, text);
-                    parseRequirements(vertex, text);
-                }
-                model.addVertex(vertex);
-            }
-            for (Iterator edgeElements = document.getDescendants(new ElementFilter("edge")); edgeElements.hasNext();) {
-                Element edgeElement = (Element)edgeElements.next();
-                Vertex source = model.getVertexById(edgeElement.getAttributeValue("source"));
-                Vertex target = model.getVertexById(edgeElement.getAttributeValue("target"));
-                String text = null;
-                for (Iterator edgeLabels = edgeElement.getDescendants(new ElementFilter("EdgeLabel")); edgeLabels.hasNext();) {
-                    Element edgeLabel = (Element)edgeLabels.next();
-                    text = edgeLabel.getTextTrim();
-                }
-                Edge edge = new Edge();
-                edge.setId(edgeElement.getAttribute("id").getValue());
-                if (null != text && !"".equals(text)) {
-                    parseName(edge, getLabel(text));
-                    parseEdgeGuard(edge, text);
-                    parseEdgeActions(edge, text);
-                    parseBlocked(edge, text);
-                }
-                model.addEdge(edge, source, target);
-            }
-        }
-        return model;
-    }
-
-    private void parseName(Vertex vertex, String name) {
-        if (null != name && !"".equals(name)) {
-            vertex.setName(name);
-        }
-    }
-
-    private void parseName(Edge edge, String name) {
-        if (null != name && !"".equals(name)) {
-            edge.setName(name);
-        }
-    }
-
-    private String getLabel(String text) {
-        Pattern pattern = Pattern.compile("^(\\w+).*");
-        Matcher matcher = pattern.matcher(text);
-        if (matcher.find()) {
-            String label = matcher.group(1);
-            if (!Resource.getText(Bundle.NAME, "label.blocked").equals(label)) {
-                return label;
-            }
-        }
-        return null;
-    }
-
-    private void parseSwitchModelId(Vertex vertex, String text) {
-        Pattern pattern = Pattern.compile(Resource.getText(Bundle.NAME, "label.switch.model")+"\\((.*)\\)", Pattern.MULTILINE);
-        Matcher matcher = pattern.matcher(text);
-        if (matcher.find()) {
-            vertex.setSwitchModelId(matcher.group(1));
-        }
-    }
-    
-    private void parseRequirements(Vertex vertex, String text) {
-        Pattern pattern = Pattern.compile(Resource.getText(Bundle.NAME, "label.requirement")+"\\((.*)\\)", Pattern.MULTILINE);
-        Matcher matcher = pattern.matcher(text);
-        while (matcher.find()) {
-            vertex.addRequirement(new Requirement(matcher.group(1)));
-        }
-    }
-
-    private void parseEdgeGuard(Edge edge, String text) {
-        Pattern pattern = Pattern.compile("^.*\\[(.+)\\].*$");
-        Matcher matcher = pattern.matcher(text);
-        if (matcher.find()) {
-            edge.setEdgeGuard(new Guard(matcher.group(1)));    
-        }
-    }
-    
-    private void parseEdgeActions(Edge edge, String text) {
-        List<Action> edgeActions = new ArrayList<Action>();
-        Pattern pattern = Pattern.compile("^.*/(.*)$");
-        Matcher matcher = pattern.matcher(text);
-        if (matcher.find()) {
-            for (String action:  matcher.group(1).split(":")) {
-                edgeActions.add(new Action(action));
-            }
-        }
-        edge.setEdgeActions(edgeActions);
-    }
-    
-    private void parseBlocked(Edge edge, String text) {
-        Pattern pattern = Pattern.compile(Resource.getText(Bundle.NAME, "label.blocked"), Pattern.MULTILINE);
-        Matcher matcher = pattern.matcher(text);
-        edge.setBlocked(matcher.find());
-    }
-
+    Model create(String id, String filename);
 }

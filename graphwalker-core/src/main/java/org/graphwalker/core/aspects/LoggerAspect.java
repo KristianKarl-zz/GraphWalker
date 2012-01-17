@@ -50,11 +50,21 @@ public class LoggerAspect {
     @Pointcut("within(org.graphwalker.core.GraphWalker+)")
     void anyGraphWalker() {}
 
+    /**
+     * <p>monitor.</p>
+     *
+     * @param joinPoint a {@link org.aspectj.lang.JoinPoint} object.
+     */
     @AfterReturning("anyFactory()")
     public void monitor(JoinPoint joinPoint) {
         myLogger.info(joinPoint.toShortString());
     }
     
+    /**
+     * <p>a.</p>
+     *
+     * @param joinPoint a {@link org.aspectj.lang.JoinPoint} object.
+     */
     @Before("anyGraphWalker()")
     public void a(JoinPoint joinPoint) {
         myLogger.info(joinPoint.toShortString());

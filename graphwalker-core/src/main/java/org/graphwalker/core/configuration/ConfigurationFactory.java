@@ -33,6 +33,7 @@ import org.graphwalker.core.conditions.StopConditionFactory;
 import org.graphwalker.core.filter.EdgeFilterImpl;
 import org.graphwalker.core.generators.PathGenerator;
 import org.graphwalker.core.generators.PathGeneratorFactory;
+import org.graphwalker.core.model.factory.GraphMLModelFactory;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.ModelFactory;
 import org.graphwalker.core.util.Resource;
@@ -40,7 +41,6 @@ import org.graphwalker.core.util.Resource;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Unmarshaller;
-import java.awt.*;
 import java.io.File;
 import java.io.FileInputStream;
 
@@ -115,7 +115,8 @@ public class ConfigurationFactory {
         if (!modelFile.exists()) {
             modelFile = new File(configuration.getConfigurationFile().getParentFile(), modelType.getFile());
         }
-        Model model = ModelFactory.create(modelType.getId(), modelFile.getAbsolutePath());
+        ModelFactory modelFactory = new GraphMLModelFactory();
+        Model model = modelFactory.create(modelType.getId(), modelFile.getAbsolutePath());
         if (null != modelType.getPathGenerator()) {
             model.setPathGenerator(parse(modelType.getPathGenerator()));
         }

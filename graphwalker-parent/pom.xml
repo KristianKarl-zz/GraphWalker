@@ -65,6 +65,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <beanshell.version>2.0b4</beanshell.version>
         <jung.version>2.0.1</jung.version>
         <junit.version>4.8.2</junit.version>
@@ -85,7 +86,6 @@
             <artifactId>slf4j-api</artifactId>
             <version>1.6.4</version>
         </dependency>
-        <!--
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>jcl-over-slf4j</artifactId>
@@ -96,7 +96,11 @@
             <artifactId>log4j-over-slf4j</artifactId>
             <version>1.6.4</version>
         </dependency>
-        -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jul-to-slf4j</artifactId>
+            <version>1.6.4</version>
+        </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>

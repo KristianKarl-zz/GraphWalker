@@ -33,10 +33,12 @@ import org.graphwalker.core.model.Element;
 
 import java.io.File;
 
-// TODO: Improve logging messages
+// TODO: Add implementation for different model formats
+// TODO: Create a parser class for name;actions;guard
 // TODO: Requirements (if model knows "everything" we don't need to iterate elements)
-// TODO: Statistics (eg. how many times a element been traversed)
 // TODO: More stop conditions (Requirement conditions missing)
+// TODO: Improve logging messages
+// TODO: Statistics (eg. how many times a element been traversed)
 // TODO: More path generators (Only random exists)
 // TODO: Reload/Restart (clear statistics?)
 // TODO: Parser for CTE Models (Combined with implementation class and reflection we can execute methods with arguments)

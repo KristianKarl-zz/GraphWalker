@@ -37,22 +37,20 @@ import org.junit.Test;
 
 public class RandomPathTest {
 
-    private Configuration myConfiguration;
-
-    @Before
-    public void createConfiguration() {
-        myConfiguration = new ConfigurationImpl();
-        Model model = myConfiguration.addModel(new ModelImpl("m1"));
+    private Configuration createConfiguration() {
+        Configuration configuration = new ConfigurationImpl();
+        Model model = configuration.addModel(new ModelImpl("m1"));
         Vertex v_start = model.addVertex(new Vertex("Start"));
         Vertex v_1 = model.addVertex(new Vertex("v_1"));
         model.addEdge(new Edge(), v_start, v_1);
         model.setPathGenerator(PathGeneratorFactory.create("Random"));
         model.getPathGenerator().setStopCondition(StopConditionFactory.create("VertexCoverage", 100));
+        return configuration;
     }
 
     @Test
     public void executeTest() {
-        GraphWalker graphWalker = GraphWalkerFactory.create(myConfiguration);
+        GraphWalker graphWalker = GraphWalkerFactory.create(createConfiguration());
         Element element = graphWalker.getNextStep();
         Assert.assertEquals("v_1", element.getName());
         Assert.assertFalse(graphWalker.hasNextStep());
@@ -60,10 +58,29 @@ public class RandomPathTest {
 
     @Test(expected = PathGeneratorException.class)
     public void exceptionTest() {
-        GraphWalker graphWalker = GraphWalkerFactory.create(myConfiguration);
+        GraphWalker graphWalker = GraphWalkerFactory.create(createConfiguration());
         Element element = graphWalker.getNextStep();
         Assert.assertEquals("v_1", element.getName());
         Assert.assertFalse(graphWalker.hasNextStep());
+        graphWalker.getNextStep();
+    }
+
+    @Test(expected = PathGeneratorException.class)
+    public void culDeSacTest() {
+        Configuration configuration = createConfiguration();
+        Model model = configuration.getModel("m1");
+        Vertex v_1 = model.getVertexById("v_1");
+        Vertex v_2 = model.addVertex(new Vertex("v_2"));
+        Vertex v_3 = model.addVertex(new Vertex("v_3"));
+        model.addEdge(new Edge(), v_1, v_2);
+        model.addEdge(new Edge(), v_1, v_3);
+        GraphWalker graphWalker = GraphWalkerFactory.create(configuration);
+        Assert.assertTrue(graphWalker.hasNextStep());
+        Assert.assertNotNull(graphWalker.getNextStep());
+        Assert.assertTrue(graphWalker.hasNextStep());
+        Assert.assertNotNull(graphWalker.getNextStep());
+        Assert.assertTrue(graphWalker.hasNextStep());
+        // Now we reached a cul de sac, either in the v_2 or the v_3 vertex, next call will generate an exception
         graphWalker.getNextStep();
     }
 

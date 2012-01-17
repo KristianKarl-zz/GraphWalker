@@ -37,12 +37,9 @@ import org.junit.Test;
 
 public class ReachedEdgeTest {
 
-    private Configuration myConfiguration;
-
-    @Before
-    public void createConfiguration() {
-        myConfiguration = new ConfigurationImpl();
-        Model model = myConfiguration.addModel(new ModelImpl("m1"));
+    private Configuration createConfiguration() {
+        Configuration configuration = new ConfigurationImpl();
+        Model model = configuration.addModel(new ModelImpl("m1"));
         Vertex v_start = model.addVertex(new Vertex("Start"));
         Vertex v_1 = model.addVertex(new Vertex("v_1"));
         Vertex v_2 = model.addVertex(new Vertex("v_2"));
@@ -59,11 +56,12 @@ public class ReachedEdgeTest {
         model.addEdge(new Edge("e_6"), v_6, v_1);
         model.setPathGenerator(PathGeneratorFactory.create("Random"));
         model.getPathGenerator().setStopCondition(StopConditionFactory.create("ReachedEdge", "e_5"));
+        return configuration;
     }
 
     @Test
     public void executeTest() {
-        GraphWalker graphWalker = GraphWalkerFactory.create(myConfiguration);
+        GraphWalker graphWalker = GraphWalkerFactory.create(createConfiguration());
         Element element = graphWalker.getNextStep();
         Assert.assertEquals("v_1", element.getName());
         element = graphWalker.getNextStep();

@@ -25,6 +25,7 @@
  */
 package org.graphwalker.core.model;
 
+import org.graphwalker.core.model.factory.GraphMLModelFactory;
 import org.graphwalker.core.util.ResourceException;
 import org.junit.Assert;
 import org.junit.Test;
@@ -33,35 +34,41 @@ public class ModelFactoryTest {
 
     @Test
     public void singleModelTest() {
-        Model model = ModelFactory.create("m1", "/models/singleModel.graphml");
+        ModelFactory modelFactory = new GraphMLModelFactory();
+        Model model = modelFactory.create("m1", "/models/singleModel.graphml");
         Assert.assertNotNull(model);
     }
 
     @Test
     public void multiModelATest() {
-        Model model = ModelFactory.create("m1", "/models/multiModelA.graphml");
+        ModelFactory modelFactory = new GraphMLModelFactory();
+        Model model = modelFactory.create("m1", "/models/multiModelA.graphml");
         Assert.assertNotNull(model);
     }
 
     @Test
     public void edgeFilterModelATest() {
-        Model model = ModelFactory.create("m1", "/models/edgeFilterModelA.graphml");
+        ModelFactory modelFactory = new GraphMLModelFactory();
+        Model model = modelFactory.create("m1", "/models/edgeFilterModelA.graphml");
         Assert.assertNotNull(model);
     }
 
     @Test(expected = ResourceException.class)
     public void fileNotFoundTest() {
-        ModelFactory.create("m1", "FileNotFound");
+        ModelFactory modelFactory = new GraphMLModelFactory();
+        modelFactory.create("m1", "FileNotFound");
     }
 
     @Test(expected = ModelException.class)
     public void brokenModelTest() {
-        ModelFactory.create("m1", "/models/brokenModel.graphml");
+        ModelFactory modelFactory = new GraphMLModelFactory();
+        modelFactory.create("m1", "/models/brokenModel.graphml");
     }
 
     @Test
     public void readModelWithRequirementsTest() {
-        Model model = ModelFactory.create("m1", "/models/requirementModel.graphml");
+        ModelFactory modelFactory = new GraphMLModelFactory();
+        Model model = modelFactory.create("m1", "/models/requirementModel.graphml");
         Assert.assertNotNull(model);
     }
 
