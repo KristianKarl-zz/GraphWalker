@@ -84,12 +84,13 @@ public class MachineImplTest {
         machine.executePath();
     }
 
-    @Test(expected = MachineException.class)
+    @Test
     public void testBadImpl() {
         Configuration configuration = createConfiguration();
         configuration.getModel("m1").setImplementation(new BadImpl());
         Machine machine = new MachineImpl(configuration);
         machine.executePath();
+        Assert.assertEquals("Start", machine.getCurrentElement().getName());
     }
 
     @Test

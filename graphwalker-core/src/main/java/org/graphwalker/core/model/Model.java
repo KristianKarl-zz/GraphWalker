@@ -50,8 +50,7 @@ public interface Model {
      */
     List<Element> getElements();
     List<Requirement> getRequirements();
-    Requirement addRequirement(Requirement requirement);
-    List<Requirement> getFulfilledRequirements();
+    List<Requirement> getRequirements(RequirementStatus filter);
     /**
      * <p>getVertexById.</p>
      *

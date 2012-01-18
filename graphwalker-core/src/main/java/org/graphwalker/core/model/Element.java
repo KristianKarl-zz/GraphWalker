@@ -45,6 +45,7 @@ public interface Element {
      * @return a {@link java.lang.String} object.
      */
     String getName();
+    boolean hasName();
     /**
      * <p>markAsVisited.</p>
      */

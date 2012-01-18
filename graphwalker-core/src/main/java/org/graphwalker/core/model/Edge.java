@@ -60,7 +60,7 @@ public class Edge extends AbstractElement {
      *
      * @param name a {@link java.lang.String} object.
      */
-    public Edge(@NotNull @NotEmpty String name) {
+    public Edge(String name) {
         super(name);
     }
 

@@ -33,10 +33,10 @@ import org.graphwalker.core.model.Element;
 
 import java.io.File;
 
+// TODO: Refactor, split up into more methods to make the code easier to understand
+// TODO: Add caches for expensive methods that doesn't "change"
 // TODO: Add implementation for different model formats
 // TODO: Create a parser class for name;actions;guard
-// TODO: Requirements (if model knows "everything" we don't need to iterate elements)
-// TODO: More stop conditions (Requirement conditions missing)
 // TODO: Improve logging messages
 // TODO: Statistics (eg. how many times a element been traversed)
 // TODO: More path generators (Only random exists)

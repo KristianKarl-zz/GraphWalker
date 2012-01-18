@@ -30,16 +30,14 @@ import org.graphwalker.core.conditions.StopCondition;
 import org.graphwalker.core.configuration.Configuration;
 import org.graphwalker.core.filter.EdgeFilter;
 import org.graphwalker.core.generators.PathGenerator;
-import org.graphwalker.core.model.Edge;
-import org.graphwalker.core.model.Element;
-import org.graphwalker.core.model.Model;
-import org.graphwalker.core.model.Vertex;
+import org.graphwalker.core.model.*;
 import org.graphwalker.core.util.Resource;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 /**
  * <p>MachineImpl class.</p>
@@ -53,6 +51,7 @@ public class MachineImpl implements Machine {
     private final EdgeFilter myEdgeFilter;
     private Model myCurrentModel;
     private Element myCurrentElement;
+    private List<Element> myElementStack = new ArrayList<Element>();
 
     /**
      * <p>Constructor for MachineImpl.</p>
@@ -134,14 +133,19 @@ public class MachineImpl implements Machine {
      * @return a {@link org.graphwalker.core.model.Element} object.
      */
     public Element getNextStep() {
-        myCurrentElement = getPathGenerator(getCurrentModel()).getNextStep(this);
-        myCurrentElement.markAsVisited();
-        if (myCurrentElement instanceof Edge) {
-            myEdgeFilter.executeActions((Edge)myCurrentElement);
-            if (null == myCurrentElement.getName() || "".equals(myCurrentElement.getName())) {
-                myCurrentElement = getNextStep();
+        do {
+            myElementStack.add(myCurrentElement);
+            myCurrentElement = getPathGenerator(getCurrentModel()).getNextStep(this);
+            myCurrentElement.markAsVisited();
+            if (myCurrentElement instanceof Edge) {
+                myEdgeFilter.executeActions((Edge)myCurrentElement);
             }
-        }
+            if (myCurrentElement instanceof Vertex) {
+                for (Requirement requirement: ((Vertex) myCurrentElement).getRequirements()) {
+                    requirement.setStatus(RequirementStatus.PASSED);
+                }
+            }
+        } while (!myCurrentElement.hasName() && hasNextStep());
         return myCurrentElement;
     }
 
@@ -171,6 +175,17 @@ public class MachineImpl implements Machine {
         myCurrentElement = myCurrentModel.getStartVertex();
     }
 
+    private void backtrack() {
+        if (0<myElementStack.size()) {
+            do {
+                if (myCurrentElement instanceof Edge) {
+                    ((Edge) myCurrentElement).setBlocked(true);
+                }
+                myCurrentElement = myElementStack.remove(myElementStack.size()-1);
+            } while (0<myElementStack.size() && !hasNextStep());
+        }
+    }
+    
     /**
      * <p>executePath.</p>
      */
@@ -187,7 +202,14 @@ public class MachineImpl implements Machine {
                             method.invoke(object);
                         }
                     } catch (InvocationTargetException e) {
-                        throw new MachineException(Resource.getText(Bundle.NAME, "exception.method.invocation", element.getName()), e);
+                        //throw new MachineException(Resource.getText(Bundle.NAME, "exception.method.invocation", element.getName()), e);
+                        if (element instanceof Vertex) {
+                            Vertex vertex = (Vertex)element;
+                            for (Requirement requirement: vertex.getRequirements()) {
+                                requirement.setStatus(RequirementStatus.FAILED);
+                            }
+                        }
+                        backtrack();
                     } catch (NoSuchMethodException e) {
                         throw new MachineException(Resource.getText(Bundle.NAME, "exception.method.missing", element.getName()));
                     } catch (IllegalAccessException e) {

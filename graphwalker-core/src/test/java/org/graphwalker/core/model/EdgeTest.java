@@ -37,16 +37,6 @@ public class EdgeTest {
         new Edge("edgeName");
     }
 
-    @Test(expected = ConstraintsViolatedException.class)
-    public void createNullEdgeTest() {
-        new Edge(null);
-    }
-
-    @Test(expected = ConstraintsViolatedException.class)
-    public void createEmptyEdgeTest() {
-        new Edge("");
-    }
-
     @Test
     public void setBlockedTest() {
         Edge edge = new Edge();
@@ -118,17 +108,5 @@ public class EdgeTest {
         Edge edge = new Edge();
         edge.setName("edgeName");
     }
-
-    @Test(expected = ConstraintsViolatedException.class)
-    public void setNullNameTest() {
-        Edge edge = new Edge();
-        edge.setName(null);
-    }
-
-    @Test(expected = ConstraintsViolatedException.class)
-    public void setEmptyNameTest() {
-        Edge edge = new Edge();
-        edge.setName("");
-    }    
 
 }

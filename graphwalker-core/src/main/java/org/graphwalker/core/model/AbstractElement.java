@@ -53,7 +53,7 @@ public abstract class AbstractElement implements Element {
      *
      * @param name a {@link java.lang.String} object.
      */
-    AbstractElement(@NotNull @NotEmpty String name) {
+    AbstractElement(String name) {
         myName = name;
     }
     
@@ -87,8 +87,12 @@ public abstract class AbstractElement implements Element {
      *
      * @param name a {@link java.lang.String} object.
      */
-    public void setName(@NotNull @NotEmpty String name) {
+    public void setName(String name) {
         myName = name;
+    }
+
+    public boolean hasName() {
+        return null != myName && !"".equals(myName);
     }
 
     /**

@@ -53,13 +53,13 @@ public class TimeDurationTest {
     }
 
     @Test
-    public void executeTest() {
+    public void testExecute() {
         GraphWalker graphWalker = GraphWalkerFactory.create(createConfiguration());
         long start = System.currentTimeMillis();
         while (graphWalker.hasNextStep()) {
             graphWalker.getNextStep();
         }
         long stop = System.currentTimeMillis();
-        Assert.assertTrue(((stop-start)-3000)<3);
+        Assert.assertEquals(3000, stop-start, 10);
     }
 }

@@ -25,38 +25,6 @@
  */
 package org.graphwalker.core.model;
 
-import net.sf.oval.exception.ConstraintsViolatedException;
-import org.junit.Assert;
-import org.junit.Test;
-
-public class VertexTest {
-
-    @Test
-    public void createVertexTest() {
-        Vertex vertex = new Vertex("vertexName");
-        Assert.assertEquals("vertexName", vertex.getName());
-        Assert.assertFalse(vertex.hasSwitchModel());
-        Assert.assertNull(vertex.getSwitchModelId());
-    }
-
-    @Test
-    public void setSwitchModelIdTest() {
-        Vertex vertex = new Vertex();
-        Assert.assertFalse(vertex.hasSwitchModel());
-        vertex.setSwitchModelId("modelId");
-        Assert.assertTrue(vertex.hasSwitchModel());
-        Assert.assertEquals("modelId", vertex.getSwitchModelId());
-    }
-
-    @Test(expected = ConstraintsViolatedException.class)
-    public void setNullSwitchModelIdTest() {
-        Vertex vertex = new Vertex();
-        vertex.setSwitchModelId(null);
-    }
-
-    @Test(expected = ConstraintsViolatedException.class)
-    public void setEmptySwitchModelIdTest() {
-        Vertex vertex = new Vertex();
-        vertex.setSwitchModelId("");
-    }
+public enum RequirementStatus {
+    NOT_COVERED, PASSED, FAILED;
 }

@@ -23,58 +23,42 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core.model;
+package org.graphwalker.core.conditions;
 
-import net.sf.oval.constraint.NotEmpty;
-import net.sf.oval.constraint.NotNull;
+import net.sf.oval.constraint.Range;
 import net.sf.oval.guard.Guarded;
-
-import javax.security.auth.login.FailedLoginException;
+import org.graphwalker.core.model.Element;
+import org.graphwalker.core.model.Model;
+import org.graphwalker.core.model.RequirementStatus;
 
 @Guarded
-/**
- * <p>Requirement class.</p>
- *
- * @author nilols
- * @version $Id: $
- */
-public class Requirement {
+public class RequirementCoverage extends AbstractStopCondition {
 
-    private final String myId;
-    private RequirementStatus myRequirementStatus = RequirementStatus.NOT_COVERED;
+    private final double myLimit;
 
     /**
-     * <p>Constructor for Requirement.</p>
+     * <p>Constructor for EdgeCoverage.</p>
      *
-     * @param id a {@link java.lang.String} object.
+     * @param limit a long.
      */
-    public Requirement(@NotNull @NotEmpty String id) {
-        myId = id;
+    public RequirementCoverage(@Range(min = 1, max = 100) long limit) {
+        myLimit = (double)limit/ PERCENTAGE_SCALE;
     }
 
-    /**
-     * <p>getId.</p>
-     *
-     * @return a {@link java.lang.String} object.
-     */
-    public String getId() {
-        return myId;
-    }
-    
-    /**
-     * <p>isFulfilled.</p>
-     *
-     * @return a boolean.
-     */
-    public RequirementStatus getStatus() {
-        return myRequirementStatus;
+    @Override
+    public boolean isFulfilled(Model model, Element element) {
+        double totalCount = model.getRequirements().size();
+        double passedCount = model.getRequirements(RequirementStatus.PASSED).size();
+        double failedCount = model.getRequirements(RequirementStatus.FAILED).size();
+        return ((passedCount+failedCount) / totalCount) >= myLimit;
     }
 
-    /**
-     * <p>markAsFulfilled.</p>
-     */
-    public void setStatus(RequirementStatus status) {
-        myRequirementStatus = status;
+    @Override
+    public double getFulfilment(Model model, Element element) {
+        double totalCount = model.getRequirements().size();
+        double passedCount = model.getRequirements(RequirementStatus.PASSED).size();
+        double failedCount = model.getRequirements(RequirementStatus.FAILED).size();
+        return ((passedCount+failedCount) / totalCount) / myLimit;
     }
 
 }

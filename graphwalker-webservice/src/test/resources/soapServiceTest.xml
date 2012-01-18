@@ -32,7 +32,7 @@
     <models>
         <model id="m1" file="models/soapServiceModel.graphml">
             <pathGenerator type="Random">
-                <stopCondition type="EdgeCoverage" value="100"/>
+                <stopCondition type="VertexCoverage" value="100"/>
             </pathGenerator>
         </model>
     </models>

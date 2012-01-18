@@ -59,7 +59,7 @@ public class Vertex extends AbstractElement {
      *
      * @param name a {@link java.lang.String} object.
      */
-    public Vertex(@NotNull @NotEmpty String name) {
+    public Vertex(String name) {
         super(name);
     }
     
