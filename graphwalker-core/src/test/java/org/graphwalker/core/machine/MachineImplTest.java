@@ -53,13 +53,13 @@ public class MachineImplTest {
     }
 
     @Test
-    public void executeTest() {
+    public void testExecute() {
         Machine machine = new MachineImpl(createConfiguration());
         Assert.assertTrue(machine.hasNextStep());
     }
 
     @Test(expected = MachineException.class)
-    public void exceptionTest() {
+    public void testException() {
         Configuration configuration = new ConfigurationImpl();
         Model model = configuration.addModel(new ModelImpl("m1"));
         model.addVertex(new Vertex("Start"));
@@ -69,7 +69,7 @@ public class MachineImplTest {
     }
 
     @Test(expected = MachineException.class)
-    public void nullImplTest() {
+    public void testNullImpl() {
         Configuration configuration = createConfiguration();
         configuration.getModel("m1").setImplementation(null);
         Machine machine = new MachineImpl(configuration);
@@ -77,7 +77,7 @@ public class MachineImplTest {
     }
 
     @Test(expected = MachineException.class)
-    public void emptyImplTest() {
+    public void testEmptyImpl() {
         Configuration configuration = createConfiguration();
         configuration.getModel("m1").setImplementation(new EmptyImpl());
         Machine machine = new MachineImpl(configuration);
@@ -85,9 +85,29 @@ public class MachineImplTest {
     }
 
     @Test(expected = MachineException.class)
-    public void badImplTest() {
+    public void testBadImpl() {
         Configuration configuration = createConfiguration();
         configuration.getModel("m1").setImplementation(new BadImpl());
+        Machine machine = new MachineImpl(configuration);
+        machine.executePath();
+    }
+
+    @Test
+    public void testNullVertexName() {
+        Configuration configuration = createConfiguration();
+        Model model = configuration.getModel("m1");
+        model.setImplementation(new EmptyImpl());
+        model.getVertexByName("v_1").setName(null);
+        Machine machine = new MachineImpl(configuration);
+        machine.executePath();
+    }
+
+    @Test
+    public void testEmptyVertexName() {
+        Configuration configuration = createConfiguration();
+        Model model = configuration.getModel("m1");
+        model.setImplementation(new EmptyImpl());
+        model.getVertexByName("v_1").setName("");
         Machine machine = new MachineImpl(configuration);
         machine.executePath();
     }

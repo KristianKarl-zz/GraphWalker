@@ -48,7 +48,7 @@ public class ModelImpl implements Model {
     private final Random myIdGenerator = new Random(System.nanoTime());
     private final Map<String, Vertex> myVertexMap = new HashMap<String, Vertex>();
     private final Map<String, Edge> myEdgeMap = new HashMap<String, Edge>();
-   
+    private final Map<String, Requirement> myRequirementMap = new HashMap<String, Requirement>();
     private FloydWarshall myFloydWarshall;
     private PathGenerator myPathGenerator;
     private Object myImplementation;
@@ -97,6 +97,17 @@ public class ModelImpl implements Model {
         return elements;
     }
 
+    public Requirement addRequirement(Requirement requirement) {
+        if (!myRequirementMap.containsKey(requirement.getId())) {
+            myRequirementMap.put(requirement.getId(), requirement);
+        }
+        return myRequirementMap.get(requirement.getId());
+    }
+
+    public List<Requirement> getRequirements() {
+        return new ArrayList<Requirement>(myRequirementMap.values());    
+    }
+    
     /** {@inheritDoc} */
     public Vertex getVertexById(@NotNull @NotEmpty String id) {
         return myVertexMap.get(id);
@@ -211,7 +222,17 @@ public class ModelImpl implements Model {
         }
         throw new ModelException(Resource.getText(Bundle.NAME, "exception.default.vertex.missing"));
     }
-    
+
+    public List<Requirement> getFulfilledRequirements() {
+        List<Requirement> fulfilledRequirements = new ArrayList<Requirement>();
+        for (Requirement requirement: getRequirements()) {
+            if (requirement.isFulfilled()) {
+                fulfilledRequirements.add(requirement);
+            }
+        }
+        return fulfilledRequirements;
+    }
+
     /**
      * <p>getVisitedEdges.</p>
      *
