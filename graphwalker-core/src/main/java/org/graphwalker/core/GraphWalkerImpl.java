@@ -33,6 +33,7 @@ import org.graphwalker.core.model.Element;
 
 import java.io.File;
 
+// TODO: Log calls to the implementation, and remove system.out
 // TODO: Refactor, split up into more methods to make the code easier to understand
 // TODO: Add caches for expensive methods that doesn't "change"
 // TODO: Add implementation for different model formats

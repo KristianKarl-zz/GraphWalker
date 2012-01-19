@@ -28,6 +28,7 @@ package org.graphwalker.maven.plugin;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.project.MavenProject;
 import org.graphwalker.core.GraphWalker;
 import org.graphwalker.core.GraphWalkerImpl;
 import org.graphwalker.core.configuration.ConfigurationFactory;
@@ -52,6 +53,12 @@ import java.util.List;
 public class ExecuteMojo extends AbstractMojo {
 
     /**
+     * @parameter expression="${project}"
+     * @required
+     */
+    private MavenProject mavenProject;
+
+    /**
      * Classpath.
      *
      * @parameter expression="${project.testClasspathElements}"
@@ -71,6 +78,7 @@ public class ExecuteMojo extends AbstractMojo {
      */
     private List<String> configFiles;
 
+
     private List<GraphWalker> myGraphWalkers = new ArrayList<GraphWalker>();
 
     /**
@@ -83,6 +91,9 @@ public class ExecuteMojo extends AbstractMojo {
         ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
         try {
             URLClassLoader classLoader = new URLClassLoader(convertToURL(classpathElements), getClass().getClassLoader());
+
+            System.getProperties().putAll(mavenProject.getProperties());
+
             Thread.currentThread().setContextClassLoader(classLoader);
             File parent = new File(configPath);
             for (String configFile: configFiles) {

@@ -56,7 +56,7 @@ public class LoggerAspect {
      * @param joinPoint a {@link org.aspectj.lang.JoinPoint} object.
      */
     @AfterReturning("anyFactory()")
-    public void monitor(JoinPoint joinPoint) {
+    public void logFactoryCalls(JoinPoint joinPoint) {
         myLogger.info(joinPoint.toShortString());
     }
     
@@ -66,7 +66,7 @@ public class LoggerAspect {
      * @param joinPoint a {@link org.aspectj.lang.JoinPoint} object.
      */
     @Before("anyGraphWalker()")
-    public void a(JoinPoint joinPoint) {
+    public void logGraphWalkerCalls(JoinPoint joinPoint) {
         myLogger.info(joinPoint.toShortString());
     }
 }

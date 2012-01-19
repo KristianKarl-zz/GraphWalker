@@ -103,10 +103,7 @@ public class Edge extends AbstractElement {
     /** {@inheritDoc} */
     @Override
     public boolean isVisited() {
-        boolean hasGuard = null!=getEdgeGuard();
-        boolean hasAction = 0<getEdgeActions().size();
-        boolean hasName = null!=getName();
-        return super.isVisited()||isBlocked()||(!hasName&&!hasAction&&!hasGuard);
+        return super.isVisited()||isBlocked();
     }
 
     /**

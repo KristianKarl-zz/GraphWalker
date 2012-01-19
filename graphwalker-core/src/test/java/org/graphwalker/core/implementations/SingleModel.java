@@ -54,4 +54,8 @@ public class SingleModel {
     public void e_3() {
         System.out.println("e_3");
     }
+
+    public void v_3() {
+        System.out.println("v_3");
+    }
 }

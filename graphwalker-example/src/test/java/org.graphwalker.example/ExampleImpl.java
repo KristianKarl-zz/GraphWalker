@@ -31,6 +31,7 @@ public class ExampleImpl {
 
     public void e_execute() {
         System.out.println("e_execute");
+        System.out.println(System.getProperty("test.property"));
     }
     
     public void v_verify() {

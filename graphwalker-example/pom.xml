@@ -16,6 +16,10 @@
     <version>3.0-SNAPSHOT</version>
     <name>GraphWalker Example</name>
 
+    <properties>
+        <test.property>Access this property from test</test.property>
+    </properties>
+
     <build>
         <plugins>
             <plugin>

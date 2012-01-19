@@ -34,7 +34,7 @@ package org.graphwalker.core.conditions;
 public abstract class AbstractStopCondition implements StopCondition {
 
     /** Constant <code>FULFILLMENT_LEVEL=0.99999</code> */
-    static final double FULFILLMENT_LEVEL = 0.99999;
+    static final double FULFILLMENT_LEVEL = 0.999999;
     /** Constant <code>PERCENTAGE_SCALE=100</code> */
     static final int PERCENTAGE_SCALE = 100;
     /** Constant <code>SECOND_SCALE=1000</code> */

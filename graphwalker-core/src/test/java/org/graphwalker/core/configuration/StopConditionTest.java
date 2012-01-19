@@ -48,10 +48,6 @@ public class StopConditionTest {
         Assert.assertEquals(graphWalker.getNextStep().getName(), "v_1");
         Assert.assertTrue(graphWalker.hasNextStep());
         Assert.assertEquals(graphWalker.getNextStep().getName(), "e_2");
-        Assert.assertTrue(graphWalker.hasNextStep());
-        Assert.assertEquals(graphWalker.getNextStep().getName(), "v_2");
-        Assert.assertTrue(graphWalker.hasNextStep());
-        Assert.assertEquals(graphWalker.getNextStep().getName(), "e_3");
         Assert.assertFalse(graphWalker.hasNextStep());
     }
 }
