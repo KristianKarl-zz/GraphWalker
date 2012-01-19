@@ -26,10 +26,12 @@
 package org.graphwalker.core.aspects;
 
 import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
+import org.slf4j.ILoggerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,31 +44,23 @@ import org.slf4j.LoggerFactory;
 @Aspect
 public class LoggerAspect {
 
-    static final Logger myLogger = LoggerFactory.getLogger(LoggerAspect.class);
+    private ILoggerFactory myLoggerFactory = LoggerFactory.getILoggerFactory();
 
-    @Pointcut("execution(* org.graphwalker.core..*Factory.create(..))")
+    @Pointcut("call(* org.graphwalker.core..*Factory.create(..))")
     void anyFactory() {}
 
     @Pointcut("within(org.graphwalker.core.GraphWalker+)")
     void anyGraphWalker() {}
 
-    /**
-     * <p>monitor.</p>
-     *
-     * @param joinPoint a {@link org.aspectj.lang.JoinPoint} object.
-     */
-    @AfterReturning("anyFactory()")
-    public void logFactoryCalls(JoinPoint joinPoint) {
-        myLogger.info(joinPoint.toShortString());
+    @Pointcut("call(* org.graphwalker.core.machine.Machine+.getNextStep(..))")
+    void implementation() {}
+
+    @Before("anyGraphWalker()||anyFactory()||implementation()")
+    public void logInfo(JoinPoint joinPoint) {
+        getLogger(joinPoint).info(joinPoint.toLongString());
     }
-    
-    /**
-     * <p>a.</p>
-     *
-     * @param joinPoint a {@link org.aspectj.lang.JoinPoint} object.
-     */
-    @Before("anyGraphWalker()")
-    public void logGraphWalkerCalls(JoinPoint joinPoint) {
-        myLogger.info(joinPoint.toShortString());
+
+    private Logger getLogger(JoinPoint joinPoint) {
+        return myLoggerFactory.getLogger(joinPoint.getSignature().getDeclaringType().getName());
     }
 }

@@ -36,18 +36,15 @@ import java.io.File;
 // TODO: Log calls to the implementation, and remove system.out
 // TODO: Refactor, split up into more methods to make the code easier to understand
 // TODO: Add caches for expensive methods that doesn't "change"
-// TODO: Add implementation for different model formats
 // TODO: Create a parser class for name;actions;guard
 // TODO: Improve logging messages
 // TODO: Statistics (eg. how many times a element been traversed)
 // TODO: More path generators (Only random exists)
 // TODO: Reload/Restart (clear statistics?)
-// TODO: Parser for CTE Models (Combined with implementation class and reflection we can execute methods with arguments)
-// TODO: possibility to use external properties files
 // TODO: Add support for Event driven models?
-// TODO: Add interface, abstract class and/or annotation to make implementations GraphWalkerAware and so they will be able to e.g. fail tests
 // TODO: Try to continue executing models when implementation exceptions occurs (maybe block the closest edge, and continue)
-
+// TODO: handle backtracking better, block node and restart from start vertex
+// TODO: Update xsd so that all configuration uses class parameter so it will be easy to use an external developed component
 /**
  * <p>GraphWalkerImpl class.</p>
  *
