@@ -67,6 +67,21 @@ public class ExecuteMojo extends AbstractMojo {
     private List<String> classpathElements;
 
     /**
+     * @parameter default-value="false" expression="${skipTests}"
+     */
+    private boolean skipTests;
+
+    /**
+     * @parameter default-value="false" expression="${graphwalker.test.skip}"
+     */
+    private boolean skipTestsProperty;
+
+    /**
+     * @parameter default-value="false" expression="${maven.test.skip}"
+     */
+    private boolean skipAllTests;
+
+    /**
      * @parameter property="configPath" default-value="${project.build.testOutputDirectory}"
      * @required
      */
@@ -88,25 +103,27 @@ public class ExecuteMojo extends AbstractMojo {
      * @throws org.apache.maven.plugin.MojoFailureException if any.
      */
     public void execute() throws MojoExecutionException, MojoFailureException {
-        ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
-        try {
-            URLClassLoader classLoader = new URLClassLoader(convertToURL(classpathElements), getClass().getClassLoader());
+        if (!skipTests()) {
+            ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
+            try {
+                URLClassLoader classLoader = new URLClassLoader(convertToURL(classpathElements), getClass().getClassLoader());
 
-            System.getProperties().putAll(mavenProject.getProperties());
+                System.getProperties().putAll(mavenProject.getProperties());
 
-            Thread.currentThread().setContextClassLoader(classLoader);
-            File parent = new File(configPath);
-            for (String configFile: configFiles) {
-                File file = new File(parent, configFile);
-                myGraphWalkers.add(new GraphWalkerImpl(ConfigurationFactory.create(file)));
+                Thread.currentThread().setContextClassLoader(classLoader);
+                File parent = new File(configPath);
+                for (String configFile: configFiles) {
+                    File file = new File(parent, configFile);
+                    myGraphWalkers.add(new GraphWalkerImpl(ConfigurationFactory.create(file)));
+                }
+                for (GraphWalker graphWalker: myGraphWalkers) {
+                    graphWalker.executePath();
+                }
+            } catch (MalformedURLException e) {
+                throw new MojoExecutionException(Resource.getText(Bundle.NAME, "exception.classloader"));
+            } finally {
+                Thread.currentThread().setContextClassLoader(contextClassLoader);
             }
-            for (GraphWalker graphWalker: myGraphWalkers) {
-                graphWalker.executePath();
-            }
-        } catch (MalformedURLException e) {
-            throw new MojoExecutionException(Resource.getText(Bundle.NAME, "exception.classloader"));
-        } finally {
-            Thread.currentThread().setContextClassLoader(contextClassLoader);
         }
     }
 
@@ -116,6 +133,10 @@ public class ExecuteMojo extends AbstractMojo {
             urlList.add(new File(element).toURI().toURL());
         }
         return urlList.toArray(new URL[urlList.size()]);
+    }
+
+    private boolean skipTests() {
+        return skipAllTests || skipTestsProperty || skipTests;
     }
 
 }

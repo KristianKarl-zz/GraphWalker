@@ -32,6 +32,7 @@
                             <goal>test</goal>
                         </goals>
                         <configuration>
+                            <skipTests>true</skipTests>
                             <configFiles>
                                 <configFile>exampleConfig.xml</configFile>
                             </configFiles>
