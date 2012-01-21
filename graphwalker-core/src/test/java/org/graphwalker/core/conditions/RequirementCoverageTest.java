@@ -31,6 +31,7 @@ import org.graphwalker.core.configuration.Configuration;
 import org.graphwalker.core.configuration.ConfigurationImpl;
 import org.graphwalker.core.generators.PathGenerator;
 import org.graphwalker.core.generators.RandomPath;
+import org.graphwalker.core.machine.MachineException;
 import org.graphwalker.core.model.*;
 import org.graphwalker.core.model.factories.GraphMLModelFactory;
 import org.junit.Assert;
@@ -53,7 +54,7 @@ public class RequirementCoverageTest {
         graphWalker.executePath();
     }
 
-    @Test
+    @Test(expected = MachineException.class)
     public void testFailedRequirement() {
         Configuration configuration = new ConfigurationImpl();
         Model model = new ModelImpl("m1");

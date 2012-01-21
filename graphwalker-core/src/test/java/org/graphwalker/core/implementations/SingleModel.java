@@ -28,34 +28,26 @@ package org.graphwalker.core.implementations;
 public class SingleModel {
 
     public void e_0() {
-        System.out.println("e_0");
     }
 
     public void v_0() {
-        System.out.println("v_0");
     }
 
     public void e_1() {
-        System.out.println("e_1");
     }
 
     public void v_1() {
-        System.out.println("v_1");
     }
 
     public void e_2() {
-        System.out.println("e_2");
     }
 
     public void v_2() {
-        System.out.println("v_2");
     }
 
     public void e_3() {
-        System.out.println("e_3");
     }
 
     public void v_3() {
-        System.out.println("v_3");
     }
 }

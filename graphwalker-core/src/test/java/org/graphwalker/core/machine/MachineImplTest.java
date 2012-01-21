@@ -84,7 +84,7 @@ public class MachineImplTest {
         machine.executePath();
     }
 
-    @Test
+    @Test(expected = MachineException.class)
     public void testBadImpl() {
         Configuration configuration = createConfiguration();
         configuration.getModel("m1").setImplementation(new BadImpl());

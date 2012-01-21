@@ -194,31 +194,39 @@ public class MachineImpl implements Machine {
             Element element = getNextStep();
             if (null != element.getName() && !"".equals(element.getName())) {
                 if (getCurrentModel().hasImplementation()) {
-                    Object object = getCurrentModel().getImplementation();
-                    Class clazz = object.getClass();
-                    try {
-                        Method method = clazz.getMethod(element.getName());
-                        if (null != method) {
-                            method.invoke(object);
+                    //try
+                    executeElement(element);
+                    //catch
+                    /*
+                    if (element instanceof Vertex) {
+                        Vertex vertex = (Vertex)element;
+                        for (Requirement requirement: vertex.getRequirements()) {
+                            requirement.setStatus(RequirementStatus.FAILED);
                         }
-                    } catch (InvocationTargetException e) {
-                        //throw new MachineException(Resource.getText(Bundle.NAME, "exception.method.invocation", element.getName()), e);
-                        if (element instanceof Vertex) {
-                            Vertex vertex = (Vertex)element;
-                            for (Requirement requirement: vertex.getRequirements()) {
-                                requirement.setStatus(RequirementStatus.FAILED);
-                            }
-                        }
-                        backtrack();
-                    } catch (NoSuchMethodException e) {
-                        throw new MachineException(Resource.getText(Bundle.NAME, "exception.method.missing", element.getName()));
-                    } catch (IllegalAccessException e) {
-                        throw new MachineException(Resource.getText(Bundle.NAME, "exception.method.access", element.getName()));
                     }
+                    backtrack();
+                    */
                 } else {
                     throw new MachineException(Resource.getText(Bundle.NAME, "exception.implementation.missing", getCurrentModel().getId()));
                 }
             }
+        }
+    }
+
+    private void executeElement(Element element) {
+        Object object = getCurrentModel().getImplementation();
+        Class clazz = object.getClass();
+        try {
+            Method method = clazz.getMethod(element.getName());
+            if (null != method) {
+                method.invoke(object);
+            }
+        } catch (InvocationTargetException e) {
+            throw new MachineException(Resource.getText(Bundle.NAME, "exception.method.invocation", element.getName()), e);
+        } catch (NoSuchMethodException e) {
+            throw new MachineException(Resource.getText(Bundle.NAME, "exception.method.missing", element.getName()));
+        } catch (IllegalAccessException e) {
+            throw new MachineException(Resource.getText(Bundle.NAME, "exception.method.access", element.getName()));
         }
     }
 }

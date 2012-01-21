@@ -25,16 +25,17 @@
  */
 package org.graphwalker.example;
 
+import org.junit.Assert;
+
 public class ExampleImpl {
 
     //TODO: Make a more interesting example
 
     public void e_execute() {
-        System.out.println("e_execute");
-        System.out.println(System.getProperty("test.property"));
+        String property = System.getProperty("test.property");
+        Assert.assertNotNull(property);
     }
     
     public void v_verify() {
-        System.out.println("v_verify");
     }
 }

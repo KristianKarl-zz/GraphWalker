@@ -27,10 +27,12 @@ package org.graphwalker.core.aspects;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.Signature;
-import org.aspectj.lang.annotation.AfterReturning;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
-import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.annotation.*;
+import org.aspectj.lang.reflect.MethodSignature;
+import org.graphwalker.core.Bundle;
+import org.graphwalker.core.model.Edge;
+import org.graphwalker.core.model.Element;
+import org.graphwalker.core.util.Resource;
 import org.slf4j.ILoggerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,21 +48,49 @@ public class LoggerAspect {
 
     private ILoggerFactory myLoggerFactory = LoggerFactory.getILoggerFactory();
 
-    @Pointcut("call(* org.graphwalker.core..*Factory.create(..))")
+    @Pointcut("execution(* org.graphwalker.core..*Factory.create(..))")
     void anyFactory() {}
 
-    @Pointcut("within(org.graphwalker.core.GraphWalker+)")
+    @Pointcut("within(org.graphwalker.core.GraphWalker)")
     void anyGraphWalker() {}
 
-    @Pointcut("call(* org.graphwalker.core.machine.Machine+.getNextStep(..))")
+    @Pointcut("execution(* org.graphwalker.core.machine.Machine+.*(..))")
+    void machine() {}
+
+    @Pointcut("execution(* org.graphwalker.core.machine.Machine+.getNextStep(..))")
     void implementation() {}
 
-    @Before("anyGraphWalker()||anyFactory()||implementation()")
-    public void logInfo(JoinPoint joinPoint) {
-        getLogger(joinPoint).info(joinPoint.toLongString());
+    @Before("anyFactory()")
+    public void logBeforeFactoryCalls(JoinPoint joinPoint) {
+        MethodSignature methodSignature = (MethodSignature)joinPoint.getSignature();
+        String returnType = methodSignature.getReturnType().getSimpleName();
+        String factoryClass = methodSignature.getDeclaringType().getSimpleName();
+        getLogger(joinPoint).info(Resource.getText(Bundle.NAME, "log.factory.create.before", factoryClass, returnType));
+    }
+
+    @AfterReturning("anyFactory()")
+    public void logAfterFactoryCalls(JoinPoint joinPoint) {
+        MethodSignature methodSignature = (MethodSignature)joinPoint.getSignature();
+        String returnType = methodSignature.getReturnType().getSimpleName();
+        String factoryClass = methodSignature.getDeclaringType().getSimpleName();
+        getLogger(joinPoint).info(Resource.getText(Bundle.NAME, "log.factory.create.after", factoryClass, returnType));
+    }
+
+    @AfterReturning(pointcut = "implementation()", returning = "element")
+    public void logImplementationCalls(JoinPoint joinPoint, Element element) {
+        getLogger(joinPoint).info(Resource.getText(Bundle.NAME, "log.method.call", (element instanceof Edge?"EDGE":"VERTEX"), element.getId(), element.getName(), element.getVisitCount()));
+    }
+
+    @AfterThrowing(pointcut = "machine()", throwing = "throwable")
+    public void logExceptions(Throwable throwable) {
+        getLogger(throwable).info(throwable.getLocalizedMessage());
     }
 
     private Logger getLogger(JoinPoint joinPoint) {
         return myLoggerFactory.getLogger(joinPoint.getSignature().getDeclaringType().getName());
+    }
+
+    private Logger getLogger(Throwable throwable) {
+        return myLoggerFactory.getLogger(throwable.getClass().getName());
     }
 }

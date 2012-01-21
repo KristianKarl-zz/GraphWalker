@@ -17,8 +17,15 @@
     <name>GraphWalker Example</name>
 
     <properties>
-        <test.property>Access this property from test</test.property>
+        <test.property>Access this property from a test</test.property>
     </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+    </dependencies>
 
     <build>
         <plugins>
@@ -32,7 +39,6 @@
                             <goal>test</goal>
                         </goals>
                         <configuration>
-                            <skipTests>true</skipTests>
                             <configFiles>
                                 <configFile>exampleConfig.xml</configFile>
                             </configFiles>

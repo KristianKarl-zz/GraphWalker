@@ -25,6 +25,8 @@
  */
 package org.graphwalker.core.model;
 
+import org.graphwalker.core.Bundle;
+import org.graphwalker.core.util.Resource;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,7 +39,7 @@ public class ModelImplTest {
     private Vertex mySource;
     private Vertex myTarget;
     private Edge myEdge;
-    
+
     @Before
     public void createModel() {
         myModel = new ModelImpl("m1");
@@ -110,5 +112,66 @@ public class ModelImplTest {
         Assert.assertEquals(mySource.getName(), modelElements.get(0).getName());
         Assert.assertEquals(myEdge.getName(), modelElements.get(1).getName());
         Assert.assertEquals(myTarget.getName(), modelElements.get(2).getName());
+    }
+
+    @Test
+    public void testStartNode() {
+        Model model = new ModelImpl("m1");
+        model.addVertex(new Vertex(Resource.getText(Bundle.NAME, "start.vertex")));
+        Assert.assertNotNull(model.getStartVertex());
+        Assert.assertEquals(Resource.getText(Bundle.NAME, "start.vertex"), model.getStartVertex().getName());
+    }
+
+    @Test
+    public void testStartNodeWithDifferentCase() {
+        Model model = new ModelImpl("m1");
+        model.addVertex(new Vertex(Resource.getText(Bundle.NAME, "start.vertex").toLowerCase()));
+        Assert.assertNotNull(model.getStartVertex());
+    }
+
+    @Test(expected = ModelException.class)
+    public void testTwoStartNodes() {
+        Model model = new ModelImpl("m1");
+        model.addVertex(new Vertex(Resource.getText(Bundle.NAME, "start.vertex")));
+        model.addVertex(new Vertex(Resource.getText(Bundle.NAME, "start.vertex")));
+        model.getStartVertex();
+    }
+
+    @Test(expected = ModelException.class)
+    public void testTwoStartNodesWithDifferentCase() {
+        Model model = new ModelImpl("m1");
+        model.addVertex(new Vertex(Resource.getText(Bundle.NAME, "start.vertex").toLowerCase()));
+        model.addVertex(new Vertex(Resource.getText(Bundle.NAME, "start.vertex").toUpperCase()));
+        model.getStartVertex();
+    }
+
+    @Test(expected = ModelException.class)
+    public void testStartNodeWithSeveralOutEdges() {
+        Model model = new ModelImpl("m1");
+        Vertex start = model.addVertex(new Vertex(Resource.getText(Bundle.NAME, "start.vertex").toLowerCase()));
+        Vertex vertex = model.addVertex(new Vertex());
+        model.addEdge(new Edge(), start, vertex);
+        model.addEdge(new Edge(), start, vertex);
+        model.getStartVertex();
+    }
+
+    @Test(expected = ModelException.class)
+    public void testStartNodeWithInEdge() {
+        Model model = new ModelImpl("m1");
+        Vertex start = model.addVertex(new Vertex(Resource.getText(Bundle.NAME, "start.vertex").toLowerCase()));
+        Vertex vertex = model.addVertex(new Vertex());
+        model.addEdge(new Edge(), start, vertex);
+        model.addEdge(new Edge(), vertex, start);
+        model.getStartVertex();
+    }
+
+    @Test(expected = ModelException.class)
+    public void testStartNodeWithLoopEdge() {
+        Model model = new ModelImpl("m1");
+        Vertex start = model.addVertex(new Vertex(Resource.getText(Bundle.NAME, "start.vertex").toLowerCase()));
+        Vertex vertex = model.addVertex(new Vertex());
+        model.addEdge(new Edge(), start, vertex);
+        model.addEdge(new Edge(), start, start);
+        model.getStartVertex();
     }
 }

@@ -134,6 +134,17 @@ public class ModelImpl implements Model {
         return null;
     }
     
+    private List<Vertex> findByName(@NotNull @NotEmpty String name) {
+        List<Vertex> vertices = new ArrayList<Vertex>();
+        for (Vertex vertex: myVertexMap.values()) {
+            String vertexName = vertex.getName();
+            if (null != vertexName && vertexName.equalsIgnoreCase(name)) {
+                vertices.add(vertex);
+            }
+        }
+        return vertices;
+    }
+    
     /**
      * <p>getVertices.</p>
      *
@@ -162,6 +173,9 @@ public class ModelImpl implements Model {
     /** {@inheritDoc} */
     public Vertex addVertex(@NotNull Vertex vertex) {
         verifyId(vertex);
+        if (hasStartVertex() && (getStartVertex().equals(vertex) || getStartVertex().getName().equalsIgnoreCase(vertex.getName()))) {
+            throw new ModelException(Resource.getText(Bundle.NAME, "exception.duplicate.start.vertex"));
+        }
         myVertexMap.put(vertex.getId(), vertex);
         myFloydWarshall = new FloydWarshall(this);
         return vertex;
@@ -196,6 +210,12 @@ public class ModelImpl implements Model {
     public Edge addEdge(@NotNull Edge edge, @NotNull Vertex source, @NotNull Vertex target) {
         boolean changed = false;        
         verifyId(edge);
+        if (hasStartVertex() && getStartVertex().equals(target)) {
+            throw new ModelException(Resource.getText(Bundle.NAME, "exception.start.vertex.in.edge"));
+        }
+        if (hasStartVertex() && getStartVertex().equals(source) && 1 == getStartVertex().getEdges().size()) {
+            throw new ModelException(Resource.getText(Bundle.NAME, "exception.start.vertex.out.edges"));
+        }
         if (!myEdgeMap.containsKey(edge.getId())) {
             source.addEdge(edge);
             edge.setSource(source);
@@ -226,11 +246,17 @@ public class ModelImpl implements Model {
      * @return a {@link org.graphwalker.core.model.Vertex} object.
      */
     public Vertex getStartVertex() {
-        Vertex vertex = getVertexByName(Resource.getText(Bundle.NAME, "default.vertex"));
-        if (null != vertex) {
-            return vertex;
+        List<Vertex> vertices = findByName(Resource.getText(Bundle.NAME, "start.vertex"));
+        if (1<vertices.size()) {
+            throw new ModelException(Resource.getText(Bundle.NAME, "exception.duplicate.start.vertex"));
+        } if (1>vertices.size()) {
+            throw new ModelException(Resource.getText(Bundle.NAME, "exception.start.vertex.missing"));
         }
-        throw new ModelException(Resource.getText(Bundle.NAME, "exception.default.vertex.missing"));
+        return vertices.get(0);
+    }
+
+    public boolean hasStartVertex() {
+        return 0<findByName(Resource.getText(Bundle.NAME, "start.vertex")).size();
     }
 
     /**
