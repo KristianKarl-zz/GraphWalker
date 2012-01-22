@@ -46,7 +46,6 @@ public class Edge extends AbstractElement {
     private Vertex myTarget;
     private List<Action> myEdgeActions = new ArrayList<Action>();
     private Guard myEdgeGuard;
-    private boolean myIsBlocked = false;
     private double myWeight = 1.0;
 
     /**
@@ -98,30 +97,6 @@ public class Edge extends AbstractElement {
      */
     public @NotNull Vertex getTarget() {
         return myTarget;
-    }
-    
-    /** {@inheritDoc} */
-    @Override
-    public boolean isVisited() {
-        return super.isVisited()||isBlocked();
-    }
-
-    /**
-     * <p>isBlocked.</p>
-     *
-     * @return true if this Edge is blocked, indicating that this edge should not be used when generating a path
-     */
-    public boolean isBlocked() {
-        return myIsBlocked;
-    }
-
-    /**
-     * <p>setBlocked.</p>
-     *
-     * @param blocked a boolean.
-     */
-    public void setBlocked(boolean blocked) {
-        myIsBlocked = blocked;
     }
 
     /**

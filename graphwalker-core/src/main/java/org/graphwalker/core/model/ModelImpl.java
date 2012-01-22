@@ -29,6 +29,7 @@ import net.sf.oval.constraint.NotEmpty;
 import net.sf.oval.constraint.NotNull;
 import net.sf.oval.guard.Guarded;
 import org.graphwalker.core.Bundle;
+import org.graphwalker.core.algorithms.DepthFirstSearch;
 import org.graphwalker.core.algorithms.FloydWarshall;
 import org.graphwalker.core.generators.PathGenerator;
 import org.graphwalker.core.util.Resource;
@@ -48,6 +49,7 @@ public class ModelImpl implements Model {
     private final Random myIdGenerator = new Random(System.nanoTime());
     private final Map<String, Vertex> myVertexMap = new HashMap<String, Vertex>();
     private final Map<String, Edge> myEdgeMap = new HashMap<String, Edge>();
+    private DepthFirstSearch myDepthFirstSearch;
     private FloydWarshall myFloydWarshall;
     private PathGenerator myPathGenerator;
     private Object myImplementation;
@@ -82,6 +84,11 @@ public class ModelImpl implements Model {
     /** {@inheritDoc} */
     public void setPathGenerator(@NotNull PathGenerator pathGenerator) {
         myPathGenerator = pathGenerator;
+    }
+
+    public void afterElementsAdded() {
+        myDepthFirstSearch = new DepthFirstSearch(this);
+        myFloydWarshall = new FloydWarshall(this);
     }
 
     /**
@@ -177,7 +184,6 @@ public class ModelImpl implements Model {
             throw new ModelException(Resource.getText(Bundle.NAME, "exception.duplicate.start.vertex"));
         }
         myVertexMap.put(vertex.getId(), vertex);
-        myFloydWarshall = new FloydWarshall(this);
         return vertex;
     }
 
@@ -208,7 +214,6 @@ public class ModelImpl implements Model {
 
     /** {@inheritDoc} */
     public Edge addEdge(@NotNull Edge edge, @NotNull Vertex source, @NotNull Vertex target) {
-        boolean changed = false;        
         verifyId(edge);
         if (hasStartVertex() && getStartVertex().equals(target)) {
             throw new ModelException(Resource.getText(Bundle.NAME, "exception.start.vertex.in.edge"));
@@ -221,21 +226,14 @@ public class ModelImpl implements Model {
             edge.setSource(source);
             edge.setTarget(target);
             myEdgeMap.put(edge.getId(), edge);
-            changed = true;
         } else {
             Edge existingEdge = myEdgeMap.get(edge.getId());
             if (!existingEdge.getSource().getId().equals(edge.getSource().getId())) {
-
                 existingEdge.setSource(edge.getSource());
-                changed = true;
             }
             if (!existingEdge.getTarget().getId().equals(edge.getTarget().getId())) {
                 existingEdge.setTarget(edge.getTarget());
-                changed = true;
             }
-        }        
-        if (changed) {
-            myFloydWarshall = new FloydWarshall(this);
         }
         return edge;
     }
@@ -300,6 +298,10 @@ public class ModelImpl implements Model {
             }
         }
         return visitedVertices;
+    }
+    
+    public List<Element> getConnectedComponent() {
+        return myDepthFirstSearch.getConnectedComponent();
     }
     
     /** {@inheritDoc} */

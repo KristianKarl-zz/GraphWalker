@@ -56,6 +56,7 @@ public class ReachedEdgeTest {
         model.addEdge(new Edge("e_6"), v_6, v_1);
         model.setPathGenerator(PathGeneratorFactory.create("Random"));
         model.getPathGenerator().setStopCondition(StopConditionFactory.create("ReachedEdge", "e_5"));
+        model.afterElementsAdded();
         return configuration;
     }
 

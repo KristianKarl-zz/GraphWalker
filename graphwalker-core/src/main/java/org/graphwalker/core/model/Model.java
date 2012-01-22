@@ -49,8 +49,10 @@ public interface Model {
      * @return a {@link java.util.List} object.
      */
     List<Element> getElements();
+    List<Element> getConnectedComponent();
     List<Requirement> getRequirements();
     List<Requirement> getRequirements(RequirementStatus filter);
+    void afterElementsAdded();
     /**
      * <p>getVertexById.</p>
      *

@@ -56,6 +56,7 @@ public class ReachedVertexTest {
         model.addEdge(new Edge("e_6"), v_6, v_1);
         model.setPathGenerator(PathGeneratorFactory.create("Random"));
         model.getPathGenerator().setStopCondition(StopConditionFactory.create("ReachedVertex", "v_5"));
+        model.afterElementsAdded();
         return configuration;
     }
 

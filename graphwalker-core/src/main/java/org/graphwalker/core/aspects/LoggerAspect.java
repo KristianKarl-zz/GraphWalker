@@ -32,6 +32,8 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.graphwalker.core.Bundle;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Element;
+import org.graphwalker.core.model.Requirement;
+import org.graphwalker.core.model.RequirementStatus;
 import org.graphwalker.core.util.Resource;
 import org.slf4j.ILoggerFactory;
 import org.slf4j.Logger;
@@ -54,12 +56,6 @@ public class LoggerAspect {
     @Pointcut("within(org.graphwalker.core.GraphWalker)")
     void anyGraphWalker() {}
 
-    @Pointcut("execution(* org.graphwalker.core.machine.Machine+.*(..))")
-    void machine() {}
-
-    @Pointcut("execution(* org.graphwalker.core.machine.Machine+.getNextStep(..))")
-    void implementation() {}
-
     @Before("anyFactory()")
     public void logBeforeFactoryCalls(JoinPoint joinPoint) {
         MethodSignature methodSignature = (MethodSignature)joinPoint.getSignature();
@@ -76,14 +72,30 @@ public class LoggerAspect {
         getLogger(joinPoint).info(Resource.getText(Bundle.NAME, "log.factory.create.after", factoryClass, returnType));
     }
 
-    @AfterReturning(pointcut = "implementation()", returning = "element")
-    public void logImplementationCalls(JoinPoint joinPoint, Element element) {
-        getLogger(joinPoint).info(Resource.getText(Bundle.NAME, "log.method.call", (element instanceof Edge?"EDGE":"VERTEX"), element.getId(), element.getName(), element.getVisitCount()));
-    }
+    @Pointcut("execution(* org.graphwalker.core.machine.Machine+.*(..))")
+    void machine() {}
 
     @AfterThrowing(pointcut = "machine()", throwing = "throwable")
     public void logExceptions(Throwable throwable) {
-        getLogger(throwable).info(throwable.getLocalizedMessage());
+        getLogger(throwable).info(throwable.getLocalizedMessage(), throwable);
+    }
+
+    @Pointcut("execution(* org.graphwalker.core.machine.Machine+.executeElement(..)) && args(element)")
+    void executeElement(Element element) {}
+
+    @Before("executeElement(element)")
+    public void logExecuteElementCalls(JoinPoint joinPoint, Element element) {
+        getLogger(joinPoint).info(Resource.getText(Bundle.NAME, "log.method.call", (element instanceof Edge?"EDGE":"VERTEX"), element.getId(), element.getName(), element.getVisitCount()));
+    }    
+
+    @Pointcut("execution(* org.graphwalker.core.machine.Machine+.setRequirementStatus(..)) && args(requirement, status)")
+    void setRequirementStatus(Requirement requirement, RequirementStatus status) {}
+
+    @Before("setRequirementStatus(requirement, status)")
+    public void logSetRequirementStatusCalls(JoinPoint joinPoint, Requirement requirement, RequirementStatus status) {
+        if (!requirement.getStatus().equals(status)) {
+            getLogger(joinPoint).info(Resource.getText(Bundle.NAME, "log.requirement", requirement.getId(), status));
+        }
     }
 
     private Logger getLogger(JoinPoint joinPoint) {

@@ -41,7 +41,7 @@ public abstract class AbstractElement implements Element {
     private String myId;
     private String myName;
     private long myVisitCount = 0L;
-
+    private ElementStatus myStatus;
     /**
      * <p>Constructor for AbstractElement.</p>
      */
@@ -118,5 +118,17 @@ public abstract class AbstractElement implements Element {
      */
     public long getVisitCount() {
         return myVisitCount;
+    }
+
+    public void setStatus(ElementStatus status) {
+        myStatus = status;
+    }
+
+    public ElementStatus getStatus() {
+        return myStatus;
+    }
+
+    public boolean isBlocked() {
+        return ElementStatus.BLOCKED.equals(getStatus());
     }
 }

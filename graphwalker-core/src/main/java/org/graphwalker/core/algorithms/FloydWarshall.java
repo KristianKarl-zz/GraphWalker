@@ -25,10 +25,7 @@
  */
 package org.graphwalker.core.algorithms;
 
-import org.graphwalker.core.model.Edge;
-import org.graphwalker.core.model.Element;
-import org.graphwalker.core.model.Model;
-import org.graphwalker.core.model.Vertex;
+import org.graphwalker.core.model.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -52,14 +49,14 @@ public class FloydWarshall implements Algorithm {
      * @param model a {@link org.graphwalker.core.model.Model} object.
      */
     public FloydWarshall(Model model) {
-        myModelElements = model.getElements();
+        myModelElements = model.getConnectedComponent();
         myDistances = createDistanceMatrix(model);
         myPredecessors = createPredecessorMatrix(model);
         updateMatrices(model);
     }
     
     private int[][] createDistanceMatrix(Model model) {
-        List<Element> elements = model.getElements();
+        List<Element> elements = model.getConnectedComponent();
         int[][] distances = new int[elements.size()][elements.size()];
         for (int[] row: distances) {
             Arrays.fill(row, Integer.MAX_VALUE);
@@ -72,7 +69,9 @@ public class FloydWarshall implements Algorithm {
             } else if (element instanceof Vertex) {
                 Vertex vertex = (Vertex)element;
                 for (Edge edge: vertex.getEdges()) {
-                    distances[elements.indexOf(vertex)][elements.indexOf(edge)] = 1;
+                    if (!ElementStatus.BLOCKED.equals(edge.getStatus())) {
+                        distances[elements.indexOf(vertex)][elements.indexOf(edge)] = 1;
+                    }
                 }
             }
         }
@@ -80,11 +79,11 @@ public class FloydWarshall implements Algorithm {
     }
     
     private Element[][] createPredecessorMatrix(Model model) {
-        return new Element[model.getElements().size()][model.getElements().size()];
+        return new Element[model.getConnectedComponent().size()][model.getConnectedComponent().size()];
     }
     
     private void updateMatrices(Model model) {
-        int size = model.getElements().size();
+        int size = model.getConnectedComponent().size();
         for (int k = 0; k < size; k++) {
             for (int i = 0; i < size; i++) {
                 for (int j = 0; j < size; j++) {
@@ -92,7 +91,7 @@ public class FloydWarshall implements Algorithm {
                             && myDistances[k][j] != Integer.MAX_VALUE
                             && myDistances[i][k] + myDistances[k][j] < myDistances[i][j]) {
                         myDistances[i][j] = myDistances[i][k] + myDistances[k][j];
-                        myPredecessors[i][j] = model.getElements().get(k);
+                        myPredecessors[i][j] = model.getConnectedComponent().get(k);
                     }
                 }
             }

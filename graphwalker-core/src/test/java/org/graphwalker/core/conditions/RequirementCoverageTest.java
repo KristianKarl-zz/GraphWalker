@@ -74,6 +74,23 @@ public class RequirementCoverageTest {
         Assert.assertEquals(RequirementStatus.FAILED, requirement.getStatus());
     }
 
+    @Test(expected = MachineException.class)
+    public void testBacktrackingRequirement() {
+        Configuration configuration = new ConfigurationImpl();
+        ModelFactory modelFactory = new GraphMLModelFactory();
+        Model model = modelFactory.create("m1", "models/requirementBacktrackingModel.graphml");
+        PathGenerator pathGenerator = new RandomPath();
+        StopCondition stopCondition = new RequirementCoverage(100);
+        pathGenerator.setStopCondition(stopCondition);
+        model.setPathGenerator(pathGenerator);
+        model.setImplementation(this);
+        configuration.addModel(model);
+        GraphWalker graphWalker = new GraphWalkerImpl(configuration);
+        graphWalker.executePath();
+        // TODO: verify requirement status
+    }
+
+
     public void v_1() {}
 
     public void v_2() {}
@@ -81,6 +98,6 @@ public class RequirementCoverageTest {
     public void v_3() {}
 
     public void v_fail() {
-        throw new RuntimeException();
+        Assert.assertTrue("Assert fails, the result is not as expected!", false);
     }
 }

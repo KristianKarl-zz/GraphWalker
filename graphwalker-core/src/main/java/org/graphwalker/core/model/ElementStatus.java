@@ -25,45 +25,6 @@
  */
 package org.graphwalker.core.model;
 
-/**
- * <p>ModelElement interface.</p>
- *
- * @author nilols
- * @version $Id: $
- */
-public interface Element {
-
-    /**
-     * <p>getId.</p>
-     *
-     * @return a {@link java.lang.String} object.
-     */
-    String getId();
-    /**
-     * <p>getName.</p>
-     *
-     * @return a {@link java.lang.String} object.
-     */
-    String getName();
-    boolean hasName();
-    /**
-     * <p>markAsVisited.</p>
-     */
-    void markAsVisited();
-    /**
-     * <p>isVisited.</p>
-     *
-     * @return a boolean.
-     */
-    boolean isVisited();
-
-    /**
-     * <p>getVisitCount.</p>
-     *
-     * @return a long.
-     */
-    long getVisitCount();
-    void setStatus(ElementStatus status);
-    ElementStatus getStatus();
-    boolean isBlocked();
+public enum ElementStatus {
+    UNREACHABLE,VISITED,BLOCKED;
 }

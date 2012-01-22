@@ -115,6 +115,7 @@ public class GraphMLModelFactory implements ModelFactory {
                 model.addEdge(edge, source, target);
             }
         }
+        model.afterElementsAdded();
         return model;
     }
 
@@ -187,7 +188,9 @@ public class GraphMLModelFactory implements ModelFactory {
         String blocked = Resource.getText(Bundle.NAME, "label.blocked");
         Pattern pattern = Pattern.compile(blocked, Pattern.MULTILINE);
         Matcher matcher = pattern.matcher(text);
-        edge.setBlocked(matcher.find());
+        if (matcher.find()) {
+            edge.setStatus(ElementStatus.BLOCKED);
+        }
         return matcher.replaceAll("");
     }
 

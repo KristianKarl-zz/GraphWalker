@@ -28,65 +28,67 @@ package org.graphwalker.core.model;
 import org.graphwalker.core.Bundle;
 import org.graphwalker.core.util.Resource;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.util.List;
 
 public class ModelImplTest {
 
-    private Model myModel;
-    private Vertex mySource;
-    private Vertex myTarget;
-    private Edge myEdge;
-
-    @Before
-    public void createModel() {
-        myModel = new ModelImpl("m1");
-        mySource = myModel.addVertex(new Vertex());
-        mySource.setName("v_1");
-        myTarget = myModel.addVertex(new Vertex("v_2"));
-        myEdge = myModel.addEdge(new Edge("e_1"), mySource, myTarget);
+    public Model createModel() {
+        Model model = new ModelImpl("m1");
+        Vertex source = model.addVertex(new Vertex());
+        source.setName("Start");
+        Vertex target = model.addVertex(new Vertex("target"));
+        model.addEdge(new Edge("edge"), source, target);
+        model.afterElementsAdded();
+        return model;
     }
     
     @Test
     public void getVertexByNameTest() {
-        Vertex vertex = myModel.getVertexByName(myTarget.getName());
+        Model model = createModel();
+        Vertex vertex = model.getVertexByName("target");
         Assert.assertNotNull(vertex);
-        Assert.assertEquals(myTarget.getName(), vertex.getName());
-        vertex = myModel.getVertexByName("NotFound");
+        Assert.assertEquals("target", vertex.getName());
+        vertex = model.getVertexByName("NotFound");
         Assert.assertNull(vertex);
     }
 
     @Test
     public void getEdgeByNameTest() {
-        Edge edge = myModel.getEdgeByName(myEdge.getName());
+        Model model = createModel();
+        Edge edge = model.getEdgeByName("edge");
         Assert.assertNotNull(edge);
-        Assert.assertEquals(myEdge.getName(), edge.getName());
-        edge = myModel.getEdgeByName("NotFound");
+        Assert.assertEquals(edge.getName(), edge.getName());
+        edge = model.getEdgeByName("NotFound");
         Assert.assertNull(edge);
     }        
 
     @Test
     public void getVertexByIdTest() {
-        Vertex vertex = myModel.getVertexById(mySource.getId());
+        Model model = createModel();
+        Vertex source = model.getVertexByName("Start");
+        Vertex vertex = model.getVertexById(source.getId());
         Assert.assertNotNull(vertex);
-        Assert.assertEquals(mySource.getId(), vertex.getId());
+        Assert.assertEquals(source.getId(), vertex.getId());
         
     }
     
     @Test
     public void getEdgeByIdTest() {
-        Edge edge = myModel.getEdgeById(myEdge.getId());
-        Assert.assertNotNull(edge);
-        Assert.assertEquals(myEdge.getId(), edge.getId());
+        Model model = createModel();
+        Edge edge = model.getEdgeByName("edge");
+        Assert.assertNotNull(model.getEdgeById(edge.getId()));
     }
 
     @Test
     public void getEdgeSourceTest() {
-        Vertex vertex = myEdge.getSource();
+        Model model = createModel();
+        Vertex source = model.getVertexByName("Start");
+        Edge edge = model.getEdgeByName("edge");
+        Vertex vertex = edge.getSource();
         Assert.assertNotNull(vertex);
-        Assert.assertEquals(mySource.getId(), vertex.getId());
+        Assert.assertEquals(source.getId(), vertex.getId());
     }
 
     @Test(expected = ModelException.class)
@@ -97,21 +99,28 @@ public class ModelImplTest {
     
     @Test
     public void getShortestPathToEdge() {
-        List<Element> modelElements = myModel.getShortestPath(mySource, myEdge);
+        Model model = createModel();
+        Vertex source = model.getVertexByName("Start");
+        Edge edge = model.getEdgeByName("edge");
+        List<Element> modelElements = model.getShortestPath(source, edge);
         Assert.assertNotNull(modelElements);
         Assert.assertEquals(2, modelElements.size());
-        Assert.assertEquals(mySource.getName(), modelElements.get(0).getName());
-        Assert.assertEquals(myEdge.getName(), modelElements.get(1).getName());
+        Assert.assertEquals(source.getName(), modelElements.get(0).getName());
+        Assert.assertEquals(edge.getName(), modelElements.get(1).getName());
     }
 
     @Test
     public void getShortestPathToVertex() {
-        List<Element> modelElements = myModel.getShortestPath(mySource, myTarget);
+        Model model = createModel();
+        Vertex source = model.getVertexByName("Start");
+        Vertex target = model.getVertexByName("target");
+        Edge edge = model.getEdgeByName("edge");
+        List<Element> modelElements = model.getShortestPath(source, target);
         Assert.assertNotNull(modelElements);
         Assert.assertEquals(3, modelElements.size());
-        Assert.assertEquals(mySource.getName(), modelElements.get(0).getName());
-        Assert.assertEquals(myEdge.getName(), modelElements.get(1).getName());
-        Assert.assertEquals(myTarget.getName(), modelElements.get(2).getName());
+        Assert.assertEquals(source.getName(), modelElements.get(0).getName());
+        Assert.assertEquals(edge.getName(), modelElements.get(1).getName());
+        Assert.assertEquals(target.getName(), modelElements.get(2).getName());
     }
 
     @Test

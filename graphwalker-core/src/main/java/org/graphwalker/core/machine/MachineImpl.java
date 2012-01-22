@@ -30,6 +30,7 @@ import org.graphwalker.core.conditions.StopCondition;
 import org.graphwalker.core.configuration.Configuration;
 import org.graphwalker.core.filter.EdgeFilter;
 import org.graphwalker.core.generators.PathGenerator;
+import org.graphwalker.core.generators.PathGeneratorException;
 import org.graphwalker.core.model.*;
 import org.graphwalker.core.util.Resource;
 
@@ -37,7 +38,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Stack;
 
 /**
  * <p>MachineImpl class.</p>
@@ -51,7 +51,6 @@ public class MachineImpl implements Machine {
     private final EdgeFilter myEdgeFilter;
     private Model myCurrentModel;
     private Element myCurrentElement;
-    private List<Element> myElementStack = new ArrayList<Element>();
 
     /**
      * <p>Constructor for MachineImpl.</p>
@@ -61,9 +60,9 @@ public class MachineImpl implements Machine {
     public MachineImpl(Configuration configuration) {
         myConfiguration = configuration;
         myEdgeFilter = configuration.getEdgeFilter();
-        myCurrentModel = configuration.getDefaultModel();
-        myCurrentElement = myCurrentModel.getStartVertex();
-        myCurrentElement.markAsVisited();
+        setCurrentModel(configuration.getDefaultModel());
+        setCurrentElement(getCurrentModel().getStartVertex());
+        getCurrentElement().markAsVisited();
     }
 
     /**
@@ -84,6 +83,10 @@ public class MachineImpl implements Machine {
         return myCurrentElement;
     }
 
+    public void setCurrentElement(Element element) {
+        myCurrentElement = element; 
+    }
+    
     /**
      * <p>getCurrentModel.</p>
      *
@@ -93,20 +96,8 @@ public class MachineImpl implements Machine {
         return myCurrentModel;
     }
     
-    private PathGenerator getPathGenerator(Model model) {
-        if (null != model.getPathGenerator()) {
-            return model.getPathGenerator();
-        } else if (null != getConfiguration().getDefaultPathGenerator()) {
-            return getConfiguration().getDefaultPathGenerator();
-        }
-        throw new MachineException(Resource.getText(Bundle.NAME, "exception.generator.missing"));
-    }
-
-    private StopCondition getStopCondition(PathGenerator pathGenerator) {
-        if (null != pathGenerator.getStopCondition()) {
-            return pathGenerator.getStopCondition();
-        }
-        throw new MachineException(Resource.getText(Bundle.NAME, "exception.condition.missing"));
+    public void setCurrentModel(Model model) {
+        myCurrentModel = model;
     }
 
     /**
@@ -117,7 +108,7 @@ public class MachineImpl implements Machine {
     public boolean hasNextStep() {
         Model model = getCurrentModel();
         Element element = getCurrentElement();
-        if (element instanceof Vertex) {
+        if (isVertex(element)) {
             Vertex vertex = (Vertex)element;
             if (vertex.hasSwitchModel()) {
                 model = getConfiguration().getModel(vertex.getSwitchModelId());
@@ -134,21 +125,16 @@ public class MachineImpl implements Machine {
      */
     public Element getNextStep() {
         do {
-            myElementStack.add(myCurrentElement);
-            myCurrentElement = getPathGenerator(getCurrentModel()).getNextStep(this);
-            myCurrentElement.markAsVisited();
-            if (myCurrentElement instanceof Edge) {
-                myEdgeFilter.executeActions((Edge)myCurrentElement);
-            }
-            if (myCurrentElement instanceof Vertex) {
-                for (Requirement requirement: ((Vertex) myCurrentElement).getRequirements()) {
-                    requirement.setStatus(RequirementStatus.PASSED);
-                }
-            }
-        } while (!myCurrentElement.hasName() && hasNextStep());
-        return myCurrentElement;
+            executeActions(getCurrentElement());
+            setRequirementStatus(getCurrentElement(), RequirementStatus.PASSED);
+            setCurrentElement(getPathGenerator(getCurrentModel()).getNextStep(this));
+            getCurrentElement().markAsVisited();
+        } while (hasNextStep() && !getCurrentElement().hasName());
+        return getCurrentElement();
     }
 
+    
+    
     /** {@inheritDoc} */
     public List<Element> getPossibleElements(Element element) {
         List<Element> possibleElements = new ArrayList<Element>();
@@ -170,49 +156,101 @@ public class MachineImpl implements Machine {
         return possibleElements;
     }
 
-    private void switchModel(String modelId) {
-        myCurrentModel = myConfiguration.getModel(modelId);
-        myCurrentElement = myCurrentModel.getStartVertex();
-    }
-
-    private void backtrack() {
-        if (0<myElementStack.size()) {
-            do {
-                if (myCurrentElement instanceof Edge) {
-                    ((Edge) myCurrentElement).setBlocked(true);
-                }
-                myCurrentElement = myElementStack.remove(myElementStack.size()-1);
-            } while (0<myElementStack.size() && !hasNextStep());
-        }
-    }
-    
     /**
      * <p>executePath.</p>
      */
     public void executePath() {
         while (hasNextStep()) {
             Element element = getNextStep();
-            if (null != element.getName() && !"".equals(element.getName())) {
+            if (element.hasName()) {
                 if (getCurrentModel().hasImplementation()) {
-                    //try
-                    executeElement(element);
-                    //catch
-                    /*
-                    if (element instanceof Vertex) {
-                        Vertex vertex = (Vertex)element;
-                        for (Requirement requirement: vertex.getRequirements()) {
-                            requirement.setStatus(RequirementStatus.FAILED);
-                        }
+                    try {
+                        executeElement(element);
+                        setRequirementStatus(element, RequirementStatus.PASSED);
+                    } catch (RuntimeException e) {
+                        setRequirementStatus(element, RequirementStatus.FAILED);
+                        //backtrack();
+                        //restart();
+                        throw e;
                     }
-                    backtrack();
-                    */
                 } else {
                     throw new MachineException(Resource.getText(Bundle.NAME, "exception.implementation.missing", getCurrentModel().getId()));
                 }
             }
         }
     }
+    
+    private void restart() {
+        setCurrentElement(getCurrentModel().getStartVertex());
+    }
+    /*
+    private void backtrack() {
+        if (isEdge(getCurrentElement())) {
+            backtrack((Edge)getCurrentElement());
+        } else if (isVertex(getCurrentElement())) {
+            backtrack((Vertex)getCurrentElement());
+        }
+    }
+    
+    private void backtrack(Edge edge) {
+        edge.skip();
+    }
 
+    private void backtrack(Vertex vertex) {
+        for (Edge edge: getCurrentModel().getEdges()) {
+            if (vertex.equals(edge.getSource()) || vertex.equals(edge.getTarget())) {
+                backtrack(edge);
+            }
+        }
+    }
+    */
+    private boolean isVertex(Element element) {
+        return element instanceof Vertex;
+    }
+    
+    private boolean isEdge(Element element) {
+        return element instanceof Edge;   
+    }
+    
+    private void switchModel(String modelId) {
+        setCurrentModel(myConfiguration.getModel(modelId));
+        setCurrentElement(myCurrentModel.getStartVertex());
+    }
+
+    private PathGenerator getPathGenerator(Model model) {
+        if (null != model.getPathGenerator()) {
+            return model.getPathGenerator();
+        } else if (null != getConfiguration().getDefaultPathGenerator()) {
+            return getConfiguration().getDefaultPathGenerator();
+        }
+        throw new MachineException(Resource.getText(Bundle.NAME, "exception.generator.missing"));
+    }
+
+    private StopCondition getStopCondition(PathGenerator pathGenerator) {
+        if (null != pathGenerator.getStopCondition()) {
+            return pathGenerator.getStopCondition();
+        }
+        throw new MachineException(Resource.getText(Bundle.NAME, "exception.condition.missing"));
+    }
+  
+    private void setRequirementStatus(Element element, RequirementStatus status) {
+        if (element instanceof Vertex) {
+            for (Requirement requirement: ((Vertex) element).getRequirements()) {
+                setRequirementStatus(requirement, status);
+            }
+        }
+    }
+
+    private void setRequirementStatus(Requirement requirement, RequirementStatus status) {
+        requirement.setStatus(status);
+    }
+
+    private void executeActions(Element element) {
+        if (isEdge(element)) {
+            myEdgeFilter.executeActions((Edge)element);
+        }
+    }
+    
     private void executeElement(Element element) {
         Object object = getCurrentModel().getImplementation();
         Class clazz = object.getClass();

@@ -38,12 +38,6 @@ public class EdgeTest {
     }
 
     @Test
-    public void setBlockedTest() {
-        Edge edge = new Edge();
-        edge.setBlocked(true);
-    }
-
-    @Test
     public void setWeightTest() {
         Edge edge = new Edge();
         edge.setWeight(0.5);
