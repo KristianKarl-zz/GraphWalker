@@ -56,6 +56,7 @@ public class VertexCoverageTest {
         model.addEdge(new Edge(), v_2, v_1);
         model.setPathGenerator(PathGeneratorFactory.create("Random"));
         model.getPathGenerator().setStopCondition(StopConditionFactory.create("VertexCoverage", 100));
+        model.afterElementsAdded();
         return configuration;
     }
 

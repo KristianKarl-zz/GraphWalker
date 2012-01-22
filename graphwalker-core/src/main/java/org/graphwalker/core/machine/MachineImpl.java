@@ -127,9 +127,17 @@ public class MachineImpl implements Machine {
         do {
             executeActions(getCurrentElement());
             setRequirementStatus(getCurrentElement(), RequirementStatus.PASSED);
-            setCurrentElement(getPathGenerator(getCurrentModel()).getNextStep(this));
-            getCurrentElement().markAsVisited();
-        } while (hasNextStep() && !getCurrentElement().hasName());
+            if (hasNextStep()) {
+                try {
+                    setCurrentElement(getPathGenerator(getCurrentModel()).getNextStep(this));
+                    getCurrentElement().markAsVisited();
+                } catch (PathGeneratorException e) {
+                    // Cul de sac, but we still haven't satisfied the stop condition
+                    block(getCurrentElement());
+                    restart();
+                }
+            }
+        } while (hasNextStep() && (getCurrentElement().equals(getCurrentModel().getStartVertex()) || !getCurrentElement().hasName()));
         return getCurrentElement();
     }
 
@@ -169,9 +177,8 @@ public class MachineImpl implements Machine {
                         setRequirementStatus(element, RequirementStatus.PASSED);
                     } catch (RuntimeException e) {
                         setRequirementStatus(element, RequirementStatus.FAILED);
-                        //backtrack();
-                        //restart();
-                        throw e;
+                        block(element);
+                        restart();
                     }
                 } else {
                     throw new MachineException(Resource.getText(Bundle.NAME, "exception.implementation.missing", getCurrentModel().getId()));
@@ -181,17 +188,21 @@ public class MachineImpl implements Machine {
     }
     
     private void restart() {
+        getCurrentModel().afterElementsAdded();
         setCurrentElement(getCurrentModel().getStartVertex());
     }
-    /*
-    private void backtrack() {
-        if (isEdge(getCurrentElement())) {
-            backtrack((Edge)getCurrentElement());
-        } else if (isVertex(getCurrentElement())) {
-            backtrack((Vertex)getCurrentElement());
+
+    private void block(Element element) {
+        element.setStatus(ElementStatus.BLOCKED);
+        if (isVertex(element)) {
+            for (Edge edge: getCurrentModel().getEdges()) {
+                if (element.equals(edge.getSource()) || element.equals(edge.getTarget())) {
+                    edge.setStatus(ElementStatus.BLOCKED);
+                }
+            }
         }
     }
-    
+    /*
     private void backtrack(Edge edge) {
         edge.skip();
     }

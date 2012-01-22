@@ -65,6 +65,7 @@ public class FloydWarshall implements Algorithm {
             if (element instanceof Edge) {
                 Edge edge = (Edge)element;
                 Vertex target = edge.getTarget();
+
                 distances[elements.indexOf(edge)][elements.indexOf(target)] = (int)Math.round(100*edge.getWeight());
             } else if (element instanceof Vertex) {
                 Vertex vertex = (Vertex)element;

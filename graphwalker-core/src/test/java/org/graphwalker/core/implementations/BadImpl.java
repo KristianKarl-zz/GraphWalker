@@ -28,6 +28,6 @@ package org.graphwalker.core.implementations;
 public class BadImpl {
 
     public void v_1() throws Exception {
-        throw new Exception();
+        throw new Exception("The implementation generated an exception");
     }
 }

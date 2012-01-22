@@ -49,6 +49,7 @@ public class MachineImplTest {
         model.addEdge(new Edge(), v_start, v_1);
         model.setPathGenerator(PathGeneratorFactory.create("Random"));
         model.getPathGenerator().setStopCondition(StopConditionFactory.create("VertexCoverage", 100));
+        model.afterElementsAdded();
         return configuration;
     }
 
@@ -63,6 +64,7 @@ public class MachineImplTest {
         Configuration configuration = new ConfigurationImpl();
         Model model = configuration.addModel(new ModelImpl("m1"));
         model.addVertex(new Vertex("Start"));
+        model.afterElementsAdded();
         configuration.addModel(model);
         Machine machine = new MachineImpl(configuration);
         machine.hasNextStep();
@@ -76,7 +78,7 @@ public class MachineImplTest {
         machine.executePath();
     }
 
-    @Test(expected = MachineException.class)
+    @Test
     public void testEmptyImpl() {
         Configuration configuration = createConfiguration();
         configuration.getModel("m1").setImplementation(new EmptyImpl());
@@ -84,7 +86,7 @@ public class MachineImplTest {
         machine.executePath();
     }
 
-    @Test(expected = MachineException.class)
+    @Test
     public void testBadImpl() {
         Configuration configuration = createConfiguration();
         configuration.getModel("m1").setImplementation(new BadImpl());

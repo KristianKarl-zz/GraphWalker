@@ -49,12 +49,13 @@ public class RequirementCoverageTest {
         pathGenerator.setStopCondition(stopCondition);
         model.setPathGenerator(pathGenerator);
         model.setImplementation(this);
+        model.afterElementsAdded();
         configuration.addModel(model);
         GraphWalker graphWalker = new GraphWalkerImpl(configuration);
         graphWalker.executePath();
     }
 
-    @Test(expected = MachineException.class)
+    @Test
     public void testFailedRequirement() {
         Configuration configuration = new ConfigurationImpl();
         Model model = new ModelImpl("m1");
@@ -68,13 +69,14 @@ public class RequirementCoverageTest {
         pathGenerator.setStopCondition(stopCondition);
         model.setPathGenerator(pathGenerator);
         model.setImplementation(this);
+        model.afterElementsAdded();
         configuration.addModel(model);
         GraphWalker graphWalker = new GraphWalkerImpl(configuration);
         graphWalker.executePath();
         Assert.assertEquals(RequirementStatus.FAILED, requirement.getStatus());
     }
 
-    @Test(expected = MachineException.class)
+    @Test
     public void testBacktrackingRequirement() {
         Configuration configuration = new ConfigurationImpl();
         ModelFactory modelFactory = new GraphMLModelFactory();
@@ -84,6 +86,7 @@ public class RequirementCoverageTest {
         pathGenerator.setStopCondition(stopCondition);
         model.setPathGenerator(pathGenerator);
         model.setImplementation(this);
+        model.afterElementsAdded();
         configuration.addModel(model);
         GraphWalker graphWalker = new GraphWalkerImpl(configuration);
         graphWalker.executePath();

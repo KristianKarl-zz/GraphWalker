@@ -48,6 +48,9 @@ public class RequirementCoverage extends AbstractStopCondition {
     @Override
     public boolean isFulfilled(Model model, Element element) {
         double totalCount = model.getRequirements().size();
+        if (0 == totalCount) {
+            return true;
+        }
         double passedCount = model.getRequirements(RequirementStatus.PASSED).size();
         double failedCount = model.getRequirements(RequirementStatus.FAILED).size();
         return ((passedCount+failedCount) / totalCount) >= myLimit;
@@ -56,6 +59,9 @@ public class RequirementCoverage extends AbstractStopCondition {
     @Override
     public double getFulfilment(Model model, Element element) {
         double totalCount = model.getRequirements().size();
+        if (0 == totalCount) {
+            return 1.0;
+        }
         double passedCount = model.getRequirements(RequirementStatus.PASSED).size();
         double failedCount = model.getRequirements(RequirementStatus.FAILED).size();
         return ((passedCount+failedCount) / totalCount) / myLimit;

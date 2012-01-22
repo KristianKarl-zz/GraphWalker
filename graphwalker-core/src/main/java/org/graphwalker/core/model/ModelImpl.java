@@ -158,7 +158,13 @@ public class ModelImpl implements Model {
      * @return a {@link java.util.List} object.
      */
     public List<Vertex> getVertices() {
-        return new ArrayList<Vertex>(myVertexMap.values());
+        List<Vertex> vertices = new ArrayList<Vertex>();
+        for (Element element: getConnectedComponent()) {
+            if (element instanceof Vertex) {
+                vertices.add((Vertex)element);
+            }
+        }
+        return vertices;
     }
 
     private void verifyId(@NotNull Edge edge) {
@@ -209,7 +215,13 @@ public class ModelImpl implements Model {
      * @return a {@link java.util.List} object.
      */
     public List<Edge> getEdges() {
-        return new ArrayList<Edge>(myEdgeMap.values());
+        List<Edge> edges = new ArrayList<Edge>();
+        for (Element element: getConnectedComponent()) {
+            if (element instanceof Edge) {
+                edges.add((Edge)element);
+            }
+        }
+        return edges;
     }
 
     /** {@inheritDoc} */
@@ -264,7 +276,7 @@ public class ModelImpl implements Model {
      */
     public List<Edge> getVisitedEdges() {
         List<Edge> visitedEdges = new ArrayList<Edge>();
-        for (Edge edge: myEdgeMap.values()) {
+        for (Edge edge: getEdges()) {
             if (edge.isVisited()) {
                 visitedEdges.add(edge);
             }
@@ -292,7 +304,7 @@ public class ModelImpl implements Model {
      */
     public List<Vertex> getVisitedVertices() {
         List<Vertex> visitedVertices = new ArrayList<Vertex>();
-        for (Vertex vertex: myVertexMap.values()) {
+        for (Vertex vertex: getVertices()) {
             if (vertex.isVisited()) {
                 visitedVertices.add(vertex);
             }

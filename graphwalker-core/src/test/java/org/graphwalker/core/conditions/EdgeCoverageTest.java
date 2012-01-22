@@ -59,6 +59,7 @@ public class EdgeCoverageTest {
         model.addEdge(new Edge(), v_2, v_1);
         model.setPathGenerator(PathGeneratorFactory.create("Random"));
         model.getPathGenerator().setStopCondition(StopConditionFactory.create("EdgeCoverage", 100));
+        model.afterElementsAdded();
         return configuration;
     }
 
