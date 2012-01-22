@@ -33,6 +33,8 @@ import org.graphwalker.core.GraphWalker;
 import org.graphwalker.core.GraphWalkerImpl;
 import org.graphwalker.core.configuration.ConfigurationFactory;
 import org.graphwalker.core.util.Resource;
+import org.graphwalker.maven.plugin.report.ReportGenerator;
+import org.graphwalker.maven.plugin.report.XMLReportGenerator;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -40,6 +42,9 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
+
+// TODO: fork execution of config files
+// TODO: create html reports
 
 /**
  * <p>ExecuteMojo class.</p>
@@ -93,6 +98,11 @@ public class ExecuteMojo extends AbstractMojo {
      */
     private List<String> configFiles;
 
+    /**
+     * @parameter default-value="${project.build.directory}/graphwalker-reports"
+     */
+    private File reportsDirectory;
+
 
     private List<GraphWalker> myGraphWalkers = new ArrayList<GraphWalker>();
 
@@ -118,6 +128,9 @@ public class ExecuteMojo extends AbstractMojo {
                 }
                 for (GraphWalker graphWalker: myGraphWalkers) {
                     graphWalker.executePath();
+                }
+                for (GraphWalker graphWalker: myGraphWalkers) {
+                    new XMLReportGenerator(graphWalker, reportsDirectory).writeReport();
                 }
             } catch (MalformedURLException e) {
                 throw new MojoExecutionException(Resource.getText(Bundle.NAME, "exception.classloader"));

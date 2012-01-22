@@ -33,18 +33,15 @@ import org.graphwalker.core.model.Element;
 
 import java.io.File;
 
-// TODO: Log calls to the implementation, and remove system.out
 // TODO: Refactor, split up into more methods to make the code easier to understand
 // TODO: Add caches for expensive methods that doesn't "change"
 // TODO: Create a parser class for name;actions;guard
-// TODO: Improve logging messages
 // TODO: Statistics (eg. how many times a element been traversed)
 // TODO: More path generators (Only random exists)
 // TODO: Reload/Restart (clear statistics?)
 // TODO: Add support for Event driven models?
-// TODO: Try to continue executing models when implementation exceptions occurs (maybe block the closest edge, and continue)
-// TODO: handle backtracking better, block node and restart from start vertex
 // TODO: Update xsd so that all configuration uses class parameter so it will be easy to use an external developed component
+
 /**
  * <p>GraphWalkerImpl class.</p>
  *
