@@ -28,7 +28,7 @@ package org.graphwalker.core.filter;
 import org.graphwalker.core.Bundle;
 import org.graphwalker.core.model.Action;
 import org.graphwalker.core.model.Edge;
-import org.graphwalker.core.util.Resource;
+import org.graphwalker.core.utils.Resource;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;

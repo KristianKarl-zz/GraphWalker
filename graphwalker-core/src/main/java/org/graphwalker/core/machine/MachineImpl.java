@@ -32,7 +32,7 @@ import org.graphwalker.core.filter.EdgeFilter;
 import org.graphwalker.core.generators.PathGenerator;
 import org.graphwalker.core.generators.PathGeneratorException;
 import org.graphwalker.core.model.*;
-import org.graphwalker.core.util.Resource;
+import org.graphwalker.core.utils.Resource;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

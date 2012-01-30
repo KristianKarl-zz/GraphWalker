@@ -25,11 +25,20 @@
  */
 package org.graphwalker.example;
 
+import org.graphwalker.core.annotations.After;
+import org.graphwalker.core.annotations.Before;
+import org.graphwalker.core.annotations.GraphWalker;
+import org.graphwalker.core.conditions.Any;
 import org.junit.Assert;
 
-public class ExampleImpl {
+@GraphWalker(id = "m1", model = "models/exampleModel.graphml")
+public class ExampleImpl extends BaseClass {
 
     //TODO: Make a more interesting example
+    @Before
+    public void baseBefore() {
+
+    }
 
     public void e_execute() {
         String property = System.getProperty("test.property");

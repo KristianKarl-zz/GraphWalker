@@ -27,7 +27,7 @@ package org.graphwalker.core.model.factories;
 
 import org.graphwalker.core.Bundle;
 import org.graphwalker.core.model.*;
-import org.graphwalker.core.util.Resource;
+import org.graphwalker.core.utils.Resource;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.filter.ElementFilter;

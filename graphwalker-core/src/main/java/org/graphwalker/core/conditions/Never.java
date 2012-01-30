@@ -34,7 +34,13 @@ import org.graphwalker.core.model.Model;
  * @author nilols
  * @version $Id: $
  */
-public class Never extends AbstractStopCondition {
+public class Never implements StopCondition {
+
+    public Never() {
+    }
+
+    public Never(String value) {
+    }
 
     /** {@inheritDoc} */
     @Override

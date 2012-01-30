@@ -1,6 +1,6 @@
 /*
  * #%L
- * GraphWalker GUI
+ * GraphWalker Core
  * %%
  * Copyright (C) 2011 - 2012 GraphWalker
  * %%
@@ -23,40 +23,12 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.gui.actions;
+package org.graphwalker.core;
 
-import org.graphwalker.core.utils.Resource;
-import org.graphwalker.gui.Bundle;
-import org.graphwalker.gui.GraphWalkerView;
+public class GraphWalkerWorker implements Runnable {
 
-import java.awt.event.ActionEvent;
-
-/**
- * <p>NextAction class.</p>
- *
- * @author nilols
- * @version $Id: $
- */
-public class NextAction extends GraphWalkerAbstractAction {
-
-    /**
-     * <p>Constructor for NextAction.</p>
-     *
-     * @param view a {@link org.graphwalker.gui.GraphWalkerView} object.
-     */
-    public NextAction(GraphWalkerView view) {
-        super(view);
-        putValue(ActionConstants.GROUP, Resource.getText(Bundle.NAME, "menu.next.group"));
-        putValue(ActionConstants.INDEX, Integer.parseInt(Resource.getText(Bundle.NAME, "menu.next.index")));
-        putValue(ActionConstants.NAME, Resource.getText(Bundle.NAME, "menu.next.label"));
-        putValue(ActionConstants.DESCRIPTION, Resource.getText(Bundle.NAME, "menu.next.description"));
-        putValue(ActionConstants.ICON, Resource.getIcon(Bundle.NAME, "menu.next.icon"));
-        setEnabled(false);
-    }
-
-    /** {@inheritDoc} */
     @Override
-    public void actionPerformed(ActionEvent actionEvent) {
+    public void run() {
         // TODO: Fix me (Auto generated)
     }
 }

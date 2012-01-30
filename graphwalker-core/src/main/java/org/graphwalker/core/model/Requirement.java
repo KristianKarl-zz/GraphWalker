@@ -29,8 +29,6 @@ import net.sf.oval.constraint.NotEmpty;
 import net.sf.oval.constraint.NotNull;
 import net.sf.oval.guard.Guarded;
 
-import javax.security.auth.login.FailedLoginException;
-
 @Guarded
 /**
  * <p>Requirement class.</p>

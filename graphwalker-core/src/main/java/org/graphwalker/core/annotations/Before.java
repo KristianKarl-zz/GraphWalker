@@ -1,6 +1,6 @@
 /*
  * #%L
- * Maven GraphWalker Plugin
+ * GraphWalker Core
  * %%
  * Copyright (C) 2011 - 2012 GraphWalker
  * %%
@@ -23,8 +23,13 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.maven.plugin.report;
+package org.graphwalker.core.annotations;
 
-public interface ReportGenerator {
-    void writeReport();
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+@Retention(RetentionPolicy.RUNTIME)
+@Target(java.lang.annotation.ElementType.METHOD)
+public @interface Before {
 }

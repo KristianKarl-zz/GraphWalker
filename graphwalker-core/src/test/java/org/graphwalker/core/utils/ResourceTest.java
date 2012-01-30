@@ -23,32 +23,30 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core.generators;
+package org.graphwalker.core.utils;
 
-import org.graphwalker.core.Bundle;
-import org.graphwalker.core.utils.Resource;
+import net.sf.oval.exception.ConstraintsViolatedException;
+import org.junit.Test;
 
-/**
- * <p>PathGeneratorFactory class.</p>
- *
- * @author nilols
- * @version $Id: $
- */
-public class PathGeneratorFactory {
+public class ResourceTest {
 
-    private PathGeneratorFactory() {
+    @Test
+    public void testGetFileWithUnixPath() {
+        Resource.getFile("/models/brokenModel.graphml");
     }
 
-    /**
-     * <p>create.</p>
-     *
-     * @param type a {@link java.lang.String} object.
-     * @return a {@link org.graphwalker.core.generators.PathGenerator} object.
-     */
-    public static PathGenerator create(String type) {
-        if ("Random".equalsIgnoreCase(type)) {
-            return new RandomPath();
-        }
-        throw new PathGeneratorException(Resource.getText(Bundle.NAME, "exception.generator.unknown"));
+    @Test
+    public void testGetResourceFile() {
+        Resource.getFile("models/brokenModel.graphml");
+    }
+
+    @Test(expected = ConstraintsViolatedException.class)
+    public void testGetFileWithMissingFilename() {
+        Resource.getFile(null);
+    }
+
+    @Test(expected = ConstraintsViolatedException.class)
+    public void testGetFileWithEmptyFilename() {
+        Resource.getFile("");
     }
 }

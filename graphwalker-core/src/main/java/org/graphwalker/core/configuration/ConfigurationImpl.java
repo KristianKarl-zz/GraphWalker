@@ -30,7 +30,7 @@ import org.graphwalker.core.filter.EdgeFilter;
 import org.graphwalker.core.filter.EdgeFilterImpl;
 import org.graphwalker.core.generators.PathGenerator;
 import org.graphwalker.core.model.Model;
-import org.graphwalker.core.util.Resource;
+import org.graphwalker.core.utils.Resource;
 
 import java.io.File;
 import java.util.ArrayList;

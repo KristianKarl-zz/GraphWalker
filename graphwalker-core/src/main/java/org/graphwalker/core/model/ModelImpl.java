@@ -32,7 +32,7 @@ import org.graphwalker.core.Bundle;
 import org.graphwalker.core.algorithms.DepthFirstSearch;
 import org.graphwalker.core.algorithms.FloydWarshall;
 import org.graphwalker.core.generators.PathGenerator;
-import org.graphwalker.core.util.Resource;
+import org.graphwalker.core.utils.Resource;
 
 import java.util.*;
 

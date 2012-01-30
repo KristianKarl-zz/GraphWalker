@@ -1,6 +1,6 @@
 /*
  * #%L
- * Maven GraphWalker Plugin
+ * GraphWalker Core
  * %%
  * Copyright (C) 2011 - 2012 GraphWalker
  * %%
@@ -23,35 +23,11 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.maven.plugin.report;
+package org.graphwalker.core.utils;
 
-import org.apache.maven.doxia.sink.Sink;
-import org.graphwalker.core.util.Resource;
-import org.graphwalker.maven.plugin.Bundle;
+public class ReflectionException extends RuntimeException {
 
-public class HTMLReportGenerator implements ReportGenerator {
-
-    private Sink mySink;
-    
-    public HTMLReportGenerator(Sink sink) {
-        mySink = sink;
-    }
-
-    private Sink getSink() {
-        return mySink;
-    }
-
-    @Override
-    public void writeReport() {
-        getSink().head();
-        getSink().title();
-        getSink().text(Resource.getText(Bundle.NAME, "report.graphwalker.header"));
-        getSink().title_();
-        getSink().head_();
-        getSink().body();
-
-        getSink().body_();
-        getSink().flush();
-        getSink().close();
+    public ReflectionException(String cause) {
+        super(cause);
     }
 }

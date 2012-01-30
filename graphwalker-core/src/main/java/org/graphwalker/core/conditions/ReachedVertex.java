@@ -35,7 +35,7 @@ import org.graphwalker.core.model.Vertex;
  * @author nilols
  * @version $Id: $
  */
-public class ReachedVertex extends AbstractStopCondition {
+public class ReachedVertex implements StopCondition {
 
     private final String myName;
 

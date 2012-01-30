@@ -37,7 +37,7 @@ import java.util.List;
  * @author nilols
  * @version $Id: $
  */
-public class Any extends AbstractStopCondition {
+public class Any implements StopCondition {
 
     private final List<StopCondition> myStopConditions = new ArrayList<StopCondition>();
 

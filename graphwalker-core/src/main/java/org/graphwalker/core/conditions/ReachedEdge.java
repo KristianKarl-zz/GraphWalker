@@ -35,7 +35,7 @@ import org.graphwalker.core.model.Model;
  * @author nilols
  * @version $Id: $
  */
-public class ReachedEdge extends AbstractStopCondition {
+public class ReachedEdge implements StopCondition {
 
     private final String myName;
 

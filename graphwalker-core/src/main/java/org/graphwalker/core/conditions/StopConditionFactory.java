@@ -26,7 +26,7 @@
 package org.graphwalker.core.conditions;
 
 import org.graphwalker.core.Bundle;
-import org.graphwalker.core.util.Resource;
+import org.graphwalker.core.utils.Resource;
 
 /**
  * <p>StopConditionFactory class.</p>

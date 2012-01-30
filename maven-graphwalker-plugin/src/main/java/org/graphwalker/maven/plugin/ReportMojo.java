@@ -29,9 +29,8 @@ import org.apache.maven.doxia.siterenderer.Renderer;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.reporting.AbstractMavenReport;
 import org.apache.maven.reporting.MavenReportException;
-import org.graphwalker.core.util.Resource;
-import org.graphwalker.maven.plugin.report.HTMLReportGenerator;
-import org.graphwalker.maven.plugin.report.ReportGenerator;
+import org.graphwalker.core.utils.Resource;
+import org.graphwalker.maven.plugin.reports.HTMLReportGenerator;
 
 import java.io.File;
 import java.util.Locale;
@@ -48,7 +47,8 @@ public class ReportMojo extends AbstractMavenReport {
 
     /**
      * @parameter expression="${project}"
-     * @required @readonly
+     * @required
+     * @readonly
      */
     private MavenProject project;
 

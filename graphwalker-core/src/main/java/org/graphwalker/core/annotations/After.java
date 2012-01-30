@@ -23,22 +23,13 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core.util;
+package org.graphwalker.core.annotations;
 
-/**
- * <p>ResourceException class.</p>
- *
- * @author nilols
- * @version $Id: $
- */
-public class ResourceException extends RuntimeException {
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-    /**
-     * <p>Constructor for ResourceException.</p>
-     *
-     * @param cause a {@link java.lang.String} object.
-     */
-    public ResourceException(String cause) {
-        super(cause);
-    }
+@Retention(RetentionPolicy.RUNTIME)
+@Target(java.lang.annotation.ElementType.METHOD)
+public @interface After {
 }

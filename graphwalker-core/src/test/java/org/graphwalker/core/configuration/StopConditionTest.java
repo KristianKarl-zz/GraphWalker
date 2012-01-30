@@ -27,11 +27,9 @@ package org.graphwalker.core.configuration;
 
 import org.graphwalker.core.GraphWalker;
 import org.graphwalker.core.GraphWalkerFactory;
-import org.graphwalker.core.util.Resource;
+import org.graphwalker.core.utils.Resource;
 import org.junit.Assert;
 import org.junit.Test;
-
-import java.io.File;
 
 public class StopConditionTest {
 

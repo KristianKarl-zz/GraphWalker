@@ -25,7 +25,7 @@
  */
 package org.graphwalker.cli;
 
-import org.graphwalker.core.util.ResourceException;
+import org.graphwalker.core.utils.ResourceException;
 import org.junit.Assert;
 import org.junit.Test;
 

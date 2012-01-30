@@ -26,7 +26,7 @@
 package org.graphwalker.core.model;
 
 import org.graphwalker.core.Bundle;
-import org.graphwalker.core.util.Resource;
+import org.graphwalker.core.utils.Resource;
 import org.junit.Assert;
 import org.junit.Test;
 

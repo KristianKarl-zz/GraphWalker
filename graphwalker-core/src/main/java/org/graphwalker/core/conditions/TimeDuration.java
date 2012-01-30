@@ -37,10 +37,14 @@ import org.graphwalker.core.model.Model;
  * @author nilols
  * @version $Id: $
  */
-public class TimeDuration extends AbstractStopCondition {
+public class TimeDuration implements StopCondition {
 
     private final long myDuration;
     private final long myTimestamp;
+
+    public TimeDuration(String value) {
+        this(Long.parseLong(value));
+    }
 
     /**
      * <p>Constructor for TimeDuration.</p>

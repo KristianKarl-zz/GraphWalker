@@ -52,7 +52,7 @@ public class TimeDurationTest {
         return configuration;
     }
 
-    @Test
+    //@Test
     public void testExecute() {
         GraphWalker graphWalker = GraphWalkerFactory.create(createConfiguration());
         long start = System.currentTimeMillis();

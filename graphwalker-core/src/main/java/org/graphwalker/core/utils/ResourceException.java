@@ -23,30 +23,22 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core.util;
+package org.graphwalker.core.utils;
 
-import net.sf.oval.exception.ConstraintsViolatedException;
-import org.junit.Test;
+/**
+ * <p>ResourceException class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
+public class ResourceException extends RuntimeException {
 
-public class ResourceTest {
-
-    @Test
-    public void testGetFileWithUnixPath() {
-        Resource.getFile("/models/brokenModel.graphml");
-    }
-
-    @Test
-    public void testGetResourceFile() {
-        Resource.getFile("models/brokenModel.graphml");
-    }
-
-    @Test(expected = ConstraintsViolatedException.class)
-    public void testGetFileWithMissingFilename() {
-        Resource.getFile(null);
-    }
-
-    @Test(expected = ConstraintsViolatedException.class)
-    public void testGetFileWithEmptyFilename() {
-        Resource.getFile("");
+    /**
+     * <p>Constructor for ResourceException.</p>
+     *
+     * @param cause a {@link java.lang.String} object.
+     */
+    public ResourceException(String cause) {
+        super(cause);
     }
 }

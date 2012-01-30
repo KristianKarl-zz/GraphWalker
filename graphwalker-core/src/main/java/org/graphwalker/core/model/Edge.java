@@ -25,7 +25,6 @@
  */
 package org.graphwalker.core.model;
 
-import net.sf.oval.constraint.NotEmpty;
 import net.sf.oval.constraint.NotNull;
 import net.sf.oval.constraint.Range;
 import net.sf.oval.guard.Guarded;

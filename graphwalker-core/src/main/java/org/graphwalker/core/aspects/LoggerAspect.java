@@ -26,18 +26,16 @@
 package org.graphwalker.core.aspects;
 
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.Signature;
-import org.aspectj.lang.annotation.*;
-import org.aspectj.lang.reflect.MethodSignature;
-import org.graphwalker.core.Bundle;
-import org.graphwalker.core.model.Edge;
-import org.graphwalker.core.model.Element;
-import org.graphwalker.core.model.Requirement;
-import org.graphwalker.core.model.RequirementStatus;
-import org.graphwalker.core.util.Resource;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
+import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.ILoggerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
+
+import java.util.UUID;
+
 
 /**
  * <p>LoggerAspect class.</p>
@@ -50,11 +48,112 @@ public class LoggerAspect {
 
     private ILoggerFactory myLoggerFactory = LoggerFactory.getILoggerFactory();
 
+    static {
+        MDC.put("traceId", UUID.randomUUID().toString());
+    }
+
+    @Pointcut("execution(public * *(..))")
+    void publicCall() {}
+
+    @Pointcut("within(org.graphwalker.core.algorithms.Algorithm+)")
+    void algorithm() {}
+
+    @Pointcut("within(org.graphwalker.core.algorithms.Algorithm+)")
+    void annotation() {}
+
+    @Pointcut("within(org.graphwalker.core.conditions.StopCondition+)")
+    void stopCondition() {}
+
+    @Pointcut("within(org.graphwalker.core.configuration.Configuration+)")
+    void configuration() {}
+
+    @Pointcut("within(org.graphwalker.core.filter.EdgeFilter+)")
+    void edgeFilter() {}
+
+    @Pointcut("within(org.graphwalker.core.generators.PathGenerator+)")
+    void pathGenerator() {}
+
+    @Pointcut("within(org.graphwalker.core.machine.Machine+)")
+    void machine() {}
+
+    @Pointcut("within(org.graphwalker.core.model.Element+)")
+    void element() {}
+
+    @Pointcut("within(org.graphwalker.core.model.Model+)")
+    void model() {}
+
+    @Pointcut("within(org.graphwalker.core.model.ModelFactory+)")
+    void modelFactory() {}
+
+    @Pointcut("within(org.graphwalker.core.GraphWalker+)")
+    void graphwalker() {}
+
+    @Before("publicCall() && graphwalker()")
+    public void logInfo(JoinPoint joinPoint) {
+        MDC.put("traceId", UUID.randomUUID().toString());
+        getLogger(joinPoint).info(joinPoint.toLongString());
+    }
+
+    //  algorithm() || element() || model() ||
+    @Before("publicCall() && (annotation() || stopCondition() || configuration() || edgeFilter() || pathGenerator() || machine() || modelFactory())")
+    public void logDebug(JoinPoint joinPoint) {
+        //getLogger(joinPoint).debug(joinPoint.toLongString()+":"+joinPoint.getSourceLocation().getLine());
+    }
+
+
+
+    /*
+    @Pointcut("execution(public * *(..))")
+    void publicCall() {}
+
+    @Pointcut("within(org.graphwalker.core.GraphWalker+)")
+    void info() {}
+
+    @Pointcut("within(org.graphwalker..*)")
+    void debug() {}
+
+    @Pointcut("within(@(@org.graphwalker.core.annotations.GraphWalker *) *)")
+    public void implementation() {}
+
+    @Before("publicCall() && (info() || implementation())")
+    public void logInfo(JoinPoint joinPoint) {
+        MDC.put("traceId", UUID.randomUUID().toString());
+        getLogger(joinPoint).info(joinPoint.toLongString());
+    }
+
+    @Before("publicCall() && debug()")
+    public void logDebug(JoinPoint joinPoint) {
+        getLogger(joinPoint).debug(joinPoint.toLongString()+":"+joinPoint.getSourceLocation().getLine());
+    }
+    */
+
+
+    /*
+    @Pointcut("execution(* org.graphwalker.core.machine.Machine+.executeElement(..)) && args(element)")
+    void executeElement(Element element) {}
+
+    @Before("executeElement(element)")
+    public void logExecuteElementCalls(JoinPoint joinPoint, Element element) {
+        getLogger(joinPoint).info(Resource.getText(Bundle.NAME, "log.method.call", (element instanceof Edge?"EDGE":"VERTEX"), element.getId(), element.getName(), element.getVisitCount()));
+    }
+
+    @Pointcut("call(* GraphWalker.*(..))")
+    void anyGraphWalkerCall() {}
+
+    @Before("anyGraphWalkerCall()")
+    public void updateTraceId(JoinPoint joinPoint) {
+        getLogger(joinPoint).info(joinPoint.toLongString());
+        MDC.put("traceId", UUID.randomUUID().toString());
+    }
+
+    @After("anyGraphWalkerCall()")
+    public void resetTraceId(JoinPoint joinPoint) {
+        getLogger(joinPoint).info(joinPoint.toShortString());
+        MDC.put("traceId", "");
+    }
+    /*
     @Pointcut("execution(* org.graphwalker.core..*Factory.create(..))")
     void anyFactory() {}
-
-    @Pointcut("within(org.graphwalker.core.GraphWalker)")
-    void anyGraphWalker() {}
 
     @Before("anyFactory()")
     public void logBeforeFactoryCalls(JoinPoint joinPoint) {
@@ -80,14 +179,6 @@ public class LoggerAspect {
         getLogger(throwable).info(throwable.getLocalizedMessage(), throwable);
     }
 
-    @Pointcut("execution(* org.graphwalker.core.machine.Machine+.executeElement(..)) && args(element)")
-    void executeElement(Element element) {}
-
-    @Before("executeElement(element)")
-    public void logExecuteElementCalls(JoinPoint joinPoint, Element element) {
-        getLogger(joinPoint).info(Resource.getText(Bundle.NAME, "log.method.call", (element instanceof Edge?"EDGE":"VERTEX"), element.getId(), element.getName(), element.getVisitCount()));
-    }    
-
     @Pointcut("execution(* org.graphwalker.core.machine.Machine+.setRequirementStatus(..)) && args(requirement, status)")
     void setRequirementStatus(Requirement requirement, RequirementStatus status) {}
 
@@ -98,8 +189,18 @@ public class LoggerAspect {
         }
     }
 
+    @Pointcut("within(@org.graphwalker.core.annotations.GraphWalker *)")
+    void implementation() {}
+
+    @Before("implementation()")
+    public void logImplementationCalls(JoinPoint joinPoint) {
+        getLogger(joinPoint).debug(joinPoint.toLongString());
+    }
+    */
+
+
     private Logger getLogger(JoinPoint joinPoint) {
-        return myLoggerFactory.getLogger(joinPoint.getSignature().getDeclaringType().getName());
+        return myLoggerFactory.getLogger(joinPoint.getSignature().getDeclaringType().getSimpleName());
     }
 
     private Logger getLogger(Throwable throwable) {

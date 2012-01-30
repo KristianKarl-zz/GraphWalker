@@ -28,7 +28,7 @@ package org.graphwalker.core.generators;
 import org.graphwalker.core.Bundle;
 import org.graphwalker.core.machine.Machine;
 import org.graphwalker.core.model.Element;
-import org.graphwalker.core.util.Resource;
+import org.graphwalker.core.utils.Resource;
 
 import java.util.List;
 import java.util.Random;

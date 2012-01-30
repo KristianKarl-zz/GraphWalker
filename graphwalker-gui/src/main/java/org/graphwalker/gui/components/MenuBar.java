@@ -25,9 +25,8 @@
  */
 package org.graphwalker.gui.components;
 
-import org.graphwalker.core.util.Resource;
+import org.graphwalker.core.utils.Resource;
 import org.graphwalker.gui.Bundle;
-import org.graphwalker.gui.GraphWalker;
 import org.graphwalker.gui.actions.ActionConstants;
 
 import javax.swing.*;

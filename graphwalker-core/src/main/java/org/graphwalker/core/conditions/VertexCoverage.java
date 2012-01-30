@@ -37,10 +37,14 @@ import org.graphwalker.core.model.Model;
  * @version $Id: $
  */
 @Guarded
-public class VertexCoverage extends AbstractStopCondition {
+public class VertexCoverage implements StopCondition {
 
     private final double myLimit;
 
+    public VertexCoverage(String value) {
+        this(Long.parseLong(value));
+    }
+    
     /**
      * <p>Constructor for VertexCoverage.</p>
      *

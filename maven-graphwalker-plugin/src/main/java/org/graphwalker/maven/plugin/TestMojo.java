@@ -30,11 +30,12 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
 import org.graphwalker.core.GraphWalker;
-import org.graphwalker.core.GraphWalkerImpl;
+import org.graphwalker.core.GraphWalkerFactory;
+import org.graphwalker.core.configuration.Configuration;
 import org.graphwalker.core.configuration.ConfigurationFactory;
-import org.graphwalker.core.util.Resource;
-import org.graphwalker.maven.plugin.report.ReportGenerator;
-import org.graphwalker.maven.plugin.report.XMLReportGenerator;
+import org.graphwalker.core.utils.Resource;
+import org.graphwalker.maven.plugin.reports.XMLReportGenerator;
+import org.graphwalker.maven.plugin.utils.TestUtil;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -53,57 +54,72 @@ import java.util.List;
  * @version $Id: $
  * @goal test
  * @phase test
+ * @execute phase="test" lifecycle="graphwalker"
  * @requiresDependencyResolution test
  */
-public class ExecuteMojo extends AbstractMojo {
+public class TestMojo extends AbstractMojo {
 
     /**
      * @parameter expression="${project}"
-     * @required
      */
     private MavenProject mavenProject;
 
     /**
-     * Classpath.
-     *
      * @parameter expression="${project.testClasspathElements}"
-     * @required
      */
     private List<String> classpathElements;
 
     /**
-     * @parameter default-value="false" expression="${skipTests}"
+     * @parameter expression="${skipTests}" default-value="false"
      */
     private boolean skipTests;
 
     /**
-     * @parameter default-value="false" expression="${graphwalker.test.skip}"
+     * @parameter expression="${graphwalker.test.skip}" default-value="false"
      */
     private boolean skipTestsProperty;
 
     /**
-     * @parameter default-value="false" expression="${maven.test.skip}"
+     * @parameter expression="${maven.test.skip}" default-value="false"
      */
     private boolean skipAllTests;
 
     /**
-     * @parameter property="configPath" default-value="${project.build.testOutputDirectory}"
-     * @required
+     * @parameter expression="${test}"
      */
-    private String configPath;
-    
+    private String test;
+
+    /**
+     * @parameter default-value="${project.build.testOutputDirectory}"
+     */
+    private File testClassesDirectory;
+
+    /**
+     * @parameter property="configPath" default-value="${project.build.testOutputDirectory}"
+     */
+    private File configPath;
+
     /**
      * @parameter property="configFiles"
-     * @required
      */
     private List<String> configFiles;
-
+    
     /**
      * @parameter default-value="${project.build.directory}/graphwalker-reports"
      */
     private File reportsDirectory;
 
+    /**
+     * @parameter property="includes"
+     */
+    private String[] includes;
 
+    /**
+     * @parameter property="excludes"
+     */
+    private String[] excludes;    
+    
+    
     private List<GraphWalker> myGraphWalkers = new ArrayList<GraphWalker>();
 
     /**
@@ -117,29 +133,41 @@ public class ExecuteMojo extends AbstractMojo {
             ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
             try {
                 URLClassLoader classLoader = new URLClassLoader(convertToURL(classpathElements), getClass().getClassLoader());
-
                 System.getProperties().putAll(mavenProject.getProperties());
-
                 Thread.currentThread().setContextClassLoader(classLoader);
-                File parent = new File(configPath);
-                for (String configFile: configFiles) {
-                    File file = new File(parent, configFile);
-                    myGraphWalkers.add(new GraphWalkerImpl(ConfigurationFactory.create(file)));
+                if (null != configPath && configPath.exists() && configPath.isDirectory() && null != configFiles) {
+                    for (String configFile: configFiles) {
+                        File file = new File(configPath, configFile);
+                        myGraphWalkers.add(GraphWalkerFactory.create(file));
+                    }                   
+                } else {
+                    List<Class<?>> tests = TestUtil.findTests(testClassesDirectory, getIncludes(), excludes);
+                    Configuration configuration = ConfigurationFactory.create(tests);
+                    myGraphWalkers.add(GraphWalkerFactory.create(configuration));
                 }
                 for (GraphWalker graphWalker: myGraphWalkers) {
                     graphWalker.executePath();
                 }
-                for (GraphWalker graphWalker: myGraphWalkers) {
-                    new XMLReportGenerator(graphWalker, reportsDirectory).writeReport();
-                }
+                //for (GraphWalker graphWalker: myGraphWalkers) {
+                //    new XMLReportGenerator(graphWalker, reportsDirectory).writeReport();
+                //}
             } catch (MalformedURLException e) {
                 throw new MojoExecutionException(Resource.getText(Bundle.NAME, "exception.classloader"));
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
             } finally {
                 Thread.currentThread().setContextClassLoader(contextClassLoader);
             }
         }
     }
 
+    private String[] getIncludes() {
+        if (null == includes) {
+            return new String[] {"**/*.class"};
+        }
+        return includes;
+    } 
+    
     private URL[] convertToURL(List<String> elements) throws MalformedURLException {
         List<URL> urlList = new ArrayList<URL>();
         for (String element: elements) {

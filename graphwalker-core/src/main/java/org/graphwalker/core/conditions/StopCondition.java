@@ -37,6 +37,10 @@ import org.graphwalker.core.model.Model;
  */
 public interface StopCondition {
 
+    double FULFILLMENT_LEVEL = 0.999999;
+    int PERCENTAGE_SCALE = 100;
+    int SECOND_SCALE = 1000;
+
     /**
      * <p>isFulfilled.</p>
      *

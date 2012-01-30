@@ -23,14 +23,14 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.maven.plugin.report;
+package org.graphwalker.maven.plugin.reports;
 
 import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.xml.PrettyPrintXMLWriter;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.codehaus.plexus.util.xml.Xpp3DomWriter;
 import org.graphwalker.core.GraphWalker;
-import org.graphwalker.core.util.Resource;
+import org.graphwalker.core.utils.Resource;
 import org.graphwalker.maven.plugin.Bundle;
 
 import java.io.*;

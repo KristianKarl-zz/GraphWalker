@@ -1,6 +1,6 @@
 /*
  * #%L
- * GraphWalker Core
+ * Maven GraphWalker Plugin
  * %%
  * Copyright (C) 2011 - 2012 GraphWalker
  * %%
@@ -23,21 +23,11 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core.conditions;
+package org.graphwalker.maven.plugin.reports;
 
-/**
- * <p>Abstract AbstractStopCondition class.</p>
- *
- * @author nilols
- * @version $Id: $
- */
-public abstract class AbstractStopCondition implements StopCondition {
-
-    /** Constant <code>FULFILLMENT_LEVEL=0.99999</code> */
-    static final double FULFILLMENT_LEVEL = 0.999999;
-    /** Constant <code>PERCENTAGE_SCALE=100</code> */
-    static final int PERCENTAGE_SCALE = 100;
-    /** Constant <code>SECOND_SCALE=1000</code> */
-    static final int SECOND_SCALE = 1000;
-
+public class ReportException extends RuntimeException {
+    
+    public ReportException(String cause, Throwable nested) {
+        super(cause, nested);
+    }
 }

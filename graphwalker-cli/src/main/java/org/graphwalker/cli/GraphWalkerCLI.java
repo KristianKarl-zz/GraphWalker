@@ -26,7 +26,7 @@
 package org.graphwalker.cli;
 
 import org.apache.commons.cli.*;
-import org.graphwalker.core.util.Resource;
+import org.graphwalker.core.utils.Resource;
 
 import java.io.File;
 

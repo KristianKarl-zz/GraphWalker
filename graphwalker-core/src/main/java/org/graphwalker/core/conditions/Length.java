@@ -37,7 +37,7 @@ import org.graphwalker.core.model.Model;
  * @author nilols
  * @version $Id: $
  */
-public class Length extends AbstractStopCondition {
+public class Length implements StopCondition {
 
     private final long myLength;
 

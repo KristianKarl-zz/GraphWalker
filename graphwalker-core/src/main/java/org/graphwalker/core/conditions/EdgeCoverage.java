@@ -37,9 +37,13 @@ import org.graphwalker.core.model.Model;
  * @version $Id: $
  */
 @Guarded
-public class EdgeCoverage extends AbstractStopCondition {
+public class EdgeCoverage implements StopCondition {
 
     private final double myLimit;
+
+    public EdgeCoverage(String value) {
+        this(Long.parseLong(value));
+    }
 
     /**
      * <p>Constructor for EdgeCoverage.</p>

@@ -1,6 +1,6 @@
 /*
  * #%L
- * GraphWalker Core
+ * Maven GraphWalker Plugin
  * %%
  * Copyright (C) 2011 - 2012 GraphWalker
  * %%
@@ -23,32 +23,8 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core.generators;
+package org.graphwalker.maven.plugin.reports;
 
-import org.graphwalker.core.Bundle;
-import org.graphwalker.core.utils.Resource;
-
-/**
- * <p>PathGeneratorFactory class.</p>
- *
- * @author nilols
- * @version $Id: $
- */
-public class PathGeneratorFactory {
-
-    private PathGeneratorFactory() {
-    }
-
-    /**
-     * <p>create.</p>
-     *
-     * @param type a {@link java.lang.String} object.
-     * @return a {@link org.graphwalker.core.generators.PathGenerator} object.
-     */
-    public static PathGenerator create(String type) {
-        if ("Random".equalsIgnoreCase(type)) {
-            return new RandomPath();
-        }
-        throw new PathGeneratorException(Resource.getText(Bundle.NAME, "exception.generator.unknown"));
-    }
+public interface ReportGenerator {
+    void writeReport();
 }

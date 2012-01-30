@@ -26,7 +26,7 @@
 package org.graphwalker.gui;
 
 import net.miginfocom.swing.MigLayout;
-import org.graphwalker.core.util.Resource;
+import org.graphwalker.core.utils.Resource;
 import org.graphwalker.gui.actions.*;
 import org.graphwalker.gui.components.StatusBar;
 import org.graphwalker.gui.components.ToolBar;

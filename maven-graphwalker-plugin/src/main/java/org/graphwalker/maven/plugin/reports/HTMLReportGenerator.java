@@ -1,6 +1,6 @@
 /*
  * #%L
- * GraphWalker GUI
+ * Maven GraphWalker Plugin
  * %%
  * Copyright (C) 2011 - 2012 GraphWalker
  * %%
@@ -23,40 +23,35 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.gui.actions;
+package org.graphwalker.maven.plugin.reports;
 
+import org.apache.maven.doxia.sink.Sink;
 import org.graphwalker.core.utils.Resource;
-import org.graphwalker.gui.Bundle;
-import org.graphwalker.gui.GraphWalkerView;
+import org.graphwalker.maven.plugin.Bundle;
 
-import java.awt.event.ActionEvent;
+public class HTMLReportGenerator implements ReportGenerator {
 
-/**
- * <p>NextAction class.</p>
- *
- * @author nilols
- * @version $Id: $
- */
-public class NextAction extends GraphWalkerAbstractAction {
-
-    /**
-     * <p>Constructor for NextAction.</p>
-     *
-     * @param view a {@link org.graphwalker.gui.GraphWalkerView} object.
-     */
-    public NextAction(GraphWalkerView view) {
-        super(view);
-        putValue(ActionConstants.GROUP, Resource.getText(Bundle.NAME, "menu.next.group"));
-        putValue(ActionConstants.INDEX, Integer.parseInt(Resource.getText(Bundle.NAME, "menu.next.index")));
-        putValue(ActionConstants.NAME, Resource.getText(Bundle.NAME, "menu.next.label"));
-        putValue(ActionConstants.DESCRIPTION, Resource.getText(Bundle.NAME, "menu.next.description"));
-        putValue(ActionConstants.ICON, Resource.getIcon(Bundle.NAME, "menu.next.icon"));
-        setEnabled(false);
+    private Sink mySink;
+    
+    public HTMLReportGenerator(Sink sink) {
+        mySink = sink;
     }
 
-    /** {@inheritDoc} */
+    private Sink getSink() {
+        return mySink;
+    }
+
     @Override
-    public void actionPerformed(ActionEvent actionEvent) {
-        // TODO: Fix me (Auto generated)
+    public void writeReport() {
+        getSink().head();
+        getSink().title();
+        getSink().text(Resource.getText(Bundle.NAME, "report.graphwalker.header"));
+        getSink().title_();
+        getSink().head_();
+        getSink().body();
+
+        getSink().body_();
+        getSink().flush();
+        getSink().close();
     }
 }

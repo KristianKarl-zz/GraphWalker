@@ -1,6 +1,6 @@
 /*
  * #%L
- * Maven GraphWalker Plugin
+ * GraphWalker Core
  * %%
  * Copyright (C) 2011 - 2012 GraphWalker
  * %%
@@ -23,11 +23,12 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.maven.plugin.report;
+package org.graphwalker.core;
 
-public class ReportException extends RuntimeException {
+import java.util.List;
+
+public class GraphWalkerExecutor {
     
-    public ReportException(String cause, Throwable nested) {
-        super(cause, nested);
+    public GraphWalkerExecutor(List<GraphWalkerWorker> workers) {
     }
 }

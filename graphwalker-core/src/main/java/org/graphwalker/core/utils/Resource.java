@@ -23,7 +23,7 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core.util;
+package org.graphwalker.core.utils;
 
 import net.sf.oval.constraint.MinLength;
 import net.sf.oval.constraint.NotNull;

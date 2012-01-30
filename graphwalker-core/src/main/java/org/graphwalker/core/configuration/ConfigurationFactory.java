@@ -26,6 +26,7 @@
 package org.graphwalker.core.configuration;
 
 import org.graphwalker.core.Bundle;
+import org.graphwalker.core.annotations.GraphWalker;
 import org.graphwalker.core.conditions.All;
 import org.graphwalker.core.conditions.Any;
 import org.graphwalker.core.conditions.StopCondition;
@@ -33,16 +34,18 @@ import org.graphwalker.core.conditions.StopConditionFactory;
 import org.graphwalker.core.filter.EdgeFilterImpl;
 import org.graphwalker.core.generators.PathGenerator;
 import org.graphwalker.core.generators.PathGeneratorFactory;
-import org.graphwalker.core.model.factories.GraphMLModelFactory;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.ModelFactory;
-import org.graphwalker.core.util.Resource;
+import org.graphwalker.core.model.factories.GraphMLModelFactory;
+import org.graphwalker.core.utils.Reflection;
+import org.graphwalker.core.utils.Resource;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Unmarshaller;
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.List;
 
 /**
  * <p>ConfigurationFactory class.</p>
@@ -53,6 +56,23 @@ import java.io.FileInputStream;
 public class ConfigurationFactory {
 
     private ConfigurationFactory() {
+    }
+
+    public static Configuration create(List<Class<?>> clazzes) {
+        Configuration configuration = new ConfigurationImpl();
+        for (Class<?> clazz: clazzes) {
+            GraphWalker metadata = clazz.getAnnotation(GraphWalker.class);
+            if (null != metadata) {
+                Model model = new GraphMLModelFactory().create(metadata.id(), metadata.model());
+                model.setImplementation(Reflection.newInstance(clazz));
+                PathGenerator pathGenerator = Reflection.newInstance(metadata.pathGenerator());
+                StopCondition stopCondition = Reflection.newInstance(metadata.stopCondition(), metadata.stopConditionValue());
+                pathGenerator.setStopCondition(stopCondition);
+                model.setPathGenerator(pathGenerator);
+                configuration.addModel(model);
+            }
+        }
+        return configuration;
     }
 
     /**
