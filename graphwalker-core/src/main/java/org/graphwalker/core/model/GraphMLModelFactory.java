@@ -23,10 +23,9 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core.model.factories;
+package org.graphwalker.core.model;
 
 import org.graphwalker.core.Bundle;
-import org.graphwalker.core.model.*;
 import org.graphwalker.core.utils.Resource;
 import org.jdom.Document;
 import org.jdom.Element;

@@ -23,36 +23,11 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core.annotations;
+package org.graphwalker.core.machine;
 
-import org.graphwalker.core.conditions.StopCondition;
-import org.graphwalker.core.conditions.VertexCoverage;
-import org.graphwalker.core.generators.PathGenerator;
-import org.graphwalker.core.generators.RandomPath;
-import org.graphwalker.core.machine.ExceptionStrategy;
-import org.graphwalker.core.machine.FailFastStrategy;
+public class FailFastStrategy implements ExceptionStrategy {
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+    public void handleException(Machine machine, Exception exception) {
 
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-public @interface GraphWalker {
-
-    public String id();
-    
-    public String model();
-    
-    public String group() default "global";
-    
-    public Class<? extends PathGenerator> pathGenerator() default RandomPath.class;
-    
-    public Class<? extends StopCondition> stopCondition() default VertexCoverage.class;
-
-    public String stopConditionValue() default "100";
-    
-    public Class<? extends ExceptionStrategy> exceptionStrategy() default FailFastStrategy.class;
-
+    }
 }

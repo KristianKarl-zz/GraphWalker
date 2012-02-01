@@ -31,9 +31,8 @@ import org.graphwalker.core.configuration.Configuration;
 import org.graphwalker.core.configuration.ConfigurationImpl;
 import org.graphwalker.core.generators.PathGenerator;
 import org.graphwalker.core.generators.RandomPath;
-import org.graphwalker.core.machine.MachineException;
 import org.graphwalker.core.model.*;
-import org.graphwalker.core.model.factories.GraphMLModelFactory;
+import org.graphwalker.core.model.GraphMLModelFactory;
 import org.junit.Assert;
 import org.junit.Test;
 

@@ -34,9 +34,9 @@ import org.graphwalker.core.conditions.StopConditionFactory;
 import org.graphwalker.core.filter.EdgeFilterImpl;
 import org.graphwalker.core.generators.PathGenerator;
 import org.graphwalker.core.generators.PathGeneratorFactory;
+import org.graphwalker.core.model.GraphMLModelFactory;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.ModelFactory;
-import org.graphwalker.core.model.factories.GraphMLModelFactory;
 import org.graphwalker.core.utils.Reflection;
 import org.graphwalker.core.utils.Resource;
 

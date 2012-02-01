@@ -51,6 +51,7 @@ public class MachineImpl implements Machine {
     private final EdgeFilter myEdgeFilter;
     private Model myCurrentModel;
     private Element myCurrentElement;
+    private ExceptionStrategy myStrategy;
 
     /**
      * <p>Constructor for MachineImpl.</p>
