@@ -81,13 +81,13 @@ public class A_StarPathGeneratorEFSMJavaScriptTest extends TestCase {
 		assertEquals("V1/y=[];x=1.0;", stepPair[1]);
 		stepPair = pathGenerator.getNext();
 		assertEquals("E1", stepPair[0]);
-		assertEquals("V2/y=[];x=2.0;", stepPair[1]);
+		assertEquals("V2/y=[];x=2;", stepPair[1]);
 		stepPair = pathGenerator.getNext();
 		assertEquals("E3", stepPair[0]);
-		assertEquals("V1/y=[2.0];x=2.0;", stepPair[1]);
+		assertEquals("V1/y=[2.0];x=2;", stepPair[1]);
 		stepPair = pathGenerator.getNext();
 		assertEquals("E1", stepPair[0]);
-		assertEquals("V2/y=[2.0];x=2.0;", stepPair[1]);
+		assertEquals("V2/y=[2.0];x=2;", stepPair[1]);
 		stepPair = pathGenerator.getNext();
 		assertEquals("E2", stepPair[0]);
 		assertEquals("V2/y=[2.0];x=3.0;", stepPair[1]);
@@ -96,7 +96,7 @@ public class A_StarPathGeneratorEFSMJavaScriptTest extends TestCase {
 		assertEquals("V1/y=[2.0, 3.0];x=3.0;", stepPair[1]);
 		stepPair = pathGenerator.getNext();
 		assertEquals("E1", stepPair[0]);
-		assertEquals("V2/y=[2.0, 3.0];x=2.0;", stepPair[1]);
+		assertEquals("V2/y=[2.0, 3.0];x=2;", stepPair[1]);
 		stepPair = pathGenerator.getNext();
 		assertEquals("E2", stepPair[0]);
 		assertEquals("V2/y=[2.0, 3.0];x=3.0;", stepPair[1]);
@@ -119,7 +119,7 @@ public class A_StarPathGeneratorEFSMJavaScriptTest extends TestCase {
 		assertEquals("V1/y=[];x=1.0;", stepPair[1]);
 		stepPair = pathGenerator.getNext();
 		assertEquals("E1", stepPair[0]);
-		assertEquals("V2/y=[];x=2.0;", stepPair[1]);
+		assertEquals("V2/y=[];x=2;", stepPair[1]);
 		stepPair = pathGenerator.getNext();
 		assertEquals("E2", stepPair[0]);
 		assertEquals("V2/y=[];x=3.0;", stepPair[1]);

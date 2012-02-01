@@ -50,6 +50,7 @@ import org.apache.log4j.Logger;
 import org.graphwalker.GUI.App;
 import org.graphwalker.Keywords.Generator;
 import org.graphwalker.Keywords.StopCondition;
+import org.graphwalker.analyze.Analyze;
 import org.graphwalker.conditions.AlternativeCondition;
 import org.graphwalker.exceptions.GeneratorException;
 import org.graphwalker.exceptions.StopConditionException;
@@ -201,9 +202,11 @@ public class CLI {
 				buildSoapCLI();
 			} else if (args[0].equalsIgnoreCase("gui")) {
 				buildGuiCLI();
-			} else if (args[0].equalsIgnoreCase("log")) {
-				buildLogCLI();
-			} else if (args[0].equals("-v") || args[0].equals("--version")) {
+      } else if (args[0].equalsIgnoreCase("log")) {
+        buildLogCLI();
+      } else if (args[0].equalsIgnoreCase("analyze")) {
+        buildAnalyzeCLI();
+      } else if (args[0].equals("-v") || args[0].equals("--version")) {
 				printVersionInformation();
 				return;
 			} else if (args[0].equals("-h") || args[0].equals("--help")) {
@@ -275,12 +278,18 @@ public class CLI {
 			else if (args[0].equalsIgnoreCase("gui")) {
 				RunCommandGui(cl);
 			}
-			/**
-			 * Command: log
-			 */
-			else if (args[0].equalsIgnoreCase("log")) {
-				RunCommandLog(cl);
-			}
+      /**
+       * Command: analyze
+       */
+      else if (args[0].equalsIgnoreCase("analyze")) {
+        RunCommandAnalyze(cl);
+      }
+      /**
+       * Command: log
+       */
+      else if (args[0].equalsIgnoreCase("log")) {
+        RunCommandLog(cl);
+      }
 			/**
 			 * Command: manual
 			 */
@@ -339,8 +348,10 @@ public class CLI {
 		System.out.println("usage: 'java -jar graphwalker.jar <COMMAND> [OPTION] [ARGUMENT]'\n");
 		System.out.println("Type 'java -jar graphwalker.jar help <COMMAND>' to get specific help about a command.");
 		System.out.println("Valid commands are:");
+    System.out.println("    analyze");
 		System.out.println("    gui");
 		System.out.println("    help");
+    System.out.println("    log");
 		System.out.println("    manual");
 		System.out.println("    merge");
 		System.out.println("    methods");
@@ -349,7 +360,6 @@ public class CLI {
 		System.out.println("    requirements");
 		System.out.println("    soap");
 		System.out.println("    source");
-		System.out.println("    log");
 		System.out.println("    xml\n");
 		System.out.println("Type 'java -jar graphwalker.jar -v (--version)' for version information.");
 	}
@@ -398,12 +408,17 @@ public class CLI {
 		} else if (helpSection.equalsIgnoreCase("gui")) {
 			buildGuiCLI();
 			header = "Run MBT in a GUI mode.\n" + "Also an mbt xml file can be supplied.";
-		} else if (helpSection.equalsIgnoreCase("log")) {
-			buildLogCLI();
-			header = "This will start MBT's GUI, and load a model and it's log file.\n"
-			    + "MBT parses the log file and shows the user how it traversed the model."
-			    + " This is usefull when the user whishes to debug a session, and analyze the test.";
-		} else {
+    } else if (helpSection.equalsIgnoreCase("log")) {
+      buildLogCLI();
+      header = "This will start MBT's GUI, and load a model and it's log file.\n"
+          + "MBT parses the log file and shows the user how it traversed the model."
+          + " This is usefull when the user whishes to debug a session, and analyze the test.";
+    } else if (helpSection.equalsIgnoreCase("analyze")) {
+      buildLogCLI();
+      header = "This will start an analyzing session of an graphml file.\n"
+          + "Graphwalker will try to find any potentials pitfalls, and report them"
+          + " This is usefull when the user whishes to debug a graph.";
+    } else {
 			System.err.println("Type 'java -jar graphwalker.jar help' for usage.");
 			return;
 		}
@@ -617,15 +632,24 @@ public class CLI {
 		opt.addOption(OptionBuilder.withArgName("file").withDescription("The xml file containing the mbt settings.").hasArg().create("f"));
 	}
 
-	/**
-	 * Build the command log command line parser
-	 */
-	@SuppressWarnings("static-access")
-	private void buildLogCLI() {
-		opt.addOption(OptionBuilder.isRequired().withArgName("file|folder")
-		    .withDescription("The file (or folder) containing graphml formatted files.").hasArg().withLongOpt("input_graphml").create("f"));
-		opt.addOption(OptionBuilder.withArgName("log").withDescription("The log file from a previuos run.").hasArg().create("l"));
-	}
+  /**
+   * Build the command log command line parser
+   */
+  @SuppressWarnings("static-access")
+  private void buildLogCLI() {
+    opt.addOption(OptionBuilder.isRequired().withArgName("file|folder")
+        .withDescription("The file (or folder) containing graphml formatted files.").hasArg().withLongOpt("input_graphml").create("f"));
+    opt.addOption(OptionBuilder.withArgName("log").withDescription("The log file from a previuos run.").hasArg().create("l"));
+  }
+
+  /**
+   * Build the command analyze command line parser
+   */
+  @SuppressWarnings("static-access")
+  private void buildAnalyzeCLI() {
+    opt.addOption(OptionBuilder.isRequired().withArgName("file|folder")
+        .withDescription("The file (or folder) containing graphml formatted files.").hasArg().withLongOpt("input_graphml").create("f"));
+  }
 
 	/**
 	 * Print version information
@@ -1053,19 +1077,33 @@ public class CLI {
 		}
 	}
 
-	/**
-	 * Run the log command
-	 * 
-	 * @param cl
-	 * @throws IOException
-	 */
-	private void RunCommandLog(CommandLine cl) throws IOException {
-		if (helpNeeded("log", !cl.hasOption("f"), "Missing the input graphml file (folder), See -f (--input_graphml)")
-		    || helpNeeded("log", !cl.hasOption("l"), "Missing the log file. See -l"))
-			return;
+  /**
+   * Run the analyze command
+   * 
+   * @param cl
+   * @throws IOException
+   */
+  private void RunCommandAnalyze(CommandLine cl) throws IOException {
+    if (helpNeeded("log", !cl.hasOption("f"), "Missing the input graphml file (folder), See -f (--input_graphml)"))
+      return;
 
-		App.main(new String[] { cl.getOptionValue("f"), cl.getOptionValue("l") });
-	}
+    getMbt().readGraph(cl.getOptionValue("f"));
+    System.out.println( Analyze.unreachableVertices( getMbt() ) );
+ }
+
+  /**
+   * Run the log command
+   * 
+   * @param cl
+   * @throws IOException
+   */
+  private void RunCommandLog(CommandLine cl) throws IOException {
+    if (helpNeeded("log", !cl.hasOption("f"), "Missing the input graphml file (folder), See -f (--input_graphml)")
+        || helpNeeded("log", !cl.hasOption("l"), "Missing the log file. See -l"))
+      return;
+
+    App.main(new String[] { cl.getOptionValue("f"), cl.getOptionValue("l") });
+  }
 
 	private boolean helpNeeded(String module, boolean condition, String message) {
 		if (condition) {
