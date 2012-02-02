@@ -34,18 +34,6 @@
                 <groupId>org.graphwalker</groupId>
                 <artifactId>maven-graphwalker-plugin</artifactId>
                 <version>3.0-SNAPSHOT</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>test</goal>
-                        </goals>
-                        <configuration>
-                            <configFiles>
-                                <configFile>exampleConfig.xml</configFile>
-                            </configFiles>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>

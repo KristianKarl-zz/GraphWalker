@@ -71,4 +71,37 @@ public class ModelFactoryTest {
         Assert.assertNotNull(model);
     }
 
+    @Test
+    public void edgeKeyWordsTest() {
+        ModelFactory modelFactory = new GraphMLModelFactory();
+        Model model = modelFactory.create("m1", "/models/edgeKeywords.graphml");
+
+        Edge edge = model.getEdgeByName("e_execute0");
+        Assert.assertNotNull(edge);
+        Assert.assertNotNull(edge.getEdgeGuard());
+        Assert.assertEquals(edge.getEdgeGuard().getScript(), "test3 == 3");
+        Assert.assertEquals(2, edge.getEdgeActions().size());
+        Assert.assertEquals("test1 =1", edge.getEdgeActions().get(0).getScript());
+        Assert.assertEquals("test2= 2", edge.getEdgeActions().get(1).getScript());
+
+        edge = model.getEdgeByName("e_execute1");
+        Assert.assertNotNull(edge);
+        Assert.assertNull(edge.getEdgeGuard());
+        Assert.assertEquals(1, edge.getEdgeActions().size());
+        Assert.assertEquals("test =1", edge.getEdgeActions().get(0).getScript());
+        
+        edge = model.getEdgeByName("e_execute3");
+        Assert.assertNotNull(edge);
+        Assert.assertNotNull(edge.getEdgeGuard());
+        Assert.assertEquals("test1 != 0", edge.getEdgeGuard().getScript());
+        Assert.assertTrue(edge.isBlocked());
+        Assert.assertEquals(1, edge.getEdgeActions().size());
+        Assert.assertEquals("test3 = 1", edge.getEdgeActions().get(0).getScript());
+        
+        edge = model.getEdgeByName("e_execute4");
+        Assert.assertNotNull(edge);
+        Assert.assertNull(edge.getEdgeGuard());
+        Assert.assertTrue(edge.isBlocked());
+    }
+    
 }

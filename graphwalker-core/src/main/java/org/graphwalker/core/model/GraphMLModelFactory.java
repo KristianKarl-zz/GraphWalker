@@ -106,9 +106,9 @@ public class GraphMLModelFactory implements ModelFactory {
                 Edge edge = new Edge();
                 edge.setId(edgeElement.getAttribute("id").getValue());
                 if (null != text && !"".equals(text)) {
+                    text = parseBlocked(edge, text);
                     text = parseEdgeGuard(edge, text);
                     text = parseEdgeActions(edge, text);
-                    text = parseBlocked(edge, text);
                     parseName(edge, getLabel(text));
                 }
                 model.addEdge(edge, source, target);
@@ -131,7 +131,7 @@ public class GraphMLModelFactory implements ModelFactory {
     }
 
     private String getLabel(String text) {
-        Pattern pattern = Pattern.compile("^(\\w+).*");
+        Pattern pattern = Pattern.compile("(\\w+)");
         Matcher matcher = pattern.matcher(text);
         if (matcher.find()) {
             return matcher.group(1);
@@ -145,7 +145,7 @@ public class GraphMLModelFactory implements ModelFactory {
         if (matcher.find()) {
             vertex.setSwitchModelId(matcher.group(1));
         }
-        return matcher.replaceAll("");
+        return matcher.replaceAll("").trim();
     }
     
     private String parseRequirements(Vertex vertex, String text) {
@@ -158,29 +158,29 @@ public class GraphMLModelFactory implements ModelFactory {
             }
             vertex.addRequirement(myRequirementMap.get(id));
         }
-        return matcher.replaceAll("");
+        return matcher.replaceAll("").trim();
     }
 
     private String parseEdgeGuard(Edge edge, String text) {
-        Pattern pattern = Pattern.compile("^.*\\[(.+)\\].*$");
+        Pattern pattern = Pattern.compile("\\[(.+)\\]");
         Matcher matcher = pattern.matcher(text);
         if (matcher.find()) {
-            edge.setEdgeGuard(new Guard(matcher.group(1)));    
+            edge.setEdgeGuard(new Guard(matcher.group(1).trim()));
         }
-        return matcher.replaceAll("");
+        return matcher.replaceAll("").trim();
     }
     
     private String parseEdgeActions(Edge edge, String text) {
         List<Action> edgeActions = new ArrayList<Action>();
-        Pattern pattern = Pattern.compile("^.*/(.*)$");
+        Pattern pattern = Pattern.compile("/([^\\[]+)");
         Matcher matcher = pattern.matcher(text);
         if (matcher.find()) {
-            for (String action:  matcher.group(1).split(":")) {
-                edgeActions.add(new Action(action));
+            for (String action: matcher.group(1).split(";")) {
+                edgeActions.add(new Action(action.trim()));
             }
         }
         edge.setEdgeActions(edgeActions);
-        return matcher.replaceAll("");
+        return matcher.replaceAll("").trim();
     }
     
     private String parseBlocked(Edge edge, String text) {
@@ -190,7 +190,7 @@ public class GraphMLModelFactory implements ModelFactory {
         if (matcher.find()) {
             edge.setStatus(ElementStatus.BLOCKED);
         }
-        return matcher.replaceAll("");
+        return matcher.replaceAll("").trim();
     }
 
 }
