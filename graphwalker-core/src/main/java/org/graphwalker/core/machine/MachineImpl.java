@@ -65,6 +65,7 @@ public class MachineImpl implements Machine {
         getCurrentElement().markAsVisited();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void after() {
         for (Model model: getConfiguration().getModels()) {
@@ -74,6 +75,7 @@ public class MachineImpl implements Machine {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void before() {
         for (Model model: getConfiguration().getModels()) {
@@ -84,9 +86,9 @@ public class MachineImpl implements Machine {
     }
 
     /**
-     * <p>getConfiguration.</p>
+     * {@inheritDoc}
      *
-     * @return a {@link org.graphwalker.core.configuration.Configuration} object.
+     * <p>getConfiguration.</p>
      */
     @Override
     public Configuration getConfiguration() {
@@ -94,44 +96,47 @@ public class MachineImpl implements Machine {
     }
     
     /**
-     * <p>getCurrentElement.</p>
+     * {@inheritDoc}
      *
-     * @return a {@link org.graphwalker.core.model.Element} object.
+     * <p>getCurrentElement.</p>
      */
     @Override
     public Element getCurrentElement() {
         return myCurrentElement;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setCurrentElement(Element element) {
         myCurrentElement = element;
     }
     
     /**
-     * <p>getCurrentModel.</p>
+     * {@inheritDoc}
      *
-     * @return a {@link org.graphwalker.core.model.Model} object.
+     * <p>getCurrentModel.</p>
      */
     @Override
     public Model getCurrentModel() {
         return myCurrentModel;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setCurrentModel(Model model) {
         myCurrentModel = model;
     }
 
+    /** {@inheritDoc} */
     @Override
     public ExceptionStrategy getExceptionStrategy() {
         return getCurrentModel().getExceptionStrategy();
     }
 
     /**
-     * <p>hasNextStep.</p>
+     * {@inheritDoc}
      *
-     * @return a boolean.
+     * <p>hasNextStep.</p>
      */
     @Override
     public boolean hasNextStep() {
@@ -150,9 +155,9 @@ public class MachineImpl implements Machine {
     }
 
     /**
-     * <p>getNextStep.</p>
+     * {@inheritDoc}
      *
-     * @return a {@link org.graphwalker.core.model.Element} object.
+     * <p>getNextStep.</p>
      */
     @Override
     public Element getNextStep() {

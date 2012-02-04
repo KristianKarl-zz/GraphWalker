@@ -89,6 +89,9 @@ public class ModelImpl implements Model {
         myPathGenerator = pathGenerator;
     }
 
+    /**
+     * <p>afterElementsAdded.</p>
+     */
     public void afterElementsAdded() {
         myDepthFirstSearch = new DepthFirstSearch(this);
         myFloydWarshall = new FloydWarshall(this);
@@ -106,6 +109,11 @@ public class ModelImpl implements Model {
         return elements;
     }
 
+    /**
+     * <p>getRequirements.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
     public List<Requirement> getRequirements() {
         Map<String, Requirement> requirements = new HashMap<String, Requirement>();
         for (Vertex vertex: getVertices()) {
@@ -118,6 +126,7 @@ public class ModelImpl implements Model {
         return new ArrayList<Requirement>(requirements.values());
     }
 
+    /** {@inheritDoc} */
     public List<Requirement> getRequirements(RequirementStatus filter) {
         List<Requirement> requirements = new ArrayList<Requirement>();
         for (Requirement requirement: getRequirements()) {
@@ -268,6 +277,11 @@ public class ModelImpl implements Model {
         return vertices.get(0);
     }
 
+    /**
+     * <p>hasStartVertex.</p>
+     *
+     * @return a boolean.
+     */
     public boolean hasStartVertex() {
         return 0<findByName(Resource.getText(Bundle.NAME, "start.vertex")).size();
     }
@@ -315,11 +329,22 @@ public class ModelImpl implements Model {
         return visitedVertices;
     }
     
+    /**
+     * <p>getConnectedComponent.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
     public List<Element> getConnectedComponent() {
         return myDepthFirstSearch.getConnectedComponent();
     }
     
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     *
+     * @param source a {@link org.graphwalker.core.model.Element} object.
+     * @param target a {@link org.graphwalker.core.model.Edge} object.
+     * @return a int.
+     */
     public int getShortestDistance(@NotNull Element source, @NotNull Edge target) {
         return myFloydWarshall.getShortestDistance(source, target);
     }
@@ -343,13 +368,7 @@ public class ModelImpl implements Model {
         return myFloydWarshall.getMaximumDistance(target);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param source a {@link org.graphwalker.core.model.Element} object.
-     * @param target a {@link org.graphwalker.core.model.Edge} object.
-     * @return a {@link java.util.List} object.
-     */
+    /** {@inheritDoc} */
     public List<Element> getShortestPath(@NotNull Element source, @NotNull Edge target) {
         return myFloydWarshall.getShortestPath(source, target);
     }
@@ -358,10 +377,6 @@ public class ModelImpl implements Model {
      * {@inheritDoc}
      *
      * <p>getShortestDistance.</p>
-     *
-     * @param source a {@link org.graphwalker.core.model.Element} object.
-     * @param target a {@link org.graphwalker.core.model.Vertex} object.
-     * @return a int.
      */
     public int getShortestDistance(@NotNull Element source, @NotNull Vertex target) {
         return myFloydWarshall.getShortestDistance(source, target);
@@ -371,6 +386,10 @@ public class ModelImpl implements Model {
      * {@inheritDoc}
      *
      * <p>getShortestPath.</p>
+     *
+     * @param source a {@link org.graphwalker.core.model.Element} object.
+     * @param target a {@link org.graphwalker.core.model.Vertex} object.
+     * @return a {@link java.util.List} object.
      */
     public List<Element> getShortestPath(@NotNull Element source, @NotNull Vertex target) {
         return myFloydWarshall.getShortestPath(source, target);
@@ -399,21 +418,25 @@ public class ModelImpl implements Model {
         return myImplementation;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getGroup() {
         return myGroup;  
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setGroup(String group) {
         myGroup = group;
     }
 
+    /** {@inheritDoc} */
     @Override
     public ExceptionStrategy getExceptionStrategy() {
         return myExceptionStrategy;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setExceptionStrategy(ExceptionStrategy exceptionStrategy) {
         myExceptionStrategy = exceptionStrategy;

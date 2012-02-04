@@ -37,22 +37,63 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * <p>GraphWalker class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface GraphWalker {
 
+    /**
+     * <p>id.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String id();
     
+    /**
+     * <p>model.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String model();
     
+    /**
+     * <p>group.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String group() default "global";
     
+    /**
+     * <p>pathGenerator.</p>
+     *
+     * @return a {@link java.lang.Class} object.
+     */
     public Class<? extends PathGenerator> pathGenerator() default RandomPath.class;
     
+    /**
+     * <p>stopCondition.</p>
+     *
+     * @return a {@link java.lang.Class} object.
+     */
     public Class<? extends StopCondition> stopCondition() default VertexCoverage.class;
 
+    /**
+     * <p>stopConditionValue.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String stopConditionValue() default "100";
     
+    /**
+     * <p>exceptionStrategy.</p>
+     *
+     * @return a {@link java.lang.Class} object.
+     */
     public Class<? extends ExceptionStrategy> exceptionStrategy() default FailFastStrategy.class;
 
 }

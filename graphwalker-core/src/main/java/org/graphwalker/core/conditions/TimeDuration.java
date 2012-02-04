@@ -42,6 +42,11 @@ public class TimeDuration implements StopCondition {
     private final long myDuration;
     private final long myTimestamp;
 
+    /**
+     * <p>Constructor for TimeDuration.</p>
+     *
+     * @param value a {@link java.lang.String} object.
+     */
     public TimeDuration(String value) {
         this(Long.parseLong(value));
     }

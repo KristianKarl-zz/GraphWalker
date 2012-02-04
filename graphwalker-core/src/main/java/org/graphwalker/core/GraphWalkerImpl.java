@@ -74,20 +74,22 @@ public class GraphWalkerImpl implements GraphWalker {
         return myMachine;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void after() {
         getMachine().after();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void before() {
         getMachine().before();
     }
 
     /**
-     * <p>hasNextStep.</p>
+     * {@inheritDoc}
      *
-     * @return a boolean.
+     * <p>hasNextStep.</p>
      */
     @Override
     public boolean hasNextStep() {
@@ -95,9 +97,9 @@ public class GraphWalkerImpl implements GraphWalker {
     }
 
     /**
-     * <p>getNextStep.</p>
+     * {@inheritDoc}
      *
-     * @return a {@link org.graphwalker.core.model.Element} object.
+     * <p>getNextStep.</p>
      */
     @Override
     public Element getNextStep() {
@@ -105,9 +107,9 @@ public class GraphWalkerImpl implements GraphWalker {
     }
 
     /**
-     * <p>getConfiguration.</p>
+     * {@inheritDoc}
      *
-     * @return a {@link org.graphwalker.core.configuration.Configuration} object.
+     * <p>getConfiguration.</p>
      */
     @Override
     public Configuration getConfiguration() {

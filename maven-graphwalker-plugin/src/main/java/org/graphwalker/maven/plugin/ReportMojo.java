@@ -70,36 +70,43 @@ public class ReportMojo extends AbstractMavenReport {
      */
     private String outputName;
 
+    /** {@inheritDoc} */
     @Override
     protected Renderer getSiteRenderer() {
         return siteRenderer;
     }
 
+    /** {@inheritDoc} */
     @Override
     protected String getOutputDirectory() {
         return outputDirectory.getAbsolutePath();
     }
 
+    /** {@inheritDoc} */
     @Override
     protected MavenProject getProject() {
         return project;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getOutputName() {
         return outputName;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getName(Locale locale) {
         return Resource.getText(Bundle.NAME, "report.graphwalker.name");
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getDescription(Locale locale) {
         return Resource.getText(Bundle.NAME, "report.graphwalker.description");
     }
 
+    /** {@inheritDoc} */
     @Override
     protected void executeReport(Locale locale) throws MavenReportException {
         new HTMLReportGenerator(getSink()).writeReport();

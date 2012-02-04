@@ -59,6 +59,12 @@ public class ConfigurationFactory {
     private ConfigurationFactory() {
     }
 
+    /**
+     * <p>create.</p>
+     *
+     * @param clazzes a {@link java.util.List} object.
+     * @return a {@link org.graphwalker.core.configuration.Configuration} object.
+     */
     public static Configuration create(List<Class<?>> clazzes) {
         Configuration configuration = new ConfigurationImpl();
         for (Class<?> clazz: clazzes) {

@@ -36,9 +36,17 @@ import org.graphwalker.core.model.Model;
  */
 public class Never implements StopCondition {
 
+    /**
+     * <p>Constructor for Never.</p>
+     */
     public Never() {
     }
 
+    /**
+     * <p>Constructor for Never.</p>
+     *
+     * @param value a {@link java.lang.String} object.
+     */
     public Never(String value) {
     }
 

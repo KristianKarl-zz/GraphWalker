@@ -45,6 +45,11 @@ public interface Element {
      * @return a {@link java.lang.String} object.
      */
     String getName();
+    /**
+     * <p>hasName.</p>
+     *
+     * @return a boolean.
+     */
     boolean hasName();
     /**
      * <p>markAsVisited.</p>
@@ -63,7 +68,22 @@ public interface Element {
      * @return a long.
      */
     long getVisitCount();
+    /**
+     * <p>setStatus.</p>
+     *
+     * @param status a {@link org.graphwalker.core.model.ElementStatus} object.
+     */
     void setStatus(ElementStatus status);
+    /**
+     * <p>getStatus.</p>
+     *
+     * @return a {@link org.graphwalker.core.model.ElementStatus} object.
+     */
     ElementStatus getStatus();
+    /**
+     * <p>isBlocked.</p>
+     *
+     * @return a boolean.
+     */
     boolean isBlocked();
 }

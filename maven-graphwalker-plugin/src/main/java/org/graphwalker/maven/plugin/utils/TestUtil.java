@@ -34,11 +34,26 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * <p>TestUtil class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public final class TestUtil {
 
     private TestUtil() {
     }
 
+    /**
+     * <p>findTests.</p>
+     *
+     * @param basedir a {@link java.io.File} object.
+     * @param includes an array of {@link java.lang.String} objects.
+     * @param excludes an array of {@link java.lang.String} objects.
+     * @return a {@link java.util.List} object.
+     * @throws java.lang.ClassNotFoundException if any.
+     */
     public static List<Class<?>> findTests(File basedir, String[] includes, String[] excludes) throws ClassNotFoundException {
         List<Class<?>> tests = new ArrayList<Class<?>>();
         for (String fileName: findFiles(basedir, includes, excludes)) {
@@ -50,6 +65,13 @@ public final class TestUtil {
         return tests;
     }
 
+    /**
+     * <p>findMethods.</p>
+     *
+     * @param clazz a {@link java.lang.Class} object.
+     * @param type a {@link java.lang.Class} object.
+     * @return a {@link java.util.List} object.
+     */
     public static List<Method> findMethods(Class<?> clazz, Class<? extends Annotation> type) {
         List<Method> methods = new ArrayList<Method>();
         for (Method method: clazz.getMethods()) {

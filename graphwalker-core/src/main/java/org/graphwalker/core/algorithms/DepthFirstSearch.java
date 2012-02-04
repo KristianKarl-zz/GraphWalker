@@ -32,10 +32,21 @@ import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
 
+/**
+ * <p>DepthFirstSearch class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public class DepthFirstSearch implements Algorithm {
 
     private List<Element> myConnectedComponent = new ArrayList<Element>();
     
+    /**
+     * <p>Constructor for DepthFirstSearch.</p>
+     *
+     * @param model a {@link org.graphwalker.core.model.Model} object.
+     */
     public DepthFirstSearch(Model model) {
         for (Element element: model.getElements()) {
             if (!ElementStatus.BLOCKED.equals(element.getStatus())) {
@@ -64,6 +75,11 @@ public class DepthFirstSearch implements Algorithm {
         } 
     }
 
+    /**
+     * <p>getConnectedComponent.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
     public List<Element> getConnectedComponent() {
         return myConnectedComponent;
     }

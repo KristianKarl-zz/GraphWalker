@@ -25,14 +25,26 @@
  */
 package org.graphwalker.core;
 
+/**
+ * <p>GraphWalkerExecutor class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public class GraphWalkerExecutor implements Runnable {
 
     private final GraphWalker myGraphWalker;
     
+    /**
+     * <p>Constructor for GraphWalkerExecutor.</p>
+     *
+     * @param graphWalker a {@link org.graphwalker.core.GraphWalker} object.
+     */
     public GraphWalkerExecutor(GraphWalker graphWalker) {
         myGraphWalker = graphWalker;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void run() {
         myGraphWalker.before();

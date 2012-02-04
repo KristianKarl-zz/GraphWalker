@@ -36,7 +36,13 @@ import org.graphwalker.core.model.Element;
  */
 public interface GraphWalker {
 
+    /**
+     * <p>after.</p>
+     */
     void after();
+    /**
+     * <p>before.</p>
+     */
     void before();
     /**
      * <p>hasNextStep.</p>

@@ -70,6 +70,8 @@ public class Requirement {
 
     /**
      * <p>markAsFulfilled.</p>
+     *
+     * @param status a {@link org.graphwalker.core.model.RequirementStatus} object.
      */
     public void setStatus(RequirementStatus status) {
         myRequirementStatus = status;

@@ -25,8 +25,20 @@
  */
 package org.graphwalker.maven.plugin.reports;
 
+/**
+ * <p>ReportException class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public class ReportException extends RuntimeException {
     
+    /**
+     * <p>Constructor for ReportException.</p>
+     *
+     * @param cause a {@link java.lang.String} object.
+     * @param nested a {@link java.lang.Throwable} object.
+     */
     public ReportException(String cause, Throwable nested) {
         super(cause, nested);
     }

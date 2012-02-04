@@ -39,7 +39,13 @@ import java.util.List;
  */
 public interface Machine {
 
+    /**
+     * <p>after.</p>
+     */
     void after();
+    /**
+     * <p>before.</p>
+     */
     void before();
     /**
      * <p>getConfiguration.</p>
@@ -72,6 +78,11 @@ public interface Machine {
      * @return a {@link org.graphwalker.core.model.Element} object.
      */
     Element getCurrentElement();
+    /**
+     * <p>setCurrentElement.</p>
+     *
+     * @param element a {@link org.graphwalker.core.model.Element} object.
+     */
     void setCurrentElement(Element element);
     /**
      * <p>getCurrentModel.</p>
@@ -79,6 +90,16 @@ public interface Machine {
      * @return a {@link org.graphwalker.core.model.Model} object.
      */
     Model getCurrentModel();
+    /**
+     * <p>setCurrentModel.</p>
+     *
+     * @param model a {@link org.graphwalker.core.model.Model} object.
+     */
     void setCurrentModel(Model model);
+    /**
+     * <p>getExceptionStrategy.</p>
+     *
+     * @return a {@link org.graphwalker.core.machine.ExceptionStrategy} object.
+     */
     ExceptionStrategy getExceptionStrategy();
 }

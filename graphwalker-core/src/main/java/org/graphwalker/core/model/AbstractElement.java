@@ -91,6 +91,11 @@ public abstract class AbstractElement implements Element {
         myName = name;
     }
 
+    /**
+     * <p>hasName.</p>
+     *
+     * @return a boolean.
+     */
     public boolean hasName() {
         return null != myName && !"".equals(myName);
     }
@@ -120,14 +125,25 @@ public abstract class AbstractElement implements Element {
         return myVisitCount;
     }
 
+    /** {@inheritDoc} */
     public void setStatus(ElementStatus status) {
         myStatus = status;
     }
 
+    /**
+     * <p>getStatus.</p>
+     *
+     * @return a {@link org.graphwalker.core.model.ElementStatus} object.
+     */
     public ElementStatus getStatus() {
         return myStatus;
     }
 
+    /**
+     * <p>isBlocked.</p>
+     *
+     * @return a boolean.
+     */
     public boolean isBlocked() {
         return ElementStatus.BLOCKED.equals(getStatus());
     }

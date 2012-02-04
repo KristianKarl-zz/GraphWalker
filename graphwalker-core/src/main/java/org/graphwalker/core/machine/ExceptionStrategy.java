@@ -25,7 +25,19 @@
  */
 package org.graphwalker.core.machine;
 
+/**
+ * <p>ExceptionStrategy interface.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public interface ExceptionStrategy {
     
+    /**
+     * <p>handleException.</p>
+     *
+     * @param machine a {@link org.graphwalker.core.machine.Machine} object.
+     * @param throwable a {@link java.lang.Throwable} object.
+     */
     void handleException(Machine machine, Throwable throwable);
 }

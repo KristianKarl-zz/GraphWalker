@@ -30,37 +30,73 @@ import org.graphwalker.core.Bundle;
 import java.lang.reflect.Array;
 import java.util.*;
 
+/**
+ * <p>Assert class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public final class Assert {
 
     private Assert() {
     }
 
+    /**
+     * <p>assertTrue.</p>
+     *
+     * @param condition a boolean.
+     */
     public static void assertTrue(boolean condition) {
         if (!condition) {
             failNotEquals(condition, Boolean.TRUE);
         }
     }
 
+    /**
+     * <p>assertFalse.</p>
+     *
+     * @param condition a boolean.
+     */
     public static void assertFalse(boolean condition) {
         if (condition) {
             failNotEquals(condition, Boolean.FALSE);
         }
     }
 
+    /**
+     * <p>fail.</p>
+     *
+     * @param message a {@link java.lang.String} object.
+     * @param realCause a {@link java.lang.Throwable} object.
+     */
     public static void fail(String message, Throwable realCause) {
         AssertionError assertionError = new AssertionError(message);
         assertionError.initCause(realCause);
         throw assertionError;
     }
 
+    /**
+     * <p>fail.</p>
+     *
+     * @param message a {@link java.lang.String} object.
+     */
     public static void fail(String message) {
         throw new AssertionError(message);
     }
 
+    /**
+     * <p>fail.</p>
+     */
     public static void fail() {
         fail(null);
     }
 
+    /**
+     * <p>assertEquals.</p>
+     *
+     * @param actual a {@link java.lang.Object} object.
+     * @param expected a {@link java.lang.Object} object.
+     */
     public static void assertEquals(Object actual, Object expected) {
         if (null == expected && null == actual) {
             return;
@@ -94,6 +130,13 @@ public final class Assert {
         failNotEquals(actual, expected);
     }
 
+    /**
+     * <p>assertEquals.</p>
+     *
+     * @param actual a double.
+     * @param expected a double.
+     * @param delta a double.
+     */
     public static void assertEquals(double actual, double expected, double delta) {
         if (Double.isInfinite(expected)) {
             if (!(expected == actual)) {
@@ -104,6 +147,13 @@ public final class Assert {
         }
     }
 
+    /**
+     * <p>assertEquals.</p>
+     *
+     * @param actual a float.
+     * @param expected a float.
+     * @param delta a float.
+     */
     public static void assertEquals(float actual, float expected, float delta) {
         if (Float.isInfinite(expected)) {
             if (!(expected == actual)) {
@@ -114,34 +164,80 @@ public final class Assert {
         }
     }
 
+    /**
+     * <p>assertEquals.</p>
+     *
+     * @param actual a long.
+     * @param expected a long.
+     */
     public static void assertEquals(long actual, long expected) {
         assertEquals(Long.valueOf(actual), Long.valueOf(expected));
     }
 
+    /**
+     * <p>assertEquals.</p>
+     *
+     * @param actual a boolean.
+     * @param expected a boolean.
+     */
     public static void assertEquals(boolean actual, boolean expected) {
         assertEquals(Boolean.valueOf(actual), Boolean.valueOf(expected));
     }
 
+    /**
+     * <p>assertEquals.</p>
+     *
+     * @param actual a byte.
+     * @param expected a byte.
+     */
     public static void assertEquals(byte actual, byte expected) {
         assertEquals(Byte.valueOf(actual), Byte.valueOf(expected));
     }
 
+    /**
+     * <p>assertEquals.</p>
+     *
+     * @param actual a char.
+     * @param expected a char.
+     */
     public static void assertEquals(char actual, char expected) {
         assertEquals(Character.valueOf(actual), Character.valueOf(expected));
     }
 
+    /**
+     * <p>assertEquals.</p>
+     *
+     * @param actual a short.
+     * @param expected a short.
+     */
     public static void assertEquals(short actual, short expected) {
         assertEquals(Short.valueOf(actual), Short.valueOf(expected));
     }
 
+    /**
+     * <p>assertEquals.</p>
+     *
+     * @param actual a int.
+     * @param expected a int.
+     */
     public static void assertEquals(int actual, int expected) {
         assertEquals(Integer.valueOf(actual), Integer.valueOf(expected));
     }
 
+    /**
+     * <p>assertNotNull.</p>
+     *
+     * @param object a {@link java.lang.Object} object.
+     */
     public static void assertNotNull(Object object) {
         assertTrue(null != object);
     }
 
+    /**
+     * <p>assertNull.</p>
+     *
+     * @param object a {@link java.lang.Object} object.
+     */
     public static void assertNull(Object object) {
         assertTrue(null != object);
     }
@@ -154,6 +250,12 @@ public final class Assert {
         return Resource.getText(Bundle.NAME, "message.assert.equals", expected, actual);
     }
 
+    /**
+     * <p>assertEquals.</p>
+     *
+     * @param actual a {@link java.util.Collection} object.
+     * @param expected a {@link java.util.Collection} object.
+     */
     public static void assertEquals(Collection actual, Collection expected) {
         if (actual == expected) {
             return;
@@ -170,6 +272,12 @@ public final class Assert {
         }
     }
 
+    /**
+     * <p>assertEquals.</p>
+     *
+     * @param actual an array of {@link java.lang.Object} objects.
+     * @param expected an array of {@link java.lang.Object} objects.
+     */
     public static void assertEquals(Object[] actual, Object[] expected) {
         if (actual == expected) {
             return;
@@ -180,6 +288,12 @@ public final class Assert {
         assertEquals(Arrays.asList(actual), Arrays.asList(expected));
     }
 
+    /**
+     * <p>assertEqualsNoOrder.</p>
+     *
+     * @param actual an array of {@link java.lang.Object} objects.
+     * @param expected an array of {@link java.lang.Object} objects.
+     */
     public static void assertEqualsNoOrder(Object[] actual, Object[] expected) {
         if (actual == expected) {
             return;
@@ -200,6 +314,12 @@ public final class Assert {
         }
     }
 
+    /**
+     * <p>assertEquals.</p>
+     *
+     * @param actual an array of byte.
+     * @param expected an array of byte.
+     */
     public static void assertEquals(final byte[] actual, final byte[] expected) {
         if (expected == actual) {
             return;
@@ -216,6 +336,12 @@ public final class Assert {
         }
     }
 
+    /**
+     * <p>assertEquals.</p>
+     *
+     * @param actual a {@link java.util.Set} object.
+     * @param expected a {@link java.util.Set} object.
+     */
     public static void assertEquals(Set<?> actual, Set<?> expected) {
         if (actual == expected) {
             return;
@@ -229,6 +355,12 @@ public final class Assert {
         }
     }
 
+    /**
+     * <p>assertEquals.</p>
+     *
+     * @param actual a {@link java.util.Map} object.
+     * @param expected a {@link java.util.Map} object.
+     */
     public static void assertEquals(Map<?, ?> actual, Map<?, ?> expected) {
         if (actual == expected) {
             return;

@@ -29,10 +29,21 @@ import org.apache.maven.doxia.sink.Sink;
 import org.graphwalker.core.utils.Resource;
 import org.graphwalker.maven.plugin.Bundle;
 
+/**
+ * <p>HTMLReportGenerator class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public class HTMLReportGenerator implements ReportGenerator {
 
     private Sink mySink;
     
+    /**
+     * <p>Constructor for HTMLReportGenerator.</p>
+     *
+     * @param sink a {@link org.apache.maven.doxia.sink.Sink} object.
+     */
     public HTMLReportGenerator(Sink sink) {
         mySink = sink;
     }
@@ -41,6 +52,7 @@ public class HTMLReportGenerator implements ReportGenerator {
         return mySink;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void writeReport() {
         getSink().head();

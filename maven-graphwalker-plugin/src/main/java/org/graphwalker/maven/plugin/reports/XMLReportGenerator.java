@@ -35,12 +35,24 @@ import org.graphwalker.maven.plugin.Bundle;
 
 import java.io.*;
 
+/**
+ * <p>XMLReportGenerator class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public class XMLReportGenerator {
 
     private static final String LINE_SEPARATOR = System.getProperty("line.separator");
     private final GraphWalker myGraphWalker;
     private final File myReportsDirectory;
 
+    /**
+     * <p>Constructor for XMLReportGenerator.</p>
+     *
+     * @param graphWalker a {@link org.graphwalker.core.GraphWalker} object.
+     * @param reportsDirectory a {@link java.io.File} object.
+     */
     public XMLReportGenerator(GraphWalker graphWalker, File reportsDirectory) {
         myGraphWalker = graphWalker;
         myReportsDirectory = reportsDirectory;
@@ -61,6 +73,9 @@ public class XMLReportGenerator {
         return report;
     }
 
+    /**
+     * <p>writeReport.</p>
+     */
     public void writeReport() {
         PrintWriter writer = null;
         try {

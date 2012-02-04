@@ -25,6 +25,15 @@
  */
 package org.graphwalker.maven.plugin.reports;
 
+/**
+ * <p>ReportGenerator interface.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public interface ReportGenerator {
+    /**
+     * <p>writeReport.</p>
+     */
     void writeReport();
 }

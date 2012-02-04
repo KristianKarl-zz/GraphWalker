@@ -29,6 +29,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * <p>After class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(java.lang.annotation.ElementType.METHOD)
 public @interface After {

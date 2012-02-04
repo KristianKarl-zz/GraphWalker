@@ -34,11 +34,24 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * <p>Reflection class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public final class Reflection {
 
     private Reflection() {
     }
 
+    /**
+     * <p>newInstance.</p>
+     *
+     * @param clazz a {@link java.lang.Class} object.
+     * @param <T> a T object.
+     * @return a T object.
+     */
     public static <T> T newInstance(Class<T> clazz) {
         try {
             return clazz.newInstance();
@@ -49,6 +62,14 @@ public final class Reflection {
         }
     }
     
+    /**
+     * <p>newInstance.</p>
+     *
+     * @param clazz a {@link java.lang.Class} object.
+     * @param arguments a {@link java.lang.Object} object.
+     * @param <T> a T object.
+     * @return a T object.
+     */
     public static <T> T newInstance(Class<T> clazz, Object... arguments) {
         try {
             Constructor<T> constructor = clazz.getConstructor(getTypes(arguments));
@@ -64,6 +85,12 @@ public final class Reflection {
         }
     }
 
+    /**
+     * <p>execute.</p>
+     *
+     * @param object a {@link java.lang.Object} object.
+     * @param annotation a {@link java.lang.Class} object.
+     */
     public static void execute(Object object, Class<? extends Annotation> annotation) {
         if (null != object) {
             for (Method method: object.getClass().getMethods()) {
@@ -82,6 +109,12 @@ public final class Reflection {
         }
     }
 
+    /**
+     * <p>execute.</p>
+     *
+     * @param object a {@link java.lang.Object} object.
+     * @param methodName a {@link java.lang.String} object.
+     */
     public static void execute(Object object, String methodName) {
         if (null != object) {
             try {

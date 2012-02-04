@@ -25,8 +25,15 @@
  */
 package org.graphwalker.core.machine;
 
+/**
+ * <p>BacktrackStrategy class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public class BacktrackStrategy implements ExceptionStrategy {
 
+    /** {@inheritDoc} */
     public void handleException(Machine machine, Throwable throwable) {
 
     }

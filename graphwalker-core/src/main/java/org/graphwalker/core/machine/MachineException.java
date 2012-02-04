@@ -33,6 +33,11 @@ package org.graphwalker.core.machine;
  */
 public class MachineException extends RuntimeException {
 
+    /**
+     * <p>Constructor for MachineException.</p>
+     *
+     * @param throwable a {@link java.lang.Throwable} object.
+     */
     public MachineException(Throwable throwable) {
         super(throwable);
     }
@@ -46,6 +51,12 @@ public class MachineException extends RuntimeException {
         super(cause);
     }
 
+    /**
+     * <p>Constructor for MachineException.</p>
+     *
+     * @param cause a {@link java.lang.String} object.
+     * @param throwable a {@link java.lang.Throwable} object.
+     */
     public MachineException(String cause, Throwable throwable) {
         super(cause, throwable);
     }

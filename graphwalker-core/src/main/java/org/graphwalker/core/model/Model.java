@@ -50,9 +50,28 @@ public interface Model {
      * @return a {@link java.util.List} object.
      */
     List<Element> getElements();
+    /**
+     * <p>getConnectedComponent.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
     List<Element> getConnectedComponent();
+    /**
+     * <p>getRequirements.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
     List<Requirement> getRequirements();
+    /**
+     * <p>getRequirements.</p>
+     *
+     * @param filter a {@link org.graphwalker.core.model.RequirementStatus} object.
+     * @return a {@link java.util.List} object.
+     */
     List<Requirement> getRequirements(RequirementStatus filter);
+    /**
+     * <p>afterElementsAdded.</p>
+     */
     void afterElementsAdded();
     /**
      * <p>getVertexById.</p>
@@ -211,8 +230,28 @@ public interface Model {
      * @return a {@link java.lang.Object} object.
      */
     Object getImplementation();
+    /**
+     * <p>getGroup.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     String getGroup();
+    /**
+     * <p>setGroup.</p>
+     *
+     * @param group a {@link java.lang.String} object.
+     */
     void setGroup(String group);
+    /**
+     * <p>getExceptionStrategy.</p>
+     *
+     * @return a {@link org.graphwalker.core.machine.ExceptionStrategy} object.
+     */
     ExceptionStrategy getExceptionStrategy();
+    /**
+     * <p>setExceptionStrategy.</p>
+     *
+     * @param exceptionStrategy a {@link org.graphwalker.core.machine.ExceptionStrategy} object.
+     */
     void setExceptionStrategy(ExceptionStrategy exceptionStrategy);
 }

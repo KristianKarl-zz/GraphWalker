@@ -41,6 +41,11 @@ public class EdgeCoverage implements StopCondition {
 
     private final double myLimit;
 
+    /**
+     * <p>Constructor for EdgeCoverage.</p>
+     *
+     * @param value a {@link java.lang.String} object.
+     */
     public EdgeCoverage(String value) {
         this(Long.parseLong(value));
     }
