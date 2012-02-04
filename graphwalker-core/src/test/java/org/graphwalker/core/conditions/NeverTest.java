@@ -53,6 +53,8 @@ public class NeverTest {
     public void executeTest() {
         GraphWalker graphWalker = GraphWalkerFactory.create(createConfiguration());
         Element element = graphWalker.getNextStep();
+        Assert.assertNull(element.getName());
+        element = graphWalker.getNextStep();
         Assert.assertEquals("v_1", element.getName());
         for (int i=0; i<100; i++) {
             element = graphWalker.getNextStep();

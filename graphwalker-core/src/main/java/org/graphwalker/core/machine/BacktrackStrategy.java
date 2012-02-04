@@ -27,7 +27,7 @@ package org.graphwalker.core.machine;
 
 public class BacktrackStrategy implements ExceptionStrategy {
 
-    public void handleException(Machine machine, Exception exception) {
+    public void handleException(Machine machine, Throwable throwable) {
 
     }
 }

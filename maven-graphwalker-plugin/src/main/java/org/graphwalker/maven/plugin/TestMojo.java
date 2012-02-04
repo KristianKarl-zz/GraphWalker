@@ -30,6 +30,7 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
 import org.graphwalker.core.GraphWalker;
+import org.graphwalker.core.GraphWalkerExecutor;
 import org.graphwalker.core.GraphWalkerFactory;
 import org.graphwalker.core.configuration.Configuration;
 import org.graphwalker.core.configuration.ConfigurationFactory;
@@ -43,9 +44,9 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
-
-// TODO: fork execution of config files
-// TODO: create html reports
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 /**
  * <p>ExecuteMojo class.</p>
@@ -135,6 +136,7 @@ public class TestMojo extends AbstractMojo {
                 URLClassLoader classLoader = new URLClassLoader(convertToURL(classpathElements), getClass().getClassLoader());
                 System.getProperties().putAll(mavenProject.getProperties());
                 Thread.currentThread().setContextClassLoader(classLoader);
+
                 if (null != configPath && configPath.exists() && configPath.isDirectory() && null != configFiles) {
                     for (String configFile: configFiles) {
                         File file = new File(configPath, configFile);
@@ -145,15 +147,22 @@ public class TestMojo extends AbstractMojo {
                     Configuration configuration = ConfigurationFactory.create(tests);
                     myGraphWalkers.add(GraphWalkerFactory.create(configuration));
                 }
+
+                ExecutorService executorService = Executors.newFixedThreadPool(myGraphWalkers.size());
                 for (GraphWalker graphWalker: myGraphWalkers) {
-                    graphWalker.executePath();
+                    executorService.execute(new GraphWalkerExecutor(graphWalker));
                 }
+                executorService.shutdown();
+                executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.DAYS);
+
                 //for (GraphWalker graphWalker: myGraphWalkers) {
                 //    new XMLReportGenerator(graphWalker, reportsDirectory).writeReport();
                 //}
             } catch (MalformedURLException e) {
                 throw new MojoExecutionException(Resource.getText(Bundle.NAME, "exception.classloader"));
             } catch (ClassNotFoundException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            } catch (InterruptedException e) {
                 e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
             } finally {
                 Thread.currentThread().setContextClassLoader(contextClassLoader);

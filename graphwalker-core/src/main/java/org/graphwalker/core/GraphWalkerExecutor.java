@@ -25,10 +25,20 @@
  */
 package org.graphwalker.core;
 
-import java.util.List;
+public class GraphWalkerExecutor implements Runnable {
 
-public class GraphWalkerExecutor {
+    private final GraphWalker myGraphWalker;
     
-    public GraphWalkerExecutor(List<GraphWalkerWorker> workers) {
+    public GraphWalkerExecutor(GraphWalker graphWalker) {
+        myGraphWalker = graphWalker;
+    }
+
+    @Override
+    public void run() {
+        myGraphWalker.before();
+        while (myGraphWalker.hasNextStep()) {
+            myGraphWalker.getNextStep();
+        }
+        myGraphWalker.after();
     }
 }

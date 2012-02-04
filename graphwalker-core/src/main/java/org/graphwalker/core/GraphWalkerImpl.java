@@ -33,15 +33,6 @@ import org.graphwalker.core.model.Element;
 
 import java.io.File;
 
-// TODO: Refactor, split up into more methods to make the code easier to understand
-// TODO: Add caches for expensive methods that doesn't "change"
-// TODO: Create a parser class for name;actions;guard
-// TODO: Statistics (eg. how many times a element been traversed)
-// TODO: More path generators (Only random exists)
-// TODO: Reload/Restart (clear statistics?)
-// TODO: Add support for Event driven models?
-// TODO: Update xsd so that all configuration uses class parameter so it will be easy to use an external developed component
-
 /**
  * <p>GraphWalkerImpl class.</p>
  *
@@ -83,11 +74,14 @@ public class GraphWalkerImpl implements GraphWalker {
         return myMachine;
     }
 
-    /**
-     * <p>executePath.</p>
-     */
-    public void executePath() {
-        getMachine().executePath();
+    @Override
+    public void after() {
+        getMachine().after();
+    }
+
+    @Override
+    public void before() {
+        getMachine().before();
     }
 
     /**
@@ -95,6 +89,7 @@ public class GraphWalkerImpl implements GraphWalker {
      *
      * @return a boolean.
      */
+    @Override
     public boolean hasNextStep() {
         return getMachine().hasNextStep();
     }
@@ -104,6 +99,7 @@ public class GraphWalkerImpl implements GraphWalker {
      *
      * @return a {@link org.graphwalker.core.model.Element} object.
      */
+    @Override
     public Element getNextStep() {
         return getMachine().getNextStep();
     }
@@ -113,6 +109,7 @@ public class GraphWalkerImpl implements GraphWalker {
      *
      * @return a {@link org.graphwalker.core.configuration.Configuration} object.
      */
+    @Override
     public Configuration getConfiguration() {
         return getMachine().getConfiguration();
     }

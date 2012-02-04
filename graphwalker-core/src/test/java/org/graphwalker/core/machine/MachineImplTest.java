@@ -70,13 +70,6 @@ public class MachineImplTest {
         machine.hasNextStep();
     }
 
-    @Test(expected = MachineException.class)
-    public void testNullImpl() {
-        Configuration configuration = createConfiguration();
-        configuration.getModel("m1").setImplementation(null);
-        Machine machine = new MachineImpl(configuration);
-        machine.executePath();
-    }
     /*
     @Test
     public void testEmptyImpl() {
@@ -102,7 +95,7 @@ public class MachineImplTest {
         model.setImplementation(new EmptyImpl());
         model.getVertexByName("v_1").setName(null);
         Machine machine = new MachineImpl(configuration);
-        machine.executePath();
+        machine.getNextStep();
     }
 
     @Test
@@ -112,7 +105,7 @@ public class MachineImplTest {
         model.setImplementation(new EmptyImpl());
         model.getVertexByName("v_1").setName("");
         Machine machine = new MachineImpl(configuration);
-        machine.executePath();
+        machine.getNextStep();
     }
 
 }

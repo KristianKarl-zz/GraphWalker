@@ -27,5 +27,5 @@ package org.graphwalker.core.machine;
 
 public interface ExceptionStrategy {
     
-    void handleException(Machine machine, Exception exception);
+    void handleException(Machine machine, Throwable throwable);
 }

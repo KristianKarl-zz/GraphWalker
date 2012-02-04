@@ -32,13 +32,10 @@ import org.graphwalker.core.conditions.StopCondition;
 import org.graphwalker.core.configuration.Configuration;
 import org.graphwalker.core.filter.EdgeFilter;
 import org.graphwalker.core.generators.PathGenerator;
-import org.graphwalker.core.generators.PathGeneratorException;
 import org.graphwalker.core.model.*;
 import org.graphwalker.core.utils.Reflection;
 import org.graphwalker.core.utils.Resource;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,11 +65,30 @@ public class MachineImpl implements Machine {
         getCurrentElement().markAsVisited();
     }
 
+    @Override
+    public void after() {
+        for (Model model: getConfiguration().getModels()) {
+            if (model.hasImplementation()) {
+                Reflection.execute(model.getImplementation(), After.class);
+            }
+        }
+    }
+
+    @Override
+    public void before() {
+        for (Model model: getConfiguration().getModels()) {
+            if (model.hasImplementation()) {
+                Reflection.execute(model.getImplementation(), Before.class);
+            }
+        }
+    }
+
     /**
      * <p>getConfiguration.</p>
      *
      * @return a {@link org.graphwalker.core.configuration.Configuration} object.
      */
+    @Override
     public Configuration getConfiguration() {
         return myConfiguration;
     }
@@ -82,12 +98,14 @@ public class MachineImpl implements Machine {
      *
      * @return a {@link org.graphwalker.core.model.Element} object.
      */
+    @Override
     public Element getCurrentElement() {
         return myCurrentElement;
     }
 
+    @Override
     public void setCurrentElement(Element element) {
-        myCurrentElement = element; 
+        myCurrentElement = element;
     }
     
     /**
@@ -95,17 +113,17 @@ public class MachineImpl implements Machine {
      *
      * @return a {@link org.graphwalker.core.model.Model} object.
      */
+    @Override
     public Model getCurrentModel() {
         return myCurrentModel;
     }
-    
+
+    @Override
     public void setCurrentModel(Model model) {
-        if (model.hasImplementation()) {
-            Reflection.execute(model.getImplementation(), Before.class);
-        }
         myCurrentModel = model;
     }
 
+    @Override
     public ExceptionStrategy getExceptionStrategy() {
         return getCurrentModel().getExceptionStrategy();
     }
@@ -115,17 +133,20 @@ public class MachineImpl implements Machine {
      *
      * @return a boolean.
      */
+    @Override
     public boolean hasNextStep() {
         Model model = getCurrentModel();
         Element element = getCurrentElement();
-        if (isVertex(element)) {
-            Vertex vertex = (Vertex)element;
+        if (isVertex(getCurrentElement())) {
+            Vertex vertex = getVertex(getCurrentElement());
             if (vertex.hasSwitchModel()) {
                 model = getConfiguration().getModel(vertex.getSwitchModelId());
                 element = model.getStartVertex();
             }
-        }
-        return !getStopCondition(getPathGenerator(model)).isFulfilled(model, element);
+        } 
+        PathGenerator pathGenerator = getPathGenerator(model);
+        StopCondition stopCondition = getStopCondition(pathGenerator);
+        return !stopCondition.isFulfilled(model, element);
     }
 
     /**
@@ -133,29 +154,25 @@ public class MachineImpl implements Machine {
      *
      * @return a {@link org.graphwalker.core.model.Element} object.
      */
+    @Override
     public Element getNextStep() {
-        do {
+        try {
+            setCurrentElement(getPathGenerator(getCurrentModel()).getNextStep(this));
+            getCurrentElement().markAsVisited();
             executeActions(getCurrentElement());
-            setRequirementStatus(getCurrentElement(), RequirementStatus.PASSED);
-            if (hasNextStep()) {
-                try {
-                    setCurrentElement(getPathGenerator(getCurrentModel()).getNextStep(this));
-                    getCurrentElement().markAsVisited();
-                } catch (PathGeneratorException e) {
-                    getExceptionStrategy().handleException(this, e);
-                }
-            } else {
-                if (getCurrentModel().hasImplementation()) {
-                    Reflection.execute(getCurrentModel().getImplementation(), After.class);
-                }
+            if (getCurrentModel().hasImplementation() && getCurrentElement().hasName()) {
+                Reflection.execute(getCurrentModel().getImplementation(), getCurrentElement().getName());
             }
-        } while (hasNextStep() && (getCurrentElement().equals(getCurrentModel().getStartVertex()) || !getCurrentElement().hasName()));
+            setRequirementStatus(getCurrentElement(), RequirementStatus.PASSED);
+        } catch (Throwable throwable) {
+            setRequirementStatus(getCurrentElement(), RequirementStatus.FAILED);
+            getExceptionStrategy().handleException(this, throwable);
+        }
         return getCurrentElement();
     }
 
-    
-    
     /** {@inheritDoc} */
+    @Override
     public List<Element> getPossibleElements(Element element) {
         List<Element> possibleElements = new ArrayList<Element>();
         if (element instanceof Vertex) {
@@ -176,69 +193,12 @@ public class MachineImpl implements Machine {
         return possibleElements;
     }
 
-    /**
-     * <p>executePath.</p>
-     * This functionality should be through the GraphWalkerExecutor
-     */
-    @Deprecated
-    public void executePath() {
-        while (hasNextStep()) {
-            Element element = getNextStep();
-            if (element.hasName()) {
-                if (getCurrentModel().hasImplementation()) {
-                    try {
-                        executeElement(element);
-                        setRequirementStatus(element, RequirementStatus.PASSED);
-                    } catch (RuntimeException e) {
-                    //    setRequirementStatus(element, RequirementStatus.FAILED);
-                    //    block(element);
-                    //    restart();
-                        getExceptionStrategy().handleException(this, e);
-                    }
-                } else {
-                    throw new MachineException(Resource.getText(Bundle.NAME, "exception.implementation.missing", getCurrentModel().getId()));
-                }
-            }
-        }
-        if (getCurrentModel().hasImplementation()) {
-            Reflection.execute(getCurrentModel().getImplementation(), After.class);
-        }
-    }
-
-    /*
-    @Deprecated // Should be handled by the ExceptionStrategy
-    private void restart() {
-        getCurrentModel().afterElementsAdded();
-        setCurrentElement(getCurrentModel().getStartVertex());
-    }
-
-    @Deprecated // Should be handled by the ExceptionStrategy
-    private void block(Element element) {
-        element.setStatus(ElementStatus.BLOCKED);
-        if (isVertex(element)) {
-            for (Edge edge: getCurrentModel().getEdges()) {
-                if (element.equals(edge.getSource()) || element.equals(edge.getTarget())) {
-                    edge.setStatus(ElementStatus.BLOCKED);
-                }
-            }
-        }
-    }
-    */
-    /*
-    private void backtrack(Edge edge) {
-        edge.skip();
-    }
-
-    private void backtrack(Vertex vertex) {
-        for (Edge edge: getCurrentModel().getEdges()) {
-            if (vertex.equals(edge.getSource()) || vertex.equals(edge.getTarget())) {
-                backtrack(edge);
-            }
-        }
-    }
-    */
     private boolean isVertex(Element element) {
         return element instanceof Vertex;
+    }
+    
+    private Vertex getVertex(Element element) {
+        return (Vertex)element;
     }
     
     private boolean isEdge(Element element) {
@@ -283,21 +243,5 @@ public class MachineImpl implements Machine {
             myEdgeFilter.executeActions((Edge)element);
         }
     }
-    
-    private void executeElement(Element element) {
-        Object object = getCurrentModel().getImplementation();
-        Class clazz = object.getClass();
-        try {
-            Method method = clazz.getMethod(element.getName());
-            if (null != method) {
-                method.invoke(object);
-            }
-        } catch (InvocationTargetException e) {
-            throw new MachineException(Resource.getText(Bundle.NAME, "exception.method.invocation", element.getName()), e);
-        } catch (NoSuchMethodException e) {
-            throw new MachineException(Resource.getText(Bundle.NAME, "exception.method.missing", element.getName()));
-        } catch (IllegalAccessException e) {
-            throw new MachineException(Resource.getText(Bundle.NAME, "exception.method.access", element.getName()));
-        }
-    }
+
 }

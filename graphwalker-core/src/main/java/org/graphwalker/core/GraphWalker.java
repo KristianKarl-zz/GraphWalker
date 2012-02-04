@@ -36,10 +36,8 @@ import org.graphwalker.core.model.Element;
  */
 public interface GraphWalker {
 
-    /**
-     * <p>executePath.</p>
-     */
-    void executePath();
+    void after();
+    void before();
     /**
      * <p>hasNextStep.</p>
      *

@@ -26,7 +26,6 @@
 package org.graphwalker.core.utils;
 
 import org.graphwalker.core.Bundle;
-import org.graphwalker.core.annotations.Before;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
@@ -44,9 +43,9 @@ public final class Reflection {
         try {
             return clazz.newInstance();
         } catch (InstantiationException e) {
-            throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.class.instantiation", clazz.getName()));
+            throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.class.instantiation", clazz.getName()), e);
         } catch (IllegalAccessException e) {
-            throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.class.instantiation", clazz.getName()));
+            throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.class.instantiation", clazz.getName()), e);
         }
     }
     
@@ -55,13 +54,13 @@ public final class Reflection {
             Constructor<T> constructor = clazz.getConstructor(getTypes(arguments));
             return constructor.newInstance(arguments);
         } catch (NoSuchMethodException e) {
-            throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.class.instantiation", clazz.getName()));
+            throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.class.instantiation", clazz.getName()), e);
         } catch (InvocationTargetException e) {
-            throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.class.instantiation", clazz.getName()));
+            throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.class.instantiation", clazz.getName()), e);
         } catch (InstantiationException e) {
-            throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.class.instantiation", clazz.getName()));
+            throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.class.instantiation", clazz.getName()), e);
         } catch (IllegalAccessException e) {
-            throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.class.instantiation", clazz.getName()));
+            throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.class.instantiation", clazz.getName()), e);
         }
     }
 
@@ -73,14 +72,27 @@ public final class Reflection {
                         try {
                             method.invoke(object);
                         } catch (IllegalAccessException e) {
-                            e.printStackTrace();
-                            throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.class.instantiation", method.getName()));
+                            throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.class.instantiation", method.getName()), e);
                         } catch (InvocationTargetException e) {
-                            e.printStackTrace();
-                            throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.class.instantiation", method.getName()));
+                            throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.class.instantiation", method.getName()), e);
                         }
                     }
                 }
+            }
+        }
+    }
+
+    public static void execute(Object object, String methodName) {
+        if (null != object) {
+            try {
+                Method method = object.getClass().getMethod(methodName);
+                method.invoke(object);
+            } catch (NoSuchMethodException e) {
+                throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.class.instantiation", methodName), e);
+            } catch (IllegalAccessException e) {
+                throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.class.instantiation", methodName), e);
+            } catch (InvocationTargetException e) {
+                throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.class.instantiation", methodName), e);
             }
         }
     }

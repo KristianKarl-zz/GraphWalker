@@ -47,7 +47,7 @@ import java.util.UUID;
 public class LoggerAspect {
 
     private ILoggerFactory myLoggerFactory = LoggerFactory.getILoggerFactory();
-
+ /*
     static {
         MDC.put("traceId", UUID.randomUUID().toString());
     }
@@ -99,7 +99,7 @@ public class LoggerAspect {
     public void logDebug(JoinPoint joinPoint) {
         //getLogger(joinPoint).debug(joinPoint.toLongString()+":"+joinPoint.getSourceLocation().getLine());
     }
-
+ */
 
 
     /*

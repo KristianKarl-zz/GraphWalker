@@ -26,6 +26,7 @@
 package org.graphwalker.core.conditions;
 
 import org.graphwalker.core.GraphWalker;
+import org.graphwalker.core.GraphWalkerExecutor;
 import org.graphwalker.core.GraphWalkerImpl;
 import org.graphwalker.core.configuration.Configuration;
 import org.graphwalker.core.configuration.ConfigurationImpl;
@@ -50,8 +51,8 @@ public class RequirementCoverageTest {
         model.setImplementation(this);
         model.afterElementsAdded();
         configuration.addModel(model);
-        GraphWalker graphWalker = new GraphWalkerImpl(configuration);
-        graphWalker.executePath();
+        GraphWalkerExecutor executor = new GraphWalkerExecutor(new GraphWalkerImpl(configuration));
+        executor.run();
     }
     /*
     @Test
