@@ -34,6 +34,7 @@ import org.graphwalker.core.conditions.StopConditionFactory;
 import org.graphwalker.core.filter.EdgeFilterImpl;
 import org.graphwalker.core.generators.PathGenerator;
 import org.graphwalker.core.generators.PathGeneratorFactory;
+import org.graphwalker.core.machine.ExceptionStrategy;
 import org.graphwalker.core.model.GraphMLModelFactory;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.ModelFactory;
@@ -69,6 +70,9 @@ public class ConfigurationFactory {
                 StopCondition stopCondition = Reflection.newInstance(metadata.stopCondition(), metadata.stopConditionValue());
                 pathGenerator.setStopCondition(stopCondition);
                 model.setPathGenerator(pathGenerator);
+                model.setGroup(metadata.group());
+                ExceptionStrategy exceptionStrategy = Reflection.newInstance(metadata.exceptionStrategy());
+                model.setExceptionStrategy(exceptionStrategy);
                 configuration.addModel(model);
             }
         }

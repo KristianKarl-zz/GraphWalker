@@ -26,13 +26,16 @@
 package org.graphwalker.core.utils;
 
 import org.graphwalker.core.Bundle;
+import org.graphwalker.core.annotations.Before;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Reflection {
+public final class Reflection {
 
     private Reflection() {
     }
@@ -59,6 +62,26 @@ public class Reflection {
             throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.class.instantiation", clazz.getName()));
         } catch (IllegalAccessException e) {
             throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.class.instantiation", clazz.getName()));
+        }
+    }
+
+    public static void execute(Object object, Class<? extends Annotation> annotation) {
+        if (null != object) {
+            for (Method method: object.getClass().getMethods()) {
+                if (method.isAnnotationPresent(annotation)) {
+                    if (void.class.equals(method.getReturnType()) && 0 == method.getParameterTypes().length) {
+                        try {
+                            method.invoke(object);
+                        } catch (IllegalAccessException e) {
+                            e.printStackTrace();
+                            throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.class.instantiation", method.getName()));
+                        } catch (InvocationTargetException e) {
+                            e.printStackTrace();
+                            throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.class.instantiation", method.getName()));
+                        }
+                    }
+                }
+            }
         }
     }
     

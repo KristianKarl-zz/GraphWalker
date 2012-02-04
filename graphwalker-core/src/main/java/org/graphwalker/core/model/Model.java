@@ -26,6 +26,7 @@
 package org.graphwalker.core.model;
 
 import org.graphwalker.core.generators.PathGenerator;
+import org.graphwalker.core.machine.ExceptionStrategy;
 
 import java.util.List;
 
@@ -210,4 +211,8 @@ public interface Model {
      * @return a {@link java.lang.Object} object.
      */
     Object getImplementation();
+    String getGroup();
+    void setGroup(String group);
+    ExceptionStrategy getExceptionStrategy();
+    void setExceptionStrategy(ExceptionStrategy exceptionStrategy);
 }

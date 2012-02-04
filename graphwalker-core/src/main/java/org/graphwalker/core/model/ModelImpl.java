@@ -32,6 +32,7 @@ import org.graphwalker.core.Bundle;
 import org.graphwalker.core.algorithms.DepthFirstSearch;
 import org.graphwalker.core.algorithms.FloydWarshall;
 import org.graphwalker.core.generators.PathGenerator;
+import org.graphwalker.core.machine.ExceptionStrategy;
 import org.graphwalker.core.utils.Resource;
 
 import java.util.*;
@@ -53,6 +54,8 @@ public class ModelImpl implements Model {
     private FloydWarshall myFloydWarshall;
     private PathGenerator myPathGenerator;
     private Object myImplementation;
+    private String myGroup;
+    private ExceptionStrategy myExceptionStrategy;
     
     /**
      * <p>Constructor for ModelImpl.</p>
@@ -395,5 +398,24 @@ public class ModelImpl implements Model {
     public Object getImplementation() {
         return myImplementation;
     }
-    
+
+    @Override
+    public String getGroup() {
+        return myGroup;  
+    }
+
+    @Override
+    public void setGroup(String group) {
+        myGroup = group;
+    }
+
+    @Override
+    public ExceptionStrategy getExceptionStrategy() {
+        return myExceptionStrategy;
+    }
+
+    @Override
+    public void setExceptionStrategy(ExceptionStrategy exceptionStrategy) {
+        myExceptionStrategy = exceptionStrategy;
+    }
 }

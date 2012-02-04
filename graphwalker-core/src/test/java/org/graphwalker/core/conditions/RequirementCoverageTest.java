@@ -53,7 +53,7 @@ public class RequirementCoverageTest {
         GraphWalker graphWalker = new GraphWalkerImpl(configuration);
         graphWalker.executePath();
     }
-
+    /*
     @Test
     public void testFailedRequirement() {
         Configuration configuration = new ConfigurationImpl();
@@ -91,7 +91,7 @@ public class RequirementCoverageTest {
         graphWalker.executePath();
         // TODO: verify requirement status
     }
-
+  */
 
     public void v_1() {}
 

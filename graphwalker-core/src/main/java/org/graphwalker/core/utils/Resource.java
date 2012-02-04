@@ -44,7 +44,7 @@ import java.util.ResourceBundle;
  * @version $Id: $
  */
 @Guarded
-public class Resource {
+public final class Resource {
 
     private Resource() {
     }

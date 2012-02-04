@@ -26,12 +26,15 @@
 package org.graphwalker.core.machine;
 
 import org.graphwalker.core.Bundle;
+import org.graphwalker.core.annotations.After;
+import org.graphwalker.core.annotations.Before;
 import org.graphwalker.core.conditions.StopCondition;
 import org.graphwalker.core.configuration.Configuration;
 import org.graphwalker.core.filter.EdgeFilter;
 import org.graphwalker.core.generators.PathGenerator;
 import org.graphwalker.core.generators.PathGeneratorException;
 import org.graphwalker.core.model.*;
+import org.graphwalker.core.utils.Reflection;
 import org.graphwalker.core.utils.Resource;
 
 import java.lang.reflect.InvocationTargetException;
@@ -51,7 +54,6 @@ public class MachineImpl implements Machine {
     private final EdgeFilter myEdgeFilter;
     private Model myCurrentModel;
     private Element myCurrentElement;
-    private ExceptionStrategy myStrategy;
 
     /**
      * <p>Constructor for MachineImpl.</p>
@@ -98,7 +100,14 @@ public class MachineImpl implements Machine {
     }
     
     public void setCurrentModel(Model model) {
+        if (model.hasImplementation()) {
+            Reflection.execute(model.getImplementation(), Before.class);
+        }
         myCurrentModel = model;
+    }
+
+    public ExceptionStrategy getExceptionStrategy() {
+        return getCurrentModel().getExceptionStrategy();
     }
 
     /**
@@ -133,9 +142,11 @@ public class MachineImpl implements Machine {
                     setCurrentElement(getPathGenerator(getCurrentModel()).getNextStep(this));
                     getCurrentElement().markAsVisited();
                 } catch (PathGeneratorException e) {
-                    // Cul de sac, but we still haven't satisfied the stop condition
-                    block(getCurrentElement());
-                    restart();
+                    getExceptionStrategy().handleException(this, e);
+                }
+            } else {
+                if (getCurrentModel().hasImplementation()) {
+                    Reflection.execute(getCurrentModel().getImplementation(), After.class);
                 }
             }
         } while (hasNextStep() && (getCurrentElement().equals(getCurrentModel().getStartVertex()) || !getCurrentElement().hasName()));
@@ -167,7 +178,9 @@ public class MachineImpl implements Machine {
 
     /**
      * <p>executePath.</p>
+     * This functionality should be through the GraphWalkerExecutor
      */
+    @Deprecated
     public void executePath() {
         while (hasNextStep()) {
             Element element = getNextStep();
@@ -177,22 +190,29 @@ public class MachineImpl implements Machine {
                         executeElement(element);
                         setRequirementStatus(element, RequirementStatus.PASSED);
                     } catch (RuntimeException e) {
-                        setRequirementStatus(element, RequirementStatus.FAILED);
-                        block(element);
-                        restart();
+                    //    setRequirementStatus(element, RequirementStatus.FAILED);
+                    //    block(element);
+                    //    restart();
+                        getExceptionStrategy().handleException(this, e);
                     }
                 } else {
                     throw new MachineException(Resource.getText(Bundle.NAME, "exception.implementation.missing", getCurrentModel().getId()));
                 }
             }
         }
+        if (getCurrentModel().hasImplementation()) {
+            Reflection.execute(getCurrentModel().getImplementation(), After.class);
+        }
     }
-    
+
+    /*
+    @Deprecated // Should be handled by the ExceptionStrategy
     private void restart() {
         getCurrentModel().afterElementsAdded();
         setCurrentElement(getCurrentModel().getStartVertex());
     }
 
+    @Deprecated // Should be handled by the ExceptionStrategy
     private void block(Element element) {
         element.setStatus(ElementStatus.BLOCKED);
         if (isVertex(element)) {
@@ -203,6 +223,7 @@ public class MachineImpl implements Machine {
             }
         }
     }
+    */
     /*
     private void backtrack(Edge edge) {
         edge.skip();

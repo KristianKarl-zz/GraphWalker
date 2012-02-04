@@ -77,7 +77,7 @@ public class MachineImplTest {
         Machine machine = new MachineImpl(configuration);
         machine.executePath();
     }
-
+    /*
     @Test
     public void testEmptyImpl() {
         Configuration configuration = createConfiguration();
@@ -94,7 +94,7 @@ public class MachineImplTest {
         machine.executePath();
         Assert.assertEquals("Start", machine.getCurrentElement().getName());
     }
-
+    */
     @Test
     public void testNullVertexName() {
         Configuration configuration = createConfiguration();

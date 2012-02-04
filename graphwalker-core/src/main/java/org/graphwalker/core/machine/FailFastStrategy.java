@@ -25,9 +25,15 @@
  */
 package org.graphwalker.core.machine;
 
+import org.graphwalker.core.annotations.After;
+import org.graphwalker.core.utils.Reflection;
+
 public class FailFastStrategy implements ExceptionStrategy {
 
     public void handleException(Machine machine, Exception exception) {
-
+        if (machine.getCurrentModel().hasImplementation()) {
+            Reflection.execute(machine.getCurrentModel().getImplementation(), After.class);
+        }
+        throw new MachineException(exception);
     }
 }
