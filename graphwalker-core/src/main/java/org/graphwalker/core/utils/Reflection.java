@@ -99,9 +99,9 @@ public final class Reflection {
                         try {
                             method.invoke(object);
                         } catch (IllegalAccessException e) {
-                            throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.class.instantiation", method.getName()), e);
+                            throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.method.access", method.getName()), e);
                         } catch (InvocationTargetException e) {
-                            throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.class.instantiation", method.getName()), e);
+                            throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.method.invocation", method.getName()), e);
                         }
                     }
                 }
@@ -121,11 +121,11 @@ public final class Reflection {
                 Method method = object.getClass().getMethod(methodName);
                 method.invoke(object);
             } catch (NoSuchMethodException e) {
-                throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.class.instantiation", methodName), e);
+                throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.method.missing", methodName), e);
             } catch (IllegalAccessException e) {
-                throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.class.instantiation", methodName), e);
+                throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.method.access", methodName), e);
             } catch (InvocationTargetException e) {
-                throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.class.instantiation", methodName), e);
+                throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.method.invocation", methodName), e);
             }
         }
     }
