@@ -187,7 +187,7 @@ public class MachineImpl implements Machine {
                 return getPossibleElements(myCurrentElement);
             } else {
                 for (Edge edge: vertex.getEdges()) {
-                    if (!edge.isBlocked() && myEdgeFilter.acceptEdge(edge)) {
+                    if (!edge.isBlocked() && myEdgeFilter.acceptEdge(getCurrentModel(), edge)) {
                         possibleElements.add(edge);
                     }
                 }
@@ -245,7 +245,7 @@ public class MachineImpl implements Machine {
 
     private void executeActions(Element element) {
         if (isEdge(element)) {
-            myEdgeFilter.executeActions((Edge)element);
+            myEdgeFilter.executeActions(getCurrentModel(), (Edge)element);
         }
     }
 

@@ -42,11 +42,19 @@ public class SoapServiceTest {
     @Test
     public void hasNextStepTest() {
         Assert.assertTrue(mySoapService.hasNextStep());
+        Assert.assertEquals(null, mySoapService.getNextStep());
+        Assert.assertTrue(mySoapService.hasNextStep());
         Assert.assertEquals("v_0", mySoapService.getNextStep());
+        Assert.assertTrue(mySoapService.hasNextStep());
+        Assert.assertEquals(null, mySoapService.getNextStep());
         Assert.assertTrue(mySoapService.hasNextStep());
         Assert.assertEquals("v_1", mySoapService.getNextStep());
         Assert.assertTrue(mySoapService.hasNextStep());
+        Assert.assertEquals(null, mySoapService.getNextStep());
+        Assert.assertTrue(mySoapService.hasNextStep());
         Assert.assertEquals("v_0", mySoapService.getNextStep());
+        Assert.assertTrue(mySoapService.hasNextStep());
+        Assert.assertEquals(null, mySoapService.getNextStep());
         Assert.assertTrue(mySoapService.hasNextStep());
         Assert.assertEquals("Done", mySoapService.getNextStep());
         Assert.assertFalse(mySoapService.hasNextStep());
@@ -55,6 +63,8 @@ public class SoapServiceTest {
     @Test
     public void getNextStepTest() {
         String nextStep = mySoapService.getNextStep();
+        Assert.assertNull(nextStep);
+        nextStep = mySoapService.getNextStep();
         Assert.assertNotNull(nextStep);
         Assert.assertEquals("v_0", nextStep);
     }

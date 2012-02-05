@@ -151,4 +151,8 @@ public class Edge extends AbstractElement {
     public void setEdgeGuard(@NotNull Guard edgeGuard) {
         myEdgeGuard = edgeGuard;
     }
+
+    public boolean hasEdgeGuard() {
+        return null != myEdgeGuard;
+    }
 }

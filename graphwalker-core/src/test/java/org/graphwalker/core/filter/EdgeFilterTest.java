@@ -25,9 +25,7 @@
  */
 package org.graphwalker.core.filter;
 
-import org.graphwalker.core.model.Action;
-import org.graphwalker.core.model.Edge;
-import org.graphwalker.core.model.Guard;
+import org.graphwalker.core.model.*;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -48,20 +46,34 @@ public class EdgeFilterTest {
     @Test(expected = EdgeFilterException.class)
     public void unknownScriptEngine() {
         EdgeFilter edgeFilter = new EdgeFilterImpl("unknown");
-        edgeFilter.executeActions(createEdge());
+        edgeFilter.executeActions(null, createEdge());
     }
 
     @Test(expected = EdgeFilterException.class)
     public void groovyScriptEngineException() {
         EdgeFilter edgeFilter = new EdgeFilterImpl("groovy");
-        Assert.assertTrue(edgeFilter.acceptEdge(createEdge()));
+        Assert.assertTrue(edgeFilter.acceptEdge(null, createEdge()));
     }
     
     @Test
     public void groovyScriptEngine() {
         EdgeFilter edgeFilter = new EdgeFilterImpl("groovy");
         Edge edge = createEdge();
-        edgeFilter.executeActions(edge);
-        Assert.assertTrue(edgeFilter.acceptEdge(edge));
-    }    
+        edgeFilter.executeActions(null, edge);
+        Assert.assertTrue(edgeFilter.acceptEdge(null, edge));
+    }  
+    
+    @Test
+    public void callImplementationMethod() {
+        EdgeFilter edgeFilter = new EdgeFilterImpl("groovy");
+        Model model = new ModelImpl("m1");
+        model.setImplementation(this);
+        Edge edge = new Edge("myEdge");
+        edge.setEdgeGuard(new Guard("impl.not(false)"));
+        Assert.assertTrue(edgeFilter.acceptEdge(model, edge));
+    }
+
+    public boolean not(boolean flag) {
+        return !flag;
+    }
 }
