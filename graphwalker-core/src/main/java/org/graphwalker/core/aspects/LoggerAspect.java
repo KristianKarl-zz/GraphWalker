@@ -26,6 +26,7 @@
 package org.graphwalker.core.aspects;
 
 import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
@@ -47,11 +48,54 @@ import java.util.UUID;
 public class LoggerAspect {
 
     private ILoggerFactory myLoggerFactory = LoggerFactory.getILoggerFactory();
- /*
+
     static {
         MDC.put("traceId", UUID.randomUUID().toString());
     }
 
+    @Pointcut("execution(public * *(..))")
+    void publicMethod() {}
+
+    @Pointcut("within(org.graphwalker.core.GraphWalker+)")
+    void graphWalker() {}
+
+    @Pointcut("within(@org.graphwalker.core.annotations.GraphWalker *)")
+    public void graphWalkerAnnotation() {}
+
+    @Pointcut("within(org.graphwalker.core.machine.Machine+)")
+    void machine() {}
+
+    @Pointcut("within(org.graphwalker.core.filter.EdgeFilter+)")
+    void edgeFilter() {}
+
+    @Pointcut("within(org.graphwalker.core.conditions.StopCondition+)")
+    void stopCondition() {}
+
+    @Before("publicMethod() && graphWalker()")
+    public void logInfoBefore(JoinPoint joinPoint) {
+        MDC.put("traceId", UUID.randomUUID().toString());
+        getLogger(joinPoint).info(joinPoint.toLongString());
+    }
+
+    @Before("graphWalkerAnnotation()")
+    public void logImplementation(JoinPoint joinPoint) {
+        getLogger(joinPoint).info(joinPoint.toLongString());
+    }
+
+    @Before("publicMethod() && (machine() || edgeFilter() || stopCondition())")
+    public void logDebug(JoinPoint joinPoint) {
+        getLogger(joinPoint).debug(joinPoint.toLongString());
+    }
+
+    private Logger getLogger(JoinPoint joinPoint) {
+        return myLoggerFactory.getLogger(joinPoint.getSignature().getDeclaringType().getSimpleName());
+    }
+
+    private Logger getLogger(Throwable throwable) {
+        return myLoggerFactory.getLogger(throwable.getClass().getName());
+    }
+
+/*
     @Pointcut("execution(public * *(..))")
     void publicCall() {}
 
@@ -66,9 +110,6 @@ public class LoggerAspect {
 
     @Pointcut("within(org.graphwalker.core.configuration.Configuration+)")
     void configuration() {}
-
-    @Pointcut("within(org.graphwalker.core.filter.EdgeFilter+)")
-    void edgeFilter() {}
 
     @Pointcut("within(org.graphwalker.core.generators.PathGenerator+)")
     void pathGenerator() {}
@@ -198,12 +239,4 @@ public class LoggerAspect {
     }
     */
 
-
-    private Logger getLogger(JoinPoint joinPoint) {
-        return myLoggerFactory.getLogger(joinPoint.getSignature().getDeclaringType().getSimpleName());
-    }
-
-    private Logger getLogger(Throwable throwable) {
-        return myLoggerFactory.getLogger(throwable.getClass().getName());
-    }
 }
