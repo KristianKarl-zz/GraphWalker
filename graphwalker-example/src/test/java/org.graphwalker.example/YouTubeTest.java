@@ -10,10 +10,10 @@ import org.openqa.selenium.WebElement;
 import java.util.List;
 import java.util.Random;
 
-@GraphWalker(id = "youtubeSenario", model = "models/YouTubeModel.graphml", group = "youtube")
+@GraphWalker(id = "youtubeSenario", model = "models/YouTubeModel.graphml")
 public class YouTubeTest extends SeleniumBasedTest {
 
-    private final String myStartPage = System.getProperty("start.page");
+    private final String myStartPage = System.getProperty("youtube.start.page");
     private String myCurrentFeedTitle = null;
     private String myCurrentVideoTitle = null;
     private WebElement myCurrentGuideElement = null;
@@ -24,11 +24,11 @@ public class YouTubeTest extends SeleniumBasedTest {
     }
 
     public void e_startpage() {
-        getWebDriver().navigate().to(System.getProperty("start.page"));
+        getWebDriver().navigate().to(myStartPage);
     }
     
     public void v_startpage() {
-        Assert.assertTrue(System.getProperty("start.page").equals(getWebDriver().getCurrentUrl()));
+        Assert.assertTrue(myStartPage.equals(getWebDriver().getCurrentUrl()));
     }
 
     public void e_search() {

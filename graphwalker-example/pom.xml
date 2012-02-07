@@ -12,7 +12,8 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <start.page>http://www.youtube.com/</start.page>
+        <wikipedia.start.page>http://www.wikipedia.org/</wikipedia.start.page>
+        <youtube.start.page>http://www.youtube.com/</youtube.start.page>
     </properties>
 
     <profiles>

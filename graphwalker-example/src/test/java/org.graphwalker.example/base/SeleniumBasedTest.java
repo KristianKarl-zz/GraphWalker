@@ -24,8 +24,10 @@ public abstract class SeleniumBasedTest {
 
     @After
     public void destroyWebDriver() {
-        myWebDriver.close();
-        myWebDriver = null;
+        if (null != myWebDriver) {
+            myWebDriver.close();
+            myWebDriver = null;
+        }
     }
 
     protected WebDriver getWebDriver() {
