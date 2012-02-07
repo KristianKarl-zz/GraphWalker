@@ -48,8 +48,12 @@ public class GraphWalkerExecutor implements Runnable {
     @Override
     public void run() {
         myGraphWalker.before();
-        while (myGraphWalker.hasNextStep()) {
-            myGraphWalker.getNextStep();
+        try {
+            while (myGraphWalker.hasNextStep()) {
+                myGraphWalker.getNextStep();
+            }
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
         }
         myGraphWalker.after();
     }
