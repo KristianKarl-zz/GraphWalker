@@ -4,7 +4,7 @@ import org.graphwalker.core.annotations.GraphWalker;
 import org.graphwalker.core.utils.Assert;
 import org.graphwalker.example.base.SeleniumBasedTest;
 
-@GraphWalker(id = "wikipediaTest", model = "models/WikipediaModel.graphml")
+@GraphWalker(id = "wikipediaTest", model = "models/WikipediaModel.graphml", group = "wikipedia")
 public class WikipediaTest extends SeleniumBasedTest {
 
     public void e_startpage() {

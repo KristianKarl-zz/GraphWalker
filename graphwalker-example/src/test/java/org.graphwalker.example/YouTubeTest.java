@@ -10,7 +10,7 @@ import org.openqa.selenium.WebElement;
 import java.util.List;
 import java.util.Random;
 
-@GraphWalker(id = "youtubeSenario", model = "models/YouTubeModel.graphml")
+@GraphWalker(id = "youtubeSenario", model = "models/YouTubeModel.graphml", group = "youtube")
 public class YouTubeTest extends SeleniumBasedTest {
 
     private final String myStartPage = System.getProperty("youtube.start.page");
