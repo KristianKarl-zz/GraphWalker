@@ -140,20 +140,48 @@ public class MachineImpl implements Machine {
      */
     @Override
     public boolean hasNextStep() {
-        Model model = getCurrentModel();
-        Element element = getCurrentElement();
-        if (isVertex(getCurrentElement())) {
-            Vertex vertex = getVertex(getCurrentElement());
-            if (vertex.hasSwitchModel()) {
-                model = getConfiguration().getModel(vertex.getSwitchModelId());
-                element = model.getStartVertex();
+        // if the current model's state is a vertex with a switch model statement
+        if (isVertex(getCurrentElement()) && ((Vertex)getCurrentElement()).hasSwitchModel()) {
+            // then we check if the switch model has any more steps to take
+            if (hasVertexNextStep(getVertex(getCurrentElement()))) {
+                return true;
             }
-        } 
+        }
+        // next we check if the current model has any more steps to take
+        if (hasModelNextStep(getCurrentModel(), getCurrentElement())) {
+            return true;
+        }
+        // and finally we go through all the models in order to find any step we can take
+        for (Model model: getConfiguration().getModels()) {
+            if (!getCurrentModel().equals(model)) {
+                if (hasModelNextStep(model, model.getStartVertex())) {
+                    return true;
+                }
+            }
+        }
+        // there is no more steps
+        return false;
+    }
+
+    private boolean hasVertexNextStep(Vertex vertex) {
+        if (vertex.hasSwitchModel()) {
+            Model model = getConfiguration().getModel(vertex.getSwitchModelId());
+            if (null == model) {
+                throw new MachineException(Resource.getText(Bundle.NAME, "exception.model.missing", vertex.getSwitchModelId()));
+            }
+            if (hasModelNextStep(model, model.getStartVertex())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean hasModelNextStep(Model model, Element element) {
         PathGenerator pathGenerator = getPathGenerator(model);
         StopCondition stopCondition = getStopCondition(pathGenerator);
         return !stopCondition.isFulfilled(model, element);
     }
-
+    
     /**
      * {@inheritDoc}
      *
@@ -161,6 +189,21 @@ public class MachineImpl implements Machine {
      */
     @Override
     public Element getNextStep() {
+        // if the current model's state is a vertex with a switch model statement
+        if (isVertex(getCurrentElement()) && ((Vertex)getCurrentElement()).hasSwitchModel()) {
+            switchModel(getVertex(getCurrentElement()).getSwitchModelId());
+        }
+        // if the current model doesn't have any more steps we try to find one model that have
+        if (!hasModelNextStep(getCurrentModel(), getCurrentElement())) {
+            for (Model model: getConfiguration().getModels()) {
+                if (!getCurrentModel().equals(model)) {
+                    if (hasModelNextStep(model, model.getStartVertex())) {
+                        switchModel(model.getId());
+                    }
+                }
+            }
+        }
+        // now we will try to take the next step
         try {
             setCurrentElement(getPathGenerator(getCurrentModel()).getNextStep(this));
             getCurrentElement().markAsVisited();
@@ -175,21 +218,16 @@ public class MachineImpl implements Machine {
         }
         return getCurrentElement();
     }
-
+    
     /** {@inheritDoc} */
     @Override
     public List<Element> getPossibleElements(Element element) {
         List<Element> possibleElements = new ArrayList<Element>();
         if (element instanceof Vertex) {
             Vertex vertex = (Vertex)element;
-            if (vertex.hasSwitchModel()) {
-                switchModel(vertex.getSwitchModelId());
-                return getPossibleElements(myCurrentElement);
-            } else {
-                for (Edge edge: vertex.getEdges()) {
-                    if (!edge.isBlocked() && myEdgeFilter.acceptEdge(getCurrentModel(), edge)) {
-                        possibleElements.add(edge);
-                    }
+            for (Edge edge: vertex.getEdges()) {
+                if (!edge.isBlocked() && myEdgeFilter.acceptEdge(getCurrentModel(), edge)) {
+                    possibleElements.add(edge);
                 }
             }
         } else if (element instanceof Edge) {
@@ -201,7 +239,7 @@ public class MachineImpl implements Machine {
     private boolean isVertex(Element element) {
         return element instanceof Vertex;
     }
-    
+
     private Vertex getVertex(Element element) {
         return (Vertex)element;
     }
@@ -213,6 +251,7 @@ public class MachineImpl implements Machine {
     private void switchModel(String modelId) {
         setCurrentModel(myConfiguration.getModel(modelId));
         setCurrentElement(myCurrentModel.getStartVertex());
+        getCurrentElement().markAsVisited();
     }
 
     private PathGenerator getPathGenerator(Model model) {
