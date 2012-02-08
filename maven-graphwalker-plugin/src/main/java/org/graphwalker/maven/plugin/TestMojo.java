@@ -43,7 +43,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -143,9 +145,19 @@ public class TestMojo extends AbstractMojo {
                         myGraphWalkers.add(GraphWalkerFactory.create(file));
                     }                   
                 } else {
+                    Map<String, List<Class<?>>> testGroups = new HashMap<String, List<Class<?>>>();
                     List<Class<?>> tests = TestUtil.findTests(testClassesDirectory, getIncludes(), excludes);
-                    Configuration configuration = ConfigurationFactory.create(tests);
-                    myGraphWalkers.add(GraphWalkerFactory.create(configuration));
+                    for (Class<?> test: tests) {
+                        String group = TestUtil.getGroup(test);
+                        if (!testGroups.containsKey(group)) {
+                            testGroups.put(group, new ArrayList<Class<?>>());
+                        }
+                        testGroups.get(group).add(test);
+                    } 
+                    for (String group: testGroups.keySet()) {
+                        Configuration configuration = ConfigurationFactory.create(testGroups.get(group));
+                        myGraphWalkers.add(GraphWalkerFactory.create(configuration));
+                    }
                 }
 
                 ExecutorService executorService = Executors.newFixedThreadPool(myGraphWalkers.size());

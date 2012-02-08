@@ -25,6 +25,7 @@
  */
 package org.graphwalker.maven.plugin.utils;
 
+import org.apache.maven.plugin.PluginExecutionException;
 import org.codehaus.plexus.util.DirectoryScanner;
 import org.graphwalker.core.annotations.GraphWalker;
 
@@ -65,6 +66,14 @@ public final class TestUtil {
         return tests;
     }
 
+    public static String getGroup(Class<?> clazz) {
+        if (acceptClass(clazz)) {
+            GraphWalker metadata = clazz.getAnnotation(GraphWalker.class);
+            return metadata.group();
+        }
+        return null; // TODO: throw exception
+    }
+    
     /**
      * <p>findMethods.</p>
      *
