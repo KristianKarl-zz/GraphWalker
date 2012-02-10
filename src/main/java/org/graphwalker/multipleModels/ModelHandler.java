@@ -71,7 +71,7 @@ public class ModelHandler {
     private ModelBasedTesting mbt;
     private Object modelAPI;
     private boolean executionRestarted = false;
-    private boolean crashed = false;
+    private Exception thrownException = null;
 
     public ModelRunnable(String name, ModelAPI modelAPI) {
       this.name = name;
@@ -85,7 +85,7 @@ public class ModelHandler {
         logger.debug("Will start executing the model: " + this.mbt.getGraph());
         mbt.executePath(modelAPI);
       } catch (Exception e) {
-        crashed = true;
+        thrownException = e;
         Util.logStackTraceToError(e);
       }
     }
@@ -99,7 +99,11 @@ public class ModelHandler {
     }
 
     public boolean isCrashed() {
-      return crashed;
+      return thrownException != null;
+    }
+    
+    public Exception crashException() {
+      return thrownException;
     }
 
     public boolean isExecutionRestarted() {
@@ -373,7 +377,7 @@ public class ModelHandler {
   private void check4Crash(ModelRunnable model) {
     if (model.isCrashed()) {
       logger.error("Model has crashed: " + model.getName());
-      throw new RuntimeException("Model has crashed");
+      throw new RuntimeException("Model has crashed", model.crashException());
     }
   }
 
