@@ -27,6 +27,9 @@ package org.graphwalker.core;
 
 import org.graphwalker.core.configuration.Configuration;
 import org.graphwalker.core.model.Element;
+import org.graphwalker.core.model.Model;
+
+import java.util.List;
 
 /**
  * <p>GraphWalker interface.</p>
@@ -56,7 +59,20 @@ public interface GraphWalker {
      * @return a {@link org.graphwalker.core.model.Element} object.
      */
     Element getNextStep();
-
+    /**
+     * <p>hasExceptions.</p>
+     *
+     * @param model a {@link org.graphwalker.core.model.Model} object.
+     * @return a boolean.
+     */
+    boolean hasExceptions(Model model);
+    /**
+     * <p>getExceptions.</p>
+     *
+     * @param model a {@link org.graphwalker.core.model.Model} object.
+     * @return a {@link java.util.List} object.
+     */
+    List<Throwable> getExceptions(Model model);
     /**
      * <p>getConfiguration.</p>
      *

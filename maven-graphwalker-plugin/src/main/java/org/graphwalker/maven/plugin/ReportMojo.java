@@ -41,7 +41,7 @@ import java.util.Locale;
  * @author nilols
  * @version $Id: $
  * @goal report
- * @execute phase="test" lifecycle="graphwalker"
+ * @execute phase="test-compile" lifecycle="graphwalker-report"
  */
 public class ReportMojo extends AbstractMavenReport {
 

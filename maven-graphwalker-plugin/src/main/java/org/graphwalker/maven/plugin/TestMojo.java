@@ -58,7 +58,7 @@ import java.util.concurrent.TimeUnit;
  * @version $Id: $
  * @goal test
  * @phase test
- * @execute phase="test" lifecycle="graphwalker"
+ * @execute phase="test-compile"
  * @requiresDependencyResolution test
  */
 public class TestMojo extends AbstractMojo {
@@ -99,16 +99,6 @@ public class TestMojo extends AbstractMojo {
     private File testClassesDirectory;
 
     /**
-     * @parameter property="configPath" default-value="${project.build.testOutputDirectory}"
-     */
-    private File configPath;
-
-    /**
-     * @parameter property="configFiles"
-     */
-    private List<String> configFiles;
-    
-    /**
      * @parameter default-value="${project.build.directory}/graphwalker-reports"
      */
     private File reportsDirectory;
@@ -134,54 +124,77 @@ public class TestMojo extends AbstractMojo {
      */
     public void execute() throws MojoExecutionException, MojoFailureException {
         if (!skipTests()) {
-            ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
-            try {
-                URLClassLoader classLoader = new URLClassLoader(convertToURL(classpathElements), getClass().getClassLoader());
-                System.getProperties().putAll(mavenProject.getProperties());
-                Thread.currentThread().setContextClassLoader(classLoader);
+            ClassLoader classLoader = switchClassLoader(createClassLoader());
+            setSystemProperties();
+            createInstances();
+            executeInstances();
+            reportExecution();
+            switchClassLoader(classLoader);
+        }
+    }
 
-                if (null != configPath && configPath.exists() && configPath.isDirectory() && null != configFiles) {
-                    for (String configFile: configFiles) {
-                        File file = new File(configPath, configFile);
-                        myGraphWalkers.add(GraphWalkerFactory.create(file));
-                    }                   
-                } else {
-                    Map<String, List<Class<?>>> testGroups = new HashMap<String, List<Class<?>>>();
-                    List<Class<?>> tests = TestUtil.findTests(testClassesDirectory, getIncludes(), excludes);
-                    for (Class<?> test: tests) {
-                        String group = TestUtil.getGroup(test);
-                        if (!testGroups.containsKey(group)) {
-                            testGroups.put(group, new ArrayList<Class<?>>());
-                        }
-                        testGroups.get(group).add(test);
-                    } 
-                    for (String group: testGroups.keySet()) {
-                        Configuration configuration = ConfigurationFactory.create(testGroups.get(group));
-                        myGraphWalkers.add(GraphWalkerFactory.create(configuration));
-                    }
-                }
+    private ClassLoader createClassLoader() throws MojoExecutionException {
+        try {
+            return new URLClassLoader(convertToURL(classpathElements), getClass().getClassLoader());
+        } catch (MalformedURLException e) {
+            throw new MojoExecutionException(Resource.getText(Bundle.NAME, "exception.create.classloader"));
+        }
+    }
 
-                ExecutorService executorService = Executors.newFixedThreadPool(myGraphWalkers.size());
-                for (GraphWalker graphWalker: myGraphWalkers) {
-                    executorService.execute(new GraphWalkerExecutor(graphWalker));
-                }
-                executorService.shutdown();
-                executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.DAYS);
+    private ClassLoader switchClassLoader(ClassLoader newClassLoader) {
+        ClassLoader oldClassLoader = Thread.currentThread().getContextClassLoader();
+        Thread.currentThread().setContextClassLoader(newClassLoader);
+        return oldClassLoader;
+    }
+    
+    private void setSystemProperties() {
+        System.getProperties().putAll(mavenProject.getProperties());
+    }
 
-                for (GraphWalker graphWalker: myGraphWalkers) {
-                    for (Model model: graphWalker.getConfiguration().getModels()) {
-                        XMLReportGenerator.writeReport(model, reportsDirectory);
-                    }
+    private void createInstances() throws MojoExecutionException {
+        try {
+            Map<String, List<Class<?>>> testGroups = new HashMap<String, List<Class<?>>>();
+            List<Class<?>> tests = TestUtil.findTests(testClassesDirectory, getIncludes(), excludes);
+            for (Class<?> test: tests) {
+                String group = TestUtil.getGroup(test);
+                if (!testGroups.containsKey(group)) {
+                    testGroups.put(group, new ArrayList<Class<?>>());
                 }
-            } catch (MalformedURLException e) {
-                throw new MojoExecutionException(Resource.getText(Bundle.NAME, "exception.classloader"));
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-            } catch (InterruptedException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-            } finally {
-                Thread.currentThread().setContextClassLoader(contextClassLoader);
+                testGroups.get(group).add(test);
             }
+
+            for (String group: testGroups.keySet()) {
+                Configuration configuration = ConfigurationFactory.create(testGroups.get(group));
+                myGraphWalkers.add(GraphWalkerFactory.create(configuration));
+            }
+        } catch (ClassNotFoundException e) {
+            throw new MojoExecutionException(Resource.getText(Bundle.NAME, "exception.create.test"));
+        }
+    }
+
+    private void executeInstances() throws MojoExecutionException {
+        try {
+            ExecutorService executorService = Executors.newFixedThreadPool(myGraphWalkers.size());
+            for (GraphWalker graphWalker: myGraphWalkers) {
+                executorService.execute(new GraphWalkerExecutor(graphWalker));
+            }
+            executorService.shutdown();
+            executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.DAYS);
+        } catch (InterruptedException e) {
+            throw new MojoExecutionException(Resource.getText(Bundle.NAME, "exception.execution.interrupted"));
+        }
+    }
+
+    private void reportExecution() throws MojoExecutionException {
+        boolean hasExceptions = false;
+        for (GraphWalker graphWalker: myGraphWalkers) {
+            for (Model model: graphWalker.getConfiguration().getModels()) {
+                hasExceptions |= graphWalker.hasExceptions(model);
+                XMLReportGenerator.writeReport(reportsDirectory, model, graphWalker.getExceptions(model));
+            }
+        }
+        if (hasExceptions) {
+            throw new MojoExecutionException(Resource.getText(Bundle.NAME, "exception.execution.failed", reportsDirectory.getAbsolutePath()));
         }
     }
 

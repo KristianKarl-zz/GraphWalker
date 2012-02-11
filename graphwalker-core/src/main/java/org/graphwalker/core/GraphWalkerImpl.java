@@ -30,8 +30,10 @@ import org.graphwalker.core.configuration.ConfigurationFactory;
 import org.graphwalker.core.machine.Machine;
 import org.graphwalker.core.machine.MachineImpl;
 import org.graphwalker.core.model.Element;
+import org.graphwalker.core.model.Model;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * <p>GraphWalkerImpl class.</p>
@@ -104,6 +106,16 @@ public class GraphWalkerImpl implements GraphWalker {
     @Override
     public Element getNextStep() {
         return getMachine().getNextStep();
+    }
+
+    /** {@inheritDoc} */
+    public boolean hasExceptions(Model model) {
+        return getMachine().getExceptionStrategy().hasExceptions(model);
+    }
+
+    /** {@inheritDoc} */
+    public List<Throwable> getExceptions(Model model) {
+        return getMachine().getExceptionStrategy().getExceptions(model);
     }
 
     /**

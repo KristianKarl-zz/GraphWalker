@@ -66,6 +66,12 @@ public final class TestUtil {
         return tests;
     }
 
+    /**
+     * <p>getGroup.</p>
+     *
+     * @param clazz a {@link java.lang.Class} object.
+     * @return a {@link java.lang.String} object.
+     */
     public static String getGroup(Class<?> clazz) {
         if (acceptClass(clazz)) {
             GraphWalker metadata = clazz.getAnnotation(GraphWalker.class);

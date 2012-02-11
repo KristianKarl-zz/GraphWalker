@@ -25,6 +25,10 @@
  */
 package org.graphwalker.core.machine;
 
+import org.graphwalker.core.model.Model;
+
+import java.util.List;
+
 /**
  * <p>ExceptionStrategy interface.</p>
  *
@@ -40,4 +44,20 @@ public interface ExceptionStrategy {
      * @param throwable a {@link java.lang.Throwable} object.
      */
     void handleException(Machine machine, Throwable throwable);
+
+    /**
+     * <p>hasExceptions.</p>
+     *
+     * @param model a {@link org.graphwalker.core.model.Model} object.
+     * @return a boolean.
+     */
+    boolean hasExceptions(Model model);
+
+    /**
+     * <p>getExceptions.</p>
+     *
+     * @param model a {@link org.graphwalker.core.model.Model} object.
+     * @return a {@link java.util.List} object.
+     */
+    List<Throwable> getExceptions(Model model);
 }

@@ -29,6 +29,12 @@ import org.graphwalker.core.model.Vertex;
 
 import java.util.List;
 
+/**
+ * <p>VertexStatistics class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public class VertexStatistics {
 
     private long myVertexCount = 0;
@@ -36,6 +42,11 @@ public class VertexStatistics {
     private long myBlockedVertexCount = 0;
     private long myUnreachableVertexCount = 0;
 
+    /**
+     * <p>Constructor for VertexStatistics.</p>
+     *
+     * @param vertices a {@link java.util.List} object.
+     */
     public VertexStatistics(List<Vertex> vertices) {
         for (Vertex vertex: vertices) {
             myVertexCount++;
@@ -47,18 +58,38 @@ public class VertexStatistics {
         }
     }
 
+    /**
+     * <p>getVertexCount.</p>
+     *
+     * @return a long.
+     */
     public long getVertexCount() {
         return myVertexCount;
     }
 
+    /**
+     * <p>getVisitedVertexCount.</p>
+     *
+     * @return a long.
+     */
     public long getVisitedVertexCount() {
         return myVisitedVertexCount;
     }
 
+    /**
+     * <p>getBlockedVertexCount.</p>
+     *
+     * @return a long.
+     */
     public long getBlockedVertexCount() {
         return myBlockedVertexCount;
     }
 
+    /**
+     * <p>getUnreachableVertexCount.</p>
+     *
+     * @return a long.
+     */
     public long getUnreachableVertexCount() {
         return myUnreachableVertexCount;
     }

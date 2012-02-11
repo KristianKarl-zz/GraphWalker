@@ -152,6 +152,11 @@ public class Edge extends AbstractElement {
         myEdgeGuard = edgeGuard;
     }
 
+    /**
+     * <p>hasEdgeGuard.</p>
+     *
+     * @return a boolean.
+     */
     public boolean hasEdgeGuard() {
         return null != myEdgeGuard;
     }

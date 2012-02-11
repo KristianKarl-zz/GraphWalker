@@ -59,6 +59,9 @@ public class LoggerAspect {
     @Pointcut("within(org.graphwalker.core.GraphWalker+)")
     void graphWalker() {}
 
+    /**
+     * <p>graphWalkerAnnotation.</p>
+     */
     @Pointcut("within(@org.graphwalker.core.annotations.GraphWalker *)")
     public void graphWalkerAnnotation() {}
 
@@ -71,17 +74,32 @@ public class LoggerAspect {
     @Pointcut("within(org.graphwalker.core.conditions.StopCondition+)")
     void stopCondition() {}
 
+    /**
+     * <p>logInfoBefore.</p>
+     *
+     * @param joinPoint a {@link org.aspectj.lang.JoinPoint} object.
+     */
     @Before("publicMethod() && graphWalker()")
     public void logInfoBefore(JoinPoint joinPoint) {
         MDC.put("traceId", UUID.randomUUID().toString());
         getLogger(joinPoint).info(joinPoint.toLongString());
     }
 
+    /**
+     * <p>logImplementation.</p>
+     *
+     * @param joinPoint a {@link org.aspectj.lang.JoinPoint} object.
+     */
     @Before("graphWalkerAnnotation()")
     public void logImplementation(JoinPoint joinPoint) {
         getLogger(joinPoint).info(joinPoint.toLongString());
     }
 
+    /**
+     * <p>logDebug.</p>
+     *
+     * @param joinPoint a {@link org.aspectj.lang.JoinPoint} object.
+     */
     @Before("publicMethod() && (machine() || edgeFilter() || stopCondition())")
     public void logDebug(JoinPoint joinPoint) {
         getLogger(joinPoint).debug(joinPoint.toLongString());

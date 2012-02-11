@@ -33,6 +33,11 @@ package org.graphwalker.maven.plugin.reports;
  */
 public class ReportException extends RuntimeException {
 
+    /**
+     * <p>Constructor for ReportException.</p>
+     *
+     * @param cause a {@link java.lang.String} object.
+     */
     public ReportException(String cause) {
         super(cause);
     }

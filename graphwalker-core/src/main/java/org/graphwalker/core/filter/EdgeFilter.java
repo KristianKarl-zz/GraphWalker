@@ -36,6 +36,19 @@ import org.graphwalker.core.model.Model;
  */
 public interface EdgeFilter {
 
+    /**
+     * <p>executeActions.</p>
+     *
+     * @param model a {@link org.graphwalker.core.model.Model} object.
+     * @param edge a {@link org.graphwalker.core.model.Edge} object.
+     */
     void executeActions(Model model, Edge edge);
+    /**
+     * <p>acceptEdge.</p>
+     *
+     * @param model a {@link org.graphwalker.core.model.Model} object.
+     * @param edge a {@link org.graphwalker.core.model.Edge} object.
+     * @return a boolean.
+     */
     boolean acceptEdge(Model model, Edge edge);
 }

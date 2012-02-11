@@ -29,6 +29,12 @@ import org.graphwalker.core.model.Requirement;
 
 import java.util.List;
 
+/**
+ * <p>RequirementStatistics class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public class RequirementStatistics {
 
     private long myRequirementCount = 0;
@@ -36,6 +42,11 @@ public class RequirementStatistics {
     private long myFailedRequirementCount = 0;
     private long myNotCoveredRequirementCount = 0;
 
+    /**
+     * <p>Constructor for RequirementStatistics.</p>
+     *
+     * @param requirements a {@link java.util.List} object.
+     */
     public RequirementStatistics(List<Requirement> requirements) {
         for (Requirement requirement: requirements) {
             myRequirementCount++;
@@ -47,18 +58,38 @@ public class RequirementStatistics {
         }
     }
 
+    /**
+     * <p>getRequirementCount.</p>
+     *
+     * @return a long.
+     */
     public long getRequirementCount() {
         return myRequirementCount;
     }
 
+    /**
+     * <p>getPassedRequirementCount.</p>
+     *
+     * @return a long.
+     */
     public long getPassedRequirementCount() {
         return myPassedRequirementCount;
     }
 
+    /**
+     * <p>getFailedRequirementCount.</p>
+     *
+     * @return a long.
+     */
     public long getFailedRequirementCount() {
         return myFailedRequirementCount;
     }
 
+    /**
+     * <p>getNotCoveredRequirementCount.</p>
+     *
+     * @return a long.
+     */
     public long getNotCoveredRequirementCount() {
         return myNotCoveredRequirementCount;
     }

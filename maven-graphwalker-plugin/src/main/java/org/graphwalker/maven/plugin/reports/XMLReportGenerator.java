@@ -37,6 +37,7 @@ import org.graphwalker.core.utils.Resource;
 import org.graphwalker.maven.plugin.Bundle;
 
 import java.io.*;
+import java.util.List;
 
 /**
  * <p>XMLReportGenerator class.</p>
@@ -51,7 +52,7 @@ public class XMLReportGenerator {
     private XMLReportGenerator() {
     }
     
-    private static File getReportFile(Model model, File reportDirectory) {
+    private static File getReportFile(File reportDirectory, Model model) {
         if (!reportDirectory.mkdirs()) {
             if (!reportDirectory.exists()) {
                 throw new ReportException(Resource.getText(Bundle.NAME, "exception.report.directory"));
@@ -60,46 +61,63 @@ public class XMLReportGenerator {
         return new File(reportDirectory, model.getImplementation().getClass().getName()+".xml");
     }
 
-    private static Xpp3Dom generateReport(Model model) {
+    private static Xpp3Dom generateReport(Model model, List<Throwable> exceptions) {
         Xpp3Dom report = new Xpp3Dom("report");
         report.setAttribute("class", model.getImplementation().getClass().getName());
         report.setAttribute("group", model.getGroup());
+
         VertexStatistics vertexStatistics = new VertexStatistics(model.getVertices());
-        Xpp3Dom vertices = new Xpp3Dom("vertices");
-        vertices.setAttribute("count", ""+vertexStatistics.getVertexCount());
-        vertices.setAttribute("visited", ""+vertexStatistics.getVisitedVertexCount());
-        vertices.setAttribute("blocked", ""+vertexStatistics.getBlockedVertexCount());
-        vertices.setAttribute("unreachable", ""+vertexStatistics.getUnreachableVertexCount());
-        //vertices.setAttribute("coverage", ""+model.getVertices().size());
-        report.addChild(vertices);
+        Xpp3Dom verticesElement = new Xpp3Dom("vertices");
+        verticesElement.setAttribute("count", "" + vertexStatistics.getVertexCount());
+        verticesElement.setAttribute("visited", "" + vertexStatistics.getVisitedVertexCount());
+        verticesElement.setAttribute("blocked", "" + vertexStatistics.getBlockedVertexCount());
+        verticesElement.setAttribute("unreachable", "" + vertexStatistics.getUnreachableVertexCount());
+        //verticesElement.setAttribute("coverage", ""+model.getVertices().size());
+        report.addChild(verticesElement);
+
         EdgeStatistics edgeStatistics = new EdgeStatistics(model.getEdges());
-        Xpp3Dom edges = new Xpp3Dom("edges");
-        edges.setAttribute("count", ""+edgeStatistics.getEdgeCount());
-        edges.setAttribute("visited", ""+edgeStatistics.getVisitedEdgeCount());
-        edges.setAttribute("blocked", ""+edgeStatistics.getBlockedEdgeCount());
-        edges.setAttribute("unreachable", ""+edgeStatistics.getUnreachableEdgeCount());
-        //edges.setAttribute("coverage", ""+model.getEdges().size());
-        report.addChild(edges);
+        Xpp3Dom edgesElement = new Xpp3Dom("edges");
+        edgesElement.setAttribute("count", "" + edgeStatistics.getEdgeCount());
+        edgesElement.setAttribute("visited", "" + edgeStatistics.getVisitedEdgeCount());
+        edgesElement.setAttribute("blocked", "" + edgeStatistics.getBlockedEdgeCount());
+        edgesElement.setAttribute("unreachable", "" + edgeStatistics.getUnreachableEdgeCount());
+        //edgesElement.setAttribute("coverage", ""+model.getEdges().size());
+        report.addChild(edgesElement);
+
         RequirementStatistics requirementStatistics = new RequirementStatistics(model.getRequirements());
-        Xpp3Dom requirements = new Xpp3Dom("requirements");
-        requirements.setAttribute("count", ""+requirementStatistics.getRequirementCount());
-        requirements.setAttribute("passed", ""+requirementStatistics.getPassedRequirementCount());
-        requirements.setAttribute("failed", ""+requirementStatistics.getFailedRequirementCount());
-        requirements.setAttribute("notCovered", ""+requirementStatistics.getNotCoveredRequirementCount());
-        //requirements.setAttribute("coverage", ""+model.getRequirements().size());
-        report.addChild(requirements);
+        Xpp3Dom requirementsElement = new Xpp3Dom("requirements");
+        requirementsElement.setAttribute("count", "" + requirementStatistics.getRequirementCount());
+        requirementsElement.setAttribute("passed", "" + requirementStatistics.getPassedRequirementCount());
+        requirementsElement.setAttribute("failed", "" + requirementStatistics.getFailedRequirementCount());
+        requirementsElement.setAttribute("notCovered", "" + requirementStatistics.getNotCoveredRequirementCount());
+        //requirementsElement.setAttribute("coverage", ""+model.getRequirements().size());
+        report.addChild(requirementsElement);
+
+        if (0<exceptions.size()) {
+            Xpp3Dom exceptionsElement = new Xpp3Dom("exceptions");
+            for (Throwable throwable: exceptions) {
+                Xpp3Dom exceptionElement = new Xpp3Dom("exception");
+                exceptionElement.setValue(getStackTrace(throwable));
+                exceptionsElement.addChild(exceptionElement);
+            }
+            report.addChild(exceptionsElement);
+        }
         return report;
     }
 
     /**
      * <p>writeReport.</p>
+     *
+     * @param reportDirectory a {@link java.io.File} object.
+     * @param model a {@link org.graphwalker.core.model.Model} object.
+     * @param exceptions a {@link java.util.List} object.
      */
-    public static void writeReport(Model model, File reportDirectory) {
+    public static void writeReport(File reportDirectory, Model model, List<Throwable> exceptions) {
         PrintWriter writer = null;
         try {
-            writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(getReportFile(model, reportDirectory)), "UTF-8")));
+            writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(getReportFile(reportDirectory, model)), "UTF-8")));
             writer.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"+LINE_SEPARATOR);
-            Xpp3DomWriter.write(new PrettyPrintXMLWriter(writer), generateReport(model));
+            Xpp3DomWriter.write(new PrettyPrintXMLWriter(writer), generateReport(model, exceptions));
         } catch (UnsupportedEncodingException e) {
             throw new ReportException(Resource.getText(Bundle.NAME, "exception.report.encoding"), e);
         } catch (FileNotFoundException e) {
@@ -109,4 +127,46 @@ public class XMLReportGenerator {
         }
     }
 
+    private static String getStackTrace(Throwable throwable) {
+        StringBuilder stringBuilder = new StringBuilder(LINE_SEPARATOR);
+        stringBuilder.append("      ");
+        stringBuilder.append(throwable.toString());
+        for (StackTraceElement element: throwable.getStackTrace()) {
+            stringBuilder.append(LINE_SEPARATOR);
+            stringBuilder.append("        at ");
+            stringBuilder.append(element.toString());
+        }
+        if (null != throwable.getCause()) {
+            appendStackTraceCause(stringBuilder, throwable.getStackTrace(), throwable.getCause());
+        }
+        stringBuilder.append(LINE_SEPARATOR);
+        stringBuilder.append("    ");
+        return stringBuilder.toString();
+    }
+
+    private static void appendStackTraceCause(StringBuilder stringBuilder, StackTraceElement[] stackTraceElements, Throwable throwable) {
+        StackTraceElement[] causedStackTraceElements = throwable.getStackTrace();
+        int m = causedStackTraceElements.length-1, n = stackTraceElements.length-1;
+        while (m >= 0 && n >=0 && causedStackTraceElements[m].equals(stackTraceElements[n])) {
+            m--; n--;
+        }
+        int framesInCommon = causedStackTraceElements.length - 1 - m;
+        stringBuilder.append(LINE_SEPARATOR);
+        stringBuilder.append("      ").append("Caused by: ");
+        stringBuilder.append(throwable.toString());
+        for (int i=0; i <= m; i++) {
+            stringBuilder.append(LINE_SEPARATOR);
+            stringBuilder.append("        at ");
+            stringBuilder.append(causedStackTraceElements[i]);
+        }
+        if (framesInCommon != 0) {
+            stringBuilder.append(LINE_SEPARATOR);
+            stringBuilder.append("        ... ");
+            stringBuilder.append(framesInCommon);
+            stringBuilder.append(" more");
+        }
+        if (null != throwable.getCause()) {
+            appendStackTraceCause(stringBuilder, stackTraceElements, throwable.getCause());
+        }
+    }
 }

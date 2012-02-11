@@ -29,6 +29,12 @@ import org.graphwalker.core.model.Edge;
 
 import java.util.List;
 
+/**
+ * <p>EdgeStatistics class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public class EdgeStatistics {
     
     private long myEdgeCount = 0;
@@ -37,6 +43,11 @@ public class EdgeStatistics {
     private long myUnreachableEdgeCount = 0;
     //private long 
     
+    /**
+     * <p>Constructor for EdgeStatistics.</p>
+     *
+     * @param edges a {@link java.util.List} object.
+     */
     public EdgeStatistics(List<Edge> edges) {
         for (Edge edge: edges) {
             myEdgeCount++;
@@ -48,18 +59,38 @@ public class EdgeStatistics {
         }
     }
 
+    /**
+     * <p>getEdgeCount.</p>
+     *
+     * @return a long.
+     */
     public long getEdgeCount() {
         return myEdgeCount;
     }
 
+    /**
+     * <p>getVisitedEdgeCount.</p>
+     *
+     * @return a long.
+     */
     public long getVisitedEdgeCount() {
         return myVisitedEdgeCount;
     }
 
+    /**
+     * <p>getBlockedEdgeCount.</p>
+     *
+     * @return a long.
+     */
     public long getBlockedEdgeCount() {
         return myBlockedEdgeCount;
     }
 
+    /**
+     * <p>getUnreachableEdgeCount.</p>
+     *
+     * @return a long.
+     */
     public long getUnreachableEdgeCount() {
         return myUnreachableEdgeCount;
     }

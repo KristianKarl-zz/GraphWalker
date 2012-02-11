@@ -368,7 +368,13 @@ public class ModelImpl implements Model {
         return myFloydWarshall.getMaximumDistance(target);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     *
+     * @param source a {@link org.graphwalker.core.model.Element} object.
+     * @param target a {@link org.graphwalker.core.model.Edge} object.
+     * @return a {@link java.util.List} object.
+     */
     public List<Element> getShortestPath(@NotNull Element source, @NotNull Edge target) {
         return myFloydWarshall.getShortestPath(source, target);
     }
@@ -386,10 +392,6 @@ public class ModelImpl implements Model {
      * {@inheritDoc}
      *
      * <p>getShortestPath.</p>
-     *
-     * @param source a {@link org.graphwalker.core.model.Element} object.
-     * @param target a {@link org.graphwalker.core.model.Vertex} object.
-     * @return a {@link java.util.List} object.
      */
     public List<Element> getShortestPath(@NotNull Element source, @NotNull Vertex target) {
         return myFloydWarshall.getShortestPath(source, target);

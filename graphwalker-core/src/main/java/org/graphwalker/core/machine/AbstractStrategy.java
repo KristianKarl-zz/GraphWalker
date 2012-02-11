@@ -25,20 +25,43 @@
  */
 package org.graphwalker.core.machine;
 
+import org.graphwalker.core.model.Model;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
- * <p>BacktrackStrategy class.</p>
+ * <p>Abstract AbstractStrategy class.</p>
  *
  * @author nilols
  * @version $Id: $
  */
-public class BacktrackStrategy extends AbstractStrategy {
+public abstract class AbstractStrategy implements ExceptionStrategy {
+
+    private Map<String, List<Throwable>> myExceptionMap = new HashMap<String, List<Throwable>>();
 
     /** {@inheritDoc} */
-    public void handleException(Machine machine, Throwable throwable) {
-        addException(machine.getCurrentModel(), throwable);
+    public boolean hasExceptions(Model model) {
+        return myExceptionMap.containsKey(model.getId());
     }
 
+    /**
+     * <p>addException.</p>
+     *
+     * @param model a {@link org.graphwalker.core.model.Model} object.
+     * @param throwable a {@link java.lang.Throwable} object.
+     */
+    protected void addException(Model model, Throwable throwable) {
+        if (!myExceptionMap.containsKey(model.getId())) {
+            myExceptionMap.put(model.getId(), new ArrayList<Throwable>());
+        }
+        myExceptionMap.get(model.getId()).add(throwable);
+    }
+
+    /** {@inheritDoc} */
+    public List<Throwable> getExceptions(Model model) {
+        return myExceptionMap.get(model.getId());
+    }
 }
