@@ -29,7 +29,10 @@ import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.xml.PrettyPrintXMLWriter;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.codehaus.plexus.util.xml.Xpp3DomWriter;
-import org.graphwalker.core.GraphWalker;
+import org.graphwalker.core.model.Model;
+import org.graphwalker.core.statistics.EdgeStatistics;
+import org.graphwalker.core.statistics.RequirementStatistics;
+import org.graphwalker.core.statistics.VertexStatistics;
 import org.graphwalker.core.utils.Resource;
 import org.graphwalker.maven.plugin.Bundle;
 
@@ -44,44 +47,59 @@ import java.io.*;
 public class XMLReportGenerator {
 
     private static final String LINE_SEPARATOR = System.getProperty("line.separator");
-    private final GraphWalker myGraphWalker;
-    private final File myReportsDirectory;
 
-    /**
-     * <p>Constructor for XMLReportGenerator.</p>
-     *
-     * @param graphWalker a {@link org.graphwalker.core.GraphWalker} object.
-     * @param reportsDirectory a {@link java.io.File} object.
-     */
-    public XMLReportGenerator(GraphWalker graphWalker, File reportsDirectory) {
-        myGraphWalker = graphWalker;
-        myReportsDirectory = reportsDirectory;
-        myReportsDirectory.mkdirs();
-    }
-
-    private File getConfigurationFile() {
-        return myGraphWalker.getConfiguration().getConfigurationFile();
+    private XMLReportGenerator() {
     }
     
-    private File getReportFile() {
-        return new File(myReportsDirectory, getConfigurationFile().getName());
+    private static File getReportFile(Model model, File reportDirectory) {
+        if (!reportDirectory.mkdirs()) {
+            if (!reportDirectory.exists()) {
+                throw new ReportException(Resource.getText(Bundle.NAME, "exception.report.directory"));
+            }
+        }
+        return new File(reportDirectory, model.getImplementation().getClass().getName()+".xml");
     }
 
-    private Xpp3Dom generateReport() {
+    private static Xpp3Dom generateReport(Model model) {
         Xpp3Dom report = new Xpp3Dom("report");
-        report.setAttribute("file", getConfigurationFile().getAbsolutePath());
+        report.setAttribute("class", model.getImplementation().getClass().getName());
+        report.setAttribute("group", model.getGroup());
+        VertexStatistics vertexStatistics = new VertexStatistics(model.getVertices());
+        Xpp3Dom vertices = new Xpp3Dom("vertices");
+        vertices.setAttribute("count", ""+vertexStatistics.getVertexCount());
+        vertices.setAttribute("visited", ""+vertexStatistics.getVisitedVertexCount());
+        vertices.setAttribute("blocked", ""+vertexStatistics.getBlockedVertexCount());
+        vertices.setAttribute("unreachable", ""+vertexStatistics.getUnreachableVertexCount());
+        //vertices.setAttribute("coverage", ""+model.getVertices().size());
+        report.addChild(vertices);
+        EdgeStatistics edgeStatistics = new EdgeStatistics(model.getEdges());
+        Xpp3Dom edges = new Xpp3Dom("edges");
+        edges.setAttribute("count", ""+edgeStatistics.getEdgeCount());
+        edges.setAttribute("visited", ""+edgeStatistics.getVisitedEdgeCount());
+        edges.setAttribute("blocked", ""+edgeStatistics.getBlockedEdgeCount());
+        edges.setAttribute("unreachable", ""+edgeStatistics.getUnreachableEdgeCount());
+        //edges.setAttribute("coverage", ""+model.getEdges().size());
+        report.addChild(edges);
+        RequirementStatistics requirementStatistics = new RequirementStatistics(model.getRequirements());
+        Xpp3Dom requirements = new Xpp3Dom("requirements");
+        requirements.setAttribute("count", ""+requirementStatistics.getRequirementCount());
+        requirements.setAttribute("passed", ""+requirementStatistics.getPassedRequirementCount());
+        requirements.setAttribute("failed", ""+requirementStatistics.getFailedRequirementCount());
+        requirements.setAttribute("notCovered", ""+requirementStatistics.getNotCoveredRequirementCount());
+        //requirements.setAttribute("coverage", ""+model.getRequirements().size());
+        report.addChild(requirements);
         return report;
     }
 
     /**
      * <p>writeReport.</p>
      */
-    public void writeReport() {
+    public static void writeReport(Model model, File reportDirectory) {
         PrintWriter writer = null;
         try {
-            writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(getReportFile()), "UTF-8")));
+            writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(getReportFile(model, reportDirectory)), "UTF-8")));
             writer.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"+LINE_SEPARATOR);
-            Xpp3DomWriter.write(new PrettyPrintXMLWriter(writer), generateReport());
+            Xpp3DomWriter.write(new PrettyPrintXMLWriter(writer), generateReport(model));
         } catch (UnsupportedEncodingException e) {
             throw new ReportException(Resource.getText(Bundle.NAME, "exception.report.encoding"), e);
         } catch (FileNotFoundException e) {
@@ -90,4 +108,5 @@ public class XMLReportGenerator {
             IOUtil.close(writer);
         }
     }
+
 }

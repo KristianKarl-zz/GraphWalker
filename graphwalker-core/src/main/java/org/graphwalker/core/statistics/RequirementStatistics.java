@@ -1,6 +1,6 @@
 /*
  * #%L
- * Maven GraphWalker Plugin
+ * GraphWalker Core
  * %%
  * Copyright (C) 2011 - 2012 GraphWalker
  * %%
@@ -23,27 +23,43 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.maven.plugin.reports;
+package org.graphwalker.core.statistics;
 
-/**
- * <p>ReportException class.</p>
- *
- * @author nilols
- * @version $Id: $
- */
-public class ReportException extends RuntimeException {
+import org.graphwalker.core.model.Requirement;
 
-    public ReportException(String cause) {
-        super(cause);
+import java.util.List;
+
+public class RequirementStatistics {
+
+    private long myRequirementCount = 0;
+    private long myPassedRequirementCount = 0;
+    private long myFailedRequirementCount = 0;
+    private long myNotCoveredRequirementCount = 0;
+
+    public RequirementStatistics(List<Requirement> requirements) {
+        for (Requirement requirement: requirements) {
+            myRequirementCount++;
+            switch (requirement.getStatus()) {
+                case NOT_COVERED: myNotCoveredRequirementCount++; break;
+                case PASSED: myPassedRequirementCount++; break;
+                case FAILED: myFailedRequirementCount++; break;
+            }
+        }
     }
 
-    /**
-     * <p>Constructor for ReportException.</p>
-     *
-     * @param cause a {@link java.lang.String} object.
-     * @param nested a {@link java.lang.Throwable} object.
-     */
-    public ReportException(String cause, Throwable nested) {
-        super(cause, nested);
+    public long getRequirementCount() {
+        return myRequirementCount;
+    }
+
+    public long getPassedRequirementCount() {
+        return myPassedRequirementCount;
+    }
+
+    public long getFailedRequirementCount() {
+        return myFailedRequirementCount;
+    }
+
+    public long getNotCoveredRequirementCount() {
+        return myNotCoveredRequirementCount;
     }
 }

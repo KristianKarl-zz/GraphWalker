@@ -1,6 +1,6 @@
 /*
  * #%L
- * Maven GraphWalker Plugin
+ * GraphWalker Core
  * %%
  * Copyright (C) 2011 - 2012 GraphWalker
  * %%
@@ -23,27 +23,44 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.maven.plugin.reports;
+package org.graphwalker.core.statistics;
 
-/**
- * <p>ReportException class.</p>
- *
- * @author nilols
- * @version $Id: $
- */
-public class ReportException extends RuntimeException {
+import org.graphwalker.core.model.Edge;
 
-    public ReportException(String cause) {
-        super(cause);
+import java.util.List;
+
+public class EdgeStatistics {
+    
+    private long myEdgeCount = 0;
+    private long myVisitedEdgeCount = 0;
+    private long myBlockedEdgeCount = 0;
+    private long myUnreachableEdgeCount = 0;
+    //private long 
+    
+    public EdgeStatistics(List<Edge> edges) {
+        for (Edge edge: edges) {
+            myEdgeCount++;
+            switch (edge.getStatus()) {
+                case UNREACHABLE: myUnreachableEdgeCount++; break;
+                case VISITED: myVisitedEdgeCount++; break;
+                case BLOCKED: myBlockedEdgeCount++; break;
+            }
+        }
     }
 
-    /**
-     * <p>Constructor for ReportException.</p>
-     *
-     * @param cause a {@link java.lang.String} object.
-     * @param nested a {@link java.lang.Throwable} object.
-     */
-    public ReportException(String cause, Throwable nested) {
-        super(cause, nested);
+    public long getEdgeCount() {
+        return myEdgeCount;
+    }
+
+    public long getVisitedEdgeCount() {
+        return myVisitedEdgeCount;
+    }
+
+    public long getBlockedEdgeCount() {
+        return myBlockedEdgeCount;
+    }
+
+    public long getUnreachableEdgeCount() {
+        return myUnreachableEdgeCount;
     }
 }

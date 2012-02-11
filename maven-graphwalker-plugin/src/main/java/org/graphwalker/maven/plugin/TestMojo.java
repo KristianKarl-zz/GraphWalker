@@ -34,6 +34,7 @@ import org.graphwalker.core.GraphWalkerExecutor;
 import org.graphwalker.core.GraphWalkerFactory;
 import org.graphwalker.core.configuration.Configuration;
 import org.graphwalker.core.configuration.ConfigurationFactory;
+import org.graphwalker.core.model.Model;
 import org.graphwalker.core.utils.Resource;
 import org.graphwalker.maven.plugin.reports.XMLReportGenerator;
 import org.graphwalker.maven.plugin.utils.TestUtil;
@@ -167,9 +168,11 @@ public class TestMojo extends AbstractMojo {
                 executorService.shutdown();
                 executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.DAYS);
 
-                //for (GraphWalker graphWalker: myGraphWalkers) {
-                //    new XMLReportGenerator(graphWalker, reportsDirectory).writeReport();
-                //}
+                for (GraphWalker graphWalker: myGraphWalkers) {
+                    for (Model model: graphWalker.getConfiguration().getModels()) {
+                        XMLReportGenerator.writeReport(model, reportsDirectory);
+                    }
+                }
             } catch (MalformedURLException e) {
                 throw new MojoExecutionException(Resource.getText(Bundle.NAME, "exception.classloader"));
             } catch (ClassNotFoundException e) {
