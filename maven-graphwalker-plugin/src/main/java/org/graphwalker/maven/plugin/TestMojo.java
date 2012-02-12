@@ -25,6 +25,7 @@
  */
 package org.graphwalker.maven.plugin;
 
+import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -43,10 +44,7 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -62,6 +60,13 @@ import java.util.concurrent.TimeUnit;
  * @requiresDependencyResolution test
  */
 public class TestMojo extends AbstractMojo {
+
+    /**
+     * The current build session instance.
+     *
+     * @parameter expression="${session}"
+     */
+    private MavenSession session;
 
     /**
      * @parameter expression="${project}"
@@ -125,10 +130,11 @@ public class TestMojo extends AbstractMojo {
     public void execute() throws MojoExecutionException, MojoFailureException {
         if (!skipTests()) {
             ClassLoader classLoader = switchClassLoader(createClassLoader());
-            setSystemProperties();
+            Properties properties = switchProperties(createProperties());
             createInstances();
             executeInstances();
             reportExecution();
+            switchProperties(properties);
             switchClassLoader(classLoader);
         }
     }
@@ -147,8 +153,17 @@ public class TestMojo extends AbstractMojo {
         return oldClassLoader;
     }
     
-    private void setSystemProperties() {
-        System.getProperties().putAll(mavenProject.getProperties());
+    private Properties createProperties() {
+        Properties properties = (Properties)System.getProperties().clone();
+        properties.putAll((Properties)mavenProject.getProperties().clone());
+        properties.putAll((Properties)session.getUserProperties().clone());
+        return properties;
+    }
+    
+    private Properties switchProperties(Properties properties) {
+        Properties oldProperties = (Properties)System.getProperties().clone();
+        System.setProperties(properties);
+        return oldProperties;
     }
 
     private void createInstances() throws MojoExecutionException {

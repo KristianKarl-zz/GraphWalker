@@ -25,7 +25,7 @@
   -->
 <lifecycles>
     <lifecycle>
-        <id>graphwalker-report</id>
+        <id>graphwalker</id>
         <phases>
             <phase>
                 <id>test</id>

@@ -93,7 +93,7 @@ public class XMLReportGenerator {
         //requirementsElement.setAttribute("coverage", ""+model.getRequirements().size());
         report.addChild(requirementsElement);
 
-        if (0<exceptions.size()) {
+        if (null != exceptions) {
             Xpp3Dom exceptionsElement = new Xpp3Dom("exceptions");
             for (Throwable throwable: exceptions) {
                 Xpp3Dom exceptionElement = new Xpp3Dom("exception");
