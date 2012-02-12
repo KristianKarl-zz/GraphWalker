@@ -129,6 +129,7 @@ public class TestMojo extends AbstractMojo {
      */
     public void execute() throws MojoExecutionException, MojoFailureException {
         if (!skipTests()) {
+            logHeader();
             ClassLoader classLoader = switchClassLoader(createClassLoader());
             Properties properties = switchProperties(createProperties());
             createInstances();
@@ -137,6 +138,12 @@ public class TestMojo extends AbstractMojo {
             switchProperties(properties);
             switchClassLoader(classLoader);
         }
+    }
+
+    private void logHeader() {
+        getLog().info("-------------------------------------------------------");
+        getLog().info(" G r a p h W a l k e r                                 ");
+        getLog().info("-------------------------------------------------------");
     }
 
     private ClassLoader createClassLoader() throws MojoExecutionException {
@@ -191,6 +198,12 @@ public class TestMojo extends AbstractMojo {
         try {
             ExecutorService executorService = Executors.newFixedThreadPool(myGraphWalkers.size());
             for (GraphWalker graphWalker: myGraphWalkers) {
+                for (Model model: graphWalker.getConfiguration().getModels()) {
+                    StringBuffer buffer = new StringBuffer("Running [");
+                    buffer.append(model.getGroup()).append("] ");
+                    buffer.append(model.getImplementation().getClass().getName());
+                    getLog().info(buffer.toString());
+                }
                 executorService.execute(new GraphWalkerExecutor(graphWalker));
             }
             executorService.shutdown();

@@ -53,7 +53,7 @@ public class GraphWalkerExecutor implements Runnable {
                 myGraphWalker.getNextStep();
             }
         } catch (Throwable throwable) {
-            throwable.printStackTrace();
+            // ignore exception
         }
         myGraphWalker.after();
     }
