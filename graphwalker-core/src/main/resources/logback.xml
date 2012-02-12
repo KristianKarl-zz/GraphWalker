@@ -39,7 +39,7 @@
             </TimeBasedFileNamingAndTriggeringPolicy>
         </rollingPolicy>
         <encoder>
-            <pattern>%date %level [%contextName] [%X{traceId}] %logger{10} - %msg%n</pattern>
+            <pattern>%date %level [%contextName] [%X{traceId}] - %msg%n</pattern>
         </encoder>
     </appender>
 
