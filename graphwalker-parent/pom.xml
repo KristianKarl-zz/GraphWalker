@@ -179,11 +179,6 @@
                 <version>1.6</version>
             </dependency>
             <dependency>
-                <groupId>net.sf.oval</groupId>
-                <artifactId>oval</artifactId>
-                <version>1.80</version>
-            </dependency>
-            <dependency>
                 <groupId>jgraph</groupId>
                 <artifactId>jgraph</artifactId>
                 <version>5.13.0.0</version>
