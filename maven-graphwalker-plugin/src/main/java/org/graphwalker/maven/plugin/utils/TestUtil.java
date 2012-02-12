@@ -25,7 +25,6 @@
  */
 package org.graphwalker.maven.plugin.utils;
 
-import org.apache.maven.plugin.PluginExecutionException;
 import org.codehaus.plexus.util.DirectoryScanner;
 import org.graphwalker.core.annotations.GraphWalker;
 
@@ -50,12 +49,12 @@ public final class TestUtil {
      * <p>findTests.</p>
      *
      * @param basedir a {@link java.io.File} object.
-     * @param includes an array of {@link java.lang.String} objects.
-     * @param excludes an array of {@link java.lang.String} objects.
+     * @param includes an {@link java.util.List} of {@link java.lang.String} objects.
+     * @param excludes an {@link java.util.List} of {@link java.lang.String} objects.
      * @return a {@link java.util.List} object.
      * @throws java.lang.ClassNotFoundException if any.
      */
-    public static List<Class<?>> findTests(File basedir, String[] includes, String[] excludes) throws ClassNotFoundException {
+    public static List<Class<?>> findTests(File basedir, List<String> includes, List<String> excludes) throws ClassNotFoundException {
         List<Class<?>> tests = new ArrayList<Class<?>>();
         for (String fileName: findFiles(basedir, includes, excludes)) {
             Class<?> clazz = loadClass(getClassName(fileName));
@@ -97,10 +96,10 @@ public final class TestUtil {
         return methods;
     }
     
-    private static String[] findFiles(File basedir, String[] includes, String[] excludes) {
+    private static String[] findFiles(File basedir, List<String> includes, List<String> excludes) {
         DirectoryScanner directoryScanner = new DirectoryScanner();
-        directoryScanner.setIncludes(includes);
-        directoryScanner.setExcludes(excludes);
+        directoryScanner.setIncludes(null!=includes?includes.toArray(new String[includes.size()]):null);
+        directoryScanner.setExcludes(null!=excludes?excludes.toArray(new String[excludes.size()]):null);
         directoryScanner.setBasedir(basedir);
         directoryScanner.setCaseSensitive(true);
         directoryScanner.scan();

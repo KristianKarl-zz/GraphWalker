@@ -111,12 +111,12 @@ public class TestMojo extends AbstractMojo {
     /**
      * @parameter property="includes"
      */
-    private String[] includes;
+    private List<String> includes;
 
     /**
      * @parameter property="excludes"
      */
-    private String[] excludes;    
+    private List<String> excludes;
     
     
     private List<GraphWalker> myGraphWalkers = new ArrayList<GraphWalker>();
@@ -213,13 +213,26 @@ public class TestMojo extends AbstractMojo {
         }
     }
 
-    private String[] getIncludes() {
-        if (null == includes) {
-            return new String[] {"**/*.class"};
+    private List<String> getIncludes() {
+        if (null != test) {
+            includes = new ArrayList<String>();
+            for (String regex: test.split(",")) {
+                if (regex.endsWith(".java")) {
+                    regex = regex.substring(0, regex.length()-5);
+                }
+                if (regex.endsWith(".class")) {
+                    regex = regex.substring(0, regex.length()-6);
+                }
+                regex = regex.replace('.', '/');
+                includes.add("**/"+regex+".class");
+            }
+        } else if (null == includes) {
+            includes = new ArrayList<String>();
+            includes.add("**/*.class");
         }
         return includes;
-    } 
-    
+    }
+
     private URL[] convertToURL(List<String> elements) throws MalformedURLException {
         List<URL> urlList = new ArrayList<URL>();
         for (String element: elements) {
