@@ -25,15 +25,15 @@
  */
 package org.graphwalker.core.conditions;
 
-import org.graphwalker.core.GraphWalker;
 import org.graphwalker.core.GraphWalkerExecutor;
 import org.graphwalker.core.GraphWalkerImpl;
 import org.graphwalker.core.configuration.Configuration;
 import org.graphwalker.core.configuration.ConfigurationImpl;
 import org.graphwalker.core.generators.PathGenerator;
 import org.graphwalker.core.generators.RandomPath;
-import org.graphwalker.core.model.*;
 import org.graphwalker.core.model.GraphMLModelFactory;
+import org.graphwalker.core.model.Model;
+import org.graphwalker.core.model.ModelFactory;
 import org.junit.Assert;
 import org.junit.Test;
 

@@ -28,7 +28,6 @@ package org.graphwalker.core.configuration;
 import org.graphwalker.core.GraphWalker;
 import org.graphwalker.core.GraphWalkerExecutor;
 import org.graphwalker.core.GraphWalkerFactory;
-import org.graphwalker.core.GraphWalkerImpl;
 import org.graphwalker.core.utils.Resource;
 import org.junit.Assert;
 import org.junit.Test;

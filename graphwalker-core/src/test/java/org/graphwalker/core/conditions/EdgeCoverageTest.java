@@ -35,7 +35,6 @@ import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.ModelImpl;
 import org.graphwalker.core.model.Vertex;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 public class EdgeCoverageTest {

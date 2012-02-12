@@ -29,14 +29,12 @@ import org.graphwalker.core.conditions.StopConditionFactory;
 import org.graphwalker.core.configuration.Configuration;
 import org.graphwalker.core.configuration.ConfigurationImpl;
 import org.graphwalker.core.generators.PathGeneratorFactory;
-import org.graphwalker.core.implementations.BadImpl;
 import org.graphwalker.core.implementations.EmptyImpl;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.ModelImpl;
 import org.graphwalker.core.model.Vertex;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 public class MachineImplTest {

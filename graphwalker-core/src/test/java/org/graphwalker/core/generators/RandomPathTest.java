@@ -32,7 +32,6 @@ import org.graphwalker.core.configuration.Configuration;
 import org.graphwalker.core.configuration.ConfigurationImpl;
 import org.graphwalker.core.model.*;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 public class RandomPathTest {

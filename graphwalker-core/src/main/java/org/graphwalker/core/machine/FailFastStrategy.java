@@ -28,9 +28,6 @@ package org.graphwalker.core.machine;
 import org.graphwalker.core.annotations.After;
 import org.graphwalker.core.utils.Reflection;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * <p>FailFastStrategy class.</p>
  *
