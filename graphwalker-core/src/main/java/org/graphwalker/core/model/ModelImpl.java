@@ -25,9 +25,6 @@
  */
 package org.graphwalker.core.model;
 
-import net.sf.oval.constraint.NotEmpty;
-import net.sf.oval.constraint.NotNull;
-import net.sf.oval.guard.Guarded;
 import org.graphwalker.core.Bundle;
 import org.graphwalker.core.algorithms.DepthFirstSearch;
 import org.graphwalker.core.algorithms.FloydWarshall;
@@ -43,7 +40,6 @@ import java.util.*;
  * @author nilols
  * @version $Id: $
  */
-@Guarded
 public class ModelImpl implements Model {
 
     private final String myId;
@@ -62,7 +58,7 @@ public class ModelImpl implements Model {
      *
      * @param id a {@link java.lang.String} object.
      */
-    public ModelImpl(@NotNull @NotEmpty String id) {
+    public ModelImpl(String id) {
         myId = id;
     }
 
@@ -85,7 +81,7 @@ public class ModelImpl implements Model {
     }
 
     /** {@inheritDoc} */
-    public void setPathGenerator(@NotNull PathGenerator pathGenerator) {
+    public void setPathGenerator(PathGenerator pathGenerator) {
         myPathGenerator = pathGenerator;
     }
 
@@ -138,12 +134,12 @@ public class ModelImpl implements Model {
     }
 
     /** {@inheritDoc} */
-    public Vertex getVertexById(@NotNull @NotEmpty String id) {
+    public Vertex getVertexById(String id) {
         return myVertexMap.get(id);
     }
 
     /** {@inheritDoc} */
-    public Vertex getVertexByName(@NotNull @NotEmpty String name) {
+    public Vertex getVertexByName(String name) {
         for (Vertex vertex: myVertexMap.values()) {
             String vertexName = vertex.getName();
             if (null != vertexName && vertexName.equalsIgnoreCase(name)) {
@@ -153,7 +149,7 @@ public class ModelImpl implements Model {
         return null;
     }
     
-    private List<Vertex> findByName(@NotNull @NotEmpty String name) {
+    private List<Vertex> findByName(String name) {
         List<Vertex> vertices = new ArrayList<Vertex>();
         for (Vertex vertex: myVertexMap.values()) {
             String vertexName = vertex.getName();
@@ -179,24 +175,24 @@ public class ModelImpl implements Model {
         return vertices;
     }
 
-    private void verifyId(@NotNull Edge edge) {
+    private void verifyId(Edge edge) {
         if (null == edge.getId()) {
             edge.setId(generateId("e_"));
         }
     }
 
-    private void verifyId(@NotNull Vertex vertex) {
+    private void verifyId(Vertex vertex) {
         if (null == vertex.getId()) {
             vertex.setId(generateId("v_"));
         }
     }
 
-    private String generateId(@NotNull @NotEmpty String prefix) {
+    private String generateId(String prefix) {
         return prefix+myIdGenerator.nextLong();
     }
     
     /** {@inheritDoc} */
-    public Vertex addVertex(@NotNull Vertex vertex) {
+    public Vertex addVertex(Vertex vertex) {
         verifyId(vertex);
         if (hasStartVertex() && (getStartVertex().equals(vertex) || getStartVertex().getName().equalsIgnoreCase(vertex.getName()))) {
             throw new ModelException(Resource.getText(Bundle.NAME, "exception.duplicate.start.vertex"));
@@ -206,12 +202,12 @@ public class ModelImpl implements Model {
     }
 
     /** {@inheritDoc} */
-    public Edge getEdgeById(@NotNull @NotEmpty String id) {
+    public Edge getEdgeById(String id) {
         return myEdgeMap.get(id);
     }
 
     /** {@inheritDoc} */
-    public Edge getEdgeByName(@NotNull @NotEmpty String name) {
+    public Edge getEdgeByName(String name) {
         for (Edge edge: myEdgeMap.values()) {
             String edgeName = edge.getName();
             if (null != edgeName && edgeName.equalsIgnoreCase(name)) {
@@ -237,7 +233,7 @@ public class ModelImpl implements Model {
     }
 
     /** {@inheritDoc} */
-    public Edge addEdge(@NotNull Edge edge, @NotNull Vertex source, @NotNull Vertex target) {
+    public Edge addEdge(Edge edge, Vertex source, Vertex target) {
         verifyId(edge);
         if (hasStartVertex() && getStartVertex().equals(target)) {
             throw new ModelException(Resource.getText(Bundle.NAME, "exception.start.vertex.in.edge"));
@@ -345,7 +341,7 @@ public class ModelImpl implements Model {
      * @param target a {@link org.graphwalker.core.model.Edge} object.
      * @return a int.
      */
-    public int getShortestDistance(@NotNull Element source, @NotNull Edge target) {
+    public int getShortestDistance(Element source, Edge target) {
         return myFloydWarshall.getShortestDistance(source, target);
     }
 
@@ -354,7 +350,7 @@ public class ModelImpl implements Model {
      *
      * <p>getMaximumDistance.</p>
      */
-    public int getMaximumDistance(@NotNull Edge target) {
+    public int getMaximumDistance(Edge target) {
         return myFloydWarshall.getMaximumDistance(target);
     }
 
@@ -364,7 +360,7 @@ public class ModelImpl implements Model {
      * @param target a {@link org.graphwalker.core.model.Vertex} object.
      * @return a int.
      */
-    public int getMaximumDistance(@NotNull Vertex target) {
+    public int getMaximumDistance(Vertex target) {
         return myFloydWarshall.getMaximumDistance(target);
     }
 
@@ -375,7 +371,7 @@ public class ModelImpl implements Model {
      * @param target a {@link org.graphwalker.core.model.Edge} object.
      * @return a {@link java.util.List} object.
      */
-    public List<Element> getShortestPath(@NotNull Element source, @NotNull Edge target) {
+    public List<Element> getShortestPath(Element source, Edge target) {
         return myFloydWarshall.getShortestPath(source, target);
     }
 
@@ -384,7 +380,7 @@ public class ModelImpl implements Model {
      *
      * <p>getShortestDistance.</p>
      */
-    public int getShortestDistance(@NotNull Element source, @NotNull Vertex target) {
+    public int getShortestDistance(Element source, Vertex target) {
         return myFloydWarshall.getShortestDistance(source, target);
     }
 
@@ -393,7 +389,7 @@ public class ModelImpl implements Model {
      *
      * <p>getShortestPath.</p>
      */
-    public List<Element> getShortestPath(@NotNull Element source, @NotNull Vertex target) {
+    public List<Element> getShortestPath(Element source, Vertex target) {
         return myFloydWarshall.getShortestPath(source, target);
     }
 

@@ -25,7 +25,6 @@
  */
 package org.graphwalker.core.model;
 
-import net.sf.oval.exception.ConstraintsViolatedException;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -43,28 +42,10 @@ public class EdgeTest {
         edge.setWeight(0.5);
     }
 
-    @Test(expected = ConstraintsViolatedException.class)
-    public void setToLargeWeightTest() {
-        Edge edge = new Edge();
-        edge.setWeight(1.01);
-    }
-
-    @Test(expected = ConstraintsViolatedException.class)
-    public void setToSmallWeightTest() {
-        Edge edge = new Edge();
-        edge.setWeight(0.001);
-    }
-
     @Test
     public void setEdgeActionsTest() {
         Edge edge = new Edge();
         edge.setEdgeActions(new ArrayList<Action>());
-    }
-
-    @Test(expected = ConstraintsViolatedException.class)
-    public void setNullEdgeActionsTest() {
-        Edge edge = new Edge();
-        edge.setEdgeActions(null);
     }
 
     @Test
@@ -73,28 +54,10 @@ public class EdgeTest {
         edge.setEdgeGuard(new Guard("guardScript"));
     }
 
-    @Test(expected = ConstraintsViolatedException.class)
-    public void setNullEdgeGuardTest() {
-        Edge edge = new Edge();
-        edge.setEdgeGuard(null);
-    }
-
     @Test
     public void setIdTest() {
         Edge edge = new Edge();
         edge.setId("edgeName");
-    }
-
-    @Test(expected = ConstraintsViolatedException.class)
-    public void setNullIdTest() {
-        Edge edge = new Edge();
-        edge.setId(null);
-    }
-
-    @Test(expected = ConstraintsViolatedException.class)
-    public void setEmptyIdTest() {
-        Edge edge = new Edge();
-        edge.setId("");
     }
 
     @Test

@@ -25,12 +25,9 @@
  */
 package org.graphwalker.core.conditions;
 
-import net.sf.oval.constraint.Min;
-import net.sf.oval.guard.Guarded;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Model;
 
-@Guarded
 /**
  * <p>TimeDuration class.</p>
  *
@@ -56,7 +53,7 @@ public class TimeDuration implements StopCondition {
      *
      * @param seconds a long.
      */
-    public TimeDuration(@Min(1) long seconds) {
+    public TimeDuration(long seconds) {
         myTimestamp = System.currentTimeMillis();
         myDuration = seconds * SECOND_SCALE;
     }

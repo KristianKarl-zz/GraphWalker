@@ -25,7 +25,6 @@
  */
 package org.graphwalker.core.model;
 
-import net.sf.oval.exception.ConstraintsViolatedException;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -35,15 +34,5 @@ public class GuardTest {
     public void createGuardTest() {
         Guard guard = new Guard("guardScript");
         Assert.assertEquals("guardScript", guard.getScript());
-    }
-
-    @Test(expected = ConstraintsViolatedException.class)
-    public void createNullGuardTest() {
-        new Guard(null);
-    }
-
-    @Test(expected = ConstraintsViolatedException.class)
-    public void createEmptyGuardTest() {
-        new Guard("");
     }
 }

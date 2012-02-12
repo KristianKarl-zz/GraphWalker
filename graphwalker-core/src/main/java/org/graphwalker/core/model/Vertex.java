@@ -25,10 +25,6 @@
  */
 package org.graphwalker.core.model;
 
-import net.sf.oval.constraint.NotEmpty;
-import net.sf.oval.constraint.NotNull;
-import net.sf.oval.guard.Guarded;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -40,7 +36,6 @@ import java.util.Map;
  * @author nilols
  * @version $Id: $
  */
-@Guarded
 public class Vertex extends AbstractElement {
 
     private final static Map<String, Requirement> ourRequirements = new HashMap<String, Requirement>();
@@ -143,7 +138,7 @@ public class Vertex extends AbstractElement {
      *
      * @param id a {@link java.lang.String} object.
      */
-    public void setSwitchModelId(@NotNull @NotEmpty String id) {
+    public void setSwitchModelId(String id) {
         mySwitchModelId = id;
     }
 

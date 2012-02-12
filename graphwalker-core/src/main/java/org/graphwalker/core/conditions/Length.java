@@ -25,12 +25,9 @@
  */
 package org.graphwalker.core.conditions;
 
-import net.sf.oval.constraint.Min;
-import net.sf.oval.guard.Guarded;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Model;
 
-@Guarded
 /**
  * <p>Length class.</p>
  *
@@ -46,7 +43,7 @@ public class Length implements StopCondition {
      *
      * @param length a long.
      */
-    public Length(@Min(1) long length) {
+    public Length(long length) {
         myLength = length;
     }
 

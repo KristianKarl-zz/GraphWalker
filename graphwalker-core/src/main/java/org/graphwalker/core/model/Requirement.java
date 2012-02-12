@@ -25,11 +25,6 @@
  */
 package org.graphwalker.core.model;
 
-import net.sf.oval.constraint.NotEmpty;
-import net.sf.oval.constraint.NotNull;
-import net.sf.oval.guard.Guarded;
-
-@Guarded
 /**
  * <p>Requirement class.</p>
  *
@@ -46,7 +41,7 @@ public class Requirement {
      *
      * @param id a {@link java.lang.String} object.
      */
-    public Requirement(@NotNull @NotEmpty String id) {
+    public Requirement(String id) {
         myId = id;
     }
 

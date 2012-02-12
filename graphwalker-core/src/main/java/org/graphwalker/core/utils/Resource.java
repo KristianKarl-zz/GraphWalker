@@ -25,9 +25,6 @@
  */
 package org.graphwalker.core.utils;
 
-import net.sf.oval.constraint.MinLength;
-import net.sf.oval.constraint.NotNull;
-import net.sf.oval.guard.Guarded;
 import org.graphwalker.core.Bundle;
 
 import javax.swing.*;
@@ -43,7 +40,6 @@ import java.util.ResourceBundle;
  * @author nilols
  * @version $Id: $
  */
-@Guarded
 public final class Resource {
 
     private Resource() {
@@ -57,7 +53,7 @@ public final class Resource {
      * @return a {@link java.lang.String} object.
      * @param params a {@link java.lang.String} object.
      */
-    public static String getText(@NotNull @MinLength(1) final String bundle, @NotNull @MinLength(1) final String key, final Object... params) {
+    public static String getText(final String bundle, final String key, final Object... params) {
         return getText(bundle, Locale.getDefault(), key, params);
     }
 
@@ -70,7 +66,7 @@ public final class Resource {
      * @return a {@link java.lang.String} object.
      * @param params a {@link java.lang.String} object.
      */
-    public static String getText(@NotNull @MinLength(1) final String bundle, @NotNull final Locale locale, @NotNull @MinLength(1) final String key, final Object... params) {
+    public static String getText(final String bundle, final Locale locale, final String key, final Object... params) {
         MessageFormat messageFormat = new MessageFormat("");
         messageFormat.setLocale(locale);
         messageFormat.applyPattern(ResourceBundle.getBundle(bundle, locale).getString(key));
@@ -84,7 +80,7 @@ public final class Resource {
      * @param key a {@link java.lang.String} object.
      * @return a {@link javax.swing.Icon} object.
      */
-    public static Icon getIcon(@NotNull @MinLength(1) final String bundle, @NotNull @MinLength(1) final String key) {
+    public static Icon getIcon(final String bundle, final String key) {
         return getIcon(getText(bundle, key));
     }
 
@@ -94,7 +90,7 @@ public final class Resource {
      * @param filename a {@link java.lang.String} object.
      * @return a {@link javax.swing.Icon} object.
      */
-    public static Icon getIcon(@NotNull @MinLength(1) final String filename) {
+    public static Icon getIcon(final String filename) {
         File file = createFile(filename);
         if (file.exists()) {
             return new ImageIcon(file.getPath());
@@ -109,7 +105,7 @@ public final class Resource {
      * @param filename a {@link java.lang.String} object.
      * @return a {@link java.io.File} object.
      */
-    public static File getFile(@NotNull @MinLength(1) final String filename) {
+    public static File getFile(final String filename) {
         File file = createFile(filename);
         if (file.exists()) {
             return file;

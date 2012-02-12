@@ -25,7 +25,6 @@
  */
 package org.graphwalker.core.model;
 
-import net.sf.oval.exception.ConstraintsViolatedException;
 import org.junit.Test;
 
 public class RequirementTest {
@@ -33,15 +32,5 @@ public class RequirementTest {
     @Test
     public void createRequirementTest() {
         new Requirement("requirementId");
-    }
-
-    @Test(expected = ConstraintsViolatedException.class)
-    public void createNullRequirementTest() {
-        new Requirement(null);
-    }
-
-    @Test(expected = ConstraintsViolatedException.class)
-    public void createEmptyRequirementTest() {
-        new Requirement("");
     }
 }

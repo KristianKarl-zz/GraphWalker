@@ -25,13 +25,10 @@
  */
 package org.graphwalker.core.conditions;
 
-import net.sf.oval.constraint.Range;
-import net.sf.oval.guard.Guarded;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.RequirementStatus;
 
-@Guarded
 /**
  * <p>RequirementCoverage class.</p>
  *
@@ -56,7 +53,7 @@ public class RequirementCoverage implements StopCondition {
      *
      * @param limit a long.
      */
-    public RequirementCoverage(@Range(min = 1, max = 100) long limit) {
+    public RequirementCoverage(long limit) {
         myLimit = (double)limit/ PERCENTAGE_SCALE;
     }
 

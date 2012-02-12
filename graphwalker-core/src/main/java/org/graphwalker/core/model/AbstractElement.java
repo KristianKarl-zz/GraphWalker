@@ -25,17 +25,12 @@
  */
 package org.graphwalker.core.model;
 
-import net.sf.oval.constraint.NotEmpty;
-import net.sf.oval.constraint.NotNull;
-import net.sf.oval.guard.Guarded;
-
 /**
  * <p>Abstract AbstractElement class.</p>
  *
  * @author nilols
  * @version $Id: $
  */
-@Guarded
 public abstract class AbstractElement implements Element {
 
     private String myId;
@@ -72,7 +67,7 @@ public abstract class AbstractElement implements Element {
      *
      * @param id a {@link java.lang.String} object.
      */
-    public void setId(@NotNull @NotEmpty String id) {
+    public void setId(String id) {
         myId = id;
     }
 

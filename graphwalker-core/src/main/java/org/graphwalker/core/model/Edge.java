@@ -25,10 +25,6 @@
  */
 package org.graphwalker.core.model;
 
-import net.sf.oval.constraint.NotNull;
-import net.sf.oval.constraint.Range;
-import net.sf.oval.guard.Guarded;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,7 +34,6 @@ import java.util.List;
  * @author nilols
  * @version $Id: $
  */
-@Guarded
 public class Edge extends AbstractElement {
 
     private Vertex mySource;
@@ -67,7 +62,7 @@ public class Edge extends AbstractElement {
      *
      * @param source a {@link org.graphwalker.core.model.Vertex} object.
      */
-    public void setSource(@NotNull Vertex source) {
+    public void setSource(Vertex source) {
         mySource = source;
     }
 
@@ -76,7 +71,7 @@ public class Edge extends AbstractElement {
      *
      * @return a {@link org.graphwalker.core.model.Vertex} object.
      */
-    public @NotNull Vertex getSource() {
+    public Vertex getSource() {
         return mySource;
     }
 
@@ -85,7 +80,7 @@ public class Edge extends AbstractElement {
      *
      * @param target a {@link org.graphwalker.core.model.Vertex} object.
      */
-    public void setTarget(@NotNull Vertex target) {
+    public void setTarget(Vertex target) {
         myTarget = target;
     }
 
@@ -94,7 +89,7 @@ public class Edge extends AbstractElement {
      *
      * @return a {@link org.graphwalker.core.model.Vertex} object.
      */
-    public @NotNull Vertex getTarget() {
+    public Vertex getTarget() {
         return myTarget;
     }
 
@@ -112,7 +107,7 @@ public class Edge extends AbstractElement {
      *
      * @param weight a double.
      */
-    public void setWeight(@Range(min = 0.01, max = 1.0) double weight) {
+    public void setWeight(double weight) {
         myWeight = weight;
     }
 
@@ -130,7 +125,7 @@ public class Edge extends AbstractElement {
      *
      * @param edgeActions a {@link java.util.List} object.
      */
-    public void setEdgeActions(@NotNull List<Action> edgeActions) {
+    public void setEdgeActions(List<Action> edgeActions) {
         myEdgeActions = edgeActions;
     }
 
@@ -148,7 +143,7 @@ public class Edge extends AbstractElement {
      *
      * @param edgeGuard a {@link Guard} object.
      */
-    public void setEdgeGuard(@NotNull Guard edgeGuard) {
+    public void setEdgeGuard(Guard edgeGuard) {
         myEdgeGuard = edgeGuard;
     }
 

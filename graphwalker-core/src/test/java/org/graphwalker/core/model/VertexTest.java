@@ -25,7 +25,6 @@
  */
 package org.graphwalker.core.model;
 
-import net.sf.oval.exception.ConstraintsViolatedException;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -48,15 +47,4 @@ public class VertexTest {
         Assert.assertEquals("modelId", vertex.getSwitchModelId());
     }
 
-    @Test(expected = ConstraintsViolatedException.class)
-    public void setNullSwitchModelIdTest() {
-        Vertex vertex = new Vertex();
-        vertex.setSwitchModelId(null);
-    }
-
-    @Test(expected = ConstraintsViolatedException.class)
-    public void setEmptySwitchModelIdTest() {
-        Vertex vertex = new Vertex();
-        vertex.setSwitchModelId("");
-    }
 }

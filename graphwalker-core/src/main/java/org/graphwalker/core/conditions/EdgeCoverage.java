@@ -25,8 +25,6 @@
  */
 package org.graphwalker.core.conditions;
 
-import net.sf.oval.constraint.Range;
-import net.sf.oval.guard.Guarded;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Model;
 
@@ -36,7 +34,6 @@ import org.graphwalker.core.model.Model;
  * @author nilols
  * @version $Id: $
  */
-@Guarded
 public class EdgeCoverage implements StopCondition {
 
     private final double myLimit;
@@ -55,7 +52,7 @@ public class EdgeCoverage implements StopCondition {
      *
      * @param limit a long.
      */
-    public EdgeCoverage(@Range(min = 1, max = 100) long limit) {
+    public EdgeCoverage(long limit) {
         myLimit = (double)limit/ PERCENTAGE_SCALE;
     }
 

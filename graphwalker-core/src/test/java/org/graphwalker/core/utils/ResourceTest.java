@@ -25,7 +25,6 @@
  */
 package org.graphwalker.core.utils;
 
-import net.sf.oval.exception.ConstraintsViolatedException;
 import org.junit.Test;
 
 public class ResourceTest {
@@ -40,13 +39,4 @@ public class ResourceTest {
         Resource.getFile("models/brokenModel.graphml");
     }
 
-    @Test(expected = ConstraintsViolatedException.class)
-    public void testGetFileWithMissingFilename() {
-        Resource.getFile(null);
-    }
-
-    @Test(expected = ConstraintsViolatedException.class)
-    public void testGetFileWithEmptyFilename() {
-        Resource.getFile("");
-    }
 }

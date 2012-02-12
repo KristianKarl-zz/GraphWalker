@@ -25,7 +25,6 @@
  */
 package org.graphwalker.core.model;
 
-import net.sf.oval.exception.ConstraintsViolatedException;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -37,13 +36,4 @@ public class ActionTest {
         Assert.assertEquals("actionScript", action.getScript());
     }
 
-    @Test(expected = ConstraintsViolatedException.class)
-    public void createNullActionTest() {
-        new Action(null);
-    }
-
-    @Test(expected = ConstraintsViolatedException.class)
-    public void createEmptyActionTest() {
-        new Action("");
-    }
 }

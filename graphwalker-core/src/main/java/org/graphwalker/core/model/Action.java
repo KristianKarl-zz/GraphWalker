@@ -25,17 +25,12 @@
  */
 package org.graphwalker.core.model;
 
-import net.sf.oval.constraint.NotEmpty;
-import net.sf.oval.constraint.NotNull;
-import net.sf.oval.guard.Guarded;
-
 /**
  * <p>EdgeAction class.</p>
  *
  * @author nilols
  * @version $Id: $
  */
-@Guarded
 public class Action {
     
     private final String myScript;
@@ -45,7 +40,7 @@ public class Action {
      *
      * @param script a {@link java.lang.String} object.
      */
-    public Action(@NotNull @NotEmpty String script) {
+    public Action(String script) {
         myScript = script;
     }
     
