@@ -134,6 +134,7 @@ public class TestMojo extends AbstractMojo {
             Properties properties = switchProperties(createProperties());
             createInstances();
             executeInstances();
+            logResult();
             reportExecution();
             switchProperties(properties);
             switchClassLoader(classLoader);
@@ -144,6 +145,36 @@ public class TestMojo extends AbstractMojo {
         getLog().info("-------------------------------------------------------");
         getLog().info(" G r a p h W a l k e r                                 ");
         getLog().info("-------------------------------------------------------");
+    }
+
+    private void logResult() {
+        getLog().info("");
+        getLog().info(Resource.getText(Bundle.NAME, "result.label"));
+        getLog().info( "" );
+        long group = 0, total = 0, completed = 0, failed = 0, notExecuted = 0;
+        for (GraphWalker graphWalker: myGraphWalkers) {
+            group++;
+            for (Model model: graphWalker.getConfiguration().getModels()) {
+                total++;
+                switch (model.getModelStatus()) {
+                    case COMPLETED: {
+                        completed++;
+                    }
+                    break;
+                    case FAILED: {
+                        failed++;
+                    }
+                    break;
+                    case NOT_EXECUTED: {
+                        notExecuted++;
+                    }
+                    break;
+                }
+            }
+        }
+        
+        getLog().info(Resource.getText(Bundle.NAME, "result.summary", group, total, completed, failed, notExecuted));
+        getLog().info("");
     }
 
     private ClassLoader createClassLoader() throws MojoExecutionException {
