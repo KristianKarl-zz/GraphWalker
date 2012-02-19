@@ -254,4 +254,6 @@ public interface Model {
      * @param exceptionStrategy a {@link org.graphwalker.core.machine.ExceptionStrategy} object.
      */
     void setExceptionStrategy(ExceptionStrategy exceptionStrategy);
+    ModelStatus getModelStatus();
+    void setModelStatus(ModelStatus myModelStatus);
 }

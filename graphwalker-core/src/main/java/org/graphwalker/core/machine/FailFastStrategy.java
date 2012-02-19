@@ -26,6 +26,7 @@
 package org.graphwalker.core.machine;
 
 import org.graphwalker.core.annotations.After;
+import org.graphwalker.core.model.ModelStatus;
 import org.graphwalker.core.utils.Reflection;
 
 /**
@@ -42,6 +43,7 @@ public class FailFastStrategy extends AbstractStrategy {
         if (machine.getCurrentModel().hasImplementation()) {
             Reflection.execute(machine.getCurrentModel().getImplementation(), After.class);
         }
+        machine.getCurrentModel().setModelStatus(ModelStatus.FAILED);
         throw new MachineException(throwable);
     }
 

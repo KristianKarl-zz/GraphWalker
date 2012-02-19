@@ -32,5 +32,5 @@ package org.graphwalker.core.model;
  * @version $Id: $
  */
 public enum RequirementStatus {
-    NOT_COVERED, PASSED, FAILED;
+    NOT_COVERED, PASSED, FAILED
 }

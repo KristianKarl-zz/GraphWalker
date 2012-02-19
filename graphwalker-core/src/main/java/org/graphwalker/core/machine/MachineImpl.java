@@ -48,7 +48,6 @@ import java.util.List;
 public class MachineImpl implements Machine {
 
     private final Configuration myConfiguration;
-    private final EdgeFilter myEdgeFilter;
     private Model myCurrentModel;
     private Element myCurrentElement;
 
@@ -59,7 +58,6 @@ public class MachineImpl implements Machine {
      */
     public MachineImpl(Configuration configuration) {
         myConfiguration = configuration;
-        myEdgeFilter = configuration.getEdgeFilter();
         setCurrentModel(configuration.getDefaultModel());
         setCurrentElement(getCurrentModel().getStartVertex());
         getCurrentElement().markAsVisited();
@@ -125,6 +123,9 @@ public class MachineImpl implements Machine {
     @Override
     public void setCurrentModel(Model model) {
         myCurrentModel = model;
+        if (ModelStatus.NOT_EXECUTED == myCurrentModel.getModelStatus()) {
+            myCurrentModel.setModelStatus(ModelStatus.EXECUTING);
+        }
     }
 
     /** {@inheritDoc} */
@@ -150,11 +151,13 @@ public class MachineImpl implements Machine {
         // next we check if the current model has any more steps to take
         if (hasModelNextStep(getCurrentModel(), getCurrentElement())) {
             return true;
+        } else {
+            getCurrentModel().setModelStatus(ModelStatus.COMPLETED);
         }
         // and finally we go through all the models in order to find any step we can take
         for (Model model: getConfiguration().getModels()) {
             if (!getCurrentModel().equals(model)) {
-                if (hasModelNextStep(model, model.getStartVertex())) {
+                if (hasExecutableState(model)) {
                     return true;
                 }
             }
@@ -197,7 +200,7 @@ public class MachineImpl implements Machine {
         if (!hasModelNextStep(getCurrentModel(), getCurrentElement())) {
             for (Model model: getConfiguration().getModels()) {
                 if (!getCurrentModel().equals(model)) {
-                    if (hasModelNextStep(model, model.getStartVertex())) {
+                    if (hasExecutableState(model)) {
                         switchModel(model.getId());
                     }
                 }
@@ -225,8 +228,9 @@ public class MachineImpl implements Machine {
         List<Element> possibleElements = new ArrayList<Element>();
         if (element instanceof Vertex) {
             Vertex vertex = (Vertex)element;
+            EdgeFilter edgeFilter = getConfiguration().getEdgeFilter();
             for (Edge edge: vertex.getEdges()) {
-                if (!edge.isBlocked() && myEdgeFilter.acceptEdge(getCurrentModel(), edge)) {
+                if (!edge.isBlocked() && edgeFilter.acceptEdge(getCurrentModel(), edge)) {
                     possibleElements.add(edge);
                 }
             }
@@ -248,9 +252,16 @@ public class MachineImpl implements Machine {
         return element instanceof Edge;   
     }
     
+    private boolean hasExecutableState(Model model) {
+        return ModelStatus.NOT_EXECUTED == model.getModelStatus() || ModelStatus.EXECUTING == model.getModelStatus();
+    }
+    
     private void switchModel(String modelId) {
-        setCurrentModel(myConfiguration.getModel(modelId));
-        setCurrentElement(myCurrentModel.getStartVertex());
+        if (!hasModelNextStep(getCurrentModel(), getCurrentElement())) {
+            getCurrentModel().setModelStatus(ModelStatus.COMPLETED);
+        }
+        setCurrentModel(getConfiguration().getModel(modelId));
+        setCurrentElement(getCurrentModel().getStartVertex());
         getCurrentElement().markAsVisited();
     }
 
@@ -284,7 +295,8 @@ public class MachineImpl implements Machine {
 
     private void executeActions(Element element) {
         if (isEdge(element)) {
-            myEdgeFilter.executeActions(getCurrentModel(), (Edge)element);
+            EdgeFilter edgeFilter = getConfiguration().getEdgeFilter();
+            edgeFilter.executeActions(getCurrentModel(), (Edge)element);
         }
     }
 

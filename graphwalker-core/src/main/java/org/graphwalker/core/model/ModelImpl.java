@@ -52,6 +52,7 @@ public class ModelImpl implements Model {
     private Object myImplementation;
     private String myGroup;
     private ExceptionStrategy myExceptionStrategy;
+    private ModelStatus myModelStatus = ModelStatus.NOT_EXECUTED;
     
     /**
      * <p>Constructor for ModelImpl.</p>
@@ -440,5 +441,13 @@ public class ModelImpl implements Model {
     @Override
     public void setExceptionStrategy(ExceptionStrategy exceptionStrategy) {
         myExceptionStrategy = exceptionStrategy;
+    }
+
+    public ModelStatus getModelStatus() {
+        return myModelStatus;
+    }
+
+    public void setModelStatus(ModelStatus myModelStatus) {
+        this.myModelStatus = myModelStatus;
     }
 }
