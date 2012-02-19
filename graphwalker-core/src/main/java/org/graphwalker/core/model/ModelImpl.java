@@ -60,6 +60,8 @@ public class ModelImpl implements Model {
      */
     public ModelImpl(String id) {
         myId = id;
+        myDepthFirstSearch = new DepthFirstSearch(this);
+        myFloydWarshall = new FloydWarshall(this);
     }
 
     /**
@@ -89,8 +91,8 @@ public class ModelImpl implements Model {
      * <p>afterElementsAdded.</p>
      */
     public void afterElementsAdded() {
-        myDepthFirstSearch = new DepthFirstSearch(this);
-        myFloydWarshall = new FloydWarshall(this);
+        myDepthFirstSearch.calculate();
+        myFloydWarshall.calculate();
     }
 
     /**

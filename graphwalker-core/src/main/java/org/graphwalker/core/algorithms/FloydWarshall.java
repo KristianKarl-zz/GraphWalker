@@ -38,10 +38,11 @@ import java.util.List;
  * @version $Id: $
  */
 public class FloydWarshall implements Algorithm {
-    
-    private final List<Element> myModelElements;
-    private final int[][] myDistances;
-    private final Element[][] myPredecessors;
+                  
+    private final Model myModel;
+    private List<Element> myModelElements;
+    private int[][] myDistances;
+    private Element[][] myPredecessors;
     
     /**
      * <p>Constructor for FloydWarshall.</p>
@@ -49,12 +50,17 @@ public class FloydWarshall implements Algorithm {
      * @param model a {@link org.graphwalker.core.model.Model} object.
      */
     public FloydWarshall(Model model) {
-        myModelElements = model.getConnectedComponent();
-        myDistances = createDistanceMatrix(model);
-        myPredecessors = createPredecessorMatrix(model);
-        updateMatrices(model);
+        myModel = model;
     }
-    
+
+    @Override
+    public void calculate() {
+        myModelElements = myModel.getConnectedComponent();
+        myDistances = createDistanceMatrix(myModel);
+        myPredecessors = createPredecessorMatrix(myModel);
+        updateMatrices(myModel);
+    }
+
     private int[][] createDistanceMatrix(Model model) {
         List<Element> elements = model.getConnectedComponent();
         int[][] distances = new int[elements.size()][elements.size()];

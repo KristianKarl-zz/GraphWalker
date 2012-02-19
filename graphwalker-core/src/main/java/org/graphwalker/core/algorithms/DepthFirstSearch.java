@@ -40,7 +40,8 @@ import java.util.List;
  */
 public class DepthFirstSearch implements Algorithm {
 
-    private List<Element> myConnectedComponent = new ArrayList<Element>();
+    private final Model myModel;
+    private final List<Element> myConnectedComponent = new ArrayList<Element>();
     
     /**
      * <p>Constructor for DepthFirstSearch.</p>
@@ -48,12 +49,17 @@ public class DepthFirstSearch implements Algorithm {
      * @param model a {@link org.graphwalker.core.model.Model} object.
      */
     public DepthFirstSearch(Model model) {
-        for (Element element: model.getElements()) {
+        myModel = model;
+    }
+
+    @Override
+    public void calculate() {
+        for (Element element: myModel.getElements()) {
             if (!ElementStatus.BLOCKED.equals(element.getStatus())) {
                 element.setStatus(ElementStatus.UNREACHABLE);
             }
         }
-        createConnectedComponent(model.getStartVertex());
+        createConnectedComponent(myModel.getStartVertex());
     }
 
     private void createConnectedComponent(Element root) {

@@ -32,5 +32,5 @@ package org.graphwalker.core.algorithms;
  * @version $Id: $
  */
 public interface Algorithm {
-
+    void calculate();
 }
