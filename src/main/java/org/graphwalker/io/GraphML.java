@@ -129,6 +129,9 @@ public class GraphML extends AbstractModelHandler {
 		mergeAllGraphs();
 	}
 
+    public void load(File fileOrfolder) {
+      load(fileOrfolder);
+    }
 	/**
 	 * Parses the graphml file, and returns the model as a
 	 * edu.uci.ics.jung.graph.impl.Graph

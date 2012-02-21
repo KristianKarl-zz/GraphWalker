@@ -23,6 +23,7 @@
 
 package org.graphwalker;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
@@ -498,6 +499,10 @@ public class ModelBasedTesting {
     if (isUseGUI() && App.getInstance() != null) {
       App.getInstance().updateLayout();
     }
+  }
+
+  public void readGraph(File graphmlFile) {
+    readGraph(graphmlFile.getAbsolutePath());
   }
 
   protected void writeModel(PrintStream ps, boolean printIndex) {
