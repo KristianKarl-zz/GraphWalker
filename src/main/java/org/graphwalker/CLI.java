@@ -324,15 +324,15 @@ public class CLI {
 			System.err.println(e.getMessage());
 			System.err.println("Type 'java -jar graphwalker.jar help " + args[0] + "' for help.");
 		} catch (JDOMException e) {
-			logger.warn(e.getMessage());
+			Util.logStackTraceToError(e);
 			System.err.println("Can not access file: " + e.getMessage());
 			System.err.println("Type 'java -jar graphwalker.jar help " + args[0] + "' for help.");
 		} catch (FileNotFoundException e) {
-			logger.warn(e.getMessage());
+			Util.logStackTraceToError(e);
 			System.err.println("Can not access file: " + e.getMessage());
 			System.err.println("Type 'java -jar graphwalker.jar help " + args[0] + "' for help.");
 		} catch (IOException e) {
-			logger.warn(e.getMessage());
+			Util.logStackTraceToError(e);
 			System.err.println(e.getMessage());
 			System.err.println("Type 'java -jar graphwalker.jar help " + args[0] + "' for help.");
 		} catch (Exception e) {
