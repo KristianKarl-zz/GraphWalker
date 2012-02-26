@@ -212,7 +212,7 @@ public class MachineImpl implements Machine {
             getCurrentElement().markAsVisited();
             executeActions(getCurrentElement());
             if (getCurrentModel().hasImplementation() && getCurrentElement().hasName()) {
-                Reflection.execute(getCurrentModel().getImplementation(), getCurrentElement().getName());
+                executeElement(getCurrentModel(), getCurrentElement());
             }
             setRequirementStatus(getCurrentElement(), RequirementStatus.PASSED);
         } catch (Throwable throwable) {
@@ -298,6 +298,10 @@ public class MachineImpl implements Machine {
             EdgeFilter edgeFilter = getConfiguration().getEdgeFilter();
             edgeFilter.executeActions(getCurrentModel(), (Edge)element);
         }
+    }
+    
+    private void executeElement(Model model, Element element) {
+        Reflection.execute(model.getImplementation(), element.getName());
     }
 
 }
