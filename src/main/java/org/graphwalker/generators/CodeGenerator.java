@@ -23,6 +23,8 @@
 
 package org.graphwalker.generators;
 
+import java.util.regex.Matcher;
+
 import org.graphwalker.conditions.StopCondition;
 
 /**
@@ -73,6 +75,15 @@ public class CodeGenerator extends ListGenerator {
 			retur[1] = "";
 			return retur;
 		}
+        
+		// Quote strings
+		template[0] = Matcher.quoteReplacement(template[0]);
+        template[1] = Matcher.quoteReplacement(template[1]);
+        template[2] = Matcher.quoteReplacement(template[2]);
+        retur[0] = Matcher.quoteReplacement(retur[0]);
+        retur[1] = Matcher.quoteReplacement(retur[1]);
+        retur[2] = Matcher.quoteReplacement(retur[2]);
+        
 		retur[0] = (first && template[0].length() > 0 ? template[0] + "\n" : "")
 		    + // HEADER
 		    template[1]
