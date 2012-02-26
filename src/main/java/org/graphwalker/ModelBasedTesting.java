@@ -541,9 +541,9 @@ public class ModelBasedTesting {
       stringBuilder.append(".");
       stringBuilder.append(properties.getProperty("version.fix"));
     }
-    if (properties.containsKey("version.svn.rev")) {
-      stringBuilder.append(", svn rev. ");
-      stringBuilder.append(properties.getProperty("version.svn.rev"));
+    if (properties.containsKey("version.git.commit")) {
+      stringBuilder.append(", git commit ");
+      stringBuilder.append(properties.getProperty("version.git.commit"));
     }
     return stringBuilder.toString();
   }
