@@ -1,0 +1,21 @@
+HEADER<{{
+import org.apache.log4j.Logger;
+import org.graphwalker.Util;
+import org.graphwalker.generators.PathGenerator;
+
+public class ModelAPI extends org.graphwalker.multipleModels.ModelAPI {
+  private static Logger logger = Util.setupLogger(ModelAPI.class);
+
+  public ModelAPI(File model, boolean efsm, PathGenerator generator, boolean weight) {
+    super(model, efsm, generator, weight);
+  }
+}}>HEADER
+  /**
+   * This method implements the {EDGE_VERTEX} '{LABEL}'
+   * {DESCRIPTION}
+   */
+  public void {LABEL}() {
+  }
+FOOTER<{{
+}
+}}>FOOTER
