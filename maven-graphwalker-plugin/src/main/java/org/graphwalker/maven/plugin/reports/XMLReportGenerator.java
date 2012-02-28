@@ -29,7 +29,10 @@ import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.xml.PrettyPrintXMLWriter;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.codehaus.plexus.util.xml.Xpp3DomWriter;
+import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Model;
+import org.graphwalker.core.model.Requirement;
+import org.graphwalker.core.model.Vertex;
 import org.graphwalker.core.statistics.EdgeStatistics;
 import org.graphwalker.core.statistics.RequirementStatistics;
 import org.graphwalker.core.statistics.VertexStatistics;
@@ -45,14 +48,20 @@ import java.util.List;
  * @author nilols
  * @version $Id: $
  */
-public class XMLReportGenerator {
+public class XMLReportGenerator implements ReportGenerator {
 
     private static final String LINE_SEPARATOR = System.getProperty("line.separator");
+    private final File myReportDirectory;
+    private final Model myModel;
+    private final List<Throwable> myExceptions;
 
-    private XMLReportGenerator() {
+    public XMLReportGenerator(File reportDirectory, Model model, List<Throwable> exceptions) {
+        myReportDirectory = reportDirectory;
+        myModel = model;
+        myExceptions = exceptions;
     }
     
-    private static File getReportFile(File reportDirectory, Model model) {
+    private File getReportFile(File reportDirectory, Model model) {
         if (!reportDirectory.mkdirs()) {
             if (!reportDirectory.exists()) {
                 throw new ReportException(Resource.getText(Bundle.NAME, "exception.report.directory"));
@@ -61,7 +70,7 @@ public class XMLReportGenerator {
         return new File(reportDirectory, model.getImplementation().getClass().getName()+".xml");
     }
 
-    private static Xpp3Dom generateReport(Model model, List<Throwable> exceptions) {
+    private Xpp3Dom generateReport(Model model, List<Throwable> exceptions) {
         Xpp3Dom report = new Xpp3Dom("report");
         report.setAttribute("class", model.getImplementation().getClass().getName());
         report.setAttribute("group", model.getGroup());
@@ -73,6 +82,14 @@ public class XMLReportGenerator {
         verticesElement.setAttribute("blocked", "" + vertexStatistics.getBlockedVertexCount());
         verticesElement.setAttribute("unreachable", "" + vertexStatistics.getUnreachableVertexCount());
         //verticesElement.setAttribute("coverage", ""+model.getVertices().size());
+        for (Vertex vertex: model.getVertices()) {
+            Xpp3Dom vertexElement = new Xpp3Dom("vertex");
+            vertexElement.setAttribute("id", vertex.getId());
+            vertexElement.setAttribute("name", vertex.getName());
+            vertexElement.setAttribute("status", vertex.getStatus().name());
+            vertexElement.setAttribute("visitCount", ""+vertex.getVisitCount());
+            verticesElement.addChild(vertexElement);
+        }
         report.addChild(verticesElement);
 
         EdgeStatistics edgeStatistics = new EdgeStatistics(model.getEdges());
@@ -82,6 +99,14 @@ public class XMLReportGenerator {
         edgesElement.setAttribute("blocked", "" + edgeStatistics.getBlockedEdgeCount());
         edgesElement.setAttribute("unreachable", "" + edgeStatistics.getUnreachableEdgeCount());
         //edgesElement.setAttribute("coverage", ""+model.getEdges().size());
+        for (Edge edge: model.getEdges()) {
+            Xpp3Dom edgeElement = new Xpp3Dom("edge");
+            edgeElement.setAttribute("id", edge.getId());
+            edgeElement.setAttribute("name", edge.getName());
+            edgeElement.setAttribute("status", edge.getStatus().name());
+            edgeElement.setAttribute("visitCount", ""+edge.getVisitCount());
+            edgesElement.addChild(edgeElement);
+        }
         report.addChild(edgesElement);
 
         RequirementStatistics requirementStatistics = new RequirementStatistics(model.getRequirements());
@@ -91,6 +116,12 @@ public class XMLReportGenerator {
         requirementsElement.setAttribute("failed", "" + requirementStatistics.getFailedRequirementCount());
         requirementsElement.setAttribute("notCovered", "" + requirementStatistics.getNotCoveredRequirementCount());
         //requirementsElement.setAttribute("coverage", ""+model.getRequirements().size());
+        for (Requirement requirement: model.getRequirements()) {
+            Xpp3Dom requirementElement = new Xpp3Dom("requirement");
+            requirementElement.setAttribute("id", requirement.getId());
+            requirementElement.setAttribute("status", requirement.getStatus().name());
+            requirementsElement.addChild(requirementElement);
+        }
         report.addChild(requirementsElement);
 
         if (null != exceptions) {
@@ -107,17 +138,13 @@ public class XMLReportGenerator {
 
     /**
      * <p>writeReport.</p>
-     *
-     * @param reportDirectory a {@link java.io.File} object.
-     * @param model a {@link org.graphwalker.core.model.Model} object.
-     * @param exceptions a {@link java.util.List} object.
      */
-    public static void writeReport(File reportDirectory, Model model, List<Throwable> exceptions) {
+    public void writeReport() {
         PrintWriter writer = null;
         try {
-            writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(getReportFile(reportDirectory, model)), "UTF-8")));
+            writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(getReportFile(myReportDirectory, myModel)), "UTF-8")));
             writer.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"+LINE_SEPARATOR);
-            Xpp3DomWriter.write(new PrettyPrintXMLWriter(writer), generateReport(model, exceptions));
+            Xpp3DomWriter.write(new PrettyPrintXMLWriter(writer), generateReport(myModel, myExceptions));
         } catch (UnsupportedEncodingException e) {
             throw new ReportException(Resource.getText(Bundle.NAME, "exception.report.encoding"), e);
         } catch (FileNotFoundException e) {
@@ -127,7 +154,7 @@ public class XMLReportGenerator {
         }
     }
 
-    private static String getStackTrace(Throwable throwable) {
+    private String getStackTrace(Throwable throwable) {
         StringBuilder stringBuilder = new StringBuilder(LINE_SEPARATOR);
         stringBuilder.append("      ");
         stringBuilder.append(throwable.toString());
@@ -144,7 +171,7 @@ public class XMLReportGenerator {
         return stringBuilder.toString();
     }
 
-    private static void appendStackTraceCause(StringBuilder stringBuilder, StackTraceElement[] stackTraceElements, Throwable throwable) {
+    private void appendStackTraceCause(StringBuilder stringBuilder, StackTraceElement[] stackTraceElements, Throwable throwable) {
         StackTraceElement[] causedStackTraceElements = throwable.getStackTrace();
         int m = causedStackTraceElements.length-1, n = stackTraceElements.length-1;
         while (m >= 0 && n >=0 && causedStackTraceElements[m].equals(stackTraceElements[n])) {

@@ -31,6 +31,7 @@ import org.apache.maven.reporting.AbstractMavenReport;
 import org.apache.maven.reporting.MavenReportException;
 import org.graphwalker.core.utils.Resource;
 import org.graphwalker.maven.plugin.reports.HTMLReportGenerator;
+import org.graphwalker.maven.plugin.reports.ReportGenerator;
 
 import java.io.File;
 import java.util.Locale;
@@ -109,6 +110,7 @@ public class ReportMojo extends AbstractMavenReport {
     /** {@inheritDoc} */
     @Override
     protected void executeReport(Locale locale) throws MavenReportException {
-        new HTMLReportGenerator(getSink()).writeReport();
+        ReportGenerator reportGenerator = new HTMLReportGenerator(getSink());
+        reportGenerator.writeReport();
     }
 }

@@ -28,10 +28,14 @@
         <id>graphwalker</id>
         <phases>
             <phase>
-                <id>test</id>
-                <configuration>
-                    <testFailureIgnore>true</testFailureIgnore>
-                </configuration>
+                <id>test-compile</id>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>graphwalker:test</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </phase>
         </phases>
     </lifecycle>

@@ -37,6 +37,7 @@ import org.graphwalker.core.configuration.Configuration;
 import org.graphwalker.core.configuration.ConfigurationFactory;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.utils.Resource;
+import org.graphwalker.maven.plugin.reports.ReportGenerator;
 import org.graphwalker.maven.plugin.reports.XMLReportGenerator;
 import org.graphwalker.maven.plugin.utils.TestUtil;
 
@@ -230,10 +231,10 @@ public class TestMojo extends AbstractMojo {
             ExecutorService executorService = Executors.newFixedThreadPool(myGraphWalkers.size());
             for (GraphWalker graphWalker: myGraphWalkers) {
                 for (Model model: graphWalker.getConfiguration().getModels()) {
-                    StringBuffer buffer = new StringBuffer("Running [");
-                    buffer.append(model.getGroup()).append("] ");
-                    buffer.append(model.getImplementation().getClass().getName());
-                    getLog().info(buffer.toString());
+                    StringBuilder stringBuilder = new StringBuilder("Running [");
+                    stringBuilder.append(model.getGroup()).append("] ");
+                    stringBuilder.append(model.getImplementation().getClass().getName());
+                    getLog().info(stringBuilder.toString());
                 }
                 executorService.execute(new GraphWalkerExecutor(graphWalker));
             }
@@ -249,7 +250,8 @@ public class TestMojo extends AbstractMojo {
         for (GraphWalker graphWalker: myGraphWalkers) {
             for (Model model: graphWalker.getConfiguration().getModels()) {
                 hasExceptions |= graphWalker.hasExceptions(model);
-                XMLReportGenerator.writeReport(reportsDirectory, model, graphWalker.getExceptions(model));
+                ReportGenerator reportGenerator = new XMLReportGenerator(reportsDirectory, model, graphWalker.getExceptions(model));
+                reportGenerator.writeReport();
             }
         }
         if (hasExceptions) {
