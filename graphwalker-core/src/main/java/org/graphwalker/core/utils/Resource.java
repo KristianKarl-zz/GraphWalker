@@ -29,6 +29,9 @@ import org.graphwalker.core.Bundle;
 
 import javax.swing.*;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.Locale;
@@ -114,6 +117,15 @@ public final class Resource {
         }
     }
 
+    public static InputStream getInputStream(final String filename) throws FileNotFoundException {
+        File file = createFile(filename);
+        if (file.exists()) {
+            return new FileInputStream(file);
+        } else {
+            return getResourceAsStream(filename);
+        }
+    }
+    
     private static String[] splitPath(String filename) {
         return filename.split("[\\\\/]");
     }
@@ -133,6 +145,14 @@ public final class Resource {
         }
         if (null != resource) {
             return new File(resource.getFile());
+        }
+        throw new ResourceException(getText(Bundle.NAME, "exception.file.missing", filename));
+    }
+
+    private static InputStream getResourceAsStream(final String filename) {
+        InputStream inputStream = Resource.class.getResourceAsStream(filename);
+        if (null != inputStream) {
+            return inputStream;
         }
         throw new ResourceException(getText(Bundle.NAME, "exception.file.missing", filename));
     }

@@ -271,6 +271,9 @@
                         <goals>
                             <goal>update-file-header</goal>
                         </goals>
+                        <configuration>
+                            <excludes>*.css,*.js</excludes>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>

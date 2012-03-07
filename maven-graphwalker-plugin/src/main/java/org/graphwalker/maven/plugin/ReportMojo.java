@@ -26,6 +26,9 @@
 package org.graphwalker.maven.plugin;
 
 import org.apache.maven.doxia.siterenderer.Renderer;
+import org.apache.maven.plugin.AbstractMojo;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.reporting.AbstractMavenReport;
 import org.apache.maven.reporting.MavenReportException;
@@ -44,73 +47,17 @@ import java.util.Locale;
  * @goal report
  * @execute phase="test-compile" lifecycle="graphwalker"
  */
-public class ReportMojo extends AbstractMavenReport {
+public class ReportMojo extends AbstractMojo {
 
     /**
-     * @parameter expression="${project}"
-     * @required
-     * @readonly
+     * @parameter default-value="${project.build.directory}/graphwalker-reports"
      */
-    private MavenProject project;
-
-    /**
-     * @parameter expression="${project.reporting.outputDirectory}"
-     * @noinspection UnusedDeclaration
-     */
-    private File outputDirectory;
-
-    /**
-     * @component
-     * @noinspection UnusedDeclaration
-     */
-    private Renderer siteRenderer;
-
-    /**
-     * @parameter expression="${outputName}" default-value="graphwalker-report"
-     * @required
-     */
-    private String outputName;
+    private File reportsDirectory;
 
     /** {@inheritDoc} */
     @Override
-    protected Renderer getSiteRenderer() {
-        return siteRenderer;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    protected String getOutputDirectory() {
-        return outputDirectory.getAbsolutePath();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    protected MavenProject getProject() {
-        return project;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String getOutputName() {
-        return outputName;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String getName(Locale locale) {
-        return Resource.getText(Bundle.NAME, "report.graphwalker.name");
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String getDescription(Locale locale) {
-        return Resource.getText(Bundle.NAME, "report.graphwalker.description");
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    protected void executeReport(Locale locale) throws MavenReportException {
-        ReportGenerator reportGenerator = new HTMLReportGenerator(getSink());
+    public void execute() throws MojoExecutionException, MojoFailureException {
+        ReportGenerator reportGenerator = new HTMLReportGenerator(reportsDirectory);
         reportGenerator.writeReport();
     }
 }
