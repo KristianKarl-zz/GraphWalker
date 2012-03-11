@@ -272,7 +272,7 @@
                             <goal>update-file-header</goal>
                         </goals>
                         <configuration>
-                            <excludes>*.css,*.js</excludes>
+                            <excludes>**/bootstrap/**/*.css,**/bootstrap/**/*.js</excludes>
                         </configuration>
                     </execution>
                 </executions>
