@@ -85,7 +85,7 @@ public class XMLReportGenerator implements ReportGenerator {
         for (Vertex vertex: model.getVertices()) {
             Xpp3Dom vertexElement = new Xpp3Dom("vertex");
             vertexElement.setAttribute("id", vertex.getId());
-            vertexElement.setAttribute("name", vertex.getName());
+            vertexElement.setAttribute("name", (null!=vertex.getName()?vertex.getName():""));
             vertexElement.setAttribute("status", vertex.getStatus().name());
             vertexElement.setAttribute("visitCount", ""+vertex.getVisitCount());
             verticesElement.addChild(vertexElement);
@@ -102,7 +102,7 @@ public class XMLReportGenerator implements ReportGenerator {
         for (Edge edge: model.getEdges()) {
             Xpp3Dom edgeElement = new Xpp3Dom("edge");
             edgeElement.setAttribute("id", edge.getId());
-            edgeElement.setAttribute("name", edge.getName());
+            edgeElement.setAttribute("name", (null!=edge.getName()?edge.getName():""));
             edgeElement.setAttribute("status", edge.getStatus().name());
             edgeElement.setAttribute("visitCount", ""+edge.getVisitCount());
             edgesElement.addChild(edgeElement);
