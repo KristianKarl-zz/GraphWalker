@@ -57,7 +57,6 @@ public class VertexCoverage implements StopCondition {
     }
 
     /** {@inheritDoc} */
-    @Override
     public boolean isFulfilled(Model model, Element element) {
         double totalVertexCount = model.getVertices().size();
         double visitedVertexCount = model.getVisitedVertices().size();
@@ -65,7 +64,6 @@ public class VertexCoverage implements StopCondition {
     }
 
     /** {@inheritDoc} */
-    @Override
     public double getFulfilment(Model model, Element element) {
         double totalVertexCount = model.getVertices().size();
         double visitedVertexCount = model.getVisitedVertices().size();

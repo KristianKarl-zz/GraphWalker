@@ -64,7 +64,6 @@ public class OpenAction extends GraphWalkerAbstractAction {
     }
 
     /** {@inheritDoc} */
-    @Override
     public void actionPerformed(ActionEvent actionEvent) {
         if (JFileChooser.APPROVE_OPTION == myFileChooser.showOpenDialog(getView())) {
             getView().getController().open(myFileChooser.getSelectedFile());
@@ -73,12 +72,10 @@ public class OpenAction extends GraphWalkerAbstractAction {
 
     private class GraphWalkerFileFilter extends FileFilter {
 
-        @Override
         public boolean accept(File file) {
             return file.isDirectory() || file.getName().endsWith(".xml");
         }
 
-        @Override
         public String getDescription() {
             return "GraphWalker files"; // TODO: Get from properties
         }

@@ -51,13 +51,11 @@ public class Never implements StopCondition {
     }
 
     /** {@inheritDoc} */
-    @Override
     public boolean isFulfilled(Model model, Element element) {
         return false;
     }
 
     /** {@inheritDoc} */
-    @Override
     public double getFulfilment(Model model, Element element) {
         return 0;
     }

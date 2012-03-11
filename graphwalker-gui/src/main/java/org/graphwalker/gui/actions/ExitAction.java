@@ -54,7 +54,6 @@ public class ExitAction extends GraphWalkerAbstractAction {
     }
     
     /** {@inheritDoc} */
-    @Override
     public void actionPerformed(ActionEvent actionEvent) {
         System.exit(0); //TODO: Do we need to save anything?
     }

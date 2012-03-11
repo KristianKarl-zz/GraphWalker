@@ -49,13 +49,11 @@ public class ReachedVertex implements StopCondition {
     }
 
     /** {@inheritDoc} */
-    @Override
     public boolean isFulfilled(Model model, Element element) {
         return getFulfilment(model, element) >= FULFILLMENT_LEVEL;
     }
 
     /** {@inheritDoc} */
-    @Override
     public double getFulfilment(Model model, Element element) {
         Vertex vertex = model.getVertexByName(myName);
         if (null != vertex) {

@@ -170,7 +170,6 @@ public class HTMLReportGenerator implements ReportGenerator {
     }
     
     /** {@inheritDoc} */
-    @Override
     public void writeReport() {
         PrintWriter writer = null;
         try {

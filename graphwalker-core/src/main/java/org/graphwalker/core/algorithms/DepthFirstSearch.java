@@ -52,7 +52,6 @@ public class DepthFirstSearch implements Algorithm {
         myModel = model;
     }
 
-    @Override
     public void calculate() {
         for (Element element: myModel.getElements()) {
             if (!ElementStatus.BLOCKED.equals(element.getStatus())) {

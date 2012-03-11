@@ -64,7 +64,6 @@ public class MachineImpl implements Machine {
     }
 
     /** {@inheritDoc} */
-    @Override
     public void after() {
         for (Model model: getConfiguration().getModels()) {
             if (model.hasImplementation()) {
@@ -74,7 +73,6 @@ public class MachineImpl implements Machine {
     }
 
     /** {@inheritDoc} */
-    @Override
     public void before() {
         for (Model model: getConfiguration().getModels()) {
             if (model.hasImplementation()) {
@@ -88,7 +86,6 @@ public class MachineImpl implements Machine {
      *
      * <p>getConfiguration.</p>
      */
-    @Override
     public Configuration getConfiguration() {
         return myConfiguration;
     }
@@ -98,13 +95,11 @@ public class MachineImpl implements Machine {
      *
      * <p>getCurrentElement.</p>
      */
-    @Override
     public Element getCurrentElement() {
         return myCurrentElement;
     }
 
     /** {@inheritDoc} */
-    @Override
     public void setCurrentElement(Element element) {
         myCurrentElement = element;
     }
@@ -114,13 +109,11 @@ public class MachineImpl implements Machine {
      *
      * <p>getCurrentModel.</p>
      */
-    @Override
     public Model getCurrentModel() {
         return myCurrentModel;
     }
 
     /** {@inheritDoc} */
-    @Override
     public void setCurrentModel(Model model) {
         myCurrentModel = model;
         if (ModelStatus.NOT_EXECUTED == myCurrentModel.getModelStatus()) {
@@ -129,7 +122,6 @@ public class MachineImpl implements Machine {
     }
 
     /** {@inheritDoc} */
-    @Override
     public ExceptionStrategy getExceptionStrategy() {
         return getCurrentModel().getExceptionStrategy();
     }
@@ -139,7 +131,6 @@ public class MachineImpl implements Machine {
      *
      * <p>hasNextStep.</p>
      */
-    @Override
     public boolean hasNextStep() {
         // if the current model's state is a vertex with a switch model statement
         if (isVertex(getCurrentElement()) && ((Vertex)getCurrentElement()).hasSwitchModel()) {
@@ -190,7 +181,6 @@ public class MachineImpl implements Machine {
      *
      * <p>getNextStep.</p>
      */
-    @Override
     public Element getNextStep() {
         // if the current model's state is a vertex with a switch model statement
         if (isVertex(getCurrentElement()) && ((Vertex)getCurrentElement()).hasSwitchModel()) {
@@ -223,7 +213,6 @@ public class MachineImpl implements Machine {
     }
     
     /** {@inheritDoc} */
-    @Override
     public List<Element> getPossibleElements(Element element) {
         List<Element> possibleElements = new ArrayList<Element>();
         if (element instanceof Vertex) {

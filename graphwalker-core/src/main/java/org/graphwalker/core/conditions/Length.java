@@ -48,13 +48,11 @@ public class Length implements StopCondition {
     }
 
     /** {@inheritDoc} */
-    @Override
     public boolean isFulfilled(Model model, Element element) {
         return model.getTotalVisitCount() >= myLength;
     }
 
     /** {@inheritDoc} */
-    @Override
     public double getFulfilment(Model model, Element element) {
         return (double) model.getTotalVisitCount() / myLength;
     }

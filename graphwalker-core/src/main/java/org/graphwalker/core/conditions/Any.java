@@ -70,7 +70,6 @@ public class Any implements StopCondition {
     }
 
     /** {@inheritDoc} */
-    @Override
     public boolean isFulfilled(Model model, Element element) {
 		for (StopCondition stopCondition : myStopConditions) {
 			if (stopCondition.isFulfilled(model, element)) {
@@ -81,7 +80,6 @@ public class Any implements StopCondition {
     }
 
     /** {@inheritDoc} */
-    @Override
     public double getFulfilment(Model model, Element element) {
 		double maxFulfilment = 0;
 		for (StopCondition stopCondition: myStopConditions) {

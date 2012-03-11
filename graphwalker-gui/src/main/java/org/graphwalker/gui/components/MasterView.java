@@ -78,7 +78,6 @@ public class MasterView extends AbstractView implements ControllerListener {
     }
 
     /** {@inheritDoc} */
-    @Override
     public void instanceAdded(ControllerEvent event) {
         Configuration configuration = event.getInstance().getConfiguration();
         DefaultMutableTreeNode modelNode = new DefaultMutableTreeNode(configuration.getConfigurationFile().getName());

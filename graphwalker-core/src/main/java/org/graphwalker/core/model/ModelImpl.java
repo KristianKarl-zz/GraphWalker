@@ -420,25 +420,21 @@ public class ModelImpl implements Model {
     }
 
     /** {@inheritDoc} */
-    @Override
     public String getGroup() {
         return myGroup;  
     }
 
     /** {@inheritDoc} */
-    @Override
     public void setGroup(String group) {
         myGroup = group;
     }
 
     /** {@inheritDoc} */
-    @Override
     public ExceptionStrategy getExceptionStrategy() {
         return myExceptionStrategy;
     }
 
     /** {@inheritDoc} */
-    @Override
     public void setExceptionStrategy(ExceptionStrategy exceptionStrategy) {
         myExceptionStrategy = exceptionStrategy;
     }

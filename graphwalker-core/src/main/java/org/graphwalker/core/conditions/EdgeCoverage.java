@@ -57,7 +57,6 @@ public class EdgeCoverage implements StopCondition {
     }
 
     /** {@inheritDoc} */
-    @Override
     public boolean isFulfilled(Model model, Element element) {
         double totalEdgesCount = model.getEdges().size();
         double visitedEdgesCount = model.getVisitedEdges().size();
@@ -65,7 +64,6 @@ public class EdgeCoverage implements StopCondition {
     }
     
     /** {@inheritDoc} */
-    @Override
     public double getFulfilment(Model model, Element element) {
 		double totalEdgesCount = model.getEdges().size();
 		double visitedEdgesCount = model.getVisitedEdges().size();

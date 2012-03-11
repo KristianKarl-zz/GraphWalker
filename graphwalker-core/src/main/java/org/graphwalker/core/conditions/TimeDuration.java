@@ -59,13 +59,11 @@ public class TimeDuration implements StopCondition {
     }
 
     /** {@inheritDoc} */
-    @Override
     public boolean isFulfilled(Model model, Element element) {
         return getFulfilment(model, element) >= FULFILLMENT_LEVEL;
     }
 
     /** {@inheritDoc} */
-    @Override
     public double getFulfilment(Model model, Element element) {
         return (double) (System.currentTimeMillis() - myTimestamp) / myDuration;
     }

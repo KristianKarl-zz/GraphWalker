@@ -68,17 +68,15 @@ public class ConsoleView extends AbstractView {
 
     private void captureOutput() {
         OutputStream outputStream = new OutputStream() {
-            @Override
+
             public void write(final int b) throws IOException {
                 updateEditor(String.valueOf((char) b));
             }
 
-            @Override
             public void write(byte[] b, int off, int len) throws IOException {
                 updateEditor(new String(b, off, len));
             }
 
-            @Override
             public void write(byte[] b) throws IOException {
                 write(b, 0, b.length);
             }

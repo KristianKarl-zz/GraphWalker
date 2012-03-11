@@ -53,7 +53,6 @@ public class FloydWarshall implements Algorithm {
         myModel = model;
     }
 
-    @Override
     public void calculate() {
         myModelElements = myModel.getConnectedComponent();
         myDistances = createDistanceMatrix(myModel);

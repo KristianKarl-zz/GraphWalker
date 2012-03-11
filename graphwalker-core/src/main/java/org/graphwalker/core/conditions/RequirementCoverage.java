@@ -58,7 +58,6 @@ public class RequirementCoverage implements StopCondition {
     }
 
     /** {@inheritDoc} */
-    @Override
     public boolean isFulfilled(Model model, Element element) {
         double totalCount = model.getRequirements().size();
         if (0 == totalCount) {
@@ -70,7 +69,6 @@ public class RequirementCoverage implements StopCondition {
     }
 
     /** {@inheritDoc} */
-    @Override
     public double getFulfilment(Model model, Element element) {
         double totalCount = model.getRequirements().size();
         if (0 == totalCount) {

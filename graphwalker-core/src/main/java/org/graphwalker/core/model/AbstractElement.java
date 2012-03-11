@@ -53,7 +53,6 @@ public abstract class AbstractElement implements Element {
     }
     
     /** {@inheritDoc} */
-    @Override
     public String getId() {
         if (null != myId) {
             return myId;
@@ -72,7 +71,6 @@ public abstract class AbstractElement implements Element {
     }
 
     /** {@inheritDoc} */
-    @Override
     public String getName() {
         return myName;
     }

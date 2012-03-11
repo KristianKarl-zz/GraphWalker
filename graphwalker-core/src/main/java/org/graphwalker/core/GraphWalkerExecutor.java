@@ -45,7 +45,6 @@ public class GraphWalkerExecutor implements Runnable {
     }
 
     /** {@inheritDoc} */
-    @Override
     public void run() {
         myGraphWalker.before();
         try {

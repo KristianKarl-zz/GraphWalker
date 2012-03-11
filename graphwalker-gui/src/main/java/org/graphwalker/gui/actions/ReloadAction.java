@@ -55,7 +55,6 @@ public class ReloadAction extends GraphWalkerAbstractAction {
     }
 
     /** {@inheritDoc} */
-    @Override
     public void actionPerformed(ActionEvent actionEvent) {
         // TODO: Fix me (Auto generated)
     }

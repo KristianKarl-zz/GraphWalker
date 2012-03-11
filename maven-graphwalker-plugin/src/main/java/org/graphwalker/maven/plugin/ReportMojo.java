@@ -55,7 +55,6 @@ public class ReportMojo extends AbstractMojo {
     private File reportsDirectory;
 
     /** {@inheritDoc} */
-    @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         ReportGenerator reportGenerator = new HTMLReportGenerator(reportsDirectory);
         reportGenerator.writeReport();
