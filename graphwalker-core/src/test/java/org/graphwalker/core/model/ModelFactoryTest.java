@@ -72,9 +72,9 @@ public class ModelFactoryTest {
     }
 
     @Test
-    public void edgeKeyWordsTest() {
+    public void keyWordsTest() {
         ModelFactory modelFactory = new GraphMLModelFactory();
-        Model model = modelFactory.create("m1", "/models/edgeKeywords.graphml");
+        Model model = modelFactory.create("m1", "/models/keywords.graphml");
 
         Edge edge = model.getEdgeByName("e_execute0");
         Assert.assertNotNull(edge);
@@ -102,6 +102,15 @@ public class ModelFactoryTest {
         Assert.assertNotNull(edge);
         Assert.assertNull(edge.getEdgeGuard());
         Assert.assertTrue(edge.isBlocked());
+        
+        Vertex vertex = model.getVertexByName("v_verify");
+        Assert.assertNotNull(vertex);
+        Assert.assertNotNull(vertex.getRequirements());
+        Assert.assertEquals(1, vertex.getRequirements().size());
+        Assert.assertEquals("123", vertex.getRequirements().get(0).getId());
+        Assert.assertEquals("NOT_COVERED", vertex.getRequirements().get(0).getStatus().name());
+
+
     }
     
 }

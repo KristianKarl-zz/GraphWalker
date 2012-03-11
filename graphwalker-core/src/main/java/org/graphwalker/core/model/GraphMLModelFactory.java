@@ -88,6 +88,7 @@ public class GraphMLModelFactory implements ModelFactory {
                 Vertex vertex = new Vertex();
                 vertex.setId(nodeElement.getAttribute("id").getValue());
                 if (null != text && !"".equals(text)) {
+                    text = parseComment(vertex, text);
                     text = parseSwitchModelId(vertex, text);
                     text = parseRequirements(vertex, text);
                     parseName(vertex, getLabel(text));
@@ -106,6 +107,7 @@ public class GraphMLModelFactory implements ModelFactory {
                 Edge edge = new Edge();
                 edge.setId(edgeElement.getAttribute("id").getValue());
                 if (null != text && !"".equals(text)) {
+                    text = parseComment(edge, text);
                     text = parseBlocked(edge, text);
                     text = parseEdgeGuard(edge, text);
                     text = parseEdgeActions(edge, text);
@@ -193,4 +195,21 @@ public class GraphMLModelFactory implements ModelFactory {
         return matcher.replaceAll("").trim();
     }
 
+    private String parseComment(Vertex vertex, String text) {
+        Pattern pattern = Pattern.compile("/\\*.*\\*/", Pattern.MULTILINE);
+        Matcher matcher = pattern.matcher(text);
+        if (matcher.find()) {
+            // TODO: Save comment?
+        }
+        return matcher.replaceAll("").trim();
+    }
+
+    private String parseComment(Edge edge, String text) {
+        Pattern pattern = Pattern.compile("/\\*.*\\*/", Pattern.MULTILINE);
+        Matcher matcher = pattern.matcher(text);
+        if (matcher.find()) {
+            // TODO: Save comment?
+        }
+        return matcher.replaceAll("").trim();
+    }
 }
