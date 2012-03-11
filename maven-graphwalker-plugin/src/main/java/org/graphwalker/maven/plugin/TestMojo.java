@@ -152,6 +152,7 @@ public class TestMojo extends AbstractMojo {
         getLog().info("");
         getLog().info(Resource.getText(Bundle.NAME, "result.label"));
         getLog().info( "" );
+        List<Model> failedModels = new ArrayList<Model>();
         long group = 0, total = 0, completed = 0, failed = 0, notExecuted = 0;
         for (GraphWalker graphWalker: myGraphWalkers) {
             group++;
@@ -164,6 +165,7 @@ public class TestMojo extends AbstractMojo {
                     break;
                     case FAILED: {
                         failed++;
+                        failedModels.add(model);
                     }
                     break;
                     case NOT_EXECUTED: {
@@ -173,7 +175,13 @@ public class TestMojo extends AbstractMojo {
                 }
             }
         }
-        
+        if (0 < failedModels.size()) {
+            getLog().info("Failed models: ");
+            for (Model model: failedModels) {
+                getLog().info("  " + model.getId() + " [group = " + model.getGroup() + "]");
+            }
+            getLog().info("");
+        }                
         getLog().info(Resource.getText(Bundle.NAME, "result.summary", group, total, completed, failed, notExecuted));
         getLog().info("");
     }
