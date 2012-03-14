@@ -278,8 +278,14 @@ public class MachineImpl implements Machine {
         }
     }
 
-    private void setRequirementStatus(Requirement requirement, RequirementStatus status) {
-        requirement.setStatus(status);
+    private void setRequirementStatus(Requirement requirement, RequirementStatus newStatus) {
+        if (!requirement.getStatus().equals(newStatus)) {
+            RequirementStatus oldStatus = requirement.getStatus();
+            requirement.setStatus(newStatus);
+            if (getCurrentModel().hasImplementation() && getCurrentModel().getImplementation() instanceof RequirementStatusListener) {
+                ((RequirementStatusListener)getCurrentModel().getImplementation()).requirementStatusChanged(requirement, oldStatus, newStatus);
+            }
+        }
     }
 
     private void executeActions(Element element) {
