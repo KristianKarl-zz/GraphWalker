@@ -142,7 +142,7 @@ public class GraphMLModelFactory implements ModelFactory {
     }
 
     private String parseSwitchModelId(Vertex vertex, String text) {
-        Pattern pattern = Pattern.compile(Resource.getText(Bundle.NAME, "label.switch.model")+"\\((.*)\\)", Pattern.MULTILINE);
+        Pattern pattern = Pattern.compile(Resource.getText(Bundle.NAME, "label.switch.model")+"\\s*\\((.*)\\)", Pattern.MULTILINE);
         Matcher matcher = pattern.matcher(text);
         if (matcher.find()) {
             vertex.setSwitchModelId(matcher.group(1));
@@ -151,7 +151,7 @@ public class GraphMLModelFactory implements ModelFactory {
     }
     
     private String parseRequirements(Vertex vertex, String text) {
-        Pattern pattern = Pattern.compile(Resource.getText(Bundle.NAME, "label.requirement")+"\\((.*)\\)", Pattern.MULTILINE);
+        Pattern pattern = Pattern.compile(Resource.getText(Bundle.NAME, "label.requirement")+"\\s*\\((.*)\\)", Pattern.MULTILINE);
         Matcher matcher = pattern.matcher(text);
         while (matcher.find()) {
             String id = matcher.group(1);
