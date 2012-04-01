@@ -76,20 +76,26 @@ public class GraphWalkerImpl implements GraphWalker {
         return myMachine;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void after() {
         getMachine().after();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void before() {
         getMachine().before();
     }
 
     /**
      * {@inheritDoc}
-     *
+     * <p/>
      * <p>hasNextStep.</p>
+     *
+     * @return a boolean.
      */
     public boolean hasNextStep() {
         return getMachine().hasNextStep();
@@ -97,27 +103,35 @@ public class GraphWalkerImpl implements GraphWalker {
 
     /**
      * {@inheritDoc}
-     *
+     * <p/>
      * <p>getNextStep.</p>
+     *
+     * @return a {@link org.graphwalker.core.model.Element} object.
      */
     public Element getNextStep() {
         return getMachine().getNextStep();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public boolean hasExceptions(Model model) {
         return getMachine().getExceptionStrategy().hasExceptions(model);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public List<Throwable> getExceptions(Model model) {
         return getMachine().getExceptionStrategy().getExceptions(model);
     }
 
     /**
      * {@inheritDoc}
-     *
+     * <p/>
      * <p>getConfiguration.</p>
+     *
+     * @return a {@link org.graphwalker.core.configuration.Configuration} object.
      */
     public Configuration getConfiguration() {
         return getMachine().getConfiguration();

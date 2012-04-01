@@ -44,24 +44,28 @@ public interface Model {
      * @return a {@link java.lang.String} object.
      */
     String getId();
+
     /**
      * <p>getElements.</p>
      *
      * @return a {@link java.util.List} object.
      */
     List<Element> getElements();
+
     /**
      * <p>getConnectedComponent.</p>
      *
      * @return a {@link java.util.List} object.
      */
     List<Element> getConnectedComponent();
+
     /**
      * <p>getRequirements.</p>
      *
      * @return a {@link java.util.List} object.
      */
     List<Requirement> getRequirements();
+
     /**
      * <p>getRequirements.</p>
      *
@@ -69,10 +73,12 @@ public interface Model {
      * @return a {@link java.util.List} object.
      */
     List<Requirement> getRequirements(RequirementStatus filter);
+
     /**
      * <p>afterElementsAdded.</p>
      */
     void afterElementsAdded();
+
     /**
      * <p>getVertexById.</p>
      *
@@ -80,6 +86,7 @@ public interface Model {
      * @return a {@link org.graphwalker.core.model.Vertex} object.
      */
     Vertex getVertexById(String id);
+
     /**
      * <p>getVertexByName.</p>
      *
@@ -87,12 +94,14 @@ public interface Model {
      * @return a {@link org.graphwalker.core.model.Vertex} object.
      */
     Vertex getVertexByName(String name);
+
     /**
      * <p>getVertices.</p>
      *
      * @return a {@link java.util.List} object.
      */
     List<Vertex> getVertices();
+
     /**
      * <p>addVertex.</p>
      *
@@ -100,6 +109,7 @@ public interface Model {
      * @return a {@link org.graphwalker.core.model.Vertex} object.
      */
     Vertex addVertex(Vertex vertex);
+
     /**
      * <p>getEdgeById.</p>
      *
@@ -107,6 +117,7 @@ public interface Model {
      * @return a {@link org.graphwalker.core.model.Edge} object.
      */
     Edge getEdgeById(String id);
+
     /**
      * <p>getEdgeByName.</p>
      *
@@ -114,27 +125,31 @@ public interface Model {
      * @return a {@link org.graphwalker.core.model.Edge} object.
      */
     Edge getEdgeByName(String name);
+
     /**
      * <p>getEdges.</p>
      *
      * @return a {@link java.util.List} object.
      */
     List<Edge> getEdges();
+
     /**
      * <p>addEdge.</p>
      *
-     * @param edge a {@link org.graphwalker.core.model.Edge} object.
+     * @param edge   a {@link org.graphwalker.core.model.Edge} object.
      * @param source a {@link org.graphwalker.core.model.Vertex} object.
      * @param target a {@link org.graphwalker.core.model.Vertex} object.
      * @return a {@link org.graphwalker.core.model.Edge} object.
      */
     Edge addEdge(Edge edge, Vertex source, Vertex target);
+
     /**
      * <p>getStartVertex.</p>
      *
      * @return a {@link org.graphwalker.core.model.Vertex} object.
      */
     Vertex getStartVertex();
+
     /**
      * <p>getVisitedEdges.</p>
      *
@@ -148,24 +163,28 @@ public interface Model {
      * @return a long.
      */
     long getTotalVisitCount();
+
     /**
      * <p>getVisitedVertices.</p>
      *
      * @return a {@link java.util.List} object.
      */
     List<Vertex> getVisitedVertices();
+
     /**
      * <p>getPathGenerator.</p>
      *
      * @return a {@link org.graphwalker.core.generators.PathGenerator} object.
      */
     PathGenerator getPathGenerator();
+
     /**
      * <p>setPathGenerator.</p>
      *
      * @param pathGenerator a {@link org.graphwalker.core.generators.PathGenerator} object.
      */
     void setPathGenerator(PathGenerator pathGenerator);
+
     /**
      * <p>getShortestDistance.</p>
      *
@@ -174,6 +193,7 @@ public interface Model {
      * @return a int.
      */
     int getShortestDistance(Element source, Edge target);
+
     /**
      * <p>getMaximumDistance.</p>
      *
@@ -181,6 +201,7 @@ public interface Model {
      * @return a int.
      */
     int getMaximumDistance(Edge target);
+
     /**
      * <p>getShortestPath.</p>
      *
@@ -189,6 +210,7 @@ public interface Model {
      * @return a {@link java.util.List} object.
      */
     List<Element> getShortestPath(Element source, Edge target);
+
     /**
      * <p>getShortestDistance.</p>
      *
@@ -197,6 +219,7 @@ public interface Model {
      * @return a int.
      */
     int getShortestDistance(Element source, Vertex target);
+
     /**
      * <p>getMaximumDistance.</p>
      *
@@ -204,6 +227,7 @@ public interface Model {
      * @return a int.
      */
     int getMaximumDistance(Vertex target);
+
     /**
      * <p>getShortestPath.</p>
      *
@@ -212,48 +236,67 @@ public interface Model {
      * @return a {@link java.util.List} object.
      */
     List<Element> getShortestPath(Element source, Vertex target);
+
     /**
      * <p>hasImplementation.</p>
      *
      * @return a boolean.
      */
     boolean hasImplementation();
+
     /**
      * <p>setImplementation.</p>
      *
      * @param implementation a {@link java.lang.Object} object.
      */
     void setImplementation(Object implementation);
+
     /**
      * <p>getImplementation.</p>
      *
      * @return a {@link java.lang.Object} object.
      */
     Object getImplementation();
+
     /**
      * <p>getGroup.</p>
      *
      * @return a {@link java.lang.String} object.
      */
     String getGroup();
+
     /**
      * <p>setGroup.</p>
      *
      * @param group a {@link java.lang.String} object.
      */
     void setGroup(String group);
+
     /**
      * <p>getExceptionStrategy.</p>
      *
      * @return a {@link org.graphwalker.core.machine.ExceptionStrategy} object.
      */
     ExceptionStrategy getExceptionStrategy();
+
     /**
      * <p>setExceptionStrategy.</p>
      *
      * @param exceptionStrategy a {@link org.graphwalker.core.machine.ExceptionStrategy} object.
      */
     void setExceptionStrategy(ExceptionStrategy exceptionStrategy);
+
+    /**
+     * <p>getModelStatus.</p>
+     *
+     * @return a {@link org.graphwalker.core.model.ModelStatus} object.
+     */
     ModelStatus getModelStatus();
+
+    /**
+     * <p>setModelStatus.</p>
+     *
+     * @param myModelStatus a {@link org.graphwalker.core.model.ModelStatus} object.
+     */
     void setModelStatus(ModelStatus myModelStatus);
 }

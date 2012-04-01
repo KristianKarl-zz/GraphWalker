@@ -63,18 +63,22 @@ public class MachineImpl implements Machine {
         getCurrentElement().markAsVisited();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void after() {
-        for (Model model: getConfiguration().getModels()) {
+        for (Model model : getConfiguration().getModels()) {
             if (model.hasImplementation()) {
                 Reflection.execute(model.getImplementation(), After.class);
             }
         }
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void before() {
-        for (Model model: getConfiguration().getModels()) {
+        for (Model model : getConfiguration().getModels()) {
             if (model.hasImplementation()) {
                 Reflection.execute(model.getImplementation(), Before.class);
             }
@@ -83,37 +87,47 @@ public class MachineImpl implements Machine {
 
     /**
      * {@inheritDoc}
-     *
+     * <p/>
      * <p>getConfiguration.</p>
+     *
+     * @return a {@link org.graphwalker.core.configuration.Configuration} object.
      */
     public Configuration getConfiguration() {
         return myConfiguration;
     }
-    
+
     /**
      * {@inheritDoc}
-     *
+     * <p/>
      * <p>getCurrentElement.</p>
+     *
+     * @return a {@link org.graphwalker.core.model.Element} object.
      */
     public Element getCurrentElement() {
         return myCurrentElement;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void setCurrentElement(Element element) {
         myCurrentElement = element;
     }
-    
+
     /**
      * {@inheritDoc}
-     *
+     * <p/>
      * <p>getCurrentModel.</p>
+     *
+     * @return a {@link org.graphwalker.core.model.Model} object.
      */
     public Model getCurrentModel() {
         return myCurrentModel;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void setCurrentModel(Model model) {
         myCurrentModel = model;
         if (ModelStatus.NOT_EXECUTED == myCurrentModel.getModelStatus()) {
@@ -121,19 +135,25 @@ public class MachineImpl implements Machine {
         }
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     *
+     * @return a {@link org.graphwalker.core.machine.ExceptionStrategy} object.
+     */
     public ExceptionStrategy getExceptionStrategy() {
         return getCurrentModel().getExceptionStrategy();
     }
 
     /**
      * {@inheritDoc}
-     *
+     * <p/>
      * <p>hasNextStep.</p>
+     *
+     * @return a boolean.
      */
     public boolean hasNextStep() {
         // if the current model's state is a vertex with a switch model statement
-        if (isVertex(getCurrentElement()) && ((Vertex)getCurrentElement()).hasSwitchModel()) {
+        if (isVertex(getCurrentElement()) && ((Vertex) getCurrentElement()).hasSwitchModel()) {
             // then we check if the switch model has any more steps to take
             if (hasVertexNextStep(getVertex(getCurrentElement()))) {
                 return true;
@@ -146,7 +166,7 @@ public class MachineImpl implements Machine {
             getCurrentModel().setModelStatus(ModelStatus.COMPLETED);
         }
         // and finally we go through all the models in order to find any step we can take
-        for (Model model: getConfiguration().getModels()) {
+        for (Model model : getConfiguration().getModels()) {
             if (!getCurrentModel().equals(model)) {
                 if (hasExecutableState(model)) {
                     return true;
@@ -175,20 +195,22 @@ public class MachineImpl implements Machine {
         StopCondition stopCondition = getStopCondition(pathGenerator);
         return !stopCondition.isFulfilled(model, element);
     }
-    
+
     /**
      * {@inheritDoc}
-     *
+     * <p/>
      * <p>getNextStep.</p>
+     *
+     * @return a {@link org.graphwalker.core.model.Element} object.
      */
     public Element getNextStep() {
         // if the current model's state is a vertex with a switch model statement
-        if (isVertex(getCurrentElement()) && ((Vertex)getCurrentElement()).hasSwitchModel()) {
+        if (isVertex(getCurrentElement()) && ((Vertex) getCurrentElement()).hasSwitchModel()) {
             switchModel(getVertex(getCurrentElement()).getSwitchModelId());
         }
         // if the current model doesn't have any more steps we try to find one model that have
         if (!hasModelNextStep(getCurrentModel(), getCurrentElement())) {
-            for (Model model: getConfiguration().getModels()) {
+            for (Model model : getConfiguration().getModels()) {
                 if (!getCurrentModel().equals(model)) {
                     if (hasExecutableState(model)) {
                         switchModel(model.getId());
@@ -211,20 +233,22 @@ public class MachineImpl implements Machine {
         }
         return getCurrentElement();
     }
-    
-    /** {@inheritDoc} */
+
+    /**
+     * {@inheritDoc}
+     */
     public List<Element> getPossibleElements(Element element) {
         List<Element> possibleElements = new ArrayList<Element>();
         if (element instanceof Vertex) {
-            Vertex vertex = (Vertex)element;
+            Vertex vertex = (Vertex) element;
             EdgeFilter edgeFilter = getConfiguration().getEdgeFilter();
-            for (Edge edge: vertex.getEdges()) {
+            for (Edge edge : vertex.getEdges()) {
                 if (!edge.isBlocked() && edgeFilter.acceptEdge(getCurrentModel(), edge)) {
                     possibleElements.add(edge);
                 }
             }
         } else if (element instanceof Edge) {
-            possibleElements.add(((Edge)element).getTarget());
+            possibleElements.add(((Edge) element).getTarget());
         }
         return possibleElements;
     }
@@ -234,17 +258,17 @@ public class MachineImpl implements Machine {
     }
 
     private Vertex getVertex(Element element) {
-        return (Vertex)element;
+        return (Vertex) element;
     }
-    
+
     private boolean isEdge(Element element) {
-        return element instanceof Edge;   
+        return element instanceof Edge;
     }
-    
+
     private boolean hasExecutableState(Model model) {
         return ModelStatus.NOT_EXECUTED == model.getModelStatus() || ModelStatus.EXECUTING == model.getModelStatus();
     }
-    
+
     private void switchModel(String modelId) {
         if (!hasModelNextStep(getCurrentModel(), getCurrentElement())) {
             getCurrentModel().setModelStatus(ModelStatus.COMPLETED);
@@ -269,10 +293,10 @@ public class MachineImpl implements Machine {
         }
         throw new MachineException(Resource.getText(Bundle.NAME, "exception.condition.missing"));
     }
-  
+
     private void setRequirementStatus(Element element, RequirementStatus status) {
         if (element instanceof Vertex) {
-            for (Requirement requirement: ((Vertex) element).getRequirements()) {
+            for (Requirement requirement : ((Vertex) element).getRequirements()) {
                 setRequirementStatus(requirement, status);
             }
         }
@@ -283,7 +307,7 @@ public class MachineImpl implements Machine {
             RequirementStatus oldStatus = requirement.getStatus();
             requirement.setStatus(newStatus);
             if (getCurrentModel().hasImplementation() && getCurrentModel().getImplementation() instanceof RequirementStatusListener) {
-                ((RequirementStatusListener)getCurrentModel().getImplementation()).requirementStatusChanged(requirement, oldStatus, newStatus);
+                ((RequirementStatusListener) getCurrentModel().getImplementation()).requirementStatusChanged(requirement, oldStatus, newStatus);
             }
         }
     }
@@ -291,10 +315,10 @@ public class MachineImpl implements Machine {
     private void executeActions(Element element) {
         if (isEdge(element)) {
             EdgeFilter edgeFilter = getConfiguration().getEdgeFilter();
-            edgeFilter.executeActions(getCurrentModel(), (Edge)element);
+            edgeFilter.executeActions(getCurrentModel(), (Edge) element);
         }
     }
-    
+
     private void executeElement(Model model, Element element) {
         Reflection.execute(model.getImplementation(), element.getName());
     }

@@ -47,6 +47,11 @@ public class HTMLReportGenerator implements ReportGenerator {
     private static final String LINE_SEPARATOR = System.getProperty("line.separator");
     private final File myReportDirectory;
 
+    /**
+     * <p>Constructor for HTMLReportGenerator.</p>
+     *
+     * @param reportDirectory a {@link java.io.File} object.
+     */
     public HTMLReportGenerator(File reportDirectory) {
         myReportDirectory = reportDirectory;
     }
@@ -78,7 +83,7 @@ public class HTMLReportGenerator implements ReportGenerator {
             }
         }
     }
-    
+
     private Xpp3Dom generateReport() {
         Xpp3Dom report = new Xpp3Dom("html");
         report.addChild(generateHead());
@@ -88,10 +93,18 @@ public class HTMLReportGenerator implements ReportGenerator {
 
     private Xpp3Dom generateHead() {
         Xpp3Dom head = new Xpp3Dom("head");
-        head.addChild(createElement("meta", new HashMap<String, String>(){{put("charset","utf-8");}}, null));
-        head.addChild(createElement("meta", new HashMap<String, String>(){{put("name","viewport");put("content","width=device-width, initial-scale=1.0");}}, null));
+        head.addChild(createElement("meta", new HashMap<String, String>() {{
+            put("charset", "utf-8");
+        }}, null));
+        head.addChild(createElement("meta", new HashMap<String, String>() {{
+            put("name", "viewport");
+            put("content", "width=device-width, initial-scale=1.0");
+        }}, null));
         head.addChild(createElement("title", null, "GraphWalker Report"));
-        head.addChild(createElement("link", new HashMap<String, String>(){{put("rel","stylesheet");put("href","assets/css/bootstrap.css");}}, null));
+        head.addChild(createElement("link", new HashMap<String, String>() {{
+            put("rel", "stylesheet");
+            put("href", "assets/css/bootstrap.css");
+        }}, null));
         head.addChild(createElement("style", null, "body {padding-top: 60px;}"));
         return head;
     }
@@ -99,7 +112,7 @@ public class HTMLReportGenerator implements ReportGenerator {
     private Xpp3Dom createElement(String type, Map<String, String> attributes, String value) {
         Xpp3Dom element = new Xpp3Dom(type);
         if (null != attributes) {
-            for (String key: attributes.keySet()) {
+            for (String key : attributes.keySet()) {
                 element.setAttribute(key, attributes.get(key));
             }
         }
@@ -113,8 +126,12 @@ public class HTMLReportGenerator implements ReportGenerator {
         Xpp3Dom body = new Xpp3Dom("body");
         body.addChild(getNavbar());
         body.addChild(getContainer());
-        body.addChild(createElement("script", new HashMap<String, String>(){{put("src","assets/js/jquery.js");}}, null));
-        body.addChild(createElement("script", new HashMap<String, String>(){{put("src","assets/js/bootstrap.js");}}, null));
+        body.addChild(createElement("script", new HashMap<String, String>() {{
+            put("src", "assets/js/jquery.js");
+        }}, null));
+        body.addChild(createElement("script", new HashMap<String, String>() {{
+            put("src", "assets/js/bootstrap.js");
+        }}, null));
         return body;
     }
 
@@ -154,7 +171,6 @@ public class HTMLReportGenerator implements ReportGenerator {
         */
 
 
-
         return navbar;
     }
 
@@ -168,13 +184,15 @@ public class HTMLReportGenerator implements ReportGenerator {
 
         return element;
     }
-    
-    /** {@inheritDoc} */
+
+    /**
+     * {@inheritDoc}
+     */
     public void writeReport() {
         PrintWriter writer = null;
         try {
             writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(getReportFile()), "UTF-8")));
-            writer.write("<!DOCTYPE html>"+LINE_SEPARATOR);
+            writer.write("<!DOCTYPE html>" + LINE_SEPARATOR);
             Xpp3DomWriter.write(new PrettyPrintXMLWriter(writer), generateReport());
             writer.flush();
             writer.close();

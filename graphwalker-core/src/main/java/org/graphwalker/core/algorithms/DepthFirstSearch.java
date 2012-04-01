@@ -42,7 +42,7 @@ public class DepthFirstSearch implements Algorithm {
 
     private final Model myModel;
     private final List<Element> myConnectedComponent = new ArrayList<Element>();
-    
+
     /**
      * <p>Constructor for DepthFirstSearch.</p>
      *
@@ -52,8 +52,11 @@ public class DepthFirstSearch implements Algorithm {
         myModel = model;
     }
 
+    /**
+     * <p>calculate.</p>
+     */
     public void calculate() {
-        for (Element element: myModel.getElements()) {
+        for (Element element : myModel.getElements()) {
             if (!ElementStatus.BLOCKED.equals(element.getStatus())) {
                 element.setStatus(ElementStatus.UNREACHABLE);
             }
@@ -70,14 +73,14 @@ public class DepthFirstSearch implements Algorithm {
                 myConnectedComponent.add(element);
                 element.setStatus(ElementStatus.VISITED);
                 if (element instanceof Vertex) {
-                    for (Edge edge: ((Vertex)element).getEdges()) {
+                    for (Edge edge : ((Vertex) element).getEdges()) {
                         stack.push(edge);
                     }
                 } else if (element instanceof Edge) {
-                    stack.push(((Edge)element).getTarget());
+                    stack.push(((Edge) element).getTarget());
                 }
             }
-        } 
+        }
     }
 
     /**

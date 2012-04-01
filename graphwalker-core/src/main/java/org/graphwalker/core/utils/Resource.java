@@ -47,14 +47,14 @@ public final class Resource {
 
     private Resource() {
     }
-    
+
     /**
      * <p>getText.</p>
      *
      * @param bundle a {@link java.lang.String} object.
-     * @param key a {@link java.lang.String} object.
-     * @return a {@link java.lang.String} object.
+     * @param key    a {@link java.lang.String} object.
      * @param params a {@link java.lang.String} object.
+     * @return a {@link java.lang.String} object.
      */
     public static String getText(final String bundle, final String key, final Object... params) {
         return getText(bundle, Locale.getDefault(), key, params);
@@ -64,10 +64,10 @@ public final class Resource {
      * <p>getText.</p>
      *
      * @param bundle a {@link java.lang.String} object.
-     * @param key a {@link java.lang.String} object.
+     * @param key    a {@link java.lang.String} object.
      * @param locale a {@link java.util.Locale} object.
-     * @return a {@link java.lang.String} object.
      * @param params a {@link java.lang.String} object.
+     * @return a {@link java.lang.String} object.
      */
     public static String getText(final String bundle, final Locale locale, final String key, final Object... params) {
         MessageFormat messageFormat = new MessageFormat("");
@@ -80,7 +80,7 @@ public final class Resource {
      * <p>getIcon.</p>
      *
      * @param bundle a {@link java.lang.String} object.
-     * @param key a {@link java.lang.String} object.
+     * @param key    a {@link java.lang.String} object.
      * @return a {@link javax.swing.Icon} object.
      */
     public static Icon getIcon(final String bundle, final String key) {
@@ -117,6 +117,13 @@ public final class Resource {
         }
     }
 
+    /**
+     * <p>getInputStream.</p>
+     *
+     * @param filename a {@link java.lang.String} object.
+     * @return a {@link java.io.InputStream} object.
+     * @throws java.io.FileNotFoundException if any.
+     */
     public static InputStream getInputStream(final String filename) throws FileNotFoundException {
         File file = createFile(filename);
         if (file.exists()) {
@@ -125,14 +132,14 @@ public final class Resource {
             return getResourceAsStream(filename);
         }
     }
-    
+
     private static String[] splitPath(String filename) {
         return filename.split("[\\\\/]");
     }
-    
+
     private static File createFile(String filename) {
         File createdFile = null;
-        for (String part: splitPath(filename)) {
+        for (String part : splitPath(filename)) {
             createdFile = new File(createdFile, part);
         }
         return createdFile;

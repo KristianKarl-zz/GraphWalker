@@ -34,7 +34,7 @@ package org.graphwalker.core;
 public class GraphWalkerExecutor implements Runnable {
 
     private final GraphWalker myGraphWalker;
-    
+
     /**
      * <p>Constructor for GraphWalkerExecutor.</p>
      *
@@ -44,7 +44,9 @@ public class GraphWalkerExecutor implements Runnable {
         myGraphWalker = graphWalker;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void run() {
         myGraphWalker.before();
         try {

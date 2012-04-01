@@ -25,6 +25,19 @@
  */
 package org.graphwalker.core.model;
 
+/**
+ * <p>RequirementStatusListener interface.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public interface RequirementStatusListener {
+    /**
+     * <p>requirementStatusChanged.</p>
+     *
+     * @param requirement a {@link org.graphwalker.core.model.Requirement} object.
+     * @param oldStatus   a {@link org.graphwalker.core.model.RequirementStatus} object.
+     * @param newStatus   a {@link org.graphwalker.core.model.RequirementStatus} object.
+     */
     void requirementStatusChanged(Requirement requirement, RequirementStatus oldStatus, RequirementStatus newStatus);
 }

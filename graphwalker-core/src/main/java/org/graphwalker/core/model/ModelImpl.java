@@ -53,7 +53,7 @@ public class ModelImpl implements Model {
     private String myGroup;
     private ExceptionStrategy myExceptionStrategy;
     private ModelStatus myModelStatus = ModelStatus.NOT_EXECUTED;
-    
+
     /**
      * <p>Constructor for ModelImpl.</p>
      *
@@ -83,7 +83,9 @@ public class ModelImpl implements Model {
         return myPathGenerator;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void setPathGenerator(PathGenerator pathGenerator) {
         myPathGenerator = pathGenerator;
     }
@@ -102,7 +104,7 @@ public class ModelImpl implements Model {
      * @return a {@link java.util.List} object.
      */
     public List<Element> getElements() {
-        List<Element> elements = new ArrayList<Element>(myVertexMap.size()+myEdgeMap.size());
+        List<Element> elements = new ArrayList<Element>(myVertexMap.size() + myEdgeMap.size());
         elements.addAll(myVertexMap.values());
         elements.addAll(myEdgeMap.values());
         return elements;
@@ -115,8 +117,8 @@ public class ModelImpl implements Model {
      */
     public List<Requirement> getRequirements() {
         Map<String, Requirement> requirements = new HashMap<String, Requirement>();
-        for (Vertex vertex: getVertices()) {
-            for (Requirement requirement: vertex.getRequirements()) {
+        for (Vertex vertex : getVertices()) {
+            for (Requirement requirement : vertex.getRequirements()) {
                 if (!requirements.containsKey(requirement.getId())) {
                     requirements.put(requirement.getId(), requirement);
                 }
@@ -125,10 +127,12 @@ public class ModelImpl implements Model {
         return new ArrayList<Requirement>(requirements.values());
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public List<Requirement> getRequirements(RequirementStatus filter) {
         List<Requirement> requirements = new ArrayList<Requirement>();
-        for (Requirement requirement: getRequirements()) {
+        for (Requirement requirement : getRequirements()) {
             if (filter.equals(requirement.getStatus())) {
                 requirements.add(requirement);
             }
@@ -136,14 +140,18 @@ public class ModelImpl implements Model {
         return requirements;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Vertex getVertexById(String id) {
         return myVertexMap.get(id);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Vertex getVertexByName(String name) {
-        for (Vertex vertex: myVertexMap.values()) {
+        for (Vertex vertex : myVertexMap.values()) {
             String vertexName = vertex.getName();
             if (null != vertexName && vertexName.equalsIgnoreCase(name)) {
                 return vertex;
@@ -151,10 +159,10 @@ public class ModelImpl implements Model {
         }
         return null;
     }
-    
+
     private List<Vertex> findByName(String name) {
         List<Vertex> vertices = new ArrayList<Vertex>();
-        for (Vertex vertex: myVertexMap.values()) {
+        for (Vertex vertex : myVertexMap.values()) {
             String vertexName = vertex.getName();
             if (null != vertexName && vertexName.equalsIgnoreCase(name)) {
                 vertices.add(vertex);
@@ -162,7 +170,7 @@ public class ModelImpl implements Model {
         }
         return vertices;
     }
-    
+
     /**
      * <p>getVertices.</p>
      *
@@ -170,9 +178,9 @@ public class ModelImpl implements Model {
      */
     public List<Vertex> getVertices() {
         List<Vertex> vertices = new ArrayList<Vertex>();
-        for (Element element: getConnectedComponent()) {
+        for (Element element : getConnectedComponent()) {
             if (element instanceof Vertex) {
-                vertices.add((Vertex)element);
+                vertices.add((Vertex) element);
             }
         }
         return vertices;
@@ -191,10 +199,12 @@ public class ModelImpl implements Model {
     }
 
     private String generateId(String prefix) {
-        return prefix+myIdGenerator.nextLong();
+        return prefix + myIdGenerator.nextLong();
     }
-    
-    /** {@inheritDoc} */
+
+    /**
+     * {@inheritDoc}
+     */
     public Vertex addVertex(Vertex vertex) {
         verifyId(vertex);
         if (hasStartVertex() && (getStartVertex().equals(vertex) || getStartVertex().getName().equalsIgnoreCase(vertex.getName()))) {
@@ -204,14 +214,18 @@ public class ModelImpl implements Model {
         return vertex;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Edge getEdgeById(String id) {
         return myEdgeMap.get(id);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Edge getEdgeByName(String name) {
-        for (Edge edge: myEdgeMap.values()) {
+        for (Edge edge : myEdgeMap.values()) {
             String edgeName = edge.getName();
             if (null != edgeName && edgeName.equalsIgnoreCase(name)) {
                 return edge;
@@ -227,15 +241,17 @@ public class ModelImpl implements Model {
      */
     public List<Edge> getEdges() {
         List<Edge> edges = new ArrayList<Edge>();
-        for (Element element: getConnectedComponent()) {
+        for (Element element : getConnectedComponent()) {
             if (element instanceof Edge) {
-                edges.add((Edge)element);
+                edges.add((Edge) element);
             }
         }
         return edges;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Edge addEdge(Edge edge, Vertex source, Vertex target) {
         verifyId(edge);
         if (hasStartVertex() && getStartVertex().equals(target)) {
@@ -268,9 +284,10 @@ public class ModelImpl implements Model {
      */
     public Vertex getStartVertex() {
         List<Vertex> vertices = findByName(Resource.getText(Bundle.NAME, "start.vertex"));
-        if (1<vertices.size()) {
+        if (1 < vertices.size()) {
             throw new ModelException(Resource.getText(Bundle.NAME, "exception.duplicate.start.vertex"));
-        } if (1>vertices.size()) {
+        }
+        if (1 > vertices.size()) {
             throw new ModelException(Resource.getText(Bundle.NAME, "exception.start.vertex.missing"));
         }
         return vertices.get(0);
@@ -282,7 +299,7 @@ public class ModelImpl implements Model {
      * @return a boolean.
      */
     public boolean hasStartVertex() {
-        return 0<findByName(Resource.getText(Bundle.NAME, "start.vertex")).size();
+        return 0 < findByName(Resource.getText(Bundle.NAME, "start.vertex")).size();
     }
 
     /**
@@ -292,7 +309,7 @@ public class ModelImpl implements Model {
      */
     public List<Edge> getVisitedEdges() {
         List<Edge> visitedEdges = new ArrayList<Edge>();
-        for (Edge edge: getEdges()) {
+        for (Edge edge : getEdges()) {
             if (edge.isVisited()) {
                 visitedEdges.add(edge);
             }
@@ -307,7 +324,7 @@ public class ModelImpl implements Model {
      */
     public long getTotalVisitCount() {
         long totalCount = 0L;
-        for (Element modelElement: getElements()) {
+        for (Element modelElement : getElements()) {
             totalCount += modelElement.getVisitCount();
         }
         return totalCount;
@@ -320,14 +337,14 @@ public class ModelImpl implements Model {
      */
     public List<Vertex> getVisitedVertices() {
         List<Vertex> visitedVertices = new ArrayList<Vertex>();
-        for (Vertex vertex: getVertices()) {
+        for (Vertex vertex : getVertices()) {
             if (vertex.isVisited()) {
                 visitedVertices.add(vertex);
             }
         }
         return visitedVertices;
     }
-    
+
     /**
      * <p>getConnectedComponent.</p>
      *
@@ -336,7 +353,7 @@ public class ModelImpl implements Model {
     public List<Element> getConnectedComponent() {
         return myDepthFirstSearch.getConnectedComponent();
     }
-    
+
     /**
      * {@inheritDoc}
      *
@@ -350,7 +367,7 @@ public class ModelImpl implements Model {
 
     /**
      * {@inheritDoc}
-     *
+     * <p/>
      * <p>getMaximumDistance.</p>
      */
     public int getMaximumDistance(Edge target) {
@@ -369,10 +386,6 @@ public class ModelImpl implements Model {
 
     /**
      * {@inheritDoc}
-     *
-     * @param source a {@link org.graphwalker.core.model.Element} object.
-     * @param target a {@link org.graphwalker.core.model.Edge} object.
-     * @return a {@link java.util.List} object.
      */
     public List<Element> getShortestPath(Element source, Edge target) {
         return myFloydWarshall.getShortestPath(source, target);
@@ -380,7 +393,7 @@ public class ModelImpl implements Model {
 
     /**
      * {@inheritDoc}
-     *
+     * <p/>
      * <p>getShortestDistance.</p>
      */
     public int getShortestDistance(Element source, Vertex target) {
@@ -389,8 +402,12 @@ public class ModelImpl implements Model {
 
     /**
      * {@inheritDoc}
-     *
+     * <p/>
      * <p>getShortestPath.</p>
+     *
+     * @param source a {@link org.graphwalker.core.model.Element} object.
+     * @param target a {@link org.graphwalker.core.model.Vertex} object.
+     * @return a {@link java.util.List} object.
      */
     public List<Element> getShortestPath(Element source, Vertex target) {
         return myFloydWarshall.getShortestPath(source, target);
@@ -405,11 +422,13 @@ public class ModelImpl implements Model {
         return null != getImplementation();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void setImplementation(Object implementation) {
-        myImplementation = implementation;    
+        myImplementation = implementation;
     }
-    
+
     /**
      * <p>getImplementation.</p>
      *
@@ -419,30 +438,50 @@ public class ModelImpl implements Model {
         return myImplementation;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getGroup() {
-        return myGroup;  
+        return myGroup;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void setGroup(String group) {
         myGroup = group;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     *
+     * @return a {@link org.graphwalker.core.machine.ExceptionStrategy} object.
+     */
     public ExceptionStrategy getExceptionStrategy() {
         return myExceptionStrategy;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void setExceptionStrategy(ExceptionStrategy exceptionStrategy) {
         myExceptionStrategy = exceptionStrategy;
     }
 
+    /**
+     * <p>getModelStatus.</p>
+     *
+     * @return a {@link org.graphwalker.core.model.ModelStatus} object.
+     */
     public ModelStatus getModelStatus() {
         return myModelStatus;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void setModelStatus(ModelStatus myModelStatus) {
         this.myModelStatus = myModelStatus;
     }

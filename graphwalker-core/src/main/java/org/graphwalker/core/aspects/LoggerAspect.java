@@ -58,29 +58,43 @@ public class LoggerAspect {
     }
 
     @Pointcut("execution(public * *(..))")
-    void publicMethod() {}
+    void publicMethod() {
+    }
 
     @Pointcut("within(org.graphwalker.core.GraphWalker+)")
-    void graphWalker() {}
+    void graphWalker() {
+    }
 
     /**
      * <p>graphWalkerAnnotation.</p>
      */
     @Pointcut("within(@org.graphwalker.core.annotations.GraphWalker *)")
-    public void graphWalkerAnnotation() {}
+    public void graphWalkerAnnotation() {
+    }
 
     @Pointcut("within(org.graphwalker.core.machine.Machine+)")
-    void machine() {}
+    void machine() {
+    }
 
     @Pointcut("within(org.graphwalker.core.filter.EdgeFilter+)")
-    void edgeFilter() {}
+    void edgeFilter() {
+    }
 
     @Pointcut("within(org.graphwalker.core.conditions.StopCondition+)")
-    void stopCondition() {}
+    void stopCondition() {
+    }
 
     @Pointcut("execution(* *.executeElement(..)) && args(model, element)")
-    void executeElement(Model model, Element element) {}
-    
+    void executeElement(Model model, Element element) {
+    }
+
+    /**
+     * <p>beforeExecuteElement.</p>
+     *
+     * @param joinPoint a {@link org.aspectj.lang.JoinPoint} object.
+     * @param model     a {@link org.graphwalker.core.model.Model} object.
+     * @param element   a {@link org.graphwalker.core.model.Element} object.
+     */
     @Before("machine() && executeElement(model, element)")
     public void beforeExecuteElement(JoinPoint joinPoint, Model model, Element element) {
         getLogger(joinPoint).info(Resource.getText(Bundle.NAME, "log.method.call", model.getId(), (element instanceof Edge ? "edge" : "vertex"), element.getId(), element.getName(), element.getVisitCount()));

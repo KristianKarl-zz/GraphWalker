@@ -25,19 +25,13 @@
  */
 package org.graphwalker.maven.plugin;
 
-import org.apache.maven.doxia.siterenderer.Renderer;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.project.MavenProject;
-import org.apache.maven.reporting.AbstractMavenReport;
-import org.apache.maven.reporting.MavenReportException;
-import org.graphwalker.core.utils.Resource;
 import org.graphwalker.maven.plugin.reports.HTMLReportGenerator;
 import org.graphwalker.maven.plugin.reports.ReportGenerator;
 
 import java.io.File;
-import java.util.Locale;
 
 /**
  * <p>ExecuteMojo class.</p>
@@ -54,7 +48,14 @@ public class ReportMojo extends AbstractMojo {
      */
     private File reportsDirectory;
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     *
+     * @throws org.apache.maven.plugin.MojoExecutionException
+     *          if any.
+     * @throws org.apache.maven.plugin.MojoFailureException
+     *          if any.
+     */
     public void execute() throws MojoExecutionException, MojoFailureException {
         ReportGenerator reportGenerator = new HTMLReportGenerator(reportsDirectory);
         reportGenerator.writeReport();

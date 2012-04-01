@@ -38,12 +38,12 @@ import java.util.List;
  * @version $Id: $
  */
 public class FloydWarshall implements Algorithm {
-                  
+
     private final Model myModel;
     private List<Element> myModelElements;
     private int[][] myDistances;
     private Element[][] myPredecessors;
-    
+
     /**
      * <p>Constructor for FloydWarshall.</p>
      *
@@ -53,6 +53,9 @@ public class FloydWarshall implements Algorithm {
         myModel = model;
     }
 
+    /**
+     * <p>calculate.</p>
+     */
     public void calculate() {
         myModelElements = myModel.getConnectedComponent();
         myDistances = createDistanceMatrix(myModel);
@@ -63,18 +66,18 @@ public class FloydWarshall implements Algorithm {
     private int[][] createDistanceMatrix(Model model) {
         List<Element> elements = model.getConnectedComponent();
         int[][] distances = new int[elements.size()][elements.size()];
-        for (int[] row: distances) {
+        for (int[] row : distances) {
             Arrays.fill(row, Integer.MAX_VALUE);
         }
-        for (Element element: elements) {
+        for (Element element : elements) {
             if (element instanceof Edge) {
-                Edge edge = (Edge)element;
+                Edge edge = (Edge) element;
                 Vertex target = edge.getTarget();
 
-                distances[elements.indexOf(edge)][elements.indexOf(target)] = (int)Math.round(100*edge.getWeight());
+                distances[elements.indexOf(edge)][elements.indexOf(target)] = (int) Math.round(100 * edge.getWeight());
             } else if (element instanceof Vertex) {
-                Vertex vertex = (Vertex)element;
-                for (Edge edge: vertex.getEdges()) {
+                Vertex vertex = (Vertex) element;
+                for (Edge edge : vertex.getEdges()) {
                     if (!ElementStatus.BLOCKED.equals(edge.getStatus())) {
                         distances[elements.indexOf(vertex)][elements.indexOf(edge)] = 1;
                     }
@@ -83,11 +86,11 @@ public class FloydWarshall implements Algorithm {
         }
         return distances;
     }
-    
+
     private Element[][] createPredecessorMatrix(Model model) {
         return new Element[model.getConnectedComponent().size()][model.getConnectedComponent().size()];
     }
-    
+
     private void updateMatrices(Model model) {
         int size = model.getConnectedComponent().size();
         for (int k = 0; k < size; k++) {
@@ -123,7 +126,7 @@ public class FloydWarshall implements Algorithm {
      */
     public int getMaximumDistance(Element target) {
         int maximumDistance = Integer.MIN_VALUE;
-        for (int[] distance: myDistances) {
+        for (int[] distance : myDistances) {
             int value = distance[myModelElements.indexOf(target)];
             if (value != Integer.MAX_VALUE && value > maximumDistance) {
                 maximumDistance = value;
@@ -158,6 +161,6 @@ public class FloydWarshall implements Algorithm {
         path.add(myPredecessors[myModelElements.indexOf(source)][myModelElements.indexOf(target)]);
         path.addAll(getIntermediatePath(myPredecessors[myModelElements.indexOf(source)][myModelElements.indexOf(target)], target));
         return path;
-    }    
-    
+    }
+
 }

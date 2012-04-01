@@ -37,12 +37,13 @@ public abstract class AbstractElement implements Element {
     private String myName;
     private long myVisitCount = 0L;
     private ElementStatus myStatus;
+
     /**
      * <p>Constructor for AbstractElement.</p>
      */
     AbstractElement() {
     }
-    
+
     /**
      * <p>Constructor for AbstractElement.</p>
      *
@@ -51,8 +52,12 @@ public abstract class AbstractElement implements Element {
     AbstractElement(String name) {
         myName = name;
     }
-    
-    /** {@inheritDoc} */
+
+    /**
+     * {@inheritDoc}
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getId() {
         if (null != myId) {
             return myId;
@@ -70,7 +75,11 @@ public abstract class AbstractElement implements Element {
         myId = id;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getName() {
         return myName;
     }
@@ -106,7 +115,7 @@ public abstract class AbstractElement implements Element {
      * @return a boolean.
      */
     public boolean isVisited() {
-        return 0<myVisitCount;
+        return 0 < myVisitCount;
     }
 
     /**
@@ -118,7 +127,9 @@ public abstract class AbstractElement implements Element {
         return myVisitCount;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void setStatus(ElementStatus status) {
         myStatus = status;
     }
