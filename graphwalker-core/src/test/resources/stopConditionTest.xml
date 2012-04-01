@@ -32,13 +32,7 @@
     <models>
         <model id="m1" file="models/singleModel.graphml">
             <pathGenerator type="Random">
-                <any>
-                    <all>
-                        <stopCondition type="ReachedVertex" value="v_2"/>
-                        <stopCondition type="EdgeCoverage" value="100"/>
-                    </all>
-                    <stopCondition type="ReachedEdge" value="e_2"/>
-                </any>
+                <stopCondition type="ReachedEdge" value="e_2"/>
             </pathGenerator>
         </model>
     </models>
