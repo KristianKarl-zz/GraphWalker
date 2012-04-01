@@ -27,8 +27,6 @@ package org.graphwalker.core.configuration;
 
 import org.graphwalker.core.Bundle;
 import org.graphwalker.core.annotations.GraphWalker;
-import org.graphwalker.core.conditions.All;
-import org.graphwalker.core.conditions.Any;
 import org.graphwalker.core.conditions.StopCondition;
 import org.graphwalker.core.conditions.StopConditionFactory;
 import org.graphwalker.core.filter.EdgeFilterImpl;
@@ -168,44 +166,12 @@ public class ConfigurationFactory {
 
     private static PathGenerator parse(PathGeneratorType pathGeneratorType) {
         PathGenerator pathGenerator = PathGeneratorFactory.create(pathGeneratorType.getType());
-        if (null != pathGeneratorType.getAny()) {
-            pathGenerator.setStopCondition(parse(pathGeneratorType.getAny()));
-        } else if (null != pathGeneratorType.getAll()) {
-            pathGenerator.setStopCondition(parse(pathGeneratorType.getAll()));
-        } else if (null != pathGeneratorType.getStopCondition()) {
+        if (null != pathGeneratorType.getStopCondition()) {
             pathGenerator.setStopCondition(parse(pathGeneratorType.getStopCondition()));
         } else {
             throw new ConfigurationException(Resource.getText(Bundle.NAME, "exception.condition.missing"));
         }
         return pathGenerator;
-    }
-
-    private static StopCondition parse(AnyStopConditionType anyStopConditionsType) {
-        Any any = new Any();
-        for (Object stopCondition: anyStopConditionsType.getAllOrAnyOrStopCondition()) {
-            if (stopCondition instanceof AllStopConditionsType) {
-                any.addStopCondition(parse((AllStopConditionsType)stopCondition));
-            } else if (stopCondition instanceof AnyStopConditionType) {
-                any.addStopCondition(parse((AnyStopConditionType)stopCondition));
-            } else if (stopCondition instanceof StopConditionType) {
-                any.addStopCondition(parse((StopConditionType)stopCondition));
-            }       
-        }   
-        return any;
-    }
-
-    private static StopCondition parse(AllStopConditionsType allStopConditionsType) {
-        All all = new All();
-        for (Object stopCondition: allStopConditionsType.getAllOrAnyOrStopCondition()) {
-            if (stopCondition instanceof AllStopConditionsType) {
-                all.addStopCondition(parse((AllStopConditionsType)stopCondition));
-            } else if (stopCondition instanceof AnyStopConditionType) {
-                all.addStopCondition(parse((AnyStopConditionType)stopCondition));
-            } else if (stopCondition instanceof StopConditionType) {
-                all.addStopCondition(parse((StopConditionType)stopCondition));
-            }
-        }
-        return all;
     }
 
     private static StopCondition parse(StopConditionType stopConditionType) {

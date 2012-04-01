@@ -22,11 +22,9 @@
     </xsd:complexType>
 
     <xsd:complexType name="PathGeneratorType">
-        <xsd:choice>
-            <xsd:element name="any" type="AnyStopConditionType"/>
-            <xsd:element name="all" type="AllStopConditionsType"/>
+        <xsd:all>
             <xsd:element name="stopCondition" type="StopConditionType"/>
-        </xsd:choice>
+        </xsd:all>
         <xsd:attribute name="type" use="required">
             <xsd:simpleType>
                 <xsd:restriction base="xsd:string">
@@ -56,22 +54,6 @@
             <xsd:pattern value="([a-zA-Z_$][a-zA-Z\d_$]*\.)*[a-zA-Z_$][a-zA-Z\d_$]*"/>
         </xsd:restriction>
     </xsd:simpleType>
-
-    <xsd:complexType name="AnyStopConditionType">
-        <xsd:choice minOccurs="1" maxOccurs="unbounded">
-            <xsd:element name="all" type="AllStopConditionsType"/>
-            <xsd:element name="any" type="AnyStopConditionType"/>
-            <xsd:element name="stopCondition" type="StopConditionType"/>
-        </xsd:choice>
-    </xsd:complexType>
-
-    <xsd:complexType name="AllStopConditionsType">
-        <xsd:choice minOccurs="1" maxOccurs="unbounded">
-            <xsd:element name="all" type="AllStopConditionsType"/>
-            <xsd:element name="any" type="AnyStopConditionType"/>
-            <xsd:element name="stopCondition" type="StopConditionType"/>
-        </xsd:choice>
-    </xsd:complexType>
 
     <xsd:complexType name="StopConditionType">
         <xsd:attribute name="type" use="required">
