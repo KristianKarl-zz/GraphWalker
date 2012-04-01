@@ -45,6 +45,7 @@ public class EdgeFilterImpl implements EdgeFilter {
 
     private final ScriptEngine myScriptEngine;
     private final String myScriptEngineName;
+
     /**
      * <p>Constructor for EdgeFilterImpl.</p>
      *
@@ -56,48 +57,54 @@ public class EdgeFilterImpl implements EdgeFilter {
         myScriptEngine = scriptEngineManager.getEngineByName(myScriptEngineName);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void executeActions(Model model, Edge edge) {
-        if (null != edge.getEdgeActions() && 0<edge.getEdgeActions().size()) {
+        if (null == myScriptEngine) {
+            throw new EdgeFilterException(Resource.getText(Bundle.NAME, "exception.script.engine.missing", myScriptEngineName));
+        }
+        if (null != edge.getEdgeActions() && 0 < edge.getEdgeActions().size()) {
             addImplementationToFilter(model);
-            for (Action action: edge.getEdgeActions()) {
+            for (Action action : edge.getEdgeActions()) {
                 try {
                     myScriptEngine.eval(action.getScript());
                 } catch (ScriptException e) {
                     removeImplementationFromFilter();
                     throw new EdgeFilterException(Resource.getText(Bundle.NAME, "exception.script.error", e.getMessage()));
-                } catch (NullPointerException e) {
-                    throw new EdgeFilterException(Resource.getText(Bundle.NAME, "exception.script.engine.missing", myScriptEngineName));
                 }
             }
             removeImplementationFromFilter();
         }
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public boolean acceptEdge(Model model, Edge edge) {
+        if (null == myScriptEngine) {
+            throw new EdgeFilterException(Resource.getText(Bundle.NAME, "exception.script.engine.missing", myScriptEngineName));
+        }
         boolean isEdgeAccepted = true;
         if (edge.hasEdgeGuard()) {
             addImplementationToFilter(model);
             try {
-                isEdgeAccepted = (Boolean)myScriptEngine.eval(edge.getEdgeGuard().getScript());
+                isEdgeAccepted = (Boolean) myScriptEngine.eval(edge.getEdgeGuard().getScript());
             } catch (ScriptException e) {
                 removeImplementationFromFilter();
                 throw new EdgeFilterException(Resource.getText(Bundle.NAME, "exception.script.error", e.getMessage()));
-            } catch (NullPointerException e) {
-                throw new EdgeFilterException(Resource.getText(Bundle.NAME, "exception.script.engine.missing", myScriptEngineName));
             }
             removeImplementationFromFilter();
         }
         return isEdgeAccepted;
     }
-    
+
     private void addImplementationToFilter(Model model) {
         if (null != model && model.hasImplementation()) {
             myScriptEngine.put(Resource.getText(Bundle.NAME, "script.implementation.name"), model.getImplementation());
         }
     }
-    
+
     private void removeImplementationFromFilter() {
         if (null != myScriptEngine) {
             myScriptEngine.put(Resource.getText(Bundle.NAME, "script.implementation.name"), null);
