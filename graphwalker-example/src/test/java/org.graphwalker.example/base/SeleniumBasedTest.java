@@ -2,7 +2,6 @@ package org.graphwalker.example.base;
 
 import com.thoughtworks.selenium.SeleniumException;
 import org.graphwalker.core.annotations.After;
-import org.graphwalker.core.annotations.Before;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -14,13 +13,7 @@ public abstract class SeleniumBasedTest {
 
     private static final long DEFAULT_TIMEOUT = 30;
     private static final BrowserType DEFAULT_BROWSER = BrowserType.FIREFOX;
-    private WebDriver myWebDriver;
-
-    @Before
-    public void createWebDriver() {
-        myWebDriver = createWebDriver(getBrowserType());
-        myWebDriver.manage().timeouts().implicitlyWait(getTimeout(), TimeUnit.SECONDS);
-    }
+    private static WebDriver myWebDriver;
 
     @After
     public void destroyWebDriver() {
@@ -31,15 +24,23 @@ public abstract class SeleniumBasedTest {
     }
 
     protected WebDriver getWebDriver() {
+        if (null == myWebDriver) {
+            myWebDriver = createWebDriver(getBrowserType());
+            myWebDriver.manage().timeouts().implicitlyWait(getTimeout(), TimeUnit.SECONDS);
+        }
         return myWebDriver;
     }
-    
+
     private WebDriver createWebDriver(BrowserType type) {
         switch (type) {
-            case CHROME: return new ChromeDriver();
-            case FIREFOX: return new FirefoxDriver();
-            case IEXPLORER: return new InternetExplorerDriver();
-            default: throw new SeleniumException("Unknown browser type");
+            case CHROME:
+                return new ChromeDriver();
+            case FIREFOX:
+                return new FirefoxDriver();
+            case IEXPLORER:
+                return new InternetExplorerDriver();
+            default:
+                throw new SeleniumException("Unknown browser type");
         }
     }
 
@@ -60,5 +61,5 @@ public abstract class SeleniumBasedTest {
         }
         return DEFAULT_TIMEOUT;
     }
-    
+
 }

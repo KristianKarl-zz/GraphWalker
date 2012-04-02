@@ -7,7 +7,7 @@ import org.graphwalker.core.model.RequirementStatusListener;
 import org.graphwalker.core.utils.Assert;
 import org.graphwalker.example.base.SeleniumBasedTest;
 
-@GraphWalker(id = "wikipediaSenario", model = "models/WikipediaModel.graphml", group = "wikipedia")
+@GraphWalker(id = "wikipediaSenario", model = "models/WikipediaModel.graphml")
 public class WikipediaTest extends SeleniumBasedTest implements RequirementStatusListener {
 
     public void e_startpage() {
@@ -19,6 +19,6 @@ public class WikipediaTest extends SeleniumBasedTest implements RequirementStatu
     }
 
     public void requirementStatusChanged(Requirement requirement, RequirementStatus oldStatus, RequirementStatus newStatus) {
-        System.out.println("RequirementStatus for "+requirement.getId()+" has changed from "+oldStatus+" to "+newStatus);
+        System.out.println("RequirementStatus for " + requirement.getId() + " has changed from " + oldStatus + " to " + newStatus);
     }
 }

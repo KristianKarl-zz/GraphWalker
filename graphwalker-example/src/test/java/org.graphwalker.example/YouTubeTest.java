@@ -10,23 +10,23 @@ import org.openqa.selenium.WebElement;
 import java.util.List;
 import java.util.Random;
 
-@GraphWalker(id = "youtubeSenario", model = "models/YouTubeModel.graphml", group = "youtube")
+@GraphWalker(id = "youtubeSenario", model = "models/YouTubeModel.graphml")
 public class YouTubeTest extends SeleniumBasedTest {
 
     private final String myStartPage = System.getProperty("youtube.start.page");
     private String myCurrentFeedTitle = null;
     private String myCurrentVideoTitle = null;
     private WebElement myCurrentGuideElement = null;
-    
+
     @Before
     public void assertTestPreconditions() {
-       Assert.assertNotNull(myStartPage);
+        Assert.assertNotNull(myStartPage);
     }
 
     public void e_startpage() {
         getWebDriver().navigate().to(myStartPage);
     }
-    
+
     public void v_startpage() {
         Assert.assertTrue(myStartPage.equals(getWebDriver().getCurrentUrl()));
     }
