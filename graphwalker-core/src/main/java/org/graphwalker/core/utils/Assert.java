@@ -41,335 +41,306 @@ public final class Assert {
     private Assert() {
     }
 
-    /**
-     * <p>assertTrue.</p>
-     *
-     * @param condition a boolean.
-     */
-    public static void assertTrue(boolean condition) {
+    public static void assertTrue(boolean condition, String message) {
         if (!condition) {
-            failNotEquals(condition, Boolean.TRUE);
+            fail(Resource.getText(Bundle.NAME, "assert.message", condition, true, message));
         }
     }
 
-    /**
-     * <p>assertFalse.</p>
-     *
-     * @param condition a boolean.
-     */
-    public static void assertFalse(boolean condition) {
+    public static void assertTrue(boolean condition) {
+        assertTrue(condition, "");
+    }
+
+    public static void assertFalse(boolean condition, String message) {
         if (condition) {
-            failNotEquals(condition, Boolean.FALSE);
+            fail(Resource.getText(Bundle.NAME, "assert.message", condition, false, message));
         }
     }
 
-    /**
-     * <p>fail.</p>
-     *
-     * @param message a {@link java.lang.String} object.
-     * @param realCause a {@link java.lang.Throwable} object.
-     */
+    public static void assertFalse(boolean condition) {
+        assertFalse(condition, "");
+    }
+
     public static void fail(String message, Throwable realCause) {
         AssertionError assertionError = new AssertionError(message);
         assertionError.initCause(realCause);
         throw assertionError;
     }
 
-    /**
-     * <p>fail.</p>
-     *
-     * @param message a {@link java.lang.String} object.
-     */
     public static void fail(String message) {
         throw new AssertionError(message);
     }
 
-    /**
-     * <p>fail.</p>
-     */
     public static void fail() {
-        fail(null);
+        fail("");
     }
 
-    /**
-     * <p>assertEquals.</p>
-     *
-     * @param actual a {@link java.lang.Object} object.
-     * @param expected a {@link java.lang.Object} object.
-     */
-    public static void assertEquals(Object actual, Object expected) {
-        if (null == expected && null == actual) {
-            return;
-        }
-        if (null != expected) {
-            if (expected.getClass().isArray()) {
-                assertArrayEquals(actual, expected);
-                return;
-            } else if (expected.equals(actual)) {
-                return;
+    public static void assertEquals(Object actual, Object expected, String message) {
+        if (null != expected || null != actual) {
+            if (null != expected) {
+                if (expected.getClass().isArray()) {
+                    assertArrayEquals(actual, expected, message);
+                    return;
+                } else if (expected.equals(actual)) {
+                    return;
+                }
             }
+            fail(Resource.getText(Bundle.NAME, "assert.message", actual, expected, message));
         }
-        failNotEquals(actual, expected);
     }
 
-    private static void assertArrayEquals(Object actual, Object expected) {
+    private static void assertArrayEquals(Object actual, Object expected, String message) {
         if (actual.getClass().isArray()) {
-            int actualLength = Array.getLength(actual);
             int expectedLength = Array.getLength(expected);
-            if (expectedLength == actualLength) {
+            if (expectedLength == Array.getLength(actual)) {
                 for (int i = 0; i < expectedLength; i++) {
                     Object _actual = Array.get(actual, i);
                     Object _expected = Array.get(expected, i);
-                    assertEquals(_actual, _expected);
+                    try {
+                        assertEquals(_actual, _expected);
+                    } catch (AssertionError ae) {
+                        fail(Resource.getText(Bundle.NAME, "assert.message", actual, expected, message));
+                    }
                 }
                 return;
-            } else {
-                failNotEquals(actualLength, expectedLength);
             }
         }
-        failNotEquals(actual, expected);
+        fail(Resource.getText(Bundle.NAME, "assert.message", actual, expected, message));
     }
 
-    /**
-     * <p>assertEquals.</p>
-     *
-     * @param actual a double.
-     * @param expected a double.
-     * @param delta a double.
-     */
-    public static void assertEquals(double actual, double expected, double delta) {
+    public static void assertEquals(Object actual, Object expected) {
+        assertEquals(actual, expected, "");
+    }
+
+    public static void assertEquals(String actual, String expected, String message) {
+        assertEquals((Object) actual, (Object) expected, message);
+    }
+
+    public static void assertEquals(String actual, String expected) {
+        assertEquals(actual, expected, "");
+    }
+
+    public static void assertEquals(double actual, double expected, double delta, String message) {
         if (Double.isInfinite(expected)) {
             if (!(expected == actual)) {
-                failNotEquals(actual, expected);
+                fail(Resource.getText(Bundle.NAME, "assert.message", actual, expected, message));
             }
         } else if (!(Math.abs(expected - actual) <= delta)) {
-            failNotEquals(actual, expected);
+            fail(Resource.getText(Bundle.NAME, "assert.message", actual, expected, message));
         }
     }
 
-    /**
-     * <p>assertEquals.</p>
-     *
-     * @param actual a float.
-     * @param expected a float.
-     * @param delta a float.
-     */
-    public static void assertEquals(float actual, float expected, float delta) {
+    public static void assertEquals(double actual, double expected, double delta) {
+        assertEquals(actual, expected, delta, "");
+    }
+
+    public static void assertEquals(float actual, float expected, float delta, String message) {
         if (Float.isInfinite(expected)) {
             if (!(expected == actual)) {
-                failNotEquals(actual, expected);
+                fail(Resource.getText(Bundle.NAME, "assert.message", actual, expected, message));
             }
         } else if (!(Math.abs(expected - actual) <= delta)) {
-            failNotEquals(actual, expected);
+            fail(Resource.getText(Bundle.NAME, "assert.message", actual, expected, message));
         }
     }
 
-    /**
-     * <p>assertEquals.</p>
-     *
-     * @param actual a long.
-     * @param expected a long.
-     */
+    public static void assertEquals(float actual, float expected, float delta) {
+        assertEquals(actual, expected, delta, "");
+    }
+
+    public static void assertEquals(long actual, long expected, String message) {
+        assertEquals(Long.valueOf(actual), Long.valueOf(expected), message);
+    }
+
     public static void assertEquals(long actual, long expected) {
-        assertEquals(Long.valueOf(actual), Long.valueOf(expected));
+        assertEquals(actual, expected, "");
     }
 
-    /**
-     * <p>assertEquals.</p>
-     *
-     * @param actual a boolean.
-     * @param expected a boolean.
-     */
+    public static void assertEquals(boolean actual, boolean expected, String message) {
+        assertEquals(Boolean.valueOf(actual), Boolean.valueOf(expected), message);
+    }
+
     public static void assertEquals(boolean actual, boolean expected) {
-        assertEquals(Boolean.valueOf(actual), Boolean.valueOf(expected));
+        assertEquals(actual, expected, "");
     }
 
-    /**
-     * <p>assertEquals.</p>
-     *
-     * @param actual a byte.
-     * @param expected a byte.
-     */
+    public static void assertEquals(byte actual, byte expected, String message) {
+        assertEquals(Byte.valueOf(actual), Byte.valueOf(expected), message);
+    }
+
     public static void assertEquals(byte actual, byte expected) {
-        assertEquals(Byte.valueOf(actual), Byte.valueOf(expected));
+        assertEquals(actual, expected, "");
     }
 
-    /**
-     * <p>assertEquals.</p>
-     *
-     * @param actual a char.
-     * @param expected a char.
-     */
+    public static void assertEquals(char actual, char expected, String message) {
+        assertEquals(Character.valueOf(actual), Character.valueOf(expected), message);
+    }
+
     public static void assertEquals(char actual, char expected) {
-        assertEquals(Character.valueOf(actual), Character.valueOf(expected));
+        assertEquals(actual, expected, "");
     }
 
-    /**
-     * <p>assertEquals.</p>
-     *
-     * @param actual a short.
-     * @param expected a short.
-     */
+    public static void assertEquals(short actual, short expected, String message) {
+        assertEquals(Short.valueOf(actual), Short.valueOf(expected), message);
+    }
+
     public static void assertEquals(short actual, short expected) {
-        assertEquals(Short.valueOf(actual), Short.valueOf(expected));
+        assertEquals(actual, expected, "");
     }
 
-    /**
-     * <p>assertEquals.</p>
-     *
-     * @param actual a int.
-     * @param expected a int.
-     */
+    public static void assertEquals(int actual, int expected, String message) {
+        assertEquals(Integer.valueOf(actual), Integer.valueOf(expected), message);
+    }
+
     public static void assertEquals(int actual, int expected) {
-        assertEquals(Integer.valueOf(actual), Integer.valueOf(expected));
+        assertEquals(actual, expected, "");
     }
 
-    /**
-     * <p>assertNotNull.</p>
-     *
-     * @param object a {@link java.lang.Object} object.
-     */
     public static void assertNotNull(Object object) {
-        assertTrue(null != object);
+        assertNotNull(object, "");
     }
 
-    /**
-     * <p>assertNull.</p>
-     *
-     * @param object a {@link java.lang.Object} object.
-     */
+    public static void assertNotNull(Object object, String message) {
+        if (null == object) {
+            fail(Resource.getText(Bundle.NAME, "assert.message", object, "not null", message));
+        }
+    }
+
     public static void assertNull(Object object) {
-        assertTrue(null != object);
+        assertNull(object, "");
     }
 
-    private static void failNotEquals(Object actual, Object expected) {
-        fail(format(actual, expected));
-    }
-
-    private static String format(Object actual, Object expected) {
-        return Resource.getText(Bundle.NAME, "message.assert.equals", expected, actual);
-    }
-
-    /**
-     * <p>assertEquals.</p>
-     *
-     * @param actual a {@link java.util.Collection} object.
-     * @param expected a {@link java.util.Collection} object.
-     */
-    public static void assertEquals(Collection actual, Collection expected) {
-        if (actual == expected) {
-            return;
-        }
-        if (null == actual || null == expected) {
-            fail(Resource.getText(Bundle.NAME, "message.assert.collection", expected, actual));
-        } else {
-            assertEquals(actual.size(), expected.size());
-            Iterator<?> actualIterator = actual.iterator();
-            Iterator<?> expectedIterator = expected.iterator();
-            while (actualIterator.hasNext() && expectedIterator.hasNext()) {
-                assertEquals(actualIterator.next(), expectedIterator.next());
-            }
+    public static void assertNull(Object object, String message) {
+        if (null != object) {
+            fail(Resource.getText(Bundle.NAME, "assert.message", object, null, message));
         }
     }
 
-    /**
-     * <p>assertEquals.</p>
-     *
-     * @param actual an array of {@link java.lang.Object} objects.
-     * @param expected an array of {@link java.lang.Object} objects.
-     */
-    public static void assertEquals(Object[] actual, Object[] expected) {
-        if (actual == expected) {
-            return;
-        }
-        if (null == actual || null == expected) {
-            fail(Resource.getText(Bundle.NAME, "assert.message.arrays", Arrays.toString(expected), Arrays.toString(actual)));
-        }
-        assertEquals(Arrays.asList(actual), Arrays.asList(expected));
-    }
-
-    /**
-     * <p>assertEqualsNoOrder.</p>
-     *
-     * @param actual an array of {@link java.lang.Object} objects.
-     * @param expected an array of {@link java.lang.Object} objects.
-     */
-    public static void assertEqualsNoOrder(Object[] actual, Object[] expected) {
-        if (actual == expected) {
-            return;
-        }
-        if (null == actual || null == expected) {
-            fail(Resource.getText(Bundle.NAME, "assert.message.arrays", Arrays.toString(expected), Arrays.toString(actual)));
-        } else if (actual.length != expected.length) {
-            fail(Resource.getText(Bundle.NAME, "assert.message.arrays.size", actual.length, expected.length));
-        } else {
-            List<Object> actualCollection = new ArrayList<Object>();
-            Collections.addAll(actualCollection, actual);
-            for (Object o : expected) {
-                actualCollection.remove(o);
-            }
-            if (actualCollection.size() != 0) {
-                fail(Resource.getText(Bundle.NAME, "assert.message.arrays", Arrays.toString(expected), Arrays.toString(actual)));
-            }
+    public static void assertSame(Object actual, Object expected, String message) {
+        if (expected != actual) {
+            failNotSame(actual, expected, message);
         }
     }
 
-    /**
-     * <p>assertEquals.</p>
-     *
-     * @param actual an array of byte.
-     * @param expected an array of byte.
-     */
-    public static void assertEquals(final byte[] actual, final byte[] expected) {
+    public static void assertSame(Object actual, Object expected) {
+        assertSame(actual, expected, "");
+    }
+
+    public static void assertNotSame(Object actual, Object expected, String message) {
         if (expected == actual) {
-            return;
+            failSame(actual, expected, message);
         }
-        if (null == actual || null == expected) {
-            fail(Resource.getText(Bundle.NAME, "message.assert.arrays", Arrays.toString(expected), Arrays.toString(actual)));
-        } else {
-            assertEquals(expected.length, actual.length);
-            for (int i = 0; i < expected.length; i++) {
-                if (expected[i] != actual[i]) {
-                    fail(Resource.getText(Bundle.NAME, "message.assert.equals", expected[i], actual[i]));
+    }
+
+    public static void assertNotSame(Object actual, Object expected) {
+        assertNotSame(actual, expected, "");
+    }
+
+    private static void failSame(Object actual, Object expected, String message) {
+        fail(Resource.getText(Bundle.NAME, "assert.message", actual, expected, message));
+    }
+
+    private static void failNotSame(Object actual, Object expected, String message) {
+        fail(Resource.getText(Bundle.NAME, "assert.message", actual, expected, message));
+    }
+
+    public static void assertEquals(Collection actual, Collection expected) {
+        assertEquals(actual, expected, "");
+    }
+
+    public static void assertEquals(Collection actual, Collection expected, String message) {
+        if (actual != expected) {
+            if (actual == null || expected == null) {
+                fail(Resource.getText(Bundle.NAME, "assert.message", actual, expected, message));
+            } else {
+                Iterator actualIterator = actual.iterator();
+                Iterator expectedIterator = expected.iterator();
+                while (actualIterator.hasNext() && expectedIterator.hasNext()) {
+                    Object e = expectedIterator.next();
+                    Object a = actualIterator.next();
+                    assertEquals(a, e, message);
                 }
             }
         }
     }
 
-    /**
-     * <p>assertEquals.</p>
-     *
-     * @param actual a {@link java.util.Set} object.
-     * @param expected a {@link java.util.Set} object.
-     */
-    public static void assertEquals(Set<?> actual, Set<?> expected) {
-        if (actual == expected) {
-            return;
-        }
-        if (null == actual || null == expected) {
-            fail(Resource.getText(Bundle.NAME, "message.assert.sets", expected, actual));
-        } else {
-            if (!actual.equals(expected)) {
-                fail(Resource.getText(Bundle.NAME, "message.assert.sets.differ", expected, actual));
+    public static void assertEquals(Object[] actual, Object[] expected, String message) {
+        if (actual != expected) {
+            if (null == actual || null == expected) {
+                fail(Resource.getText(Bundle.NAME, "assert.message", Arrays.toString(expected), Arrays.toString(actual), message));
+            } else {
+                assertEquals(Arrays.asList(actual), Arrays.asList(expected), message);
             }
         }
     }
 
-    /**
-     * <p>assertEquals.</p>
-     *
-     * @param actual a {@link java.util.Map} object.
-     * @param expected a {@link java.util.Map} object.
-     */
-    public static void assertEquals(Map<?, ?> actual, Map<?, ?> expected) {
-        if (actual == expected) {
-            return;
+    public static void assertEqualsNoOrder(Object[] actual, Object[] expected, String message) {
+        if (actual != expected) {
+            if (null == actual || null == expected) {
+                fail(Resource.getText(Bundle.NAME, "assert.message", Arrays.toString(expected), Arrays.toString(actual), message));
+            } else {
+                List<Object> actualCollection = new ArrayList<Object>();
+                Collections.addAll(actualCollection, actual);
+                List<Object> expectedCollection = new ArrayList<Object>();
+                Collections.addAll(expectedCollection, expected);
+                actualCollection.removeAll(expectedCollection);
+                if (actualCollection.size() != 0) {
+                    fail(Resource.getText(Bundle.NAME, "assert.message", Arrays.toString(expected), Arrays.toString(actual), message));
+                }
+            }
         }
-        if (null == actual  || null == expected) {
-            fail(Resource.getText(Bundle.NAME, "message.assert.maps", expected, actual));
-        } else {
-            if (!actual.equals(expected)) {
-                fail(Resource.getText(Bundle.NAME, "message.assert.maps.differ", expected, actual));
+    }
+
+    public static void assertEquals(Object[] actual, Object[] expected) {
+        assertEquals(actual, expected, "");
+    }
+
+    public static void assertEqualsNoOrder(Object[] actual, Object[] expected) {
+        assertEqualsNoOrder(actual, expected, "");
+    }
+
+    public static void assertEquals(byte[] actual, byte[] expected) {
+        assertEquals(actual, expected, "");
+    }
+
+    public static void assertEquals(byte[] actual, byte[] expected, String message) {
+        if (expected != actual) {
+            if (null == actual || null == expected) {
+                fail(Resource.getText(Bundle.NAME, "assert.message", Arrays.toString(expected), Arrays.toString(actual), message));
+            } else {
+                for (int i = 0; i < expected.length; i++) {
+                    if (expected[i] != actual[i]) {
+                        fail(Resource.getText(Bundle.NAME, "assert.message", expected[i], actual[i], message));
+                    }
+                }
+            }
+        }
+    }
+
+    public static void assertEquals(Set actual, Set expected) {
+        assertEquals(actual, expected, "");
+    }
+
+    public static void assertEquals(Set actual, Set expected, String message) {
+        if (actual != expected) {
+            if (null == actual || null == expected) {
+                fail(Resource.getText(Bundle.NAME, "assert.message", actual, expected, message));
+            } else if (!actual.equals(expected)) {
+                fail(Resource.getText(Bundle.NAME, "assert.message", actual, expected, message));
+            }
+        }
+    }
+
+    public static void assertEquals(Map actual, Map expected) {
+        assertEquals(actual, expected, "");
+    }
+
+    public static void assertEquals(Map actual, Map expected, String message) {
+        if (actual != expected) {
+            if (null == actual || null == expected) {
+                fail(Resource.getText(Bundle.NAME, "assert.message", actual, expected, message));
+            } else if (!actual.equals(expected)) {
+                fail(Resource.getText(Bundle.NAME, "assert.message", actual, expected, message));
             }
         }
     }
