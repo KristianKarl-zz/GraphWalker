@@ -237,7 +237,7 @@ public final class Assert {
     }
 
     private static void failSame(Object actual, Object expected, String message) {
-        fail(Resource.getText(Bundle.NAME, "assert.message", actual, expected, message));
+        fail(Resource.getText(Bundle.NAME, "assert.same.message", actual, expected, message));
     }
 
     private static void failNotSame(Object actual, Object expected, String message) {
