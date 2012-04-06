@@ -65,21 +65,33 @@ public class MachineImpl implements Machine {
     /**
      * {@inheritDoc}
      */
-    public void afterGroup() {
+    public void beforeGroup() {
         for (Model model : getConfiguration().getModels()) {
             if (model.hasImplementation()) {
-                Reflection.execute(model.getImplementation(), AfterGroup.class);
+                Reflection.execute(model.getImplementation(), BeforeGroup.class);
             }
+        }
+    }
+
+    public void beforeModel() {
+        if (getCurrentModel().hasImplementation()) {
+            Reflection.execute(getCurrentModel().getImplementation(), BeforeModel.class);
+        }
+    }
+
+    public void afterModel() {
+        if (getCurrentModel().hasImplementation()) {
+            Reflection.execute(getCurrentModel().getImplementation(), AfterModel.class);
         }
     }
 
     /**
      * {@inheritDoc}
      */
-    public void beforeGroup() {
+    public void afterGroup() {
         for (Model model : getConfiguration().getModels()) {
             if (model.hasImplementation()) {
-                Reflection.execute(model.getImplementation(), BeforeGroup.class);
+                Reflection.execute(model.getImplementation(), AfterGroup.class);
             }
         }
     }
@@ -135,10 +147,8 @@ public class MachineImpl implements Machine {
     public void setCurrentModel(Model model) {
         myCurrentModel = model;
         if (ModelStatus.NOT_EXECUTED == myCurrentModel.getModelStatus()) {
+            beforeModel();
             myCurrentModel.setModelStatus(ModelStatus.EXECUTING);
-            if (myCurrentModel.hasImplementation()) {
-                Reflection.execute(myCurrentModel.getImplementation(), BeforeModel.class);
-            }
         }
     }
 
@@ -171,9 +181,7 @@ public class MachineImpl implements Machine {
             return true;
         } else {
             getCurrentModel().setModelStatus(ModelStatus.COMPLETED);
-            if (getCurrentModel().hasImplementation()) {
-                Reflection.execute(getCurrentModel().getImplementation(), AfterModel.class);
-            }
+            afterModel();
         }
         // and finally we go through all the models in order to find any other step we can take
         for (Model model : getConfiguration().getModels()) {
@@ -282,9 +290,7 @@ public class MachineImpl implements Machine {
     private void switchModel(String modelId) {
         if (!hasModelNextStep(getCurrentModel(), getCurrentElement())) {
             getCurrentModel().setModelStatus(ModelStatus.COMPLETED);
-            if (getCurrentModel().hasImplementation()) {
-                Reflection.execute(getCurrentModel().getImplementation(), AfterModel.class);
-            }
+            afterModel();
         }
         setCurrentModel(getConfiguration().getModel(modelId));
         setCurrentElement(getCurrentModel().getStartVertex());

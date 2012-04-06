@@ -39,9 +39,8 @@
                     <y:BorderStyle color="#000000" type="line" width="1.0"/>
                     <y:NodeLabel alignment="center" autoSizePolicy="content" borderDistance="0.0" fontFamily="Dialog"
                                  fontSize="13" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false"
-                                 height="19.310546875" modelName="internal" modelPosition="c" textColor="#000000"
-                                 visible="true" width="44.88525390625" x="23.057373046875" y="11.3447265625">v_stop
-                    </y:NodeLabel>
+                                 hasText="false" height="4.0" modelName="internal" modelPosition="c" textColor="#000000"
+                                 visible="true" width="4.0" x="43.5" y="19.0"/>
                     <y:Shape type="rectangle"/>
                 </y:ShapeNode>
             </data>

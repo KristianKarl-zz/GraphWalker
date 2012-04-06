@@ -34,55 +34,53 @@ import org.junit.Test;
 @GraphWalker(id = "AnnotationTest", model = "models/annotationModel.graphml")
 public class AnnotationTest {
 
-    private static boolean beforeGroupExecuted = false;
-    private static boolean beforeModelExecuted = false;
-    private static boolean afterModelExecuted = false;
-    private static boolean afterGroupExecuted = false;
+    private static boolean isBeforeGroupExecuted = false;
+    private static boolean isBeforeModelExecuted = false;
+    private static boolean isAfterModelExecuted = false;
+    private static boolean isAfterGroupExecuted = false;
 
     @Test
     public void executeTest() {
-        GraphWalkerExecutor executor = new GraphWalkerExecutor(GraphWalkerFactory.create(ConfigurationFactory.create(getClass())));
-        executor.run();
-        Assert.assertTrue(beforeGroupExecuted);
-        Assert.assertTrue(beforeModelExecuted);
-        Assert.assertTrue(afterModelExecuted);
-        Assert.assertTrue(afterGroupExecuted);
+        new GraphWalkerExecutor(GraphWalkerFactory.create(ConfigurationFactory.create(getClass()))).run();
+        Assert.assertTrue(isBeforeGroupExecuted);
+        Assert.assertTrue(isBeforeModelExecuted);
+        Assert.assertTrue(isAfterModelExecuted);
+        Assert.assertTrue(isAfterGroupExecuted);
     }
 
     @BeforeGroup
     public void beforeGroup() {
-        Assert.assertFalse(beforeGroupExecuted);
-        Assert.assertFalse(beforeModelExecuted);
-        Assert.assertFalse(afterModelExecuted);
-        Assert.assertFalse(afterGroupExecuted);
-        beforeGroupExecuted = true;
+        Assert.assertFalse(isBeforeGroupExecuted);
+        Assert.assertFalse(isBeforeModelExecuted);
+        Assert.assertFalse(isAfterModelExecuted);
+        Assert.assertFalse(isAfterGroupExecuted);
+        isBeforeGroupExecuted = true;
     }
 
     @BeforeModel
     public void beforeModel() {
-        Assert.assertTrue(beforeGroupExecuted);
-        Assert.assertFalse(beforeModelExecuted);
-        Assert.assertFalse(afterModelExecuted);
-        Assert.assertFalse(afterGroupExecuted);
-        beforeModelExecuted = true;
+        Assert.assertTrue(isBeforeGroupExecuted);
+        Assert.assertFalse(isBeforeModelExecuted);
+        Assert.assertFalse(isAfterModelExecuted);
+        Assert.assertFalse(isAfterGroupExecuted);
+        isBeforeModelExecuted = true;
     }
 
     @AfterModel
     public void afterModel() {
-        Assert.assertTrue(beforeGroupExecuted);
-        Assert.assertTrue(beforeModelExecuted);
-        Assert.assertFalse(afterModelExecuted);
-        Assert.assertFalse(afterGroupExecuted);
-        afterModelExecuted = true;
+        Assert.assertTrue(isBeforeGroupExecuted);
+        Assert.assertTrue(isBeforeModelExecuted);
+        Assert.assertFalse(isAfterModelExecuted);
+        Assert.assertFalse(isAfterGroupExecuted);
+        isAfterModelExecuted = true;
     }
 
     @AfterGroup
     public void afterGroup() {
-        Assert.assertTrue(beforeGroupExecuted);
-        Assert.assertTrue(beforeModelExecuted);
-        Assert.assertTrue(afterModelExecuted);
-        Assert.assertFalse(afterGroupExecuted);
-        afterGroupExecuted = true;
+        Assert.assertTrue(isBeforeGroupExecuted);
+        Assert.assertTrue(isBeforeModelExecuted);
+        Assert.assertTrue(isAfterModelExecuted);
+        Assert.assertFalse(isAfterGroupExecuted);
+        isAfterGroupExecuted = true;
     }
-
 }

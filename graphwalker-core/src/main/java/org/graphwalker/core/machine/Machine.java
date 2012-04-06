@@ -39,15 +39,26 @@ import java.util.List;
  */
 public interface Machine {
 
-    /**
-     * <p>afterGroup.</p>
-     */
-    void afterGroup();
 
     /**
      * <p>beforeGroup.</p>
      */
     void beforeGroup();
+
+    /**
+     * <p>beforeModel.</p>
+     */
+    void beforeModel();
+
+    /**
+     * <p>afterModel.</p>
+     */
+    void afterModel();
+
+    /**
+     * <p>afterGroup.</p>
+     */
+    void afterGroup();
 
     /**
      * <p>getConfiguration.</p>
