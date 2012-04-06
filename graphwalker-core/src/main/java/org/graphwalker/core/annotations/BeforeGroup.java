@@ -30,12 +30,12 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * <p>After class.</p>
+ * <p>Before class.</p>
  *
  * @author nilols
  * @version $Id: $
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(java.lang.annotation.ElementType.METHOD)
-public @interface After {
+public @interface BeforeGroup {
 }

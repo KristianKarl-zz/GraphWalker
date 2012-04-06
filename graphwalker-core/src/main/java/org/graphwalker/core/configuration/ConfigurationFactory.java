@@ -44,6 +44,7 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Unmarshaller;
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -57,6 +58,12 @@ public class ConfigurationFactory {
     private ConfigurationFactory() {
     }
 
+    public static Configuration create(Class<?> clazz) {
+        List<Class<?>> clazzes = new ArrayList<Class<?>>();
+        clazzes.add(clazz);
+        return create(clazzes);
+    }
+
     /**
      * <p>create.</p>
      *
@@ -65,7 +72,7 @@ public class ConfigurationFactory {
      */
     public static Configuration create(List<Class<?>> clazzes) {
         Configuration configuration = new ConfigurationImpl();
-        for (Class<?> clazz: clazzes) {
+        for (Class<?> clazz : clazzes) {
             GraphWalker metadata = clazz.getAnnotation(GraphWalker.class);
             if (null != metadata) {
                 Model model = new GraphMLModelFactory().create(metadata.id(), metadata.model());
@@ -107,8 +114,8 @@ public class ConfigurationFactory {
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance(ConfigurationFactory.class.getPackage().getName());
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-            JAXBElement jaxbElement = (JAXBElement)unmarshaller.unmarshal(new FileInputStream(file));
-            return (GraphWalkerType)jaxbElement.getValue();
+            JAXBElement jaxbElement = (JAXBElement) unmarshaller.unmarshal(new FileInputStream(file));
+            return (GraphWalkerType) jaxbElement.getValue();
         } catch (Exception e) {
             throw new ConfigurationException(e);
         }
@@ -121,11 +128,11 @@ public class ConfigurationFactory {
     }
 
     private static Configuration parse(Configuration configuration, GraphWalkerType graphWalkerType) {
-        for (ModelType modelType: graphWalkerType.getModels().getModel()) {
+        for (ModelType modelType : graphWalkerType.getModels().getModel()) {
             configuration.addModel(parse(configuration, modelType));
         }
         if (null != graphWalkerType.getDefaultModelId()) {
-            ModelType modelType = (ModelType)graphWalkerType.getDefaultModelId();
+            ModelType modelType = (ModelType) graphWalkerType.getDefaultModelId();
             configuration.setDefaultModelId(modelType.getId());
         }
         String scriptLanguage = graphWalkerType.getScriptLanguage();

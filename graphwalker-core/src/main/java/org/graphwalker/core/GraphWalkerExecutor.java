@@ -48,7 +48,7 @@ public class GraphWalkerExecutor implements Runnable {
      * {@inheritDoc}
      */
     public void run() {
-        myGraphWalker.before();
+        myGraphWalker.beforeGroup();
         try {
             while (myGraphWalker.hasNextStep()) {
                 myGraphWalker.getNextStep();
@@ -56,6 +56,6 @@ public class GraphWalkerExecutor implements Runnable {
         } catch (Throwable throwable) {
             // ignore exception
         }
-        myGraphWalker.after();
+        myGraphWalker.afterGroup();
     }
 }

@@ -23,30 +23,13 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core.machine;
+package org.graphwalker.core.annotations;
 
-import org.graphwalker.core.annotations.AfterModel;
-import org.graphwalker.core.model.ModelStatus;
-import org.graphwalker.core.utils.Reflection;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-/**
- * <p>FailFastStrategy class.</p>
- *
- * @author nilols
- * @version $Id: $
- */
-public class FailFastStrategy extends AbstractStrategy {
-
-    /**
-     * {@inheritDoc}
-     */
-    public void handleException(Machine machine, Throwable throwable) {
-        addException(machine.getCurrentModel(), throwable);
-        machine.getCurrentModel().setModelStatus(ModelStatus.FAILED);
-        if (machine.getCurrentModel().hasImplementation()) {
-            Reflection.execute(machine.getCurrentModel().getImplementation(), AfterModel.class);
-        }
-        throw new MachineException(throwable);
-    }
-
+@Retention(RetentionPolicy.RUNTIME)
+@Target(java.lang.annotation.ElementType.METHOD)
+public @interface BeforeModel {
 }

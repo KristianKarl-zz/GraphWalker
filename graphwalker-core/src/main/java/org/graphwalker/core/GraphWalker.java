@@ -40,25 +40,29 @@ import java.util.List;
 public interface GraphWalker {
 
     /**
-     * <p>after.</p>
+     * <p>afterGroup.</p>
      */
-    void after();
+    void afterGroup();
+
     /**
-     * <p>before.</p>
+     * <p>beforeGroup.</p>
      */
-    void before();
+    void beforeGroup();
+
     /**
      * <p>hasNextStep.</p>
      *
      * @return a boolean.
      */
     boolean hasNextStep();
+
     /**
      * <p>getNextStep.</p>
      *
      * @return a {@link org.graphwalker.core.model.Element} object.
      */
     Element getNextStep();
+
     /**
      * <p>hasExceptions.</p>
      *
@@ -66,6 +70,7 @@ public interface GraphWalker {
      * @return a boolean.
      */
     boolean hasExceptions(Model model);
+
     /**
      * <p>getExceptions.</p>
      *
@@ -73,6 +78,7 @@ public interface GraphWalker {
      * @return a {@link java.util.List} object.
      */
     List<Throwable> getExceptions(Model model);
+
     /**
      * <p>getConfiguration.</p>
      *

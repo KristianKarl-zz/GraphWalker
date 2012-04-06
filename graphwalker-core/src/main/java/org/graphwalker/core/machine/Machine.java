@@ -40,31 +40,36 @@ import java.util.List;
 public interface Machine {
 
     /**
-     * <p>after.</p>
+     * <p>afterGroup.</p>
      */
-    void after();
+    void afterGroup();
+
     /**
-     * <p>before.</p>
+     * <p>beforeGroup.</p>
      */
-    void before();
+    void beforeGroup();
+
     /**
      * <p>getConfiguration.</p>
      *
      * @return a {@link org.graphwalker.core.configuration.Configuration} object.
      */
     Configuration getConfiguration();
+
     /**
      * <p>hasNextStep.</p>
      *
      * @return a boolean.
      */
     boolean hasNextStep();
+
     /**
      * <p>getNextStep.</p>
      *
      * @return a {@link org.graphwalker.core.model.Element} object.
      */
     Element getNextStep();
+
     /**
      * <p>getPossibleElements.</p>
      *
@@ -72,30 +77,35 @@ public interface Machine {
      * @return a {@link java.util.List} object.
      */
     List<Element> getPossibleElements(Element modelElement);
+
     /**
      * <p>getCurrentElement.</p>
      *
      * @return a {@link org.graphwalker.core.model.Element} object.
      */
     Element getCurrentElement();
+
     /**
      * <p>setCurrentElement.</p>
      *
      * @param element a {@link org.graphwalker.core.model.Element} object.
      */
     void setCurrentElement(Element element);
+
     /**
      * <p>getCurrentModel.</p>
      *
      * @return a {@link org.graphwalker.core.model.Model} object.
      */
     Model getCurrentModel();
+
     /**
      * <p>setCurrentModel.</p>
      *
      * @param model a {@link org.graphwalker.core.model.Model} object.
      */
     void setCurrentModel(Model model);
+
     /**
      * <p>getExceptionStrategy.</p>
      *
