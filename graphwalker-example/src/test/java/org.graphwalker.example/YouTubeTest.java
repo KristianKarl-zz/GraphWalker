@@ -1,6 +1,6 @@
 package org.graphwalker.example;
 
-import org.graphwalker.core.annotations.Before;
+import org.graphwalker.core.annotations.BeforeModel;
 import org.graphwalker.core.annotations.GraphWalker;
 import org.graphwalker.core.utils.Assert;
 import org.graphwalker.example.base.SeleniumBasedTest;
@@ -18,7 +18,7 @@ public class YouTubeTest extends SeleniumBasedTest {
     private String myCurrentVideoTitle = null;
     private WebElement myCurrentGuideElement = null;
 
-    @Before
+    @BeforeModel
     public void assertTestPreconditions() {
         Assert.assertNotNull(myStartPage);
     }
