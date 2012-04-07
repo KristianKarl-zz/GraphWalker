@@ -146,7 +146,7 @@ public class MachineImpl implements Machine {
      */
     public void setCurrentModel(Model model) {
         myCurrentModel = model;
-        if (ModelStatus.NOT_EXECUTED == myCurrentModel.getModelStatus()) {
+        if (isModelStatus(myCurrentModel, ModelStatus.NOT_EXECUTED)) {
             beforeModel();
             myCurrentModel.setModelStatus(ModelStatus.EXECUTING);
         }
@@ -179,7 +179,7 @@ public class MachineImpl implements Machine {
         // next we check if the current model has any more steps to take
         if (hasModelNextStep(getCurrentModel(), getCurrentElement())) {
             return true;
-        } else {
+        } else if (isModelStatus(getCurrentModel(), ModelStatus.EXECUTING)) {
             getCurrentModel().setModelStatus(ModelStatus.COMPLETED);
             afterModel();
         }
@@ -209,7 +209,7 @@ public class MachineImpl implements Machine {
     }
 
     private boolean hasModelNextStep(Model model, Element element) {
-        if (!ModelStatus.FAILED.equals(model.getModelStatus()) && !ModelStatus.COMPLETED.equals(model.getModelStatus())) {
+        if (!isModelStatus(model, ModelStatus.FAILED) && !isModelStatus(model, ModelStatus.COMPLETED)) {
             PathGenerator pathGenerator = getPathGenerator(model);
             StopCondition stopCondition = getStopCondition(pathGenerator);
             return !stopCondition.isFulfilled(model, element);
@@ -287,17 +287,21 @@ public class MachineImpl implements Machine {
     }
 
     private boolean hasExecutableState(Model model) {
-        return ModelStatus.NOT_EXECUTED == model.getModelStatus() || ModelStatus.EXECUTING == model.getModelStatus();
+        return isModelStatus(model, ModelStatus.NOT_EXECUTED) || isModelStatus(model, ModelStatus.EXECUTING);
     }
 
     private void switchModel(String modelId) {
-        if (!hasModelNextStep(getCurrentModel(), getCurrentElement())) {
+        if (!hasModelNextStep(getCurrentModel(), getCurrentElement()) && isModelStatus(getCurrentModel(), ModelStatus.EXECUTING)) {
             getCurrentModel().setModelStatus(ModelStatus.COMPLETED);
             afterModel();
         }
         setCurrentModel(getConfiguration().getModel(modelId));
         setCurrentElement(getCurrentModel().getStartVertex());
         getCurrentElement().markAsVisited();
+    }
+
+    private boolean isModelStatus(Model model, ModelStatus status) {
+        return status.equals(model.getModelStatus());
     }
 
     private PathGenerator getPathGenerator(Model model) {
