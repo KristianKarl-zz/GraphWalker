@@ -42,7 +42,6 @@ public class FailFastStrategy extends AbstractStrategy {
         addException(machine.getCurrentModel(), throwable);
         machine.getCurrentModel().setModelStatus(ModelStatus.FAILED);
         machine.afterModel();
-        throw new MachineException(throwable);
     }
 
 }

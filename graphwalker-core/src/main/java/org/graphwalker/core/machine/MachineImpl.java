@@ -209,9 +209,12 @@ public class MachineImpl implements Machine {
     }
 
     private boolean hasModelNextStep(Model model, Element element) {
-        PathGenerator pathGenerator = getPathGenerator(model);
-        StopCondition stopCondition = getStopCondition(pathGenerator);
-        return !stopCondition.isFulfilled(model, element);
+        if (!ModelStatus.FAILED.equals(model.getModelStatus()) && !ModelStatus.COMPLETED.equals(model.getModelStatus())) {
+            PathGenerator pathGenerator = getPathGenerator(model);
+            StopCondition stopCondition = getStopCondition(pathGenerator);
+            return !stopCondition.isFulfilled(model, element);
+        }
+        return false;
     }
 
     /**

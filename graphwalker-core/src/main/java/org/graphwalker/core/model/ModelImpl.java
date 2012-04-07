@@ -30,6 +30,7 @@ import org.graphwalker.core.algorithms.DepthFirstSearch;
 import org.graphwalker.core.algorithms.FloydWarshall;
 import org.graphwalker.core.generators.PathGenerator;
 import org.graphwalker.core.machine.ExceptionStrategy;
+import org.graphwalker.core.machine.FailFastStrategy;
 import org.graphwalker.core.utils.Resource;
 
 import java.util.*;
@@ -460,6 +461,9 @@ public class ModelImpl implements Model {
      * @return a {@link org.graphwalker.core.machine.ExceptionStrategy} object.
      */
     public ExceptionStrategy getExceptionStrategy() {
+        if (null == myExceptionStrategy) {
+            myExceptionStrategy = new FailFastStrategy();
+        }
         return myExceptionStrategy;
     }
 
