@@ -38,25 +38,25 @@ public class ExceptionTest {
     private static boolean castAfterModelException = false;
     private static boolean castAfterGroupException = false;
 
-    @Test(expected = Exception.class)
+    @Test
     public void executeBeforeGroupTest() {
         exceptionSetup(true, false, false, false);
         new GraphWalkerExecutor(GraphWalkerFactory.create(ConfigurationFactory.create(getClass()))).run();
     }
 
-    @Test(expected = Exception.class)
+    @Test
     public void executeBeforeModelTest() {
         exceptionSetup(false, true, false, false);
         new GraphWalkerExecutor(GraphWalkerFactory.create(ConfigurationFactory.create(getClass()))).run();
     }
 
-    @Test(expected = Exception.class)
+    @Test
     public void executeAfterModelTest() {
         exceptionSetup(false, false, true, false);
         new GraphWalkerExecutor(GraphWalkerFactory.create(ConfigurationFactory.create(getClass()))).run();
     }
 
-    @Test(expected = Exception.class)
+    @Test
     public void executeAfterGroupTest() {
         exceptionSetup(false, false, false, true);
         new GraphWalkerExecutor(GraphWalkerFactory.create(ConfigurationFactory.create(getClass()))).run();
