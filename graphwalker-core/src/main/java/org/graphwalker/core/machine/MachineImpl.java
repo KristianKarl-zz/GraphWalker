@@ -72,10 +72,16 @@ public class MachineImpl implements Machine {
         }
     }
 
+    /**
+     * <p>beforeModel.</p>
+     */
     public void beforeModel() {
         executeAnnotation(getCurrentModel(), BeforeModel.class);
     }
 
+    /**
+     * <p>afterModel.</p>
+     */
     public void afterModel() {
         executeAnnotation(getCurrentModel(), AfterModel.class);
     }

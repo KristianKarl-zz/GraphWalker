@@ -58,6 +58,12 @@ public class ConfigurationFactory {
     private ConfigurationFactory() {
     }
 
+    /**
+     * <p>create.</p>
+     *
+     * @param clazz a {@link java.lang.Class} object.
+     * @return a {@link org.graphwalker.core.configuration.Configuration} object.
+     */
     public static Configuration create(Class<?> clazz) {
         List<Class<?>> clazzes = new ArrayList<Class<?>>();
         clazzes.add(clazz);

@@ -357,10 +357,6 @@ public class ModelImpl implements Model {
 
     /**
      * {@inheritDoc}
-     *
-     * @param source a {@link org.graphwalker.core.model.Element} object.
-     * @param target a {@link org.graphwalker.core.model.Edge} object.
-     * @return a int.
      */
     public int getShortestDistance(Element source, Edge target) {
         return myFloydWarshall.getShortestDistance(source, target);
@@ -396,6 +392,10 @@ public class ModelImpl implements Model {
      * {@inheritDoc}
      * <p/>
      * <p>getShortestDistance.</p>
+     *
+     * @param source a {@link org.graphwalker.core.model.Element} object.
+     * @param target a {@link org.graphwalker.core.model.Vertex} object.
+     * @return a int.
      */
     public int getShortestDistance(Element source, Vertex target) {
         return myFloydWarshall.getShortestDistance(source, target);

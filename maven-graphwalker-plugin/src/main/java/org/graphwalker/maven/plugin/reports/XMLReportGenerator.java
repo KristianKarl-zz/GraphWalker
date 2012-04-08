@@ -63,6 +63,7 @@ public class XMLReportGenerator implements ReportGenerator {
      * @param reportDirectory a {@link java.io.File} object.
      * @param model           a {@link org.graphwalker.core.model.Model} object.
      * @param exceptions      a {@link java.util.List} object.
+     * @param startTime       a {@link java.util.Date} object.
      */
     public XMLReportGenerator(File reportDirectory, Model model, List<Throwable> exceptions, Date startTime) {
         myReportDirectory = reportDirectory;
