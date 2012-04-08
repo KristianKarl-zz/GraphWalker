@@ -38,6 +38,7 @@ import org.graphwalker.core.model.*;
 import org.graphwalker.core.utils.Reflection;
 import org.graphwalker.core.utils.Resource;
 
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,22 +68,16 @@ public class MachineImpl implements Machine {
      */
     public void beforeGroup() {
         for (Model model : getConfiguration().getModels()) {
-            if (model.hasImplementation()) {
-                Reflection.execute(model.getImplementation(), BeforeGroup.class);
-            }
+            executeAnnotation(model, BeforeGroup.class);
         }
     }
 
     public void beforeModel() {
-        if (getCurrentModel().hasImplementation()) {
-            Reflection.execute(getCurrentModel().getImplementation(), BeforeModel.class);
-        }
+        executeAnnotation(getCurrentModel(), BeforeModel.class);
     }
 
     public void afterModel() {
-        if (getCurrentModel().hasImplementation()) {
-            Reflection.execute(getCurrentModel().getImplementation(), AfterModel.class);
-        }
+        executeAnnotation(getCurrentModel(), AfterModel.class);
     }
 
     /**
@@ -90,9 +85,7 @@ public class MachineImpl implements Machine {
      */
     public void afterGroup() {
         for (Model model : getConfiguration().getModels()) {
-            if (model.hasImplementation()) {
-                Reflection.execute(model.getImplementation(), AfterGroup.class);
-            }
+            executeAnnotation(model, AfterGroup.class);
         }
     }
 
@@ -349,4 +342,13 @@ public class MachineImpl implements Machine {
         Reflection.execute(model.getImplementation(), element.getName());
     }
 
+    private void executeAnnotation(Model model, Class<? extends Annotation> annotation) {
+        if (model.hasImplementation()) {
+            try {
+                Reflection.execute(model.getImplementation(), annotation);
+            } catch (Throwable throwable) {
+                model.getExceptionStrategy().handleException(this, throwable);
+            }
+        }
+    }
 }
