@@ -118,15 +118,16 @@ public class TestMojo extends AbstractMojo {
      * @parameter property="excludes"
      */
     private List<String> excludes;
-    
-    
+
     private List<GraphWalker> myGraphWalkers = new ArrayList<GraphWalker>();
 
     /**
      * <p>execute.</p>
      *
-     * @throws org.apache.maven.plugin.MojoExecutionException if any.
-     * @throws org.apache.maven.plugin.MojoFailureException if any.
+     * @throws org.apache.maven.plugin.MojoExecutionException
+     *          if any.
+     * @throws org.apache.maven.plugin.MojoFailureException
+     *          if any.
      */
     public void execute() throws MojoExecutionException, MojoFailureException {
         if (!skipTests()) {
@@ -151,12 +152,12 @@ public class TestMojo extends AbstractMojo {
     private void logResult() {
         getLog().info("");
         getLog().info(Resource.getText(Bundle.NAME, "result.label"));
-        getLog().info( "" );
+        getLog().info("");
         List<Model> failedModels = new ArrayList<Model>();
         long group = 0, total = 0, completed = 0, failed = 0, notExecuted = 0;
-        for (GraphWalker graphWalker: myGraphWalkers) {
+        for (GraphWalker graphWalker : myGraphWalkers) {
             group++;
-            for (Model model: graphWalker.getConfiguration().getModels()) {
+            for (Model model : graphWalker.getConfiguration().getModels()) {
                 total++;
                 switch (model.getModelStatus()) {
                     case COMPLETED: {
@@ -177,11 +178,11 @@ public class TestMojo extends AbstractMojo {
         }
         if (0 < failedModels.size()) {
             getLog().info("Failed models: ");
-            for (Model model: failedModels) {
+            for (Model model : failedModels) {
                 getLog().info("  " + model.getId() + " [group = " + model.getGroup() + "]");
             }
             getLog().info("");
-        }                
+        }
         getLog().info(Resource.getText(Bundle.NAME, "result.summary", group, total, completed, failed, notExecuted));
         getLog().info("");
     }
@@ -199,16 +200,16 @@ public class TestMojo extends AbstractMojo {
         Thread.currentThread().setContextClassLoader(newClassLoader);
         return oldClassLoader;
     }
-    
+
     private Properties createProperties() {
-        Properties properties = (Properties)System.getProperties().clone();
-        properties.putAll((Properties)mavenProject.getProperties().clone());
-        properties.putAll((Properties)session.getUserProperties().clone());
+        Properties properties = (Properties) System.getProperties().clone();
+        properties.putAll((Properties) mavenProject.getProperties().clone());
+        properties.putAll((Properties) session.getUserProperties().clone());
         return properties;
     }
-    
+
     private Properties switchProperties(Properties properties) {
-        Properties oldProperties = (Properties)System.getProperties().clone();
+        Properties oldProperties = (Properties) System.getProperties().clone();
         System.setProperties(properties);
         return oldProperties;
     }
@@ -217,7 +218,7 @@ public class TestMojo extends AbstractMojo {
         try {
             Map<String, List<Class<?>>> testGroups = new HashMap<String, List<Class<?>>>();
             List<Class<?>> tests = TestUtil.findTests(testClassesDirectory, getIncludes(), excludes);
-            for (Class<?> test: tests) {
+            for (Class<?> test : tests) {
                 String group = TestUtil.getGroup(test);
                 if (!testGroups.containsKey(group)) {
                     testGroups.put(group, new ArrayList<Class<?>>());
@@ -225,7 +226,7 @@ public class TestMojo extends AbstractMojo {
                 testGroups.get(group).add(test);
             }
 
-            for (String group: testGroups.keySet()) {
+            for (String group : testGroups.keySet()) {
                 Configuration configuration = ConfigurationFactory.create(testGroups.get(group));
                 myGraphWalkers.add(GraphWalkerFactory.create(configuration));
             }
@@ -237,8 +238,8 @@ public class TestMojo extends AbstractMojo {
     private void executeInstances() throws MojoExecutionException {
         try {
             ExecutorService executorService = Executors.newFixedThreadPool(myGraphWalkers.size());
-            for (GraphWalker graphWalker: myGraphWalkers) {
-                for (Model model: graphWalker.getConfiguration().getModels()) {
+            for (GraphWalker graphWalker : myGraphWalkers) {
+                for (Model model : graphWalker.getConfiguration().getModels()) {
                     StringBuilder stringBuilder = new StringBuilder("Running [");
                     stringBuilder.append(model.getGroup()).append("] ");
                     stringBuilder.append(model.getImplementation().getClass().getName());
@@ -255,10 +256,10 @@ public class TestMojo extends AbstractMojo {
 
     private void reportExecution() throws MojoExecutionException {
         boolean hasExceptions = false;
-        for (GraphWalker graphWalker: myGraphWalkers) {
-            for (Model model: graphWalker.getConfiguration().getModels()) {
+        for (GraphWalker graphWalker : myGraphWalkers) {
+            for (Model model : graphWalker.getConfiguration().getModels()) {
                 hasExceptions |= graphWalker.hasExceptions(model);
-                ReportGenerator reportGenerator = new XMLReportGenerator(reportsDirectory, model, graphWalker.getExceptions(model));
+                ReportGenerator reportGenerator = new XMLReportGenerator(reportsDirectory, model, graphWalker.getExceptions(model), session.getStartTime());
                 reportGenerator.writeReport();
             }
         }
@@ -270,15 +271,15 @@ public class TestMojo extends AbstractMojo {
     private List<String> getIncludes() {
         if (null != test) {
             includes = new ArrayList<String>();
-            for (String regex: test.split(",")) {
+            for (String regex : test.split(",")) {
                 if (regex.endsWith(".java")) {
-                    regex = regex.substring(0, regex.length()-5);
+                    regex = regex.substring(0, regex.length() - 5);
                 }
                 if (regex.endsWith(".class")) {
-                    regex = regex.substring(0, regex.length()-6);
+                    regex = regex.substring(0, regex.length() - 6);
                 }
                 regex = regex.replace('.', '/');
-                includes.add("**/"+regex+".class");
+                includes.add("**/" + regex + ".class");
             }
         } else if (null == includes) {
             includes = new ArrayList<String>();
@@ -289,7 +290,7 @@ public class TestMojo extends AbstractMojo {
 
     private URL[] convertToURL(List<String> elements) throws MalformedURLException {
         List<URL> urlList = new ArrayList<URL>();
-        for (String element: elements) {
+        for (String element : elements) {
             urlList.add(new File(element).toURI().toURL());
         }
         return urlList.toArray(new URL[urlList.size()]);

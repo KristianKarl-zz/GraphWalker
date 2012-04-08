@@ -40,6 +40,7 @@ import org.graphwalker.core.utils.Resource;
 import org.graphwalker.maven.plugin.Bundle;
 
 import java.io.*;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -54,6 +55,7 @@ public class XMLReportGenerator implements ReportGenerator {
     private final File myReportDirectory;
     private final Model myModel;
     private final List<Throwable> myExceptions;
+    private final Date myStartTime;
 
     /**
      * <p>Constructor for XMLReportGenerator.</p>
@@ -62,10 +64,11 @@ public class XMLReportGenerator implements ReportGenerator {
      * @param model           a {@link org.graphwalker.core.model.Model} object.
      * @param exceptions      a {@link java.util.List} object.
      */
-    public XMLReportGenerator(File reportDirectory, Model model, List<Throwable> exceptions) {
+    public XMLReportGenerator(File reportDirectory, Model model, List<Throwable> exceptions, Date startTime) {
         myReportDirectory = reportDirectory;
         myModel = model;
         myExceptions = exceptions;
+        myStartTime = startTime;
     }
 
     private File getReportFile(File reportDirectory, Model model) {
@@ -81,6 +84,7 @@ public class XMLReportGenerator implements ReportGenerator {
         Xpp3Dom report = new Xpp3Dom("report");
         report.setAttribute("class", model.getImplementation().getClass().getName());
         report.setAttribute("group", model.getGroup());
+        report.setAttribute("timestamp", String.valueOf(myStartTime.getTime()));
 
         VertexStatistics vertexStatistics = new VertexStatistics(model.getVertices());
         Xpp3Dom verticesElement = new Xpp3Dom("vertices");
