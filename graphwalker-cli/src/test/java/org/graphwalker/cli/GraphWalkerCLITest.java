@@ -40,7 +40,7 @@ public class GraphWalkerCLITest {
     public void testShortHelpCommand() {
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
         System.setOut(new PrintStream(buffer));
-        GraphWalkerCLI.main(new String[]{"-h"});
+        GraphWalker.main(new String[]{"-h"});
         Pattern pattern = Pattern.compile(".*Prints this help.*", Pattern.MULTILINE);
         Matcher matcher = pattern.matcher(buffer.toString());
         Assert.assertTrue(matcher.find());
@@ -50,7 +50,7 @@ public class GraphWalkerCLITest {
     public void testLongHelpCommand() {
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
         System.setOut(new PrintStream(buffer));
-        GraphWalkerCLI.main(new String[]{"-help"});
+        GraphWalker.main(new String[]{"-help"});
         Pattern pattern = Pattern.compile(".*Prints this help.*", Pattern.MULTILINE);
         Matcher matcher = pattern.matcher(buffer.toString());
         Assert.assertTrue(matcher.find());
@@ -60,7 +60,7 @@ public class GraphWalkerCLITest {
     public void testUnknownCommand() {
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
         System.setOut(new PrintStream(buffer));
-        GraphWalkerCLI.main(new String[]{"-unknown"});
+        GraphWalker.main(new String[]{"-unknown"});
         Pattern pattern = Pattern.compile(".*Prints this help.*", Pattern.MULTILINE);
         Matcher matcher = pattern.matcher(buffer.toString());
         Assert.assertTrue(matcher.find());
@@ -68,7 +68,7 @@ public class GraphWalkerCLITest {
 
     @Test(expected = ResourceException.class)
     public void testMissingFileCommand() {
-        GraphWalkerCLI.main(new String[] {"-f", "missing"});
+        GraphWalker.main(new String[]{"-f", "missing"});
     }
     /*
     @Test

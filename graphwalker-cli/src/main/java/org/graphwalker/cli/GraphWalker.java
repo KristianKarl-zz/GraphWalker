@@ -36,12 +36,12 @@ import java.io.File;
  * @author nilols
  * @version $Id: $
  */
-public class GraphWalkerCLI {
+public class GraphWalker {
 
     private final Options myOptions = new Options();
     private final CommandLineParser myParser = new PosixParser();
 
-    GraphWalkerCLI() {
+    GraphWalker() {
         createOptions();
     }
 
@@ -74,7 +74,7 @@ public class GraphWalkerCLI {
         File file = Resource.getFile(filename);
 
     }
-    
+
     private void printHelp() {
         HelpFormatter helpFormatter = new HelpFormatter();
         helpFormatter.printHelp(Resource.getText(Bundle.NAME, "options.label"), myOptions);
@@ -86,7 +86,7 @@ public class GraphWalkerCLI {
      * @param arguments an array of {@link java.lang.String} objects.
      */
     public static void main(String[] arguments) {
-        GraphWalkerCLI graphWalkerCLI = new GraphWalkerCLI();
+        GraphWalker graphWalkerCLI = new GraphWalker();
         graphWalkerCLI.parse(arguments);
     }
 }
