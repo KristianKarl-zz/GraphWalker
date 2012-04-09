@@ -86,7 +86,7 @@ public class GraphWalker {
      * @param arguments an array of {@link java.lang.String} objects.
      */
     public static void main(String[] arguments) {
-        GraphWalker graphWalkerCLI = new GraphWalker();
-        graphWalkerCLI.parse(arguments);
+        GraphWalker graphWalker = new GraphWalker();
+        graphWalker.parse(arguments);
     }
 }
