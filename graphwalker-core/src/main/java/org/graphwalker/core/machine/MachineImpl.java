@@ -234,6 +234,7 @@ public class MachineImpl implements Machine {
                 if (!getCurrentModel().equals(model)) {
                     if (hasExecutableState(model)) {
                         switchModel(model.getId());
+                        break;
                     }
                 }
             }
