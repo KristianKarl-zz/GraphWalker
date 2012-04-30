@@ -48,6 +48,8 @@ public class PathGeneratorFactory {
     public static PathGenerator create(String type) {
         if ("Random".equalsIgnoreCase(type)) {
             return new RandomPath();
+        } else if ("RandomUnvisitedFirst".equalsIgnoreCase(type)) {
+            return new RandomUnvisitedFirstPath();
         }
         throw new PathGeneratorException(Resource.getText(Bundle.NAME, "exception.generator.unknown"));
     }

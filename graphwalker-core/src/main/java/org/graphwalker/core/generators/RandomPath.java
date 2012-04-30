@@ -45,9 +45,9 @@ public class RandomPath extends AbstractPathGenerator {
 
     /** {@inheritDoc} */
     public Element getNextStep(Machine machine) {
-        List<Element> childElements = machine.getPossibleElements(machine.getCurrentElement());
-        if (0<childElements.size()) {
-            return childElements.get(myRandomGenerator.nextInt(childElements.size()));
+        List<Element> possibleElements = machine.getPossibleElements(machine.getCurrentElement());
+        if (0<possibleElements.size()) {
+            return possibleElements.get(myRandomGenerator.nextInt(possibleElements.size()));
         }
         throw new PathGeneratorException(Resource.getText(Bundle.NAME, "exception.generator.path.missing"));
     }
