@@ -242,9 +242,6 @@
                         <goals>
                             <goal>update-file-header</goal>
                         </goals>
-                        <configuration>
-                            <excludes>**/bootstrap/**/*.css,**/bootstrap/**/*.js</excludes>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
