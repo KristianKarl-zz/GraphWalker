@@ -73,32 +73,6 @@
         <junit.version>4.10</junit.version>
     </properties>
 
-    <profiles>
-        <profile>
-            <id>default</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <modules>
-                <module>../graphwalker-core</module>
-                <module>../graphwalker-cli</module>
-                <module>../graphwalker-gui</module>
-                <module>../graphwalker-webservice</module>
-                <module>../maven-graphwalker-plugin</module>
-                <module>../jenkins-graphwalker-plugin</module>
-                <module>../graphwalker-example</module>
-            </modules>
-        </profile>
-        <profile>
-            <id>example</id>
-            <modules>
-                <module>../graphwalker-core</module>
-                <module>../maven-graphwalker-plugin</module>
-                <module>../graphwalker-example</module>
-            </modules>
-        </profile>
-    </profiles>
-
     <dependencyManagement>
         <dependencies>
             <dependency>

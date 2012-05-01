@@ -1,0 +1,41 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.graphwalker</groupId>
+    <artifactId>graphwalker</artifactId>
+    <version>3.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>GraphWalker</name>
+    <url>http://graphwalker.org</url>
+    <inceptionYear>2011</inceptionYear>
+
+    <profiles>
+        <profile>
+            <id>default</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <modules>
+                <module>graphwalker-parent</module>
+                <module>graphwalker-core</module>
+                <module>graphwalker-cli</module>
+                <module>graphwalker-gui</module>
+                <module>graphwalker-webservice</module>
+                <module>maven-graphwalker-plugin</module>
+                <module>jenkins-graphwalker-plugin</module>
+                <module>graphwalker-example</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>example</id>
+            <modules>
+                <module>graphwalker-core</module>
+                <module>maven-graphwalker-plugin</module>
+                <module>graphwalker-example</module>
+            </modules>
+        </profile>
+    </profiles>
+
+</project>
