@@ -50,6 +50,8 @@ public class PathGeneratorFactory {
             return new RandomPath();
         } else if ("RandomUnvisitedFirst".equalsIgnoreCase(type)) {
             return new RandomUnvisitedFirstPath();
+        } else if ("RandomLeastVisited".equalsIgnoreCase(type)) {
+            return new RandomLeastVisitedPath();
         }
         throw new PathGeneratorException(Resource.getText(Bundle.NAME, "exception.generator.unknown"));
     }
