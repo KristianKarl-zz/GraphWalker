@@ -25,16 +25,7 @@
  */
 package org.graphwalker.maven.plugin.reports;
 
-import org.codehaus.plexus.util.IOUtil;
-import org.codehaus.plexus.util.xml.PrettyPrintXMLWriter;
-import org.codehaus.plexus.util.xml.Xpp3Dom;
-import org.codehaus.plexus.util.xml.Xpp3DomWriter;
-import org.graphwalker.core.utils.Resource;
-import org.graphwalker.maven.plugin.Bundle;
-
-import java.io.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.File;
 
 /**
  * <p>HTMLReportGenerator class.</p>
@@ -55,7 +46,7 @@ public class HTMLReportGenerator implements ReportGenerator {
     public HTMLReportGenerator(File reportDirectory) {
         myReportDirectory = reportDirectory;
     }
-
+    /*
     private File getReportFile() {
         if (!myReportDirectory.mkdirs()) {
             if (!myReportDirectory.exists()) {
@@ -153,23 +144,21 @@ public class HTMLReportGenerator implements ReportGenerator {
 
         navbar.addChild(navbarInner);
 
-        /*
-        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        </a>
 
-        <a class="brand" href="#">Project name</a>
-        <div class="nav-collapse">
-        <ul class="nav">
-        <li class="active"><a href="#">Home</a></li>
-        <li><a href="#about">About</a></li>
-        <li><a href="#contact">Contact</a></li>
-        </ul>
-        </div><!--/.nav-collapse -->
-        */
+        //<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        //<span class="icon-bar"></span>
+        //<span class="icon-bar"></span>
+        //<span class="icon-bar"></span>
+        //</a>
 
+        //<a class="brand" href="#">Project name</a>
+        //<div class="nav-collapse">
+        //<ul class="nav">
+        //<li class="active"><a href="#">Home</a></li>
+        //<li><a href="#about">About</a></li>
+        //<li><a href="#contact">Contact</a></li>
+        //</ul>
+        //</div><!--/.nav-collapse -->
 
         return navbar;
     }
@@ -184,11 +173,13 @@ public class HTMLReportGenerator implements ReportGenerator {
 
         return element;
     }
+    */
 
     /**
      * {@inheritDoc}
      */
     public void writeReport() {
+        /*
         PrintWriter writer = null;
         try {
             writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(getReportFile()), "UTF-8")));
@@ -206,5 +197,6 @@ public class HTMLReportGenerator implements ReportGenerator {
         } finally {
             IOUtil.close(writer);
         }
+        */
     }
 }
