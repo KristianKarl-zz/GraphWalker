@@ -1,0 +1,7 @@
+HEADER<{{
+public interface SimpleLogin {
+}}>HEADER
+  public void {LABEL}();
+FOOTER<{{
+}
+}}>FOOTER
