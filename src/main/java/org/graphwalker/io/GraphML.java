@@ -162,8 +162,15 @@ public class GraphML extends AbstractModelHandler {
 					}
 					Iterator<Object> iterUMLNoteIter = element.getDescendants(new org.jdom.filter.ElementFilter("UMLNoteNode"));
 					if (iterUMLNoteIter.hasNext()) {
-						logger.debug("  Excluded node: UMLNoteNode");
-						continue;
+                        Iterator<Object> iter_label = element.getDescendants(new org.jdom.filter.ElementFilter("NodeLabel"));
+                        if (iter_label.hasNext()) {
+                            Object o3 = iter_label.next();
+                            org.jdom.Element nodeLabel = (org.jdom.Element) o3;
+                            logger.debug("  Full name: '" + nodeLabel.getQualifiedName() + "'");
+                            logger.debug("  Name: '" + nodeLabel.getTextTrim() + "'");
+                            graph.setDescriptionKey(nodeLabel.getTextTrim());
+                        }
+                        continue;
 					}
 					logger.debug("  id: " + element.getAttributeValue("id"));
 

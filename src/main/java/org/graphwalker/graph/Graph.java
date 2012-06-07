@@ -34,9 +34,18 @@ public class Graph extends SparseMultigraph<Vertex, Edge> {
 	private static Logger logger = Util.setupLogger(Graph.class);
 
 	private String fileKey = "";
-	private String labelKey = "";
+    private String labelKey = "";
+    private String descriptionKey = "";
 
-	public String getLabelKey() {
+	public String getDescriptionKey() {
+      return descriptionKey;
+    }
+
+    public void setDescriptionKey(String descriptionKey) {
+      this.descriptionKey = descriptionKey;
+    }
+
+    public String getLabelKey() {
 		return labelKey;
 	}
 

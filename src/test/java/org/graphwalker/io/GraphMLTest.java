@@ -39,27 +39,38 @@ public class GraphMLTest extends TestCase {
 		ModelBasedTesting.getInstance().reset();
 	}
 
-	public void testGraphNode() {
-		try {
-			GraphML modelHandler = new GraphML();
-			modelHandler.load("graphml/multiple/switch/A.graphml");
-			assertEquals(modelHandler.getModel().getVertexCount(), 5);
-			assertEquals(modelHandler.getModel().getEdgeCount(), 8);
-			assertEquals(modelHandler.getModel().getLabelKey(), "v_ClientNotRunning");
+    public void testGraphDescription() {
+        try {
+            GraphML modelHandler = new GraphML();
+            modelHandler.load("graphml/UC01.graphml");
+            assertEquals(modelHandler.getModel().getDescriptionKey(), "This is a description of the test");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            fail(e.getMessage());
+        }
+    }
 
-			Vertex clientNotRunning = modelHandler.getModel().findVertex("v_ClientNotRunning");
-			assertNotNull(clientNotRunning);
-			assertTrue(clientNotRunning.isGraphVertex());
+    public void testGraphNode() {
+        try {
+            GraphML modelHandler = new GraphML();
+            modelHandler.load("graphml/multiple/switch/A.graphml");
+            assertEquals(modelHandler.getModel().getVertexCount(), 5);
+            assertEquals(modelHandler.getModel().getEdgeCount(), 8);
+            assertEquals(modelHandler.getModel().getLabelKey(), "v_ClientNotRunning");
 
-			Vertex whatsNew = modelHandler.getModel().findVertex("v_WhatsNew");
-			assertNotNull(whatsNew);
-			assertFalse(whatsNew.isGraphVertex());
+            Vertex clientNotRunning = modelHandler.getModel().findVertex("v_ClientNotRunning");
+            assertNotNull(clientNotRunning);
+            assertTrue(clientNotRunning.isGraphVertex());
 
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-			fail(e.getMessage());
-		}
-	}
+            Vertex whatsNew = modelHandler.getModel().findVertex("v_WhatsNew");
+            assertNotNull(whatsNew);
+            assertFalse(whatsNew.isGraphVertex());
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            fail(e.getMessage());
+        }
+    }
 
 	public void testSwitchModelKeyWord() {
 		try {
