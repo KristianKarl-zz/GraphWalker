@@ -9,3 +9,6 @@
 logs/
 target/
 
+# Temporary files #
+# #################
+*~
