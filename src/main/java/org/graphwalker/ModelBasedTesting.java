@@ -1,4 +1,4 @@
-//This file is part of the GraphWalker java package
+// This file is part of the GraphWalker java package
 // The MIT License
 //
 // Copyright (c) 2010 graphwalker.org
@@ -179,16 +179,11 @@ public class ModelBasedTesting {
     if (this.statisticsManager == null) {
       this.statisticsManager = new StatisticsManager();
     }
-    this.statisticsManager.addStatisicsCounter("Vertex Coverage", new VertexCoverageStatistics(
-        getGraph()));
-    this.statisticsManager.addStatisicsCounter("Edge Coverage", new EdgeCoverageStatistics(
-        getGraph()));
-    this.statisticsManager.addStatisicsCounter("2-Edge Sequence Coverage",
-        new EdgeSequenceCoverageStatistics(getGraph(), 2));
-    this.statisticsManager.addStatisicsCounter("3-Edge Sequence Coverage",
-        new EdgeSequenceCoverageStatistics(getGraph(), 3));
-    this.statisticsManager.addStatisicsCounter("Requirements Coverage",
-        new RequirementCoverageStatistics(getGraph()));
+    this.statisticsManager.addStatisicsCounter("Vertex Coverage", new VertexCoverageStatistics(getGraph()));
+    this.statisticsManager.addStatisicsCounter("Edge Coverage", new EdgeCoverageStatistics(getGraph()));
+    this.statisticsManager.addStatisicsCounter("2-Edge Sequence Coverage", new EdgeSequenceCoverageStatistics(getGraph(), 2));
+    this.statisticsManager.addStatisicsCounter("3-Edge Sequence Coverage", new EdgeSequenceCoverageStatistics(getGraph(), 3));
+    this.statisticsManager.addStatisicsCounter("Requirements Coverage", new RequirementCoverageStatistics(getGraph()));
     this.statisticsManager.addProgress(getMachine().getCurrentVertex());
   }
 
@@ -270,8 +265,7 @@ public class ModelBasedTesting {
     if (this.machine instanceof ExtendedFiniteStateMachine) {
       return ((ExtendedFiniteStateMachine) this.machine).getDataValue(data);
     }
-    throw new InvalidDataException(
-        "Data can only be fetched from a ExtendedFiniteStateMachine. Please enable EFSM.");
+    throw new InvalidDataException("Data can only be fetched from a ExtendedFiniteStateMachine. Please enable EFSM.");
   }
 
   /**
@@ -289,8 +283,7 @@ public class ModelBasedTesting {
     if (this.machine instanceof ExtendedFiniteStateMachine) {
       return ((ExtendedFiniteStateMachine) this.machine).execAction(action);
     }
-    throw new InvalidDataException(
-        "Data can only be fetched from a ExtendedFiniteStateMachine. Please enable EFSM.");
+    throw new InvalidDataException("Data can only be fetched from a ExtendedFiniteStateMachine. Please enable EFSM.");
   }
 
   /**
@@ -380,8 +373,7 @@ public class ModelBasedTesting {
     this.generator = generator;
 
     if (this.machine != null) getGenerator().setMachine(getMachine());
-    if (this.template != null && this.generator instanceof CodeGenerator)
-      ((CodeGenerator) generator).setTemplate(this.template);
+    if (this.template != null && this.generator instanceof CodeGenerator) ((CodeGenerator) generator).setTemplate(this.template);
   }
 
   public void setGenerator(int generatorType) throws GeneratorException {
@@ -407,9 +399,7 @@ public class ModelBasedTesting {
       while (true) {
         if (App.getInstance().getStatus().isStopped()) throw new GuiStoppedExecution();
 
-        if (App.getInstance().getStatus().isNext() || App.getInstance().getStatus().isRunning()
-            || App.getInstance().getStatus().isExecutingJavaTest()
-            || App.getInstance().getStatus().isExecutingSoapTest()
+        if (App.getInstance().getStatus().isNext() || App.getInstance().getStatus().isRunning() || App.getInstance().getStatus().isExecutingJavaTest() || App.getInstance().getStatus().isExecutingSoapTest()
             && !App.getInstance().getStatus().isPaused()) {
           break;
         }
@@ -567,17 +557,14 @@ public class ModelBasedTesting {
   public void setTemplate(String[] template) {
     this.template = template.clone();
 
-    if (getGenerator() != null && getGenerator() instanceof CodeGenerator)
-      ((CodeGenerator) getGenerator()).setTemplate(this.template);
+    if (getGenerator() != null && getGenerator() instanceof CodeGenerator) ((CodeGenerator) getGenerator()).setTemplate(this.template);
 
   }
 
   public void setTemplate(String templateFile) throws IOException {
     String template = Util.readFile(Util.getFile(templateFile));
     String header = "", body = "", footer = "";
-    Pattern p =
-        Pattern
-            .compile("HEADER<\\{\\{([.\\s\\S]+)\\}\\}>HEADER([.\\s\\S]+)FOOTER<\\{\\{([.\\s\\S]+)\\}\\}>FOOTER");
+    Pattern p = Pattern.compile("HEADER<\\{\\{([.\\s\\S]+)\\}\\}>HEADER([.\\s\\S]+)FOOTER<\\{\\{([.\\s\\S]+)\\}\\}>FOOTER");
     Matcher m = p.matcher(template);
     if (m.find()) {
       header = m.group(1);
@@ -665,11 +652,7 @@ public class ModelBasedTesting {
     if (element instanceof Edge) {
       logger.info(getMachine().getLastEdge() + req + additionalInfo);
     } else if (element instanceof Vertex) {
-      logger.info(getMachine().getCurrentVertex()
-          + req
-          + (getMachine().hasInternalVariables()
-              ? " DATA: " + getMachine().getCurrentDataString()
-              : "") + additionalInfo);
+      logger.info(getMachine().getCurrentVertex() + req + (getMachine().hasInternalVariables() ? " DATA: " + getMachine().getCurrentDataString() : "") + additionalInfo);
     }
   }
 
@@ -736,8 +719,7 @@ public class ModelBasedTesting {
       logger.debug("Executing a non-dry run");
     }
 
-    if (strClassName == null || strClassName.trim().equals(""))
-      throw new RuntimeException("Needed execution class name is missing as parameter.");
+    if (strClassName == null || strClassName.trim().equals("")) throw new RuntimeException("Needed execution class name is missing as parameter.");
     Class<?> clsClass = null;
 
     logger.debug("Trying to get a class for name: " + strClassName);
@@ -745,17 +727,12 @@ public class ModelBasedTesting {
       clsClass = Class.forName(strClassName);
       logger.debug("Got class for name: " + strClassName);
     } catch (LinkageError e) {
-      String str =
-          "Could not load class: " + e.getMessage() + "\nProblem occured when loading class: "
-              + strClassName + ".\n Current class path is: "
-              + System.getProperty("java.class.path");
+      String str = "Could not load class: " + e.getMessage() + "\nProblem occured when loading class: " + strClassName + ".\n Current class path is: " + System.getProperty("java.class.path");
       logger.error(str);
       Util.logStackTraceToError(e);
       throw new RuntimeException(str, e);
     } catch (ClassNotFoundException e) {
-      String str =
-          "Could not load class: " + strClassName + ".\n Current class path is: "
-              + System.getProperty("java.class.path");
+      String str = "Could not load class: " + strClassName + ".\n Current class path is: " + System.getProperty("java.class.path");
       logger.error(str);
       throw new RuntimeException(str, e);
     }
@@ -807,8 +784,7 @@ public class ModelBasedTesting {
         logger.debug("Executing a non-dry run");
       }
 
-      if (clsClass == null && objInstance == null)
-        throw new RuntimeException("Execution instance or class is missing as parameters.");
+      if (clsClass == null && objInstance == null) throw new RuntimeException("Execution instance or class is missing as parameters.");
       if (clsClass == null) {
         logger.debug("Class is null, but object instance is: " + objInstance.toString());
         clsClass = objInstance.getClass();
@@ -816,8 +792,7 @@ public class ModelBasedTesting {
       if (objInstance == null) {
         logger.debug("Got class: " + clsClass.getName() + ", but object instance null");
         try {
-          objInstance =
-              clsClass.getConstructor(new Class[] {ModelBasedTesting.class}).newInstance(this);
+          objInstance = clsClass.getConstructor(new Class[] {ModelBasedTesting.class}).newInstance(this);
         } catch (SecurityException e) {
           throw new RuntimeException("SecurityException: " + e.getMessage(), e);
         } catch (NoSuchMethodException e) {
@@ -892,17 +867,14 @@ public class ModelBasedTesting {
     }
 
     if (getCurrentVertex().isSwitchModelKey()) {
-      logger
-          .debug("Will suspend the model because the SWITCH_MODEL key is found for current vertex: "
-              + getCurrentVertex().getLabelKey());
+      logger.debug("Will suspend the model because the SWITCH_MODEL key is found for current vertex: " + getCurrentVertex().getLabelKey());
       suspend();
       while (threadSuspended) {
         Thread.sleep(10);
       }
     } else if (getMultiModelHandler() != null) {
       if (getCurrentVertex().isGraphVertex()) {
-        logger.debug("Will suspend the model because the vertex is a GRAPH_VERTEX: "
-            + getCurrentVertex().getLabelKey());
+        logger.debug("Will suspend the model because the vertex is a GRAPH_VERTEX: " + getCurrentVertex().getLabelKey());
         suspend();
         while (threadSuspended) {
           Thread.sleep(10);
@@ -911,8 +883,7 @@ public class ModelBasedTesting {
     }
   }
 
-  private void executeMethod(Class<?> clsClass, Object objInstance, String strMethod, boolean isEdge)
-      throws IllegalArgumentException, SecurityException, IllegalAccessException {
+  private void executeMethod(Class<?> clsClass, Object objInstance, String strMethod, boolean isEdge) throws IllegalArgumentException, SecurityException, IllegalAccessException {
     if (strMethod.contains("/")) {
       strMethod = strMethod.substring(0, strMethod.indexOf('/'));
     }
@@ -957,22 +928,18 @@ public class ModelBasedTesting {
         m.invoke(objInstance, null);
       } catch (InvocationTargetException e) {
         if (isEdge) {
-          logger.error("InvocationTargetException for: " + getMachine().getLastEdge() + " : "
-              + e.getCause().getMessage());
+          logger.error("InvocationTargetException for: " + getMachine().getLastEdge() + " : " + e.getCause().getMessage());
         } else {
-          logger.error("InvocationTargetException for: " + getMachine().getCurrentVertex() + " : "
-              + e.getCause().getMessage());
+          logger.error("InvocationTargetException for: " + getMachine().getCurrentVertex() + " : " + e.getCause().getMessage());
         }
         Util.logStackTraceToError(e);
         throw new RuntimeException("InvocationTargetException.", e.getCause());
       } catch (NoSuchMethodException e) {
         logger.error("In model: " + getGraph());
         if (isEdge) {
-          logger.error("Method: " + getMachine().getLastEdge() + ", is missing in class: "
-              + clsClass);
+          logger.error("Method: " + getMachine().getLastEdge() + ", is missing in class: " + clsClass);
         } else {
-          logger.error("Method: " + getMachine().getCurrentVertex() + ", is missing in class: "
-              + clsClass);
+          logger.error("Method: " + getMachine().getCurrentVertex() + ", is missing in class: " + clsClass);
         }
         throw new RuntimeException("NoSuchMethodException.", e);
       } finally {
@@ -993,12 +960,9 @@ public class ModelBasedTesting {
     }
     while (hasNextStep()) {
       getNextStep();
-      String labels =
-          getMachine().getLastEdge().getLabelKey() + " -> " + getCurrentVertex().getLabelKey();
-      String edgeManualInstruction =
-          parseManualInstructions(getMachine().getLastEdge().getManualInstructions());
-      String vertexManualInstruction =
-          parseManualInstructions(getCurrentVertex().getManualInstructions());
+      String labels = getMachine().getLastEdge().getLabelKey() + " -> " + getCurrentVertex().getLabelKey();
+      String edgeManualInstruction = parseManualInstructions(getMachine().getLastEdge().getManualInstructions());
+      String vertexManualInstruction = parseManualInstructions(getCurrentVertex().getManualInstructions());
       testSequence.add(new String[] {labels, edgeManualInstruction, vertexManualInstruction});
     }
   }
@@ -1103,18 +1067,14 @@ public class ModelBasedTesting {
   public boolean setCurrentVertex(String newVertex) {
     if (this.machine != null) {
       if (newVertex == null || newVertex.isEmpty()) {
-        logger.error("Could not manually change the vertex from: "
-            + getMachine().getCurrentVertexName() + " beacuse it is an empty string.");
+        logger.error("Could not manually change the vertex from: " + getMachine().getCurrentVertexName() + " beacuse it is an empty string.");
         return false;
       }
       if (!getMachine().hasVertex(newVertex)) {
-        logger.error("Could not manually change the vertex from: "
-            + getMachine().getCurrentVertexName() + " to: " + newVertex
-            + " beacuse it does not exist in the model.");
+        logger.error("Could not manually change the vertex from: " + getMachine().getCurrentVertexName() + " to: " + newVertex + " beacuse it does not exist in the model.");
         return false;
       }
-      logger.info("Manually changing vertex from: " + getMachine().getCurrentVertexName() + " to: "
-          + newVertex);
+      logger.info("Manually changing vertex from: " + getMachine().getCurrentVertexName() + " to: " + newVertex);
       getMachine().setVertex(newVertex);
 
       // We have to empty current Dijkstra path, if it exists.
@@ -1214,8 +1174,7 @@ public class ModelBasedTesting {
   }
 
   public void setMultiModelHandler(ModelHandler modelHandler) {
-    logger.debug("Will change multiModelHandler from: " + this.multiModelHandler + ", to: "
-        + modelHandler);
+    logger.debug("Will change multiModelHandler from: " + this.multiModelHandler + ", to: " + modelHandler);
     this.multiModelHandler = modelHandler;
   }
 
@@ -1229,10 +1188,10 @@ public class ModelBasedTesting {
   }
 
   public String getCurrentModelName() {
-    if ( getMultiModelHandler() != null ){      
+    if (getMultiModelHandler() != null) {
       return getMultiModelHandler().getCurrentRunningModel();
     }
-    
+
     return getGraph().getFileKey();
   }
 }

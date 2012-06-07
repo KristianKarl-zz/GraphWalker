@@ -101,7 +101,7 @@ public class ModelHandler {
     public boolean isCrashed() {
       return thrownException != null;
     }
-    
+
     public Exception crashException() {
       return thrownException;
     }
@@ -111,8 +111,7 @@ public class ModelHandler {
     }
 
     public void setExecutionRestarted(boolean executionRestarted) {
-      logger.debug("Will change executionRestarted from: " + this.executionRestarted + ", to: "
-          + executionRestarted);
+      logger.debug("Will change executionRestarted from: " + this.executionRestarted + ", to: " + executionRestarted);
       this.executionRestarted = executionRestarted;
     }
   }
@@ -136,9 +135,7 @@ public class ModelHandler {
     if (hasModel(name)) {
       throw new IllegalArgumentException("The model name " + name + " has already been used.");
     }
-    logger.debug("Adding the model: "
-        + Integer.toHexString(System.identityHashCode(modelAPI.getMbt())) + ", "
-        + modelAPI.getMbt().getGraph());
+    logger.debug("Adding the model: " + Integer.toHexString(System.identityHashCode(modelAPI.getMbt())) + ", " + modelAPI.getMbt().getGraph());
     modelAPI.getMbt().setMultiModelHandler(this);
     models.add(new ModelRunnable(name, modelAPI));
   }
@@ -170,8 +167,7 @@ public class ModelHandler {
    */
   public void execute(String name) throws InterruptedException {
     if (!hasModel(name)) {
-      throw new IllegalArgumentException("The model name " + name
-          + " does not exist in the model handler. Have you forgotten to add it?");
+      throw new IllegalArgumentException("The model name " + name + " does not exist in the model handler. Have you forgotten to add it?");
     }
 
     ModelRunnable model = getModel(name);
@@ -250,8 +246,7 @@ public class ModelHandler {
    * @return an array of models that matches
    */
   private ArrayList<ModelRunnable> getModelMatchingCurrentVertex() {
-    logger.debug("Looking for paused or not started model matching current vertex: "
-        + currentVertex);
+    logger.debug("Looking for paused or not started model matching current vertex: " + currentVertex);
     ArrayList<ModelRunnable> array = new ArrayList<ModelRunnable>();
     for (ModelRunnable model : models) {
       logger.debug("Examining model: " + model.getName());
@@ -259,8 +254,7 @@ public class ModelHandler {
 
       check4Crash(model);
 
-      if (model.getMbt().getGraph().getLabelKey().equals(currentVertex)
-          || model.getMbt().getCurrentVertex().getLabelKey().equals(currentVertex)) {
+      if (model.getMbt().getGraph().getLabelKey().equals(currentVertex) || model.getMbt().getCurrentVertex().getLabelKey().equals(currentVertex)) {
         logger.debug("  " + model.getName() + ", has matching graph or current vertex label");
         if (model.getMbt().hasNotStartedExecution()) {
           logger.debug("  Adding not started model: " + model.getName());
@@ -269,16 +263,12 @@ public class ModelHandler {
           if (model.getMbt().isCulDeSac()) {
             logger.debug("  Model has ended up in a Cul-de-Sac");
             if (!model.getMbt().hasNextStep()) {
-              logger
-                  .debug("  Model has reached it's stop condition, so restarting model and resetting current vertex to Start: "
-                      + model.getName());
+              logger.debug("  Model has reached it's stop condition, so restarting model and resetting current vertex to Start: " + model.getName());
               model.setExecutionRestarted(true);
               model.getMbt().setGenerator(new RandomPathGenerator(new NeverCondition()));
               model.getMbt().setCurrentVertex(Keywords.START_NODE);
             } else {
-              logger
-                  .debug("  Model has not reached it's stop condition, so restarting model and resetting current vertex to Start: "
-                      + model.getName());
+              logger.debug("  Model has not reached it's stop condition, so restarting model and resetting current vertex to Start: " + model.getName());
               model.setExecutionRestarted(true);
               model.getMbt().setCurrentVertex(Keywords.START_NODE);
             }
@@ -344,13 +334,11 @@ public class ModelHandler {
       logger.debug("Examining model: " + model.getMbt().getGraph());
       check4Crash(model);
       if (model.getMbt().getGenerator().getStopCondition() instanceof NeverCondition) {
-        logger.debug("  Model: " + model.getName()
-            + ", has a NeverCondition, thus by definition finished.");
+        logger.debug("  Model: " + model.getName() + ", has a NeverCondition, thus by definition finished.");
       } else if (!model.getMbt().hasNextStep()) {
         logger.debug("  Model: " + model.getName() + ", has reached it's stop condition");
       } else {
-        logger.debug("  Model: " + model.getName() + ", is not done: "
-            + model.getMbt().getStatisticsString());
+        logger.debug("  Model: " + model.getName() + ", is not done: " + model.getMbt().getStatisticsString());
         return false;
       }
     }
