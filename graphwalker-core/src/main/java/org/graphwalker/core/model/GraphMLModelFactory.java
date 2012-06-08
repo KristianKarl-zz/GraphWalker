@@ -45,21 +45,24 @@ import java.util.regex.Pattern;
  */
 public class GraphMLModelFactory implements ModelFactory {
 
-    private Map<String, Requirement> myRequirementMap = new HashMap<String, Requirement>();
-    
+    private final Map<String, Requirement> myRequirementMap = new HashMap<String, Requirement>();
+
     /**
      * <p>Constructor for GraphmlModelFactory.</p>
      */
-    public GraphMLModelFactory() {}
+    public GraphMLModelFactory() {
+    }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public boolean accept(String type) {
         return "graphml".equals(type.toLowerCase());
     }
-    
+
     /**
      * {@inheritDoc}
-     *
+     * <p/>
      * <p>create.</p>
      */
     public Model create(String id, String filename) {
@@ -78,11 +81,11 @@ public class GraphMLModelFactory implements ModelFactory {
         }
 
         if (null != document) {
-            for (Iterator nodeElements = document.getDescendants(new ElementFilter("node")); nodeElements.hasNext();) {
-                Element nodeElement = (Element)nodeElements.next();
+            for (Iterator nodeElements = document.getDescendants(new ElementFilter("node")); nodeElements.hasNext(); ) {
+                Element nodeElement = (Element) nodeElements.next();
                 String text = null;
-                for (Iterator nodeLabels = nodeElement.getDescendants(new ElementFilter("NodeLabel")); nodeLabels.hasNext();) {
-                    Element nodeLabel = (Element)nodeLabels.next();
+                for (Iterator nodeLabels = nodeElement.getDescendants(new ElementFilter("NodeLabel")); nodeLabels.hasNext(); ) {
+                    Element nodeLabel = (Element) nodeLabels.next();
                     text = nodeLabel.getTextTrim();
                 }
                 Vertex vertex = new Vertex();
@@ -95,13 +98,13 @@ public class GraphMLModelFactory implements ModelFactory {
                 }
                 model.addVertex(vertex);
             }
-            for (Iterator edgeElements = document.getDescendants(new ElementFilter("edge")); edgeElements.hasNext();) {
-                Element edgeElement = (Element)edgeElements.next();
+            for (Iterator edgeElements = document.getDescendants(new ElementFilter("edge")); edgeElements.hasNext(); ) {
+                Element edgeElement = (Element) edgeElements.next();
                 Vertex source = model.getVertexById(edgeElement.getAttributeValue("source"));
                 Vertex target = model.getVertexById(edgeElement.getAttributeValue("target"));
                 String text = null;
-                for (Iterator edgeLabels = edgeElement.getDescendants(new ElementFilter("EdgeLabel")); edgeLabels.hasNext();) {
-                    Element edgeLabel = (Element)edgeLabels.next();
+                for (Iterator edgeLabels = edgeElement.getDescendants(new ElementFilter("EdgeLabel")); edgeLabels.hasNext(); ) {
+                    Element edgeLabel = (Element) edgeLabels.next();
                     text = edgeLabel.getTextTrim();
                 }
                 Edge edge = new Edge();
@@ -142,16 +145,16 @@ public class GraphMLModelFactory implements ModelFactory {
     }
 
     private String parseSwitchModelId(Vertex vertex, String text) {
-        Pattern pattern = Pattern.compile(Resource.getText(Bundle.NAME, "label.switch.model")+"\\s*\\((.*)\\)", Pattern.MULTILINE);
+        Pattern pattern = Pattern.compile(Resource.getText(Bundle.NAME, "label.switch.model") + "\\s*\\((.*)\\)", Pattern.MULTILINE);
         Matcher matcher = pattern.matcher(text);
         if (matcher.find()) {
             vertex.setSwitchModelId(matcher.group(1));
         }
         return matcher.replaceAll("").trim();
     }
-    
+
     private String parseRequirements(Vertex vertex, String text) {
-        Pattern pattern = Pattern.compile(Resource.getText(Bundle.NAME, "label.requirement")+"\\s*\\((.*)\\)", Pattern.MULTILINE);
+        Pattern pattern = Pattern.compile(Resource.getText(Bundle.NAME, "label.requirement") + "\\s*\\((.*)\\)", Pattern.MULTILINE);
         Matcher matcher = pattern.matcher(text);
         while (matcher.find()) {
             String id = matcher.group(1);
@@ -171,20 +174,20 @@ public class GraphMLModelFactory implements ModelFactory {
         }
         return matcher.replaceAll("").trim();
     }
-    
+
     private String parseEdgeActions(Edge edge, String text) {
         List<Action> edgeActions = new ArrayList<Action>();
         Pattern pattern = Pattern.compile("/([^\\[]+)");
         Matcher matcher = pattern.matcher(text);
         if (matcher.find()) {
-            for (String action: matcher.group(1).split(";")) {
+            for (String action : matcher.group(1).split(";")) {
                 edgeActions.add(new Action(action.trim()));
             }
         }
         edge.setEdgeActions(edgeActions);
         return matcher.replaceAll("").trim();
     }
-    
+
     private String parseBlocked(Edge edge, String text) {
         String blocked = Resource.getText(Bundle.NAME, "label.blocked");
         Pattern pattern = Pattern.compile(blocked, Pattern.MULTILINE);

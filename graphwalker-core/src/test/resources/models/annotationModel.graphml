@@ -19,13 +19,13 @@
         <node id="n0">
             <data key="d6">
                 <y:ShapeNode>
-                    <y:Geometry height="30.0" width="44.0" x="518.0" y="315.0"/>
+                    <y:Geometry height="42.0" width="44.0" x="518.0" y="339.0"/>
                     <y:Fill hasColor="false" transparent="false"/>
                     <y:BorderStyle color="#000000" type="line" width="4.0"/>
                     <y:NodeLabel alignment="center" autoSizePolicy="content" borderDistance="0.0" fontFamily="Dialog"
                                  fontSize="13" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false"
                                  height="19.310546875" modelName="internal" modelPosition="c" textColor="#000000"
-                                 visible="true" width="33.224609375" x="5.3876953125" y="5.3447265625">Start
+                                 visible="true" width="33.224609375" x="5.3876953125" y="11.3447265625">Start
                     </y:NodeLabel>
                     <y:Shape type="ellipse"/>
                 </y:ShapeNode>
@@ -41,6 +41,11 @@
                                  fontSize="13" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false"
                                  hasText="false" height="4.0" modelName="internal" modelPosition="c" textColor="#000000"
                                  visible="true" width="4.0" x="43.5" y="19.0"/>
+                    <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12"
+                                 fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125"
+                                 modelName="internal" modelPosition="c" textColor="#000000" visible="true"
+                                 width="52.55078125" x="19.224609375" y="11.93359375">v_vertex
+                    </y:NodeLabel>
                     <y:Shape type="rectangle"/>
                 </y:ShapeNode>
             </data>
@@ -49,15 +54,20 @@
             <data key="d8"/>
             <data key="d10">
                 <y:ArcEdge>
-                    <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0">
-                        <y:Point x="540.0" y="390.0"/>
+                    <y:Path sx="0.0" sy="0.0" tx="0.0" ty="-21.0">
+                        <y:Point x="540.0" y="394.5"/>
                     </y:Path>
                     <y:LineStyle color="#000000" type="line" width="1.0"/>
                     <y:Arrows source="none" target="standard"/>
                     <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain"
                                  hasBackgroundColor="false" hasLineColor="false" hasText="false" height="4.0"
                                  modelName="six_pos" modelPosition="tail" preferredPlacement="anywhere" ratio="0.5"
-                                 textColor="#000000" visible="true" width="4.0" x="2.0" y="25.0625"/>
+                                 textColor="#000000" visible="true" width="4.0" x="2.0" y="24.1875"/>
+                    <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain"
+                                 hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="six_pos"
+                                 modelPosition="tail" preferredPlacement="anywhere" ratio="0.5" textColor="#000000"
+                                 visible="true" width="45.091796875" x="2.0" y="17.12109375">e_edge
+                    </y:EdgeLabel>
                     <y:Arc height="0.0" ratio="0.0" type="fixedHeight"/>
                 </y:ArcEdge>
             </data>

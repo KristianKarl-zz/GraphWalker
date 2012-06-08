@@ -26,10 +26,7 @@
 package org.graphwalker.core.machine;
 
 import org.graphwalker.core.Bundle;
-import org.graphwalker.core.annotations.AfterGroup;
-import org.graphwalker.core.annotations.AfterModel;
-import org.graphwalker.core.annotations.BeforeGroup;
-import org.graphwalker.core.annotations.BeforeModel;
+import org.graphwalker.core.annotations.*;
 import org.graphwalker.core.conditions.StopCondition;
 import org.graphwalker.core.configuration.Configuration;
 import org.graphwalker.core.filter.EdgeFilter;
@@ -346,13 +343,25 @@ public class MachineImpl implements Machine {
     }
 
     private void executeElement(Model model, Element element) {
+        executeAnnotation(model, element, BeforeElement.class);
         Reflection.execute(model.getImplementation(), element.getName());
+        executeAnnotation(model, element, AfterElement.class);
     }
 
     private void executeAnnotation(Model model, Class<? extends Annotation> annotation) {
         if (model.hasImplementation()) {
             try {
                 Reflection.execute(model.getImplementation(), annotation);
+            } catch (Throwable throwable) {
+                model.getExceptionStrategy().handleException(this, throwable);
+            }
+        }
+    }
+
+    private void executeAnnotation(Model model, Element element, Class<? extends Annotation> annotation) {
+        if (model.hasImplementation()) {
+            try {
+                Reflection.execute(model.getImplementation(), element, annotation);
             } catch (Throwable throwable) {
                 model.getExceptionStrategy().handleException(this, throwable);
             }

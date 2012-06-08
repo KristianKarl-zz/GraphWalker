@@ -47,8 +47,8 @@ public class ModelImpl implements Model {
     private final Random myIdGenerator = new Random(System.nanoTime());
     private final Map<String, Vertex> myVertexMap = new HashMap<String, Vertex>();
     private final Map<String, Edge> myEdgeMap = new HashMap<String, Edge>();
-    private DepthFirstSearch myDepthFirstSearch;
-    private FloydWarshall myFloydWarshall;
+    private final DepthFirstSearch myDepthFirstSearch;
+    private final FloydWarshall myFloydWarshall;
     private PathGenerator myPathGenerator;
     private Object myImplementation;
     private String myGroup;

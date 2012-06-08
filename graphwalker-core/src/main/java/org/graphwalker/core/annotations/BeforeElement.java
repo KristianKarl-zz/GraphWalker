@@ -23,49 +23,27 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core.machine;
+package org.graphwalker.core.annotations;
 
-import org.graphwalker.core.model.Model;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * <p>Abstract AbstractStrategy class.</p>
+ * <p>AfterModel class.</p>
  *
  * @author nilols
  * @version $Id: $
  */
-public abstract class AbstractStrategy implements ExceptionStrategy {
-
-    private final Map<String, List<Throwable>> myExceptionMap = new HashMap<String, List<Throwable>>();
-
-    /**
-     * {@inheritDoc}
-     */
-    public boolean hasExceptions(Model model) {
-        return myExceptionMap.containsKey(model.getId());
-    }
+@Retention(RetentionPolicy.RUNTIME)
+@Target(java.lang.annotation.ElementType.METHOD)
+public @interface BeforeElement {
 
     /**
-     * <p>addException.</p>
+     * <p>filter.</p>
      *
-     * @param model     a {@link org.graphwalker.core.model.Model} object.
-     * @param throwable a {@link java.lang.Throwable} object.
+     * @return a {@link java.lang.String} object.
      */
-    protected void addException(Model model, Throwable throwable) {
-        if (!myExceptionMap.containsKey(model.getId())) {
-            myExceptionMap.put(model.getId(), new ArrayList<Throwable>());
-        }
-        myExceptionMap.get(model.getId()).add(throwable);
-    }
+    public String filter() default "";
 
-    /**
-     * {@inheritDoc}
-     */
-    public List<Throwable> getExceptions(Model model) {
-        return myExceptionMap.get(model.getId());
-    }
 }

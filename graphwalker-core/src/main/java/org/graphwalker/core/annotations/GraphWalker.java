@@ -52,29 +52,29 @@ public @interface GraphWalker {
      *
      * @return a {@link java.lang.String} object.
      */
-    public String id();
-    
+    public String id() default "${classname}";
+
     /**
      * <p>model.</p>
      *
      * @return a {@link java.lang.String} object.
      */
-    public String model();
-    
+    public String model() default "${classname}";
+
     /**
      * <p>group.</p>
      *
      * @return a {@link java.lang.String} object.
      */
     public String group() default "global";
-    
+
     /**
      * <p>pathGenerator.</p>
      *
      * @return a {@link java.lang.Class} object.
      */
     public Class<? extends PathGenerator> pathGenerator() default RandomPath.class;
-    
+
     /**
      * <p>stopCondition.</p>
      *
@@ -87,8 +87,8 @@ public @interface GraphWalker {
      *
      * @return a {@link java.lang.String} object.
      */
-    public String stopConditionValue() default "100";
-    
+    public String stopConditionValue() default "";
+
     /**
      * <p>exceptionStrategy.</p>
      *

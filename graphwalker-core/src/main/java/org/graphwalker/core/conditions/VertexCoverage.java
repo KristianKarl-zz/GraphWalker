@@ -44,26 +44,30 @@ public class VertexCoverage implements StopCondition {
      * @param value a {@link java.lang.String} object.
      */
     public VertexCoverage(String value) {
-        this(Long.parseLong(value));
+        this(!"".equals(value) ? Long.parseLong(value) : 100);
     }
-    
+
     /**
      * <p>Constructor for VertexCoverage.</p>
      *
      * @param limit a long.
      */
     public VertexCoverage(long limit) {
-        myLimit = (double)limit/ PERCENTAGE_SCALE;
+        myLimit = (double) limit / PERCENTAGE_SCALE;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public boolean isFulfilled(Model model, Element element) {
         double totalVertexCount = model.getVertices().size();
         double visitedVertexCount = model.getVisitedVertices().size();
         return (visitedVertexCount / totalVertexCount) >= myLimit;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public double getFulfilment(Model model, Element element) {
         double totalVertexCount = model.getVertices().size();
         double visitedVertexCount = model.getVisitedVertices().size();

@@ -51,7 +51,7 @@ import java.util.UUID;
 @Aspect
 public class LoggerAspect {
 
-    private ILoggerFactory myLoggerFactory = LoggerFactory.getILoggerFactory();
+    private final ILoggerFactory myLoggerFactory = LoggerFactory.getILoggerFactory();
 
     static {
         MDC.put("traceId", UUID.randomUUID().toString());

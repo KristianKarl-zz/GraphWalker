@@ -39,7 +39,7 @@ import org.junit.Test;
 
 public class LengthTest {
 
-    private int myTestLength = 30;
+    private static final int TEST_LENGTH = 30;
 
     private Configuration createConfiguration() {
         Configuration configuration = new ConfigurationImpl();
@@ -49,14 +49,14 @@ public class LengthTest {
         model.addEdge(new Edge(), v_start, v_1);
         model.addEdge(new Edge("e_1"), v_1, v_1);
         model.setPathGenerator(PathGeneratorFactory.create("Random"));
-        model.getPathGenerator().setStopCondition(StopConditionFactory.create("Length", myTestLength));
+        model.getPathGenerator().setStopCondition(StopConditionFactory.create("Length", TEST_LENGTH));
         return configuration;
     }
 
     @Test
     public void executeTest() {
         GraphWalker graphWalker = GraphWalkerFactory.create(createConfiguration());
-        for (int i=0; i<myTestLength; i++) {
+        for (int i = 0; i < TEST_LENGTH; i++) {
             graphWalker.getNextStep();
         }
         Assert.assertFalse(graphWalker.hasNextStep());
