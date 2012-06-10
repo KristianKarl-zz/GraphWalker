@@ -4,7 +4,6 @@ import java.io.File;
 
 import org.graphwalker.ModelBasedTesting;
 import org.graphwalker.generators.PathGenerator;
-import org.graphwalker.generators.RandomPathGenerator;
 
 /**
  * @author krikar Any test should extend this class.
@@ -29,6 +28,11 @@ public class ModelAPI {
   }
 
   public ModelAPI(String model) {
+    mbt = new ModelBasedTesting();
+    mbt.readGraph(model);
+  }
+
+  public ModelAPI(File model) {
     mbt = new ModelBasedTesting();
     mbt.readGraph(model);
   }
