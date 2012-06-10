@@ -25,6 +25,9 @@
  */
 package org.graphwalker.core.machine;
 
+import org.graphwalker.core.annotations.AfterModel;
+import org.graphwalker.core.annotations.AnnotationProcessor;
+import org.graphwalker.core.annotations.AnnotationProcessorImpl;
 import org.graphwalker.core.model.ModelStatus;
 
 /**
@@ -35,6 +38,8 @@ import org.graphwalker.core.model.ModelStatus;
  */
 public class FailFastStrategy extends AbstractStrategy {
 
+    private AnnotationProcessor myAnnotationProcessor = new AnnotationProcessorImpl();
+
     /**
      * {@inheritDoc}
      */
@@ -42,7 +47,7 @@ public class FailFastStrategy extends AbstractStrategy {
         if (!ModelStatus.FAILED.equals(machine.getCurrentModel().getModelStatus())) {
             addException(machine.getCurrentModel(), throwable);
             machine.getCurrentModel().setModelStatus(ModelStatus.FAILED);
-            machine.afterModel();
+            myAnnotationProcessor.process(AfterModel.class, machine, machine.getCurrentModel(), null);
         }
     }
 

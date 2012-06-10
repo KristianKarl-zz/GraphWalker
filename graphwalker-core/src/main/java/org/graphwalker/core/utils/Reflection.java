@@ -100,6 +100,12 @@ public final class Reflection {
         }
     }
 
+    /**
+     * <p>execute.</p>
+     *
+     * @param object a {@link java.lang.Object} object.
+     * @param method a {@link java.lang.reflect.Method} object.
+     */
     public static void execute(Object object, Method method) {
         if (null != object) {
             try {
@@ -112,6 +118,13 @@ public final class Reflection {
         }
     }
 
+    /**
+     * <p>execute.</p>
+     *
+     * @param object    a {@link java.lang.Object} object.
+     * @param method    a {@link java.lang.reflect.Method} object.
+     * @param arguments a {@link java.lang.Object} object.
+     */
     public static void execute(Object object, Method method, Object... arguments) {
         if (null != object) {
             try {

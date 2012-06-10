@@ -34,10 +34,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * <p>RandomUnvisitedFirstPath class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public class RandomUnvisitedFirstPath extends AbstractPathGenerator {
 
     private final Random myRandomGenerator = new Random(System.nanoTime());
 
+    /**
+     * {@inheritDoc}
+     */
     public Element getNextStep(Machine machine) {
         List<Element> possibleElements = machine.getPossibleElements(machine.getCurrentElement());
         List<Element> unvisitedElements = new ArrayList<Element>();

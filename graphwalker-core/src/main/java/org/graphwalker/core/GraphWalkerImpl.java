@@ -78,20 +78,6 @@ public class GraphWalkerImpl implements GraphWalker {
 
     /**
      * {@inheritDoc}
-     */
-    public void afterGroup() {
-        getMachine().afterGroup();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void beforeGroup() {
-        getMachine().beforeGroup();
-    }
-
-    /**
-     * {@inheritDoc}
      * <p/>
      * <p>hasNextStep.</p>
      *

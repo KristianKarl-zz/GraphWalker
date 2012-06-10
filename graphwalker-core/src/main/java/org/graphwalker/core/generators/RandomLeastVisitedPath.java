@@ -34,10 +34,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * <p>RandomLeastVisitedPath class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public class RandomLeastVisitedPath extends AbstractPathGenerator {
 
     private final Random myRandomGenerator = new Random(System.nanoTime());
 
+    /**
+     * {@inheritDoc}
+     */
     public Element getNextStep(Machine machine) {
         List<Element> possibleElements = machine.getPossibleElements(machine.getCurrentElement());
         long leastVisitedCount = Long.MAX_VALUE;

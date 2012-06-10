@@ -47,7 +47,7 @@ import java.util.List;
  */
 public class MachineImpl implements Machine {
 
-    private final AnnotationProcessor myAnnotationProcessor = new AnnotationProcessor();
+    private final AnnotationProcessor myAnnotationProcessor = new AnnotationProcessorImpl();
     private final Configuration myConfiguration;
     private Model myCurrentModel;
     private Element myCurrentElement;
@@ -59,38 +59,6 @@ public class MachineImpl implements Machine {
      */
     public MachineImpl(Configuration configuration) {
         myConfiguration = configuration;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void beforeGroup() {
-        for (Model model : getConfiguration().getModels()) {
-            processAnnotation(BeforeGroup.class, model, null);
-        }
-    }
-
-    /**
-     * <p>beforeModel.</p>
-     */
-    public void beforeModel() {
-        processAnnotation(BeforeModel.class, getCurrentModel(), null);
-    }
-
-    /**
-     * <p>afterModel.</p>
-     */
-    public void afterModel() {
-        processAnnotation(AfterModel.class, getCurrentModel(), null);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void afterGroup() {
-        for (Model model : getConfiguration().getModels()) {
-            processAnnotation(AfterGroup.class, model, null);
-        }
     }
 
     /**
@@ -143,8 +111,9 @@ public class MachineImpl implements Machine {
      */
     public void setCurrentModel(Model model) {
         myCurrentModel = model;
+        beforeGroup();
         if (isModelStatus(myCurrentModel, ModelStatus.NOT_EXECUTED)) {
-            beforeModel();
+            processAnnotation(BeforeModel.class, myCurrentModel, null);
             myCurrentModel.setModelStatus(ModelStatus.EXECUTING);
         }
     }
@@ -178,7 +147,8 @@ public class MachineImpl implements Machine {
             return true;
         } else if (isModelStatus(getCurrentModel(), ModelStatus.EXECUTING)) {
             getCurrentModel().setModelStatus(ModelStatus.COMPLETED);
-            afterModel();
+            processAnnotation(AfterModel.class, getCurrentModel(), null);
+            afterGroup();
         }
         // and finally we go through all the models in order to find any other step we can take
         for (Model model : getConfiguration().getModels()) {
@@ -291,7 +261,8 @@ public class MachineImpl implements Machine {
     private void switchModel(String modelId) {
         if (!hasModelNextStep(getCurrentModel(), getCurrentElement()) && isModelStatus(getCurrentModel(), ModelStatus.EXECUTING)) {
             getCurrentModel().setModelStatus(ModelStatus.COMPLETED);
-            afterModel();
+            processAnnotation(AfterModel.class, getCurrentModel(), null);
+            afterGroup();
         }
         setCurrentModel(getConfiguration().getModel(modelId));
         setCurrentElement(getCurrentModel().getStartVertex());
@@ -355,6 +326,30 @@ public class MachineImpl implements Machine {
                 myAnnotationProcessor.process(annotation, this, model, element);
             } catch (Throwable throwable) {
                 model.getExceptionStrategy().handleException(this, throwable);
+            }
+        }
+    }
+
+    private void beforeGroup() {
+        boolean executeBeforeGroup = true;
+        for (Model model : getConfiguration().getModels()) {
+            executeBeforeGroup &= ModelStatus.NOT_EXECUTED.equals(model.getModelStatus());
+        }
+        if (executeBeforeGroup) {
+            for (Model model : getConfiguration().getModels()) {
+                processAnnotation(BeforeGroup.class, model, null);
+            }
+        }
+    }
+
+    private void afterGroup() {
+        boolean executeAfterGroup = true;
+        for (Model model : getConfiguration().getModels()) {
+            executeAfterGroup &= (ModelStatus.COMPLETED.equals(model.getModelStatus()) || ModelStatus.FAILED.equals(model.getModelStatus()));
+        }
+        if (executeAfterGroup) {
+            for (Model model : getConfiguration().getModels()) {
+                processAnnotation(AfterGroup.class, model, null);
             }
         }
     }

@@ -366,6 +366,9 @@ public class ModelImpl implements Model {
      * {@inheritDoc}
      * <p/>
      * <p>getMaximumDistance.</p>
+     *
+     * @param target a {@link org.graphwalker.core.model.Edge} object.
+     * @return a int.
      */
     public int getMaximumDistance(Edge target) {
         return myFloydWarshall.getMaximumDistance(target);
@@ -373,9 +376,6 @@ public class ModelImpl implements Model {
 
     /**
      * {@inheritDoc}
-     *
-     * @param target a {@link org.graphwalker.core.model.Vertex} object.
-     * @return a int.
      */
     public int getMaximumDistance(Vertex target) {
         return myFloydWarshall.getMaximumDistance(target);

@@ -40,16 +40,6 @@ import java.util.List;
 public interface GraphWalker {
 
     /**
-     * <p>afterGroup.</p>
-     */
-    void afterGroup();
-
-    /**
-     * <p>beforeGroup.</p>
-     */
-    void beforeGroup();
-
-    /**
      * <p>hasNextStep.</p>
      *
      * @return a boolean.

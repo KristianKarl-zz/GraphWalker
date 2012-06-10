@@ -45,13 +45,20 @@ public class GraphWalkerExecutor implements Runnable {
     }
 
     /**
+     * <p>getGraphWalker.</p>
+     *
+     * @return a {@link org.graphwalker.core.GraphWalker} object.
+     */
+    public GraphWalker getGraphWalker() {
+        return myGraphWalker;
+    }
+
+    /**
      * {@inheritDoc}
      */
     public void run() {
-        myGraphWalker.beforeGroup();
-        while (myGraphWalker.hasNextStep()) {
-            myGraphWalker.getNextStep();
+        while (getGraphWalker().hasNextStep()) {
+            getGraphWalker().getNextStep();
         }
-        myGraphWalker.afterGroup();
     }
 }
