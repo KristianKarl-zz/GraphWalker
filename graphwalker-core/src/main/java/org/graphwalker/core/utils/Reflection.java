@@ -26,11 +26,7 @@
 package org.graphwalker.core.utils;
 
 import org.graphwalker.core.Bundle;
-import org.graphwalker.core.model.Edge;
-import org.graphwalker.core.model.Element;
-import org.graphwalker.core.model.Vertex;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -92,91 +88,38 @@ public final class Reflection {
      * <p>execute.</p>
      *
      * @param object     a {@link java.lang.Object} object.
-     * @param annotation a {@link java.lang.Class} object.
-     */
-    public static void execute(Object object, Class<? extends Annotation> annotation) {
-        if (null != object) {
-            for (Method method : object.getClass().getMethods()) {
-                if (method.isAnnotationPresent(annotation)) {
-                    if (void.class.equals(method.getReturnType()) && 0 == method.getParameterTypes().length) {
-                        try {
-                            method.invoke(object);
-                        } catch (IllegalAccessException e) {
-                            throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.method.access", method.getName()), e);
-                        } catch (InvocationTargetException e) {
-                            throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.method.invocation", method.getName()), e);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * <p>execute.</p>
-     *
-     * @param object     a {@link java.lang.Object} object.
-     * @param annotation a {@link java.lang.Class} object.
-     */
-    public static void execute(Object object, Element element, Class<? extends Annotation> annotation) {
-        if (null != object) {
-            for (Method method : object.getClass().getMethods()) {
-                if (method.isAnnotationPresent(annotation)) {
-                    if (void.class.equals(method.getReturnType()) && 0 == method.getParameterTypes().length) {
-                        try {
-                            method.invoke(object);
-                        } catch (IllegalAccessException e) {
-                            throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.method.access", method.getName()), e);
-                        } catch (InvocationTargetException e) {
-                            throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.method.invocation", method.getName()), e);
-                        }
-                    } else if (void.class.equals(method.getReturnType()) && 1 == method.getParameterTypes().length && Element.class.equals(method.getParameterTypes()[0])) {
-                        try {
-                            method.invoke(object, element);
-                        } catch (IllegalAccessException e) {
-                            throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.method.access", method.getName()), e);
-                        } catch (InvocationTargetException e) {
-                            throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.method.invocation", method.getName()), e);
-                        }
-                    } else if (void.class.equals(method.getReturnType()) && 1 == method.getParameterTypes().length && Vertex.class.equals(method.getParameterTypes()[0]) && element instanceof Vertex) {
-                        try {
-                            method.invoke(object, (Vertex) element);
-                        } catch (IllegalAccessException e) {
-                            throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.method.access", method.getName()), e);
-                        } catch (InvocationTargetException e) {
-                            throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.method.invocation", method.getName()), e);
-                        }
-                    } else if (void.class.equals(method.getReturnType()) && 1 == method.getParameterTypes().length && Edge.class.equals(method.getParameterTypes()[0]) && element instanceof Edge) {
-                        try {
-                            method.invoke(object, (Edge) element);
-                        } catch (IllegalAccessException e) {
-                            throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.method.access", method.getName()), e);
-                        } catch (InvocationTargetException e) {
-                            throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.method.invocation", method.getName()), e);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * <p>execute.</p>
-     *
-     * @param object     a {@link java.lang.Object} object.
      * @param methodName a {@link java.lang.String} object.
      */
     public static void execute(Object object, String methodName) {
         if (null != object) {
             try {
-                Method method = object.getClass().getMethod(methodName);
-                method.invoke(object);
+                execute(object, object.getClass().getMethod(methodName));
             } catch (NoSuchMethodException e) {
                 throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.method.missing", methodName), e);
+            }
+        }
+    }
+
+    public static void execute(Object object, Method method) {
+        if (null != object) {
+            try {
+                method.invoke(object);
             } catch (IllegalAccessException e) {
-                throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.method.access", methodName), e);
+                throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.method.access", method.getName()), e);
             } catch (InvocationTargetException e) {
-                throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.method.invocation", methodName), e);
+                throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.method.invocation", method.getName()), e);
+            }
+        }
+    }
+
+    public static void execute(Object object, Method method, Object... arguments) {
+        if (null != object) {
+            try {
+                method.invoke(object, arguments);
+            } catch (IllegalAccessException e) {
+                throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.method.access", method.getName()), e);
+            } catch (InvocationTargetException e) {
+                throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.method.invocation", method.getName()), e);
             }
         }
     }

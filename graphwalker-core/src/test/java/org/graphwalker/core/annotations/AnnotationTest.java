@@ -55,6 +55,14 @@ public class AnnotationTest {
         new GraphWalkerExecutor(GraphWalkerFactory.create(ConfigurationFactory.create(getClass()))).run();
         Assert.assertTrue(isBeforeGroupExecuted);
         Assert.assertTrue(isBeforeModelExecuted);
+        Assert.assertTrue(isBeforeElementExecuted);
+        Assert.assertTrue(isBeforeElementWithEdgeExecuted);
+        Assert.assertTrue(isBeforeElementWithParameterExecuted);
+        Assert.assertTrue(isBeforeElementWithVertexExecuted);
+        Assert.assertTrue(isAfterElementWithEdgeExecuted);
+        Assert.assertTrue(isAfterElementWithParameterExecuted);
+        Assert.assertTrue(isAfterElementWithVertexExecuted);
+        Assert.assertTrue(isAfterElementExecuted);
         Assert.assertTrue(isAfterModelExecuted);
         Assert.assertTrue(isAfterGroupExecuted);
     }
@@ -67,46 +75,103 @@ public class AnnotationTest {
 
     @BeforeElement
     public void beforeElement() {
+        System.out.println("beforeElement 1");
+        Assert.assertTrue(isBeforeGroupExecuted);
+        Assert.assertTrue(isBeforeModelExecuted);
+        Assert.assertFalse(isAfterModelExecuted);
+        Assert.assertFalse(isAfterGroupExecuted);
         isBeforeElementExecuted = true;
     }
 
     @BeforeElement
     public void beforeElement(Edge edge) {
+        System.out.println("beforeElement 2");
+        Assert.assertTrue(isBeforeGroupExecuted);
+        Assert.assertTrue(isBeforeModelExecuted);
+        Assert.assertFalse(isAfterModelExecuted);
+        Assert.assertFalse(isAfterGroupExecuted);
         isBeforeElementWithEdgeExecuted = true;
     }
 
     @BeforeElement
     public void beforeElement(Element element) {
+        System.out.println("beforeElement 3");
+        Assert.assertTrue(isBeforeGroupExecuted);
+        Assert.assertTrue(isBeforeModelExecuted);
+        Assert.assertFalse(isAfterModelExecuted);
+        Assert.assertFalse(isAfterGroupExecuted);
         isBeforeElementWithParameterExecuted = true;
     }
 
     @BeforeElement
     public void beforeElement(Vertex vertex) {
+        System.out.println("beforeElement 4");
+        Assert.assertTrue(isBeforeGroupExecuted);
+        Assert.assertTrue(isBeforeModelExecuted);
+        Assert.assertFalse(isAfterModelExecuted);
+        Assert.assertFalse(isAfterGroupExecuted);
         isBeforeElementWithVertexExecuted = true;
     }
 
     @AfterElement
     public void afterElement() {
+        System.out.println("afterElement 1");
+        Assert.assertTrue(isBeforeGroupExecuted);
+        Assert.assertTrue(isBeforeModelExecuted);
+        Assert.assertTrue(isBeforeElementExecuted);
+        Assert.assertTrue(isBeforeElementWithEdgeExecuted);
+        Assert.assertTrue(isBeforeElementWithParameterExecuted);
+        Assert.assertTrue(isBeforeElementWithVertexExecuted);
+        Assert.assertFalse(isAfterModelExecuted);
+        Assert.assertFalse(isAfterGroupExecuted);
         isAfterElementExecuted = true;
     }
 
     @AfterElement
     public void afterElement(Edge edge) {
+        System.out.println("afterElement 2");
+        Assert.assertTrue(isBeforeGroupExecuted);
+        Assert.assertTrue(isBeforeModelExecuted);
+        Assert.assertTrue(isBeforeElementExecuted);
+        Assert.assertTrue(isBeforeElementWithEdgeExecuted);
+        Assert.assertTrue(isBeforeElementWithParameterExecuted);
+        Assert.assertTrue(isBeforeElementWithVertexExecuted);
+        Assert.assertFalse(isAfterModelExecuted);
+        Assert.assertFalse(isAfterGroupExecuted);
         isAfterElementWithEdgeExecuted = true;
     }
 
     @AfterElement
     public void afterElement(Element element) {
+        System.out.println("afterElement 3");
+        Assert.assertTrue(isBeforeGroupExecuted);
+        Assert.assertTrue(isBeforeModelExecuted);
+        Assert.assertTrue(isBeforeElementExecuted);
+        Assert.assertTrue(isBeforeElementWithEdgeExecuted);
+        Assert.assertTrue(isBeforeElementWithParameterExecuted);
+        Assert.assertTrue(isBeforeElementWithVertexExecuted);
+        Assert.assertFalse(isAfterModelExecuted);
+        Assert.assertFalse(isAfterGroupExecuted);
         isAfterElementWithParameterExecuted = true;
     }
 
     @AfterElement
     public void afterElement(Vertex vertex) {
+        System.out.println("afterElement 4");
+        Assert.assertTrue(isBeforeGroupExecuted);
+        Assert.assertTrue(isBeforeModelExecuted);
+        Assert.assertTrue(isBeforeElementExecuted);
+        Assert.assertTrue(isBeforeElementWithEdgeExecuted);
+        Assert.assertTrue(isBeforeElementWithParameterExecuted);
+        Assert.assertTrue(isBeforeElementWithVertexExecuted);
+        Assert.assertFalse(isAfterModelExecuted);
+        Assert.assertFalse(isAfterGroupExecuted);
         isAfterElementWithVertexExecuted = true;
     }
 
     @BeforeGroup
     public void beforeGroup() {
+        System.out.println("beforeGroup");
         Assert.assertFalse(isBeforeGroupExecuted);
         Assert.assertFalse(isBeforeModelExecuted);
         Assert.assertFalse(isBeforeElementExecuted);
@@ -124,6 +189,7 @@ public class AnnotationTest {
 
     @BeforeModel
     public void beforeModel() {
+        System.out.println("beforeModel");
         Assert.assertTrue(isBeforeGroupExecuted);
         Assert.assertFalse(isBeforeModelExecuted);
         Assert.assertFalse(isBeforeElementExecuted);
@@ -141,6 +207,7 @@ public class AnnotationTest {
 
     @AfterModel
     public void afterModel() {
+        System.out.println("afterModel");
         Assert.assertTrue(isBeforeGroupExecuted);
         Assert.assertTrue(isBeforeModelExecuted);
         Assert.assertTrue(isBeforeElementExecuted);
@@ -158,6 +225,7 @@ public class AnnotationTest {
 
     @AfterGroup
     public void afterGroup() {
+        System.out.println("afterGroup");
         Assert.assertTrue(isBeforeGroupExecuted);
         Assert.assertTrue(isBeforeModelExecuted);
         Assert.assertTrue(isBeforeElementExecuted);

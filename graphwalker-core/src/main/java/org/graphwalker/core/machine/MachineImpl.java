@@ -47,6 +47,7 @@ import java.util.List;
  */
 public class MachineImpl implements Machine {
 
+    private final AnnotationProcessor myAnnotationProcessor = new AnnotationProcessor();
     private final Configuration myConfiguration;
     private Model myCurrentModel;
     private Element myCurrentElement;
@@ -65,7 +66,7 @@ public class MachineImpl implements Machine {
      */
     public void beforeGroup() {
         for (Model model : getConfiguration().getModels()) {
-            executeAnnotation(model, BeforeGroup.class);
+            processAnnotation(BeforeGroup.class, model, null);
         }
     }
 
@@ -73,14 +74,14 @@ public class MachineImpl implements Machine {
      * <p>beforeModel.</p>
      */
     public void beforeModel() {
-        executeAnnotation(getCurrentModel(), BeforeModel.class);
+        processAnnotation(BeforeModel.class, getCurrentModel(), null);
     }
 
     /**
      * <p>afterModel.</p>
      */
     public void afterModel() {
-        executeAnnotation(getCurrentModel(), AfterModel.class);
+        processAnnotation(AfterModel.class, getCurrentModel(), null);
     }
 
     /**
@@ -88,7 +89,7 @@ public class MachineImpl implements Machine {
      */
     public void afterGroup() {
         for (Model model : getConfiguration().getModels()) {
-            executeAnnotation(model, AfterGroup.class);
+            processAnnotation(AfterGroup.class, model, null);
         }
     }
 
@@ -343,25 +344,15 @@ public class MachineImpl implements Machine {
     }
 
     private void executeElement(Model model, Element element) {
-        executeAnnotation(model, element, BeforeElement.class);
+        processAnnotation(BeforeElement.class, model, element);
         Reflection.execute(model.getImplementation(), element.getName());
-        executeAnnotation(model, element, AfterElement.class);
+        processAnnotation(AfterElement.class, model, element);
     }
 
-    private void executeAnnotation(Model model, Class<? extends Annotation> annotation) {
+    private void processAnnotation(Class<? extends Annotation> annotation, Model model, Element element) {
         if (model.hasImplementation()) {
             try {
-                Reflection.execute(model.getImplementation(), annotation);
-            } catch (Throwable throwable) {
-                model.getExceptionStrategy().handleException(this, throwable);
-            }
-        }
-    }
-
-    private void executeAnnotation(Model model, Element element, Class<? extends Annotation> annotation) {
-        if (model.hasImplementation()) {
-            try {
-                Reflection.execute(model.getImplementation(), element, annotation);
+                myAnnotationProcessor.process(annotation, this, model, element);
             } catch (Throwable throwable) {
                 model.getExceptionStrategy().handleException(this, throwable);
             }
