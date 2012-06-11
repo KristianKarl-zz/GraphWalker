@@ -102,14 +102,14 @@ public class GraphWalkerImpl implements GraphWalker {
      * {@inheritDoc}
      */
     public boolean hasExceptions(Model model) {
-        return getMachine().getExceptionStrategy().hasExceptions(model);
+        return model.getExceptionStrategy().hasExceptions(model);
     }
 
     /**
      * {@inheritDoc}
      */
     public List<Throwable> getExceptions(Model model) {
-        return getMachine().getExceptionStrategy().getExceptions(model);
+        return model.getExceptionStrategy().getExceptions(model);
     }
 
     /**

@@ -95,11 +95,4 @@ public interface Machine {
      * @param model a {@link org.graphwalker.core.model.Model} object.
      */
     void setCurrentModel(Model model);
-
-    /**
-     * <p>getExceptionStrategy.</p>
-     *
-     * @return a {@link org.graphwalker.core.machine.ExceptionStrategy} object.
-     */
-    ExceptionStrategy getExceptionStrategy();
 }

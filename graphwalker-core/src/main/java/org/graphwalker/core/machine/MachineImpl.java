@@ -120,15 +120,6 @@ public class MachineImpl implements Machine {
 
     /**
      * {@inheritDoc}
-     *
-     * @return a {@link org.graphwalker.core.machine.ExceptionStrategy} object.
-     */
-    public ExceptionStrategy getExceptionStrategy() {
-        return getCurrentModel().getExceptionStrategy();
-    }
-
-    /**
-     * {@inheritDoc}
      * <p/>
      * <p>hasNextStep.</p>
      *
@@ -218,7 +209,7 @@ public class MachineImpl implements Machine {
             setRequirementStatus(getCurrentElement(), RequirementStatus.PASSED);
         } catch (Throwable throwable) {
             setRequirementStatus(getCurrentElement(), RequirementStatus.FAILED);
-            getExceptionStrategy().handleException(this, throwable);
+            getCurrentModel().getExceptionStrategy().handleException(this, throwable);
         }
         return getCurrentElement();
     }
