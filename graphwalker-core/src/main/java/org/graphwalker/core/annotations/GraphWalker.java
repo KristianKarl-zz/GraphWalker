@@ -52,14 +52,14 @@ public @interface GraphWalker {
      *
      * @return a {@link java.lang.String} object.
      */
-    public String id() default "${classname}";
+    public String id() default "${className}";
 
     /**
      * <p>model.</p>
      *
      * @return a {@link java.lang.String} object.
      */
-    public String model() default "${classname}";
+    public String model() default "models/${className}.graphml";
 
     /**
      * <p>group.</p>

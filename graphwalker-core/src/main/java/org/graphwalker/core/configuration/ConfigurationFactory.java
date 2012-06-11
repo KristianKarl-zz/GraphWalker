@@ -81,7 +81,7 @@ public class ConfigurationFactory {
         for (Class<?> clazz : clazzes) {
             GraphWalker metadata = clazz.getAnnotation(GraphWalker.class);
             if (null != metadata) {
-                Model model = new GraphMLModelFactory().create(metadata.id(), metadata.model());
+                Model model = new GraphMLModelFactory().create(expand(metadata.id(), clazz), expand(metadata.model(), clazz));
                 model.setImplementation(Reflection.newInstance(clazz));
                 PathGenerator pathGenerator = Reflection.newInstance(metadata.pathGenerator());
                 StopCondition stopCondition = Reflection.newInstance(metadata.stopCondition(), metadata.stopConditionValue());
@@ -94,6 +94,10 @@ public class ConfigurationFactory {
             }
         }
         return configuration;
+    }
+
+    private static String expand(String property, Class<?> clazz) {
+        return property.replaceAll("\\$\\{className\\}", clazz.getSimpleName());
     }
 
     /**
