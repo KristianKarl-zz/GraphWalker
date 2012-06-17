@@ -27,11 +27,9 @@ package org.graphwalker.core.utils;
 
 import org.graphwalker.core.Bundle;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.Locale;
@@ -77,59 +75,80 @@ public final class Resource {
     }
 
     /**
-     * <p>getIcon.</p>
+     * <p>getResourceAsIcon.</p>
      *
      * @param bundle a {@link java.lang.String} object.
      * @param key    a {@link java.lang.String} object.
      * @return a {@link javax.swing.Icon} object.
      */
-    public static Icon getIcon(final String bundle, final String key) {
-        return getIcon(getText(bundle, key));
+    public static Icon getResourceAsIcon(final String bundle, final String key) {
+        return getResourceAsIcon(getText(bundle, key));
     }
 
     /**
-     * <p>getIcon.</p>
+     * <p>getResourceAsIcon.</p>
      *
      * @param filename a {@link java.lang.String} object.
      * @return a {@link javax.swing.Icon} object.
      */
-    public static Icon getIcon(final String filename) {
+    public static Icon getResourceAsIcon(final String filename) {
         File file = createFile(filename);
         if (file.exists()) {
             return new ImageIcon(file.getPath());
         } else {
-            return new ImageIcon(getResource(file.getPath()).getPath());
+            try {
+                return new ImageIcon(ImageIO.read(getResourceAsStream(file.getPath())));
+            } catch (IOException e) {
+                throw new ResourceException(getText(Bundle.NAME, "exception.file.missing", filename));
+            }
         }
     }
 
     /**
-     * <p>getFile.</p>
+     * <p>getResourceAsFile.</p>
      *
      * @param filename a {@link java.lang.String} object.
      * @return a {@link java.io.File} object.
      */
-    public static File getFile(final String filename) {
+    public static File getResourceAsFile(final String filename) {
         File file = createFile(filename);
         if (file.exists()) {
             return file;
         } else {
-            return getResource(filename);
+            URL resource = Resource.class.getResource(filename);
+            if (null == resource) {
+                resource = Thread.currentThread().getContextClassLoader().getResource(filename);
+            }
+            if (null != resource) {
+                return new File(resource.getFile());
+            }
+            throw new ResourceException(getText(Bundle.NAME, "exception.file.missing", filename));
         }
     }
 
     /**
-     * <p>getInputStream.</p>
+     * <p>getResourceAsStream.</p>
      *
      * @param filename a {@link java.lang.String} object.
      * @return a {@link java.io.InputStream} object.
-     * @throws java.io.FileNotFoundException if any.
      */
-    public static InputStream getInputStream(final String filename) throws FileNotFoundException {
+    public static InputStream getResourceAsStream(final String filename) {
         File file = createFile(filename);
         if (file.exists()) {
-            return new FileInputStream(file);
+            try {
+                return new FileInputStream(file);
+            } catch (FileNotFoundException e) {
+                throw new ResourceException(getText(Bundle.NAME, "exception.file.missing", filename));
+            }
         } else {
-            return getResourceAsStream(filename);
+            InputStream resource = Resource.class.getResourceAsStream(filename);
+            if (null == resource) {
+                resource = Thread.currentThread().getContextClassLoader().getResourceAsStream(filename);
+            }
+            if (null != resource) {
+                return resource;
+            }
+            throw new ResourceException(getText(Bundle.NAME, "exception.file.missing", filename));
         }
     }
 
@@ -143,25 +162,6 @@ public final class Resource {
             createdFile = new File(createdFile, part);
         }
         return createdFile;
-    }
-
-    private static File getResource(final String filename) {
-        URL resource = Resource.class.getResource(filename);
-        if (null == resource) {
-            resource = Thread.currentThread().getContextClassLoader().getResource(filename);
-        }
-        if (null != resource) {
-            return new File(resource.getFile());
-        }
-        throw new ResourceException(getText(Bundle.NAME, "exception.file.missing", filename));
-    }
-
-    private static InputStream getResourceAsStream(final String filename) {
-        InputStream inputStream = Resource.class.getResourceAsStream(filename);
-        if (null != inputStream) {
-            return inputStream;
-        }
-        throw new ResourceException(getText(Bundle.NAME, "exception.file.missing", filename));
     }
 
 }

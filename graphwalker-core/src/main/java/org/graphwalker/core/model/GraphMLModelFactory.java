@@ -32,7 +32,7 @@ import org.jdom.Element;
 import org.jdom.filter.ElementFilter;
 import org.jdom.input.SAXBuilder;
 
-import java.io.File;
+import java.io.InputStream;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -66,16 +66,16 @@ public class GraphMLModelFactory implements ModelFactory {
      * <p>create.</p>
      */
     public Model create(String id, String filename) {
-        return parse(id, Resource.getFile(filename));
+        return parse(id, Resource.getResourceAsStream(filename));
     }
 
-    private Model parse(String id, File file) {
+    private Model parse(String id, InputStream inputStream) {
         Model model = new ModelImpl(id);
         SAXBuilder saxBuilder = new SAXBuilder();
         Document document;
 
         try {
-            document = saxBuilder.build(file);
+            document = saxBuilder.build(inputStream);
         } catch (Exception e) {
             throw new ModelException(e);
         }

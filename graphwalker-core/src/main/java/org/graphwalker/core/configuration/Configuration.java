@@ -29,7 +29,6 @@ import org.graphwalker.core.filter.EdgeFilter;
 import org.graphwalker.core.generators.PathGenerator;
 import org.graphwalker.core.model.Model;
 
-import java.io.File;
 import java.util.List;
 
 /**
@@ -41,41 +40,33 @@ import java.util.List;
 public interface Configuration {
 
     /**
-     * <p>getConfigurationFile.</p>
-     *
-     * @return a {@link java.io.File} object.
-     */
-    File getConfigurationFile();
-    /**
-     * <p>setConfigurationFile.</p>
-     *
-     * @param configurationFile a {@link java.io.File} object.
-     */
-    void setConfigurationFile(File configurationFile);
-    /**
      * <p>getDefaultModel.</p>
      *
      * @return a {@link org.graphwalker.core.model.Model} object.
      */
     Model getDefaultModel();
+
     /**
      * <p>setDefaultModelId.</p>
      *
      * @param id a {@link java.lang.String} object.
      */
     void setDefaultModelId(String id);
+
     /**
      * <p>getDefaultPathGenerator.</p>
      *
      * @return a {@link org.graphwalker.core.generators.PathGenerator} object.
      */
     PathGenerator getDefaultPathGenerator();
+
     /**
      * <p>setDefaultPathGenerator.</p>
      *
      * @param pathGenerator a {@link org.graphwalker.core.generators.PathGenerator} object.
      */
     void setDefaultPathGenerator(PathGenerator pathGenerator);
+
     /**
      * <p>addModel.</p>
      *
@@ -83,6 +74,7 @@ public interface Configuration {
      * @return a {@link org.graphwalker.core.model.Model} object.
      */
     Model addModel(Model model);
+
     /**
      * <p>getModel.</p>
      *
@@ -90,18 +82,21 @@ public interface Configuration {
      * @return a {@link org.graphwalker.core.model.Model} object.
      */
     Model getModel(String id);
+
     /**
      * <p>getModels.</p>
      *
      * @return a {@link java.util.List} object.
      */
     List<Model> getModels();
+
     /**
      * <p>getEdgeFilter.</p>
      *
      * @return a {@link org.graphwalker.core.filter.EdgeFilter} object.
      */
     EdgeFilter getEdgeFilter();
+
     /**
      * <p>setEdgeFilter.</p>
      *

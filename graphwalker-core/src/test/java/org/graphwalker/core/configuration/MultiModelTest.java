@@ -27,15 +27,18 @@ package org.graphwalker.core.configuration;
 
 import org.graphwalker.core.GraphWalker;
 import org.graphwalker.core.GraphWalkerFactory;
-import org.graphwalker.core.utils.Resource;
 import org.junit.Assert;
-import org.junit.Test;
 
 public class MultiModelTest {
 
-    @Test
+    private Configuration createConfiguration() {
+        Configuration configuration = new ConfigurationImpl();
+
+        return configuration;
+    }
+
     public void executeTest() {
-        GraphWalker graphWalker = GraphWalkerFactory.create(Resource.getFile("multiModelTest.xml"));
+        GraphWalker graphWalker = GraphWalkerFactory.create(createConfiguration());
         // defaultModelId in multiModelTest.xml makes the m3 model the current model
         Assert.assertTrue(graphWalker.hasNextStep());
         Assert.assertEquals(graphWalker.getNextStep().getName(), "e_0");

@@ -26,13 +26,11 @@
 package org.graphwalker.core;
 
 import org.graphwalker.core.configuration.Configuration;
-import org.graphwalker.core.configuration.ConfigurationFactory;
 import org.graphwalker.core.machine.Machine;
 import org.graphwalker.core.machine.MachineImpl;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Model;
 
-import java.io.File;
 import java.util.List;
 
 /**
@@ -44,24 +42,6 @@ import java.util.List;
 public class GraphWalkerImpl implements GraphWalker {
 
     private final Machine myMachine;
-
-    /**
-     * <p>Constructor for GraphWalkerImpl.</p>
-     *
-     * @param file a {@link java.lang.String} object.
-     */
-    public GraphWalkerImpl(String file) {
-        this(ConfigurationFactory.create(file));
-    }
-
-    /**
-     * <p>Constructor for GraphWalkerImpl.</p>
-     *
-     * @param file a {@link java.io.File} object.
-     */
-    public GraphWalkerImpl(File file) {
-        this(ConfigurationFactory.create(file));
-    }
 
     /**
      * <p>Constructor for GraphWalkerImpl.</p>

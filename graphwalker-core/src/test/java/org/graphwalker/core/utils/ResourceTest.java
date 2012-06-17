@@ -27,16 +27,55 @@ package org.graphwalker.core.utils;
 
 import org.junit.Test;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
+
 public class ResourceTest {
 
     @Test
     public void testGetFileWithUnixPath() {
-        Resource.getFile("/models/brokenModel.graphml");
+        Resource.getResourceAsFile("/models/brokenModel.graphml");
     }
 
     @Test
     public void testGetResourceFile() {
-        Resource.getFile("models/brokenModel.graphml");
+        Resource.getResourceAsFile("models/brokenModel.graphml");
+    }
+
+    @Test
+    public void jarTest() throws MalformedURLException {
+        // try to find the resource in the test jar
+        InputStream inputStream = null;
+        try {
+            inputStream = Resource.getResourceAsStream("jar-resources/resource.graphml");
+        } catch (Throwable throwable) {
+            //
+        }
+        Assert.assertNull(inputStream);
+
+        // add the test jar to the classLoader
+        File file = null;
+        if (System.getProperty("user.dir").endsWith("graphwalker-core")) {
+            file = new File(System.getProperty("user.dir") + "/target/test-classes/jar-resources.jar");
+        } else {
+            file = new File(System.getProperty("user.dir") + "/graphwalker-core/target/test-classes/jar-resources.jar");
+        }
+        URLClassLoader classLoader = new URLClassLoader(new URL[]{file.toURI().toURL()}, Thread.currentThread().getContextClassLoader());
+        Thread.currentThread().setContextClassLoader(classLoader);
+
+        // try to find the resource again
+        inputStream = Resource.getResourceAsStream("jar-resources/resource.graphml");
+        Assert.assertNotNull(inputStream);
+
+        try {
+            inputStream.close();
+        } catch (IOException e) {
+            //
+        }
     }
 
 }

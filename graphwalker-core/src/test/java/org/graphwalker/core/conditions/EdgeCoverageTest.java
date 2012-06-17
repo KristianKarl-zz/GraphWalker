@@ -64,11 +64,10 @@ public class EdgeCoverageTest {
 
     @Test
     public void executeTest() {
-        Configuration configuration = createConfiguration();
-        GraphWalker graphWalker = GraphWalkerFactory.create(configuration);
+        GraphWalker graphWalker = GraphWalkerFactory.create(createConfiguration());
         while (graphWalker.hasNextStep()) {
             graphWalker.getNextStep();
         }
-        Assert.assertEquals(11, configuration.getModel("m1").getVisitedEdges().size());
+        Assert.assertEquals(11, graphWalker.getConfiguration().getModel("m1").getVisitedEdges().size());
     }
 }

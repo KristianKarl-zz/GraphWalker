@@ -27,15 +27,18 @@ package org.graphwalker.core.configuration;
 
 import org.graphwalker.core.GraphWalker;
 import org.graphwalker.core.GraphWalkerFactory;
-import org.graphwalker.core.utils.Resource;
 import org.junit.Assert;
-import org.junit.Test;
 
 public class StopConditionTest {
 
-    @Test
+    private Configuration createConfiguration() {
+        Configuration configuration = new ConfigurationImpl();
+
+        return configuration;
+    }
+
     public void executeTest() {
-        GraphWalker graphWalker = GraphWalkerFactory.create(Resource.getFile("stopConditionTest.xml"));
+        GraphWalker graphWalker = GraphWalkerFactory.create(createConfiguration());
         Assert.assertTrue(graphWalker.hasNextStep());
         Assert.assertEquals(graphWalker.getNextStep().getName(), "e_0");
         Assert.assertTrue(graphWalker.hasNextStep());

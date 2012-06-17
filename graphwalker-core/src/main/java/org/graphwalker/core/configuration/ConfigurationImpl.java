@@ -32,7 +32,6 @@ import org.graphwalker.core.generators.PathGenerator;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.utils.Resource;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -46,7 +45,6 @@ import java.util.Map;
  */
 public class ConfigurationImpl implements Configuration {
 
-    private File myConfigurationFile;
     private String myDefaultModelId;
     private PathGenerator myDefaultGenerator;
     private final Map<String, Model> myModels = new HashMap<String, Model>();
@@ -60,20 +58,6 @@ public class ConfigurationImpl implements Configuration {
     }
 
     /**
-     * <p>getConfigurationFile.</p>
-     *
-     * @return a {@link java.io.File} object.
-     */
-    public File getConfigurationFile() {
-        return myConfigurationFile;
-    }
-
-    /** {@inheritDoc} */
-    public void setConfigurationFile(File configurationFile) {
-        myConfigurationFile = configurationFile;
-    }
-
-    /**
      * <p>getDefaultModel.</p>
      *
      * @return a {@link org.graphwalker.core.model.Model} object.
@@ -82,7 +66,9 @@ public class ConfigurationImpl implements Configuration {
         return myModels.get(myDefaultModelId);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void setDefaultModelId(String id) {
         myDefaultModelId = id;
     }
@@ -96,12 +82,16 @@ public class ConfigurationImpl implements Configuration {
         return myDefaultGenerator;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void setDefaultPathGenerator(PathGenerator pathGenerator) {
         myDefaultGenerator = pathGenerator;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Model addModel(Model model) {
         if (null == myDefaultModelId) {
             setDefaultModelId(model.getId());
@@ -110,7 +100,9 @@ public class ConfigurationImpl implements Configuration {
         return model;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Model getModel(String id) {
         return myModels.get(id);
     }
@@ -133,7 +125,9 @@ public class ConfigurationImpl implements Configuration {
         return myEdgeFilter;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void setEdgeFilter(EdgeFilter edgeFilter) {
         myEdgeFilter = edgeFilter;
     }

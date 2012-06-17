@@ -25,25 +25,14 @@
  */
 package org.graphwalker.core.configuration;
 
-import org.graphwalker.core.Bundle;
 import org.graphwalker.core.annotations.GraphWalker;
 import org.graphwalker.core.conditions.StopCondition;
-import org.graphwalker.core.conditions.StopConditionFactory;
-import org.graphwalker.core.filter.EdgeFilterImpl;
 import org.graphwalker.core.generators.PathGenerator;
-import org.graphwalker.core.generators.PathGeneratorFactory;
 import org.graphwalker.core.machine.ExceptionStrategy;
 import org.graphwalker.core.model.GraphMLModelFactory;
 import org.graphwalker.core.model.Model;
-import org.graphwalker.core.model.ModelFactory;
 import org.graphwalker.core.utils.Reflection;
-import org.graphwalker.core.utils.Resource;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.Unmarshaller;
-import java.io.File;
-import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -100,98 +89,4 @@ public class ConfigurationFactory {
         return property.replaceAll("\\$\\{className\\}", clazz.getSimpleName());
     }
 
-    /**
-     * <p>create.</p>
-     *
-     * @param file a {@link java.lang.String} object.
-     * @return a configuration that can be used by GraphWalker
-     */
-    public static Configuration create(String file) {
-        return create(Resource.getFile(file));
-    }
-
-    /**
-     * <p>create.</p>
-     *
-     * @param file a {@link java.io.File} object.
-     * @return a configuration that can be used by GraphWalker
-     */
-    public static Configuration create(File file) {
-        return parse(unmarshal(file), file);
-    }
-
-    private static GraphWalkerType unmarshal(File file) {
-        try {
-            JAXBContext jaxbContext = JAXBContext.newInstance(ConfigurationFactory.class.getPackage().getName());
-            Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-            JAXBElement jaxbElement = (JAXBElement) unmarshaller.unmarshal(new FileInputStream(file));
-            return (GraphWalkerType) jaxbElement.getValue();
-        } catch (Exception e) {
-            throw new ConfigurationException(e);
-        }
-    }
-
-    private static Configuration parse(GraphWalkerType graphWalkerType, File file) {
-        Configuration configuration = new ConfigurationImpl();
-        configuration.setConfigurationFile(file);
-        return parse(configuration, graphWalkerType);
-    }
-
-    private static Configuration parse(Configuration configuration, GraphWalkerType graphWalkerType) {
-        for (ModelType modelType : graphWalkerType.getModels().getModel()) {
-            configuration.addModel(parse(configuration, modelType));
-        }
-        if (null != graphWalkerType.getDefaultModelId()) {
-            ModelType modelType = (ModelType) graphWalkerType.getDefaultModelId();
-            configuration.setDefaultModelId(modelType.getId());
-        }
-        String scriptLanguage = graphWalkerType.getScriptLanguage();
-        if (!"".equalsIgnoreCase(scriptLanguage)) {
-            configuration.setEdgeFilter(new EdgeFilterImpl(scriptLanguage));
-        }
-        if (null != graphWalkerType.getDefaultPathGenerator()) {
-            configuration.setDefaultPathGenerator(parse(graphWalkerType.getDefaultPathGenerator()));
-        }
-        return configuration;
-    }
-
-    private static Model parse(Configuration configuration, ModelType modelType) {
-        File modelFile = new File(modelType.getFile());
-        if (!modelFile.exists()) {
-            modelFile = new File(configuration.getConfigurationFile().getParentFile(), modelType.getFile());
-        }
-        //TODO: Handle more than graphml files
-        ModelFactory modelFactory = new GraphMLModelFactory();
-        Model model = modelFactory.create(modelType.getId(), modelFile.getAbsolutePath());
-        if (null != modelType.getPathGenerator()) {
-            model.setPathGenerator(parse(modelType.getPathGenerator()));
-        }
-        if (null != modelType.getClazz()) {
-            try {
-                Class clazz = Thread.currentThread().getContextClassLoader().loadClass(modelType.getClazz());
-                model.setImplementation(clazz.newInstance());
-            } catch (ClassNotFoundException e) {
-                throw new ConfigurationException(Resource.getText(Bundle.NAME, "exception.class.missing", modelType.getClazz()));
-            } catch (InstantiationException e) {
-                throw new ConfigurationException(Resource.getText(Bundle.NAME, "exception.class.instantiation", modelType.getClazz()));
-            } catch (IllegalAccessException e) {
-                throw new ConfigurationException(Resource.getText(Bundle.NAME, "exception.class.instantiation", modelType.getClazz()));
-            }
-        }
-        return model;
-    }
-
-    private static PathGenerator parse(PathGeneratorType pathGeneratorType) {
-        PathGenerator pathGenerator = PathGeneratorFactory.create(pathGeneratorType.getType());
-        if (null != pathGeneratorType.getStopCondition()) {
-            pathGenerator.setStopCondition(parse(pathGeneratorType.getStopCondition()));
-        } else {
-            throw new ConfigurationException(Resource.getText(Bundle.NAME, "exception.condition.missing"));
-        }
-        return pathGenerator;
-    }
-
-    private static StopCondition parse(StopConditionType stopConditionType) {
-        return StopConditionFactory.create(stopConditionType.getType(), stopConditionType.getValue());
-    }
 }

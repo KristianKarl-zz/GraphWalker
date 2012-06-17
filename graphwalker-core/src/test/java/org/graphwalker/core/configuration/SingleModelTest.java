@@ -28,15 +28,18 @@ package org.graphwalker.core.configuration;
 import org.graphwalker.core.GraphWalker;
 import org.graphwalker.core.GraphWalkerExecutor;
 import org.graphwalker.core.GraphWalkerFactory;
-import org.graphwalker.core.utils.Resource;
 import org.junit.Assert;
-import org.junit.Test;
 
 public class SingleModelTest {
 
-    @Test
+    private Configuration createConfiguration() {
+        Configuration configuration = new ConfigurationImpl();
+
+        return configuration;
+    }
+
     public void testStep() {
-        GraphWalker graphWalker = GraphWalkerFactory.create(Resource.getFile("singleModelTest.xml"));
+        GraphWalker graphWalker = GraphWalkerFactory.create(createConfiguration());
         Assert.assertTrue(graphWalker.hasNextStep());
         Assert.assertEquals(graphWalker.getNextStep().getName(), "e_0");
         Assert.assertTrue(graphWalker.hasNextStep());
@@ -58,9 +61,8 @@ public class SingleModelTest {
         Assert.assertFalse(graphWalker.hasNextStep());
     }
 
-    @Test
     public void executePath() {
-        GraphWalker graphWalker = GraphWalkerFactory.create(Resource.getFile("singleModelTest.xml"));
+        GraphWalker graphWalker = GraphWalkerFactory.create(createConfiguration());
         Assert.assertTrue(graphWalker.hasNextStep());
         GraphWalkerExecutor executor = new GraphWalkerExecutor(graphWalker);
         executor.run();

@@ -27,8 +27,6 @@ package org.graphwalker.core;
 
 import org.graphwalker.core.configuration.Configuration;
 
-import java.io.File;
-
 /**
  * <p>GraphWalkerFactory class.</p>
  *
@@ -38,26 +36,6 @@ import java.io.File;
 public class GraphWalkerFactory {
 
     private GraphWalkerFactory() {
-    }
-
-    /**
-     * <p>create.</p>
-     *
-     * @param file a {@link java.lang.String} object.
-     * @return a {@link org.graphwalker.core.GraphWalker} object.
-     */
-    public static GraphWalker create(String file) {
-        return new GraphWalkerImpl(file);
-    }
-
-    /**
-     * <p>create.</p>
-     *
-     * @param file a {@link java.io.File} object.
-     * @return a {@link org.graphwalker.core.GraphWalker} object.
-     */
-    public static GraphWalker create(File file) {
-        return new GraphWalkerImpl(file);
     }
 
     /**
