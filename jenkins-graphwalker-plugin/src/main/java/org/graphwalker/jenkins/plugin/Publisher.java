@@ -18,6 +18,8 @@ import java.util.List;
 
 public class Publisher extends Recorder {
 
+    private static final String REPORT_FILE_PATTERN = ";";
+
     @DataBoundConstructor
     public Publisher() {
 
@@ -30,13 +32,16 @@ public class Publisher extends Recorder {
     @Override
     public Collection<? extends Action> getProjectActions(AbstractProject<?, ?> project) {
         List<Action> actions = new ArrayList<Action>();
-        actions.add(new ProjectAction(project));
+        actions.add(new ProjectAction(project, this));
         return actions;
     }
 
     @Override
     public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, final BuildListener listener) throws InterruptedException, IOException {
-        build.getActions().add(new BuildAction(build));
+        //FilePath[] paths = findReports(build.getWorkspace(), REPORT_FILE_PATTERN);
+
+
+        build.getActions().add(new BuildAction(build, this));
         return true;
     }
 

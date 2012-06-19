@@ -6,9 +6,11 @@ import hudson.model.ProminentProjectAction;
 public class ProjectAction implements ProminentProjectAction {
 
     private final AbstractProject<?, ?> myProject;
+    private final Publisher myPublisher;
 
-    public ProjectAction(AbstractProject<?, ?> project) {
+    public ProjectAction(AbstractProject<?, ?> project, Publisher publisher) {
         myProject = project;
+        myPublisher = publisher;
     }
 
     public AbstractProject<?, ?> getProject() {

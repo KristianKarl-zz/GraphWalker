@@ -7,7 +7,6 @@
         <groupId>org.jenkins-ci.plugins</groupId>
         <artifactId>plugin</artifactId>
         <version>1.458</version>
-        <!-- which version of Jenkins is this plugin built against? -->
     </parent>
 
     <groupId>org.graphwalker</groupId>
@@ -16,7 +15,6 @@
     <name>Jenkins GraphWalker Plugin</name>
     <packaging>hpi</packaging>
 
-    <!-- get every artifact through repo.jenkins-ci.org, which proxies all the artifacts that we need -->
     <repositories>
         <repository>
             <id>repo.jenkins-ci.org</id>
@@ -30,5 +28,13 @@
             <url>http://repo.jenkins-ci.org/public/</url>
         </pluginRepository>
     </pluginRepositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>jfree</groupId>
+            <artifactId>jfreechart</artifactId>
+            <version>1.0.13</version>
+        </dependency>
+    </dependencies>
 
 </project>
