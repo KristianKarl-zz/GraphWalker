@@ -7,7 +7,7 @@
     <artifactId>graphwalker-parent</artifactId>
     <version>3.0-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>GraphWalker</name>
+    <name>GraphWalker Parent</name>
     <description>GraphWalker is a tool for generating offline and online test sequences from Finite State Machines and
         Extended Finite State Machines.
     </description>
