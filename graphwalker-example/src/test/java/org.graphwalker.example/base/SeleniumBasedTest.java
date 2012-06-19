@@ -3,6 +3,7 @@ package org.graphwalker.example.base;
 import com.google.common.base.Predicate;
 import com.thoughtworks.selenium.SeleniumException;
 import org.graphwalker.core.annotations.AfterModel;
+import org.graphwalker.core.annotations.BeforeGroup;
 import org.graphwalker.core.annotations.BeforeModel;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
@@ -19,6 +20,11 @@ public abstract class SeleniumBasedTest {
     private static final long DEFAULT_TIMEOUT = 30;
     private static final BrowserType DEFAULT_BROWSER = BrowserType.FIREFOX;
     private WebDriver myWebDriver;
+
+    @BeforeGroup
+    public void beforeGroup() {
+        System.out.println("before group");
+    }
 
     @BeforeModel
     public void createWebDriver() {

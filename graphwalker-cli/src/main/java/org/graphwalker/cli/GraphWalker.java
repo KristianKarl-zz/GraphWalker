@@ -71,7 +71,7 @@ public class GraphWalker {
     }
 
     private void executeFile(String filename) {
-        File file = Resource.getFile(filename);
+        File file = Resource.getResourceAsFile(filename);
 
     }
 

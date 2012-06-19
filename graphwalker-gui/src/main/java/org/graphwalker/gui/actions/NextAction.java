@@ -50,7 +50,7 @@ public class NextAction extends GraphWalkerAbstractAction {
         putValue(ActionConstants.INDEX, Integer.parseInt(Resource.getText(Bundle.NAME, "menu.next.index")));
         putValue(ActionConstants.NAME, Resource.getText(Bundle.NAME, "menu.next.label"));
         putValue(ActionConstants.DESCRIPTION, Resource.getText(Bundle.NAME, "menu.next.description"));
-        putValue(ActionConstants.ICON, Resource.getIcon(Bundle.NAME, "menu.next.icon"));
+        putValue(ActionConstants.ICON, Resource.getResourceAsIcon(Bundle.NAME, "menu.next.icon"));
         setEnabled(false);
     }
 

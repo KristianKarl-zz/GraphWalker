@@ -20,11 +20,12 @@
             <modules>
                 <module>graphwalker-parent</module>
                 <module>graphwalker-core</module>
-                <module>graphwalker-cli</module>
-                <module>graphwalker-gui</module>
-                <module>graphwalker-webservice</module>
-                <module>maven-graphwalker-plugin</module>
+                <!--module>graphwalker-cli</module-->
+                <!--module>graphwalker-gui</module-->
+                <!--module>graphwalker-webservice</module-->
+                <!--module>intellij-graphwalker-plugin</module-->
                 <module>jenkins-graphwalker-plugin</module>
+                <module>maven-graphwalker-plugin</module>
                 <module>graphwalker-example</module>
             </modules>
         </profile>

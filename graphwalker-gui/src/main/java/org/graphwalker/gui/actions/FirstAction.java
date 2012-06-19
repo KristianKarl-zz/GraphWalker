@@ -50,7 +50,7 @@ public class FirstAction extends GraphWalkerAbstractAction {
         putValue(ActionConstants.INDEX, Integer.parseInt(Resource.getText(Bundle.NAME, "menu.first.index")));
         putValue(ActionConstants.NAME, Resource.getText(Bundle.NAME, "menu.first.label"));
         putValue(ActionConstants.DESCRIPTION, Resource.getText(Bundle.NAME, "menu.first.description"));
-        putValue(ActionConstants.ICON, Resource.getIcon(Bundle.NAME, "menu.first.icon"));
+        putValue(ActionConstants.ICON, Resource.getResourceAsIcon(Bundle.NAME, "menu.first.icon"));
         setEnabled(false);
     }
 

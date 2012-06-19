@@ -50,7 +50,7 @@ public class RunAction extends GraphWalkerAbstractAction {
         putValue(ActionConstants.INDEX, Integer.parseInt(Resource.getText(Bundle.NAME, "menu.run.index")));
         putValue(ActionConstants.NAME, Resource.getText(Bundle.NAME, "menu.run.label"));
         putValue(ActionConstants.DESCRIPTION, Resource.getText(Bundle.NAME, "menu.run.description"));
-        putValue(ActionConstants.ICON, Resource.getIcon(Bundle.NAME, "menu.run.icon"));
+        putValue(ActionConstants.ICON, Resource.getResourceAsIcon(Bundle.NAME, "menu.run.icon"));
         setEnabled(false);
     }
 

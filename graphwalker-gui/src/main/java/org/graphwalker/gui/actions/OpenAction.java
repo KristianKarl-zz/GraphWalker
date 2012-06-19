@@ -56,7 +56,7 @@ public class OpenAction extends GraphWalkerAbstractAction {
         putValue(ActionConstants.INDEX, Integer.parseInt(Resource.getText(Bundle.NAME, "menu.open.index")));
         putValue(ActionConstants.NAME, Resource.getText(Bundle.NAME, "menu.open.label"));
         putValue(ActionConstants.DESCRIPTION, Resource.getText(Bundle.NAME, "menu.open.description"));
-        putValue(ActionConstants.ICON, Resource.getIcon(Bundle.NAME, "menu.open.icon"));
+        putValue(ActionConstants.ICON, Resource.getResourceAsIcon(Bundle.NAME, "menu.open.icon"));
     }
 
     private void initFileChooser() {

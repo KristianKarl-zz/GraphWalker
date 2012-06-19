@@ -45,7 +45,7 @@ public class SoapServiceImpl implements SoapService {
     
     /** {@inheritDoc} */
     public void load(String file) {
-        myGraphWalker = new GraphWalkerImpl(file);
+        //myGraphWalker = new GraphWalkerImpl(file);
     }
 
     /**
@@ -127,7 +127,7 @@ public class SoapServiceImpl implements SoapService {
 		boolean useGui = mbt.isUseGUI();
 		try {
 			if (!this.xmlFile.isEmpty()) {
-				mbt = Util.loadMbtAsWSFromXml(Util.getFile(this.xmlFile));
+				mbt = Util.loadMbtAsWSFromXml(Util.getResourceAsFile(this.xmlFile));
 				//if (useGui) {
 				//	mbt.setUseGUI();
 				//}

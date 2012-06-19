@@ -50,7 +50,7 @@ public class PauseAction extends GraphWalkerAbstractAction {
         putValue(ActionConstants.INDEX, Integer.parseInt(Resource.getText(Bundle.NAME, "menu.pause.index")));
         putValue(ActionConstants.NAME, Resource.getText(Bundle.NAME, "menu.pause.label"));
         putValue(ActionConstants.DESCRIPTION, Resource.getText(Bundle.NAME, "menu.pause.description"));
-        putValue(ActionConstants.ICON, Resource.getIcon(Bundle.NAME, "menu.pause.icon"));
+        putValue(ActionConstants.ICON, Resource.getResourceAsIcon(Bundle.NAME, "menu.pause.icon"));
         setEnabled(false);
     }
 

@@ -50,7 +50,7 @@ public class ExitAction extends GraphWalkerAbstractAction {
         putValue(ActionConstants.INDEX, Integer.parseInt(Resource.getText(Bundle.NAME, "menu.exit.index")));
         putValue(ActionConstants.NAME, Resource.getText(Bundle.NAME, "menu.exit.label"));
         putValue(ActionConstants.DESCRIPTION, Resource.getText(Bundle.NAME, "menu.exit.description"));
-        putValue(ActionConstants.ICON, Resource.getIcon(Bundle.NAME, "menu.exit.icon"));
+        putValue(ActionConstants.ICON, Resource.getResourceAsIcon(Bundle.NAME, "menu.exit.icon"));
     }
     
     /** {@inheritDoc} */

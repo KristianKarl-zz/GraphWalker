@@ -50,7 +50,7 @@ public class ReloadAction extends GraphWalkerAbstractAction {
         putValue(ActionConstants.INDEX, Integer.parseInt(Resource.getText(Bundle.NAME, "menu.reload.index")));
         putValue(ActionConstants.NAME, Resource.getText(Bundle.NAME, "menu.reload.label"));
         putValue(ActionConstants.DESCRIPTION, Resource.getText(Bundle.NAME, "menu.reload.description"));
-        putValue(ActionConstants.ICON, Resource.getIcon(Bundle.NAME, "menu.reload.icon"));
+        putValue(ActionConstants.ICON, Resource.getResourceAsIcon(Bundle.NAME, "menu.reload.icon"));
         setEnabled(false);
     }
 

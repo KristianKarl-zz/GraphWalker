@@ -50,7 +50,7 @@ public class BackAction extends GraphWalkerAbstractAction {
         putValue(ActionConstants.INDEX, Integer.parseInt(Resource.getText(Bundle.NAME, "menu.back.index")));
         putValue(ActionConstants.NAME, Resource.getText(Bundle.NAME, "menu.back.label"));
         putValue(ActionConstants.DESCRIPTION, Resource.getText(Bundle.NAME, "menu.back.description"));
-        putValue(ActionConstants.ICON, Resource.getIcon(Bundle.NAME, "menu.back.icon"));
+        putValue(ActionConstants.ICON, Resource.getResourceAsIcon(Bundle.NAME, "menu.back.icon"));
         setEnabled(false);
     }
 
