@@ -78,8 +78,8 @@
                         </goals>
                         <configuration>
                             <schemaDirectory>${basedir}/src/main/resources</schemaDirectory>
-                            <schemaFiles>graphwalker.xsd</schemaFiles>
-                            <packageName>org.graphwalker.core.configuration</packageName>
+                            <schemaFiles>graphwalker-report.xsd</schemaFiles>
+                            <packageName>org.graphwalker.core.reports</packageName>
                         </configuration>
                     </execution>
                 </executions>

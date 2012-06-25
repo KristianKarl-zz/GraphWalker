@@ -24,15 +24,18 @@
   THE SOFTWARE.
   #L%
   -->
-<graphwalker xmlns="http://graphwalker.org/graphwalker-config.xsd"
-             scriptLanguage="groovy">
 
-    <models>
-        <model id="m1" file="models/singleModel.graphml">
-            <pathGenerator type="Random">
-                <stopCondition type="ReachedEdge" value="e_2"/>
-            </pathGenerator>
-        </model>
-    </models>
+<graphwalker-report xmlns="http://graphwalker.org/graphwalker-report.xsd"
+                    timestamp="1340527310796"
+                    class="org.graphwalker.example.Test"
+                    group="global">
 
-</graphwalker>
+    <vertices blocked="0" count="0" unreachable="0" visited="0">
+        <vertex id="abc1" name="abc1" status="abc1" visitCount="0"/>
+        <vertex id="abc2" name="abc2" status="abc2" visitCount="0"/>
+    </vertices>
+    <edges blocked="0" count="0" unreachable="0" visited="0"/>
+    <requirements count="0" failed="0" notCovered="0" passed="0"/>
+    <exceptions/>
+
+</graphwalker-report>

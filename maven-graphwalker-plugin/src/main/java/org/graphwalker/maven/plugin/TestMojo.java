@@ -36,9 +36,9 @@ import org.graphwalker.core.GraphWalkerFactory;
 import org.graphwalker.core.configuration.Configuration;
 import org.graphwalker.core.configuration.ConfigurationFactory;
 import org.graphwalker.core.model.Model;
+import org.graphwalker.core.reports.Report;
+import org.graphwalker.core.reports.XMLReport;
 import org.graphwalker.core.utils.Resource;
-import org.graphwalker.maven.plugin.reports.ReportGenerator;
-import org.graphwalker.maven.plugin.reports.XMLReportGenerator;
 import org.graphwalker.maven.plugin.utils.TestUtil;
 
 import java.io.File;
@@ -120,6 +120,8 @@ public class TestMojo extends AbstractMojo {
     private List<String> excludes;
 
     private List<GraphWalker> myGraphWalkers = new ArrayList<GraphWalker>();
+
+    private Report myReportGenerator = new XMLReport();
 
     /**
      * <p>execute.</p>
@@ -257,11 +259,7 @@ public class TestMojo extends AbstractMojo {
     private void reportExecution() throws MojoExecutionException {
         boolean hasExceptions = false;
         for (GraphWalker graphWalker : myGraphWalkers) {
-            for (Model model : graphWalker.getConfiguration().getModels()) {
-                hasExceptions |= graphWalker.hasExceptions(model);
-                ReportGenerator reportGenerator = new XMLReportGenerator(reportsDirectory, model, graphWalker.getExceptions(model), session.getStartTime());
-                reportGenerator.writeReport();
-            }
+            myReportGenerator.writeReport(graphWalker, reportsDirectory, session.getStartTime());
         }
         if (hasExceptions) {
             throw new MojoExecutionException(Resource.getText(Bundle.NAME, "exception.execution.failed", reportsDirectory.getAbsolutePath()));

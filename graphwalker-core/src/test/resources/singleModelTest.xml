@@ -24,9 +24,7 @@
   THE SOFTWARE.
   #L%
   -->
-
-<graphwalker xmlns="http://graphwalker.org/graphwalker.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-             xsi:schemaLocation="http://graphwalker.org/graphwalker.xsd http://graphwalker.org/graphwalker.xsd"
+<graphwalker xmlns="http://graphwalker.org/graphwalker-config.xsd"
              scriptLanguage="groovy">
 
     <models>

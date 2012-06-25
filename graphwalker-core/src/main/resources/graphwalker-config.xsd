@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsd:schema xmlns="http://graphwalker.org/graphwalker.xsd"
+<xsd:schema xmlns="http://graphwalker.org/graphwalker-config.xsd"
             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-            targetNamespace="http://graphwalker.org/graphwalker.xsd"
+            targetNamespace="http://graphwalker.org/graphwalker-config.xsd"
             attributeFormDefault="unqualified" elementFormDefault="qualified">
 
     <xsd:element name="graphwalker" type="GraphWalkerType"/>

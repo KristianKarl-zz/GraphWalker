@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns="http://graphwalker.org/graphwalker-report.xsd"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="http://graphwalker.org/graphwalker-report.xsd"
+            attributeFormDefault="unqualified"
+            elementFormDefault="qualified">
+
+    <xsd:element name="graphwalker-report"
+                 type="GraphWalkerReportType"/>
+
+    <xsd:complexType name="GraphWalkerReportType">
+        <xsd:sequence minOccurs="1"
+                      maxOccurs="1">
+            <xsd:element name="vertices"
+                         type="VerticesType"/>
+            <xsd:element name="edges"
+                         type="EdgesType"/>
+            <xsd:element name="requirements"
+                         type="RequirementsType"/>
+            <xsd:element name="exceptions"
+                         type="ExceptionsType"/>
+        </xsd:sequence>
+        <xsd:attribute name="timestamp"
+                       type="xsd:long"
+                       use="required"/>
+        <xsd:attribute name="class"
+                       type="ClassName"
+                       use="required"/>
+        <xsd:attribute name="group"
+                       type="xsd:string"
+                       use="required"/>
+    </xsd:complexType>
+
+    <xsd:simpleType name="ClassName">
+        <xsd:restriction base="xsd:string">
+            <xsd:pattern value="([a-zA-Z_$][a-zA-Z\d_$]*\.)*[a-zA-Z_$][a-zA-Z\d_$]*"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:complexType name="VerticesType">
+        <xsd:sequence minOccurs="0"
+                      maxOccurs="unbounded">
+            <xsd:element name="vertex"
+                         type="VertexType"/>
+        </xsd:sequence>
+        <xsd:attribute name="blocked"
+                       type="xsd:nonNegativeInteger"
+                       use="required"/>
+        <xsd:attribute name="count"
+                       type="xsd:nonNegativeInteger"
+                       use="required"/>
+        <xsd:attribute name="unreachable"
+                       type="xsd:nonNegativeInteger"
+                       use="required"/>
+        <xsd:attribute name="visited"
+                       type="xsd:nonNegativeInteger"
+                       use="required"/>
+    </xsd:complexType>
+
+    <xsd:complexType name="VertexType">
+        <xsd:attribute name="id"
+                       type="xsd:string"
+                       use="required"/>
+        <xsd:attribute name="name"
+                       type="xsd:string"
+                       use="required"/>
+        <xsd:attribute name="status"
+                       type="xsd:string"
+                       use="required"/>
+        <xsd:attribute name="visitCount"
+                       type="xsd:nonNegativeInteger"
+                       use="required"/>
+    </xsd:complexType>
+
+    <xsd:complexType name="EdgesType">
+        <xsd:sequence minOccurs="0"
+                      maxOccurs="unbounded">
+            <xsd:element name="edge"
+                         type="EdgeType"/>
+        </xsd:sequence>
+        <xsd:attribute name="blocked"
+                       type="xsd:nonNegativeInteger"
+                       use="required"/>
+        <xsd:attribute name="count"
+                       type="xsd:nonNegativeInteger"
+                       use="required"/>
+        <xsd:attribute name="unreachable"
+                       type="xsd:nonNegativeInteger"
+                       use="required"/>
+        <xsd:attribute name="visited"
+                       type="xsd:nonNegativeInteger"
+                       use="required"/>
+    </xsd:complexType>
+
+    <xsd:complexType name="EdgeType">
+        <xsd:attribute name="id"
+                       type="xsd:string"
+                       use="required"/>
+        <xsd:attribute name="name"
+                       type="xsd:string"
+                       use="required"/>
+        <xsd:attribute name="status"
+                       type="xsd:string"
+                       use="required"/>
+        <xsd:attribute name="visitCount"
+                       type="xsd:nonNegativeInteger"
+                       use="required"/>
+    </xsd:complexType>
+
+    <xsd:complexType name="RequirementsType">
+        <xsd:sequence minOccurs="0"
+                      maxOccurs="unbounded">
+            <xsd:element name="requirement"
+                         type="RequirementType"/>
+        </xsd:sequence>
+        <xsd:attribute name="count"
+                       type="xsd:nonNegativeInteger"
+                       use="required"/>
+        <xsd:attribute name="failed"
+                       type="xsd:nonNegativeInteger"
+                       use="required"/>
+        <xsd:attribute name="notCovered"
+                       type="xsd:nonNegativeInteger"
+                       use="required"/>
+        <xsd:attribute name="passed"
+                       type="xsd:nonNegativeInteger"
+                       use="required"/>
+    </xsd:complexType>
+
+    <xsd:complexType name="RequirementType">
+        <xsd:attribute name="id"
+                       type="xsd:string"
+                       use="required"/>
+        <xsd:attribute name="status"
+                       type="xsd:string"
+                       use="required"/>
+    </xsd:complexType>
+
+    <xsd:complexType name="ExceptionsType">
+        <xsd:sequence minOccurs="0"
+                      maxOccurs="unbounded">
+            <xsd:element name="exception"
+                         type="ExceptionType"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="ExceptionType" mixed="true"/>
+
+</xsd:schema>
