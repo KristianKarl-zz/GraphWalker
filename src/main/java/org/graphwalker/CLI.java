@@ -153,17 +153,24 @@ public class CLI {
 
   public static void main(String[] args) {
     CLI cli = new CLI();
-    Thread shutDownThread = new CLI.VerboseStatisticsLogger(cli.getMbt());
-    try {
-      Runtime.getRuntime().addShutdownHook(shutDownThread);
-    } catch (IllegalArgumentException e) {
-      logger.debug("Could not register ShutdownHook for statistics logger, it has already been registered");
-    }
     try {
       cli.run(args);
       endpoint = cli.GetEndpoint();
     } catch (Exception e) {
       Util.logStackTraceToError(e);
+    }
+  }
+  
+  /**
+   * Prints statistics when graphwalker has ended it's execution
+   * @param cli
+   */
+  private static void setStatisticsLogger(CLI cli) {
+    Thread shutDownThread = new CLI.VerboseStatisticsLogger(cli.getMbt());
+    try {
+      Runtime.getRuntime().addShutdownHook(shutDownThread);
+    } catch (IllegalArgumentException e) {
+      logger.debug("Could not register ShutdownHook for statistics logger, it has already been registered");
     }
   }
 
@@ -231,12 +238,14 @@ public class CLI {
        * Command: online
        */
       if (args[0].equalsIgnoreCase("online")) {
+        setStatisticsLogger(this);
         RunCommandOnline(cl);
       }
       /**
        * Command: offline
        */
       else if (args[0].equalsIgnoreCase("offline")) {
+        setStatisticsLogger(this);
         RunCommandOffline(cl);
       }
       /**
@@ -261,18 +270,21 @@ public class CLI {
        * Command: xml
        */
       else if (args[0].equalsIgnoreCase("xml")) {
+        setStatisticsLogger(this);
         RunCommandXml(cl);
       }
       /**
        * Command: soap
        */
       else if (args[0].equalsIgnoreCase("soap")) {
+        setStatisticsLogger(this);
         RunCommandSoap(cl);
       }
       /**
        * Command: gui
        */
       else if (args[0].equalsIgnoreCase("gui")) {
+        setStatisticsLogger(this);
         RunCommandGui(cl);
       }
       /**
@@ -291,6 +303,7 @@ public class CLI {
        * Command: manual
        */
       else if (args[0].equalsIgnoreCase("manual")) {
+        setStatisticsLogger(this);
         RunCommandManual(cl);
       }
     } catch (ArrayIndexOutOfBoundsException e) {
