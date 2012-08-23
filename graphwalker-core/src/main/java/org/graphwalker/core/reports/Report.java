@@ -41,5 +41,6 @@ public interface Report {
      * <p>writeReport.</p>
      */
     void writeReport(GraphWalker graphWalker, File folder, Date startTime);
+    GraphWalkerReportType readReport(File file);
 
 }

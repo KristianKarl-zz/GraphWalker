@@ -121,7 +121,7 @@ public class TestMojo extends AbstractMojo {
 
     private List<GraphWalker> myGraphWalkers = new ArrayList<GraphWalker>();
 
-    private Report myReportGenerator = new XMLReport();
+    private Report myReport = new XMLReport();
 
     /**
      * <p>execute.</p>
@@ -259,7 +259,7 @@ public class TestMojo extends AbstractMojo {
     private void reportExecution() throws MojoExecutionException {
         boolean hasExceptions = false;
         for (GraphWalker graphWalker : myGraphWalkers) {
-            myReportGenerator.writeReport(graphWalker, reportsDirectory, session.getStartTime());
+            myReport.writeReport(graphWalker, reportsDirectory, session.getStartTime());
         }
         if (hasExceptions) {
             throw new MojoExecutionException(Resource.getText(Bundle.NAME, "exception.execution.failed", reportsDirectory.getAbsolutePath()));

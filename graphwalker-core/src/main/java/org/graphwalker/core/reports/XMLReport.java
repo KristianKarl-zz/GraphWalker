@@ -55,18 +55,32 @@ public class XMLReport implements Report {
         }
     }
 
-    public void readReport() {
-
+    public GraphWalkerReportType readReport(File file) {
+        try {
+            return ((JAXBElement<GraphWalkerReportType>)createUnmarshaller().unmarshal(file)).getValue();
+        } catch (JAXBException e) {
+            throw new ReportException(Resource.getText(Bundle.NAME, "exception.report.failure"), e);
+        }
     }
 
     private Marshaller createMarshaller() {
         Marshaller marshaller = null;
         try {
-            marshaller = JAXBContext.newInstance(getClass().getPackage().getName()).createMarshaller();
+            marshaller = JAXBContext.newInstance(ObjectFactory.class).createMarshaller();
         } catch (JAXBException e) {
             throw new ReportException(Resource.getText(Bundle.NAME, "exception.report.failure"), e);
         }
         return marshaller;
+    }
+
+    private Unmarshaller createUnmarshaller() {
+        Unmarshaller unmarshaller = null;
+        try {
+            unmarshaller = JAXBContext.newInstance(ObjectFactory.class).createUnmarshaller();
+        } catch (JAXBException e) {
+            throw new ReportException(Resource.getText(Bundle.NAME, "exception.report.failure"), e);
+        }
+        return unmarshaller;
     }
 
     private void writeReport(Model model, File reportDirectory) {
