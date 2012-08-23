@@ -2,8 +2,8 @@ package org.graphwalker.jenkins.plugin;
 
 import hudson.model.AbstractBuild;
 import hudson.model.Action;
-import org.graphwalker.jenkins.plugin.utils.Chart;
-import org.jfree.chart.JFreeChart;
+import org.graphwalker.core.reports.GraphWalkerReportType;
+import org.graphwalker.jenkins.plugin.charts.RingChart;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 
@@ -35,12 +35,14 @@ public class BuildAction implements Action {
         return PluginImpl.URL_NAME;
     }
 
-    public void doGraph(final StaplerRequest req, StaplerResponse rsp) throws IOException {
-        new hudson.util.Graph(-1, 500, 200) {
-            protected JFreeChart createGraph() {
-                return Chart.create();
-            }
-        }.doPng(req, rsp);
+    public void doGraph(final StaplerRequest request, StaplerResponse response) throws IOException {
+
+        RingChart ringChart = new RingChart();
+        for (GraphWalkerReportType report: myPublisher.getBuildReports(myBuild)) {
+            ringChart.setValue(report.getClazz(), 1);
+        }
+        ringChart.doPng(request, response);
+
     }
 
 }

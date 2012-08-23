@@ -1,0 +1,8 @@
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout">
+<!DOCTYPE html>
+<html>
+    <j:forEach var="item" items="${it.view.items}">
+        ${item.name}<br/>
+    </j:forEach>
+</html>
+</j:jelly>
