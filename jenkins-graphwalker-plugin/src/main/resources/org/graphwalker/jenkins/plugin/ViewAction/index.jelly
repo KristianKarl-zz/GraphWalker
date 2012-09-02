@@ -1,8 +1,227 @@
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout">
-<!DOCTYPE html>
-<html>
-    <j:forEach var="item" items="${it.view.items}">
-        ${item.name}<br/>
-    </j:forEach>
-</html>
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:t="/lib/hudson" xmlns:l="/lib/layout" xmlns:i="jelly:fmt" xmlns:x="jelly:xml">
+    <st:header name="Expires" value="0" />
+    <st:header name="Cache-Control" value="no-cache,must-revalidate" />
+    <st:contentType value="text/html;charset=UTF-8" />
+    <j:new var="h" className="hudson.Functions" />
+    <j:set var="rootURL" value="${request.contextPath}" />
+    <j:set var="resURL"  value="${rootURL}${h.resourcePath}" />
+    <j:set var="imagesURL"  value="${rootURL}${h.resourcePath}/images" />
+    <j:set var="instance" value="${it}" />
+    <j:set var="descriptor" value="${it.descriptor}" />
+    <x:doctype name="html" />
+    <html>
+        <head>
+            ${h.checkPermission(it,permission)}
+            <title>${h.appendIfNotNull(title, ' [Jenkins]', 'Jenkins')}</title>
+            <link rel="stylesheet" href="${resURL}/css/style.css" type="text/css" />
+            <link rel="stylesheet" href="${resURL}/css/color.css" type="text/css" />
+            <script src="${resURL}/scripts/prototype.js" type="text/javascript"/>
+            <script src="${resURL}/scripts/behavior.js" type="text/javascript"/>
+            <st:adjunct assumes="org.kohsuke.stapler.framework.prototype.prototype" includes="org.kohsuke.stapler.bind"/>
+            <style type="text/css">
+                body {
+                    font-family: sans-serif;
+                    font-weight: bold;
+                    overflow: hidden;
+                }
+
+                html, body {
+                    padding: 0;
+                    margin: 0;
+                }
+                #ruler {
+                    position:absolute;
+                    visibility: hidden;
+                    white-space: nowrap;
+                }
+                .job {
+                    position:absolute;
+                    border-radius: 20px;
+                    -moz-border-radius: 20px;
+                    text-align: center;
+                    color: #FFFFFF;
+                    white-space: nowrap;
+                }
+                .job-default {
+                    background-color: #ADADAD;
+                }
+                .job-success {
+                    background-color: #00FF00;
+                }
+                .job-failure {
+                    background-color: #FF0000;
+                }
+            </style>
+            <meta name="ROBOTS" content="INDEX,NOFOLLOW" />
+        </head>
+        <body>
+            <div id="ruler"/>
+            <script type="text/javascript">
+                var proxy;
+            </script>
+            <st:bind var="proxy" value="${it}"/>
+            <script type="text/javascript">
+
+                var jobNames = new Hash();
+                var buildQueue = [];
+                var maxFontSize = 0;
+                var rows = 0;
+                var columns = 0;
+
+                function updateJobLayout() {
+                    proxy.getJobNames(function(message) {
+                        var newJobNames = message.responseObject();
+                        jobNames.keys().without(newJobNames).each(function(name) {
+                            jobNames.get(name).remove();
+                        });
+                        newJobNames.without(jobNames.keys()).each(function(name) {
+                            var job = new Element("div", {"id":name, "class":"job job-default"});
+                            job.update(name);
+                            jobNames.set(name, job);
+                            $(document.body).insert(job);
+                        });
+                        calculateJobSize();
+                        updateJobPosition();
+                    });
+                }
+
+                function calculateJobSize() {
+                    var longestName = "";
+                    jobNames.keys().each(function (name) {
+                        if (longestName.length &lt; name.length) {
+                            longestName = name;
+                        }
+                    });
+                    $("ruler").update(longestName);
+                    maxFontSize = 0;
+                    var maxWidth = document.viewport.getWidth()-20;
+                    var maxHeight = document.viewport.getHeight();
+                    for (var columnCount = 1; columnCount &lt;= jobNames.keys().length; columnCount++) {
+                        for (var fontSize = 10; fontSize &lt;= 302; fontSize++) {
+                            var rowCount = Math.ceil(jobNames.keys().length/columnCount);
+                            $("ruler").setStyle({"fontSize":fontSize+"px"});
+                            var dimensions = $("ruler").getDimensions();
+                            var totalWidth = dimensions.width*columnCount;
+                            var totalHeight = dimensions.height*rowCount;
+                            if (totalWidth &lt;= maxWidth &amp;&amp; totalHeight &lt;= maxHeight) {
+                                if (maxFontSize &lt; fontSize) {
+                                    maxFontSize = fontSize;
+                                    rows = rowCount;
+                                    columns = columnCount;
+                                }
+                            } else {
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                function updateJobPosition() {
+                    var maxWidth = document.viewport.getWidth();
+                    var maxHeight = document.viewport.getHeight()-10;
+                    var width = Math.round(maxWidth/columns)-20;
+                    var height = Math.round(maxHeight/rows)-10;
+                    var offsetX = 10;
+                    var offsetY = 10;
+                    jobNames.keys().each(function (name) {
+                        $(name).setStyle({"top": offsetY+"px"
+                            , "left": offsetX+"px"
+                            , "width": width+"px"
+                            , "height": height+"px"
+                            , "fontSize": maxFontSize+"px"});
+                        offsetY += height+10;
+                        if (maxHeight &lt;= offsetY) {
+                            offsetY = 0;
+                            offsetX += width+10;
+                        }
+                    });
+                }
+
+                function updateJobStatus() {
+                    jobNames.keys().without(buildQueue).each(function(name) {
+                        proxy.getJobAttributes(name, function(message) {
+                            var attributes = message.responseObject();
+                            if (attributes["isBuilding"] === "true") {
+                                buildQueue.unshift(name);
+                            } else {
+                                if (attributes["isDisabled"] === "true") {
+                                    $(name).addClassName("job-default");
+                                    $(name).removeClassName("job-success");
+                                    $(name).removeClassName("job-failure");
+                                }
+                                if (attributes["success"] === "true") {
+                                    $(name).addClassName("job-success");
+                                    $(name).removeClassName("job-default");
+                                    $(name).removeClassName("job-failure");
+                                }
+                                if (attributes["failure"] === "true") {
+                                    $(name).addClassName("job-failure");
+                                    $(name).removeClassName("job-success");
+                                    $(name).removeClassName("job-default");
+                                }
+                            }
+                        });
+                    });
+                }
+
+                function updateBuildStatus() {
+                    buildQueue.each(function(name) {
+                        proxy.getJobAttributes(name, function(message) {
+                            var attributes = message.responseObject();
+                        });
+                    });
+                }
+
+                Event.observe(document, "dom:loaded", function() {
+                    updateJobLayout();
+                });
+
+                Event.observe(window, "resize", function() {
+                    calculateJobSize();
+                    updateJobPosition();
+                });
+
+                var jobStatusExecutor = new PeriodicalExecuter(function(executor) {
+                    updateJobStatus();
+                }, 10);
+                <!--
+                var buildStatusExecutor = new PeriodicalExecuter(function(executor) {
+                    updateBuildStatus();
+                }, 1);
+                -->
+            </script>
+            <script type="text/javascript">
+                var crumb = {
+                    fieldName: null,
+                    value: null,
+                    init: function(crumbField, crumbValue) {
+                        if (crumbField=="") return;
+                        this.fieldName = crumbField;
+                        this.value = crumbValue;
+                    },
+                    wrap: function(headers) {
+                        if (this.fieldName!=null) {
+                            if (headers instanceof Array)
+                                headers.push(this.fieldName, this.value);
+                            else
+                                headers[this.fieldName]=this.value;
+                        }
+                        return headers;
+                    },
+                    appendToForm : function(form) {
+                        if(this.fieldName==null) return; // noop
+                        var div = document.createElement("div");
+                        var input = document.createElement("input");
+                        input.type = "hidden";
+                        input.name = this.fieldName;
+                        input.value = this.value;
+                        div.appendChild(input);
+                        form.appendChild(div);
+                    }
+                }
+                crumb.init("${h.getCrumbRequestField()}", "${h.getCrumb(request)}");
+            </script>
+        </body>
+    </html>
 </j:jelly>
