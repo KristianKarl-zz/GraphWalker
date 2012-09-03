@@ -35,6 +35,9 @@
                     visibility: hidden;
                     white-space: nowrap;
                 }
+                span {
+                    vertical-align: middle;
+                }
                 .job {
                     position:absolute;
                     border-radius: 20px;
@@ -43,14 +46,28 @@
                     color: #FFFFFF;
                     white-space: nowrap;
                 }
+                .job-title {
+                    margin-left:20px;
+                }
+                .job-time {
+                    margin-left:20px;
+                    float:left;
+                }
+                .job-result {
+                    margin-right:20px;
+                    float:right;
+                }
+                .job-building {
+                    background-color: #204a87;
+                }
                 .job-default {
-                    background-color: #ADADAD;
+                    background-color: #ABABAB;
                 }
                 .job-success {
-                    background-color: #00FF00;
+                    background-color: #4e9a06;
                 }
                 .job-failure {
-                    background-color: #FF0000;
+                    background-color: #EF2929;
                 }
             </style>
             <meta name="ROBOTS" content="INDEX,NOFOLLOW" />
@@ -69,7 +86,7 @@
                 var rows = 0;
                 var columns = 0;
 
-                function updateJobLayout() {
+                function updateEverything() {
                     proxy.getJobNames(function(message) {
                         var newJobNames = message.responseObject();
                         jobNames.keys().without(newJobNames).each(function(name) {
@@ -77,12 +94,21 @@
                         });
                         newJobNames.without(jobNames.keys()).each(function(name) {
                             var job = new Element("div", {"id":name, "class":"job job-default"});
-                            job.update(name);
+                            var title = new Element("div", {"class":"job-title"});
+                            title.update(name);
+                            var time = new Element("div", {"class":"job-time"});
+                            time.update("time");
+                            var result = new Element("div", {"class":"job-result"});
+                            result.update("result");
+                            job.appendChild(title);
+                            job.appendChild(time);
+                            job.appendChild(result);
                             jobNames.set(name, job);
                             $(document.body).insert(job);
                         });
                         calculateJobSize();
                         updateJobPosition();
+                        updateJobStatus();
                     });
                 }
 
@@ -95,15 +121,15 @@
                     });
                     $("ruler").update(longestName);
                     maxFontSize = 0;
-                    var maxWidth = document.viewport.getWidth()-20;
-                    var maxHeight = document.viewport.getHeight();
+                    var maxWidth = document.viewport.getWidth()-40;
+                    var maxHeight = Math.round(2*document.viewport.getHeight()/3);
                     for (var columnCount = 1; columnCount &lt;= jobNames.keys().length; columnCount++) {
                         for (var fontSize = 10; fontSize &lt;= 302; fontSize++) {
                             var rowCount = Math.ceil(jobNames.keys().length/columnCount);
                             $("ruler").setStyle({"fontSize":fontSize+"px"});
                             var dimensions = $("ruler").getDimensions();
-                            var totalWidth = dimensions.width*columnCount;
-                            var totalHeight = dimensions.height*rowCount;
+                            var totalWidth = (dimensions.width+20)*columnCount;
+                            var totalHeight = (dimensions.height+10)*rowCount;
                             if (totalWidth &lt;= maxWidth &amp;&amp; totalHeight &lt;= maxHeight) {
                                 if (maxFontSize &lt; fontSize) {
                                     maxFontSize = fontSize;
@@ -124,57 +150,87 @@
                     var height = Math.round(maxHeight/rows)-10;
                     var offsetX = 10;
                     var offsetY = 10;
-                    jobNames.keys().each(function (name) {
+
+                    jobNames.keys().each(function(name) {
                         $(name).setStyle({"top": offsetY+"px"
                             , "left": offsetX+"px"
                             , "width": width+"px"
-                            , "height": height+"px"
-                            , "fontSize": maxFontSize+"px"});
+                            , "height": height+"px"});
+
+                        $(name).getElementsBySelector(".job-title")[0].setStyle({"fontSize":maxFontSize+"px"});
+                        $(name).getElementsBySelector(".job-time")[0].setStyle({"fontSize":Math.round(maxFontSize/2)+"px"});
+                        $(name).getElementsBySelector(".job-result")[0].setStyle({"fontSize":Math.round(maxFontSize/2)+"px"});
+
                         offsetY += height+10;
                         if (maxHeight &lt;= offsetY) {
-                            offsetY = 0;
+                            offsetY = 10;
                             offsetX += width+10;
                         }
                     });
                 }
 
                 function updateJobStatus() {
-                    jobNames.keys().without(buildQueue).each(function(name) {
-                        proxy.getJobAttributes(name, function(message) {
-                            var attributes = message.responseObject();
-                            if (attributes["isBuilding"] === "true") {
-                                buildQueue.unshift(name);
-                            } else {
-                                if (attributes["isDisabled"] === "true") {
-                                    $(name).addClassName("job-default");
-                                    $(name).removeClassName("job-success");
-                                    $(name).removeClassName("job-failure");
-                                }
-                                if (attributes["success"] === "true") {
-                                    $(name).addClassName("job-success");
-                                    $(name).removeClassName("job-default");
-                                    $(name).removeClassName("job-failure");
-                                }
-                                if (attributes["failure"] === "true") {
-                                    $(name).addClassName("job-failure");
-                                    $(name).removeClassName("job-success");
-                                    $(name).removeClassName("job-default");
-                                }
+                    proxy.getJobAttributes(jobNames.keys().without(buildQueue), function(message) {
+                        var jobs = new Hash(message.responseObject());
+                        jobs.keys().each(function(key) {
+                            var attributes = new Hash(jobs.get(key));
+                            updateElement(key, attributes);
+                            if (attributes.get("isBuilding") === "true") {
+                                buildQueue.unshift(key);
                             }
                         });
                     });
                 }
 
                 function updateBuildStatus() {
-                    buildQueue.each(function(name) {
-                        proxy.getJobAttributes(name, function(message) {
-                            var attributes = message.responseObject();
+                    if (buildQueue.size()) {
+                        proxy.getJobAttributes(buildQueue, function(message) {
+                            var jobs = new Hash(message.responseObject());
+                            jobs.keys().each(function(key) {
+                                var attributes = new Hash(jobs.get(key));
+                                updateElement(key, attributes);
+                                if (attributes.get("isBuilding") === "false") {
+                                    buildQueue = buildQueue.without(key);
+                                }
+                            });
                         });
-                    });
+                    }
+                }
+
+                function updateElement(key, attributes) {
+                    if (attributes.get("isBuilding") === "true") {
+                            $(key).getElementsBySelector(".job-time")[0].update("");
+                            $(key).getElementsBySelector(".job-result")[0].update("");
+                            $(key).addClassName("job-building");
+                            $(key).removeClassName("job-default");
+                            $(key).removeClassName("job-success");
+                            $(key).removeClassName("job-failure");
+                    } else {
+                        if (attributes.get("isDisabled") === "true") {
+                            $(key).removeClassName("job-building");
+                            $(key).addClassName("job-default");
+                            $(key).removeClassName("job-success");
+                            $(key).removeClassName("job-failure");
+                        } else {
+                            $(key).getElementsBySelector(".job-time")[0].update(attributes.get("time"));
+                            if (attributes.get("success") === "true") {
+                                $(key).removeClassName("job-building");
+                                $(key).removeClassName("job-default");
+                                $(key).addClassName("job-success");
+                                $(key).removeClassName("job-failure");
+                            }
+                            if (attributes.get("failure") === "true") {
+                                $(key).removeClassName("job-building");
+                                $(key).removeClassName("job-default");
+                                $(key).removeClassName("job-success");
+                                $(key).addClassName("job-failure");
+                            }
+                        }
+                    }
                 }
 
                 Event.observe(document, "dom:loaded", function() {
-                    updateJobLayout();
+                    updateEverything();
                 });
 
                 Event.observe(window, "resize", function() {
@@ -185,11 +241,11 @@
                 var jobStatusExecutor = new PeriodicalExecuter(function(executor) {
                     updateJobStatus();
                 }, 10);
-                <!--
+
                 var buildStatusExecutor = new PeriodicalExecuter(function(executor) {
                     updateBuildStatus();
-                }, 1);
-                -->
+                }, 3);
+
             </script>
             <script type="text/javascript">
                 var crumb = {

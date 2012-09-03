@@ -1,13 +1,18 @@
 package org.graphwalker.jenkins.plugin;
 
 import hudson.model.*;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+import org.apache.commons.beanutils.Converter;
 import org.kohsuke.stapler.bind.JavaScriptMethod;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class ViewAction implements RootAction, ModelObject {
 
     private final View myView;
+    private final SimpleDateFormat myFormater = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     public ViewAction(View view) {
         myView = view;
@@ -40,22 +45,28 @@ public class ViewAction implements RootAction, ModelObject {
     }
 
     @JavaScriptMethod
-    public Map<String,String> getJobAttributes(String name) {
-        Map<String,String> attributes = new HashMap<String,String>();
-        Job job = (Job)getView().getItem(name);
-        if (((AbstractProject)job).isDisabled()) {
-            attributes.put("isDisabled", "true");
-        } else {
-            attributes.put("isBuilding", job.isBuilding()?"true":"false");
-            if (job.isBuilding()) {
-                Executor executor = job.getLastBuild().getExecutor();
-                attributes.put("isLikelyStuck", executor.isLikelyStuck()?"true":"false");
-                attributes.put("progress", ""+executor.getProgress());
+    public JSONObject getJobAttributes(JSONArray names) {
+        JSONObject attributes = new JSONObject();
+        for (Object name: names) {
+            JSONObject object = new JSONObject();
+            Job job = (Job)getView().getItem((String)name);
+            if (((AbstractProject)job).isDisabled()) {
+                object.put("isDisabled", "true");
             } else {
-                attributes.put("success", job.getLastBuild().getResult().isWorseThan(Result.SUCCESS)?"false":"true");
-                attributes.put("failure", job.getLastBuild().getResult().isBetterThan(Result.FAILURE)?"false":"true");
+                object.put("isBuilding", job.isBuilding() ? "true" : "false");
+                if (job.isBuilding()) {
+                    Executor executor = job.getLastBuild().getExecutor();
+                    object.put("isLikelyStuck", executor.isLikelyStuck() ? "true" : "false");
+                    object.put("progress", "" + executor.getProgress());
+                } else {
+                    object.put("success", job.getLastBuild().getResult().isWorseThan(Result.SUCCESS) ? "false" : "true");
+                    object.put("failure", job.getLastBuild().getResult().isBetterThan(Result.FAILURE) ? "false" : "true");
+                    object.put("time", myFormater.format(job.getLastBuild().getTime()));
+                }
             }
+            attributes.put((String)name, object);
         }
         return attributes;
     }
+
 }
