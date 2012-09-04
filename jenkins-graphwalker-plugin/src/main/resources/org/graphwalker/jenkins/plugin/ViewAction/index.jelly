@@ -21,59 +21,64 @@
             <st:adjunct assumes="org.kohsuke.stapler.framework.prototype.prototype" includes="org.kohsuke.stapler.bind"/>
             <style type="text/css">
                 body {
-                    font-family: sans-serif;
-                    font-weight: bold;
-                    overflow: hidden;
+                    font-family:sans-serif;
+                    font-weight:bold;
+                    overflow:hidden;
                 }
 
                 html, body {
-                    padding: 0;
-                    margin: 0;
+                    padding:0;
+                    margin:0;
                 }
                 #ruler {
                     position:absolute;
                     visibility: hidden;
-                    white-space: nowrap;
+                    white-space:nowrap;
+                    text-align:center;
                 }
                 span {
                     vertical-align: middle;
                 }
                 .job {
                     position:absolute;
-                    border-radius: 20px;
-                    -moz-border-radius: 20px;
-                    text-align: center;
-                    color: #FFFFFF;
-                    white-space: nowrap;
+                    border-radius:20px;
+                    -moz-border-radius:20px;
+                    text-align:center;
+                    color:#FFFFFF;
+                    white-space:nowrap;
+                }
+                .job-expander {
+                    height:100%;
                 }
                 .job-title {
-                    margin-left:20px;
+                    vertical-align:middle;
+                    text-align:center;
                 }
                 .job-time {
-                    margin-left:20px;
-                    float:left;
+                    vertical-align:middle;
+                    text-align:left;
                 }
                 .job-result {
-                    margin-right:20px;
-                    float:right;
+                    vertical-align:middle;
+                    text-align:right;
                 }
                 .job-building {
-                    background-color: #204a87;
+                    background-color:#204a87;
                 }
                 .job-default {
-                    background-color: #ABABAB;
+                    background-color:#ABABAB;
                 }
                 .job-success {
-                    background-color: #4e9a06;
+                    background-color:#4e9a06;
                 }
                 .job-failure {
-                    background-color: #EF2929;
+                    background-color:#EF2929;
                 }
             </style>
             <meta name="ROBOTS" content="INDEX,NOFOLLOW" />
         </head>
         <body>
-            <div id="ruler"/>
+            <table><tr><td id="ruler"/></tr></table>
             <script type="text/javascript">
                 var proxy;
             </script>
@@ -85,6 +90,7 @@
                 var maxFontSize = 0;
                 var rows = 0;
                 var columns = 0;
+                var margin = 10;
 
                 function updateEverything() {
                     proxy.getJobNames(function(message) {
@@ -94,15 +100,25 @@
                         });
                         newJobNames.without(jobNames.keys()).each(function(name) {
                             var job = new Element("div", {"id":name, "class":"job job-default"});
-                            var title = new Element("div", {"class":"job-title"});
-                            title.update(name);
-                            var time = new Element("div", {"class":"job-time"});
-                            time.update("time");
-                            var result = new Element("div", {"class":"job-result"});
-                            result.update("result");
-                            job.appendChild(title);
-                            job.appendChild(time);
-                            job.appendChild(result);
+                            var content = new Element("table", {"style":"width:100%;height:100%;padding:"+margin+"px;"});
+                            content.insert(
+                                new Element("tr").insert(
+                                    new Element("td", {"class":"job-title", "colspan":"2"}).update(name)
+                                )
+                            );
+                            content.insert(
+                                new Element("tr").insert(
+                                    new Element("td", {"class":"job-expander", "colspan":"2"})
+                                )
+                            );
+                            content.insert(
+                                new Element("tr").insert(
+                                    new Element("td", {"class":"job-time"})
+                                ).insert(
+                                    new Element("td", {"class":"job-result"})
+                                )
+                            );
+                            job.insert(content);
                             jobNames.set(name, job);
                             $(document.body).insert(job);
                         });
@@ -121,15 +137,15 @@
                     });
                     $("ruler").update(longestName);
                     maxFontSize = 0;
-                    var maxWidth = document.viewport.getWidth()-40;
-                    var maxHeight = Math.round(2*document.viewport.getHeight()/3);
+                    var maxWidth = document.viewport.getWidth()-4*margin;
+                    var maxHeight = document.viewport.getHeight()-2*margin;
                     for (var columnCount = 1; columnCount &lt;= jobNames.keys().length; columnCount++) {
                         for (var fontSize = 10; fontSize &lt;= 302; fontSize++) {
                             var rowCount = Math.ceil(jobNames.keys().length/columnCount);
                             $("ruler").setStyle({"fontSize":fontSize+"px"});
                             var dimensions = $("ruler").getDimensions();
-                            var totalWidth = (dimensions.width+20)*columnCount;
-                            var totalHeight = (dimensions.height+10)*rowCount;
+                            var totalWidth = (dimensions.width+margin)*columnCount-margin;
+                            var totalHeight = (dimensions.height+margin)*rowCount-margin;
                             if (totalWidth &lt;= maxWidth &amp;&amp; totalHeight &lt;= maxHeight) {
                                 if (maxFontSize &lt; fontSize) {
                                     maxFontSize = fontSize;
@@ -144,12 +160,12 @@
                 }
 
                 function updateJobPosition() {
-                    var maxWidth = document.viewport.getWidth();
-                    var maxHeight = document.viewport.getHeight()-10;
-                    var width = Math.round(maxWidth/columns)-20;
-                    var height = Math.round(maxHeight/rows)-10;
-                    var offsetX = 10;
-                    var offsetY = 10;
+                    var maxWidth = document.viewport.getWidth()-2*margin;
+                    var maxHeight = document.viewport.getHeight()-4*margin;
+                    var width = Math.round(maxWidth/columns);
+                    var height = Math.round(maxHeight/rows);
+                    var offsetX = margin;
+                    var offsetY = margin;
 
                     jobNames.keys().each(function(name) {
                         $(name).setStyle({"top": offsetY+"px"
@@ -158,13 +174,13 @@
                             , "height": height+"px"});
 
                         $(name).getElementsBySelector(".job-title")[0].setStyle({"fontSize":maxFontSize+"px"});
-                        $(name).getElementsBySelector(".job-time")[0].setStyle({"fontSize":Math.round(maxFontSize/2)+"px"});
-                        $(name).getElementsBySelector(".job-result")[0].setStyle({"fontSize":Math.round(maxFontSize/2)+"px"});
+                        $(name).getElementsBySelector(".job-time")[0].setStyle({"fontSize":Math.round(maxFontSize*0.4)+"px"});
+                        $(name).getElementsBySelector(".job-result")[0].setStyle({"fontSize":Math.round(maxFontSize*0.4)+"px"});
 
-                        offsetY += height+10;
+                        offsetY += height+margin;
                         if (maxHeight &lt;= offsetY) {
-                            offsetY = 10;
-                            offsetX += width+10;
+                            offsetY = margin;
+                            offsetX += width+margin;
                         }
                     });
                 }
