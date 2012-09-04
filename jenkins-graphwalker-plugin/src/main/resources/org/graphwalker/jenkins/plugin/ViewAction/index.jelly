@@ -174,8 +174,8 @@
                             , "height": height+"px"});
 
                         $(name).getElementsBySelector(".job-title")[0].setStyle({"fontSize":maxFontSize+"px"});
-                        $(name).getElementsBySelector(".job-time")[0].setStyle({"fontSize":Math.round(maxFontSize*0.4)+"px"});
-                        $(name).getElementsBySelector(".job-result")[0].setStyle({"fontSize":Math.round(maxFontSize*0.4)+"px"});
+                        $(name).getElementsBySelector(".job-time")[0].setStyle({"fontSize":Math.round(maxFontSize*0.5)+"px"});
+                        $(name).getElementsBySelector(".job-result")[0].setStyle({"fontSize":Math.round(maxFontSize*0.5)+"px"});
 
                         offsetY += height+margin;
                         if (maxHeight &lt;= offsetY) {
