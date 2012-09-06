@@ -137,7 +137,7 @@ public class MachineImpl implements Machine {
         if (hasModelNextStep(getCurrentModel(), getCurrentElement())) {
             return true;
         } else if (isModelStatus(getCurrentModel(), ModelStatus.EXECUTING)) {
-            getCurrentModel().setModelStatus(ModelStatus.COMPLETED);
+            updateModelStatus(getCurrentModel());
             processAnnotation(AfterModel.class, getCurrentModel(), null);
             afterGroup();
         }
@@ -151,6 +151,15 @@ public class MachineImpl implements Machine {
         }
         // there is no more steps
         return false;
+    }
+
+    private void updateModelStatus(Model model) {
+        ExceptionStrategy exceptionStrategy = model.getExceptionStrategy();
+        if (exceptionStrategy.hasExceptions(model)) {
+            model.setModelStatus(ModelStatus.FAILED);
+        } else {
+            model.setModelStatus(ModelStatus.COMPLETED);
+        }
     }
 
     private boolean hasVertexNextStep(Vertex vertex) {
@@ -251,7 +260,7 @@ public class MachineImpl implements Machine {
 
     private void switchModel(String modelId) {
         if (!hasModelNextStep(getCurrentModel(), getCurrentElement()) && isModelStatus(getCurrentModel(), ModelStatus.EXECUTING)) {
-            getCurrentModel().setModelStatus(ModelStatus.COMPLETED);
+            updateModelStatus(getCurrentModel());
             processAnnotation(AfterModel.class, getCurrentModel(), null);
             afterGroup();
         }
