@@ -260,6 +260,9 @@ public class TestMojo extends AbstractMojo {
         boolean hasExceptions = false;
         for (GraphWalker graphWalker : myGraphWalkers) {
             myReport.writeReport(graphWalker, reportsDirectory, session.getStartTime());
+            for (Model model:graphWalker.getConfiguration().getModels()) {
+                hasExceptions |= graphWalker.hasExceptions(model);
+            }
         }
         if (hasExceptions) {
             throw new MojoExecutionException(Resource.getText(Bundle.NAME, "exception.execution.failed", reportsDirectory.getAbsolutePath()));

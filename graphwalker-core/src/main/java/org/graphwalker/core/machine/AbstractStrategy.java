@@ -66,6 +66,7 @@ public abstract class AbstractStrategy implements ExceptionStrategy {
      * {@inheritDoc}
      */
     public List<Throwable> getExceptions(Model model) {
-        return myExceptionMap.get(model.getId());
+        List<Throwable> exceptions = myExceptionMap.get(model.getId());
+        return (null!=exceptions?myExceptionMap.get(model.getId()):new ArrayList<Throwable>());
     }
 }
