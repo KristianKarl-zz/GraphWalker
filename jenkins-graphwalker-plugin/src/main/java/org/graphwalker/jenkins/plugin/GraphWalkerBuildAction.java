@@ -9,12 +9,12 @@ import org.kohsuke.stapler.StaplerResponse;
 
 import java.io.IOException;
 
-public class BuildAction implements Action {
+public class GraphWalkerBuildAction implements Action {
 
     private final AbstractBuild<?, ?> myBuild;
-    private final Publisher myPublisher;
+    private final GraphWalkerPublisher myPublisher;
 
-    public BuildAction(AbstractBuild<?, ?> build, Publisher publisher) {
+    public GraphWalkerBuildAction(AbstractBuild<?, ?> build, GraphWalkerPublisher publisher) {
         myBuild = build;
         myPublisher = publisher;
     }
@@ -24,15 +24,15 @@ public class BuildAction implements Action {
     }
 
     public String getIconFileName() {
-        return PluginImpl.ICON_FILE_NAME;
+        return GraphWalkerPlugin.ICON_FILE_NAME;
     }
 
     public String getDisplayName() {
-        return PluginImpl.DISPLAY_NAME;
+        return GraphWalkerPlugin.DISPLAY_NAME;
     }
 
     public String getUrlName() {
-        return PluginImpl.URL_NAME;
+        return GraphWalkerPlugin.URL_NAME;
     }
 
     public void doGraph(final StaplerRequest request, StaplerResponse response) throws IOException {

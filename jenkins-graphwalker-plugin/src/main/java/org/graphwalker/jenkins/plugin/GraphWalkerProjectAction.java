@@ -3,12 +3,12 @@ package org.graphwalker.jenkins.plugin;
 import hudson.model.AbstractProject;
 import hudson.model.ProminentProjectAction;
 
-public class ProjectAction implements ProminentProjectAction {
+public class GraphWalkerProjectAction implements ProminentProjectAction {
 
     private final AbstractProject<?, ?> myProject;
-    private final Publisher myPublisher;
+    private final GraphWalkerPublisher myPublisher;
 
-    public ProjectAction(AbstractProject<?, ?> project, Publisher publisher) {
+    public GraphWalkerProjectAction(AbstractProject<?, ?> project, GraphWalkerPublisher publisher) {
         myProject = project;
         myPublisher = publisher;
     }
@@ -18,14 +18,14 @@ public class ProjectAction implements ProminentProjectAction {
     }
 
     public String getIconFileName() {
-        return PluginImpl.ICON_FILE_NAME;
+        return GraphWalkerPlugin.ICON_FILE_NAME;
     }
 
     public String getDisplayName() {
-        return PluginImpl.DISPLAY_NAME;
+        return GraphWalkerPlugin.DISPLAY_NAME;
     }
 
     public String getUrlName() {
-        return PluginImpl.URL_NAME;
+        return GraphWalkerPlugin.URL_NAME;
     }
 }

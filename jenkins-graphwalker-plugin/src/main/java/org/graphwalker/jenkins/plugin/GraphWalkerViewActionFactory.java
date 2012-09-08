@@ -7,12 +7,12 @@ import hudson.model.View;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ViewActionFactory extends TransientViewActionFactory {
+public class GraphWalkerViewActionFactory extends TransientViewActionFactory {
 
     @Override
     public List<Action> createFor(View view) {
         List<Action> actions = new ArrayList<Action>();
-        actions.add(new ViewAction(view));
+        actions.add(new GraphWalkerViewAction(view));
         return actions;
     }
 }

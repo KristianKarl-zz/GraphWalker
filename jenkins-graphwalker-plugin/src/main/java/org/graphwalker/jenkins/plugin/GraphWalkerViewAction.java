@@ -3,18 +3,19 @@ package org.graphwalker.jenkins.plugin;
 import hudson.model.*;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import org.apache.commons.beanutils.Converter;
 import org.kohsuke.stapler.bind.JavaScriptMethod;
 
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-public class ViewAction implements RootAction, ModelObject {
+public class GraphWalkerViewAction implements RootAction, ModelObject {
 
     private final View myView;
     private final SimpleDateFormat myFormater = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-    public ViewAction(View view) {
+    public GraphWalkerViewAction(View view) {
         myView = view;
     }
 
@@ -23,15 +24,15 @@ public class ViewAction implements RootAction, ModelObject {
     }
 
     public String getIconFileName() {
-        return PluginImpl.ICON_FILE_NAME;
+        return GraphWalkerPlugin.ICON_FILE_NAME;
     }
 
     public String getDisplayName() {
-        return PluginImpl.DISPLAY_NAME;
+        return GraphWalkerPlugin.DISPLAY_NAME;
     }
 
     public String getUrlName() {
-        return PluginImpl.URL_NAME;
+        return GraphWalkerPlugin.URL_NAME;
     }
 
     @JavaScriptMethod

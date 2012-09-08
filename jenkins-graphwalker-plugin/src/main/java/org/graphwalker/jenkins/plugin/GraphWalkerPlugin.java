@@ -4,7 +4,7 @@ import hudson.Plugin;
 import hudson.model.Hudson;
 import hudson.model.TransientViewActionFactory;
 
-public class PluginImpl extends Plugin {
+public class GraphWalkerPlugin extends Plugin {
 
     public static final String ICON_FILE_NAME = "";
     public static final String DISPLAY_NAME = "GraphWalker Result";
@@ -12,7 +12,7 @@ public class PluginImpl extends Plugin {
 
     @Override
     public void start() throws Exception {
-        Hudson.getInstance().getExtensionList(TransientViewActionFactory.class).add(0, new ViewActionFactory());
+        Hudson.getInstance().getExtensionList(TransientViewActionFactory.class).add(0, new GraphWalkerViewActionFactory());
         super.start();
     }
 }
