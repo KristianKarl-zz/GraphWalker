@@ -51,7 +51,7 @@ public class GraphWalkerViewAction implements RootAction, ModelObject {
         for (Object name: names) {
             JSONObject object = new JSONObject();
             Job job = (Job)getView().getItem((String)name);
-            if (((AbstractProject)job).isDisabled()) {
+            if (((AbstractProject)job).isDisabled() || null == job.getLastBuild()) {
                 object.put("isDisabled", "true");
             } else {
                 object.put("isBuilding", job.isBuilding() ? "true" : "false");

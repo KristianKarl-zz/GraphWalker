@@ -161,8 +161,8 @@
                     var result = ruler.getElementsBySelector(".job-result")[0];
                     title.update(longestName);
                     maxFontSize = 0;
-                    var maxWidth = document.viewport.getWidth()-4*margin;
-                    var maxHeight = document.viewport.getHeight()-2*margin;
+                    var maxWidth = document.viewport.getWidth();
+                    var maxHeight = document.viewport.getHeight();
                     for (var columnCount = 1; columnCount &lt;= jobNames.keys().length; columnCount++) {
                         for (var fontSize = 10; fontSize &lt;= 302; fontSize++) {
                             var rowCount = Math.ceil(jobNames.keys().length/columnCount);
@@ -170,8 +170,8 @@
                             time.setStyle({"fontSize":Math.round(maxFontSize*0.5)+"px"});
                             result.setStyle({"fontSize":Math.round(maxFontSize*0.5)+"px"});
                             var dimensions = ruler.getDimensions();
-                            var totalWidth = (dimensions.width+margin)*columnCount-margin;
-                            var totalHeight = (dimensions.height+margin)*rowCount-margin;
+                            var totalWidth = (dimensions.width+margin)*columnCount+margin;
+                            var totalHeight = (dimensions.height+margin)*rowCount+margin;
                             if (totalWidth &lt;= maxWidth &amp;&amp; totalHeight &lt;= maxHeight) {
                                 if (maxFontSize &lt; fontSize) {
                                     maxFontSize = fontSize;
@@ -186,25 +186,22 @@
                 }
 
                 function updateJobPosition() {
-                    var maxWidth = document.viewport.getWidth()-2*margin;
-                    var maxHeight = document.viewport.getHeight()-4*margin;
-                    var width = Math.round(maxWidth/columns);
-                    var height = Math.round(maxHeight/rows);
+                    var maxWidth = document.viewport.getWidth();
+                    var maxHeight = document.viewport.getHeight();
+                    var width = Math.round((maxWidth-(columns+1)*margin)/columns);
+                    var height = Math.round((maxHeight-(rows+1)*margin)/rows);
                     var offsetX = margin;
                     var offsetY = margin;
-
                     jobNames.keys().each(function(name) {
                         $(name).setStyle({"top": offsetY+"px"
                             , "left": offsetX+"px"
                             , "width": width+"px"
                             , "height": height+"px"});
-
                         $(name).getElementsBySelector(".job-title")[0].setStyle({"fontSize":maxFontSize+"px"});
                         $(name).getElementsBySelector(".job-time")[0].setStyle({"fontSize":Math.round(maxFontSize*0.5)+"px"});
                         $(name).getElementsBySelector(".job-result")[0].setStyle({"fontSize":Math.round(maxFontSize*0.5)+"px"});
-
                         offsetY += height+margin;
-                        if (maxHeight &lt;= offsetY) {
+                        if (maxHeight-margin &lt;= offsetY) {
                             offsetY = margin;
                             offsetX += width+margin;
                         }

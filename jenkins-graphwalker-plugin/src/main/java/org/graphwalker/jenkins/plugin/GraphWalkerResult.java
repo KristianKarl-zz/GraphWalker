@@ -14,17 +14,17 @@ public class GraphWalkerResult extends BuildResult {
 
     @Override
     protected String getSerializationFileName() {
-        return null;  // TODO: Fix me (Auto generated)
+        return GraphWalkerPlugin.RESULT_FILE_NAME;
     }
 
     @Override
     protected Class<? extends ResultAction<? extends BuildResult>> getResultActionType() {
-        return null;  // TODO: Fix me (Auto generated)
+        return GraphWalkerResultAction.class;
     }
 
     @Override
     public String getSummary() {
-        return GraphWalkerPlugin.DISPLAY_NAME;//+": "+createDefaultSummary();
+        return GraphWalkerPlugin.DISPLAY_NAME+": "+createDefaultSummary(GraphWalkerPlugin.RESULT_URL, getNumberOfAnnotations(), getNumberOfModules());
     }
 
     public String getDisplayName() {
