@@ -238,21 +238,23 @@ public class TestMojo extends AbstractMojo {
     }
 
     private void executeInstances() throws MojoExecutionException {
-        try {
-            ExecutorService executorService = Executors.newFixedThreadPool(myGraphWalkers.size());
-            for (GraphWalker graphWalker : myGraphWalkers) {
-                for (Model model : graphWalker.getConfiguration().getModels()) {
-                    StringBuilder stringBuilder = new StringBuilder("Running [");
-                    stringBuilder.append(model.getGroup()).append("] ");
-                    stringBuilder.append(model.getImplementation().getClass().getName());
-                    getLog().info(stringBuilder.toString());
+        if (0<myGraphWalkers.size()) {
+            try {
+                ExecutorService executorService = Executors.newFixedThreadPool(myGraphWalkers.size());
+                for (GraphWalker graphWalker : myGraphWalkers) {
+                    for (Model model : graphWalker.getConfiguration().getModels()) {
+                        StringBuilder stringBuilder = new StringBuilder("Running [");
+                        stringBuilder.append(model.getGroup()).append("] ");
+                        stringBuilder.append(model.getImplementation().getClass().getName());
+                        getLog().info(stringBuilder.toString());
+                    }
+                    executorService.execute(new GraphWalkerExecutor(graphWalker));
                 }
-                executorService.execute(new GraphWalkerExecutor(graphWalker));
+                executorService.shutdown();
+                executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.DAYS);
+            } catch (InterruptedException e) {
+                throw new MojoExecutionException(Resource.getText(Bundle.NAME, "exception.execution.interrupted"));
             }
-            executorService.shutdown();
-            executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.DAYS);
-        } catch (InterruptedException e) {
-            throw new MojoExecutionException(Resource.getText(Bundle.NAME, "exception.execution.interrupted"));
         }
     }
 
