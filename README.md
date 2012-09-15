@@ -3,14 +3,11 @@
 GraphWalker is a Model-Based Testing tool. It parses models and generates test sequences.
 
 ## Table of Contents
-1\. [Modules](#modules)  
-1\.1 [graphwalker-cli](#graphwalker-cli)  
-1\.2 [graphwalker-core](#graphwalker-core)  
-1\.3 [graphwalker-example](#graphwalker-example)  
-1\.4 [graphwalker-gui](#graphwalker-gui)  
-1\.5 [graphwalker-parent](#graphwalker-parent)  
-1\.6 [graphwalker-webservice](#graphwalker-webservice)  
-1\.7 [maven-graphwalker-plugin](#maven-graphwalker-plugin)  
+1\. [Modules](#modules)
+1\.1 [graphwalker-core](#graphwalker-core)
+1\.2 [graphwalker-example](#graphwalker-example)
+1\.3 [graphwalker-parent](#graphwalker-parent)
+1\.4 [graphwalker-maven-plugin](#graphwalker-maven-plugin)
 2\. [Example](#example)  
 2\.1  [pom.xml](#example-pom-xml)  
 2\.2  [Example.java](#example-example-java)  
@@ -18,28 +15,20 @@ GraphWalker is a Model-Based Testing tool. It parses models and generates test s
 
 <a name="modules"></a>
 ## 1\. Modules
-<a name="graphwalker-cli"></a>
-### 1\.1 graphwalker-cli
-...not done
-
 <a name="graphwalker-core"></a>
-### 1\.2 graphwalker-core
+### 1\.1 graphwalker-core
 Contains the GraphWalker implementation 
 
 <a name="graphwalker-example"></a>
-### 1\.3 graphwalker-example
+### 1\.2 graphwalker-example
 Showcase the GraphWalker project  
 
 ```sh
 mvn graphwalker:test
 ```  
 
-<a name="graphwalker-gui"></a>
-### 1\.4 graphwalker-gui
-...not done
-
 <a name="graphwalker-parent"></a>
-### 1\.5 graphwalker-parent
+### 1\.3 graphwalker-parent
 Main maven module, open this in your favorit IDE (intellij, eclipse, netbeans) that can handle pom.xml files, and all the other modules should be imported too. This module also manage all the dependencies and plugins used by the graphwalker project. When standing in the graphwalker-parent directory and executing  
 
 ```sh
@@ -48,12 +37,8 @@ mvn clean install
 
 all the artifacts created by this project will be built and installed in the local maven repository.  
 
-<a name="graphwalker-webservice"></a>
-### 1\.6 graphwalker-webservice
-...not done
-
-<a name="maven-graphwalker-plugin"></a>
-### 1\.7 maven-graphwalker-plugin  
+<a name="graphwalker-maven-plugin"></a>
+### 1\.4 graphwalker-maven-plugin
 Has two goals ```graphwalker:test``` and ```graphwalker:report```
 
 <a name="example"></a>
@@ -82,7 +67,7 @@ Defines the dependencies needed to implement the model and the plugin needed to 
   <plugins>
     <plugin>
       <groupId>org.graphwalker</groupId>
-      <artifactId>maven-graphwalker-plugin</artifactId>
+      <artifactId>graphwalker-maven-plugin</artifactId>
       <version>3.0-SNAPSHOT</version>
     </plugin>
   </plugins>
