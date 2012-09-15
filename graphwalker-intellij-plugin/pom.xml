@@ -6,7 +6,7 @@
     <groupId>org.graphwalker</groupId>
     <artifactId>graphwalker-intellij-plugin</artifactId>
     <version>3.0-SNAPSHOT</version>
-    <name>Intellij GraphWalker Plugin</name>
+    <name>GraphWalker Intellij Plugin</name>
 
     <dependencies>
         <!--dependency>
