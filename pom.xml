@@ -11,29 +11,13 @@
     <url>http://graphwalker.org</url>
     <inceptionYear>2011</inceptionYear>
 
-    <profiles>
-        <profile>
-            <id>default</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <modules>
-                <module>graphwalker-parent</module>
-                <module>graphwalker-core</module>
-                <!--module>graphwalker-intellij-plugin</module-->
-                <module>graphwalker-jenkins-plugin</module>
-                <module>graphwalker-maven-plugin</module>
-                <module>graphwalker-example</module>
-            </modules>
-        </profile>
-        <profile>
-            <id>example</id>
-            <modules>
-                <module>graphwalker-core</module>
-                <module>graphwalker-maven-plugin</module>
-                <module>graphwalker-example</module>
-            </modules>
-        </profile>
-    </profiles>
+    <modules>
+        <module>graphwalker-parent</module>
+        <module>graphwalker-core</module>
+        <module>graphwalker-intellij-plugin</module>
+        <module>graphwalker-jenkins-plugin</module>
+        <module>graphwalker-maven-plugin</module>
+        <module>graphwalker-example</module>
+    </modules>
 
 </project>
