@@ -1,5 +1,0 @@
-<j:jelly xmlns:j="jelly:core">
-
-    <img src="graph" alt="[Test result chart]"/>
-
-</j:jelly>

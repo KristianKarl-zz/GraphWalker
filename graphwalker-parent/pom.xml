@@ -77,27 +77,7 @@
         <dependencies>
             <dependency>
                 <groupId>org.graphwalker</groupId>
-                <artifactId>graphwalker-cli</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.graphwalker</groupId>
                 <artifactId>graphwalker-core</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.graphwalker</groupId>
-                <artifactId>graphwalker-gui</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.graphwalker</groupId>
-                <artifactId>graphwalker-standalone</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.graphwalker</groupId>
-                <artifactId>graphwalker-webservice</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

@@ -20,9 +20,9 @@
             <modules>
                 <module>graphwalker-parent</module>
                 <module>graphwalker-core</module>
-                <!--module>intellij-graphwalker-plugin</module-->
-                <module>jenkins-graphwalker-plugin</module>
-                <module>maven-graphwalker-plugin</module>
+                <!--module>graphwalker-intellij-plugin</module-->
+                <module>graphwalker-jenkins-plugin</module>
+                <module>graphwalker-maven-plugin</module>
                 <module>graphwalker-example</module>
             </modules>
         </profile>
@@ -30,7 +30,7 @@
             <id>example</id>
             <modules>
                 <module>graphwalker-core</module>
-                <module>maven-graphwalker-plugin</module>
+                <module>graphwalker-maven-plugin</module>
                 <module>graphwalker-example</module>
             </modules>
         </profile>
