@@ -1,16 +1,23 @@
 package org.graphwalker.jenkins.plugin;
 
+import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
+import hudson.model.Actionable;
 import hudson.model.ProminentProjectAction;
+import hudson.util.DataSetBuilder;
+import org.jfree.data.category.CategoryDataset;
+import org.kohsuke.stapler.StaplerRequest;
+import org.kohsuke.stapler.StaplerResponse;
 
-public class GraphWalkerProjectAction implements ProminentProjectAction {
+import java.io.IOException;
+import java.util.Map;
 
-    private final AbstractProject<?, ?> myProject;
-    private final GraphWalkerPublisher myPublisher;
+public class GraphWalkerProjectAction extends Actionable implements ProminentProjectAction {
 
-    public GraphWalkerProjectAction(AbstractProject<?, ?> project, GraphWalkerPublisher publisher) {
+    private final AbstractProject<?,?> myProject;
+
+    public GraphWalkerProjectAction(AbstractProject<?,?> project) {
         myProject = project;
-        myPublisher = publisher;
     }
 
     public AbstractProject<?, ?> getProject() {
@@ -18,14 +25,40 @@ public class GraphWalkerProjectAction implements ProminentProjectAction {
     }
 
     public String getIconFileName() {
-        return GraphWalkerPlugin.ICON_FILE_NAME;
-    }
-
-    public String getDisplayName() {
-        return GraphWalkerPlugin.DISPLAY_NAME;
+        return Messages.project_action_icon_file_name();
     }
 
     public String getUrlName() {
-        return GraphWalkerPlugin.URL_NAME;
+        return Messages.project_action_url_name();
     }
+
+    public String getDisplayName() {
+        return Messages.project_action_display_name();
+    }
+
+    public String getSearchUrl() {
+        return Messages.project_action_url_name();
+    }
+
+    public void doGraph(final StaplerRequest request, StaplerResponse response) throws IOException {
+        GraphWalkerTrendChart trendChart = new GraphWalkerTrendChart(createDataSet());
+        trendChart.doPng(request, response);
+    }
+
+    private CategoryDataset createDataSet() {
+        DataSetBuilder<String, Long> dataSetBuilder = new DataSetBuilder<String, Long>();
+        for (AbstractBuild<?, ?> build: getProject().getBuilds()) {
+            GraphWalkerResultAction action = build.getAction(GraphWalkerResultAction.class);
+            if (null != action) {
+                GraphWalkerResult result = action.getResult();
+                if (null != result) {
+                    dataSetBuilder.add(result.getPassedRequirementCount(), Messages.project_trend_passed(), result.getTimestamp());
+                    dataSetBuilder.add(result.getFailedRequirementCount(), Messages.project_trend_failed(), result.getTimestamp());
+                    dataSetBuilder.add(result.getNotCoveredRequirementCount(), Messages.project_trend_not_covered(), result.getTimestamp());
+                }
+            }
+        }
+        return dataSetBuilder.build();
+    }
+
 }

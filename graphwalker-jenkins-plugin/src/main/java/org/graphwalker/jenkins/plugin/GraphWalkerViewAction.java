@@ -13,7 +13,7 @@ import java.util.List;
 public class GraphWalkerViewAction implements RootAction, ModelObject {
 
     private final View myView;
-    private final SimpleDateFormat myFormater = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private final SimpleDateFormat myDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     public GraphWalkerViewAction(View view) {
         myView = view;
@@ -24,15 +24,15 @@ public class GraphWalkerViewAction implements RootAction, ModelObject {
     }
 
     public String getIconFileName() {
-        return GraphWalkerPlugin.ICON_FILE_NAME;
+        return Messages.view_action_icon_file_name();
     }
 
     public String getDisplayName() {
-        return GraphWalkerPlugin.DISPLAY_NAME;
+        return Messages.view_action_display_name();
     }
 
     public String getUrlName() {
-        return GraphWalkerPlugin.URL_NAME;
+        return Messages.view_action_url_name();
     }
 
     @JavaScriptMethod
@@ -62,7 +62,7 @@ public class GraphWalkerViewAction implements RootAction, ModelObject {
                 } else {
                     object.put("success", job.getLastBuild().getResult().isWorseThan(Result.SUCCESS) ? "false" : "true");
                     object.put("failure", job.getLastBuild().getResult().isBetterThan(Result.FAILURE) ? "false" : "true");
-                    object.put("time", myFormater.format(job.getLastBuild().getTime()));
+                    object.put("time", myDateFormat.format(job.getLastBuild().getTime()));
                 }
             }
             attributes.put((String)name, object);

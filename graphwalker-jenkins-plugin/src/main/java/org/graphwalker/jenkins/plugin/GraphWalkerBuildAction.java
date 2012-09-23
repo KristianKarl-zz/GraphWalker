@@ -2,47 +2,44 @@ package org.graphwalker.jenkins.plugin;
 
 import hudson.model.AbstractBuild;
 import hudson.model.Action;
-import org.graphwalker.core.reports.GraphWalkerReportType;
-import org.graphwalker.jenkins.plugin.charts.RingChart;
-import org.kohsuke.stapler.StaplerRequest;
-import org.kohsuke.stapler.StaplerResponse;
 
-import java.io.IOException;
+import java.text.DecimalFormat;
 
 public class GraphWalkerBuildAction implements Action {
 
     private final AbstractBuild<?, ?> myBuild;
-    private final GraphWalkerPublisher myPublisher;
 
-    public GraphWalkerBuildAction(AbstractBuild<?, ?> build, GraphWalkerPublisher publisher) {
+    public GraphWalkerBuildAction(AbstractBuild<?, ?> build) {
         myBuild = build;
-        myPublisher = publisher;
     }
 
-    public synchronized AbstractBuild<?, ?> getBuild() {
+    public AbstractBuild<?, ?> getBuild() {
         return myBuild;
     }
 
     public String getIconFileName() {
-        return GraphWalkerPlugin.ICON_FILE_NAME;
+        return Messages.build_action_icon_file_name();
     }
 
     public String getDisplayName() {
-        return GraphWalkerPlugin.DISPLAY_NAME;
+        return Messages.build_action_display_name();
     }
 
     public String getUrlName() {
-        return GraphWalkerPlugin.URL_NAME;
+        return Messages.build_action_url_name();
     }
 
-    public void doGraph(final StaplerRequest request, StaplerResponse response) throws IOException {
+    public GraphWalkerResult getResult() {
+        return myBuild.getAction(GraphWalkerResultAction.class).getResult();
+    }
 
-        RingChart ringChart = new RingChart();
-        for (GraphWalkerReportType report: myPublisher.getBuildReports(myBuild)) {
-            ringChart.setValue(report.getClazz(), 1);
+    public String format(DecimalFormat decimalFormat, double value) {
+        if (value < 1d && value > .99d) {
+            return "<100%";
         }
-        ringChart.doPng(request, response);
-
+        if (value > 0d && value < .01d) {
+            return ">0%";
+        }
+        return decimalFormat.format(value);
     }
-
 }
