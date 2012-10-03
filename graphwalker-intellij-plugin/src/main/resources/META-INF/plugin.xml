@@ -1,0 +1,38 @@
+<idea-plugin version="2">
+    <id>org.graphwalker.intellij.plugin</id>
+    <name>GraphWalker Plugin</name>
+    <description>Integrates GraphWalker to the IntelliJ environment</description>
+    <version>3.0</version>
+    <vendor url="http://www.graphwalker.org" email="info@graphwalker.org">graphwalker.org</vendor>
+    <change-notes>
+        <![CDATA[
+
+        ]]>
+    </change-notes>
+    <idea-version since-build="117.798"/>
+
+    <application-components/>
+
+    <project-components/>
+
+    <actions>
+        <!--group id="GraphWalkerGroup"
+               text="GraphWalker"
+               popup="true"
+               class="org.graphwalker.intellij.plugin.actions.GraphWalkerGroup">
+
+            <action id="GraphWalkerAbout" class="org.graphwalker.intellij.plugin.actions.AboutGraphWalkerAction"
+                    text="About GraphWalker"
+                    description="Shows information about the GraphWalker Plugin"/>
+
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
+        </group-->
+    </actions>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <fileTypeFactory implementation="org.graphwalker.intellij.plugin.GraphWalkerFileTypeFactory"/>
+        <fileEditorProvider implementation="org.graphwalker.intellij.plugin.GraphWalkerFileEditorProvider"/>
+        <fileDocumentManagerListener implementation="org.graphwalker.intellij.plugin.GraphWalkerFileDocumentManagerListener"/>
+    </extensions>
+
+</idea-plugin>
