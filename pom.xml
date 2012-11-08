@@ -17,6 +17,7 @@
         <!--module>graphwalker-intellij-plugin</module -->
         <module>graphwalker-jenkins-plugin</module>
         <module>graphwalker-maven-plugin</module>
+        <module>graphwalker-jira-plugin</module>
         <module>graphwalker-example</module>
     </modules>
 

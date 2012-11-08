@@ -11,9 +11,10 @@
 *.iws
 .idea/
 
-
 # Build and unit tests stuff #
 #############################
 logs/
 target/
 work/
+amps-standalone/
+
