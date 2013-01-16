@@ -74,6 +74,8 @@ public class StopConditionFactory {
             return create(type, Integer.parseInt(value));
         } else if ("TimeDuration".equalsIgnoreCase(type)) {
             return create(type, Integer.parseInt(value));
+        } else if ("Callback".equalsIgnoreCase(type)) {
+            return new Callback(value);
         }
         throw new StopConditionException(Resource.getText(Bundle.NAME, "exception.condition.unknown"));
     }

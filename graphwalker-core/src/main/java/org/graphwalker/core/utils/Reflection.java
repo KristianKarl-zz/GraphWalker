@@ -91,13 +91,7 @@ public final class Reflection {
      * @param methodName a {@link java.lang.String} object.
      */
     public static void execute(Object object, String methodName) {
-        if (null != object) {
-            try {
-                execute(object, object.getClass().getMethod(methodName));
-            } catch (NoSuchMethodException e) {
-                throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.method.missing", methodName), e);
-            }
-        }
+        execute(object, methodName, Void.class);
     }
 
     /**
@@ -107,15 +101,7 @@ public final class Reflection {
      * @param method a {@link java.lang.reflect.Method} object.
      */
     public static void execute(Object object, Method method) {
-        if (null != object) {
-            try {
-                method.invoke(object);
-            } catch (IllegalAccessException e) {
-                throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.method.access", method.getName()), e);
-            } catch (InvocationTargetException e) {
-                throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.method.invocation", method.getName()), e);
-            }
-        }
+        execute(object, method, Void.class);
     }
 
     /**
@@ -126,15 +112,7 @@ public final class Reflection {
      * @param arguments a {@link java.lang.Object} object.
      */
     public static void execute(Object object, Method method, Object... arguments) {
-        if (null != object) {
-            try {
-                method.invoke(object, arguments);
-            } catch (IllegalAccessException e) {
-                throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.method.access", method.getName()), e);
-            } catch (InvocationTargetException e) {
-                throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.method.invocation", method.getName()), e);
-            }
-        }
+        execute(object, method, Void.class, arguments);
     }
 
     private static Class<?>[] getTypes(Object... arguments) {
@@ -144,4 +122,48 @@ public final class Reflection {
         }
         return types.toArray(new Class<?>[types.size()]);
     }
+
+    public static <T> T execute(Object object, String methodName, Class<T> type) {
+        try {
+            return execute(object, object.getClass().getMethod(methodName), type);
+        } catch (NoSuchMethodException e) {
+            throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.method.missing", methodName), e);
+        }
+    }
+
+    public static <T> T execute(Object object, Method method, Class<T> type) {
+        try {
+            return type.cast(method.invoke(object));
+        } catch (IllegalAccessException e) {
+            throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.method.access", method.getName()), e);
+        } catch (InvocationTargetException e) {
+            throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.method.invocation", method.getName()), e);
+        }
+    }
+
+    public static <T> T execute(Object object, Method method, Class<T> type, Object... arguments) {
+        try {
+            return type.cast(method.invoke(object, arguments));
+        } catch (IllegalAccessException e) {
+            throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.method.access", method.getName()), e);
+        } catch (InvocationTargetException e) {
+            throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.method.invocation", method.getName()), e);
+        }
+    }
+
+    public static boolean isReturnType(Object object, String methodName, Class<?> type) {
+        if (null != object) {
+            try {
+                return isReturnType(object.getClass().getMethod(methodName), type);
+            } catch (NoSuchMethodException e) {
+                throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.method.missing", methodName), e);
+            }
+        }
+        return false;
+    }
+
+    public static boolean isReturnType(Method method, Class<?> type) {
+        return null != method && method.getReturnType().equals(type);
+    }
+
 }
