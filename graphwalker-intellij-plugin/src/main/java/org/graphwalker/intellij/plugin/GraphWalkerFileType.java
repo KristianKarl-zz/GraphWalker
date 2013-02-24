@@ -1,7 +1,6 @@
 package org.graphwalker.intellij.plugin;
 
 import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.PlatformIcons;

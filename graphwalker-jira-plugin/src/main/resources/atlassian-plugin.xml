@@ -24,9 +24,16 @@
   #L%
   -->
 <atlassian-plugin key="${project.groupId}.${project.artifactId}" name="${project.name}" plugins-version="2">
+
     <plugin-info>
         <description>${project.description}</description>
         <version>${project.version}</version>
         <vendor name="${project.organization.name}" url="${project.organization.url}" />
     </plugin-info>
+
+    <rest key="graphwalker-rest-service" path="/graphwalker" version="${project.version}">
+        <package>org.graphwalker.jira.plugin.rest</package>
+        <description>Provides a GraphWalker REST service</description>
+    </rest>
+
 </atlassian-plugin>

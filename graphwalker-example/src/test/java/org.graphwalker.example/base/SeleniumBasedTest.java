@@ -17,63 +17,63 @@ import java.util.concurrent.TimeUnit;
 
 public abstract class SeleniumBasedTest {
 
-    private static final long DEFAULT_TIMEOUT = 30;
-    private static final BrowserType DEFAULT_BROWSER = BrowserType.FIREFOX;
-    private WebDriver myWebDriver;
+    //private static final long DEFAULT_TIMEOUT = 30;
+    //private static final BrowserType DEFAULT_BROWSER = BrowserType.FIREFOX;
+    //private WebDriver myWebDriver;
 
     @BeforeGroup
     public void beforeGroup() {
-        System.out.println("before group");
+        //System.out.println("before group");
     }
 
     @BeforeModel
     public void createWebDriver() {
-        setWebDriver(createWebDriver(getBrowserType()));
-        getWebDriver().manage().timeouts().implicitlyWait(getTimeout(), TimeUnit.SECONDS);
+        //setWebDriver(createWebDriver(getBrowserType()));
+        //getWebDriver().manage().timeouts().implicitlyWait(getTimeout(), TimeUnit.SECONDS);
     }
 
     @AfterModel
     public void destroyWebDriver() {
-        if (null != getWebDriver()) {
-            getWebDriver().close();
-            setWebDriver(null);
-        }
+        //if (null != getWebDriver()) {
+        //    getWebDriver().close();
+        //    setWebDriver(null);
+        //}
     }
-
+    /*
     protected void waitFor(final By by) {
-        FluentWait<By> fluentWait = new FluentWait<By>(by);
-        fluentWait.withTimeout(getTimeout(), TimeUnit.SECONDS);
-        fluentWait.pollingEvery(1, TimeUnit.SECONDS);
-        fluentWait.until(new Predicate<By>() {
-            public boolean apply(By input) {
-                try {
-                    return getWebDriver().findElement(by).isDisplayed();
-                } catch (NoSuchElementException e) {
-                    return false;
-                }
-            }
-        });
+        //FluentWait<By> fluentWait = new FluentWait<By>(by);
+        //fluentWait.withTimeout(getTimeout(), TimeUnit.SECONDS);
+        //fluentWait.pollingEvery(1, TimeUnit.SECONDS);
+        //fluentWait.until(new Predicate<By>() {
+        //    public boolean apply(By input) {
+        //        try {
+        //            return getWebDriver().findElement(by).isDisplayed();
+        //        } catch (NoSuchElementException e) {
+        //            return false;
+        //        }
+        //    }
+        //});
     }
 
     protected void setWebDriver(WebDriver webDriver) {
-        myWebDriver = webDriver;
+        //myWebDriver = webDriver;
     }
 
     protected WebDriver getWebDriver() {
-        return myWebDriver;
+        //return myWebDriver;
     }
 
     private WebDriver createWebDriver(BrowserType type) {
-        switch (type) {
-            case CHROME:
-                return new ChromeDriver();
-            case FIREFOX:
-                return new FirefoxDriver();
-            case IEXPLORER:
-                return new InternetExplorerDriver();
-            default:
-                throw new SeleniumException("Unknown browser type");
-        }
+        //switch (type) {
+        //    case CHROME:
+        //        return new ChromeDriver();
+        //    case FIREFOX:
+        //        return new FirefoxDriver();
+        //     case IEXPLORER:
+        //         return new InternetExplorerDriver();
+        //    default:
+        //        throw new SeleniumException("Unknown browser type");
+        // }
     }
 
     protected enum BrowserType {
@@ -93,5 +93,5 @@ public abstract class SeleniumBasedTest {
         }
         return DEFAULT_TIMEOUT;
     }
-
+    */
 }

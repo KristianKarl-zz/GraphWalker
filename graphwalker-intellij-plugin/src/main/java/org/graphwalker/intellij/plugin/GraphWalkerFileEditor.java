@@ -7,12 +7,10 @@ import com.intellij.openapi.fileEditor.FileEditorLocation;
 import com.intellij.openapi.fileEditor.FileEditorState;
 import com.intellij.openapi.fileEditor.FileEditorStateLevel;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.beans.PropertyChangeListener;
@@ -25,28 +23,25 @@ public class GraphWalkerFileEditor extends UserDataHolderBase implements FileEdi
 
     private static final List<GraphWalkerFileEditor> ourEditors = new LinkedList<GraphWalkerFileEditor>();
 
-    private final VirtualFile myFile;
-    private final GraphWalkerFileEditorComponent myEditorComponent;
+    private final GraphWalkerComponent myComponent;
 
     public GraphWalkerFileEditor(@NotNull Project project, @NotNull VirtualFile file) {
-        myFile = file;
-
-        myEditorComponent = new GraphWalkerFileEditorComponent();
+        myComponent = new GraphWalkerComponent(new GraphWalkerGraph(file));
         ourEditors.add(this);
     }
 
     @NotNull
     public JComponent getComponent() {
-        return myEditorComponent.getComponent();
+        return myComponent;
     }
 
     public JComponent getPreferredFocusedComponent() {
-        return myEditorComponent.getPreferredFocusedComponent();
+        return myComponent.getControl();
     }
 
     @NotNull
     public String getName() {
-        return NAME;  // TODO: Fix me (Auto generated)
+        return NAME;
     }
 
     @NotNull
@@ -62,11 +57,11 @@ public class GraphWalkerFileEditor extends UserDataHolderBase implements FileEdi
     }
 
     public boolean isModified() {
-        return myEditorComponent.isModified();
+        return myComponent.getGraph().isModified();
     }
 
     public boolean isValid() {
-        return myFile.isValid(); // && myEditorComponent.isValidForFormat();
+        return myComponent.getGraph().isValid(); // && myEditorComponent.isValidForFormat();
     }
 
     public void selectNotify() {
@@ -94,7 +89,6 @@ public class GraphWalkerFileEditor extends UserDataHolderBase implements FileEdi
     }
 
     public void dispose() {
-        // TODO: Fix me (Auto generated)
     }
 
 }
