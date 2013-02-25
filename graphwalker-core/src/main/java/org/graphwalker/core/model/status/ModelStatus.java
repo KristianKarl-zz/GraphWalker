@@ -1,6 +1,6 @@
 /*
  * #%L
- * graphwalker-jira-plugin
+ * GraphWalker Core
  * %%
  * Copyright (C) 2011 - 2012 GraphWalker
  * %%
@@ -23,29 +23,14 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.jira.plugin.rest.response;
+package org.graphwalker.core.model.status;
 
-import javax.xml.bind.annotation.*;
-import java.sql.Timestamp;
-import java.util.Date;
-
-@XmlRootElement
-public class Ping {
-
-    @XmlElement
-    private String nonce;
-
-    @XmlElement
-    private String timestamp = new Timestamp(new Date().getTime()).toString();
-
-    public Ping() {
-    }
-
-    public Ping(String nonce) {
-        this.timestamp = nonce;
-    }
-
-    public void setNonce(String nonce) {
-        this.nonce = nonce;
-    }
+/**
+ * <p>ModelStatus class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
+public enum ModelStatus {
+    NOT_EXECUTED, EXECUTING, COMPLETED, FAILED
 }

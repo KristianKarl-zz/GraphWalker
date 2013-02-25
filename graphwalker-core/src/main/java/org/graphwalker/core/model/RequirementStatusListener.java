@@ -25,6 +25,8 @@
  */
 package org.graphwalker.core.model;
 
+import org.graphwalker.core.model.status.RequirementStatus;
+
 /**
  * <p>RequirementStatusListener interface.</p>
  *
@@ -36,8 +38,8 @@ public interface RequirementStatusListener {
      * <p>requirementStatusChanged.</p>
      *
      * @param requirement a {@link org.graphwalker.core.model.Requirement} object.
-     * @param oldStatus   a {@link org.graphwalker.core.model.RequirementStatus} object.
-     * @param newStatus   a {@link org.graphwalker.core.model.RequirementStatus} object.
+     * @param oldStatus   a {@link org.graphwalker.core.model.status.RequirementStatus} object.
+     * @param newStatus   a {@link org.graphwalker.core.model.status.RequirementStatus} object.
      */
     void requirementStatusChanged(Requirement requirement, RequirementStatus oldStatus, RequirementStatus newStatus);
 }

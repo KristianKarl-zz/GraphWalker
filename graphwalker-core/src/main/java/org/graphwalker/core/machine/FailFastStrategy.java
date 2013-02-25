@@ -28,7 +28,7 @@ package org.graphwalker.core.machine;
 import org.graphwalker.core.annotations.AfterModel;
 import org.graphwalker.core.annotations.AnnotationProcessor;
 import org.graphwalker.core.annotations.AnnotationProcessorImpl;
-import org.graphwalker.core.model.ModelStatus;
+import org.graphwalker.core.model.status.ModelStatus;
 
 /**
  * <p>FailFastStrategy class.</p>

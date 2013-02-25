@@ -23,14 +23,14 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core.model;
+package org.graphwalker.core.model.status;
 
 /**
- * <p>RequirementStatus class.</p>
+ * <p>ElementStatus class.</p>
  *
  * @author nilols
  * @version $Id: $
  */
-public enum RequirementStatus {
-    NOT_COVERED, PASSED, FAILED
+public enum ElementStatus {
+    UNREACHABLE,VISITED,BLOCKED
 }

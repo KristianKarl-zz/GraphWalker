@@ -25,6 +25,8 @@
  */
 package org.graphwalker.core.model;
 
+import org.graphwalker.core.model.status.ElementStatus;
+
 /**
  * <p>ModelElement interface.</p>
  *
@@ -71,13 +73,13 @@ public interface Element {
     /**
      * <p>setStatus.</p>
      *
-     * @param status a {@link org.graphwalker.core.model.ElementStatus} object.
+     * @param status a {@link org.graphwalker.core.model.status.ElementStatus} object.
      */
     void setStatus(ElementStatus status);
     /**
      * <p>getStatus.</p>
      *
-     * @return a {@link org.graphwalker.core.model.ElementStatus} object.
+     * @return a {@link org.graphwalker.core.model.status.ElementStatus} object.
      */
     ElementStatus getStatus();
     /**

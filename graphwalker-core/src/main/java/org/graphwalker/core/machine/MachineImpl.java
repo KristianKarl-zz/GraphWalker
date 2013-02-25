@@ -32,6 +32,8 @@ import org.graphwalker.core.configuration.Configuration;
 import org.graphwalker.core.filter.EdgeFilter;
 import org.graphwalker.core.generators.PathGenerator;
 import org.graphwalker.core.model.*;
+import org.graphwalker.core.model.status.ModelStatus;
+import org.graphwalker.core.model.status.RequirementStatus;
 import org.graphwalker.core.utils.Reflection;
 import org.graphwalker.core.utils.Resource;
 

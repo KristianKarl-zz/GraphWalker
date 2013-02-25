@@ -27,6 +27,8 @@ package org.graphwalker.core.model;
 
 import org.graphwalker.core.generators.PathGenerator;
 import org.graphwalker.core.machine.ExceptionStrategy;
+import org.graphwalker.core.model.status.ModelStatus;
+import org.graphwalker.core.model.status.RequirementStatus;
 
 import java.util.List;
 
@@ -69,7 +71,7 @@ public interface Model {
     /**
      * <p>getRequirements.</p>
      *
-     * @param filter a {@link org.graphwalker.core.model.RequirementStatus} object.
+     * @param filter a {@link org.graphwalker.core.model.status.RequirementStatus} object.
      * @return a {@link java.util.List} object.
      */
     List<Requirement> getRequirements(RequirementStatus filter);
@@ -289,14 +291,14 @@ public interface Model {
     /**
      * <p>getModelStatus.</p>
      *
-     * @return a {@link org.graphwalker.core.model.ModelStatus} object.
+     * @return a {@link org.graphwalker.core.model.status.ModelStatus} object.
      */
     ModelStatus getModelStatus();
 
     /**
      * <p>setModelStatus.</p>
      *
-     * @param myModelStatus a {@link org.graphwalker.core.model.ModelStatus} object.
+     * @param myModelStatus a {@link org.graphwalker.core.model.status.ModelStatus} object.
      */
     void setModelStatus(ModelStatus myModelStatus);
 }

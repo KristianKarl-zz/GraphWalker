@@ -1,6 +1,6 @@
 /*
  * #%L
- * graphwalker-jira-plugin
+ * GraphWalker Core
  * %%
  * Copyright (C) 2011 - 2012 GraphWalker
  * %%
@@ -23,8 +23,14 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.jira.plugin;
+package org.graphwalker.core.model.status;
 
-public class GraphWalkerPlugin {
-
+/**
+ * <p>RequirementStatus class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
+public enum RequirementStatus {
+    NOT_COVERED, PASSED, FAILED
 }

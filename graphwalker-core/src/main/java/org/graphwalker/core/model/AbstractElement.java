@@ -25,6 +25,8 @@
  */
 package org.graphwalker.core.model;
 
+import org.graphwalker.core.model.status.ElementStatus;
+
 /**
  * <p>Abstract AbstractElement class.</p>
  *
@@ -137,7 +139,7 @@ public abstract class AbstractElement implements Element {
     /**
      * <p>getStatus.</p>
      *
-     * @return a {@link org.graphwalker.core.model.ElementStatus} object.
+     * @return a {@link org.graphwalker.core.model.status.ElementStatus} object.
      */
     public ElementStatus getStatus() {
         return myStatus;

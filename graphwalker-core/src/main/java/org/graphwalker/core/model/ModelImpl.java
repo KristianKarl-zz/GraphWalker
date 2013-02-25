@@ -31,6 +31,8 @@ import org.graphwalker.core.algorithms.FloydWarshall;
 import org.graphwalker.core.generators.PathGenerator;
 import org.graphwalker.core.machine.ExceptionStrategy;
 import org.graphwalker.core.machine.FailFastStrategy;
+import org.graphwalker.core.model.status.ModelStatus;
+import org.graphwalker.core.model.status.RequirementStatus;
 import org.graphwalker.core.utils.Resource;
 
 import java.util.*;
@@ -281,7 +283,7 @@ public class ModelImpl implements Model {
     /**
      * <p>getStartVertex.</p>
      *
-     * @return a {@link org.graphwalker.core.model.Vertex} object.
+     * @return a {@link Vertex} object.
      */
     public Vertex getStartVertex() {
         List<Vertex> vertices = findByName(Resource.getText(Bundle.NAME, "start.vertex"));
@@ -358,8 +360,8 @@ public class ModelImpl implements Model {
     /**
      * {@inheritDoc}
      *
-     * @param source a {@link org.graphwalker.core.model.Element} object.
-     * @param target a {@link org.graphwalker.core.model.Edge} object.
+     * @param source a {@link Element} object.
+     * @param target a {@link Edge} object.
      * @return a int.
      */
     public int getShortestDistance(Element source, Edge target) {
@@ -378,7 +380,7 @@ public class ModelImpl implements Model {
     /**
      * {@inheritDoc}
      *
-     * @param target a {@link org.graphwalker.core.model.Vertex} object.
+     * @param target a {@link Vertex} object.
      * @return a int.
      */
     public int getMaximumDistance(Vertex target) {
@@ -406,8 +408,8 @@ public class ModelImpl implements Model {
      * <p/>
      * <p>getShortestPath.</p>
      *
-     * @param source a {@link org.graphwalker.core.model.Element} object.
-     * @param target a {@link org.graphwalker.core.model.Vertex} object.
+     * @param source a {@link Element} object.
+     * @param target a {@link Vertex} object.
      * @return a {@link java.util.List} object.
      */
     public List<Element> getShortestPath(Element source, Vertex target) {
@@ -477,7 +479,7 @@ public class ModelImpl implements Model {
     /**
      * <p>getModelStatus.</p>
      *
-     * @return a {@link org.graphwalker.core.model.ModelStatus} object.
+     * @return a {@link ModelStatus} object.
      */
     public ModelStatus getModelStatus() {
         return myModelStatus;

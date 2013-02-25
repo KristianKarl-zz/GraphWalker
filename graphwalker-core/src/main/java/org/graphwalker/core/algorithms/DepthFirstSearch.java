@@ -26,6 +26,7 @@
 package org.graphwalker.core.algorithms;
 
 import org.graphwalker.core.model.*;
+import org.graphwalker.core.model.status.ElementStatus;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
