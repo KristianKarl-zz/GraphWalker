@@ -26,6 +26,9 @@
 package org.graphwalker.core.generators;
 
 import org.graphwalker.core.Bundle;
+import org.graphwalker.core.generators.impl.RandomLeastVisitedPath;
+import org.graphwalker.core.generators.impl.RandomPath;
+import org.graphwalker.core.generators.impl.RandomUnvisitedFirstPath;
 import org.graphwalker.core.utils.Resource;
 
 /**

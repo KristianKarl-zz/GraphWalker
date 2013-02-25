@@ -27,9 +27,10 @@ package org.graphwalker.core.configuration;
 
 import org.graphwalker.core.annotations.GraphWalker;
 import org.graphwalker.core.conditions.StopCondition;
+import org.graphwalker.core.configuration.impl.ConfigurationImpl;
 import org.graphwalker.core.generators.PathGenerator;
 import org.graphwalker.core.machine.ExceptionStrategy;
-import org.graphwalker.core.model.GraphMLModelFactory;
+import org.graphwalker.core.model.impl.GraphMLModelFactory;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.utils.Reflection;
 

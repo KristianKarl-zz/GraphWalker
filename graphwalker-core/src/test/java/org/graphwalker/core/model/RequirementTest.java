@@ -25,12 +25,13 @@
  */
 package org.graphwalker.core.model;
 
+import org.graphwalker.core.model.impl.RequirementImpl;
 import org.junit.Test;
 
 public class RequirementTest {
 
     @Test
     public void createRequirementTest() {
-        new Requirement("requirementId");
+        new RequirementImpl("requirementId");
     }
 }

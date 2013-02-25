@@ -25,7 +25,12 @@
  */
 package org.graphwalker.core.filter;
 
+import org.graphwalker.core.filter.impl.EdgeFilterImpl;
 import org.graphwalker.core.model.*;
+import org.graphwalker.core.model.impl.ActionImpl;
+import org.graphwalker.core.model.impl.EdgeImpl;
+import org.graphwalker.core.model.impl.GuardImpl;
+import org.graphwalker.core.model.impl.ModelImpl;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -35,11 +40,11 @@ import java.util.List;
 public class EdgeFilterTest {
 
     private Edge createEdge() {
-        Edge edge = new Edge("myEdge");
+        Edge edge = new EdgeImpl("myEdge");
         List<Action> actions = new ArrayList<Action>(); 
-        actions.add(new Action("i = 0;"));
+        actions.add(new ActionImpl("i = 0;"));
         edge.setEdgeActions(actions);
-        edge.setEdgeGuard(new Guard("i == 0"));
+        edge.setEdgeGuard(new GuardImpl("i == 0"));
         return edge;
     }
     
@@ -68,8 +73,8 @@ public class EdgeFilterTest {
         EdgeFilter edgeFilter = new EdgeFilterImpl("groovy");
         Model model = new ModelImpl("m1");
         model.setImplementation(this);
-        Edge edge = new Edge("myEdge");
-        edge.setEdgeGuard(new Guard("impl.not(false)"));
+        Edge edge = new EdgeImpl("myEdge");
+        edge.setEdgeGuard(new GuardImpl("impl.not(false)"));
         Assert.assertTrue(edgeFilter.acceptEdge(model, edge));
     }
 

@@ -25,6 +25,10 @@
  */
 package org.graphwalker.core.conditions;
 
+import org.graphwalker.core.conditions.impl.EdgeCoverage;
+import org.graphwalker.core.conditions.impl.ReachedEdge;
+import org.graphwalker.core.conditions.impl.ReachedVertex;
+import org.graphwalker.core.conditions.impl.VertexCoverage;
 import org.junit.Assert;
 import org.junit.Test;
 

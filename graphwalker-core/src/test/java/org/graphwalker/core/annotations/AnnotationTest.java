@@ -29,9 +29,10 @@ import org.graphwalker.core.GraphWalkerExecutor;
 import org.graphwalker.core.GraphWalkerFactory;
 import org.graphwalker.core.configuration.ConfigurationFactory;
 import org.graphwalker.core.model.Edge;
+import org.graphwalker.core.model.Vertex;
+import org.graphwalker.core.model.impl.EdgeImpl;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Model;
-import org.graphwalker.core.model.Vertex;
 import org.graphwalker.core.utils.Assert;
 import org.junit.Test;
 

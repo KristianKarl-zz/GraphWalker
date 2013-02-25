@@ -31,25 +31,7 @@ package org.graphwalker.core.model;
  * @author nilols
  * @version $Id: $
  */
-public class Guard {
+public interface Guard {
     
-    private final String myScript;
-    
-    /**
-     * <p>Constructor for EdgeGuard.</p>
-     *
-     * @param script a {@link java.lang.String} object.
-     */
-    public Guard(String script) {
-        myScript = script;
-    }
-    
-    /**
-     * <p>getScript.</p>
-     *
-     * @return a {@link java.lang.String} object.
-     */
-    public String getScript() {
-        return myScript;
-    }
+    String getScript();
 }

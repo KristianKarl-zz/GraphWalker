@@ -25,6 +25,7 @@
  */
 package org.graphwalker.core.model;
 
+import org.graphwalker.core.model.impl.VertexImpl;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -32,7 +33,7 @@ public class VertexTest {
 
     @Test
     public void createVertexTest() {
-        Vertex vertex = new Vertex("vertexName");
+        VertexImpl vertex = new VertexImpl("vertexName");
         Assert.assertEquals("vertexName", vertex.getName());
         Assert.assertFalse(vertex.hasSwitchModel());
         Assert.assertNull(vertex.getSwitchModelId());
@@ -40,7 +41,7 @@ public class VertexTest {
 
     @Test
     public void setSwitchModelIdTest() {
-        Vertex vertex = new Vertex();
+        VertexImpl vertex = new VertexImpl();
         Assert.assertFalse(vertex.hasSwitchModel());
         vertex.setSwitchModelId("modelId");
         Assert.assertTrue(vertex.hasSwitchModel());

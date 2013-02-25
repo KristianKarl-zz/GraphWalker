@@ -25,6 +25,9 @@
  */
 package org.graphwalker.core.model;
 
+import org.graphwalker.core.model.impl.EdgeImpl;
+import org.graphwalker.core.model.impl.GraphMLModelFactory;
+import org.graphwalker.core.model.impl.VertexImpl;
 import org.graphwalker.core.utils.ResourceException;
 import org.junit.Assert;
 import org.junit.Test;

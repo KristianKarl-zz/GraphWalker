@@ -31,25 +31,8 @@ package org.graphwalker.core.model;
  * @author nilols
  * @version $Id: $
  */
-public class Action {
+public interface Action {
     
-    private final String myScript;
-    
-    /**
-     * <p>Constructor for EdgeAction.</p>
-     *
-     * @param script a {@link java.lang.String} object.
-     */
-    public Action(String script) {
-        myScript = script;
-    }
-    
-    /**
-     * <p>getScript.</p>
-     *
-     * @return a {@link java.lang.String} object.
-     */
-    public String getScript() {
-        return myScript;
-    }
+    String getScript();
+
 }

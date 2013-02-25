@@ -25,6 +25,8 @@
  */
 package org.graphwalker.core.model;
 
+import org.graphwalker.core.model.impl.EdgeImpl;
+import org.graphwalker.core.model.impl.GuardImpl;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -33,36 +35,36 @@ public class EdgeTest {
 
     @Test
     public void createEdgeTest() {
-        new Edge("edgeName");
+        new EdgeImpl("edgeName");
     }
 
     @Test
     public void setWeightTest() {
-        Edge edge = new Edge();
+        EdgeImpl edge = new EdgeImpl();
         edge.setWeight(0.5);
     }
 
     @Test
     public void setEdgeActionsTest() {
-        Edge edge = new Edge();
+        EdgeImpl edge = new EdgeImpl();
         edge.setEdgeActions(new ArrayList<Action>());
     }
 
     @Test
     public void setEdgeGuardTest() {
-        Edge edge = new Edge();
-        edge.setEdgeGuard(new Guard("guardScript"));
+        EdgeImpl edge = new EdgeImpl();
+        edge.setEdgeGuard(new GuardImpl("guardScript"));
     }
 
     @Test
     public void setIdTest() {
-        Edge edge = new Edge();
+        EdgeImpl edge = new EdgeImpl();
         edge.setId("edgeName");
     }
 
     @Test
     public void setNameTest() {
-        Edge edge = new Edge();
+        EdgeImpl edge = new EdgeImpl();
         edge.setName("edgeName");
     }
 

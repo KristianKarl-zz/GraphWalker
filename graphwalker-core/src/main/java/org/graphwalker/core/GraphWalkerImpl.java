@@ -27,7 +27,7 @@ package org.graphwalker.core;
 
 import org.graphwalker.core.configuration.Configuration;
 import org.graphwalker.core.machine.Machine;
-import org.graphwalker.core.machine.MachineImpl;
+import org.graphwalker.core.machine.impl.MachineImpl;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Model;
 

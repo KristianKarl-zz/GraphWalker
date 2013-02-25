@@ -33,45 +33,10 @@ import org.graphwalker.core.model.status.RequirementStatus;
  * @author nilols
  * @version $Id: $
  */
-public class Requirement {
+public interface Requirement {
 
-    private final String myId;
-    private RequirementStatus myRequirementStatus = RequirementStatus.NOT_COVERED;
-
-    /**
-     * <p>Constructor for Requirement.</p>
-     *
-     * @param id a {@link java.lang.String} object.
-     */
-    public Requirement(String id) {
-        myId = id;
-    }
-
-    /**
-     * <p>getId.</p>
-     *
-     * @return a {@link java.lang.String} object.
-     */
-    public String getId() {
-        return myId;
-    }
-    
-    /**
-     * <p>isFulfilled.</p>
-     *
-     * @return a boolean.
-     */
-    public RequirementStatus getStatus() {
-        return myRequirementStatus;
-    }
-
-    /**
-     * <p>markAsFulfilled.</p>
-     *
-     * @param status a {@link org.graphwalker.core.model.status.RequirementStatus} object.
-     */
-    public void setStatus(RequirementStatus status) {
-        myRequirementStatus = status;
-    }
+    String getId();
+    RequirementStatus getStatus();
+    void setStatus(RequirementStatus status);
 
 }

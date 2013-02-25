@@ -26,11 +26,11 @@
 package org.graphwalker.core.annotations;
 
 import org.graphwalker.core.conditions.StopCondition;
-import org.graphwalker.core.conditions.VertexCoverage;
+import org.graphwalker.core.conditions.impl.VertexCoverage;
 import org.graphwalker.core.generators.PathGenerator;
-import org.graphwalker.core.generators.RandomPath;
+import org.graphwalker.core.generators.impl.RandomPath;
 import org.graphwalker.core.machine.ExceptionStrategy;
-import org.graphwalker.core.machine.FailFastStrategy;
+import org.graphwalker.core.machine.impl.FailFastStrategy;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

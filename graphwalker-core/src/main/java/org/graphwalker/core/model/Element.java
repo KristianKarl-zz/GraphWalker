@@ -35,6 +35,7 @@ import org.graphwalker.core.model.status.ElementStatus;
  */
 public interface Element {
 
+    void setId(String id);
     /**
      * <p>getId.</p>
      *
@@ -46,6 +47,7 @@ public interface Element {
      *
      * @return a {@link java.lang.String} object.
      */
+    void setName(String name);
     String getName();
     /**
      * <p>hasName.</p>
