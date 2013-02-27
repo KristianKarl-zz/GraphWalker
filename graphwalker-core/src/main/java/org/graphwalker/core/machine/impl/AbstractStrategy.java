@@ -41,13 +41,13 @@ import java.util.Map;
  */
 public abstract class AbstractStrategy implements ExceptionStrategy {
 
-    private final Map<String, List<Throwable>> myExceptionMap = new HashMap<String, List<Throwable>>();
+    private final Map<String, List<Throwable>> exceptions = new HashMap<String, List<Throwable>>();
 
     /**
      * {@inheritDoc}
      */
     public boolean hasExceptions(Model model) {
-        return myExceptionMap.containsKey(model.getId());
+        return exceptions.containsKey(model.getId());
     }
 
     /**
@@ -57,17 +57,17 @@ public abstract class AbstractStrategy implements ExceptionStrategy {
      * @param throwable a {@link java.lang.Throwable} object.
      */
     protected void addException(Model model, Throwable throwable) {
-        if (!myExceptionMap.containsKey(model.getId())) {
-            myExceptionMap.put(model.getId(), new ArrayList<Throwable>());
+        if (!exceptions.containsKey(model.getId())) {
+            exceptions.put(model.getId(), new ArrayList<Throwable>());
         }
-        myExceptionMap.get(model.getId()).add(throwable);
+        exceptions.get(model.getId()).add(throwable);
     }
 
     /**
      * {@inheritDoc}
      */
     public List<Throwable> getExceptions(Model model) {
-        List<Throwable> exceptions = myExceptionMap.get(model.getId());
-        return (null!=exceptions?myExceptionMap.get(model.getId()):new ArrayList<Throwable>());
+        List<Throwable> exceptions = this.exceptions.get(model.getId());
+        return (null!=exceptions? this.exceptions.get(model.getId()):new ArrayList<Throwable>());
     }
 }

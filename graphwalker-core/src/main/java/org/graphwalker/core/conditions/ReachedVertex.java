@@ -37,7 +37,7 @@ import org.graphwalker.core.model.Vertex;
  */
 public class ReachedVertex implements StopCondition {
 
-    private final String myName;
+    private final String name;
 
     /**
      * <p>Constructor for ReachedVertex.</p>
@@ -45,7 +45,7 @@ public class ReachedVertex implements StopCondition {
      * @param name a {@link java.lang.String} object.
      */
     public ReachedVertex(String name) {
-        myName = name;
+        this.name = name;
     }
 
     /** {@inheritDoc} */
@@ -55,7 +55,7 @@ public class ReachedVertex implements StopCondition {
 
     /** {@inheritDoc} */
     public double getFulfilment(Model model, Element element) {
-        Vertex vertex = model.getVertexByName(myName);
+        Vertex vertex = model.getVertexByName(name);
         if (null != vertex) {
             if (vertex.equals(element)) {
                 return 1;

@@ -46,7 +46,7 @@ import java.util.regex.Pattern;
  */
 public class GraphMLModelFactory implements ModelFactory {
 
-    private final Map<String, Requirement> myRequirementMap = new HashMap<String, Requirement>();
+    private final Map<String, Requirement> requirements = new HashMap<String, Requirement>();
 
     /**
      * <p>Constructor for GraphmlModelFactory.</p>
@@ -159,10 +159,10 @@ public class GraphMLModelFactory implements ModelFactory {
         Matcher matcher = pattern.matcher(text);
         while (matcher.find()) {
             String id = matcher.group(1);
-            if (!myRequirementMap.containsKey(id)) {
-                myRequirementMap.put(id, new Requirement(id));
+            if (!requirements.containsKey(id)) {
+                requirements.put(id, new Requirement(id));
             }
-            vertex.addRequirement(myRequirementMap.get(id));
+            vertex.addRequirement(requirements.get(id));
         }
         return matcher.replaceAll("").trim();
     }

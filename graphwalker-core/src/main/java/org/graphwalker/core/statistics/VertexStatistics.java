@@ -37,10 +37,10 @@ import java.util.List;
  */
 public class VertexStatistics {
 
-    private long myVertexCount = 0;
-    private long myVisitedVertexCount = 0;
-    private long myBlockedVertexCount = 0;
-    private long myUnreachableVertexCount = 0;
+    private long vertexCount = 0;
+    private long visitedVertexCount = 0;
+    private long blockedVertexCount = 0;
+    private long unreachableVertexCount = 0;
 
     /**
      * <p>Constructor for VertexStatistics.</p>
@@ -49,11 +49,11 @@ public class VertexStatistics {
      */
     public VertexStatistics(List<Vertex> vertices) {
         for (Vertex vertex: vertices) {
-            myVertexCount++;
+            vertexCount++;
             switch (vertex.getStatus()) {
-                case UNREACHABLE: myUnreachableVertexCount++; break;
-                case VISITED: myVisitedVertexCount++; break;
-                case BLOCKED: myBlockedVertexCount++; break;
+                case UNREACHABLE: unreachableVertexCount++; break;
+                case VISITED: visitedVertexCount++; break;
+                case BLOCKED: blockedVertexCount++; break;
             }
         }
     }
@@ -64,7 +64,7 @@ public class VertexStatistics {
      * @return a long.
      */
     public long getVertexCount() {
-        return myVertexCount;
+        return vertexCount;
     }
 
     /**
@@ -73,7 +73,7 @@ public class VertexStatistics {
      * @return a long.
      */
     public long getVisitedVertexCount() {
-        return myVisitedVertexCount;
+        return visitedVertexCount;
     }
 
     /**
@@ -82,7 +82,7 @@ public class VertexStatistics {
      * @return a long.
      */
     public long getBlockedVertexCount() {
-        return myBlockedVertexCount;
+        return blockedVertexCount;
     }
 
     /**
@@ -91,6 +91,6 @@ public class VertexStatistics {
      * @return a long.
      */
     public long getUnreachableVertexCount() {
-        return myUnreachableVertexCount;
+        return unreachableVertexCount;
     }
 }

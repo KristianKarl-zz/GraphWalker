@@ -36,11 +36,11 @@ import java.util.List;
  */
 public class Edge extends AbstractElement {
 
-    private Vertex mySource;
-    private Vertex myTarget;
-    private List<Action> myEdgeActions = new ArrayList<Action>();
-    private Guard myEdgeGuard;
-    private double myWeight = 1.0;
+    private Vertex source;
+    private Vertex target;
+    private List<Action> actions = new ArrayList<Action>();
+    private Guard guard;
+    private double weight = 1.0;
 
     /**
      * <p>Constructor for Edge.</p>
@@ -63,7 +63,7 @@ public class Edge extends AbstractElement {
      * @param source a {@link Vertex} object.
      */
     public void setSource(Vertex source) {
-        mySource = source;
+        this.source = source;
     }
 
     /**
@@ -72,7 +72,7 @@ public class Edge extends AbstractElement {
      * @return a {@link Vertex} object.
      */
     public Vertex getSource() {
-        return mySource;
+        return source;
     }
 
     /**
@@ -81,7 +81,7 @@ public class Edge extends AbstractElement {
      * @param target a {@link Vertex} object.
      */
     public void setTarget(Vertex target) {
-        myTarget = target;
+        this.target = target;
     }
 
     /**
@@ -90,7 +90,7 @@ public class Edge extends AbstractElement {
      * @return a {@link Vertex} object.
      */
     public Vertex getTarget() {
-        return myTarget;
+        return target;
     }
 
     /**
@@ -99,7 +99,7 @@ public class Edge extends AbstractElement {
      * @return a double.
      */
     public double getWeight() {
-        return myWeight;
+        return weight;
     }
 
     /**
@@ -108,7 +108,7 @@ public class Edge extends AbstractElement {
      * @param weight a double.
      */
     public void setWeight(double weight) {
-        myWeight = weight;
+        this.weight = weight;
     }
 
     /**
@@ -117,7 +117,7 @@ public class Edge extends AbstractElement {
      * @return a {@link java.util.List} object.
      */
     public List<Action> getEdgeActions() {
-        return myEdgeActions;
+        return actions;
     }
 
     /**
@@ -126,7 +126,7 @@ public class Edge extends AbstractElement {
      * @param edgeActions a {@link java.util.List} object.
      */
     public void setEdgeActions(List<Action> edgeActions) {
-        myEdgeActions = edgeActions;
+        actions = edgeActions;
     }
 
     /**
@@ -135,7 +135,7 @@ public class Edge extends AbstractElement {
      * @return a {@link org.graphwalker.core.model.Guard} object.
      */
     public Guard getEdgeGuard() {
-        return myEdgeGuard;
+        return guard;
     }
 
     /**
@@ -144,7 +144,7 @@ public class Edge extends AbstractElement {
      * @param edgeGuard a {@link Guard} object.
      */
     public void setEdgeGuard(Guard edgeGuard) {
-        myEdgeGuard = edgeGuard;
+        guard = edgeGuard;
     }
 
     /**
@@ -153,6 +153,6 @@ public class Edge extends AbstractElement {
      * @return a boolean.
      */
     public boolean hasEdgeGuard() {
-        return null != myEdgeGuard;
+        return null != guard;
     }
 }

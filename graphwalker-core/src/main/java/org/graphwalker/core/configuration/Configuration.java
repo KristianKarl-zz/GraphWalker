@@ -44,16 +44,16 @@ import java.util.Map;
  */
 public class Configuration {
 
-    private String myDefaultModelId;
-    private PathGenerator myDefaultGenerator;
-    private final Map<String, Model> myModels = new HashMap<String, Model>();
-    private EdgeFilter myEdgeFilter;
+    private String defaultModelId;
+    private PathGenerator defaultGenerator;
+    private final Map<String, Model> models = new HashMap<String, Model>();
+    private EdgeFilter edgeFilter;
 
     /**
      * <p>Constructor for ConfigurationImpl.</p>
      */
     public Configuration() {
-        myEdgeFilter = new EdgeFilter(Resource.getText(Bundle.NAME, "default.language"));
+        edgeFilter = new EdgeFilter(Resource.getText(Bundle.NAME, "default.language"));
     }
 
     /**
@@ -62,14 +62,14 @@ public class Configuration {
      * @return a {@link org.graphwalker.core.model.Model} object.
      */
     public Model getDefaultModel() {
-        return myModels.get(myDefaultModelId);
+        return models.get(defaultModelId);
     }
 
     /**
      * {@inheritDoc}
      */
     public void setDefaultModelId(String id) {
-        myDefaultModelId = id;
+        defaultModelId = id;
     }
 
     /**
@@ -78,24 +78,24 @@ public class Configuration {
      * @return a {@link org.graphwalker.core.generators.PathGenerator} object.
      */
     public PathGenerator getDefaultPathGenerator() {
-        return myDefaultGenerator;
+        return defaultGenerator;
     }
 
     /**
      * {@inheritDoc}
      */
     public void setDefaultPathGenerator(PathGenerator pathGenerator) {
-        myDefaultGenerator = pathGenerator;
+        defaultGenerator = pathGenerator;
     }
 
     /**
      * {@inheritDoc}
      */
     public Model addModel(Model model) {
-        if (null == myDefaultModelId) {
+        if (null == defaultModelId) {
             setDefaultModelId(model.getId());
         }
-        myModels.put(model.getId(), model);
+        models.put(model.getId(), model);
         return model;
     }
 
@@ -103,7 +103,7 @@ public class Configuration {
      * {@inheritDoc}
      */
     public Model getModel(String id) {
-        return myModels.get(id);
+        return models.get(id);
     }
 
     /**
@@ -112,7 +112,7 @@ public class Configuration {
      * @return a {@link java.util.List} object.
      */
     public List<Model> getModels() {
-        return new ArrayList<Model>(myModels.values());
+        return new ArrayList<Model>(models.values());
     }
 
     /**
@@ -121,14 +121,14 @@ public class Configuration {
      * @return a {@link org.graphwalker.core.filter.EdgeFilter} object.
      */
     public EdgeFilter getEdgeFilter() {
-        return myEdgeFilter;
+        return edgeFilter;
     }
 
     /**
      * {@inheritDoc}
      */
     public void setEdgeFilter(EdgeFilter edgeFilter) {
-        myEdgeFilter = edgeFilter;
+        this.edgeFilter = edgeFilter;
     }
 
 }

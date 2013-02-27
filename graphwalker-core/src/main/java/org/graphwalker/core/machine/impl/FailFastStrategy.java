@@ -39,7 +39,7 @@ import org.graphwalker.core.model.status.ModelStatus;
  */
 public class FailFastStrategy extends AbstractStrategy {
 
-    private AnnotationProcessor myAnnotationProcessor = new AnnotationProcessorImpl();
+    private AnnotationProcessor annotationProcessor = new AnnotationProcessorImpl();
 
     /**
      * {@inheritDoc}
@@ -48,7 +48,7 @@ public class FailFastStrategy extends AbstractStrategy {
         if (!ModelStatus.FAILED.equals(machine.getCurrentModel().getModelStatus())) {
             addException(machine.getCurrentModel(), throwable);
             machine.getCurrentModel().setModelStatus(ModelStatus.FAILED);
-            myAnnotationProcessor.process(AfterModel.class, machine, machine.getCurrentModel(), null);
+            annotationProcessor.process(AfterModel.class, machine, machine.getCurrentModel(), null);
         }
     }
 

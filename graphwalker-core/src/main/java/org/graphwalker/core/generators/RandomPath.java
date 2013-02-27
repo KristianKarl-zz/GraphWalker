@@ -41,13 +41,13 @@ import java.util.Random;
  */
 public class RandomPath extends AbstractPathGenerator {
 
-    private final Random myRandomGenerator = new Random(System.nanoTime());
+    private final Random randomGenerator = new Random(System.nanoTime());
 
     /** {@inheritDoc} */
     public Element getNextStep(Machine machine) {
         List<Element> possibleElements = machine.getPossibleElements(machine.getCurrentElement());
         if (0<possibleElements.size()) {
-            return possibleElements.get(myRandomGenerator.nextInt(possibleElements.size()));
+            return possibleElements.get(randomGenerator.nextInt(possibleElements.size()));
         }
         throw new PathGeneratorException(Resource.getText(Bundle.NAME, "exception.generator.path.missing"));
     }

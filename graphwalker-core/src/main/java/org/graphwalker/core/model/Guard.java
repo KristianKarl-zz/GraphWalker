@@ -27,7 +27,7 @@ package org.graphwalker.core.model;
 
 public class Guard {
 
-    private final String myScript;
+    private final String script;
 
     /**
      * <p>Constructor for EdgeGuard.</p>
@@ -35,7 +35,7 @@ public class Guard {
      * @param script a {@link java.lang.String} object.
      */
     public Guard(String script) {
-        myScript = script;
+        this.script = script;
     }
 
     /**
@@ -44,6 +44,6 @@ public class Guard {
      * @return a {@link java.lang.String} object.
      */
     public String getScript() {
-        return myScript;
+        return script;
     }
 }

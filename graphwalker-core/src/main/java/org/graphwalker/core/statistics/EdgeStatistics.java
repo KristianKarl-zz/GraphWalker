@@ -37,10 +37,10 @@ import java.util.List;
  */
 public class EdgeStatistics {
     
-    private long myEdgeCount = 0;
-    private long myVisitedEdgeCount = 0;
-    private long myBlockedEdgeCount = 0;
-    private long myUnreachableEdgeCount = 0;
+    private long edgeCount = 0;
+    private long visitedEdgeCount = 0;
+    private long blockedEdgeCount = 0;
+    private long unreachableEdgeCount = 0;
     //private long 
     
     /**
@@ -50,11 +50,11 @@ public class EdgeStatistics {
      */
     public EdgeStatistics(List<Edge> edges) {
         for (Edge edge: edges) {
-            myEdgeCount++;
+            edgeCount++;
             switch (edge.getStatus()) {
-                case UNREACHABLE: myUnreachableEdgeCount++; break;
-                case VISITED: myVisitedEdgeCount++; break;
-                case BLOCKED: myBlockedEdgeCount++; break;
+                case UNREACHABLE: unreachableEdgeCount++; break;
+                case VISITED: visitedEdgeCount++; break;
+                case BLOCKED: blockedEdgeCount++; break;
             }
         }
     }
@@ -65,7 +65,7 @@ public class EdgeStatistics {
      * @return a long.
      */
     public long getEdgeCount() {
-        return myEdgeCount;
+        return edgeCount;
     }
 
     /**
@@ -74,7 +74,7 @@ public class EdgeStatistics {
      * @return a long.
      */
     public long getVisitedEdgeCount() {
-        return myVisitedEdgeCount;
+        return visitedEdgeCount;
     }
 
     /**
@@ -83,7 +83,7 @@ public class EdgeStatistics {
      * @return a long.
      */
     public long getBlockedEdgeCount() {
-        return myBlockedEdgeCount;
+        return blockedEdgeCount;
     }
 
     /**
@@ -92,6 +92,6 @@ public class EdgeStatistics {
      * @return a long.
      */
     public long getUnreachableEdgeCount() {
-        return myUnreachableEdgeCount;
+        return unreachableEdgeCount;
     }
 }

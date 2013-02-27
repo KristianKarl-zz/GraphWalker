@@ -45,17 +45,17 @@ import java.util.*;
  */
 public class Model {
 
-    private final String myId;
-    private final Random myIdGenerator = new Random(System.nanoTime());
-    private final Map<String, Vertex> myVertexMap = new HashMap<String, Vertex>();
-    private final Map<String, Edge> myEdgeMap = new HashMap<String, Edge>();
-    private final DepthFirstSearch myDepthFirstSearch;
-    private final FloydWarshall myFloydWarshall;
-    private PathGenerator myPathGenerator;
-    private Object myImplementation;
-    private String myGroup;
-    private ExceptionStrategy myExceptionStrategy;
-    private ModelStatus myModelStatus = ModelStatus.NOT_EXECUTED;
+    private final String id;
+    private final Random idGenerator = new Random(System.nanoTime());
+    private final Map<String, Vertex> vertices = new HashMap<String, Vertex>();
+    private final Map<String, Edge> edges = new HashMap<String, Edge>();
+    private final DepthFirstSearch depthFirstSearch;
+    private final FloydWarshall floydWarshall;
+    private PathGenerator pathGenerator;
+    private Object implementation;
+    private String group;
+    private ExceptionStrategy exceptionStrategy;
+    private ModelStatus status = ModelStatus.NOT_EXECUTED;
 
     /**
      * <p>Constructor for Model.</p>
@@ -63,9 +63,9 @@ public class Model {
      * @param id a {@link java.lang.String} object.
      */
     public Model(String id) {
-        myId = id;
-        myDepthFirstSearch = new DepthFirstSearch(this);
-        myFloydWarshall = new FloydWarshall(this);
+        this.id = id;
+        depthFirstSearch = new DepthFirstSearch(this);
+        floydWarshall = new FloydWarshall(this);
     }
 
     /**
@@ -74,7 +74,7 @@ public class Model {
      * @return a {@link java.lang.String} object.
      */
     public String getId() {
-        return myId;
+        return id;
     }
 
     /**
@@ -83,22 +83,22 @@ public class Model {
      * @return a {@link org.graphwalker.core.generators.PathGenerator} object.
      */
     public PathGenerator getPathGenerator() {
-        return myPathGenerator;
+        return pathGenerator;
     }
 
     /**
      * {@inheritDoc}
      */
     public void setPathGenerator(PathGenerator pathGenerator) {
-        myPathGenerator = pathGenerator;
+        this.pathGenerator = pathGenerator;
     }
 
     /**
      * <p>afterElementsAdded.</p>
      */
     public void afterElementsAdded() {
-        myDepthFirstSearch.calculate();
-        myFloydWarshall.calculate();
+        depthFirstSearch.calculate();
+        floydWarshall.calculate();
     }
 
     /**
@@ -107,9 +107,9 @@ public class Model {
      * @return a {@link java.util.List} object.
      */
     public List<Element> getElements() {
-        List<Element> elements = new ArrayList<Element>(myVertexMap.size() + myEdgeMap.size());
-        elements.addAll(myVertexMap.values());
-        elements.addAll(myEdgeMap.values());
+        List<Element> elements = new ArrayList<Element>(vertices.size() + edges.size());
+        elements.addAll(vertices.values());
+        elements.addAll(edges.values());
         return elements;
     }
 
@@ -147,14 +147,14 @@ public class Model {
      * {@inheritDoc}
      */
     public Vertex getVertexById(String id) {
-        return myVertexMap.get(id);
+        return vertices.get(id);
     }
 
     /**
      * {@inheritDoc}
      */
     public Vertex getVertexByName(String name) {
-        for (Vertex vertex : myVertexMap.values()) {
+        for (Vertex vertex : vertices.values()) {
             String vertexName = vertex.getName();
             if (null != vertexName && vertexName.equalsIgnoreCase(name)) {
                 return vertex;
@@ -165,7 +165,7 @@ public class Model {
 
     private List<Vertex> findByName(String name) {
         List<Vertex> vertices = new ArrayList<Vertex>();
-        for (Vertex vertex : myVertexMap.values()) {
+        for (Vertex vertex : this.vertices.values()) {
             String vertexName = vertex.getName();
             if (null != vertexName && vertexName.equalsIgnoreCase(name)) {
                 vertices.add(vertex);
@@ -202,7 +202,7 @@ public class Model {
     }
 
     private String generateId(String prefix) {
-        return prefix + myIdGenerator.nextLong();
+        return prefix + idGenerator.nextLong();
     }
 
     /**
@@ -213,7 +213,7 @@ public class Model {
         if (hasStartVertex() && (getStartVertex().equals(vertex) || getStartVertex().getName().equalsIgnoreCase(vertex.getName()))) {
             throw new ModelException(Resource.getText(Bundle.NAME, "exception.duplicate.start.vertex"));
         }
-        myVertexMap.put(vertex.getId(), vertex);
+        vertices.put(vertex.getId(), vertex);
         return vertex;
     }
 
@@ -221,14 +221,14 @@ public class Model {
      * {@inheritDoc}
      */
     public Edge getEdgeById(String id) {
-        return myEdgeMap.get(id);
+        return edges.get(id);
     }
 
     /**
      * {@inheritDoc}
      */
     public Edge getEdgeByName(String name) {
-        for (Edge edge : myEdgeMap.values()) {
+        for (Edge edge : edges.values()) {
             String edgeName = edge.getName();
             if (null != edgeName && edgeName.equalsIgnoreCase(name)) {
                 return edge;
@@ -263,13 +263,13 @@ public class Model {
         if (hasStartVertex() && getStartVertex().equals(source) && 1 == getStartVertex().getEdges().size()) {
             throw new ModelException(Resource.getText(Bundle.NAME, "exception.start.vertex.out.edges"));
         }
-        if (!myEdgeMap.containsKey(edge.getId())) {
+        if (!edges.containsKey(edge.getId())) {
             source.addEdge(edge);
             edge.setSource(source);
             edge.setTarget(target);
-            myEdgeMap.put(edge.getId(), edge);
+            edges.put(edge.getId(), edge);
         } else {
-            Edge existingEdge = myEdgeMap.get(edge.getId());
+            Edge existingEdge = edges.get(edge.getId());
             if (!existingEdge.getSource().getId().equals(edge.getSource().getId())) {
                 existingEdge.setSource(edge.getSource());
             }
@@ -354,7 +354,7 @@ public class Model {
      * @return a {@link java.util.List} object.
      */
     public List<Element> getConnectedComponent() {
-        return myDepthFirstSearch.getConnectedComponent();
+        return depthFirstSearch.getConnectedComponent();
     }
 
     /**
@@ -365,7 +365,7 @@ public class Model {
      * @return a int.
      */
     public int getShortestDistance(Element source, Edge target) {
-        return myFloydWarshall.getShortestDistance(source, target);
+        return floydWarshall.getShortestDistance(source, target);
     }
 
     /**
@@ -374,7 +374,7 @@ public class Model {
      * <p>getMaximumDistance.</p>
      */
     public int getMaximumDistance(Edge target) {
-        return myFloydWarshall.getMaximumDistance(target);
+        return floydWarshall.getMaximumDistance(target);
     }
 
     /**
@@ -384,14 +384,14 @@ public class Model {
      * @return a int.
      */
     public int getMaximumDistance(Vertex target) {
-        return myFloydWarshall.getMaximumDistance(target);
+        return floydWarshall.getMaximumDistance(target);
     }
 
     /**
      * {@inheritDoc}
      */
     public List<Element> getShortestPath(Element source, Edge target) {
-        return myFloydWarshall.getShortestPath(source, target);
+        return floydWarshall.getShortestPath(source, target);
     }
 
     /**
@@ -400,7 +400,7 @@ public class Model {
      * <p>getShortestDistance.</p>
      */
     public int getShortestDistance(Element source, Vertex target) {
-        return myFloydWarshall.getShortestDistance(source, target);
+        return floydWarshall.getShortestDistance(source, target);
     }
 
     /**
@@ -413,7 +413,7 @@ public class Model {
      * @return a {@link java.util.List} object.
      */
     public List<Element> getShortestPath(Element source, Vertex target) {
-        return myFloydWarshall.getShortestPath(source, target);
+        return floydWarshall.getShortestPath(source, target);
     }
 
     /**
@@ -429,7 +429,7 @@ public class Model {
      * {@inheritDoc}
      */
     public void setImplementation(Object implementation) {
-        myImplementation = implementation;
+        this.implementation = implementation;
     }
 
     /**
@@ -438,7 +438,7 @@ public class Model {
      * @return a {@link java.lang.Object} object.
      */
     public Object getImplementation() {
-        return myImplementation;
+        return implementation;
     }
 
     /**
@@ -447,14 +447,14 @@ public class Model {
      * @return a {@link java.lang.String} object.
      */
     public String getGroup() {
-        return myGroup;
+        return group;
     }
 
     /**
      * {@inheritDoc}
      */
     public void setGroup(String group) {
-        myGroup = group;
+        this.group = group;
     }
 
     /**
@@ -463,17 +463,17 @@ public class Model {
      * @return a {@link org.graphwalker.core.machine.ExceptionStrategy} object.
      */
     public ExceptionStrategy getExceptionStrategy() {
-        if (null == myExceptionStrategy) {
-            myExceptionStrategy = new FailFastStrategy();
+        if (null == exceptionStrategy) {
+            exceptionStrategy = new FailFastStrategy();
         }
-        return myExceptionStrategy;
+        return exceptionStrategy;
     }
 
     /**
      * {@inheritDoc}
      */
     public void setExceptionStrategy(ExceptionStrategy exceptionStrategy) {
-        myExceptionStrategy = exceptionStrategy;
+        this.exceptionStrategy = exceptionStrategy;
     }
 
     /**
@@ -482,13 +482,13 @@ public class Model {
      * @return a {@link ModelStatus} object.
      */
     public ModelStatus getModelStatus() {
-        return myModelStatus;
+        return status;
     }
 
     /**
      * {@inheritDoc}
      */
-    public void setModelStatus(ModelStatus myModelStatus) {
-        this.myModelStatus = myModelStatus;
+    public void setModelStatus(ModelStatus status) {
+        this.status = status;
     }
 }

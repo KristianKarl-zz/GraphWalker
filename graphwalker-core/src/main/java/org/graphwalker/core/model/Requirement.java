@@ -29,8 +29,8 @@ import org.graphwalker.core.model.status.RequirementStatus;
 
 public class Requirement {
 
-    private final String myId;
-    private RequirementStatus myRequirementStatus = RequirementStatus.NOT_COVERED;
+    private final String id;
+    private RequirementStatus status = RequirementStatus.NOT_COVERED;
 
     /**
      * <p>Constructor for Requirement.</p>
@@ -38,7 +38,7 @@ public class Requirement {
      * @param id a {@link java.lang.String} object.
      */
     public Requirement(String id) {
-        myId = id;
+        this.id = id;
     }
 
     /**
@@ -47,7 +47,7 @@ public class Requirement {
      * @return a {@link java.lang.String} object.
      */
     public String getId() {
-        return myId;
+        return id;
     }
 
     /**
@@ -56,7 +56,7 @@ public class Requirement {
      * @return a boolean.
      */
     public RequirementStatus getStatus() {
-        return myRequirementStatus;
+        return status;
     }
 
     /**
@@ -65,6 +65,6 @@ public class Requirement {
      * @param status a {@link org.graphwalker.core.model.status.RequirementStatus} object.
      */
     public void setStatus(RequirementStatus status) {
-        myRequirementStatus = status;
+        this.status = status;
     }
 }

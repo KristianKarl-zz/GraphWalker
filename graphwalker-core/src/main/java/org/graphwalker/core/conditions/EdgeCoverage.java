@@ -36,7 +36,7 @@ import org.graphwalker.core.model.Model;
  */
 public class EdgeCoverage implements StopCondition {
 
-    private final double myLimit;
+    private final double limit;
 
     /**
      * <p>Constructor for EdgeCoverage.</p>
@@ -53,7 +53,7 @@ public class EdgeCoverage implements StopCondition {
      * @param limit a long.
      */
     public EdgeCoverage(long limit) {
-        myLimit = (double) limit / PERCENTAGE_SCALE;
+        this.limit = (double) limit / PERCENTAGE_SCALE;
     }
 
     /**
@@ -62,7 +62,7 @@ public class EdgeCoverage implements StopCondition {
     public boolean isFulfilled(Model model, Element element) {
         double totalEdgesCount = model.getEdges().size();
         double visitedEdgesCount = model.getVisitedEdges().size();
-        return (visitedEdgesCount / totalEdgesCount) >= myLimit;
+        return (visitedEdgesCount / totalEdgesCount) >= limit;
     }
 
     /**
@@ -71,6 +71,6 @@ public class EdgeCoverage implements StopCondition {
     public double getFulfilment(Model model, Element element) {
         double totalEdgesCount = model.getEdges().size();
         double visitedEdgesCount = model.getVisitedEdges().size();
-        return (visitedEdgesCount / totalEdgesCount) / myLimit;
+        return (visitedEdgesCount / totalEdgesCount) / limit;
     }
 }

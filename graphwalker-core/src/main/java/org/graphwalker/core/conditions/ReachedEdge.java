@@ -37,7 +37,7 @@ import org.graphwalker.core.model.Model;
  */
 public class ReachedEdge implements StopCondition {
 
-    private final String myName;
+    private final String name;
 
     /**
      * <p>Constructor for ReachedEdge.</p>
@@ -45,7 +45,7 @@ public class ReachedEdge implements StopCondition {
      * @param name a {@link java.lang.String} object.
      */
     public ReachedEdge(String name) {
-        myName = name;
+        this.name = name;
     }
 
     /** {@inheritDoc} */
@@ -55,7 +55,7 @@ public class ReachedEdge implements StopCondition {
 
     /** {@inheritDoc} */
     public double getFulfilment(Model model, Element element) {
-        Edge edge = model.getEdgeByName(myName);
+        Edge edge = model.getEdgeByName(name);
         if (null != edge) {
             if (edge.equals(element)) {
                 return 1;

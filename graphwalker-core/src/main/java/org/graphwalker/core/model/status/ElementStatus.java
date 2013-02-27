@@ -32,5 +32,5 @@ package org.graphwalker.core.model.status;
  * @version $Id: $
  */
 public enum ElementStatus {
-    UNREACHABLE,VISITED,BLOCKED
+    UNREACHABLE, VISITED, BLOCKED
 }

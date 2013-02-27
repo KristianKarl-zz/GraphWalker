@@ -36,7 +36,7 @@ import org.graphwalker.core.model.Model;
  */
 public class VertexCoverage implements StopCondition {
 
-    private final double myLimit;
+    private final double limit;
 
     /**
      * <p>Constructor for VertexCoverage.</p>
@@ -53,7 +53,7 @@ public class VertexCoverage implements StopCondition {
      * @param limit a long.
      */
     public VertexCoverage(long limit) {
-        myLimit = (double) limit / PERCENTAGE_SCALE;
+        this.limit = (double) limit / PERCENTAGE_SCALE;
     }
 
     /**
@@ -62,7 +62,7 @@ public class VertexCoverage implements StopCondition {
     public boolean isFulfilled(Model model, Element element) {
         double totalVertexCount = model.getVertices().size();
         double visitedVertexCount = model.getVisitedVertices().size();
-        return (visitedVertexCount / totalVertexCount) >= myLimit;
+        return (visitedVertexCount / totalVertexCount) >= limit;
     }
 
     /**
@@ -71,6 +71,6 @@ public class VertexCoverage implements StopCondition {
     public double getFulfilment(Model model, Element element) {
         double totalVertexCount = model.getVertices().size();
         double visitedVertexCount = model.getVisitedVertices().size();
-        return (visitedVertexCount / totalVertexCount) / myLimit;
+        return (visitedVertexCount / totalVertexCount) / limit;
     }
 }

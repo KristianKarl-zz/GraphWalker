@@ -38,10 +38,10 @@ import java.util.Map;
  */
 public class Vertex extends AbstractElement {
 
-    private final static Map<String, Requirement> ourRequirements = new HashMap<String, Requirement>();
-    private final Map<String, Requirement> myRequirements = new HashMap<String, Requirement>();
-    private final Map<String, Edge> myEdges = new HashMap<String, Edge>();
-    private String mySwitchModelId;
+    private final static Map<String, Requirement> allRequirements = new HashMap<String, Requirement>();
+    private final Map<String, Requirement> requirements = new HashMap<String, Requirement>();
+    private final Map<String, Edge> edges = new HashMap<String, Edge>();
+    private String switchModelId;
 
     /**
      * <p>Constructor for Vertex.</p>
@@ -64,12 +64,12 @@ public class Vertex extends AbstractElement {
      * @param requirement a {@link org.graphwalker.core.model.Requirement} object.
      */
     public void addRequirement(Requirement requirement) {
-        if (ourRequirements.containsKey(requirement.getId())) {
-            Requirement existingRequirement = ourRequirements.get(requirement.getId());
-            myRequirements.put(existingRequirement.getId(), existingRequirement);
+        if (allRequirements.containsKey(requirement.getId())) {
+            Requirement existingRequirement = allRequirements.get(requirement.getId());
+            requirements.put(existingRequirement.getId(), existingRequirement);
         } else {
-            ourRequirements.put(requirement.getId(), requirement);
-            myRequirements.put(requirement.getId(), requirement);
+            allRequirements.put(requirement.getId(), requirement);
+            requirements.put(requirement.getId(), requirement);
         }
     }
 
@@ -79,8 +79,8 @@ public class Vertex extends AbstractElement {
      * @param requirement a {@link org.graphwalker.core.model.Requirement} object.
      */
     public void removeRequirement(Requirement requirement) {
-        if (myRequirements.containsKey(requirement.getId())) {
-            myRequirements.remove(requirement.getId());
+        if (requirements.containsKey(requirement.getId())) {
+            requirements.remove(requirement.getId());
         }
     }
 
@@ -90,7 +90,7 @@ public class Vertex extends AbstractElement {
      * @return a {@link java.util.List} object.
      */
     public List<Requirement> getRequirements() {
-        return new ArrayList<Requirement>(myRequirements.values());
+        return new ArrayList<Requirement>(requirements.values());
     }
 
     /**
@@ -99,8 +99,8 @@ public class Vertex extends AbstractElement {
      * @param edge a {@link Edge} object.
      */
     public void addEdge(Edge edge) {
-        if (!myEdges.containsKey(edge.getId())) {
-            myEdges.put(edge.getId(), edge);
+        if (!edges.containsKey(edge.getId())) {
+            edges.put(edge.getId(), edge);
         }
     }
 
@@ -110,8 +110,8 @@ public class Vertex extends AbstractElement {
      * @param edge a {@link Edge} object.
      */
     public void removeEdge(Edge edge) {
-        if (myEdges.containsKey(edge.getId())) {
-            myEdges.remove(edge.getId());
+        if (edges.containsKey(edge.getId())) {
+            edges.remove(edge.getId());
         }
     }
 
@@ -121,7 +121,7 @@ public class Vertex extends AbstractElement {
      * @return a {@link java.util.List} object.
      */
     public List<Edge> getEdges() {
-        return new ArrayList<Edge>(myEdges.values());
+        return new ArrayList<Edge>(edges.values());
     }
 
     /**
@@ -130,7 +130,7 @@ public class Vertex extends AbstractElement {
      * @return a {@link java.lang.String} object.
      */
     public String getSwitchModelId() {
-        return mySwitchModelId;
+        return switchModelId;
     }
 
     /**
@@ -139,7 +139,7 @@ public class Vertex extends AbstractElement {
      * @param id a {@link java.lang.String} object.
      */
     public void setSwitchModelId(String id) {
-        mySwitchModelId = id;
+        switchModelId = id;
     }
 
     /**
@@ -148,6 +148,6 @@ public class Vertex extends AbstractElement {
      * @return a boolean.
      */
     public boolean hasSwitchModel() {
-        return null != mySwitchModelId;
+        return null != switchModelId;
     }
 }

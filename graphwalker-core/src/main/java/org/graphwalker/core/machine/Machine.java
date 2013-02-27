@@ -49,10 +49,10 @@ import java.util.List;
  */
 public class Machine {
 
-    private final AnnotationProcessor myAnnotationProcessor = new AnnotationProcessorImpl();
-    private final Configuration myConfiguration;
-    private Model myCurrentModel;
-    private Element myCurrentElement;
+    private final AnnotationProcessor annotationProcessor = new AnnotationProcessorImpl();
+    private final Configuration configuration;
+    private Model currentModel;
+    private Element currentElement;
 
     /**
      * <p>Constructor for MachineImpl.</p>
@@ -60,7 +60,7 @@ public class Machine {
      * @param configuration a {@link org.graphwalker.core.configuration.Configuration} object.
      */
     public Machine(Configuration configuration) {
-        myConfiguration = configuration;
+        this.configuration = configuration;
     }
 
     /**
@@ -71,7 +71,7 @@ public class Machine {
      * @return a {@link org.graphwalker.core.configuration.Configuration} object.
      */
     public Configuration getConfiguration() {
-        return myConfiguration;
+        return configuration;
     }
 
     /**
@@ -82,14 +82,14 @@ public class Machine {
      * @return a {@link org.graphwalker.core.model.Element} object.
      */
     public Element getCurrentElement() {
-        return myCurrentElement;
+        return currentElement;
     }
 
     /**
      * {@inheritDoc}
      */
     public void setCurrentElement(Element element) {
-        myCurrentElement = element;
+        currentElement = element;
     }
 
     /**
@@ -100,23 +100,23 @@ public class Machine {
      * @return a {@link org.graphwalker.core.model.Model} object.
      */
     public Model getCurrentModel() {
-        if (null == myCurrentModel) {
+        if (null == currentModel) {
             setCurrentModel(getConfiguration().getDefaultModel());
             setCurrentElement(getCurrentModel().getStartVertex());
             getCurrentElement().markAsVisited();
         }
-        return myCurrentModel;
+        return currentModel;
     }
 
     /**
      * {@inheritDoc}
      */
     public void setCurrentModel(Model model) {
-        myCurrentModel = model;
+        currentModel = model;
         beforeGroup();
-        if (isModelStatus(myCurrentModel, ModelStatus.NOT_EXECUTED)) {
-            processAnnotation(BeforeModel.class, myCurrentModel, null);
-            myCurrentModel.setModelStatus(ModelStatus.EXECUTING);
+        if (isModelStatus(currentModel, ModelStatus.NOT_EXECUTED)) {
+            processAnnotation(BeforeModel.class, currentModel, null);
+            currentModel.setModelStatus(ModelStatus.EXECUTING);
         }
     }
 
@@ -325,7 +325,7 @@ public class Machine {
     private void processAnnotation(Class<? extends Annotation> annotation, Model model, Element element) {
         if (model.hasImplementation()) {
             try {
-                myAnnotationProcessor.process(annotation, this, model, element);
+                annotationProcessor.process(annotation, this, model, element);
             } catch (Throwable throwable) {
                 model.getExceptionStrategy().handleException(this, throwable);
             }

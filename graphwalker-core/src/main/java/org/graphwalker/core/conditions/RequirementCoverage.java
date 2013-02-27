@@ -37,7 +37,7 @@ import org.graphwalker.core.model.status.RequirementStatus;
  */
 public class RequirementCoverage implements StopCondition {
 
-    private final double myLimit;
+    private final double limit;
 
     /**
      * <p>Constructor for RequirementCoverage.</p>
@@ -54,7 +54,7 @@ public class RequirementCoverage implements StopCondition {
      * @param limit a long.
      */
     public RequirementCoverage(long limit) {
-        myLimit = (double)limit/ PERCENTAGE_SCALE;
+        this.limit = (double)limit/ PERCENTAGE_SCALE;
     }
 
     /** {@inheritDoc} */
@@ -65,7 +65,7 @@ public class RequirementCoverage implements StopCondition {
         }
         double passedCount = model.getRequirements(RequirementStatus.PASSED).size();
         double failedCount = model.getRequirements(RequirementStatus.FAILED).size();
-        return ((passedCount+failedCount) / totalCount) >= myLimit;
+        return ((passedCount+failedCount) / totalCount) >= limit;
     }
 
     /** {@inheritDoc} */
@@ -76,7 +76,7 @@ public class RequirementCoverage implements StopCondition {
         }
         double passedCount = model.getRequirements(RequirementStatus.PASSED).size();
         double failedCount = model.getRequirements(RequirementStatus.FAILED).size();
-        return ((passedCount+failedCount) / totalCount) / myLimit;
+        return ((passedCount+failedCount) / totalCount) / limit;
     }
 
 }

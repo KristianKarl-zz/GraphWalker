@@ -36,8 +36,8 @@ import org.graphwalker.core.model.Model;
  */
 public class TimeDuration implements StopCondition {
 
-    private final long myDuration;
-    private final long myTimestamp;
+    private final long duration;
+    private final long timestamp;
 
     /**
      * <p>Constructor for TimeDuration.</p>
@@ -54,8 +54,8 @@ public class TimeDuration implements StopCondition {
      * @param seconds a long.
      */
     public TimeDuration(long seconds) {
-        myTimestamp = System.currentTimeMillis();
-        myDuration = seconds * SECOND_SCALE;
+        timestamp = System.currentTimeMillis();
+        duration = seconds * SECOND_SCALE;
     }
 
     /** {@inheritDoc} */
@@ -65,6 +65,6 @@ public class TimeDuration implements StopCondition {
 
     /** {@inheritDoc} */
     public double getFulfilment(Model model, Element element) {
-        return (double) (System.currentTimeMillis() - myTimestamp) / myDuration;
+        return (double) (System.currentTimeMillis() - timestamp) / duration;
     }
 }

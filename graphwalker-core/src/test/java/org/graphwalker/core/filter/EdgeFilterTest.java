@@ -38,7 +38,7 @@ import java.util.List;
 public class EdgeFilterTest {
 
     private Edge createEdge() {
-        Edge edge = new Edge("myEdge");
+        Edge edge = new Edge("edge1");
         List<Action> actions = new ArrayList<Action>(); 
         actions.add(new Action("i = 0;"));
         edge.setEdgeActions(actions);
@@ -71,7 +71,7 @@ public class EdgeFilterTest {
         EdgeFilter edgeFilter = new EdgeFilter("groovy");
         Model model = new Model("m1");
         model.setImplementation(this);
-        Edge edge = new Edge("myEdge");
+        Edge edge = new Edge("edge1");
         edge.setEdgeGuard(new Guard("impl.not(false)"));
         Assert.assertTrue(edgeFilter.acceptEdge(model, edge));
     }

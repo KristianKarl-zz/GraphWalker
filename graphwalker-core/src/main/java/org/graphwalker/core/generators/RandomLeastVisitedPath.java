@@ -42,7 +42,7 @@ import java.util.Random;
  */
 public class RandomLeastVisitedPath extends AbstractPathGenerator {
 
-    private final Random myRandomGenerator = new Random(System.nanoTime());
+    private final Random randomGenerator = new Random(System.nanoTime());
 
     /**
      * {@inheritDoc}
@@ -62,9 +62,9 @@ public class RandomLeastVisitedPath extends AbstractPathGenerator {
             }
         }
         if (0 < leastVisitedElements.size()) {
-            return leastVisitedElements.get(myRandomGenerator.nextInt(leastVisitedElements.size()));
+            return leastVisitedElements.get(randomGenerator.nextInt(leastVisitedElements.size()));
         } else if (0 < possibleElements.size()) {
-            return possibleElements.get(myRandomGenerator.nextInt(possibleElements.size()));
+            return possibleElements.get(randomGenerator.nextInt(possibleElements.size()));
         }
         throw new PathGeneratorException(Resource.getText(Bundle.NAME, "exception.generator.path.missing"));
     }

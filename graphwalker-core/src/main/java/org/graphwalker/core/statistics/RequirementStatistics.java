@@ -37,10 +37,10 @@ import java.util.List;
  */
 public class RequirementStatistics {
 
-    private long myRequirementCount = 0;
-    private long myPassedRequirementCount = 0;
-    private long myFailedRequirementCount = 0;
-    private long myNotCoveredRequirementCount = 0;
+    private long requirementCount = 0;
+    private long passedRequirementCount = 0;
+    private long failedRequirementCount = 0;
+    private long notCoveredRequirementCount = 0;
 
     /**
      * <p>Constructor for RequirementStatistics.</p>
@@ -49,11 +49,11 @@ public class RequirementStatistics {
      */
     public RequirementStatistics(List<Requirement> requirements) {
         for (Requirement requirement: requirements) {
-            myRequirementCount++;
+            requirementCount++;
             switch (requirement.getStatus()) {
-                case NOT_COVERED: myNotCoveredRequirementCount++; break;
-                case PASSED: myPassedRequirementCount++; break;
-                case FAILED: myFailedRequirementCount++; break;
+                case NOT_COVERED: notCoveredRequirementCount++; break;
+                case PASSED: passedRequirementCount++; break;
+                case FAILED: failedRequirementCount++; break;
             }
         }
     }
@@ -64,7 +64,7 @@ public class RequirementStatistics {
      * @return a long.
      */
     public long getRequirementCount() {
-        return myRequirementCount;
+        return requirementCount;
     }
 
     /**
@@ -73,7 +73,7 @@ public class RequirementStatistics {
      * @return a long.
      */
     public long getPassedRequirementCount() {
-        return myPassedRequirementCount;
+        return passedRequirementCount;
     }
 
     /**
@@ -82,7 +82,7 @@ public class RequirementStatistics {
      * @return a long.
      */
     public long getFailedRequirementCount() {
-        return myFailedRequirementCount;
+        return failedRequirementCount;
     }
 
     /**
@@ -91,6 +91,6 @@ public class RequirementStatistics {
      * @return a long.
      */
     public long getNotCoveredRequirementCount() {
-        return myNotCoveredRequirementCount;
+        return notCoveredRequirementCount;
     }
 }

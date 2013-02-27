@@ -36,7 +36,7 @@ import org.graphwalker.core.model.Model;
  */
 public class Length implements StopCondition {
 
-    private final long myLength;
+    private final long length;
 
     /**
      * <p>Constructor for Length.</p>
@@ -44,16 +44,16 @@ public class Length implements StopCondition {
      * @param length a long.
      */
     public Length(long length) {
-        myLength = length;
+        this.length = length;
     }
 
     /** {@inheritDoc} */
     public boolean isFulfilled(Model model, Element element) {
-        return model.getTotalVisitCount() >= myLength;
+        return model.getTotalVisitCount() >= length;
     }
 
     /** {@inheritDoc} */
     public double getFulfilment(Model model, Element element) {
-        return (double) model.getTotalVisitCount() / myLength;
+        return (double) model.getTotalVisitCount() / length;
     }
 }

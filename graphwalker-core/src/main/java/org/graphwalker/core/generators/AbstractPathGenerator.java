@@ -35,7 +35,7 @@ import org.graphwalker.core.conditions.StopCondition;
  */
 public abstract class AbstractPathGenerator implements PathGenerator {
 
-    private StopCondition myStopCondition;
+    private StopCondition stopCondition;
 
     /**
      * <p>getStopCondition.</p>
@@ -43,11 +43,11 @@ public abstract class AbstractPathGenerator implements PathGenerator {
      * @return a {@link org.graphwalker.core.conditions.StopCondition} object.
      */
     public StopCondition getStopCondition() {
-        return myStopCondition;
+        return stopCondition;
     }
 
     /** {@inheritDoc} */
     public void setStopCondition(StopCondition stopCondition) {
-        myStopCondition = stopCondition;
+        this.stopCondition = stopCondition;
     }
 }

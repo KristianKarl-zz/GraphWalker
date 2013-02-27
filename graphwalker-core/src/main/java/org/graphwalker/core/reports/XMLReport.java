@@ -47,7 +47,7 @@ import java.util.Date;
 public class XMLReport implements Report {
 
     private static final String LINE_SEPARATOR = System.getProperty("line.separator");
-    private ObjectFactory myObjectFactory = new ObjectFactory();
+    private ObjectFactory objectFactory = new ObjectFactory();
 
     public void writeReport(GraphWalker graphWalker, File reportDirectory, Date startTime) {
         for (Model model : graphWalker.getConfiguration().getModels()) {
@@ -86,7 +86,7 @@ public class XMLReport implements Report {
     private void writeReport(Model model, File reportDirectory) {
         try {
             GraphWalkerReportType graphWalkerReportType = createGraphWalkerReportType(model);
-            JAXBElement<GraphWalkerReportType> report = myObjectFactory.createGraphwalkerReport(graphWalkerReportType);
+            JAXBElement<GraphWalkerReportType> report = objectFactory.createGraphwalkerReport(graphWalkerReportType);
             createMarshaller().marshal(report, getOutputStream(model, reportDirectory));
         } catch (JAXBException e) {
             throw new ReportException(Resource.getText(Bundle.NAME, "exception.report.failure"), e);
@@ -94,7 +94,7 @@ public class XMLReport implements Report {
     }
 
     private GraphWalkerReportType createGraphWalkerReportType(Model model) {
-        GraphWalkerReportType graphWalkerReportType = myObjectFactory.createGraphWalkerReportType();
+        GraphWalkerReportType graphWalkerReportType = objectFactory.createGraphWalkerReportType();
         graphWalkerReportType.setClazz(model.getImplementation().getClass().getName());
         graphWalkerReportType.setGroup(model.getGroup());
         graphWalkerReportType.setTimestamp(new Date().getTime());
@@ -107,13 +107,13 @@ public class XMLReport implements Report {
 
     private VerticesType createVerticesType(Model model) {
         VertexStatistics vertexStatistics = new VertexStatistics(model.getVertices());
-        VerticesType verticesType = myObjectFactory.createVerticesType();
+        VerticesType verticesType = objectFactory.createVerticesType();
         verticesType.setBlocked(BigInteger.valueOf(vertexStatistics.getBlockedVertexCount()));
         verticesType.setCount(BigInteger.valueOf(vertexStatistics.getVertexCount()));
         verticesType.setUnreachable(BigInteger.valueOf(vertexStatistics.getUnreachableVertexCount()));
         verticesType.setVisited(BigInteger.valueOf(vertexStatistics.getVisitedVertexCount()));
         for (Vertex vertex: model.getVertices()) {
-            VertexType vertexType = myObjectFactory.createVertexType();
+            VertexType vertexType = objectFactory.createVertexType();
             vertexType.setId(vertex.getId());
             vertexType.setName(vertex.getName());
             vertexType.setStatus(vertex.getStatus().name());
@@ -125,13 +125,13 @@ public class XMLReport implements Report {
 
     private EdgesType createEdgesType(Model model) {
         EdgeStatistics edgeStatistics = new EdgeStatistics(model.getEdges());
-        EdgesType edgesType = myObjectFactory.createEdgesType();
+        EdgesType edgesType = objectFactory.createEdgesType();
         edgesType.setBlocked(BigInteger.valueOf(edgeStatistics.getBlockedEdgeCount()));
         edgesType.setCount(BigInteger.valueOf(edgeStatistics.getEdgeCount()));
         edgesType.setUnreachable(BigInteger.valueOf(edgeStatistics.getUnreachableEdgeCount()));
         edgesType.setVisited(BigInteger.valueOf(edgeStatistics.getVisitedEdgeCount()));
         for (Edge edge: model.getEdges()) {
-            EdgeType edgeType = myObjectFactory.createEdgeType();
+            EdgeType edgeType = objectFactory.createEdgeType();
             edgeType.setId(edge.getId());
             edgeType.setName(edge.getName());
             edgeType.setStatus(edge.getStatus().name());
@@ -143,13 +143,13 @@ public class XMLReport implements Report {
 
     private RequirementsType createRequirementsType(Model model) {
         RequirementStatistics requirementStatistics = new RequirementStatistics(model.getRequirements());
-        RequirementsType requirementsType = myObjectFactory.createRequirementsType();
+        RequirementsType requirementsType = objectFactory.createRequirementsType();
         requirementsType.setCount(BigInteger.valueOf(requirementStatistics.getRequirementCount()));
         requirementsType.setFailed(BigInteger.valueOf(requirementStatistics.getFailedRequirementCount()));
         requirementsType.setNotCovered(BigInteger.valueOf(requirementStatistics.getNotCoveredRequirementCount()));
         requirementsType.setPassed(BigInteger.valueOf(requirementStatistics.getPassedRequirementCount()));
         for (Requirement requirement: model.getRequirements()) {
-            RequirementType requirementType = myObjectFactory.createRequirementType();
+            RequirementType requirementType = objectFactory.createRequirementType();
             requirementType.setId(requirement.getId());
             requirementType.setStatus(requirement.getStatus().name());
             requirementsType.getRequirement().add(requirementType);
@@ -158,9 +158,9 @@ public class XMLReport implements Report {
     }
 
     private ExceptionsType createExceptionsType(Model model) {
-        ExceptionsType exceptionsType = myObjectFactory.createExceptionsType();
+        ExceptionsType exceptionsType = objectFactory.createExceptionsType();
         for (Throwable throwable : model.getExceptionStrategy().getExceptions(model)) {
-            ExceptionType exceptionType = myObjectFactory.createExceptionType();
+            ExceptionType exceptionType = objectFactory.createExceptionType();
             exceptionType.setContent(getStackTrace(throwable));
             exceptionsType.getException().add(exceptionType);
         }

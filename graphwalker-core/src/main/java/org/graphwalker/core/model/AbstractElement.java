@@ -35,10 +35,10 @@ import org.graphwalker.core.model.status.ElementStatus;
  */
 public abstract class AbstractElement implements Element {
 
-    private String myId;
-    private String myName;
-    private long myVisitCount = 0L;
-    private ElementStatus myStatus;
+    private String id;
+    private String name;
+    private long visitCount = 0L;
+    private ElementStatus status;
 
     /**
      * <p>Constructor for AbstractElement.</p>
@@ -52,7 +52,7 @@ public abstract class AbstractElement implements Element {
      * @param name a {@link java.lang.String} object.
      */
     AbstractElement(String name) {
-        myName = name;
+        this.name = name;
     }
 
     /**
@@ -61,8 +61,8 @@ public abstract class AbstractElement implements Element {
      * @return a {@link java.lang.String} object.
      */
     public String getId() {
-        if (null != myId) {
-            return myId;
+        if (null != id) {
+            return id;
         } else {
             return getName();
         }
@@ -74,7 +74,7 @@ public abstract class AbstractElement implements Element {
      * @param id a {@link java.lang.String} object.
      */
     public void setId(String id) {
-        myId = id;
+        this.id = id;
     }
 
     /**
@@ -83,7 +83,7 @@ public abstract class AbstractElement implements Element {
      * @return a {@link java.lang.String} object.
      */
     public String getName() {
-        return myName;
+        return name;
     }
 
     /**
@@ -92,7 +92,7 @@ public abstract class AbstractElement implements Element {
      * @param name a {@link java.lang.String} object.
      */
     public void setName(String name) {
-        myName = name;
+        this.name = name;
     }
 
     /**
@@ -101,14 +101,14 @@ public abstract class AbstractElement implements Element {
      * @return a boolean.
      */
     public boolean hasName() {
-        return null != myName && !"".equals(myName);
+        return null != name && !"".equals(name);
     }
 
     /**
      * <p>markAsVisited.</p>
      */
     public void markAsVisited() {
-        myVisitCount++;
+        visitCount++;
     }
 
     /**
@@ -117,7 +117,7 @@ public abstract class AbstractElement implements Element {
      * @return a boolean.
      */
     public boolean isVisited() {
-        return 0 < myVisitCount;
+        return 0 < visitCount;
     }
 
     /**
@@ -126,14 +126,14 @@ public abstract class AbstractElement implements Element {
      * @return a long.
      */
     public long getVisitCount() {
-        return myVisitCount;
+        return visitCount;
     }
 
     /**
      * {@inheritDoc}
      */
     public void setStatus(ElementStatus status) {
-        myStatus = status;
+        this.status = status;
     }
 
     /**
@@ -142,7 +142,7 @@ public abstract class AbstractElement implements Element {
      * @return a {@link org.graphwalker.core.model.status.ElementStatus} object.
      */
     public ElementStatus getStatus() {
-        return myStatus;
+        return status;
     }
 
     /**
