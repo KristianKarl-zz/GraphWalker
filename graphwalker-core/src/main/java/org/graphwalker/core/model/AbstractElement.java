@@ -42,17 +42,11 @@ public abstract class AbstractElement implements Element {
 
     /**
      * <p>Constructor for AbstractElement.</p>
-     */
-    AbstractElement() {
-    }
-
-    /**
-     * <p>Constructor for AbstractElement.</p>
      *
-     * @param name a {@link java.lang.String} object.
+     * @param id a {@link java.lang.String} object.
      */
-    AbstractElement(String name) {
-        this.name = name;
+    public AbstractElement(String id) {
+        this.id = id;
     }
 
     /**

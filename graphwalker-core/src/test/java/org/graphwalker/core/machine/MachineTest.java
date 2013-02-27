@@ -35,14 +35,14 @@ import org.graphwalker.core.model.Vertex;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class MachineImplTest {
+public class MachineTest {
 
     private Configuration createConfiguration() {
         Configuration configuration = new Configuration();
         Model model = configuration.addModel(new Model("m1"));
-        Vertex v_start = model.addVertex(new Vertex("Start"));
-        Vertex v_1 = model.addVertex(new Vertex("v_1"));
-        model.addEdge(new Edge(), v_start, v_1);
+        Vertex v_start = model.addVertex(new Vertex("v_0", "Start"));
+        Vertex v_1 = model.addVertex(new Vertex("v_1", "v_1"));
+        model.addEdge(new Edge("e_0"), v_start, v_1);
         model.setPathGenerator(PathGeneratorFactory.create("Random"));
         model.getPathGenerator().setStopCondition(StopConditionFactory.create("VertexCoverage", 100));
         model.afterElementsAdded();
@@ -59,7 +59,7 @@ public class MachineImplTest {
     public void testException() {
         Configuration configuration = new Configuration();
         Model model = configuration.addModel(new Model("m1"));
-        model.addVertex(new Vertex("Start"));
+        model.addVertex(new Vertex("v_0", "Start"));
         model.afterElementsAdded();
         configuration.addModel(model);
         Machine machine = new Machine(configuration);

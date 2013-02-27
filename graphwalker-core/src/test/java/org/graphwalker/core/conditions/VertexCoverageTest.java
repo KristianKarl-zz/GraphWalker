@@ -41,10 +41,10 @@ public class VertexCoverageTest {
     private Configuration createConfiguration() {
         Configuration configuration = new Configuration();
         Model model = configuration.addModel(new Model("m1"));
-        Vertex v_start = model.addVertex(new Vertex("Start"));
-        Vertex v_1 = model.addVertex(new Vertex("v_1"));
-        Vertex v_2 = model.addVertex(new Vertex("v_2"));
-        model.addEdge(new Edge(), v_start, v_1);
+        Vertex v_start = model.addVertex(new Vertex("v_0", "Start"));
+        Vertex v_1 = model.addVertex(new Vertex("v_1", "v_1"));
+        Vertex v_2 = model.addVertex(new Vertex("v_2", "v_2"));
+        model.addEdge(new Edge("e_0"), v_start, v_1);
         model.addEdge(new Edge("e_1"), v_1, v_2);
         model.addEdge(new Edge("e_2"), v_1, v_2);
         model.addEdge(new Edge("e_3"), v_1, v_2);
@@ -54,7 +54,7 @@ public class VertexCoverageTest {
         model.addEdge(new Edge("e_7"), v_1, v_2);
         model.addEdge(new Edge("e_8"), v_1, v_2);
         model.addEdge(new Edge("e_9"), v_1, v_2);
-        model.addEdge(new Edge(), v_2, v_1);
+        model.addEdge(new Edge("e_10"), v_2, v_1);
         model.setPathGenerator(PathGeneratorFactory.create("Random"));
         model.getPathGenerator().setStopCondition(StopConditionFactory.create("VertexCoverage", 100));
         model.afterElementsAdded();

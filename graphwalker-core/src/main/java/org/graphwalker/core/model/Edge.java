@@ -44,18 +44,18 @@ public class Edge extends AbstractElement {
 
     /**
      * <p>Constructor for Edge.</p>
+     *
+     * @param id a {@link java.lang.String} object.
      */
-    public Edge() {
+    public Edge(String id) {
+        super(id);
     }
 
-    /**
-     * <p>Constructor for Edge.</p>
-     *
-     * @param name a {@link java.lang.String} object.
-     */
-    public Edge(String name) {
-        super(name);
+    public Edge(String id, String name) {
+        super(id);
+        setName(name);
     }
+
 
     /**
      * <p>setSource.</p>

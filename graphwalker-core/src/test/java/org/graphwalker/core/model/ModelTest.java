@@ -36,10 +36,12 @@ public class ModelTest {
 
     public Model createModel() {
         Model model = new Model("m1");
-        Vertex source = model.addVertex(new Vertex());
+        Vertex source = model.addVertex(new Vertex("v_0"));
         source.setName("Start");
-        Vertex target = model.addVertex(new Vertex("target"));
-        model.addEdge(new Edge("edge"), source, target);
+        Vertex target = model.addVertex(new Vertex("v_1"));
+        target.setName("target");
+        Edge edge = model.addEdge(new Edge("e_0"), source, target);
+        edge.setName("edge");
         model.afterElementsAdded();
         return model;
     }
@@ -126,7 +128,9 @@ public class ModelTest {
     @Test
     public void testStartNode() {
         Model model = new Model("m1");
-        model.addVertex(new Vertex(Resource.getText(Bundle.NAME, "start.vertex")));
+        Vertex vertex = new Vertex("v_0");
+        vertex.setName(Resource.getText(Bundle.NAME, "start.vertex"));
+        model.addVertex(vertex);
         Assert.assertNotNull(model.getStartVertex());
         Assert.assertEquals(Resource.getText(Bundle.NAME, "start.vertex"), model.getStartVertex().getName());
     }
@@ -134,33 +138,47 @@ public class ModelTest {
     @Test
     public void testStartNodeWithDifferentCase() {
         Model model = new Model("m1");
-        model.addVertex(new Vertex(Resource.getText(Bundle.NAME, "start.vertex").toLowerCase()));
+        Vertex vertex = new Vertex("v_0");
+        vertex.setName(Resource.getText(Bundle.NAME, "start.vertex").toLowerCase());
+        model.addVertex(vertex);
         Assert.assertNotNull(model.getStartVertex());
     }
 
     @Test(expected = ModelException.class)
     public void testTwoStartNodes() {
         Model model = new Model("m1");
-        model.addVertex(new Vertex(Resource.getText(Bundle.NAME, "start.vertex")));
-        model.addVertex(new Vertex(Resource.getText(Bundle.NAME, "start.vertex")));
+        Vertex vertex1 = new Vertex("v_1");
+        vertex1.setName(Resource.getText(Bundle.NAME, "start.vertex"));
+        model.addVertex(vertex1);
+        Vertex vertex2 = new Vertex("v_2");
+        vertex2.setName(Resource.getText(Bundle.NAME, "start.vertex"));
+        model.addVertex(vertex2);
         model.getStartVertex();
     }
 
     @Test(expected = ModelException.class)
     public void testTwoStartNodesWithDifferentCase() {
         Model model = new Model("m1");
-        model.addVertex(new Vertex(Resource.getText(Bundle.NAME, "start.vertex").toLowerCase()));
-        model.addVertex(new Vertex(Resource.getText(Bundle.NAME, "start.vertex").toUpperCase()));
+        Vertex vertex1 = new Vertex("v_1");
+        vertex1.setName(Resource.getText(Bundle.NAME, "start.vertex").toLowerCase());
+        model.addVertex(vertex1);
+        Vertex vertex2 = new Vertex("v_2");
+        vertex2.setName(Resource.getText(Bundle.NAME, "start.vertex").toUpperCase());
+        model.addVertex(vertex2);
         model.getStartVertex();
     }
 
     @Test(expected = ModelException.class)
     public void testStartNodeWithSeveralOutEdges() {
         Model model = new Model("m1");
-        Vertex start = model.addVertex(new Vertex(Resource.getText(Bundle.NAME, "start.vertex").toLowerCase()));
-        Vertex vertex = model.addVertex(new Vertex());
-        model.addEdge(new Edge(), start, vertex);
-        model.addEdge(new Edge(), start, vertex);
+        Vertex start = new Vertex("v_0");
+        start.setName(Resource.getText(Bundle.NAME, "start.vertex").toLowerCase());
+        model.addVertex(start);
+        Vertex vertex = new Vertex("v_1");
+        vertex.setName(Resource.getText(Bundle.NAME, "start.vertex").toLowerCase());
+        model.addVertex(vertex);
+        model.addEdge(new Edge("e_0"), start, vertex);
+        model.addEdge(new Edge("e_1"), start, vertex);
         model.getStartVertex();
     }
 
@@ -168,9 +186,9 @@ public class ModelTest {
     public void testStartNodeWithInEdge() {
         Model model = new Model("m1");
         Vertex start = model.addVertex(new Vertex(Resource.getText(Bundle.NAME, "start.vertex").toLowerCase()));
-        Vertex vertex = model.addVertex(new Vertex());
-        model.addEdge(new Edge(), start, vertex);
-        model.addEdge(new Edge(), vertex, start);
+        Vertex vertex = model.addVertex(new Vertex("v_0"));
+        model.addEdge(new Edge("e_0"), start, vertex);
+        model.addEdge(new Edge("e_1"), vertex, start);
         model.getStartVertex();
     }
 
@@ -178,9 +196,9 @@ public class ModelTest {
     public void testStartNodeWithLoopEdge() {
         Model model = new Model("m1");
         Vertex start = model.addVertex(new Vertex(Resource.getText(Bundle.NAME, "start.vertex").toLowerCase()));
-        Vertex vertex = model.addVertex(new Vertex());
-        model.addEdge(new Edge(), start, vertex);
-        model.addEdge(new Edge(), start, start);
+        Vertex vertex = model.addVertex(new Vertex("v_0"));
+        model.addEdge(new Edge("e_0"), start, vertex);
+        model.addEdge(new Edge("e_1"), start, start);
         model.getStartVertex();
     }
 }

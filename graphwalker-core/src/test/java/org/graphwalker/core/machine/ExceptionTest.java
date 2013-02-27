@@ -42,9 +42,9 @@ public class ExceptionTest {
     private Model createModel(String name) {
         Model model = new Model(name);
         model.setImplementation(this);
-        Vertex v_start = model.addVertex(new Vertex("Start"));
-        Vertex v_1 = model.addVertex(new Vertex("v_" + name));
-        model.addEdge(new Edge("e_" + name), v_start, v_1);
+        Vertex v_start = model.addVertex(new Vertex("v_0", "Start"));
+        Vertex v_1 = model.addVertex(new Vertex("v_" + name, "v_" + name));
+        model.addEdge(new Edge("e_" + name, "e_" + name), v_start, v_1);
         model.setPathGenerator(PathGeneratorFactory.create("Random"));
         model.getPathGenerator().setStopCondition(StopConditionFactory.create("VertexCoverage", 100));
         model.afterElementsAdded();

@@ -41,10 +41,10 @@ public class NeverTest {
     private Configuration createConfiguration() {
         Configuration configuration = new Configuration();
         Model model = configuration.addModel(new Model("m1"));
-        Vertex v_start = model.addVertex(new Vertex("Start"));
-        Vertex v_1 = model.addVertex(new Vertex("v_1"));
-        model.addEdge(new Edge(), v_start, v_1);
-        model.addEdge(new Edge("e_1"), v_1, v_1);
+        Vertex v_start = model.addVertex(new Vertex("v_0", "Start"));
+        Vertex v_1 = model.addVertex(new Vertex("v_1", "v_1"));
+        model.addEdge(new Edge("e_0"), v_start, v_1);
+        model.addEdge(new Edge("e_1", "e_1"), v_1, v_1);
         model.setPathGenerator(PathGeneratorFactory.create("Random"));
         model.getPathGenerator().setStopCondition(StopConditionFactory.create("Never"));
         return configuration;

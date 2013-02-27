@@ -2,7 +2,7 @@
  * #%L
  * GraphWalker Core
  * %%
- * Copyright (C) 2011 - 2012 GraphWalker
+ * Copyright (C) 2011 - 2013 GraphWalker
  * %%
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,45 +25,29 @@
  */
 package org.graphwalker.core.model;
 
-import org.junit.Test;
+public class ElementFactory {
 
-import java.util.ArrayList;
-
-public class EdgeTest {
-
-    @Test
-    public void createEdgeTest() {
-        new Edge("edgeName");
+    public static Model createModel(String id) {
+        return new Model(id);
     }
 
-    @Test
-    public void setWeightTest() {
-        Edge edge = new Edge("e_0");
-        edge.setWeight(0.5);
+    public static Vertex createVertex(String id) {
+        return new Vertex(id);
     }
 
-    @Test
-    public void setEdgeActionsTest() {
-        Edge edge = new Edge("e_0");
-        edge.setEdgeActions(new ArrayList<Action>());
+    public static Edge createEdge(String id) {
+        return new Edge(id);
     }
 
-    @Test
-    public void setEdgeGuardTest() {
-        Edge edge = new Edge("e_0");
-        edge.setEdgeGuard(new Guard("guardScript"));
+    public static Requirement createRequirement(String id) {
+        return new Requirement(id);
     }
 
-    @Test
-    public void setIdTest() {
-        Edge edge = new Edge("e_0");
-        edge.setId("edgeName");
+    public static Guard createGuard(String script) {
+        return new Guard(script);
     }
 
-    @Test
-    public void setNameTest() {
-        Edge edge = new Edge("e_0");
-        edge.setName("edgeName");
+    public static Action createAction(String script) {
+        return new Action(script);
     }
-
 }

@@ -23,9 +23,10 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core.model;
+package org.graphwalker.core.model.factories;
 
 import org.graphwalker.core.Bundle;
+import org.graphwalker.core.model.*;
 import org.graphwalker.core.model.status.ElementStatus;
 import org.graphwalker.core.utils.Resource;
 import org.jdom.Document;
@@ -45,8 +46,6 @@ import java.util.regex.Pattern;
  * @version $Id: $
  */
 public class GraphMLModelFactory implements ModelFactory {
-
-    private final Map<String, Requirement> requirements = new HashMap<String, Requirement>();
 
     /**
      * <p>Constructor for GraphmlModelFactory.</p>
@@ -71,7 +70,7 @@ public class GraphMLModelFactory implements ModelFactory {
     }
 
     private Model parse(String id, InputStream inputStream) {
-        Model model = new Model(id);
+        Model model = ElementFactory.createModel(id);
         SAXBuilder saxBuilder = new SAXBuilder();
         Document document;
 
@@ -89,8 +88,7 @@ public class GraphMLModelFactory implements ModelFactory {
                     Element nodeLabel = (Element) nodeLabels.next();
                     text = nodeLabel.getTextTrim();
                 }
-                Vertex vertex = new Vertex();
-                vertex.setId(nodeElement.getAttribute("id").getValue());
+                Vertex vertex = ElementFactory.createVertex(nodeElement.getAttribute("id").getValue());
                 if (null != text && !"".equals(text)) {
                     text = parseComment(vertex, text);
                     text = parseSwitchModelId(vertex, text);
@@ -108,8 +106,7 @@ public class GraphMLModelFactory implements ModelFactory {
                     Element edgeLabel = (Element) edgeLabels.next();
                     text = edgeLabel.getTextTrim();
                 }
-                Edge edge = new Edge();
-                edge.setId(edgeElement.getAttribute("id").getValue());
+                Edge edge = ElementFactory.createEdge(edgeElement.getAttribute("id").getValue());
                 if (null != text && !"".equals(text)) {
                     text = parseComment(edge, text);
                     text = parseBlocked(edge, text);
@@ -158,11 +155,7 @@ public class GraphMLModelFactory implements ModelFactory {
         Pattern pattern = Pattern.compile(Resource.getText(Bundle.NAME, "label.requirement") + "\\s*\\((.*)\\)", Pattern.MULTILINE);
         Matcher matcher = pattern.matcher(text);
         while (matcher.find()) {
-            String id = matcher.group(1);
-            if (!requirements.containsKey(id)) {
-                requirements.put(id, new Requirement(id));
-            }
-            vertex.addRequirement(requirements.get(id));
+            vertex.addRequirement(ElementFactory.createRequirement(matcher.group(1)));
         }
         return matcher.replaceAll("").trim();
     }
@@ -171,7 +164,7 @@ public class GraphMLModelFactory implements ModelFactory {
         Pattern pattern = Pattern.compile("\\[(.+)\\]");
         Matcher matcher = pattern.matcher(text);
         if (matcher.find()) {
-            edge.setEdgeGuard(new Guard(matcher.group(1).trim()));
+            edge.setEdgeGuard(ElementFactory.createGuard(matcher.group(1).trim()));
         }
         return matcher.replaceAll("").trim();
     }
@@ -182,7 +175,7 @@ public class GraphMLModelFactory implements ModelFactory {
         Matcher matcher = pattern.matcher(text);
         if (matcher.find()) {
             for (String action : matcher.group(1).split(";")) {
-                edgeActions.add(new Action(action.trim()));
+                edgeActions.add(ElementFactory.createAction(action.trim()));
             }
         }
         edge.setEdgeActions(edgeActions);

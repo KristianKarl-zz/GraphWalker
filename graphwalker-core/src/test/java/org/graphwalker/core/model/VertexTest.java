@@ -32,7 +32,7 @@ public class VertexTest {
 
     @Test
     public void createVertexTest() {
-        Vertex vertex = new Vertex("vertexName");
+        Vertex vertex = new Vertex("v_0", "vertexName");
         Assert.assertEquals("vertexName", vertex.getName());
         Assert.assertFalse(vertex.hasSwitchModel());
         Assert.assertNull(vertex.getSwitchModelId());
@@ -40,7 +40,7 @@ public class VertexTest {
 
     @Test
     public void setSwitchModelIdTest() {
-        Vertex vertex = new Vertex();
+        Vertex vertex = new Vertex("v_0", "v_0");
         Assert.assertFalse(vertex.hasSwitchModel());
         vertex.setSwitchModelId("modelId");
         Assert.assertTrue(vertex.hasSwitchModel());

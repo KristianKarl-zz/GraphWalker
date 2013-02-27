@@ -45,17 +45,16 @@ public class Vertex extends AbstractElement {
 
     /**
      * <p>Constructor for Vertex.</p>
+     *
+     * @param id a {@link java.lang.String} object.
      */
-    public Vertex() {
+    public Vertex(String id) {
+        super(id);
     }
 
-    /**
-     * <p>Constructor for Vertex.</p>
-     *
-     * @param name a {@link java.lang.String} object.
-     */
-    public Vertex(String name) {
-        super(name);
+    public Vertex(String id, String name) {
+        super(id);
+        setName(name);
     }
 
     /**
