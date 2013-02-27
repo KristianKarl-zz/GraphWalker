@@ -58,7 +58,7 @@ public class ResourceTest {
         Assert.assertNull(inputStream);
 
         // add the test jar to the classLoader
-        File file = null;
+        File file;
         if (System.getProperty("user.dir").endsWith("graphwalker-core")) {
             file = new File(System.getProperty("user.dir") + "/target/test-classes/jar-resources.jar");
         } else {

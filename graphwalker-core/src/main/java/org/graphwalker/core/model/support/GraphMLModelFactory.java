@@ -23,7 +23,7 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core.model.factories;
+package org.graphwalker.core.model.support;
 
 import org.graphwalker.core.Bundle;
 import org.graphwalker.core.model.*;

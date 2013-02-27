@@ -47,7 +47,7 @@ import java.util.Date;
 public class XMLReport implements Report {
 
     private static final String LINE_SEPARATOR = System.getProperty("line.separator");
-    private ObjectFactory objectFactory = new ObjectFactory();
+    private final ObjectFactory objectFactory = new ObjectFactory();
 
     public void writeReport(GraphWalker graphWalker, File reportDirectory, Date startTime) {
         for (Model model : graphWalker.getConfiguration().getModels()) {
@@ -64,7 +64,7 @@ public class XMLReport implements Report {
     }
 
     private Marshaller createMarshaller() {
-        Marshaller marshaller = null;
+        Marshaller marshaller;
         try {
             marshaller = JAXBContext.newInstance(ObjectFactory.class).createMarshaller();
         } catch (JAXBException e) {
@@ -74,7 +74,7 @@ public class XMLReport implements Report {
     }
 
     private Unmarshaller createUnmarshaller() {
-        Unmarshaller unmarshaller = null;
+        Unmarshaller unmarshaller;
         try {
             unmarshaller = JAXBContext.newInstance(ObjectFactory.class).createUnmarshaller();
         } catch (JAXBException e) {
@@ -174,7 +174,7 @@ public class XMLReport implements Report {
             }
         }
         File reportFile = new File(reportDirectory, model.getImplementation().getClass().getName() + ".xml");
-        OutputStream outputStream = null;
+        OutputStream outputStream;
         try {
             outputStream = new FileOutputStream(reportFile);
         } catch (FileNotFoundException e) {

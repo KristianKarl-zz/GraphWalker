@@ -30,7 +30,7 @@ import org.graphwalker.core.GraphWalkerImpl;
 import org.graphwalker.core.configuration.Configuration;
 import org.graphwalker.core.generators.PathGenerator;
 import org.graphwalker.core.generators.RandomPath;
-import org.graphwalker.core.model.factories.GraphMLModelFactory;
+import org.graphwalker.core.model.support.GraphMLModelFactory;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.ModelFactory;
 import org.junit.Assert;

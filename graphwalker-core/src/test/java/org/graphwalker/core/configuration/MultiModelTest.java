@@ -32,9 +32,7 @@ import org.junit.Assert;
 public class MultiModelTest {
 
     private Configuration createConfiguration() {
-        Configuration configuration = new Configuration();
-
-        return configuration;
+        return new Configuration();
     }
 
     public void executeTest() {

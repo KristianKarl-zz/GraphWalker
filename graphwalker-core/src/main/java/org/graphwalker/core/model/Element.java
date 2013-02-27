@@ -47,8 +47,8 @@ public interface Element {
      *
      * @return a {@link java.lang.String} object.
      */
-    void setName(String name);
     String getName();
+    void setName(String name);
     /**
      * <p>hasName.</p>
      *

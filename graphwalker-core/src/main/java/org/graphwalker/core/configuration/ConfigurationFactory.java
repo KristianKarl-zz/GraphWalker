@@ -29,7 +29,7 @@ import org.graphwalker.core.annotations.GraphWalker;
 import org.graphwalker.core.conditions.StopCondition;
 import org.graphwalker.core.generators.PathGenerator;
 import org.graphwalker.core.machine.ExceptionStrategy;
-import org.graphwalker.core.model.factories.GraphMLModelFactory;
+import org.graphwalker.core.model.support.GraphMLModelFactory;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.utils.Reflection;
 

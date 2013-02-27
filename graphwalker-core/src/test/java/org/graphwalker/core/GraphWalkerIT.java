@@ -2,7 +2,7 @@
  * #%L
  * GraphWalker Core
  * %%
- * Copyright (C) 2011 - 2012 GraphWalker
+ * Copyright (C) 2011 - 2013 GraphWalker
  * %%
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,30 +23,23 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core.configuration;
+package org.graphwalker.core;
 
-import org.graphwalker.core.GraphWalker;
-import org.graphwalker.core.GraphWalkerFactory;
-import org.junit.Assert;
+import org.graphwalker.core.utils.Assert;
+import org.junit.Test;
 
-public class StopConditionTest {
+import java.io.File;
 
-    private Configuration createConfiguration() {
-        return new Configuration();
+public class GraphWalkerIT {
+
+    @Test
+    public void execute() throws Exception {
+        File jarFile = new File(new File(System.getProperty("directory")), System.getProperty("filename"));
+        Assert.assertTrue(jarFile.exists());
+        String[] arguments = new String[] {"java","-jar",jarFile.getCanonicalPath()};
+        Process process = Runtime.getRuntime().exec(arguments);
+        process.waitFor();
+        //Assert.assertEquals(process.exitValue(), 0);
     }
 
-    public void executeTest() {
-        GraphWalker graphWalker = GraphWalkerFactory.create(createConfiguration());
-        Assert.assertTrue(graphWalker.hasNextStep());
-        Assert.assertEquals(graphWalker.getNextStep().getName(), "e_0");
-        Assert.assertTrue(graphWalker.hasNextStep());
-        Assert.assertEquals(graphWalker.getNextStep().getName(), "v_0");
-        Assert.assertTrue(graphWalker.hasNextStep());
-        Assert.assertEquals(graphWalker.getNextStep().getName(), "e_1");
-        Assert.assertTrue(graphWalker.hasNextStep());
-        Assert.assertEquals(graphWalker.getNextStep().getName(), "v_1");
-        Assert.assertTrue(graphWalker.hasNextStep());
-        Assert.assertEquals(graphWalker.getNextStep().getName(), "e_2");
-        Assert.assertFalse(graphWalker.hasNextStep());
-    }
 }

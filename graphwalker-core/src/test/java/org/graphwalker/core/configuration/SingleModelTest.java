@@ -33,9 +33,7 @@ import org.junit.Assert;
 public class SingleModelTest {
 
     private Configuration createConfiguration() {
-        Configuration configuration = new Configuration();
-
-        return configuration;
+        return new Configuration();
     }
 
     public void testStep() {
