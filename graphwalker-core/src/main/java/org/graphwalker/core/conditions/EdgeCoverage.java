@@ -23,41 +23,54 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core.conditions.impl;
+package org.graphwalker.core.conditions;
 
-import org.graphwalker.core.conditions.StopCondition;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Model;
 
 /**
- * <p>Never class.</p>
+ * <p>EdgeCoverage class.</p>
  *
  * @author nilols
  * @version $Id: $
  */
-public class Never implements StopCondition {
+public class EdgeCoverage implements StopCondition {
+
+    private final double myLimit;
 
     /**
-     * <p>Constructor for Never.</p>
-     */
-    public Never() {
-    }
-
-    /**
-     * <p>Constructor for Never.</p>
+     * <p>Constructor for EdgeCoverage.</p>
      *
      * @param value a {@link java.lang.String} object.
      */
-    public Never(String value) {
+    public EdgeCoverage(String value) {
+        this(!"".equals(value) ? Long.parseLong(value) : 100);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * <p>Constructor for EdgeCoverage.</p>
+     *
+     * @param limit a long.
+     */
+    public EdgeCoverage(long limit) {
+        myLimit = (double) limit / PERCENTAGE_SCALE;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public boolean isFulfilled(Model model, Element element) {
-        return false;
+        double totalEdgesCount = model.getEdges().size();
+        double visitedEdgesCount = model.getVisitedEdges().size();
+        return (visitedEdgesCount / totalEdgesCount) >= myLimit;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public double getFulfilment(Model model, Element element) {
-        return 0;
+        double totalEdgesCount = model.getEdges().size();
+        double visitedEdgesCount = model.getVisitedEdges().size();
+        return (visitedEdgesCount / totalEdgesCount) / myLimit;
     }
 }

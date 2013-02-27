@@ -28,9 +28,9 @@ package org.graphwalker.core.annotations;
 import org.graphwalker.core.Bundle;
 import org.graphwalker.core.machine.Machine;
 import org.graphwalker.core.model.Edge;
-import org.graphwalker.core.model.Vertex;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Model;
+import org.graphwalker.core.model.Vertex;
 import org.graphwalker.core.utils.Reflection;
 import org.graphwalker.core.utils.Resource;
 

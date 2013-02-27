@@ -27,12 +27,10 @@ package org.graphwalker.core.conditions;
 
 import org.graphwalker.core.GraphWalkerExecutor;
 import org.graphwalker.core.GraphWalkerImpl;
-import org.graphwalker.core.conditions.impl.RequirementCoverage;
 import org.graphwalker.core.configuration.Configuration;
-import org.graphwalker.core.configuration.impl.ConfigurationImpl;
 import org.graphwalker.core.generators.PathGenerator;
-import org.graphwalker.core.generators.impl.RandomPath;
-import org.graphwalker.core.model.impl.GraphMLModelFactory;
+import org.graphwalker.core.generators.RandomPath;
+import org.graphwalker.core.model.GraphMLModelFactory;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.ModelFactory;
 import org.junit.Assert;
@@ -42,7 +40,7 @@ public class RequirementCoverageTest {
     
     @Test
     public void testRequirement() {
-        Configuration configuration = new ConfigurationImpl();
+        Configuration configuration = new Configuration();
         ModelFactory modelFactory = new GraphMLModelFactory();
         Model model = modelFactory.create("m1", "models/requirementModel.graphml");
         PathGenerator pathGenerator = new RandomPath();
@@ -59,7 +57,7 @@ public class RequirementCoverageTest {
     @Test
     public void testFailedRequirement() {
         Configuration configuration = new ConfigurationImpl();
-        Model model = new ModelImpl("m1");
+        Model model = new Model("m1");
         Vertex start = model.addVertex(new Vertex("start"));
         Vertex vertex = model.addVertex(new Vertex("v_fail"));
         Requirement requirement = new Requirement("badReq");

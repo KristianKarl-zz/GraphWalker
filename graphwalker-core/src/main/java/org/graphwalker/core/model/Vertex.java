@@ -2,7 +2,7 @@
  * #%L
  * GraphWalker Core
  * %%
- * Copyright (C) 2011 - 2013 GraphWalker
+ * Copyright (C) 2011 - 2012 GraphWalker
  * %%
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,17 +25,129 @@
  */
 package org.graphwalker.core.model;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public interface Vertex extends Element {
+/**
+ * <p>Vertex class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
+public class Vertex extends AbstractElement {
 
-    void addRequirement(Requirement requirement);
-    void removeRequirement(Requirement requirement);
-    List<Requirement> getRequirements();
-    void addEdge(Edge edge);
-    void removeEdge(Edge edge);
-    List<Edge> getEdges();
-    String getSwitchModelId();
-    void setSwitchModelId(String id);
-    boolean hasSwitchModel();
+    private final static Map<String, Requirement> ourRequirements = new HashMap<String, Requirement>();
+    private final Map<String, Requirement> myRequirements = new HashMap<String, Requirement>();
+    private final Map<String, Edge> myEdges = new HashMap<String, Edge>();
+    private String mySwitchModelId;
+
+    /**
+     * <p>Constructor for Vertex.</p>
+     */
+    public Vertex() {
+    }
+
+    /**
+     * <p>Constructor for Vertex.</p>
+     *
+     * @param name a {@link java.lang.String} object.
+     */
+    public Vertex(String name) {
+        super(name);
+    }
+
+    /**
+     * <p>addRequirement.</p>
+     *
+     * @param requirement a {@link org.graphwalker.core.model.Requirement} object.
+     */
+    public void addRequirement(Requirement requirement) {
+        if (ourRequirements.containsKey(requirement.getId())) {
+            Requirement existingRequirement = ourRequirements.get(requirement.getId());
+            myRequirements.put(existingRequirement.getId(), existingRequirement);
+        } else {
+            ourRequirements.put(requirement.getId(), requirement);
+            myRequirements.put(requirement.getId(), requirement);
+        }
+    }
+
+    /**
+     * <p>removeRequirement.</p>
+     *
+     * @param requirement a {@link org.graphwalker.core.model.Requirement} object.
+     */
+    public void removeRequirement(Requirement requirement) {
+        if (myRequirements.containsKey(requirement.getId())) {
+            myRequirements.remove(requirement.getId());
+        }
+    }
+
+    /**
+     * <p>getRequirements.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
+    public List<Requirement> getRequirements() {
+        return new ArrayList<Requirement>(myRequirements.values());
+    }
+
+    /**
+     * <p>addEdge.</p>
+     *
+     * @param edge a {@link Edge} object.
+     */
+    public void addEdge(Edge edge) {
+        if (!myEdges.containsKey(edge.getId())) {
+            myEdges.put(edge.getId(), edge);
+        }
+    }
+
+    /**
+     * <p>removeEdge.</p>
+     *
+     * @param edge a {@link Edge} object.
+     */
+    public void removeEdge(Edge edge) {
+        if (myEdges.containsKey(edge.getId())) {
+            myEdges.remove(edge.getId());
+        }
+    }
+
+    /**
+     * <p>getEdges.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
+    public List<Edge> getEdges() {
+        return new ArrayList<Edge>(myEdges.values());
+    }
+
+    /**
+     * <p>getSwitchModelId.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
+    public String getSwitchModelId() {
+        return mySwitchModelId;
+    }
+
+    /**
+     * <p>setSwitchModelId.</p>
+     *
+     * @param id a {@link java.lang.String} object.
+     */
+    public void setSwitchModelId(String id) {
+        mySwitchModelId = id;
+    }
+
+    /**
+     * <p>hasSwitchModel.</p>
+     *
+     * @return a boolean.
+     */
+    public boolean hasSwitchModel() {
+        return null != mySwitchModelId;
+    }
 }

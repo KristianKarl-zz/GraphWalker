@@ -2,7 +2,7 @@
  * #%L
  * GraphWalker Core
  * %%
- * Copyright (C) 2011 - 2013 GraphWalker
+ * Copyright (C) 2011 - 2012 GraphWalker
  * %%
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,29 +23,32 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core.model.impl;
+package org.graphwalker.core.generators;
 
-import org.graphwalker.core.model.Action;
+import org.graphwalker.core.Bundle;
+import org.graphwalker.core.machine.Machine;
+import org.graphwalker.core.model.Element;
+import org.graphwalker.core.utils.Resource;
 
-public class ActionImpl implements Action {
+import java.util.List;
+import java.util.Random;
 
-    private final String myScript;
+/**
+ * <p>RandomPath class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
+public class RandomPath extends AbstractPathGenerator {
 
-    /**
-     * <p>Constructor for EdgeAction.</p>
-     *
-     * @param script a {@link java.lang.String} object.
-     */
-    public ActionImpl(String script) {
-        myScript = script;
-    }
+    private final Random myRandomGenerator = new Random(System.nanoTime());
 
-    /**
-     * <p>getScript.</p>
-     *
-     * @return a {@link java.lang.String} object.
-     */
-    public String getScript() {
-        return myScript;
+    /** {@inheritDoc} */
+    public Element getNextStep(Machine machine) {
+        List<Element> possibleElements = machine.getPossibleElements(machine.getCurrentElement());
+        if (0<possibleElements.size()) {
+            return possibleElements.get(myRandomGenerator.nextInt(possibleElements.size()));
+        }
+        throw new PathGeneratorException(Resource.getText(Bundle.NAME, "exception.generator.path.missing"));
     }
 }

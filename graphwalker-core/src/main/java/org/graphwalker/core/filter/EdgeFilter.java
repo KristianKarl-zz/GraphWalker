@@ -25,30 +25,89 @@
  */
 package org.graphwalker.core.filter;
 
+import org.graphwalker.core.Bundle;
+import org.graphwalker.core.model.Action;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Model;
+import org.graphwalker.core.utils.Resource;
+
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 
 /**
- * <p>EdgeFilter interface.</p>
+ * <p>EdgeFilterImpl class.</p>
  *
  * @author nilols
  * @version $Id: $
  */
-public interface EdgeFilter {
+public class EdgeFilter {
+
+    private final ScriptEngine myScriptEngine;
+    private final String myScriptEngineName;
 
     /**
-     * <p>executeActions.</p>
+     * <p>Constructor for EdgeFilterImpl.</p>
      *
-     * @param model a {@link org.graphwalker.core.model.Model} object.
-     * @param edge a {@link org.graphwalker.core.model.Edge} object.
+     * @param name a {@link java.lang.String} object.
      */
-    void executeActions(Model model, Edge edge);
+    public EdgeFilter(String name) {
+        myScriptEngineName = name;
+        ScriptEngineManager scriptEngineManager = new ScriptEngineManager();
+        myScriptEngine = scriptEngineManager.getEngineByName(myScriptEngineName);
+    }
+
     /**
-     * <p>acceptEdge.</p>
-     *
-     * @param model a {@link org.graphwalker.core.model.Model} object.
-     * @param edge a {@link org.graphwalker.core.model.Edge} object.
-     * @return a boolean.
+     * {@inheritDoc}
      */
-    boolean acceptEdge(Model model, Edge edge);
+    public void executeActions(Model model, Edge edge) {
+        if (null == myScriptEngine) {
+            throw new EdgeFilterException(Resource.getText(Bundle.NAME, "exception.script.engine.missing", myScriptEngineName));
+        }
+        if (null != edge.getEdgeActions() && 0 < edge.getEdgeActions().size()) {
+            addImplementationToFilter(model);
+            for (Action action : edge.getEdgeActions()) {
+                try {
+                    myScriptEngine.eval(action.getScript());
+                } catch (ScriptException e) {
+                    removeImplementationFromFilter();
+                    throw new EdgeFilterException(Resource.getText(Bundle.NAME, "exception.script.error", e.getMessage()));
+                }
+            }
+            removeImplementationFromFilter();
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean acceptEdge(Model model, Edge edge) {
+        if (null == myScriptEngine) {
+            throw new EdgeFilterException(Resource.getText(Bundle.NAME, "exception.script.engine.missing", myScriptEngineName));
+        }
+        boolean isEdgeAccepted = true;
+        if (edge.hasEdgeGuard()) {
+            addImplementationToFilter(model);
+            try {
+                isEdgeAccepted = (Boolean) myScriptEngine.eval(edge.getEdgeGuard().getScript());
+            } catch (ScriptException e) {
+                removeImplementationFromFilter();
+                throw new EdgeFilterException(Resource.getText(Bundle.NAME, "exception.script.error", e.getMessage()));
+            }
+            removeImplementationFromFilter();
+        }
+        return isEdgeAccepted;
+    }
+
+    private void addImplementationToFilter(Model model) {
+        if (null != model && model.hasImplementation()) {
+            myScriptEngine.put(Resource.getText(Bundle.NAME, "script.implementation.name"), model.getImplementation());
+        }
+    }
+
+    private void removeImplementationFromFilter() {
+        if (null != myScriptEngine) {
+            myScriptEngine.put(Resource.getText(Bundle.NAME, "script.implementation.name"), null);
+        }
+    }
 }

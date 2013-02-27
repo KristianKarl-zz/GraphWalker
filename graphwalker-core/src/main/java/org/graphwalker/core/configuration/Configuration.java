@@ -25,83 +25,110 @@
  */
 package org.graphwalker.core.configuration;
 
+import org.graphwalker.core.Bundle;
 import org.graphwalker.core.filter.EdgeFilter;
 import org.graphwalker.core.generators.PathGenerator;
 import org.graphwalker.core.model.Model;
+import org.graphwalker.core.utils.Resource;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
- * <p>Configuration interface.</p>
+ * <p>ConfigurationImpl class.</p>
  *
  * @author nilols
  * @version $Id: $
  */
-public interface Configuration {
+public class Configuration {
+
+    private String myDefaultModelId;
+    private PathGenerator myDefaultGenerator;
+    private final Map<String, Model> myModels = new HashMap<String, Model>();
+    private EdgeFilter myEdgeFilter;
+
+    /**
+     * <p>Constructor for ConfigurationImpl.</p>
+     */
+    public Configuration() {
+        myEdgeFilter = new EdgeFilter(Resource.getText(Bundle.NAME, "default.language"));
+    }
 
     /**
      * <p>getDefaultModel.</p>
      *
      * @return a {@link org.graphwalker.core.model.Model} object.
      */
-    Model getDefaultModel();
+    public Model getDefaultModel() {
+        return myModels.get(myDefaultModelId);
+    }
 
     /**
-     * <p>setDefaultModelId.</p>
-     *
-     * @param id a {@link java.lang.String} object.
+     * {@inheritDoc}
      */
-    void setDefaultModelId(String id);
+    public void setDefaultModelId(String id) {
+        myDefaultModelId = id;
+    }
 
     /**
      * <p>getDefaultPathGenerator.</p>
      *
      * @return a {@link org.graphwalker.core.generators.PathGenerator} object.
      */
-    PathGenerator getDefaultPathGenerator();
+    public PathGenerator getDefaultPathGenerator() {
+        return myDefaultGenerator;
+    }
 
     /**
-     * <p>setDefaultPathGenerator.</p>
-     *
-     * @param pathGenerator a {@link org.graphwalker.core.generators.PathGenerator} object.
+     * {@inheritDoc}
      */
-    void setDefaultPathGenerator(PathGenerator pathGenerator);
+    public void setDefaultPathGenerator(PathGenerator pathGenerator) {
+        myDefaultGenerator = pathGenerator;
+    }
 
     /**
-     * <p>addModel.</p>
-     *
-     * @param model a {@link org.graphwalker.core.model.Model} object.
-     * @return a {@link org.graphwalker.core.model.Model} object.
+     * {@inheritDoc}
      */
-    Model addModel(Model model);
+    public Model addModel(Model model) {
+        if (null == myDefaultModelId) {
+            setDefaultModelId(model.getId());
+        }
+        myModels.put(model.getId(), model);
+        return model;
+    }
 
     /**
-     * <p>getModel.</p>
-     *
-     * @param id a {@link java.lang.String} object.
-     * @return a {@link org.graphwalker.core.model.Model} object.
+     * {@inheritDoc}
      */
-    Model getModel(String id);
+    public Model getModel(String id) {
+        return myModels.get(id);
+    }
 
     /**
      * <p>getModels.</p>
      *
      * @return a {@link java.util.List} object.
      */
-    List<Model> getModels();
+    public List<Model> getModels() {
+        return new ArrayList<Model>(myModels.values());
+    }
 
     /**
      * <p>getEdgeFilter.</p>
      *
      * @return a {@link org.graphwalker.core.filter.EdgeFilter} object.
      */
-    EdgeFilter getEdgeFilter();
+    public EdgeFilter getEdgeFilter() {
+        return myEdgeFilter;
+    }
 
     /**
-     * <p>setEdgeFilter.</p>
-     *
-     * @param edgeFilter a {@link org.graphwalker.core.filter.EdgeFilter} object.
+     * {@inheritDoc}
      */
-    void setEdgeFilter(EdgeFilter edgeFilter);
+    public void setEdgeFilter(EdgeFilter edgeFilter) {
+        myEdgeFilter = edgeFilter;
+    }
 
 }

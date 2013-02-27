@@ -2,7 +2,7 @@
  * #%L
  * GraphWalker Core
  * %%
- * Copyright (C) 2011 - 2013 GraphWalker
+ * Copyright (C) 2011 - 2012 GraphWalker
  * %%
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,49 +23,31 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core.model.impl;
+package org.graphwalker.core.generators;
 
-import org.graphwalker.core.model.Requirement;
-import org.graphwalker.core.model.status.RequirementStatus;
+import org.graphwalker.core.conditions.StopCondition;
 
-public class RequirementImpl implements Requirement {
+/**
+ * <p>Abstract AbstractPathGenerator class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
+public abstract class AbstractPathGenerator implements PathGenerator {
 
-    private final String myId;
-    private RequirementStatus myRequirementStatus = RequirementStatus.NOT_COVERED;
+    private StopCondition myStopCondition;
 
     /**
-     * <p>Constructor for Requirement.</p>
+     * <p>getStopCondition.</p>
      *
-     * @param id a {@link java.lang.String} object.
+     * @return a {@link org.graphwalker.core.conditions.StopCondition} object.
      */
-    public RequirementImpl(String id) {
-        myId = id;
+    public StopCondition getStopCondition() {
+        return myStopCondition;
     }
 
-    /**
-     * <p>getId.</p>
-     *
-     * @return a {@link java.lang.String} object.
-     */
-    public String getId() {
-        return myId;
-    }
-
-    /**
-     * <p>isFulfilled.</p>
-     *
-     * @return a boolean.
-     */
-    public RequirementStatus getStatus() {
-        return myRequirementStatus;
-    }
-
-    /**
-     * <p>markAsFulfilled.</p>
-     *
-     * @param status a {@link org.graphwalker.core.model.status.RequirementStatus} object.
-     */
-    public void setStatus(RequirementStatus status) {
-        myRequirementStatus = status;
+    /** {@inheritDoc} */
+    public void setStopCondition(StopCondition stopCondition) {
+        myStopCondition = stopCondition;
     }
 }

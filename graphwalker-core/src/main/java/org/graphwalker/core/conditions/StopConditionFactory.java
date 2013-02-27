@@ -26,7 +26,6 @@
 package org.graphwalker.core.conditions;
 
 import org.graphwalker.core.Bundle;
-import org.graphwalker.core.conditions.impl.*;
 import org.graphwalker.core.utils.Resource;
 
 /**

@@ -23,11 +23,11 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core.algorithms.impl;
+package org.graphwalker.core.algorithms;
 
-import org.graphwalker.core.algorithms.Algorithm;
-import org.graphwalker.core.model.*;
 import org.graphwalker.core.model.Edge;
+import org.graphwalker.core.model.Element;
+import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Vertex;
 import org.graphwalker.core.model.status.ElementStatus;
 
@@ -43,10 +43,10 @@ import java.util.List;
  */
 public class FloydWarshall implements Algorithm {
 
-    private final Model myModel;
-    private List<Element> myModelElements;
-    private int[][] myDistances;
-    private Element[][] myPredecessors;
+    private final Model model;
+    private List<Element> modelElements;
+    private int[][] distances;
+    private Element[][] predecessors;
 
     /**
      * <p>Constructor for FloydWarshall.</p>
@@ -54,17 +54,17 @@ public class FloydWarshall implements Algorithm {
      * @param model a {@link org.graphwalker.core.model.Model} object.
      */
     public FloydWarshall(Model model) {
-        myModel = model;
+        this.model = model;
     }
 
     /**
      * <p>calculate.</p>
      */
     public void calculate() {
-        myModelElements = myModel.getConnectedComponent();
-        myDistances = createDistanceMatrix(myModel);
-        myPredecessors = createPredecessorMatrix(myModel);
-        updateMatrices(myModel);
+        modelElements = model.getConnectedComponent();
+        distances = createDistanceMatrix(model);
+        predecessors = createPredecessorMatrix(model);
+        updateMatrices(model);
     }
 
     private int[][] createDistanceMatrix(Model model) {
@@ -100,11 +100,11 @@ public class FloydWarshall implements Algorithm {
         for (int k = 0; k < size; k++) {
             for (int i = 0; i < size; i++) {
                 for (int j = 0; j < size; j++) {
-                    if (myDistances[i][k] != Integer.MAX_VALUE
-                            && myDistances[k][j] != Integer.MAX_VALUE
-                            && myDistances[i][k] + myDistances[k][j] < myDistances[i][j]) {
-                        myDistances[i][j] = myDistances[i][k] + myDistances[k][j];
-                        myPredecessors[i][j] = model.getConnectedComponent().get(k);
+                    if (distances[i][k] != Integer.MAX_VALUE
+                            && distances[k][j] != Integer.MAX_VALUE
+                            && distances[i][k] + distances[k][j] < distances[i][j]) {
+                        distances[i][j] = distances[i][k] + distances[k][j];
+                        predecessors[i][j] = model.getConnectedComponent().get(k);
                     }
                 }
             }
@@ -119,7 +119,7 @@ public class FloydWarshall implements Algorithm {
      * @return a int.
      */
     public int getShortestDistance(final Element source, final Element target) {
-        return myDistances[myModelElements.indexOf(source)][myModelElements.indexOf(target)];
+        return distances[modelElements.indexOf(source)][modelElements.indexOf(target)];
     }
 
     /**
@@ -130,8 +130,8 @@ public class FloydWarshall implements Algorithm {
      */
     public int getMaximumDistance(Element target) {
         int maximumDistance = Integer.MIN_VALUE;
-        for (int[] distance : myDistances) {
-            int value = distance[myModelElements.indexOf(target)];
+        for (int[] distance : distances) {
+            int value = distance[modelElements.indexOf(target)];
             if (value != Integer.MAX_VALUE && value > maximumDistance) {
                 maximumDistance = value;
             }
@@ -147,7 +147,7 @@ public class FloydWarshall implements Algorithm {
      * @return a {@link java.util.List} object.
      */
     public List<Element> getShortestPath(final Element source, final Element target) {
-        if (myDistances[myModelElements.indexOf(source)][myModelElements.indexOf(target)] == Integer.MAX_VALUE) {
+        if (distances[modelElements.indexOf(source)][modelElements.indexOf(target)] == Integer.MAX_VALUE) {
             return new ArrayList<Element>();
         }
         final List<Element> path = getIntermediatePath(source, target);
@@ -157,13 +157,13 @@ public class FloydWarshall implements Algorithm {
     }
 
     private List<Element> getIntermediatePath(final Element source, final Element target) {
-        if (myPredecessors[myModelElements.indexOf(source)][myModelElements.indexOf(target)] == null) {
+        if (predecessors[modelElements.indexOf(source)][modelElements.indexOf(target)] == null) {
             return new ArrayList<Element>();
         }
         final List<Element> path = new ArrayList<Element>();
-        path.addAll(getIntermediatePath(source, myPredecessors[myModelElements.indexOf(source)][myModelElements.indexOf(target)]));
-        path.add(myPredecessors[myModelElements.indexOf(source)][myModelElements.indexOf(target)]);
-        path.addAll(getIntermediatePath(myPredecessors[myModelElements.indexOf(source)][myModelElements.indexOf(target)], target));
+        path.addAll(getIntermediatePath(source, predecessors[modelElements.indexOf(source)][modelElements.indexOf(target)]));
+        path.add(predecessors[modelElements.indexOf(source)][modelElements.indexOf(target)]);
+        path.addAll(getIntermediatePath(predecessors[modelElements.indexOf(source)][modelElements.indexOf(target)], target));
         return path;
     }
 

@@ -27,14 +27,10 @@ package org.graphwalker.core.machine;
 
 import org.graphwalker.core.conditions.StopConditionFactory;
 import org.graphwalker.core.configuration.Configuration;
-import org.graphwalker.core.configuration.impl.ConfigurationImpl;
 import org.graphwalker.core.generators.PathGeneratorFactory;
-import org.graphwalker.core.machine.impl.MachineImpl;
-import org.graphwalker.core.model.Vertex;
-import org.graphwalker.core.model.impl.EdgeImpl;
+import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Model;
-import org.graphwalker.core.model.impl.ModelImpl;
-import org.graphwalker.core.model.impl.VertexImpl;
+import org.graphwalker.core.model.Vertex;
 import org.graphwalker.core.utils.Assert;
 import org.junit.Test;
 
@@ -44,11 +40,11 @@ public class ExceptionTest {
     private boolean m2VertexNotExecuted = false;
 
     private Model createModel(String name) {
-        Model model = new ModelImpl(name);
+        Model model = new Model(name);
         model.setImplementation(this);
-        Vertex v_start = model.addVertex(new VertexImpl("Start"));
-        Vertex v_1 = model.addVertex(new VertexImpl("v_" + name));
-        model.addEdge(new EdgeImpl("e_" + name), v_start, v_1);
+        Vertex v_start = model.addVertex(new Vertex("Start"));
+        Vertex v_1 = model.addVertex(new Vertex("v_" + name));
+        model.addEdge(new Edge("e_" + name), v_start, v_1);
         model.setPathGenerator(PathGeneratorFactory.create("Random"));
         model.getPathGenerator().setStopCondition(StopConditionFactory.create("VertexCoverage", 100));
         model.afterElementsAdded();
@@ -56,7 +52,7 @@ public class ExceptionTest {
     }
 
     private Configuration createConfiguration() {
-        Configuration configuration = new ConfigurationImpl();
+        Configuration configuration = new Configuration();
         configuration.addModel(createModel("m1"));
         configuration.addModel(createModel("m2"));
         return configuration;
@@ -64,7 +60,7 @@ public class ExceptionTest {
 
     @Test
     public void executeTest() {
-        Machine machine = new MachineImpl(createConfiguration());
+        Machine machine = new Machine(createConfiguration());
         while (machine.hasNextStep()) {
             machine.getNextStep();
         }

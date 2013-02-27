@@ -2,7 +2,7 @@
  * #%L
  * GraphWalker Core
  * %%
- * Copyright (C) 2011 - 2012 GraphWalker
+ * Copyright (C) 2011 - 2013 GraphWalker
  * %%
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,14 +25,25 @@
  */
 package org.graphwalker.core.model;
 
-/**
- * <p>EdgeAction class.</p>
- *
- * @author nilols
- * @version $Id: $
- */
-public interface Action {
-    
-    String getScript();
+public class Action {
 
+    private final String myScript;
+
+    /**
+     * <p>Constructor for EdgeAction.</p>
+     *
+     * @param script a {@link java.lang.String} object.
+     */
+    public Action(String script) {
+        myScript = script;
+    }
+
+    /**
+     * <p>getScript.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
+    public String getScript() {
+        return myScript;
+    }
 }

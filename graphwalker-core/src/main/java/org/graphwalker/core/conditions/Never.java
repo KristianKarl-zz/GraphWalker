@@ -23,38 +23,40 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core.conditions.impl;
+package org.graphwalker.core.conditions;
 
-import org.graphwalker.core.conditions.StopCondition;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Model;
 
 /**
- * <p>Length class.</p>
+ * <p>Never class.</p>
  *
  * @author nilols
  * @version $Id: $
  */
-public class Length implements StopCondition {
-
-    private final long myLength;
+public class Never implements StopCondition {
 
     /**
-     * <p>Constructor for Length.</p>
-     *
-     * @param length a long.
+     * <p>Constructor for Never.</p>
      */
-    public Length(long length) {
-        myLength = length;
+    public Never() {
+    }
+
+    /**
+     * <p>Constructor for Never.</p>
+     *
+     * @param value a {@link java.lang.String} object.
+     */
+    public Never(String value) {
     }
 
     /** {@inheritDoc} */
     public boolean isFulfilled(Model model, Element element) {
-        return model.getTotalVisitCount() >= myLength;
+        return false;
     }
 
     /** {@inheritDoc} */
     public double getFulfilment(Model model, Element element) {
-        return (double) model.getTotalVisitCount() / myLength;
+        return 0;
     }
 }

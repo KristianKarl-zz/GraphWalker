@@ -25,7 +25,6 @@
  */
 package org.graphwalker.core.model;
 
-import org.graphwalker.core.model.impl.GuardImpl;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -33,7 +32,7 @@ public class GuardTest {
 
     @Test
     public void createGuardTest() {
-        Guard guard = new GuardImpl("guardScript");
+        Guard guard = new Guard("guardScript");
         Assert.assertEquals("guardScript", guard.getScript());
     }
 }

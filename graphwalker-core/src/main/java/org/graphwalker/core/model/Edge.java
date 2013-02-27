@@ -2,7 +2,7 @@
  * #%L
  * GraphWalker Core
  * %%
- * Copyright (C) 2011 - 2013 GraphWalker
+ * Copyright (C) 2011 - 2012 GraphWalker
  * %%
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,19 +25,134 @@
  */
 package org.graphwalker.core.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public interface Edge extends Element {
+/**
+ * <p>Edge class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
+public class Edge extends AbstractElement {
 
-    void setSource(Vertex source);
-    Vertex getSource();
-    void setTarget(Vertex target);
-    Vertex getTarget();
-    double getWeight();
-    void setWeight(double weight);
-    List<Action> getEdgeActions();
-    void setEdgeActions(List<Action> edgeActions);
-    Guard getEdgeGuard();
-    void setEdgeGuard(Guard edgeGuard);
-    boolean hasEdgeGuard();
+    private Vertex mySource;
+    private Vertex myTarget;
+    private List<Action> myEdgeActions = new ArrayList<Action>();
+    private Guard myEdgeGuard;
+    private double myWeight = 1.0;
+
+    /**
+     * <p>Constructor for Edge.</p>
+     */
+    public Edge() {
+    }
+
+    /**
+     * <p>Constructor for Edge.</p>
+     *
+     * @param name a {@link java.lang.String} object.
+     */
+    public Edge(String name) {
+        super(name);
+    }
+
+    /**
+     * <p>setSource.</p>
+     *
+     * @param source a {@link Vertex} object.
+     */
+    public void setSource(Vertex source) {
+        mySource = source;
+    }
+
+    /**
+     * <p>getSource.</p>
+     *
+     * @return a {@link Vertex} object.
+     */
+    public Vertex getSource() {
+        return mySource;
+    }
+
+    /**
+     * <p>setTarget.</p>
+     *
+     * @param target a {@link Vertex} object.
+     */
+    public void setTarget(Vertex target) {
+        myTarget = target;
+    }
+
+    /**
+     * <p>getTarget.</p>
+     *
+     * @return a {@link Vertex} object.
+     */
+    public Vertex getTarget() {
+        return myTarget;
+    }
+
+    /**
+     * <p>getWeight.</p>
+     *
+     * @return a double.
+     */
+    public double getWeight() {
+        return myWeight;
+    }
+
+    /**
+     * <p>setWeight.</p>
+     *
+     * @param weight a double.
+     */
+    public void setWeight(double weight) {
+        myWeight = weight;
+    }
+
+    /**
+     * <p>getEdgeActions.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
+    public List<Action> getEdgeActions() {
+        return myEdgeActions;
+    }
+
+    /**
+     * <p>setEdgeActions.</p>
+     *
+     * @param edgeActions a {@link java.util.List} object.
+     */
+    public void setEdgeActions(List<Action> edgeActions) {
+        myEdgeActions = edgeActions;
+    }
+
+    /**
+     * <p>getEdgeGuard.</p>
+     *
+     * @return a {@link org.graphwalker.core.model.Guard} object.
+     */
+    public Guard getEdgeGuard() {
+        return myEdgeGuard;
+    }
+
+    /**
+     * <p>setEdgeGuard.</p>
+     *
+     * @param edgeGuard a {@link Guard} object.
+     */
+    public void setEdgeGuard(Guard edgeGuard) {
+        myEdgeGuard = edgeGuard;
+    }
+
+    /**
+     * <p>hasEdgeGuard.</p>
+     *
+     * @return a boolean.
+     */
+    public boolean hasEdgeGuard() {
+        return null != myEdgeGuard;
+    }
 }

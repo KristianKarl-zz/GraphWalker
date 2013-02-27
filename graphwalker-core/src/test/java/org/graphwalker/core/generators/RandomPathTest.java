@@ -29,22 +29,21 @@ import org.graphwalker.core.GraphWalker;
 import org.graphwalker.core.GraphWalkerFactory;
 import org.graphwalker.core.conditions.StopConditionFactory;
 import org.graphwalker.core.configuration.Configuration;
-import org.graphwalker.core.configuration.impl.ConfigurationImpl;
-import org.graphwalker.core.model.*;
-import org.graphwalker.core.model.impl.EdgeImpl;
-import org.graphwalker.core.model.impl.ModelImpl;
-import org.graphwalker.core.model.impl.VertexImpl;
+import org.graphwalker.core.model.Edge;
+import org.graphwalker.core.model.Element;
+import org.graphwalker.core.model.Model;
+import org.graphwalker.core.model.Vertex;
 import org.junit.Assert;
 import org.junit.Test;
 
 public class RandomPathTest {
 
     private Configuration createConfiguration() {
-        Configuration configuration = new ConfigurationImpl();
-        Model model = configuration.addModel(new ModelImpl("m1"));
-        Vertex v_start = model.addVertex(new VertexImpl("Start"));
-        Vertex v_1 = model.addVertex(new VertexImpl("v_1"));
-        model.addEdge(new EdgeImpl(), v_start, v_1);
+        Configuration configuration = new Configuration();
+        Model model = configuration.addModel(new Model("m1"));
+        Vertex v_start = model.addVertex(new Vertex("Start"));
+        Vertex v_1 = model.addVertex(new Vertex("v_1"));
+        model.addEdge(new Edge(), v_start, v_1);
         model.setPathGenerator(PathGeneratorFactory.create("Random"));
         model.getPathGenerator().setStopCondition(StopConditionFactory.create("VertexCoverage", 100));
         model.afterElementsAdded();

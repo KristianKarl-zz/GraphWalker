@@ -25,7 +25,6 @@
  */
 package org.graphwalker.core.generators;
 
-import org.graphwalker.core.generators.impl.RandomPath;
 import org.junit.Assert;
 import org.junit.Test;
 

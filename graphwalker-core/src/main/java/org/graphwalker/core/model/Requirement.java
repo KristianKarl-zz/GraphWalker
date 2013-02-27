@@ -2,7 +2,7 @@
  * #%L
  * GraphWalker Core
  * %%
- * Copyright (C) 2011 - 2012 GraphWalker
+ * Copyright (C) 2011 - 2013 GraphWalker
  * %%
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,16 +27,44 @@ package org.graphwalker.core.model;
 
 import org.graphwalker.core.model.status.RequirementStatus;
 
-/**
- * <p>Requirement class.</p>
- *
- * @author nilols
- * @version $Id: $
- */
-public interface Requirement {
+public class Requirement {
 
-    String getId();
-    RequirementStatus getStatus();
-    void setStatus(RequirementStatus status);
+    private final String myId;
+    private RequirementStatus myRequirementStatus = RequirementStatus.NOT_COVERED;
 
+    /**
+     * <p>Constructor for Requirement.</p>
+     *
+     * @param id a {@link java.lang.String} object.
+     */
+    public Requirement(String id) {
+        myId = id;
+    }
+
+    /**
+     * <p>getId.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
+    public String getId() {
+        return myId;
+    }
+
+    /**
+     * <p>isFulfilled.</p>
+     *
+     * @return a boolean.
+     */
+    public RequirementStatus getStatus() {
+        return myRequirementStatus;
+    }
+
+    /**
+     * <p>markAsFulfilled.</p>
+     *
+     * @param status a {@link org.graphwalker.core.model.status.RequirementStatus} object.
+     */
+    public void setStatus(RequirementStatus status) {
+        myRequirementStatus = status;
+    }
 }

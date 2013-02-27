@@ -28,13 +28,12 @@ package org.graphwalker.core.configuration;
 import org.graphwalker.core.GraphWalker;
 import org.graphwalker.core.GraphWalkerExecutor;
 import org.graphwalker.core.GraphWalkerFactory;
-import org.graphwalker.core.configuration.impl.ConfigurationImpl;
 import org.junit.Assert;
 
 public class SingleModelTest {
 
     private Configuration createConfiguration() {
-        Configuration configuration = new ConfigurationImpl();
+        Configuration configuration = new Configuration();
 
         return configuration;
     }

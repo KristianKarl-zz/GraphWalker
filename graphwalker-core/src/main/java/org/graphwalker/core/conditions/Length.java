@@ -2,7 +2,7 @@
  * #%L
  * GraphWalker Core
  * %%
- * Copyright (C) 2011 - 2013 GraphWalker
+ * Copyright (C) 2011 - 2012 GraphWalker
  * %%
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,29 +23,37 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core.model.impl;
+package org.graphwalker.core.conditions;
 
-import org.graphwalker.core.model.Guard;
+import org.graphwalker.core.model.Element;
+import org.graphwalker.core.model.Model;
 
-public class GuardImpl implements Guard {
+/**
+ * <p>Length class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
+public class Length implements StopCondition {
 
-    private final String myScript;
+    private final long myLength;
 
     /**
-     * <p>Constructor for EdgeGuard.</p>
+     * <p>Constructor for Length.</p>
      *
-     * @param script a {@link java.lang.String} object.
+     * @param length a long.
      */
-    public GuardImpl(String script) {
-        myScript = script;
+    public Length(long length) {
+        myLength = length;
     }
 
-    /**
-     * <p>getScript.</p>
-     *
-     * @return a {@link java.lang.String} object.
-     */
-    public String getScript() {
-        return myScript;
+    /** {@inheritDoc} */
+    public boolean isFulfilled(Model model, Element element) {
+        return model.getTotalVisitCount() >= myLength;
+    }
+
+    /** {@inheritDoc} */
+    public double getFulfilment(Model model, Element element) {
+        return (double) model.getTotalVisitCount() / myLength;
     }
 }

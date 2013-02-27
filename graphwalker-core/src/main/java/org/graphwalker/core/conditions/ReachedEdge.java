@@ -23,32 +23,49 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core.generators.impl;
+package org.graphwalker.core.conditions;
 
-import org.graphwalker.core.conditions.StopCondition;
-import org.graphwalker.core.generators.PathGenerator;
+import org.graphwalker.core.model.Edge;
+import org.graphwalker.core.model.Element;
+import org.graphwalker.core.model.Model;
 
 /**
- * <p>Abstract AbstractPathGenerator class.</p>
+ * <p>ReachedEdge class.</p>
  *
  * @author nilols
  * @version $Id: $
  */
-public abstract class AbstractPathGenerator implements PathGenerator {
+public class ReachedEdge implements StopCondition {
 
-    private StopCondition myStopCondition;
+    private final String myName;
 
     /**
-     * <p>getStopCondition.</p>
+     * <p>Constructor for ReachedEdge.</p>
      *
-     * @return a {@link org.graphwalker.core.conditions.StopCondition} object.
+     * @param name a {@link java.lang.String} object.
      */
-    public StopCondition getStopCondition() {
-        return myStopCondition;
+    public ReachedEdge(String name) {
+        myName = name;
     }
 
     /** {@inheritDoc} */
-    public void setStopCondition(StopCondition stopCondition) {
-        myStopCondition = stopCondition;
+    public boolean isFulfilled(Model model, Element element) {
+        return getFulfilment(model, element) >= FULFILLMENT_LEVEL;
     }
+
+    /** {@inheritDoc} */
+    public double getFulfilment(Model model, Element element) {
+        Edge edge = model.getEdgeByName(myName);
+        if (null != edge) {
+            if (edge.equals(element)) {
+                return 1;
+            } else {
+                int distance = model.getShortestDistance(element, edge);
+                int max = model.getMaximumDistance(edge);
+                return 1 - (double)distance/max;
+            }
+        }
+        return 0;
+    }
+
 }

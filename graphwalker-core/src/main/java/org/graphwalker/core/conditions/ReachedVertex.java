@@ -23,55 +23,48 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core.conditions.impl;
+package org.graphwalker.core.conditions;
 
-import org.graphwalker.core.conditions.StopCondition;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Model;
+import org.graphwalker.core.model.Vertex;
 
 /**
- * <p>EdgeCoverage class.</p>
+ * <p>ReachedVertex class.</p>
  *
  * @author nilols
  * @version $Id: $
  */
-public class EdgeCoverage implements StopCondition {
+public class ReachedVertex implements StopCondition {
 
-    private final double myLimit;
+    private final String myName;
 
     /**
-     * <p>Constructor for EdgeCoverage.</p>
+     * <p>Constructor for ReachedVertex.</p>
      *
-     * @param value a {@link java.lang.String} object.
+     * @param name a {@link java.lang.String} object.
      */
-    public EdgeCoverage(String value) {
-        this(!"".equals(value) ? Long.parseLong(value) : 100);
+    public ReachedVertex(String name) {
+        myName = name;
     }
 
-    /**
-     * <p>Constructor for EdgeCoverage.</p>
-     *
-     * @param limit a long.
-     */
-    public EdgeCoverage(long limit) {
-        myLimit = (double) limit / PERCENTAGE_SCALE;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     public boolean isFulfilled(Model model, Element element) {
-        double totalEdgesCount = model.getEdges().size();
-        double visitedEdgesCount = model.getVisitedEdges().size();
-        return (visitedEdgesCount / totalEdgesCount) >= myLimit;
+        return getFulfilment(model, element) >= FULFILLMENT_LEVEL;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     public double getFulfilment(Model model, Element element) {
-        double totalEdgesCount = model.getEdges().size();
-        double visitedEdgesCount = model.getVisitedEdges().size();
-        return (visitedEdgesCount / totalEdgesCount) / myLimit;
+        Vertex vertex = model.getVertexByName(myName);
+        if (null != vertex) {
+            if (vertex.equals(element)) {
+                return 1;
+            } else {
+                int distance = model.getShortestDistance(element, vertex);
+                int max = model.getMaximumDistance(vertex);
+                return 1 - (double)distance/max;
+            }
+        }
+        return 0;
     }
 }

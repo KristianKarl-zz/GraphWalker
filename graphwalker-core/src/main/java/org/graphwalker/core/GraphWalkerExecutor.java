@@ -33,7 +33,7 @@ package org.graphwalker.core;
  */
 public class GraphWalkerExecutor implements Runnable {
 
-    private final GraphWalker myGraphWalker;
+    private final GraphWalker graphWalker;
 
     /**
      * <p>Constructor for GraphWalkerExecutor.</p>
@@ -41,7 +41,7 @@ public class GraphWalkerExecutor implements Runnable {
      * @param graphWalker a {@link org.graphwalker.core.GraphWalker} object.
      */
     public GraphWalkerExecutor(GraphWalker graphWalker) {
-        myGraphWalker = graphWalker;
+        this.graphWalker = graphWalker;
     }
 
     /**
@@ -50,7 +50,7 @@ public class GraphWalkerExecutor implements Runnable {
      * @return a {@link org.graphwalker.core.GraphWalker} object.
      */
     public GraphWalker getGraphWalker() {
-        return myGraphWalker;
+        return graphWalker;
     }
 
     /**

@@ -23,7 +23,7 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core.reports.impl;
+package org.graphwalker.core.reports;
 
 import org.graphwalker.core.Bundle;
 import org.graphwalker.core.GraphWalker;
@@ -31,7 +31,6 @@ import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Requirement;
 import org.graphwalker.core.model.Vertex;
-import org.graphwalker.core.reports.*;
 import org.graphwalker.core.statistics.EdgeStatistics;
 import org.graphwalker.core.statistics.RequirementStatistics;
 import org.graphwalker.core.statistics.VertexStatistics;

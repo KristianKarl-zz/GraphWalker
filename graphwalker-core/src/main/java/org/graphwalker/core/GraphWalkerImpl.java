@@ -27,7 +27,6 @@ package org.graphwalker.core;
 
 import org.graphwalker.core.configuration.Configuration;
 import org.graphwalker.core.machine.Machine;
-import org.graphwalker.core.machine.impl.MachineImpl;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Model;
 
@@ -41,7 +40,7 @@ import java.util.List;
  */
 public class GraphWalkerImpl implements GraphWalker {
 
-    private final Machine myMachine;
+    private final Machine machine;
 
     /**
      * <p>Constructor for GraphWalkerImpl.</p>
@@ -49,11 +48,11 @@ public class GraphWalkerImpl implements GraphWalker {
      * @param configuration a {@link org.graphwalker.core.configuration.Configuration} object.
      */
     public GraphWalkerImpl(Configuration configuration) {
-        myMachine = new MachineImpl(configuration);
+        machine = new Machine(configuration);
     }
 
     private Machine getMachine() {
-        return myMachine;
+        return machine;
     }
 
     /**

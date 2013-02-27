@@ -23,50 +23,43 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core.conditions.impl;
+package org.graphwalker.core.generators;
 
-import org.graphwalker.core.conditions.StopCondition;
-import org.graphwalker.core.model.Edge;
+import org.graphwalker.core.Bundle;
+import org.graphwalker.core.machine.Machine;
 import org.graphwalker.core.model.Element;
-import org.graphwalker.core.model.Model;
+import org.graphwalker.core.utils.Resource;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 /**
- * <p>ReachedEdge class.</p>
+ * <p>RandomUnvisitedFirstPath class.</p>
  *
  * @author nilols
  * @version $Id: $
  */
-public class ReachedEdge implements StopCondition {
+public class RandomUnvisitedFirstPath extends AbstractPathGenerator {
 
-    private final String myName;
+    private final Random myRandomGenerator = new Random(System.nanoTime());
 
     /**
-     * <p>Constructor for ReachedEdge.</p>
-     *
-     * @param name a {@link java.lang.String} object.
+     * {@inheritDoc}
      */
-    public ReachedEdge(String name) {
-        myName = name;
-    }
-
-    /** {@inheritDoc} */
-    public boolean isFulfilled(Model model, Element element) {
-        return getFulfilment(model, element) >= FULFILLMENT_LEVEL;
-    }
-
-    /** {@inheritDoc} */
-    public double getFulfilment(Model model, Element element) {
-        Edge edge = model.getEdgeByName(myName);
-        if (null != edge) {
-            if (edge.equals(element)) {
-                return 1;
-            } else {
-                int distance = model.getShortestDistance(element, edge);
-                int max = model.getMaximumDistance(edge);
-                return 1 - (double)distance/max;
+    public Element getNextStep(Machine machine) {
+        List<Element> possibleElements = machine.getPossibleElements(machine.getCurrentElement());
+        List<Element> unvisitedElements = new ArrayList<Element>();
+        for (Element element : possibleElements) {
+            if (!element.isVisited()) {
+                unvisitedElements.add(element);
             }
         }
-        return 0;
+        if (0 < unvisitedElements.size()) {
+            return unvisitedElements.get(myRandomGenerator.nextInt(unvisitedElements.size()));
+        } else if (0 < possibleElements.size()) {
+            return possibleElements.get(myRandomGenerator.nextInt(possibleElements.size()));
+        }
+        throw new PathGeneratorException(Resource.getText(Bundle.NAME, "exception.generator.path.missing"));
     }
-
 }

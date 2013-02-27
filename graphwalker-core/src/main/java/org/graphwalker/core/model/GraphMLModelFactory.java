@@ -23,10 +23,9 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core.model.impl;
+package org.graphwalker.core.model;
 
 import org.graphwalker.core.Bundle;
-import org.graphwalker.core.model.*;
 import org.graphwalker.core.model.status.ElementStatus;
 import org.graphwalker.core.utils.Resource;
 import org.jdom.Document;
@@ -72,7 +71,7 @@ public class GraphMLModelFactory implements ModelFactory {
     }
 
     private Model parse(String id, InputStream inputStream) {
-        Model model = new ModelImpl(id);
+        Model model = new Model(id);
         SAXBuilder saxBuilder = new SAXBuilder();
         Document document;
 
@@ -90,7 +89,7 @@ public class GraphMLModelFactory implements ModelFactory {
                     Element nodeLabel = (Element) nodeLabels.next();
                     text = nodeLabel.getTextTrim();
                 }
-                Vertex vertex = new VertexImpl();
+                Vertex vertex = new Vertex();
                 vertex.setId(nodeElement.getAttribute("id").getValue());
                 if (null != text && !"".equals(text)) {
                     text = parseComment(vertex, text);
@@ -109,7 +108,7 @@ public class GraphMLModelFactory implements ModelFactory {
                     Element edgeLabel = (Element) edgeLabels.next();
                     text = edgeLabel.getTextTrim();
                 }
-                Edge edge = new EdgeImpl();
+                Edge edge = new Edge();
                 edge.setId(edgeElement.getAttribute("id").getValue());
                 if (null != text && !"".equals(text)) {
                     text = parseComment(edge, text);
@@ -161,7 +160,7 @@ public class GraphMLModelFactory implements ModelFactory {
         while (matcher.find()) {
             String id = matcher.group(1);
             if (!myRequirementMap.containsKey(id)) {
-                myRequirementMap.put(id, new RequirementImpl(id));
+                myRequirementMap.put(id, new Requirement(id));
             }
             vertex.addRequirement(myRequirementMap.get(id));
         }
@@ -172,7 +171,7 @@ public class GraphMLModelFactory implements ModelFactory {
         Pattern pattern = Pattern.compile("\\[(.+)\\]");
         Matcher matcher = pattern.matcher(text);
         if (matcher.find()) {
-            edge.setEdgeGuard(new GuardImpl(matcher.group(1).trim()));
+            edge.setEdgeGuard(new Guard(matcher.group(1).trim()));
         }
         return matcher.replaceAll("").trim();
     }
@@ -183,7 +182,7 @@ public class GraphMLModelFactory implements ModelFactory {
         Matcher matcher = pattern.matcher(text);
         if (matcher.find()) {
             for (String action : matcher.group(1).split(";")) {
-                edgeActions.add(new ActionImpl(action.trim()));
+                edgeActions.add(new Action(action.trim()));
             }
         }
         edge.setEdgeActions(edgeActions);

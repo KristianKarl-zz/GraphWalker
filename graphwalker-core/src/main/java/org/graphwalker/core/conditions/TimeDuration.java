@@ -23,61 +23,48 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core.conditions.impl;
+package org.graphwalker.core.conditions;
 
-import org.graphwalker.core.conditions.StopCondition;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Model;
-import org.graphwalker.core.model.status.RequirementStatus;
 
 /**
- * <p>RequirementCoverage class.</p>
+ * <p>TimeDuration class.</p>
  *
  * @author nilols
  * @version $Id: $
  */
-public class RequirementCoverage implements StopCondition {
+public class TimeDuration implements StopCondition {
 
-    private final double myLimit;
+    private final long myDuration;
+    private final long myTimestamp;
 
     /**
-     * <p>Constructor for RequirementCoverage.</p>
+     * <p>Constructor for TimeDuration.</p>
      *
      * @param value a {@link java.lang.String} object.
      */
-    public RequirementCoverage(String value) {
+    public TimeDuration(String value) {
         this(Long.parseLong(value));
     }
 
     /**
-     * <p>Constructor for EdgeCoverage.</p>
+     * <p>Constructor for TimeDuration.</p>
      *
-     * @param limit a long.
+     * @param seconds a long.
      */
-    public RequirementCoverage(long limit) {
-        myLimit = (double)limit/ PERCENTAGE_SCALE;
+    public TimeDuration(long seconds) {
+        myTimestamp = System.currentTimeMillis();
+        myDuration = seconds * SECOND_SCALE;
     }
 
     /** {@inheritDoc} */
     public boolean isFulfilled(Model model, Element element) {
-        double totalCount = model.getRequirements().size();
-        if (0 == totalCount) {
-            return true;
-        }
-        double passedCount = model.getRequirements(RequirementStatus.PASSED).size();
-        double failedCount = model.getRequirements(RequirementStatus.FAILED).size();
-        return ((passedCount+failedCount) / totalCount) >= myLimit;
+        return getFulfilment(model, element) >= FULFILLMENT_LEVEL;
     }
 
     /** {@inheritDoc} */
     public double getFulfilment(Model model, Element element) {
-        double totalCount = model.getRequirements().size();
-        if (0 == totalCount) {
-            return 1.0;
-        }
-        double passedCount = model.getRequirements(RequirementStatus.PASSED).size();
-        double failedCount = model.getRequirements(RequirementStatus.FAILED).size();
-        return ((passedCount+failedCount) / totalCount) / myLimit;
+        return (double) (System.currentTimeMillis() - myTimestamp) / myDuration;
     }
-
 }

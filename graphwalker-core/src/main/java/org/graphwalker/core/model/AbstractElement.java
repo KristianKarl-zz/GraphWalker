@@ -23,9 +23,8 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core.model.impl;
+package org.graphwalker.core.model;
 
-import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.status.ElementStatus;
 
 /**

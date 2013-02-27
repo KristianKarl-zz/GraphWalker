@@ -23,10 +23,12 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core.algorithms.impl;
+package org.graphwalker.core.algorithms;
 
-import org.graphwalker.core.algorithms.Algorithm;
-import org.graphwalker.core.model.*;
+import org.graphwalker.core.model.Edge;
+import org.graphwalker.core.model.Element;
+import org.graphwalker.core.model.Model;
+import org.graphwalker.core.model.Vertex;
 import org.graphwalker.core.model.status.ElementStatus;
 
 import java.util.ArrayDeque;
@@ -42,8 +44,8 @@ import java.util.List;
  */
 public class DepthFirstSearch implements Algorithm {
 
-    private final Model myModel;
-    private final List<Element> myConnectedComponent = new ArrayList<Element>();
+    private final Model model;
+    private final List<Element> connectedComponent = new ArrayList<Element>();
 
     /**
      * <p>Constructor for DepthFirstSearch.</p>
@@ -51,19 +53,19 @@ public class DepthFirstSearch implements Algorithm {
      * @param model a {@link org.graphwalker.core.model.Model} object.
      */
     public DepthFirstSearch(Model model) {
-        myModel = model;
+        this.model = model;
     }
 
     /**
      * <p>calculate.</p>
      */
     public void calculate() {
-        for (Element element : myModel.getElements()) {
+        for (Element element : model.getElements()) {
             if (!ElementStatus.BLOCKED.equals(element.getStatus())) {
                 element.setStatus(ElementStatus.UNREACHABLE);
             }
         }
-        createConnectedComponent(myModel.getStartVertex());
+        createConnectedComponent(model.getStartVertex());
     }
 
     private void createConnectedComponent(Element root) {
@@ -72,7 +74,7 @@ public class DepthFirstSearch implements Algorithm {
         while (!stack.isEmpty()) {
             Element element = stack.pop();
             if (ElementStatus.UNREACHABLE.equals(element.getStatus())) {
-                myConnectedComponent.add(element);
+                connectedComponent.add(element);
                 element.setStatus(ElementStatus.VISITED);
                 if (element instanceof Vertex) {
                     for (Edge edge : ((Vertex) element).getEdges()) {
@@ -91,7 +93,7 @@ public class DepthFirstSearch implements Algorithm {
      * @return a {@link java.util.List} object.
      */
     public List<Element> getConnectedComponent() {
-        return myConnectedComponent;
+        return connectedComponent;
     }
 
 }

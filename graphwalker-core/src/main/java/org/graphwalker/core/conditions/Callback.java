@@ -23,11 +23,9 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core.conditions.impl;
+package org.graphwalker.core.conditions;
 
 import org.graphwalker.core.Bundle;
-import org.graphwalker.core.conditions.StopCondition;
-import org.graphwalker.core.conditions.StopConditionException;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.utils.Reflection;
@@ -35,15 +33,15 @@ import org.graphwalker.core.utils.Resource;
 
 public class Callback implements StopCondition {
 
-    private final String myMethodName;
+    private final String methodName;
 
     public Callback(String methodName) {
-        myMethodName = methodName;
+        this.methodName = methodName;
     }
 
     public boolean isFulfilled(Model model, Element element) {
         if (isBoolean(model)) {
-            return Reflection.execute(model.getImplementation(), myMethodName, Boolean.class);
+            return Reflection.execute(model.getImplementation(), methodName, Boolean.class);
         } else if (isDouble(model)) {
             return getFulfilment(model, element) >= FULFILLMENT_LEVEL;
         }
@@ -52,20 +50,20 @@ public class Callback implements StopCondition {
 
     public double getFulfilment(Model model, Element element) {
         if (isBoolean(model)) {
-            return Reflection.execute(model.getImplementation(), myMethodName, Boolean.class)?1.0:0.0;
+            return Reflection.execute(model.getImplementation(), methodName, Boolean.class)?1.0:0.0;
         } else if (isDouble(model)) {
-            return Reflection.execute(model.getImplementation(), myMethodName, Double.class);
+            return Reflection.execute(model.getImplementation(), methodName, Double.class);
         }
         throw new StopConditionException(Resource.getText(Bundle.NAME, "exception.condition.wrong.type"));
     }
 
     private boolean isDouble(Model model) {
-        return Reflection.isReturnType(model.getImplementation(), myMethodName, double.class)
-                || Reflection.isReturnType(model.getImplementation(), myMethodName, Double.class);
+        return Reflection.isReturnType(model.getImplementation(), methodName, double.class)
+                || Reflection.isReturnType(model.getImplementation(), methodName, Double.class);
     }
 
     private boolean isBoolean(Model model) {
-        return Reflection.isReturnType(model.getImplementation(), myMethodName, boolean.class)
-                || Reflection.isReturnType(model.getImplementation(), myMethodName, Boolean.class);
+        return Reflection.isReturnType(model.getImplementation(), methodName, boolean.class)
+                || Reflection.isReturnType(model.getImplementation(), methodName, Boolean.class);
     }
 }

@@ -23,49 +23,60 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core.conditions.impl;
+package org.graphwalker.core.conditions;
 
-import org.graphwalker.core.conditions.StopCondition;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Model;
-import org.graphwalker.core.model.Vertex;
+import org.graphwalker.core.model.status.RequirementStatus;
 
 /**
- * <p>ReachedVertex class.</p>
+ * <p>RequirementCoverage class.</p>
  *
  * @author nilols
  * @version $Id: $
  */
-public class ReachedVertex implements StopCondition {
+public class RequirementCoverage implements StopCondition {
 
-    private final String myName;
+    private final double myLimit;
 
     /**
-     * <p>Constructor for ReachedVertex.</p>
+     * <p>Constructor for RequirementCoverage.</p>
      *
-     * @param name a {@link java.lang.String} object.
+     * @param value a {@link java.lang.String} object.
      */
-    public ReachedVertex(String name) {
-        myName = name;
+    public RequirementCoverage(String value) {
+        this(Long.parseLong(value));
+    }
+
+    /**
+     * <p>Constructor for EdgeCoverage.</p>
+     *
+     * @param limit a long.
+     */
+    public RequirementCoverage(long limit) {
+        myLimit = (double)limit/ PERCENTAGE_SCALE;
     }
 
     /** {@inheritDoc} */
     public boolean isFulfilled(Model model, Element element) {
-        return getFulfilment(model, element) >= FULFILLMENT_LEVEL;
+        double totalCount = model.getRequirements().size();
+        if (0 == totalCount) {
+            return true;
+        }
+        double passedCount = model.getRequirements(RequirementStatus.PASSED).size();
+        double failedCount = model.getRequirements(RequirementStatus.FAILED).size();
+        return ((passedCount+failedCount) / totalCount) >= myLimit;
     }
 
     /** {@inheritDoc} */
     public double getFulfilment(Model model, Element element) {
-        Vertex vertex = model.getVertexByName(myName);
-        if (null != vertex) {
-            if (vertex.equals(element)) {
-                return 1;
-            } else {
-                int distance = model.getShortestDistance(element, vertex);
-                int max = model.getMaximumDistance(vertex);
-                return 1 - (double)distance/max;
-            }
+        double totalCount = model.getRequirements().size();
+        if (0 == totalCount) {
+            return 1.0;
         }
-        return 0;
+        double passedCount = model.getRequirements(RequirementStatus.PASSED).size();
+        double failedCount = model.getRequirements(RequirementStatus.FAILED).size();
+        return ((passedCount+failedCount) / totalCount) / myLimit;
     }
+
 }

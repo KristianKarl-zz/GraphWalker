@@ -23,31 +23,47 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core.generators.impl;
+package org.graphwalker.core.generators;
 
 import org.graphwalker.core.Bundle;
-import org.graphwalker.core.generators.PathGeneratorException;
 import org.graphwalker.core.machine.Machine;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.utils.Resource;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 /**
- * <p>RandomPath class.</p>
+ * <p>RandomLeastVisitedPath class.</p>
  *
  * @author nilols
  * @version $Id: $
  */
-public class RandomPath extends AbstractPathGenerator {
+public class RandomLeastVisitedPath extends AbstractPathGenerator {
 
     private final Random myRandomGenerator = new Random(System.nanoTime());
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Element getNextStep(Machine machine) {
         List<Element> possibleElements = machine.getPossibleElements(machine.getCurrentElement());
-        if (0<possibleElements.size()) {
+        long leastVisitedCount = Long.MAX_VALUE;
+        List<Element> leastVisitedElements = new ArrayList<Element>();
+        for (Element element : possibleElements) {
+            long visitCount = element.getVisitCount();
+            if (visitCount < leastVisitedCount) {
+                leastVisitedCount = visitCount;
+                leastVisitedElements = new ArrayList<Element>();
+                leastVisitedElements.add(element);
+            } else if (visitCount == leastVisitedCount) {
+                leastVisitedElements.add(element);
+            }
+        }
+        if (0 < leastVisitedElements.size()) {
+            return leastVisitedElements.get(myRandomGenerator.nextInt(leastVisitedElements.size()));
+        } else if (0 < possibleElements.size()) {
             return possibleElements.get(myRandomGenerator.nextInt(possibleElements.size()));
         }
         throw new PathGeneratorException(Resource.getText(Bundle.NAME, "exception.generator.path.missing"));

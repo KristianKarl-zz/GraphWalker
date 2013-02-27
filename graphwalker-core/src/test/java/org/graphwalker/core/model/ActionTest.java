@@ -25,7 +25,6 @@
  */
 package org.graphwalker.core.model;
 
-import org.graphwalker.core.model.impl.ActionImpl;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -33,7 +32,7 @@ public class ActionTest {
 
     @Test
     public void createActionTest() {
-        Action action = new ActionImpl("actionScript");
+        Action action = new Action("actionScript");
         Assert.assertEquals("actionScript", action.getScript());
     }
 
