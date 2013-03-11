@@ -23,29 +23,49 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core;
+package org.graphwalker.core.conditions.support;
 
-import org.graphwalker.core.configuration.Configuration;
+import org.graphwalker.core.conditions.StopCondition;
+import org.graphwalker.core.model.Element;
+import org.graphwalker.core.model.Model;
 
 /**
- * <p>GraphWalkerFactory class.</p>
+ * <p>TimeDuration class.</p>
  *
  * @author nilols
  * @version $Id: $
  */
-public class GraphWalkerFactory {
+public class TimeDuration implements StopCondition {
 
-    private GraphWalkerFactory() {
+    private final long duration;
+    private final long timestamp;
+
+    /**
+     * <p>Constructor for TimeDuration.</p>
+     *
+     * @param value a {@link java.lang.String} object.
+     */
+    public TimeDuration(String value) {
+        this(Long.parseLong(value));
     }
 
     /**
-     * <p>create.</p>
+     * <p>Constructor for TimeDuration.</p>
      *
-     * @param configuration a {@link org.graphwalker.core.configuration.Configuration} object.
-     * @return a {@link org.graphwalker.core.GraphWalker} object.
+     * @param seconds a long.
      */
-    public static GraphWalker create(Configuration configuration) {
-        return new GraphWalker(configuration);
+    public TimeDuration(long seconds) {
+        timestamp = System.currentTimeMillis();
+        duration = seconds * SECOND_SCALE;
     }
 
+    /** {@inheritDoc} */
+    public boolean isFulfilled(Model model, Element element) {
+        return getFulfilment(model, element) >= FULFILLMENT_LEVEL;
+    }
+
+    /** {@inheritDoc} */
+    public double getFulfilment(Model model, Element element) {
+        return (double) (System.currentTimeMillis() - timestamp) / duration;
+    }
 }

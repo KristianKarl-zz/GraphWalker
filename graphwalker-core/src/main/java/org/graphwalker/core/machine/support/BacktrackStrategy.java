@@ -2,7 +2,7 @@
  * #%L
  * GraphWalker Core
  * %%
- * Copyright (C) 2011 - 2013 GraphWalker
+ * Copyright (C) 2011 - 2012 GraphWalker
  * %%
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,11 +23,22 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core.model;
+package org.graphwalker.core.machine.support;
 
-public final class Requirement extends NamedElement {
+import org.graphwalker.core.machine.AbstractStrategy;
+import org.graphwalker.core.machine.Machine;
 
-    public Requirement(String id, String name) {
-        super(id, name);
+/**
+ * <p>BacktrackStrategy class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
+public class BacktrackStrategy extends AbstractStrategy {
+
+    /** {@inheritDoc} */
+    public void handleException(Machine machine, Throwable throwable) {
+        addException(machine.getCurrentModel(), throwable);
     }
+
 }

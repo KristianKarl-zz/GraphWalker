@@ -23,39 +23,45 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core.generators;
+package org.graphwalker.core.generators.support;
 
 import org.graphwalker.core.Bundle;
-import org.graphwalker.core.generators.support.RandomLeastVisitedPath;
-import org.graphwalker.core.generators.support.RandomPath;
-import org.graphwalker.core.generators.support.RandomUnvisitedFirstPath;
+import org.graphwalker.core.generators.AbstractPathGenerator;
+import org.graphwalker.core.generators.PathGeneratorException;
+import org.graphwalker.core.machine.Machine;
+import org.graphwalker.core.model.Element;
 import org.graphwalker.core.utils.Resource;
 
+import java.util.Random;
+
 /**
- * <p>PathGeneratorFactory class.</p>
+ * <p>RandomUnvisitedFirstPath class.</p>
  *
  * @author nilols
  * @version $Id: $
  */
-public class PathGeneratorFactory {
+public class RandomUnvisitedFirstPath extends AbstractPathGenerator {
 
-    private PathGeneratorFactory() {
-    }
+    private final Random randomGenerator = new Random(System.nanoTime());
 
     /**
-     * <p>create.</p>
-     *
-     * @param type a {@link java.lang.String} object.
-     * @return a {@link org.graphwalker.core.generators.PathGenerator} object.
+     * {@inheritDoc}
      */
-    public static PathGenerator create(String type) {
-        if ("Random".equalsIgnoreCase(type)) {
-            return new RandomPath();
-        } else if ("RandomUnvisitedFirst".equalsIgnoreCase(type)) {
-            return new RandomUnvisitedFirstPath();
-        } else if ("RandomLeastVisited".equalsIgnoreCase(type)) {
-            return new RandomLeastVisitedPath();
+    public Element getNextStep(Machine machine) {
+        /*
+        List<Element> possibleElements = machine.getPossibleElements(machine.getCurrentElement());
+        List<Element> unvisitedElements = new ArrayList<Element>();
+        for (Element element : possibleElements) {
+            if (!element.isVisited()) {
+                unvisitedElements.add(element);
+            }
         }
-        throw new PathGeneratorException(Resource.getText(Bundle.NAME, "exception.generator.unknown"));
+        if (0 < unvisitedElements.size()) {
+            return unvisitedElements.get(randomGenerator.nextInt(unvisitedElements.size()));
+        } else if (0 < possibleElements.size()) {
+            return possibleElements.get(randomGenerator.nextInt(possibleElements.size()));
+        }
+        */
+        throw new PathGeneratorException(Resource.getText(Bundle.NAME, "exception.generator.path.missing"));
     }
 }

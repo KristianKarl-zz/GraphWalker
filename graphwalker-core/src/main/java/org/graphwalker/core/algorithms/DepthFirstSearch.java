@@ -25,15 +25,10 @@
  */
 package org.graphwalker.core.algorithms;
 
-import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Model;
-import org.graphwalker.core.model.Vertex;
-import org.graphwalker.core.model.status.ElementStatus;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Deque;
 import java.util.List;
 
 /**
@@ -60,14 +55,19 @@ public class DepthFirstSearch implements Algorithm {
      * <p>calculate.</p>
      */
     public void calculate() {
+        // TODO:
+        /*
         for (Element element : model.getElements()) {
             if (!ElementStatus.BLOCKED.equals(element.getStatus())) {
                 element.setStatus(ElementStatus.UNREACHABLE);
             }
         }
         createConnectedComponent(model.getStartVertex());
+        */
     }
 
+// TODO:
+/*
     private void createConnectedComponent(Element root) {
         Deque<Element> stack = new ArrayDeque<Element>();
         stack.push(root);
@@ -86,7 +86,7 @@ public class DepthFirstSearch implements Algorithm {
             }
         }
     }
-
+*/
     /**
      * <p>getConnectedComponent.</p>
      *

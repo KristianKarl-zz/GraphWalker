@@ -25,25 +25,9 @@
  */
 package org.graphwalker.core.model;
 
-public class Action {
+public final class Action extends ScriptElement {
 
-    private final String script;
-
-    /**
-     * <p>Constructor for EdgeAction.</p>
-     *
-     * @param script a {@link java.lang.String} object.
-     */
-    public Action(String script) {
-        this.script = script;
-    }
-
-    /**
-     * <p>getScript.</p>
-     *
-     * @return a {@link java.lang.String} object.
-     */
-    public String getScript() {
-        return script;
+    public Action(String id, String script) {
+        super(id, script);
     }
 }

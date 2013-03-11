@@ -25,9 +25,9 @@
  */
 package org.graphwalker.core.model;
 
-public final class Requirement extends NamedElement {
+public interface Immutable {
 
-    public Requirement(String id, String name) {
-        super(id, name);
-    }
+    String getId();
+    int hashCode();
+
 }

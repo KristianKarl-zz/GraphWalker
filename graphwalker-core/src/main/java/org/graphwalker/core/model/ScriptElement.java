@@ -25,9 +25,16 @@
  */
 package org.graphwalker.core.model;
 
-public final class Requirement extends NamedElement {
+public abstract class ScriptElement extends Element {
 
-    public Requirement(String id, String name) {
-        super(id, name);
+    private final String script;
+
+    public ScriptElement(String id, String script) {
+        super(id);
+        this.script = script;
+    }
+
+    public String getScript() {
+        return script;
     }
 }

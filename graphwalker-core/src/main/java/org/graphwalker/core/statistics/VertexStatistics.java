@@ -48,6 +48,8 @@ public class VertexStatistics {
      * @param vertices a {@link java.util.List} object.
      */
     public VertexStatistics(List<Vertex> vertices) {
+        // TODO:
+        /*
         for (Vertex vertex: vertices) {
             vertexCount++;
             switch (vertex.getStatus()) {
@@ -56,6 +58,7 @@ public class VertexStatistics {
                 case BLOCKED: blockedVertexCount++; break;
             }
         }
+        */
     }
 
     /**

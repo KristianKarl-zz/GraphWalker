@@ -2,7 +2,7 @@
  * #%L
  * GraphWalker Core
  * %%
- * Copyright (C) 2011 - 2013 GraphWalker
+ * Copyright (C) 2011 - 2012 GraphWalker
  * %%
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,11 +23,35 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core.model;
+package org.graphwalker.core.machine.support;
 
-public final class Requirement extends NamedElement {
+import org.graphwalker.core.annotations.AnnotationProcessor;
+import org.graphwalker.core.annotations.AnnotationProcessorImpl;
+import org.graphwalker.core.machine.AbstractStrategy;
+import org.graphwalker.core.machine.Machine;
 
-    public Requirement(String id, String name) {
-        super(id, name);
+/**
+ * <p>FailFastStrategy class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
+public class FailFastStrategy extends AbstractStrategy {
+
+    private final AnnotationProcessor annotationProcessor = new AnnotationProcessorImpl();
+
+    /**
+     * {@inheritDoc}
+     */
+    public void handleException(Machine machine, Throwable throwable) {
+        // TODO:
+        /*
+        if (!ModelStatus.FAILED.equals(machine.getCurrentModel().getModelStatus())) {
+            addException(machine.getCurrentModel(), throwable);
+            machine.getCurrentModel().setModelStatus(ModelStatus.FAILED);
+            annotationProcessor.process(AfterModel.class, machine, machine.getCurrentModel(), null);
+        }
+        */
     }
+
 }

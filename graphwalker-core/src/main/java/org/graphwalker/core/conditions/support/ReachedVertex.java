@@ -23,29 +23,50 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core;
+package org.graphwalker.core.conditions.support;
 
-import org.graphwalker.core.configuration.Configuration;
+import org.graphwalker.core.conditions.StopCondition;
+import org.graphwalker.core.model.Element;
+import org.graphwalker.core.model.Model;
 
 /**
- * <p>GraphWalkerFactory class.</p>
+ * <p>ReachedVertex class.</p>
  *
  * @author nilols
  * @version $Id: $
  */
-public class GraphWalkerFactory {
+public class ReachedVertex implements StopCondition {
 
-    private GraphWalkerFactory() {
-    }
+    private final String name;
 
     /**
-     * <p>create.</p>
+     * <p>Constructor for ReachedVertex.</p>
      *
-     * @param configuration a {@link org.graphwalker.core.configuration.Configuration} object.
-     * @return a {@link org.graphwalker.core.GraphWalker} object.
+     * @param name a {@link java.lang.String} object.
      */
-    public static GraphWalker create(Configuration configuration) {
-        return new GraphWalker(configuration);
+    public ReachedVertex(String name) {
+        this.name = name;
     }
 
+    /** {@inheritDoc} */
+    public boolean isFulfilled(Model model, Element element) {
+        return getFulfilment(model, element) >= FULFILLMENT_LEVEL;
+    }
+
+    /** {@inheritDoc} */
+    public double getFulfilment(Model model, Element element) {
+        /*
+        Vertex vertex = model.getVertexByName(name);
+        if (null != vertex) {
+            if (vertex.equals(element)) {
+                return 1;
+            } else {
+                int distance = model.getShortestDistance(element, vertex);
+                int max = model.getMaximumDistance(vertex);
+                return 1 - (double)distance/max;
+            }
+        }
+        */
+        return 0;
+    }
 }

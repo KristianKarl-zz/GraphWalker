@@ -25,23 +25,9 @@
  */
 package org.graphwalker.core.reports;
 
-import org.graphwalker.core.Bundle;
 import org.graphwalker.core.GraphWalker;
-import org.graphwalker.core.model.Edge;
-import org.graphwalker.core.model.Model;
-import org.graphwalker.core.model.Requirement;
-import org.graphwalker.core.model.Vertex;
-import org.graphwalker.core.statistics.EdgeStatistics;
-import org.graphwalker.core.statistics.RequirementStatistics;
-import org.graphwalker.core.statistics.VertexStatistics;
-import org.graphwalker.core.utils.Resource;
 
-import javax.xml.bind.*;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
-import java.math.BigInteger;
 import java.util.Date;
 
 public class XMLReport implements Report {
@@ -50,19 +36,24 @@ public class XMLReport implements Report {
     private final ObjectFactory objectFactory = new ObjectFactory();
 
     public void writeReport(GraphWalker graphWalker, File reportDirectory, Date startTime) {
+        /*
         for (Model model : graphWalker.getConfiguration().getModels()) {
             writeReport(model, reportDirectory);
         }
+        */
     }
 
     public GraphWalkerReportType readReport(File file) {
+        /*
         try {
             return ((JAXBElement<GraphWalkerReportType>)createUnmarshaller().unmarshal(file)).getValue();
         } catch (JAXBException e) {
             throw new ReportException(Resource.getText(Bundle.NAME, "exception.report.failure"), e);
         }
+        */
+        return null;
     }
-
+    /*
     private Marshaller createMarshaller() {
         Marshaller marshaller;
         try {
@@ -226,4 +217,5 @@ public class XMLReport implements Report {
             appendStackTraceCause(stringBuilder, stackTraceElements, throwable.getCause());
         }
     }
+    */
 }

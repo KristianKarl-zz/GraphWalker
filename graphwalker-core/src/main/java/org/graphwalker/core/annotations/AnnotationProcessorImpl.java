@@ -25,14 +25,11 @@
  */
 package org.graphwalker.core.annotations;
 
-import org.graphwalker.core.Bundle;
 import org.graphwalker.core.machine.Machine;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Vertex;
-import org.graphwalker.core.utils.Reflection;
-import org.graphwalker.core.utils.Resource;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -66,6 +63,8 @@ public class AnnotationProcessorImpl implements AnnotationProcessor {
      * {@inheritDoc}
      */
     public void process(Class<? extends Annotation> annotation, Machine machine, Model model, Element element) {
+        // TODO:
+        /*
         if (getSupportedAnnotations().contains(annotation)) {
             if (model.hasImplementation()) {
                 try {
@@ -98,6 +97,7 @@ public class AnnotationProcessorImpl implements AnnotationProcessor {
                 }
             }
         }
+        */
     }
 
     /**

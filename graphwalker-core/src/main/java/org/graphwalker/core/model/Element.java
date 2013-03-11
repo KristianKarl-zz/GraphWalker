@@ -2,7 +2,7 @@
  * #%L
  * GraphWalker Core
  * %%
- * Copyright (C) 2011 - 2012 GraphWalker
+ * Copyright (C) 2011 - 2013 GraphWalker
  * %%
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,69 +25,20 @@
  */
 package org.graphwalker.core.model;
 
-import org.graphwalker.core.model.status.ElementStatus;
+public abstract class Element implements Immutable {
 
-/**
- * <p>ModelElement interface.</p>
- *
- * @author nilols
- * @version $Id: $
- */
-public interface Element {
+    private final String id;
 
-    void setId(String id);
-    /**
-     * <p>getId.</p>
-     *
-     * @return a {@link java.lang.String} object.
-     */
-    String getId();
-    /**
-     * <p>getName.</p>
-     *
-     * @return a {@link java.lang.String} object.
-     */
-    String getName();
-    void setName(String name);
-    /**
-     * <p>hasName.</p>
-     *
-     * @return a boolean.
-     */
-    boolean hasName();
-    /**
-     * <p>markAsVisited.</p>
-     */
-    void markAsVisited();
-    /**
-     * <p>isVisited.</p>
-     *
-     * @return a boolean.
-     */
-    boolean isVisited();
+    public Element(String id) {
+        this.id = id;
+    }
 
-    /**
-     * <p>getVisitCount.</p>
-     *
-     * @return a long.
-     */
-    long getVisitCount();
-    /**
-     * <p>setStatus.</p>
-     *
-     * @param status a {@link org.graphwalker.core.model.status.ElementStatus} object.
-     */
-    void setStatus(ElementStatus status);
-    /**
-     * <p>getStatus.</p>
-     *
-     * @return a {@link org.graphwalker.core.model.status.ElementStatus} object.
-     */
-    ElementStatus getStatus();
-    /**
-     * <p>isBlocked.</p>
-     *
-     * @return a boolean.
-     */
-    boolean isBlocked();
+    public String getId() {
+        return id;
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
 }

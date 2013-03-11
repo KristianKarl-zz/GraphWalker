@@ -25,15 +25,11 @@
  */
 package org.graphwalker.core.filter;
 
-import org.graphwalker.core.Bundle;
-import org.graphwalker.core.model.Action;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Model;
-import org.graphwalker.core.utils.Resource;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
 
 /**
  * <p>EdgeFilterImpl class.</p>
@@ -61,6 +57,7 @@ public class EdgeFilter {
      * {@inheritDoc}
      */
     public void executeActions(Model model, Edge edge) {
+        /*
         if (null == scriptEngine) {
             throw new EdgeFilterException(Resource.getText(Bundle.NAME, "exception.script.engine.missing", scriptEngineName));
         }
@@ -76,12 +73,14 @@ public class EdgeFilter {
             }
             removeImplementationFromFilter();
         }
+        */
     }
 
     /**
      * {@inheritDoc}
      */
     public boolean acceptEdge(Model model, Edge edge) {
+        /*
         if (null == scriptEngine) {
             throw new EdgeFilterException(Resource.getText(Bundle.NAME, "exception.script.engine.missing", scriptEngineName));
         }
@@ -97,8 +96,10 @@ public class EdgeFilter {
             removeImplementationFromFilter();
         }
         return isEdgeAccepted;
+        */
+        return false;
     }
-
+    /*
     private void addImplementationToFilter(Model model) {
         if (null != model && model.hasImplementation()) {
             scriptEngine.put(Resource.getText(Bundle.NAME, "script.implementation.name"), model.getImplementation());
@@ -110,4 +111,5 @@ public class EdgeFilter {
             scriptEngine.put(Resource.getText(Bundle.NAME, "script.implementation.name"), null);
         }
     }
+    */
 }

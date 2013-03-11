@@ -2,7 +2,7 @@
  * #%L
  * GraphWalker Core
  * %%
- * Copyright (C) 2011 - 2013 GraphWalker
+ * Copyright (C) 2011 - 2012 GraphWalker
  * %%
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,11 +23,42 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core.model;
+package org.graphwalker.core.conditions.support;
 
-public final class Requirement extends NamedElement {
+import org.graphwalker.core.conditions.StopCondition;
+import org.graphwalker.core.model.Element;
+import org.graphwalker.core.model.Model;
 
-    public Requirement(String id, String name) {
-        super(id, name);
+/**
+ * <p>Length class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
+public class Length implements StopCondition {
+
+    private final long length;
+
+    /**
+     * <p>Constructor for Length.</p>
+     *
+     * @param length a long.
+     */
+    public Length(long length) {
+        this.length = length;
+    }
+
+    /** {@inheritDoc} */
+    public boolean isFulfilled(Model model, Element element) {
+        // TODO:
+        //return model.getTotalVisitCount() >= length;
+        return false;
+    }
+
+    /** {@inheritDoc} */
+    public double getFulfilment(Model model, Element element) {
+        // TODO:
+        //return (double) model.getTotalVisitCount() / length;
+        return 0;
     }
 }

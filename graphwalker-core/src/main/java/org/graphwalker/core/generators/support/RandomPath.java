@@ -2,7 +2,7 @@
  * #%L
  * GraphWalker Core
  * %%
- * Copyright (C) 2011 - 2013 GraphWalker
+ * Copyright (C) 2011 - 2012 GraphWalker
  * %%
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,11 +23,34 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core.model;
+package org.graphwalker.core.generators.support;
 
-public final class Requirement extends NamedElement {
+import org.graphwalker.core.Bundle;
+import org.graphwalker.core.generators.AbstractPathGenerator;
+import org.graphwalker.core.generators.PathGeneratorException;
+import org.graphwalker.core.machine.Machine;
+import org.graphwalker.core.model.Element;
+import org.graphwalker.core.utils.Resource;
 
-    public Requirement(String id, String name) {
-        super(id, name);
+import java.util.List;
+import java.util.Random;
+
+/**
+ * <p>RandomPath class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
+public class RandomPath extends AbstractPathGenerator {
+
+    private final Random randomGenerator = new Random(System.nanoTime());
+
+    /** {@inheritDoc} */
+    public Element getNextStep(Machine machine) {
+        List<Element> possibleElements = machine.getPossibleElements(machine.getCurrentElement());
+        if (0<possibleElements.size()) {
+            return possibleElements.get(randomGenerator.nextInt(possibleElements.size()));
+        }
+        throw new PathGeneratorException(Resource.getText(Bundle.NAME, "exception.generator.path.missing"));
     }
 }

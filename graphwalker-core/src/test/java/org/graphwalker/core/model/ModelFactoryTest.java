@@ -77,41 +77,39 @@ public class ModelFactoryTest {
         ModelFactory modelFactory = new GraphMLModelFactory();
         Model model = modelFactory.create("m1", "/models/keywords.graphml");
 
-        Edge edge = model.getEdgeByName("e_execute0");
+        Edge edge = model.getEdgeById("e1");
         Assert.assertNotNull(edge);
-        Assert.assertNotNull(edge.getEdgeGuard());
-        Assert.assertEquals(edge.getEdgeGuard().getScript(), "test3 == 3");
-        Assert.assertEquals(2, edge.getEdgeActions().size());
-        Assert.assertEquals("test1 =1", edge.getEdgeActions().get(0).getScript());
-        Assert.assertEquals("test2= 2", edge.getEdgeActions().get(1).getScript());
+        Assert.assertNotNull(edge.getGuard());
+        Assert.assertEquals(edge.getGuard().getScript(), "test3 == 3");
+        Assert.assertEquals(2, edge.getActions().size());
+        Assert.assertEquals("test1 =1", edge.getActions().get(0).getScript());
+        Assert.assertEquals("test2= 2", edge.getActions().get(1).getScript());
 
-        edge = model.getEdgeByName("e_execute1");
+        edge = model.getEdgeById("e2");
         Assert.assertNotNull(edge);
-        Assert.assertNull(edge.getEdgeGuard());
-        Assert.assertEquals(1, edge.getEdgeActions().size());
-        Assert.assertEquals("test =1", edge.getEdgeActions().get(0).getScript());
+        Assert.assertNull(edge.getGuard());
+        Assert.assertEquals(1, edge.getActions().size());
+        Assert.assertEquals("test =1", edge.getActions().get(0).getScript());
         
-        edge = model.getEdgeByName("e_execute3");
+        edge = model.getEdgeById("e3");
         Assert.assertNotNull(edge);
-        Assert.assertNotNull(edge.getEdgeGuard());
-        Assert.assertEquals("test1 != 0", edge.getEdgeGuard().getScript());
+        Assert.assertNotNull(edge.getGuard());
+        Assert.assertEquals("test1 != 0", edge.getGuard().getScript());
         Assert.assertTrue(edge.isBlocked());
-        Assert.assertEquals(1, edge.getEdgeActions().size());
-        Assert.assertEquals("test3 = 1", edge.getEdgeActions().get(0).getScript());
+        Assert.assertEquals(1, edge.getActions().size());
+        Assert.assertEquals("test3 = 1", edge.getActions().get(0).getScript());
         
-        edge = model.getEdgeByName("e_execute4");
+        edge = model.getEdgeById("e4");
         Assert.assertNotNull(edge);
-        Assert.assertNull(edge.getEdgeGuard());
+        Assert.assertNull(edge.getGuard());
         Assert.assertTrue(edge.isBlocked());
         
-        Vertex vertex = model.getVertexByName("v_verify");
+        Vertex vertex = model.getVertexById("n1");
         Assert.assertNotNull(vertex);
         Assert.assertNotNull(vertex.getRequirements());
         Assert.assertEquals(1, vertex.getRequirements().size());
         Assert.assertEquals("123", vertex.getRequirements().get(0).getId());
-        Assert.assertEquals("NOT_COVERED", vertex.getRequirements().get(0).getStatus().name());
-
 
     }
-    
+
 }

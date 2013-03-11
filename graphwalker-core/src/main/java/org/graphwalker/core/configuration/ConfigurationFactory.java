@@ -26,12 +26,6 @@
 package org.graphwalker.core.configuration;
 
 import org.graphwalker.core.annotations.GraphWalker;
-import org.graphwalker.core.conditions.StopCondition;
-import org.graphwalker.core.generators.PathGenerator;
-import org.graphwalker.core.machine.ExceptionStrategy;
-import org.graphwalker.core.model.support.GraphMLModelFactory;
-import org.graphwalker.core.model.Model;
-import org.graphwalker.core.utils.Reflection;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,6 +64,8 @@ public class ConfigurationFactory {
         for (Class<?> clazz : clazzes) {
             GraphWalker metadata = clazz.getAnnotation(GraphWalker.class);
             if (null != metadata) {
+                // TODO:
+                /*
                 Model model = new GraphMLModelFactory().create(expand(metadata.id(), clazz), expand(metadata.model(), clazz));
                 model.setImplementation(Reflection.newInstance(clazz));
                 PathGenerator pathGenerator = Reflection.newInstance(metadata.pathGenerator());
@@ -80,6 +76,7 @@ public class ConfigurationFactory {
                 ExceptionStrategy exceptionStrategy = Reflection.newInstance(metadata.exceptionStrategy());
                 model.setExceptionStrategy(exceptionStrategy);
                 configuration.addModel(model);
+                */
             }
         }
         return configuration;

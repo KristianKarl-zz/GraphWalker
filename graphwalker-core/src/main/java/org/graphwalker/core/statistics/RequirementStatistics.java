@@ -48,6 +48,8 @@ public class RequirementStatistics {
      * @param requirements a {@link java.util.List} object.
      */
     public RequirementStatistics(List<Requirement> requirements) {
+        // TODO:
+        /*
         for (Requirement requirement: requirements) {
             requirementCount++;
             switch (requirement.getStatus()) {
@@ -56,6 +58,7 @@ public class RequirementStatistics {
                 case FAILED: failedRequirementCount++; break;
             }
         }
+        */
     }
 
     /**

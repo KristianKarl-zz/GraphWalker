@@ -25,20 +25,12 @@
  */
 package org.graphwalker.core.machine;
 
-import org.graphwalker.core.Bundle;
-import org.graphwalker.core.annotations.*;
-import org.graphwalker.core.conditions.StopCondition;
+import org.graphwalker.core.annotations.AnnotationProcessor;
+import org.graphwalker.core.annotations.AnnotationProcessorImpl;
 import org.graphwalker.core.configuration.Configuration;
-import org.graphwalker.core.filter.EdgeFilter;
-import org.graphwalker.core.generators.PathGenerator;
-import org.graphwalker.core.model.*;
-import org.graphwalker.core.model.status.ModelStatus;
-import org.graphwalker.core.model.status.RequirementStatus;
-import org.graphwalker.core.utils.Reflection;
-import org.graphwalker.core.utils.Resource;
+import org.graphwalker.core.model.Element;
+import org.graphwalker.core.model.Model;
 
-import java.lang.annotation.Annotation;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -100,24 +92,29 @@ public class Machine {
      * @return a {@link org.graphwalker.core.model.Model} object.
      */
     public Model getCurrentModel() {
+        /*
         if (null == currentModel) {
             setCurrentModel(getConfiguration().getDefaultModel());
             setCurrentElement(getCurrentModel().getStartVertex());
             getCurrentElement().markAsVisited();
         }
         return currentModel;
+        */
+        return null;
     }
 
     /**
      * {@inheritDoc}
      */
     public void setCurrentModel(Model model) {
+        /*
         currentModel = model;
         beforeGroup();
         if (isModelStatus(currentModel, ModelStatus.NOT_EXECUTED)) {
             processAnnotation(BeforeModel.class, currentModel, null);
             currentModel.setModelStatus(ModelStatus.EXECUTING);
         }
+        */
     }
 
     /**
@@ -128,6 +125,7 @@ public class Machine {
      * @return a boolean.
      */
     public boolean hasNextStep() {
+        /*
         // if the current model's state is a vertex with a switch model statement
         if (isVertex(getCurrentElement()) && ((Vertex) getCurrentElement()).hasSwitchModel()) {
             // then we check if the switch model has any more steps to take
@@ -151,10 +149,11 @@ public class Machine {
                 }
             }
         }
+        */
         // there is no more steps
         return false;
     }
-
+    /*
     private void updateModelStatus(Model model) {
         ExceptionStrategy exceptionStrategy = model.getExceptionStrategy();
         if (exceptionStrategy.hasExceptions(model)) {
@@ -185,7 +184,7 @@ public class Machine {
         }
         return false;
     }
-
+    */
     /**
      * {@inheritDoc}
      * <p/>
@@ -194,6 +193,7 @@ public class Machine {
      * @return a {@link org.graphwalker.core.model.Element} object.
      */
     public Element getNextStep() {
+        /*
         // if the current model's state is a vertex with a switch model statement
         if (isVertex(getCurrentElement()) && ((Vertex) getCurrentElement()).hasSwitchModel()) {
             switchModel(getVertex(getCurrentElement()).getSwitchModelId());
@@ -223,12 +223,15 @@ public class Machine {
             getCurrentModel().getExceptionStrategy().handleException(this, throwable);
         }
         return getCurrentElement();
+        */
+        return null;
     }
 
     /**
      * {@inheritDoc}
      */
     public List<Element> getPossibleElements(Element element) {
+        /*
         List<Element> possibleElements = new ArrayList<Element>();
         if (element instanceof Vertex) {
             Vertex vertex = (Vertex) element;
@@ -242,8 +245,10 @@ public class Machine {
             possibleElements.add(((Edge) element).getTarget());
         }
         return possibleElements;
+        */
+        return null;
     }
-
+    /*
     private boolean isVertex(Element element) {
         return element instanceof Vertex;
     }
@@ -355,4 +360,5 @@ public class Machine {
             }
         }
     }
+    */
 }

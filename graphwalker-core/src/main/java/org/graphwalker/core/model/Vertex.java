@@ -2,7 +2,7 @@
  * #%L
  * GraphWalker Core
  * %%
- * Copyright (C) 2011 - 2012 GraphWalker
+ * Copyright (C) 2011 - 2013 GraphWalker
  * %%
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,128 +25,36 @@
  */
 package org.graphwalker.core.model;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import org.graphwalker.core.utils.Collection;
+
 import java.util.List;
-import java.util.Map;
 
-/**
- * <p>Vertex class.</p>
- *
- * @author nilols
- * @version $Id: $
- */
-public class Vertex extends AbstractElement {
+public final class Vertex extends NamedElement {
 
-    private final static Map<String, Requirement> allRequirements = new HashMap<String, Requirement>();
-    private final Map<String, Requirement> requirements = new HashMap<String, Requirement>();
-    private final Map<String, Edge> edges = new HashMap<String, Edge>();
-    private String switchModelId;
+    private final List<Requirement> requirements;
+    private final String switchModelId;
+    private final String comment;
 
-    /**
-     * <p>Constructor for Vertex.</p>
-     *
-     * @param id a {@link java.lang.String} object.
-     */
-    public Vertex(String id) {
-        super(id);
+    public Vertex(String id, String name, String switchModelId, String comment, List<Requirement> requirements) {
+        super(id, name);
+        this.requirements = Collection.unmodifiableList(requirements);
+        this.switchModelId = switchModelId;
+        this.comment = comment;
     }
 
-    public Vertex(String id, String name) {
-        super(id);
-        setName(name);
-    }
-
-    /**
-     * <p>addRequirement.</p>
-     *
-     * @param requirement a {@link org.graphwalker.core.model.Requirement} object.
-     */
-    public void addRequirement(Requirement requirement) {
-        if (allRequirements.containsKey(requirement.getId())) {
-            Requirement existingRequirement = allRequirements.get(requirement.getId());
-            requirements.put(existingRequirement.getId(), existingRequirement);
-        } else {
-            allRequirements.put(requirement.getId(), requirement);
-            requirements.put(requirement.getId(), requirement);
-        }
-    }
-
-    /**
-     * <p>removeRequirement.</p>
-     *
-     * @param requirement a {@link org.graphwalker.core.model.Requirement} object.
-     */
-    public void removeRequirement(Requirement requirement) {
-        if (requirements.containsKey(requirement.getId())) {
-            requirements.remove(requirement.getId());
-        }
-    }
-
-    /**
-     * <p>getRequirements.</p>
-     *
-     * @return a {@link java.util.List} object.
-     */
     public List<Requirement> getRequirements() {
-        return new ArrayList<Requirement>(requirements.values());
+        return requirements;
     }
 
-    /**
-     * <p>addEdge.</p>
-     *
-     * @param edge a {@link Edge} object.
-     */
-    public void addEdge(Edge edge) {
-        if (!edges.containsKey(edge.getId())) {
-            edges.put(edge.getId(), edge);
-        }
+    public Boolean hasSwitchModel() {
+        return null != switchModelId && !"".equals(switchModelId);
     }
 
-    /**
-     * <p>removeEdge.</p>
-     *
-     * @param edge a {@link Edge} object.
-     */
-    public void removeEdge(Edge edge) {
-        if (edges.containsKey(edge.getId())) {
-            edges.remove(edge.getId());
-        }
-    }
-
-    /**
-     * <p>getEdges.</p>
-     *
-     * @return a {@link java.util.List} object.
-     */
-    public List<Edge> getEdges() {
-        return new ArrayList<Edge>(edges.values());
-    }
-
-    /**
-     * <p>getSwitchModelId.</p>
-     *
-     * @return a {@link java.lang.String} object.
-     */
     public String getSwitchModelId() {
         return switchModelId;
     }
 
-    /**
-     * <p>setSwitchModelId.</p>
-     *
-     * @param id a {@link java.lang.String} object.
-     */
-    public void setSwitchModelId(String id) {
-        switchModelId = id;
-    }
-
-    /**
-     * <p>hasSwitchModel.</p>
-     *
-     * @return a boolean.
-     */
-    public boolean hasSwitchModel() {
-        return null != switchModelId;
+    public String getComment() {
+        return comment;
     }
 }

@@ -25,14 +25,10 @@
  */
 package org.graphwalker.core.algorithms;
 
-import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Model;
-import org.graphwalker.core.model.Vertex;
-import org.graphwalker.core.model.status.ElementStatus;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -61,12 +57,16 @@ public class FloydWarshall implements Algorithm {
      * <p>calculate.</p>
      */
     public void calculate() {
+        // TODO:
+        /*
         modelElements = model.getConnectedComponent();
         distances = createDistanceMatrix(model);
         predecessors = createPredecessorMatrix(model);
         updateMatrices(model);
+        */
     }
-
+// TODO:
+/*
     private int[][] createDistanceMatrix(Model model) {
         List<Element> elements = model.getConnectedComponent();
         int[][] distances = new int[elements.size()][elements.size()];
@@ -110,7 +110,7 @@ public class FloydWarshall implements Algorithm {
             }
         }
     }
-
+*/
     /**
      * <p>getShortestDistance.</p>
      *

@@ -29,11 +29,8 @@ import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
-import org.graphwalker.core.Bundle;
-import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Model;
-import org.graphwalker.core.utils.Resource;
 import org.slf4j.ILoggerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -97,7 +94,8 @@ public class LoggerAspect {
      */
     @Before("machine() && executeElement(model, element)")
     public void beforeExecuteElement(JoinPoint joinPoint, Model model, Element element) {
-        getLogger(joinPoint).info(Resource.getText(Bundle.NAME, "log.method.call", model.getId(), (element instanceof Edge ? "edge" : "vertex"), element.getId(), element.getName(), element.getVisitCount()));
+        // TODO:
+        //getLogger(joinPoint).info(Resource.getText(Bundle.NAME, "log.method.call", model.getId(), (element instanceof Edge ? "edge" : "vertex"), element.getId(), element.getName(), element.getVisitCount()));
     }
 
     /**

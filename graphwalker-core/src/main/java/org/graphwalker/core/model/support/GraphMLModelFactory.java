@@ -27,7 +27,6 @@ package org.graphwalker.core.model.support;
 
 import org.graphwalker.core.Bundle;
 import org.graphwalker.core.model.*;
-import org.graphwalker.core.model.status.ElementStatus;
 import org.graphwalker.core.utils.Resource;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -47,6 +46,9 @@ import java.util.regex.Pattern;
  */
 public class GraphMLModelFactory implements ModelFactory {
 
+    private static final String FILE_TYPE = "graphml";
+    private CachedElementFactory elementFactory = new CachedElementFactory();
+
     /**
      * <p>Constructor for GraphmlModelFactory.</p>
      */
@@ -57,7 +59,7 @@ public class GraphMLModelFactory implements ModelFactory {
      * {@inheritDoc}
      */
     public boolean accept(String type) {
-        return "graphml".equals(type.toLowerCase());
+        return FILE_TYPE.equalsIgnoreCase(type);
     }
 
     /**
@@ -70,9 +72,10 @@ public class GraphMLModelFactory implements ModelFactory {
     }
 
     private Model parse(String id, InputStream inputStream) {
-        Model model = ElementFactory.createModel(id);
         SAXBuilder saxBuilder = new SAXBuilder();
         Document document;
+        Map<String, Vertex> vertices = new HashMap<String, Vertex>();
+        List<Edge> edges = new ArrayList<Edge>();
 
         try {
             document = saxBuilder.build(inputStream);
@@ -88,49 +91,70 @@ public class GraphMLModelFactory implements ModelFactory {
                     Element nodeLabel = (Element) nodeLabels.next();
                     text = nodeLabel.getTextTrim();
                 }
-                Vertex vertex = ElementFactory.createVertex(nodeElement.getAttribute("id").getValue());
-                if (null != text && !"".equals(text)) {
-                    text = parseComment(vertex, text);
-                    text = parseSwitchModelId(vertex, text);
-                    text = parseRequirements(vertex, text);
-                    parseName(vertex, getLabel(text));
-                }
-                model.addVertex(vertex);
+                String vertexId = nodeElement.getAttribute("id").getValue();
+                Vertex vertex = parseVertex(vertexId, text);
+                vertices.put(vertex.getId(), vertex);
             }
             for (Iterator edgeElements = document.getDescendants(new ElementFilter("edge")); edgeElements.hasNext(); ) {
                 Element edgeElement = (Element) edgeElements.next();
-                Vertex source = model.getVertexById(edgeElement.getAttributeValue("source"));
-                Vertex target = model.getVertexById(edgeElement.getAttributeValue("target"));
+                Vertex source = vertices.get(edgeElement.getAttributeValue("source"));
+                Vertex target = vertices.get(edgeElement.getAttributeValue("target"));
                 String text = null;
                 for (Iterator edgeLabels = edgeElement.getDescendants(new ElementFilter("EdgeLabel")); edgeLabels.hasNext(); ) {
                     Element edgeLabel = (Element) edgeLabels.next();
                     text = edgeLabel.getTextTrim();
                 }
-                Edge edge = ElementFactory.createEdge(edgeElement.getAttribute("id").getValue());
-                if (null != text && !"".equals(text)) {
-                    text = parseComment(edge, text);
-                    text = parseBlocked(edge, text);
-                    text = parseEdgeGuard(edge, text);
-                    text = parseEdgeActions(edge, text);
-                    parseName(edge, getLabel(text));
-                }
-                model.addEdge(edge, source, target);
+                String edgeId = edgeElement.getAttribute("id").getValue();
+                edges.add(parseEdge(edgeId, source, target, text));
             }
         }
-        model.afterElementsAdded();
-        return model;
+        return elementFactory.createModel(id, new ArrayList<Vertex>(vertices.values()), edges);
     }
 
-    private void parseName(Vertex vertex, String name) {
-        if (null != name && !"".equals(name)) {
-            vertex.setName(name);
+    private Vertex parseVertex(String id, String text) {
+        String name = null, switchModelId = null, comment = null;
+        List<Requirement> requirements = null;
+        if (null != text && !"".equals(text)) {
+            Tupel<String, String> commentTupel = parseComment(text);
+            comment = commentTupel.getValue();
+            Tupel<String, String> switchModelIdTupel = parseSwitchModelId(commentTupel.getReminder());
+            switchModelId = switchModelIdTupel.getValue();
+            Tupel<List<Requirement>, String> requirementsTupel = parseRequirements(switchModelIdTupel.getReminder());
+            requirements = requirementsTupel.getValue();
+            name = getLabel(requirementsTupel.getReminder());
         }
+        return elementFactory.createVertex(id, name, switchModelId, comment, requirements);
     }
 
-    private void parseName(Edge edge, String name) {
-        if (null != name && !"".equals(name)) {
-            edge.setName(name);
+    private Tupel<String, String> parseComment(String text) {
+        Pattern pattern = Pattern.compile("/\\*.*\\*/", Pattern.MULTILINE);
+        Matcher matcher = pattern.matcher(text);
+        String comment = "";
+        if (matcher.find()) {
+            comment = matcher.group(0);
         }
+        return new Tupel<String, String>(comment, matcher.replaceAll("").trim());
+    }
+
+    private Tupel<String, String> parseSwitchModelId(String text) {
+        Pattern pattern = Pattern.compile(Resource.getText(Bundle.NAME, "label.switch.model") + "\\s*\\((.*)\\)", Pattern.MULTILINE);
+        Matcher matcher = pattern.matcher(text);
+        String switchModelId = "";
+        if (matcher.find()) {
+            switchModelId = matcher.group(1);
+        }
+        return new Tupel<String, String>(switchModelId, matcher.replaceAll("").trim());
+    }
+
+    private Tupel<List<Requirement>, String> parseRequirements(String text) {
+        Pattern pattern = Pattern.compile(Resource.getText(Bundle.NAME, "label.requirement") + "\\s*\\((.*)\\)", Pattern.MULTILINE);
+        Matcher matcher = pattern.matcher(text);
+        List<Requirement> requirements = new ArrayList<Requirement>();
+        while (matcher.find()) {
+            String id = matcher.group(1);
+            requirements.add(elementFactory.createRequirement(id, id));
+        }
+        return new Tupel<List<Requirement>, String>(requirements, matcher.replaceAll("").trim());
     }
 
     private String getLabel(String text) {
@@ -142,71 +166,77 @@ public class GraphMLModelFactory implements ModelFactory {
         return null;
     }
 
-    private String parseSwitchModelId(Vertex vertex, String text) {
-        Pattern pattern = Pattern.compile(Resource.getText(Bundle.NAME, "label.switch.model") + "\\s*\\((.*)\\)", Pattern.MULTILINE);
+    private Edge parseEdge(String id, Vertex source, Vertex target, String text) {
+        String name = null, comment = null;
+        Boolean blocked = false;
+        Guard guard = null;
+        List<Action> actions = null;
+        if (null != text && !"".equals(text)) {
+            Tupel<String, String> commentTupel = parseComment(text);
+            comment = commentTupel.getValue();
+            Tupel<Boolean, String> blockedTupel = parseBlocked(commentTupel.getReminder());
+            blocked = blockedTupel.getValue();
+            Tupel<Guard, String> guardTupel = parseEdgeGuard(blockedTupel.getReminder());
+            guard = guardTupel.getValue();
+            Tupel<List<Action>, String> actionsTupel = parseEdgeActions(guardTupel.getReminder());
+            actions = actionsTupel.getValue();
+            name = getLabel(actionsTupel.getReminder());
+        }
+        return elementFactory.createEdge(id, name, source, target, guard, actions, blocked, comment);
+    }
+
+    private Tupel<Boolean, String> parseBlocked(String text) {
+        Pattern pattern = Pattern.compile(Resource.getText(Bundle.NAME, "label.blocked"), Pattern.MULTILINE);
         Matcher matcher = pattern.matcher(text);
+        Boolean blocked = false;
         if (matcher.find()) {
-            vertex.setSwitchModelId(matcher.group(1));
+            blocked = true;
         }
-        return matcher.replaceAll("").trim();
+        return new Tupel<Boolean, String>(blocked, matcher.replaceAll("").trim());
     }
 
-    private String parseRequirements(Vertex vertex, String text) {
-        Pattern pattern = Pattern.compile(Resource.getText(Bundle.NAME, "label.requirement") + "\\s*\\((.*)\\)", Pattern.MULTILINE);
-        Matcher matcher = pattern.matcher(text);
-        while (matcher.find()) {
-            vertex.addRequirement(ElementFactory.createRequirement(matcher.group(1)));
-        }
-        return matcher.replaceAll("").trim();
-    }
-
-    private String parseEdgeGuard(Edge edge, String text) {
+    private Tupel<Guard, String> parseEdgeGuard(String text) {
         Pattern pattern = Pattern.compile("\\[(.+)\\]");
         Matcher matcher = pattern.matcher(text);
+        Guard guard = null;
         if (matcher.find()) {
-            edge.setEdgeGuard(ElementFactory.createGuard(matcher.group(1).trim()));
+            String id = matcher.group(1).trim();
+            guard = elementFactory.createGuard(id, id);
         }
-        return matcher.replaceAll("").trim();
+        return new Tupel<Guard, String>(guard, matcher.replaceAll("").trim());
     }
 
-    private String parseEdgeActions(Edge edge, String text) {
+    private Tupel<List<Action>, String> parseEdgeActions(String text) {
         List<Action> edgeActions = new ArrayList<Action>();
         Pattern pattern = Pattern.compile("/([^\\[]+)");
         Matcher matcher = pattern.matcher(text);
+        List<Action> actions = new ArrayList<Action>();
         if (matcher.find()) {
             for (String action : matcher.group(1).split(";")) {
-                edgeActions.add(ElementFactory.createAction(action.trim()));
+                String id = action.trim();
+                actions.add(elementFactory.createAction(id, id));
             }
         }
-        edge.setEdgeActions(edgeActions);
-        return matcher.replaceAll("").trim();
+        return new Tupel<List<Action>, String>(actions, matcher.replaceAll("").trim());
     }
 
-    private String parseBlocked(Edge edge, String text) {
-        String blocked = Resource.getText(Bundle.NAME, "label.blocked");
-        Pattern pattern = Pattern.compile(blocked, Pattern.MULTILINE);
-        Matcher matcher = pattern.matcher(text);
-        if (matcher.find()) {
-            edge.setStatus(ElementStatus.BLOCKED);
+    private class Tupel<V, R> {
+
+        private V value;
+        private R reminder;
+
+        private Tupel(V value, R reminder) {
+            this.value = value;
+            this.reminder = reminder;
         }
-        return matcher.replaceAll("").trim();
+
+        private V getValue() {
+            return value;
+        }
+
+        public R getReminder() {
+            return reminder;
+        }
     }
 
-    private String parseComment(Vertex vertex, String text) {
-        Pattern pattern = Pattern.compile("/\\*.*\\*/", Pattern.MULTILINE);
-        Matcher matcher = pattern.matcher(text);
-        if (matcher.find()) {
-            // TODO: Save comment?
-        }
-        return matcher.replaceAll("").trim();
-    }
-
-    private String parseComment(Edge edge, String text) {
-        Pattern pattern = Pattern.compile("/\\*.*\\*/", Pattern.MULTILINE);
-        Matcher matcher = pattern.matcher(text);
-        if (matcher.find()) {
-            // TODO: Save comment?
-        }
-        return matcher.replaceAll("").trim();
-    }
 }

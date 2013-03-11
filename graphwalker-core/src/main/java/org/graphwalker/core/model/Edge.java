@@ -2,7 +2,7 @@
  * #%L
  * GraphWalker Core
  * %%
- * Copyright (C) 2011 - 2012 GraphWalker
+ * Copyright (C) 2011 - 2013 GraphWalker
  * %%
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,134 +25,50 @@
  */
 package org.graphwalker.core.model;
 
-import java.util.ArrayList;
+import org.graphwalker.core.utils.Collection;
+
 import java.util.List;
 
-/**
- * <p>Edge class.</p>
- *
- * @author nilols
- * @version $Id: $
- */
-public class Edge extends AbstractElement {
+public final class Edge extends NamedElement {
 
-    private Vertex source;
-    private Vertex target;
-    private List<Action> actions = new ArrayList<Action>();
-    private Guard guard;
-    private double weight = 1.0;
+    private final Vertex source;
+    private final Vertex target;
+    private final Guard guard;
+    private final List<Action> actions;
+    private final Boolean blocked;
+    private final String comment;
 
-    /**
-     * <p>Constructor for Edge.</p>
-     *
-     * @param id a {@link java.lang.String} object.
-     */
-    public Edge(String id) {
-        super(id);
-    }
-
-    public Edge(String id, String name) {
-        super(id);
-        setName(name);
-    }
-
-
-    /**
-     * <p>setSource.</p>
-     *
-     * @param source a {@link Vertex} object.
-     */
-    public void setSource(Vertex source) {
+    public Edge(String id, String name, Vertex source, Vertex target, Guard guard, List<Action> actions, Boolean blocked, String comment) {
+        super(id, name);
         this.source = source;
+        this.target = target;
+        this.guard = guard;
+        this.actions = Collection.unmodifiableList(actions);
+        this.blocked = blocked;
+        this.comment = comment;
     }
 
-    /**
-     * <p>getSource.</p>
-     *
-     * @return a {@link Vertex} object.
-     */
     public Vertex getSource() {
         return source;
     }
 
-    /**
-     * <p>setTarget.</p>
-     *
-     * @param target a {@link Vertex} object.
-     */
-    public void setTarget(Vertex target) {
-        this.target = target;
-    }
-
-    /**
-     * <p>getTarget.</p>
-     *
-     * @return a {@link Vertex} object.
-     */
     public Vertex getTarget() {
         return target;
     }
 
-    /**
-     * <p>getWeight.</p>
-     *
-     * @return a double.
-     */
-    public double getWeight() {
-        return weight;
-    }
-
-    /**
-     * <p>setWeight.</p>
-     *
-     * @param weight a double.
-     */
-    public void setWeight(double weight) {
-        this.weight = weight;
-    }
-
-    /**
-     * <p>getEdgeActions.</p>
-     *
-     * @return a {@link java.util.List} object.
-     */
-    public List<Action> getEdgeActions() {
-        return actions;
-    }
-
-    /**
-     * <p>setEdgeActions.</p>
-     *
-     * @param edgeActions a {@link java.util.List} object.
-     */
-    public void setEdgeActions(List<Action> edgeActions) {
-        actions = edgeActions;
-    }
-
-    /**
-     * <p>getEdgeGuard.</p>
-     *
-     * @return a {@link org.graphwalker.core.model.Guard} object.
-     */
-    public Guard getEdgeGuard() {
+    public Guard getGuard() {
         return guard;
     }
 
-    /**
-     * <p>setEdgeGuard.</p>
-     *
-     * @param edgeGuard a {@link Guard} object.
-     */
-    public void setEdgeGuard(Guard edgeGuard) {
-        guard = edgeGuard;
+    public List<Action> getActions() {
+        return actions;
     }
 
-    /**
-     * <p>hasEdgeGuard.</p>
-     *
-     * @return a boolean.
-     */
-    public boolean hasEdgeGuard() {
-        return null != guard;
+    public Boolean isBlocked() {
+        return blocked;
+    }
+
+    public String getComment() {
+        return comment;
     }
 }

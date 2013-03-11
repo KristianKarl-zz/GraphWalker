@@ -26,10 +26,15 @@
 package org.graphwalker.core;
 
 import org.graphwalker.core.configuration.Configuration;
+import org.graphwalker.core.machine.Machine;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Model;
 
+import java.util.ArrayList;
 import java.util.List;
+
+//TODO: Context - spara status i en context istället för i modellen så att flera trådar kan köra en modell samtidigt (load test)
+
 
 /**
  * <p>GraphWalker interface.</p>
@@ -37,42 +42,67 @@ import java.util.List;
  * @author nilols
  * @version $Id: $
  */
-public interface GraphWalker {
+public class GraphWalker {
+
+    private final Machine machine;
 
     /**
+     * <p>Constructor for GraphWalkerImpl.</p>
+     *
+     * @param configuration a {@link org.graphwalker.core.configuration.Configuration} object.
+     */
+    public GraphWalker(Configuration configuration) {
+        machine = new Machine(configuration);
+    }
+
+    private Machine getMachine() {
+        return machine;
+    }
+
+    /**
+     * {@inheritDoc}
+     * <p/>
      * <p>hasNextStep.</p>
      *
      * @return a boolean.
      */
-    boolean hasNextStep();
+    public boolean hasNextStep() {
+        return getMachine().hasNextStep();
+    }
 
     /**
+     * {@inheritDoc}
+     * <p/>
      * <p>getNextStep.</p>
      *
      * @return a {@link org.graphwalker.core.model.Element} object.
      */
-    Element getNextStep();
+    public Element getNextStep() {
+        return getMachine().getNextStep();
+    }
 
     /**
-     * <p>hasExceptions.</p>
-     *
-     * @param model a {@link org.graphwalker.core.model.Model} object.
-     * @return a boolean.
+     * {@inheritDoc}
      */
-    boolean hasExceptions(Model model);
+    public boolean hasExceptions(Model model) {
+        return false; //TODO: model.getExceptionStrategy().hasExceptions(model);
+    }
 
     /**
-     * <p>getExceptions.</p>
-     *
-     * @param model a {@link org.graphwalker.core.model.Model} object.
-     * @return a {@link java.util.List} object.
+     * {@inheritDoc}
      */
-    List<Throwable> getExceptions(Model model);
+    public List<Throwable> getExceptions(Model model) {
+        return new ArrayList<Throwable>(); //TODO: model.getExceptionStrategy().getExceptions(model);
+    }
 
     /**
+     * {@inheritDoc}
+     * <p/>
      * <p>getConfiguration.</p>
      *
      * @return a {@link org.graphwalker.core.configuration.Configuration} object.
      */
-    Configuration getConfiguration();
+    public Configuration getConfiguration() {
+        return getMachine().getConfiguration();
+    }
 }

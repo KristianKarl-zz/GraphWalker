@@ -23,29 +23,51 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core;
+package org.graphwalker.core.conditions.support;
 
-import org.graphwalker.core.configuration.Configuration;
+import org.graphwalker.core.conditions.StopCondition;
+import org.graphwalker.core.model.Element;
+import org.graphwalker.core.model.Model;
 
 /**
- * <p>GraphWalkerFactory class.</p>
+ * <p>ReachedEdge class.</p>
  *
  * @author nilols
  * @version $Id: $
  */
-public class GraphWalkerFactory {
+public class ReachedEdge implements StopCondition {
 
-    private GraphWalkerFactory() {
-    }
+    private final String name;
 
     /**
-     * <p>create.</p>
+     * <p>Constructor for ReachedEdge.</p>
      *
-     * @param configuration a {@link org.graphwalker.core.configuration.Configuration} object.
-     * @return a {@link org.graphwalker.core.GraphWalker} object.
+     * @param name a {@link java.lang.String} object.
      */
-    public static GraphWalker create(Configuration configuration) {
-        return new GraphWalker(configuration);
+    public ReachedEdge(String name) {
+        this.name = name;
+    }
+
+    /** {@inheritDoc} */
+    public boolean isFulfilled(Model model, Element element) {
+        return getFulfilment(model, element) >= FULFILLMENT_LEVEL;
+    }
+
+    /** {@inheritDoc} */
+    public double getFulfilment(Model model, Element element) {
+        /*
+        Edge edge = model.getEdgeByName(name);
+        if (null != edge) {
+            if (edge.equals(element)) {
+                return 1;
+            } else {
+                int distance = model.getShortestDistance(element, edge);
+                int max = model.getMaximumDistance(edge);
+                return 1 - (double)distance/max;
+            }
+        }
+        */
+        return 0;
     }
 
 }

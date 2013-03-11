@@ -23,29 +23,50 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core;
+package org.graphwalker.core.machine;
 
-import org.graphwalker.core.configuration.Configuration;
+import org.graphwalker.core.model.Model;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
- * <p>GraphWalkerFactory class.</p>
+ * <p>Abstract AbstractStrategy class.</p>
  *
  * @author nilols
  * @version $Id: $
  */
-public class GraphWalkerFactory {
+public abstract class AbstractStrategy implements ExceptionStrategy {
 
-    private GraphWalkerFactory() {
+    private final Map<String, List<Throwable>> exceptions = new HashMap<String, List<Throwable>>();
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean hasExceptions(Model model) {
+        return exceptions.containsKey(model.getId());
     }
 
     /**
-     * <p>create.</p>
+     * <p>addException.</p>
      *
-     * @param configuration a {@link org.graphwalker.core.configuration.Configuration} object.
-     * @return a {@link org.graphwalker.core.GraphWalker} object.
+     * @param model     a {@link org.graphwalker.core.model.Model} object.
+     * @param throwable a {@link java.lang.Throwable} object.
      */
-    public static GraphWalker create(Configuration configuration) {
-        return new GraphWalker(configuration);
+    protected void addException(Model model, Throwable throwable) {
+        if (!exceptions.containsKey(model.getId())) {
+            exceptions.put(model.getId(), new ArrayList<Throwable>());
+        }
+        exceptions.get(model.getId()).add(throwable);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public List<Throwable> getExceptions(Model model) {
+        List<Throwable> exceptions = this.exceptions.get(model.getId());
+        return (null!=exceptions? this.exceptions.get(model.getId()):new ArrayList<Throwable>());
+    }
 }

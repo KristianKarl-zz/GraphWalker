@@ -49,6 +49,8 @@ public class EdgeStatistics {
      * @param edges a {@link java.util.List} object.
      */
     public EdgeStatistics(List<Edge> edges) {
+        // TODO:
+        /*
         for (Edge edge: edges) {
             edgeCount++;
             switch (edge.getStatus()) {
@@ -57,6 +59,7 @@ public class EdgeStatistics {
                 case BLOCKED: blockedEdgeCount++; break;
             }
         }
+        */
     }
 
     /**

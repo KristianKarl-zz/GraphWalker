@@ -25,25 +25,9 @@
  */
 package org.graphwalker.core.model;
 
-public class Guard {
+public final class Guard extends ScriptElement {
 
-    private final String script;
-
-    /**
-     * <p>Constructor for EdgeGuard.</p>
-     *
-     * @param script a {@link java.lang.String} object.
-     */
-    public Guard(String script) {
-        this.script = script;
-    }
-
-    /**
-     * <p>getScript.</p>
-     *
-     * @return a {@link java.lang.String} object.
-     */
-    public String getScript() {
-        return script;
+    public Guard(String id, String script) {
+        super(id, script);
     }
 }

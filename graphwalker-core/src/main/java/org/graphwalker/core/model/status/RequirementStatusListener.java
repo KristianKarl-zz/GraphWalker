@@ -2,7 +2,7 @@
  * #%L
  * GraphWalker Core
  * %%
- * Copyright (C) 2011 - 2013 GraphWalker
+ * Copyright (C) 2011 - 2012 GraphWalker
  * %%
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,11 +23,23 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core.model;
+package org.graphwalker.core.model.status;
 
-public final class Requirement extends NamedElement {
+import org.graphwalker.core.model.Requirement;
 
-    public Requirement(String id, String name) {
-        super(id, name);
-    }
+/**
+ * <p>RequirementStatusListener interface.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
+public interface RequirementStatusListener {
+    /**
+     * <p>requirementStatusChanged.</p>
+     *
+     * @param requirement a {@link org.graphwalker.core.model.Requirement} object.
+     * @param oldStatus   a {@link org.graphwalker.core.model.status.RequirementStatus} object.
+     * @param newStatus   a {@link org.graphwalker.core.model.status.RequirementStatus} object.
+     */
+    void requirementStatusChanged(Requirement requirement, RequirementStatus oldStatus, RequirementStatus newStatus);
 }

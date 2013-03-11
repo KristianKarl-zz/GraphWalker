@@ -25,9 +25,16 @@
  */
 package org.graphwalker.core.model;
 
-public final class Requirement extends NamedElement {
+public abstract class NamedElement extends Element {
 
-    public Requirement(String id, String name) {
-        super(id, name);
+    private final String name;
+
+    public NamedElement(String id, String name) {
+        super(id);
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
     }
 }
