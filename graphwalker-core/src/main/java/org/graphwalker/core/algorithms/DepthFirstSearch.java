@@ -25,11 +25,13 @@
  */
 package org.graphwalker.core.algorithms;
 
-import org.graphwalker.core.model.Element;
+import org.graphwalker.core.model.Edge;
+import org.graphwalker.core.model.ModelElement;
 import org.graphwalker.core.model.Model;
+import org.graphwalker.core.model.Vertex;
+import org.graphwalker.core.model.status.ElementStatus;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * <p>DepthFirstSearch class.</p>
@@ -37,62 +39,56 @@ import java.util.List;
  * @author nilols
  * @version $Id: $
  */
-public class DepthFirstSearch implements Algorithm {
+public final class DepthFirstSearch implements Algorithm {
 
-    private final Model model;
-    private final List<Element> connectedComponent = new ArrayList<Element>();
+    private final List<ModelElement> connectedComponent;
 
-    /**
-     * <p>Constructor for DepthFirstSearch.</p>
-     *
-     * @param model a {@link org.graphwalker.core.model.Model} object.
-     */
     public DepthFirstSearch(Model model) {
-        this.model = model;
-    }
-
-    /**
-     * <p>calculate.</p>
-     */
-    public void calculate() {
-        // TODO:
-        /*
-        for (Element element : model.getElements()) {
-            if (!ElementStatus.BLOCKED.equals(element.getStatus())) {
-                element.setStatus(ElementStatus.UNREACHABLE);
-            }
-        }
-        createConnectedComponent(model.getStartVertex());
-        */
-    }
-
-// TODO:
-/*
-    private void createConnectedComponent(Element root) {
-        Deque<Element> stack = new ArrayDeque<Element>();
-        stack.push(root);
-        while (!stack.isEmpty()) {
-            Element element = stack.pop();
-            if (ElementStatus.UNREACHABLE.equals(element.getStatus())) {
-                connectedComponent.add(element);
-                element.setStatus(ElementStatus.VISITED);
-                if (element instanceof Vertex) {
-                    for (Edge edge : ((Vertex) element).getEdges()) {
-                        stack.push(edge);
-                    }
-                } else if (element instanceof Edge) {
-                    stack.push(((Edge) element).getTarget());
+        Map<ModelElement, ElementStatus> elementStatus = new HashMap<ModelElement, ElementStatus>();
+        for (ModelElement element: model.getModelElements()) {
+            elementStatus.put(element, ElementStatus.UNREACHABLE);
+            if (element.isBlocked()) {
+                elementStatus.put(element, ElementStatus.BLOCKED);
+            } else if (element instanceof Edge) {
+                Edge edge = (Edge)element;
+                if (edge.getSource().isBlocked() || edge.getTarget().isBlocked()) {
+                    elementStatus.put(element, ElementStatus.BLOCKED);
                 }
             }
         }
+        this.connectedComponent = Collections.unmodifiableList(createConnectedComponent(model, elementStatus, model.getStartVertex()));
     }
-*/
+
+    private List<ModelElement> createConnectedComponent(Model model, Map<ModelElement, ElementStatus> elementStatus, ModelElement root) {
+        List<ModelElement> connectedComponent = new ArrayList<ModelElement>();
+        if (null != root) {
+            Deque<ModelElement> stack = new ArrayDeque<ModelElement>();
+            stack.push(root);
+            while (!stack.isEmpty()) {
+                ModelElement element = stack.pop();
+                if (ElementStatus.UNREACHABLE.equals(elementStatus.get(element))) {
+                    connectedComponent.add(element);
+                    elementStatus.put(element, ElementStatus.REACHABLE);
+                    if (element instanceof Vertex) {
+                        Vertex vertex = (Vertex)element;
+                        for (Edge edge: model.getEdges(vertex)) {
+                            stack.push(edge);
+                        }
+                    } else if (element instanceof Edge) {
+                        stack.push(((Edge) element).getTarget());
+                    }
+                }
+            }
+        }
+        return connectedComponent;
+    }
+
     /**
      * <p>getConnectedComponent.</p>
      *
      * @return a {@link java.util.List} object.
      */
-    public List<Element> getConnectedComponent() {
+    public List<ModelElement> getConnectedComponent() {
         return connectedComponent;
     }
 

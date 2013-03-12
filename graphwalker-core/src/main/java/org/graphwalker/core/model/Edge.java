@@ -25,27 +25,29 @@
  */
 package org.graphwalker.core.model;
 
-import org.graphwalker.core.utils.Collection;
-
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-public final class Edge extends NamedElement {
+public final class Edge extends ModelElement {
 
+    private final Double weight;
     private final Vertex source;
     private final Vertex target;
     private final Guard guard;
     private final List<Action> actions;
-    private final Boolean blocked;
-    private final String comment;
 
-    public Edge(String id, String name, Vertex source, Vertex target, Guard guard, List<Action> actions, Boolean blocked, String comment) {
-        super(id, name);
+    public Edge(String id, String name, Boolean blocked, String comment, Double weight, Vertex source, Vertex target, Guard guard, List<Action> actions) {
+        super(id, name, blocked, comment);
+        this.weight = (null!=weight?weight:1.0);
         this.source = source;
         this.target = target;
         this.guard = guard;
-        this.actions = Collection.unmodifiableList(actions);
-        this.blocked = blocked;
-        this.comment = comment;
+        this.actions = Collections.unmodifiableList(null!=actions?actions:new ArrayList<Action>(0));
+    }
+
+    public Double getWeight() {
+        return weight;
     }
 
     public Vertex getSource() {
@@ -64,11 +66,4 @@ public final class Edge extends NamedElement {
         return actions;
     }
 
-    public Boolean isBlocked() {
-        return blocked;
-    }
-
-    public String getComment() {
-        return comment;
-    }
 }

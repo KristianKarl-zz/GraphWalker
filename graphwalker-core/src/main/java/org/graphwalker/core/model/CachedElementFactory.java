@@ -40,16 +40,16 @@ public class CachedElementFactory {
         return cache.get(immutable.hashCode());
     }
 
-    public Model createModel(String id, List<Vertex> vertices, List<Edge> edges) {
-        return (Model)getCached(new Model(id, vertices, edges));
+    public Model createModel(String id, List<Vertex> vertices, List<Edge> edges, Vertex startVertex) {
+        return (Model)getCached(new Model(id, vertices, edges, startVertex));
     }
 
-    public Vertex createVertex(String id, String name, String modelSwitchId, String comment, List<Requirement> requirements) {
-        return (Vertex)getCached(new Vertex(id, name, modelSwitchId, comment, requirements));
+    public Vertex createVertex(String id, String name, Boolean blocked, String comment, String modelSwitchId, List<Requirement> requirements) {
+        return (Vertex)getCached(new Vertex(id, name, blocked, comment, modelSwitchId, requirements));
     }
 
-    public Edge createEdge(String id, String name, Vertex source, Vertex target, Guard guard, List<Action> actions, Boolean blocked, String comment) {
-        return (Edge)getCached(new Edge(id, name, source, target, guard, actions, blocked, comment));
+    public Edge createEdge(String id, String name, Boolean blocked, String comment, Double weight, Vertex source, Vertex target, Guard guard, List<Action> actions) {
+        return (Edge)getCached(new Edge(id, name, blocked, comment, weight, source, target, guard, actions));
     }
 
     public Requirement createRequirement(String id, String name) {

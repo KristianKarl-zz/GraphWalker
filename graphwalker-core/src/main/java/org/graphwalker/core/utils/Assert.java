@@ -525,9 +525,9 @@ public final class Assert {
                 fail(Resource.getText(Bundle.NAME, "assert.message", Arrays.toString(expected), Arrays.toString(actual), message));
             } else {
                 List<Object> actualCollection = new ArrayList<Object>();
-                Collections.addAll(actualCollection, actual);
+                java.util.Collections.addAll(actualCollection, actual);
                 List<Object> expectedCollection = new ArrayList<Object>();
-                Collections.addAll(expectedCollection, expected);
+                java.util.Collections.addAll(expectedCollection, expected);
                 actualCollection.removeAll(expectedCollection);
                 if (actualCollection.size() != 0) {
                     fail(Resource.getText(Bundle.NAME, "assert.message", Arrays.toString(expected), Arrays.toString(actual), message));

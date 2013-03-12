@@ -46,6 +46,8 @@ import java.util.regex.Pattern;
  */
 public class GraphMLModelFactory implements ModelFactory {
 
+    // TODO: Update support for keywords
+
     private static final String FILE_TYPE = "graphml";
     private CachedElementFactory elementFactory = new CachedElementFactory();
 
@@ -83,6 +85,8 @@ public class GraphMLModelFactory implements ModelFactory {
             throw new ModelException(e);
         }
 
+        Vertex startVertex = null;
+
         if (null != document) {
             for (Iterator nodeElements = document.getDescendants(new ElementFilter("node")); nodeElements.hasNext(); ) {
                 Element nodeElement = (Element) nodeElements.next();
@@ -94,6 +98,12 @@ public class GraphMLModelFactory implements ModelFactory {
                 String vertexId = nodeElement.getAttribute("id").getValue();
                 Vertex vertex = parseVertex(vertexId, text);
                 vertices.put(vertex.getId(), vertex);
+                if (Resource.getText(Bundle.NAME, "start.vertex").equalsIgnoreCase(vertex.getName())) {
+                    if (null != startVertex) {
+                        throw new ModelException(Resource.getText(Bundle.NAME, "exception.duplicate.start.vertex"));
+                    }
+                    startVertex = vertex;
+                }
             }
             for (Iterator edgeElements = document.getDescendants(new ElementFilter("edge")); edgeElements.hasNext(); ) {
                 Element edgeElement = (Element) edgeElements.next();
@@ -108,22 +118,25 @@ public class GraphMLModelFactory implements ModelFactory {
                 edges.add(parseEdge(edgeId, source, target, text));
             }
         }
-        return elementFactory.createModel(id, new ArrayList<Vertex>(vertices.values()), edges);
+        return elementFactory.createModel(id, new ArrayList<Vertex>(vertices.values()), edges, startVertex);
     }
 
     private Vertex parseVertex(String id, String text) {
         String name = null, switchModelId = null, comment = null;
+        Boolean blocked = false;
         List<Requirement> requirements = null;
         if (null != text && !"".equals(text)) {
             Tupel<String, String> commentTupel = parseComment(text);
             comment = commentTupel.getValue();
+            Tupel<Boolean, String> blockedTupel = parseBlocked(commentTupel.getReminder());
+            blocked = blockedTupel.getValue();
             Tupel<String, String> switchModelIdTupel = parseSwitchModelId(commentTupel.getReminder());
             switchModelId = switchModelIdTupel.getValue();
             Tupel<List<Requirement>, String> requirementsTupel = parseRequirements(switchModelIdTupel.getReminder());
             requirements = requirementsTupel.getValue();
             name = getLabel(requirementsTupel.getReminder());
         }
-        return elementFactory.createVertex(id, name, switchModelId, comment, requirements);
+        return elementFactory.createVertex(id, name, blocked, comment, switchModelId, requirements);
     }
 
     private Tupel<String, String> parseComment(String text) {
@@ -182,7 +195,7 @@ public class GraphMLModelFactory implements ModelFactory {
             actions = actionsTupel.getValue();
             name = getLabel(actionsTupel.getReminder());
         }
-        return elementFactory.createEdge(id, name, source, target, guard, actions, blocked, comment);
+        return elementFactory.createEdge(id, name, blocked, comment, 1.0, source, target, guard, actions);
     }
 
     private Tupel<Boolean, String> parseBlocked(String text) {

@@ -2,7 +2,7 @@
  * #%L
  * GraphWalker Core
  * %%
- * Copyright (C) 2011 - 2012 GraphWalker
+ * Copyright (C) 2011 - 2013 GraphWalker
  * %%
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,14 +23,24 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core.model.status;
+package org.graphwalker.core.model;
 
-/**
- * <p>ElementStatus class.</p>
- *
- * @author nilols
- * @version $Id: $
- */
-public enum ElementStatus {
-    UNREACHABLE, REACHABLE, VISITED, BLOCKED
+public abstract class ModelElement extends NamedElement {
+
+    private final Boolean blocked;
+    private final String comment;
+
+    public ModelElement(String id, String name, Boolean blocked, String comment) {
+        super(id, name);
+        this.blocked = (null!=blocked?blocked:false);
+        this.comment = comment;
+    }
+
+    public Boolean isBlocked() {
+        return blocked;
+    }
+
+    public String getComment() {
+        return comment;
+    }
 }

@@ -25,50 +25,33 @@
  */
 package org.graphwalker.core.model;
 
+import org.graphwalker.core.Bundle;
 import org.graphwalker.core.utils.Assert;
+import org.graphwalker.core.utils.Resource;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ModelTest {
 
     public Model createModel() {
-        Vertex source = new Vertex("v_0", "Start", null, null, null);
-        Vertex target = new Vertex("v_1", "target", null, null, null);
-        Edge edge = new Edge("e_0", "edge", source, target, null, null, null, null);
+        Vertex source = new Vertex("v_0", "Start", null, null, null, null);
+        Vertex target = new Vertex("v_1", "target", null, null, null, null);
+        Edge edge = new Edge("e_0", "edge", null, null, null, source, target, null, null);
         List<Vertex> vertices = new ArrayList<Vertex>();
         vertices.add(source);
         vertices.add(target);
         List<Edge> edges = new ArrayList<Edge>();
         edges.add(edge);
-        return new Model("m1", vertices, edges);
+        return new Model("m1", vertices, edges, source);
     }
-    
-    @Test
-    public void getVertexByNameTest() {
-        Model model = createModel();
-        Vertex vertex = model.getVertexById("target");
-        Assert.assertNotNull(vertex);
-        Assert.assertEquals("target", vertex.getName());
-        vertex = model.getVertexById("NotFound");
-        Assert.assertNull(vertex);
-    }
-
-    @Test
-    public void getEdgeByNameTest() {
-        Model model = createModel();
-        Edge edge = model.getEdgeById("edge");
-        Assert.assertNotNull(edge);
-        Assert.assertEquals(edge.getName(), edge.getName());
-        edge = model.getEdgeById("NotFound");
-        Assert.assertNull(edge);
-    }        
 
     @Test
     public void getVertexByIdTest() {
         Model model = createModel();
-        Vertex source = model.getVertexById("Start");
+        Vertex source = model.getVertexById("v_0");
         Vertex vertex = model.getVertexById(source.getId());
         Assert.assertNotNull(vertex);
         Assert.assertEquals(source.getId(), vertex.getId());
@@ -78,32 +61,95 @@ public class ModelTest {
     @Test
     public void getEdgeByIdTest() {
         Model model = createModel();
-        Edge edge = model.getEdgeById("edge");
+        Edge edge = model.getEdgeById("e_0");
         Assert.assertNotNull(model.getEdgeById(edge.getId()));
     }
 
     @Test
     public void getEdgeSourceTest() {
         Model model = createModel();
-        Vertex source = model.getVertexById("Start");
-        Edge edge = model.getEdgeById("edge");
+        Vertex source = model.getVertexById("v_0");
+        Edge edge = model.getEdgeById("e_0");
         Vertex vertex = edge.getSource();
         Assert.assertNotNull(vertex);
         Assert.assertEquals(source.getId(), vertex.getId());
     }
 
-    @Test(expected = ModelException.class)
+    @Test
     public void exceptionTest() {
-        Model model = new Model("m1", null, null);
+        Model model = new Model("m1", null, null, null);
+        Assert.assertNull(model.getStartVertex());
+    }
+
+    @Test
+    public void testStartNode() {
+        Vertex vertex = new Vertex("v_0", Resource.getText(Bundle.NAME, "start.vertex"), null, null, null, null);
+        Model model = new Model("m1", Arrays.asList(vertex), null, vertex);
+        Assert.assertNotNull(model.getStartVertex());
+        Assert.assertEquals(Resource.getText(Bundle.NAME, "start.vertex"), model.getStartVertex().getName());
+    }
+
+    /*
+    @Test(expected = ModelException.class)
+    public void testTwoStartNodes() {
+        Vertex vertex1 = new Vertex("v_0", Resource.getText(Bundle.NAME, "start.vertex"), null, null, null);
+        Vertex vertex2 = new Vertex("v_1", Resource.getText(Bundle.NAME, "start.vertex"), null, null, null);
+        Model model = new Model("m1", Arrays.asList(vertex1, vertex2), null, vertex1);
         model.getStartVertex();
     }
-/*
+    */
+    @Test
+    public void testStartNodeWithDifferentCase() {
+        Vertex vertex1 = new Vertex("v_0", Resource.getText(Bundle.NAME, "start.vertex").toLowerCase(), null, null, null, null);
+        Model model = new Model("m1", Arrays.asList(vertex1), null, vertex1);
+        Assert.assertNotNull(model.getStartVertex());
+    }
+    /*
+    @Test(expected = ModelException.class)
+    public void testTwoStartNodesWithDifferentCase() {
+        Vertex vertex1 = new Vertex("v_0", Resource.getText(Bundle.NAME, "start.vertex").toLowerCase(), null, null, null);
+        Vertex vertex2 = new Vertex("v_1", Resource.getText(Bundle.NAME, "start.vertex").toUpperCase(), null, null, null);
+        Model model = new Model("m1", Arrays.asList(vertex1, vertex2), null);
+        model.getStartVertex();
+    }
+    */
+    /*
+    @Test(expected = ModelException.class)
+    public void testStartNodeWithSeveralOutEdges() {
+        Vertex vertex1 = new Vertex("v_1", Resource.getText(Bundle.NAME, "start.vertex"), null, null, null);
+        Vertex vertex2 = new Vertex("v_2", "v_2", null, null, null);
+        Edge edge1 = new Edge("e_1", "e_1", vertex1, vertex2, null, null, null, null);
+        Edge edge2 = new Edge("e_2", "e_2", vertex1, vertex2, null, null, null, null);
+        Model model = new Model("m1", Arrays.asList(vertex1, vertex2), Arrays.asList(edge1, edge2));
+        model.getStartVertex();
+    }
+
+    @Test(expected = ModelException.class)
+    public void testStartNodeWithInEdge() {
+        Vertex vertex1 = new Vertex("v_1", Resource.getText(Bundle.NAME, "start.vertex"), null, null, null);
+        Vertex vertex2 = new Vertex("v_2", "v_2", null, null, null);
+        Edge edge1 = new Edge("e_1", "e_1", vertex1, vertex2, null, null, null, null);
+        Edge edge2 = new Edge("e_2", "e_2", vertex2, vertex1, null, null, null, null);
+        Model model = new Model("m1", Arrays.asList(vertex1, vertex2), Arrays.asList(edge1, edge2));
+        model.getStartVertex();
+    }
+
+    @Test(expected = ModelException.class)
+    public void testStartNodeWithLoopEdge() {
+        Vertex vertex1 = new Vertex("v_1", Resource.getText(Bundle.NAME, "start.vertex"), null, null, null);
+        Vertex vertex2 = new Vertex("v_2", "v_2", null, null, null);
+        Edge edge1 = new Edge("e_1", "e_1", vertex1, vertex2, null, null, null, null);
+        Edge edge2 = new Edge("e_2", "e_2", vertex1, vertex1, null, null, null, null);
+        Model model = new Model("m1", Arrays.asList(vertex1, vertex2), Arrays.asList(edge1, edge2));
+        model.getStartVertex();
+    }
+    */
     @Test
     public void getShortestPathToEdge() {
         Model model = createModel();
-        Vertex source = model.getVertexById("Start");
-        Edge edge = model.getEdgeById("edge");
-        List<Element> modelElements = model.getShortestPath(source, edge);
+        Vertex source = model.getVertexById("v_0");
+        Edge edge = model.getEdgeById("e_0");
+        List<ModelElement> modelElements = model.getShortestPath(source, edge);
         Assert.assertNotNull(modelElements);
         Assert.assertEquals(2, modelElements.size());
         Assert.assertEquals(source.getName(), modelElements.get(0).getName());
@@ -113,92 +159,14 @@ public class ModelTest {
     @Test
     public void getShortestPathToVertex() {
         Model model = createModel();
-        Vertex source = model.getVertexById("Start");
-        Vertex target = model.getVertexById("target");
-        Edge edge = model.getEdgeById("edge");
-        List<Element> modelElements = model.getShortestPath(source, target);
+        Vertex source = model.getVertexById("v_0");
+        Vertex target = model.getVertexById("v_1");
+        Edge edge = model.getEdgeById("e_0");
+        List<ModelElement> modelElements = model.getShortestPath(source, target);
         Assert.assertNotNull(modelElements);
         Assert.assertEquals(3, modelElements.size());
         Assert.assertEquals(source.getName(), modelElements.get(0).getName());
         Assert.assertEquals(edge.getName(), modelElements.get(1).getName());
         Assert.assertEquals(target.getName(), modelElements.get(2).getName());
     }
-
-    @Test
-    public void testStartNode() {
-        Model model = new Model("m1");
-        Vertex vertex = new Vertex("v_0");
-        vertex.setName(Resource.getText(Bundle.NAME, "start.vertex"));
-        model.addVertex(vertex);
-        Assert.assertNotNull(model.getStartVertex());
-        Assert.assertEquals(Resource.getText(Bundle.NAME, "start.vertex"), model.getStartVertex().getName());
-    }
-
-    @Test
-    public void testStartNodeWithDifferentCase() {
-        Model model = new Model("m1");
-        Vertex vertex = new Vertex("v_0");
-        vertex.setName(Resource.getText(Bundle.NAME, "start.vertex").toLowerCase());
-        model.addVertex(vertex);
-        Assert.assertNotNull(model.getStartVertex());
-    }
-
-    @Test(expected = ModelException.class)
-    public void testTwoStartNodes() {
-        Model model = new Model("m1");
-        Vertex vertex1 = new Vertex("v_1");
-        vertex1.setName(Resource.getText(Bundle.NAME, "start.vertex"));
-        model.addVertex(vertex1);
-        Vertex vertex2 = new Vertex("v_2");
-        vertex2.setName(Resource.getText(Bundle.NAME, "start.vertex"));
-        model.addVertex(vertex2);
-        model.getStartVertex();
-    }
-
-    @Test(expected = ModelException.class)
-    public void testTwoStartNodesWithDifferentCase() {
-        Model model = new Model("m1");
-        Vertex vertex1 = new Vertex("v_1");
-        vertex1.setName(Resource.getText(Bundle.NAME, "start.vertex").toLowerCase());
-        model.addVertex(vertex1);
-        Vertex vertex2 = new Vertex("v_2");
-        vertex2.setName(Resource.getText(Bundle.NAME, "start.vertex").toUpperCase());
-        model.addVertex(vertex2);
-        model.getStartVertex();
-    }
-
-    @Test(expected = ModelException.class)
-    public void testStartNodeWithSeveralOutEdges() {
-        Model model = new Model("m1");
-        Vertex start = new Vertex("v_0");
-        start.setName(Resource.getText(Bundle.NAME, "start.vertex").toLowerCase());
-        model.addVertex(start);
-        Vertex vertex = new Vertex("v_1");
-        vertex.setName(Resource.getText(Bundle.NAME, "start.vertex").toLowerCase());
-        model.addVertex(vertex);
-        model.addEdge(new Edge("e_0"), start, vertex);
-        model.addEdge(new Edge("e_1"), start, vertex);
-        model.getStartVertex();
-    }
-
-    @Test(expected = ModelException.class)
-    public void testStartNodeWithInEdge() {
-        Model model = new Model("m1");
-        Vertex start = model.addVertex(new Vertex(Resource.getText(Bundle.NAME, "start.vertex").toLowerCase()));
-        Vertex vertex = model.addVertex(new Vertex("v_0"));
-        model.addEdge(new Edge("e_0"), start, vertex);
-        model.addEdge(new Edge("e_1"), vertex, start);
-        model.getStartVertex();
-    }
-
-    @Test(expected = ModelException.class)
-    public void testStartNodeWithLoopEdge() {
-        Model model = new Model("m1");
-        Vertex start = model.addVertex(new Vertex(Resource.getText(Bundle.NAME, "start.vertex").toLowerCase()));
-        Vertex vertex = model.addVertex(new Vertex("v_0"));
-        model.addEdge(new Edge("e_0"), start, vertex);
-        model.addEdge(new Edge("e_1"), start, start);
-        model.getStartVertex();
-    }
-*/
 }

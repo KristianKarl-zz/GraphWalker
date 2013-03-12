@@ -25,19 +25,19 @@
  */
 package org.graphwalker.core.model;
 
-import org.graphwalker.core.utils.Collection;
-
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-public final class Vertex extends NamedElement {
+public final class Vertex extends ModelElement {
 
     private final List<Requirement> requirements;
     private final String switchModelId;
     private final String comment;
 
-    public Vertex(String id, String name, String switchModelId, String comment, List<Requirement> requirements) {
-        super(id, name);
-        this.requirements = Collection.unmodifiableList(requirements);
+    public Vertex(String id, String name, Boolean blocked, String comment, String switchModelId, List<Requirement> requirements) {
+        super(id, name, blocked, comment);
+        this.requirements = Collections.unmodifiableList(null!=requirements?requirements:new ArrayList<Requirement>(0));
         this.switchModelId = switchModelId;
         this.comment = comment;
     }
