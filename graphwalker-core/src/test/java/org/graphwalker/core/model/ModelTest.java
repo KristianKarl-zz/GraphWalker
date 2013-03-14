@@ -89,61 +89,43 @@ public class ModelTest {
         Assert.assertEquals(Resource.getText(Bundle.NAME, "start.vertex"), model.getStartVertex().getName());
     }
 
-    /*
-    @Test(expected = ModelException.class)
-    public void testTwoStartNodes() {
-        Vertex vertex1 = new Vertex("v_0", Resource.getText(Bundle.NAME, "start.vertex"), null, null, null);
-        Vertex vertex2 = new Vertex("v_1", Resource.getText(Bundle.NAME, "start.vertex"), null, null, null);
-        Model model = new Model("m1", Arrays.asList(vertex1, vertex2), null, vertex1);
-        model.getStartVertex();
-    }
-    */
     @Test
     public void testStartNodeWithDifferentCase() {
         Vertex vertex1 = new Vertex("v_0", Resource.getText(Bundle.NAME, "start.vertex").toLowerCase(), null, null, null, null);
         Model model = new Model("m1", Arrays.asList(vertex1), null, vertex1);
         Assert.assertNotNull(model.getStartVertex());
     }
-    /*
-    @Test(expected = ModelException.class)
-    public void testTwoStartNodesWithDifferentCase() {
-        Vertex vertex1 = new Vertex("v_0", Resource.getText(Bundle.NAME, "start.vertex").toLowerCase(), null, null, null);
-        Vertex vertex2 = new Vertex("v_1", Resource.getText(Bundle.NAME, "start.vertex").toUpperCase(), null, null, null);
-        Model model = new Model("m1", Arrays.asList(vertex1, vertex2), null);
-        model.getStartVertex();
-    }
-    */
-    /*
+
     @Test(expected = ModelException.class)
     public void testStartNodeWithSeveralOutEdges() {
-        Vertex vertex1 = new Vertex("v_1", Resource.getText(Bundle.NAME, "start.vertex"), null, null, null);
-        Vertex vertex2 = new Vertex("v_2", "v_2", null, null, null);
-        Edge edge1 = new Edge("e_1", "e_1", vertex1, vertex2, null, null, null, null);
-        Edge edge2 = new Edge("e_2", "e_2", vertex1, vertex2, null, null, null, null);
-        Model model = new Model("m1", Arrays.asList(vertex1, vertex2), Arrays.asList(edge1, edge2));
+        Vertex vertex1 = new Vertex("v_1", Resource.getText(Bundle.NAME, "start.vertex"), null, null, null, null);
+        Vertex vertex2 = new Vertex("v_2", "v_2", null, null, null, null);
+        Edge edge1 = new Edge("e_1", "e_1", null, null, null, vertex1, vertex2, null, null);
+        Edge edge2 = new Edge("e_2", "e_2", null, null, null, vertex1, vertex2, null, null);
+        Model model = new Model("m1", Arrays.asList(vertex1, vertex2), Arrays.asList(edge1, edge2), vertex1);
         model.getStartVertex();
     }
 
     @Test(expected = ModelException.class)
     public void testStartNodeWithInEdge() {
-        Vertex vertex1 = new Vertex("v_1", Resource.getText(Bundle.NAME, "start.vertex"), null, null, null);
-        Vertex vertex2 = new Vertex("v_2", "v_2", null, null, null);
-        Edge edge1 = new Edge("e_1", "e_1", vertex1, vertex2, null, null, null, null);
-        Edge edge2 = new Edge("e_2", "e_2", vertex2, vertex1, null, null, null, null);
-        Model model = new Model("m1", Arrays.asList(vertex1, vertex2), Arrays.asList(edge1, edge2));
+        Vertex vertex1 = new Vertex("v_1", Resource.getText(Bundle.NAME, "start.vertex"), null, null, null, null);
+        Vertex vertex2 = new Vertex("v_2", "v_2", null, null, null, null);
+        Edge edge1 = new Edge("e_1", "e_1", null, null, null, vertex1, vertex2, null, null);
+        Edge edge2 = new Edge("e_2", "e_2", null, null, null, vertex2, vertex1, null, null);
+        Model model = new Model("m1", Arrays.asList(vertex1, vertex2), Arrays.asList(edge1, edge2), vertex1);
         model.getStartVertex();
     }
 
     @Test(expected = ModelException.class)
     public void testStartNodeWithLoopEdge() {
-        Vertex vertex1 = new Vertex("v_1", Resource.getText(Bundle.NAME, "start.vertex"), null, null, null);
-        Vertex vertex2 = new Vertex("v_2", "v_2", null, null, null);
-        Edge edge1 = new Edge("e_1", "e_1", vertex1, vertex2, null, null, null, null);
-        Edge edge2 = new Edge("e_2", "e_2", vertex1, vertex1, null, null, null, null);
-        Model model = new Model("m1", Arrays.asList(vertex1, vertex2), Arrays.asList(edge1, edge2));
+        Vertex vertex1 = new Vertex("v_1", Resource.getText(Bundle.NAME, "start.vertex"), null, null, null, null);
+        Vertex vertex2 = new Vertex("v_2", "v_2", null, null, null, null);
+        Edge edge1 = new Edge("e_1", "e_1", null, null, null, vertex1, vertex2, null, null);
+        Edge edge2 = new Edge("e_2", "e_2", null, null, null, vertex1, vertex1, null, null);
+        Model model = new Model("m1", Arrays.asList(vertex1, vertex2), Arrays.asList(edge1, edge2), vertex1);
         model.getStartVertex();
     }
-    */
+
     @Test
     public void getShortestPathToEdge() {
         Model model = createModel();

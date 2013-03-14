@@ -30,7 +30,7 @@ import org.graphwalker.core.utils.ResourceException;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class ModelFactoryTest {
+public class GraphMLModelFactoryTest {
 
     @Test
     public void singleModelTest() {
@@ -51,6 +51,10 @@ public class ModelFactoryTest {
         ModelFactory modelFactory = new GraphMLModelFactory();
         Model model = modelFactory.create("m1", "/models/edgeFilterModelA.graphml");
         Assert.assertNotNull(model);
+        Assert.assertNotNull(model.getEdges(model.getStartVertex()));
+        Assert.assertEquals(1, model.getEdges(model.getStartVertex()).size());
+        Assert.assertNotNull(model.getEdges(model.getStartVertex()).get(0).getActions());
+        Assert.assertEquals(1, model.getEdges(model.getStartVertex()).get(0).getActions().size());
     }
 
     @Test(expected = ResourceException.class)

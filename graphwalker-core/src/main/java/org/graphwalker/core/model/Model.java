@@ -25,8 +25,10 @@
  */
 package org.graphwalker.core.model;
 
+import org.graphwalker.core.Bundle;
 import org.graphwalker.core.algorithms.DepthFirstSearch;
 import org.graphwalker.core.algorithms.FloydWarshall;
+import org.graphwalker.core.utils.Resource;
 
 import java.util.*;
 
@@ -78,6 +80,20 @@ public final class Model extends Element {
         this.modelElementsCache = Collections.unmodifiableSet(modelElementsCache);
         this.depthFirstSearch = new DepthFirstSearch(this);
         this.floydWarshall = new FloydWarshall(this);
+        validate();
+    }
+
+    private void validate() {
+        if (null != startVertex) {
+            for (Edge edge: edgeIdCache.values()) {
+                if (startVertex.equals(edge.getTarget())) {
+                    throw new ModelException(Resource.getText(Bundle.NAME, "exception.start.vertex.in.edge"));
+                }
+            }
+            if (1 < getEdges(startVertex).size()) {
+                throw new ModelException(Resource.getText(Bundle.NAME, "exception.start.vertex.out.edges"));
+            }
+        }
     }
 
     public Set<ModelElement> getModelElements() {
