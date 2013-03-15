@@ -12,11 +12,17 @@
     <inceptionYear>2011</inceptionYear>
 
     <description>
-        GraphWalker is a tool for generating offline and online test sequences from Finite State Machines and Extended Finite State Machines.
+        GraphWalker is a tool for generating offline and online test sequences from Finite State Machines and Extended
+        Finite State Machines.
     </description>
 
     <modules>
         <module>graphwalker-core</module>
+        <module>graphwalker-api</module>
+        <module>graphwalker-java</module>
+        <module>graphwalker-php</module>
+        <module>graphwalker-python</module>
+        <module>graphwalker-server</module>
     </modules>
 
     <organization>
@@ -83,6 +89,31 @@
             <dependency>
                 <groupId>org.graphwalker</groupId>
                 <artifactId>graphwalker-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.graphwalker</groupId>
+                <artifactId>graphwalker-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.graphwalker</groupId>
+                <artifactId>graphwalker-java</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.graphwalker</groupId>
+                <artifactId>graphwalker-php</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.graphwalker</groupId>
+                <artifactId>graphwalker-python</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.graphwalker</groupId>
+                <artifactId>graphwalker-server</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -198,22 +229,6 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>2.1.2</version>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                        <configuration>
-                            <includePom>true</includePom>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>license-maven-plugin</artifactId>
                 <version>1.0</version>
@@ -293,6 +308,11 @@
         </plugins>
         <pluginManagement>
             <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>2.1.2</version>
+                </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
