@@ -8,7 +8,6 @@
         <groupId>org.graphwalker</groupId>
         <artifactId>graphwalker</artifactId>
         <version>3.0-SNAPSHOT</version>
-        <relativePath>..</relativePath>
     </parent>
 
     <artifactId>graphwalker-python</artifactId>
@@ -18,6 +17,13 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.graphwalker</groupId>
+            <artifactId>graphwalker-api</artifactId>
+        </dependency>
+    </dependencies>
 
     <build>
         <resources>
@@ -44,7 +50,6 @@
                         <artifactItem>
                             <groupId>org.graphwalker</groupId>
                             <artifactId>graphwalker-api</artifactId>
-                            <version>3.0-SNAPSHOT</version>
                             <outputDirectory>${project.build.directory}/thrift</outputDirectory>
                             <includes>**\/*.thrift</includes>
                         </artifactItem>

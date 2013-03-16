@@ -1,27 +1,63 @@
-namespace c_glib GraphWalkerAPI
+namespace c_glib graphwalker
 namespace java org.graphwalker.api
 namespace cpp org.graphwalker.api
-namespace rb GraphWalker.API
-namespace perl GraphWalkerAPI
-namespace csharp GraphWalker.API
-namespace js GraphWalkerAPI
-namespace st GraphWalkerAPI
-namespace py GraphWalkerAPI
-namespace py.twisted GraphWalkerAPI
-namespace go GraphWalkerAPI
-namespace php GraphWalkerAPI
-namespace delphi GraphWalker.API
-namespace cocoa GraphWalkerAPI
+namespace rb graphwalker
+namespace perl graphwalker
+namespace csharp graphwalker
+namespace js graphwalker
+namespace st graphwalker
+namespace py graphwalker
+namespace py.twisted graphwalker
+namespace go graphwalker
+namespace php graphwalker
+namespace delphi graphwalker
+namespace cocoa graphwalker
 namespace * org.graphwalker.api
 
-service ConfigurationService {
+typedef i64 Timestamp
 
+struct Model {
+    1: string name;
+    2: string content;
+    3: Timestamp created;
+    4: Timestamp updated;
 }
 
-service ExecutionService {
-
+struct PathGenerator {
+    1: string name;
 }
 
-service ResultService {
+struct StopCondition {
+    1: string name;
+    2: string value;
+}
+
+struct Result {
+    1: Timestamp executed;
+    // ...
+}
+
+service GraphWalker {
+
+    // Check if the service is running
+    string ping(1:string message),
+
+    // Handle models
+    set<Model> getModels(),
+    Model getModel(1:string name),
+    string createModel(1:string name, 2:string content),
+    void updateModel(1:string name, 2:string content),
+    void deleteModel(1:string name),
+
+    // Handle execution of models
+    set<StopCondition> getStopConditions(),
+    set<PathGenerator> getPathGenerator(),
+    void execute(1:string name, 2:PathGenerator generator, 3:StopCondition condition),
+    bool hasMoreSteps(),
+    string getCurrentStep(),
+    string getNextStep(),
+    void fail(),
+
+    // Handle result
 
 }
