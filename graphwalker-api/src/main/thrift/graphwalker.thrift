@@ -17,8 +17,7 @@ namespace * org.graphwalker.service
 //----------------------------------------------------------------------------------------------------------------------
 // Types
 //----------------------------------------------------------------------------------------------------------------------
-typedef i32 UserID                                   //
-typedef string Guid                                  // Globally unique identifier
+typedef string UUID                                  // Universally unique identifier
 typedef i64 Timestamp                                // milliseconds since January 1, 1970, 00:00:00 GMT
 typedef string XML                                   //
 typedef string Hash                                  // MD5 checksum
@@ -36,12 +35,12 @@ enum Role {                                          //
 }
 
 struct User {                                        //
-    1: required UserID id;                           // Unique id per user that never changes
+    1: required UUID uuid;                           // Unique id per user that never changes, set by the server
     2: required string username;                     //
     3: required string email;                        //
-    4: required Timestamp created;                   //
-    5: required Timestamp updated;                   //
-    6: required Timestamp deleted;                   //
+    4: required Timestamp created;                   // set by the server
+    5: required Timestamp updated;                   // set by the server
+    6: required Timestamp deleted;                   // set by the server
     7: required bool active;                         //
     8: required Role role;                           //
 }
@@ -51,14 +50,14 @@ struct User {                                        //
 //----------------------------------------------------------------------------------------------------------------------
 
 struct Model {                                       // represent a model in the comunication between server and client
-    1: optional Guid id;                             // id for the model, set by the server
+    1: optional UUID uuid;                           // Unique id for the model, set by the server
     2: required string name;                         // the name of the model
     3: required XML content;                         // the model it self
     4: optional Hash contentHash;                    // set by the server
     5: optional Timestamp created;                   // set by the server
     6: optional Timestamp updated;                   // set by the server
     7: optional Timestamp deleted;                   // set by the server
-    8: optional i32 revision;                        // set by the server
+    8: optional i32 revision;                        // if the model is updated, this is incremented. set by the server
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -97,20 +96,21 @@ enum Status {                                        //
     FAILED,                                          //
 }
 
-enum Device {                                        //
+enum Device {                                        // Classify the execution
     HANDHELD,                                        //
     PC,                                              //
     TABLET,                                          //
 }
 
 struct ExecutionContext {                            //
-    1: required Guid id;                             // model id
-    2: optional Step currentStep;                    //
-    3: required PathGenerator pathGenerator;         //
-    4: required StopCondition stopCondition;         //
-    5: optional Status status;                       //
-    6: optional Timestamp started;                   //
-    7: optional Device device;                       //
+    1: optional UUID uuid;                           // Unique id for the execution
+    2: required Model model;                         //
+    3: optional Step currentStep;                    //
+    4: required PathGenerator pathGenerator;         //
+    5: required StopCondition stopCondition;         //
+    6: optional Status status;                       //
+    7: optional Timestamp started;                   //
+    8: optional Device device;                       //
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -118,23 +118,24 @@ struct ExecutionContext {                            //
 //----------------------------------------------------------------------------------------------------------------------
 
 struct Result {                                      // result from a model execution
-    1: required Guid id;                             //
-    2: required Timestamp started;                   //
-    3: required i32 duration;                        //
-    4: required PathGenerator pathGenerator;         //
-    5: required StopCondition stopCondition;         //
-    6: required i32 edgeCoverage;                    //
-    7: required i32 vertexCoverage;                  //
-    8: required i32 requirementCoverage;             //
-    9: required Status status;                       //
+    1: required UUID uuid;                           //
+    2: required Model model;                         //
+    3: required Timestamp started;                   //
+    4: required i32 duration;                        //
+    5: required PathGenerator pathGenerator;         //
+    6: required StopCondition stopCondition;         //
+    7: required i32 edgeCoverage;                    //
+    8: required i32 vertexCoverage;                  //
+    9: required i32 requirementCoverage;             //
+   10: required Status status;                       //
 }
 
 struct ResultList {                                  //
-    1: required map<Guid, list<Result>> results;     //
+    1: required map<Model, list<Result>> results;    //
 }
 
 struct ResultFilter {                                //
-    1: optional list<Guid> models;                   //
+    1: optional list<Model> models;                  //
     2: optional Timestamp after;                     //
     3: optional Timestamp before;                    //
 }
@@ -153,7 +154,7 @@ service GraphWalkerService {
     // Models
     //------------------------------------------------------------------------------------------------------------------
     list<Model> listModels(1:Token token),
-    Model getModel(1:Token token, 2:Guid id),
+    Model getModel(1:Token token, 2:Model model),    // 2:Model = Hibernate Example object
     Model createModel(1:Token token, 2:Model model),
     Model updateModel(1:Token token, 2:Model model),
     void deleteModel(1:Token token, 2:Model model),

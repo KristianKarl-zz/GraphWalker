@@ -29,6 +29,8 @@ import org.graphwalker.core.configuration.Configuration;
 import org.graphwalker.core.machine.Machine;
 import org.graphwalker.core.model.support.ModelContext;
 import org.graphwalker.service.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
@@ -39,7 +41,9 @@ import java.util.*;
  */
 public class GraphWalkerServiceImpl implements GraphWalkerService.Iface {
 
-    private Map<String, ModelContext> contexts = new HashMap<String, ModelContext>();
+    private static final Logger logger = LoggerFactory.getLogger(GraphWalkerServiceImpl.class);
+
+    private Map<String, Stack<String>> contexts = new HashMap<String, Stack<String>>();
     private Configuration configuration = new Configuration();
     private Machine machine = new Machine();
 
@@ -51,12 +55,12 @@ public class GraphWalkerServiceImpl implements GraphWalkerService.Iface {
         return new ArrayList<Model>();  // TODO: Fix me (Auto generated)
     }
 
-    public Model getModel(String token, String id) {
+    public Model getModel(String token, Model model) {
         return new Model();  // TODO: Fix me (Auto generated)
     }
 
     public Model createModel(String token, Model model) {
-        model.setId(UUID.randomUUID().toString());
+        model.setUuid(UUID.randomUUID().toString());
         return model;  // TODO: Fix me (Auto generated)
     }
 
@@ -69,20 +73,38 @@ public class GraphWalkerServiceImpl implements GraphWalkerService.Iface {
     }
 
     public ExecutionContext execute(String token, ExecutionContext context) {
+        logger.info("execute called");
+        context.setUuid(UUID.randomUUID().toString());
+        Stack<String> simulation = new Stack<String>();
+        simulation.push("h");
+        simulation.push("g");
+        simulation.push("f");
+        simulation.push("e");
+        simulation.push("d");
+        simulation.push("c");
+        simulation.push("b");
+        simulation.push("a");
+        contexts.put(context.getUuid(), simulation);
         return context;  // TODO: Fix me (Auto generated)
     }
 
     public boolean hasMoreSteps(String token, ExecutionContext context) {
-        return false;  // TODO: Fix me (Auto generated)
+        logger.info("hasMoreSteps called");
+        return !contexts.get(context.getUuid()).empty();  // TODO: Fix me (Auto generated)
     }
 
     public ExecutionContext getNextStep(String token, ExecutionContext context) {
-        return null;  // TODO: Fix me (Auto generated)
+        logger.info("getNextStep called");
+        context.setCurrentStep(contexts.get(context.getUuid()).pop());
+
+        //return machine.getNextStep(contexts.get(context));  // TODO: Fix me (Auto generated)
+        return context;
     }
 
     public ExecutionContext fail(String token, ExecutionContext context) {
         // TODO: Fix me (Auto generated)
-        return null;
+        logger.info("fail called");
+        return context;
     }
 
     public ResultList findResults(String token, ResultFilter filter) {
