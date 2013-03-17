@@ -25,7 +25,10 @@
  */
 package org.graphwalker.core.algorithms;
 
-import org.graphwalker.core.model.*;
+import org.graphwalker.core.model.Edge;
+import org.graphwalker.core.model.Model;
+import org.graphwalker.core.model.ModelElement;
+import org.graphwalker.core.model.Vertex;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -43,6 +46,11 @@ public final class FloydWarshall implements Algorithm {
     private final int[][] distances;
     private final ModelElement[][] predecessors;
 
+    /**
+     * <p>Constructor for FloydWarshall.</p>
+     *
+     * @param model a {@link org.graphwalker.core.model.Model} object.
+     */
     public FloydWarshall(Model model) {
         this.elements = model.getConnectedComponent();
         this.distances = createDistanceMatrix(model, elements);

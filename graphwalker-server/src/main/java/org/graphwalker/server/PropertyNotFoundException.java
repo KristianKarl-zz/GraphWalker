@@ -29,7 +29,6 @@ package org.graphwalker.server;
  * <p>PropertyNotFoundException class.</p>
  *
  * @author nilols
- * @version $Id: $
  */
 public class PropertyNotFoundException extends RuntimeException {
 

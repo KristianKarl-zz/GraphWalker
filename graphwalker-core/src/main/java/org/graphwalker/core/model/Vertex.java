@@ -29,12 +29,28 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * <p>Vertex class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public final class Vertex extends ModelElement {
 
     private final List<Requirement> requirements;
     private final String switchModelId;
     private final String comment;
 
+    /**
+     * <p>Constructor for Vertex.</p>
+     *
+     * @param id a {@link java.lang.String} object.
+     * @param name a {@link java.lang.String} object.
+     * @param blocked a {@link java.lang.Boolean} object.
+     * @param comment a {@link java.lang.String} object.
+     * @param switchModelId a {@link java.lang.String} object.
+     * @param requirements a {@link java.util.List} object.
+     */
     public Vertex(String id, String name, Boolean blocked, String comment, String switchModelId, List<Requirement> requirements) {
         super(id, name, blocked, comment);
         this.requirements = Collections.unmodifiableList(null!=requirements?requirements:new ArrayList<Requirement>(0));
@@ -42,18 +58,38 @@ public final class Vertex extends ModelElement {
         this.comment = comment;
     }
 
+    /**
+     * <p>Getter for the field <code>requirements</code>.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
     public List<Requirement> getRequirements() {
         return requirements;
     }
 
+    /**
+     * <p>hasSwitchModel.</p>
+     *
+     * @return a {@link java.lang.Boolean} object.
+     */
     public Boolean hasSwitchModel() {
         return null != switchModelId && !"".equals(switchModelId);
     }
 
+    /**
+     * <p>Getter for the field <code>switchModelId</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getSwitchModelId() {
         return switchModelId;
     }
 
+    /**
+     * <p>Getter for the field <code>comment</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getComment() {
         return comment;
     }

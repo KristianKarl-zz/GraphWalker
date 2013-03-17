@@ -23,23 +23,21 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core.machine.support;
+package org.graphwalker.core.machine.strategy;
 
-import org.graphwalker.core.machine.AbstractStrategy;
 import org.graphwalker.core.machine.Machine;
 
 /**
- * <p>NeverFailStrategy class.</p>
+ * <p>BacktrackStrategy class.</p>
  *
  * @author nilols
  * @version $Id: $
  */
-public class NeverFailStrategy extends AbstractStrategy {
+public class BacktrackStrategy extends AbstractStrategy {
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     public void handleException(Machine machine, Throwable throwable) {
-        addException(machine.getCurrentModel(), throwable);
+        //addException(machine.getCurrentModel(), throwable);
     }
+
 }

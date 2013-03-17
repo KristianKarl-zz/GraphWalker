@@ -25,15 +25,32 @@
  */
 package org.graphwalker.core.model;
 
+/**
+ * <p>Abstract ScriptElement class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public abstract class ScriptElement extends Element {
 
     private final String script;
 
+    /**
+     * <p>Constructor for ScriptElement.</p>
+     *
+     * @param id a {@link java.lang.String} object.
+     * @param script a {@link java.lang.String} object.
+     */
     public ScriptElement(String id, String script) {
         super(id);
         this.script = script;
     }
 
+    /**
+     * <p>Getter for the field <code>script</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getScript() {
         return script;
     }

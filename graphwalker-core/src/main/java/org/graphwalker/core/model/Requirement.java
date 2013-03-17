@@ -25,8 +25,20 @@
  */
 package org.graphwalker.core.model;
 
+/**
+ * <p>Requirement class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public final class Requirement extends NamedElement {
 
+    /**
+     * <p>Constructor for Requirement.</p>
+     *
+     * @param id a {@link java.lang.String} object.
+     * @param name a {@link java.lang.String} object.
+     */
     public Requirement(String id, String name) {
         super(id, name);
     }

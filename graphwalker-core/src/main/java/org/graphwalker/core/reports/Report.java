@@ -25,11 +25,6 @@
  */
 package org.graphwalker.core.reports;
 
-import org.graphwalker.core.GraphWalker;
-
-import java.io.File;
-import java.util.Date;
-
 /**
  * <p>ReportGenerator interface.</p>
  *
@@ -37,10 +32,8 @@ import java.util.Date;
  * @version $Id: $
  */
 public interface Report {
-    /**
-     * <p>writeReport.</p>
-     */
-    void writeReport(GraphWalker graphWalker, File folder, Date startTime);
-    GraphWalkerReportType readReport(File file);
+
+    //void writeReport(GraphWalker graphWalker, File folder, Date startTime);
+    //GraphWalkerReportType readReport(File file);
 
 }

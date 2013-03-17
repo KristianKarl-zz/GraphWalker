@@ -55,6 +55,9 @@ public class EdgeFilter {
 
     /**
      * {@inheritDoc}
+     *
+     * @param model a {@link org.graphwalker.core.model.Model} object.
+     * @param edge a {@link org.graphwalker.core.model.Edge} object.
      */
     public void executeActions(Model model, Edge edge) {
         /*
@@ -78,6 +81,10 @@ public class EdgeFilter {
 
     /**
      * {@inheritDoc}
+     *
+     * @param model a {@link org.graphwalker.core.model.Model} object.
+     * @param edge a {@link org.graphwalker.core.model.Edge} object.
+     * @return a boolean.
      */
     public boolean acceptEdge(Model model, Edge edge) {
         /*

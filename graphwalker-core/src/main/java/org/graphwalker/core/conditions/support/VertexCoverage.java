@@ -57,9 +57,7 @@ public class VertexCoverage implements StopCondition {
         this.limit = (double) limit / PERCENTAGE_SCALE;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     public boolean isFulfilled(Model model, Element element) {
         // TODO:
         /*
@@ -70,9 +68,7 @@ public class VertexCoverage implements StopCondition {
         return false;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     public double getFulfilment(Model model, Element element) {
         // TODO:
         /*

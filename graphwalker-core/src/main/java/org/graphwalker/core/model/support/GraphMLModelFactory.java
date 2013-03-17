@@ -57,9 +57,7 @@ public class GraphMLModelFactory implements ModelFactory {
     public GraphMLModelFactory() {
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     public boolean accept(String type) {
         return FILE_TYPE.equalsIgnoreCase(type);
     }

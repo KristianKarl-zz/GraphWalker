@@ -25,18 +25,35 @@
  */
 package org.graphwalker.core.model;
 
+/**
+ * <p>Abstract Element class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public abstract class Element implements Immutable {
 
     private final String id;
 
+    /**
+     * <p>Constructor for Element.</p>
+     *
+     * @param id a {@link java.lang.String} object.
+     */
     public Element(String id) {
         this.id = id;
     }
 
+    /**
+     * <p>Getter for the field <code>id</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getId() {
         return id;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int hashCode() {
         return id.hashCode();

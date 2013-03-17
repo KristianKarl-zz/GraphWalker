@@ -25,13 +25,19 @@
  */
 package org.graphwalker.core.machine;
 
-import org.graphwalker.core.annotations.AnnotationProcessor;
-import org.graphwalker.core.annotations.AnnotationProcessorImpl;
+import org.graphwalker.core.Bundle;
+import org.graphwalker.core.conditions.StopCondition;
 import org.graphwalker.core.configuration.Configuration;
-import org.graphwalker.core.model.Element;
-import org.graphwalker.core.model.Model;
+import org.graphwalker.core.generators.PathGenerator;
+import org.graphwalker.core.model.Edge;
+import org.graphwalker.core.model.ModelElement;
+import org.graphwalker.core.model.Vertex;
+import org.graphwalker.core.model.status.ModelStatus;
+import org.graphwalker.core.model.support.ModelContext;
+import org.graphwalker.core.utils.Resource;
 
 import java.util.List;
+import java.util.Stack;
 
 /**
  * <p>MachineImpl class.</p>
@@ -41,19 +47,68 @@ import java.util.List;
  */
 public class Machine {
 
-    private final AnnotationProcessor annotationProcessor = new AnnotationProcessorImpl();
-    private final Configuration configuration;
-    private Model currentModel;
-    private Element currentElement;
+    private Configuration configuration = null;
+    private Stack<ModelContext> contexts = new Stack<ModelContext>();
+    private ModelContext currentContext = null;
+
+    public Machine() {}
+
+    /**
+     * <p>Constructor for Machine.</p>
+     *
+     * @param configuration a {@link org.graphwalker.core.configuration.Configuration} object.
+     * @param context a {@link org.graphwalker.core.model.support.ModelContext} object.
+     */
+    public Machine(Configuration configuration, ModelContext context) {
+        this.configuration = configuration;
+        setContext(context);
+    }
+
+    /**
+     * <p>Getter for the field <code>configuration</code>.</p>
+     *
+     * @return a {@link org.graphwalker.core.configuration.Configuration} object.
+     */
+    public Configuration getConfiguration() {
+        return configuration;
+    }
+
+    private void setContext(ModelContext context) {
+        if (null != currentContext) {
+            contexts.push(currentContext);
+        }
+        currentContext = context;
+    }
+
+    private ModelContext getContext() {
+        if (null == currentContext) {
+            currentContext = getNextContext();
+        }
+        return currentContext;
+    }
+
+    private ModelContext getNextContext() {
+        if (!contexts.empty()) {
+            currentContext = contexts.pop();
+        } else {
+            currentContext = null;
+        }
+        return currentContext;
+    }
+
+    //private final AnnotationProcessor annotationProcessor = new AnnotationProcessorImpl();
+    //private final Configuration configuration;
+    //private Model currentModel;
+    //private Element currentElement;
 
     /**
      * <p>Constructor for MachineImpl.</p>
      *
      * @param configuration a {@link org.graphwalker.core.configuration.Configuration} object.
      */
-    public Machine(Configuration configuration) {
-        this.configuration = configuration;
-    }
+    //public Machine(Configuration configuration) {
+    //    this.configuration = configuration;
+    //}
 
     /**
      * {@inheritDoc}
@@ -62,9 +117,9 @@ public class Machine {
      *
      * @return a {@link org.graphwalker.core.configuration.Configuration} object.
      */
-    public Configuration getConfiguration() {
-        return configuration;
-    }
+    //public Configuration getConfiguration() {
+    //    return configuration;
+    //}
 
     /**
      * {@inheritDoc}
@@ -73,16 +128,16 @@ public class Machine {
      *
      * @return a {@link org.graphwalker.core.model.Element} object.
      */
-    public Element getCurrentElement() {
-        return currentElement;
-    }
+    //public Element getCurrentElement() {
+    //    return currentElement;
+    //}
 
     /**
      * {@inheritDoc}
      */
-    public void setCurrentElement(Element element) {
-        currentElement = element;
-    }
+    //public void setCurrentElement(Element element) {
+    //    currentElement = element;
+    //}
 
     /**
      * {@inheritDoc}
@@ -91,7 +146,7 @@ public class Machine {
      *
      * @return a {@link org.graphwalker.core.model.Model} object.
      */
-    public Model getCurrentModel() {
+    //public Model getCurrentModel() {
         /*
         if (null == currentModel) {
             setCurrentModel(getConfiguration().getDefaultModel());
@@ -100,13 +155,13 @@ public class Machine {
         }
         return currentModel;
         */
-        return null;
-    }
+    //    return null;
+    //}
 
     /**
      * {@inheritDoc}
      */
-    public void setCurrentModel(Model model) {
+    //public void setCurrentModel(Model model) {
         /*
         currentModel = model;
         beforeGroup();
@@ -115,7 +170,7 @@ public class Machine {
             currentModel.setModelStatus(ModelStatus.EXECUTING);
         }
         */
-    }
+    //}
 
     /**
      * {@inheritDoc}
@@ -125,6 +180,33 @@ public class Machine {
      * @return a boolean.
      */
     public boolean hasNextStep() {
+        ModelElement currentElement = getContext().getCurrentElement();
+        // if the current model is a vertex with a switch model statement
+        if (isVertex(currentElement) && ((Vertex)currentElement).hasSwitchModel()) {
+            String switchModelId = ((Vertex)currentElement).getSwitchModelId();
+            if (!getConfiguration().hasModel(switchModelId)) {
+                throw new MachineException(Resource.getText(Bundle.NAME, "exception.model.missing", switchModelId));
+            }
+            // then we create a new ModelContext and continue executing
+            setContext(new ModelContext(getConfiguration().getModel(switchModelId)));
+        }
+        // next we check if the current model has any more steps to take
+        if (hasModelNextStep()) {
+            return true;
+        } else if (isModelStatus(ModelStatus.EXECUTING)) {
+            updateModelStatus();
+            //processAnnotation(AfterModel.class, getCurrentModel(), null);
+            //afterGroup();
+        }
+        // and finally we check if we have another context to execute
+        if (null != getNextContext()) {
+            return hasExecutableState();
+        }
+        // there is no more steps
+        return false;
+
+
+
         /*
         // if the current model's state is a vertex with a switch model statement
         if (isVertex(getCurrentElement()) && ((Vertex) getCurrentElement()).hasSwitchModel()) {
@@ -150,8 +232,7 @@ public class Machine {
             }
         }
         */
-        // there is no more steps
-        return false;
+
     }
     /*
     private void updateModelStatus(Model model) {
@@ -176,14 +257,7 @@ public class Machine {
         return false;
     }
 
-    private boolean hasModelNextStep(Model model, Element element) {
-        if (!isModelStatus(model, ModelStatus.FAILED) && !isModelStatus(model, ModelStatus.COMPLETED)) {
-            PathGenerator pathGenerator = getPathGenerator(model);
-            StopCondition stopCondition = getStopCondition(pathGenerator);
-            return !stopCondition.isFulfilled(model, element);
-        }
-        return false;
-    }
+
     */
     /**
      * {@inheritDoc}
@@ -191,8 +265,9 @@ public class Machine {
      * <p>getNextStep.</p>
      *
      * @return a {@link org.graphwalker.core.model.Element} object.
+     * @param context a {@link org.graphwalker.core.model.support.ModelContext} object.
      */
-    public Element getNextStep() {
+    public ModelElement getNextStep(ModelContext context) {
         /*
         // if the current model's state is a vertex with a switch model statement
         if (isVertex(getCurrentElement()) && ((Vertex) getCurrentElement()).hasSwitchModel()) {
@@ -229,8 +304,12 @@ public class Machine {
 
     /**
      * {@inheritDoc}
+     *
+     * @param context a {@link org.graphwalker.core.model.support.ModelContext} object.
+     * @return a {@link java.util.List} object.
      */
-    public List<Element> getPossibleElements(Element element) {
+    public List<ModelElement> getPossibleSteps(ModelContext context) {
+
         /*
         List<Element> possibleElements = new ArrayList<Element>();
         if (element instanceof Vertex) {
@@ -248,17 +327,48 @@ public class Machine {
         */
         return null;
     }
-    /*
-    private boolean isVertex(Element element) {
+
+    private boolean hasModelNextStep() {
+        if (!isModelStatus(ModelStatus.FAILED) && !isModelStatus(ModelStatus.COMPLETED)) {
+            ModelContext context = getContext();
+            PathGenerator pathGenerator = context.getPathGenerator();
+            StopCondition stopCondition = pathGenerator.getStopCondition();
+            return false; //!stopCondition.isFulfilled(context);
+        }
+        return false;
+    }
+
+    private boolean isVertex(ModelElement element) {
         return element instanceof Vertex;
     }
 
-    private Vertex getVertex(Element element) {
-        return (Vertex) element;
+    private boolean isEdge(ModelElement element) {
+        return element instanceof Edge;
     }
 
-    private boolean isEdge(Element element) {
-        return element instanceof Edge;
+    private boolean isModelStatus(ModelStatus status) {
+        return status.equals(getContext().getStatus());
+    }
+
+    private boolean hasExecutableState() {
+        return isModelStatus(ModelStatus.NOT_EXECUTED) || isModelStatus(ModelStatus.EXECUTING);
+    }
+
+    private void updateModelStatus() {
+        /*
+        ModelContext context = getContext();
+        ExceptionStrategy exceptionStrategy = context.getExceptionStrategy();
+        if (exceptionStrategy.hasExceptions()) {
+            context.setStatus(ModelStatus.FAILED);
+        } else {
+            context.setStatus(ModelStatus.COMPLETED);
+        }
+        */
+    }
+
+    /*
+    private Vertex getVertex(Element element) {
+        return (Vertex) element;
     }
 
     private boolean hasExecutableState(Model model) {
@@ -274,10 +384,6 @@ public class Machine {
         setCurrentModel(getConfiguration().getModel(modelId));
         setCurrentElement(getCurrentModel().getStartVertex());
         getCurrentElement().markAsVisited();
-    }
-
-    private boolean isModelStatus(Model model, ModelStatus status) {
-        return status.equals(model.getModelStatus());
     }
 
     private PathGenerator getPathGenerator(Model model) {

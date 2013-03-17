@@ -25,25 +25,28 @@
  */
 package org.graphwalker.core.reports;
 
-import org.graphwalker.core.GraphWalker;
-
-import java.io.File;
-import java.util.Date;
-
+/**
+ * <p>XMLReport class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public class XMLReport implements Report {
 
     private static final String LINE_SEPARATOR = System.getProperty("line.separator");
     private final ObjectFactory objectFactory = new ObjectFactory();
 
-    public void writeReport(GraphWalker graphWalker, File reportDirectory, Date startTime) {
+    /** {@inheritDoc} */
+    //public void writeReport(GraphWalker graphWalker, File reportDirectory, Date startTime) {
         /*
         for (Model model : graphWalker.getConfiguration().getModels()) {
             writeReport(model, reportDirectory);
         }
         */
-    }
+    //}
 
-    public GraphWalkerReportType readReport(File file) {
+    /** {@inheritDoc} */
+    //public GraphWalkerReportType readReport(File file) {
         /*
         try {
             return ((JAXBElement<GraphWalkerReportType>)createUnmarshaller().unmarshal(file)).getValue();
@@ -51,8 +54,8 @@ public class XMLReport implements Report {
             throw new ReportException(Resource.getText(Bundle.NAME, "exception.report.failure"), e);
         }
         */
-        return null;
-    }
+    //    return null;
+    //}
     /*
     private Marshaller createMarshaller() {
         Marshaller marshaller;

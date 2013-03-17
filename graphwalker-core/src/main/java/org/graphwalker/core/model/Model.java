@@ -32,6 +32,12 @@ import org.graphwalker.core.utils.Resource;
 
 import java.util.*;
 
+/**
+ * <p>Model class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public final class Model extends Element {
 
     private final Set<ModelElement> modelElementsCache;
@@ -44,6 +50,14 @@ public final class Model extends Element {
     private final FloydWarshall floydWarshall;
 
 
+    /**
+     * <p>Constructor for Model.</p>
+     *
+     * @param id a {@link java.lang.String} object.
+     * @param vertices a {@link java.util.List} object.
+     * @param edges a {@link java.util.List} object.
+     * @param startVertex a {@link org.graphwalker.core.model.Vertex} object.
+     */
     public Model(String id, List<Vertex> vertices, List<Edge> edges, Vertex startVertex) {
         super(id);
         Set<ModelElement> modelElementsCache = new HashSet<ModelElement>();
@@ -96,38 +110,91 @@ public final class Model extends Element {
         }
     }
 
+    /**
+     * <p>getModelElements.</p>
+     *
+     * @return a {@link java.util.Set} object.
+     */
     public Set<ModelElement> getModelElements() {
         return modelElementsCache;
     }
 
+    /**
+     * <p>getEdges.</p>
+     *
+     * @param vertex a {@link org.graphwalker.core.model.Vertex} object.
+     * @return a {@link java.util.List} object.
+     */
     public List<Edge> getEdges(Vertex vertex) {
         return vertexEdgeCache.get(vertex);
     }
 
+    /**
+     * <p>getEdgeById.</p>
+     *
+     * @param id a {@link java.lang.String} object.
+     * @return a {@link org.graphwalker.core.model.Edge} object.
+     */
     public Edge getEdgeById(String id) {
         return edgeIdCache.get(id);
     }
 
+    /**
+     * <p>getVertexById.</p>
+     *
+     * @param id a {@link java.lang.String} object.
+     * @return a {@link org.graphwalker.core.model.Vertex} object.
+     */
     public Vertex getVertexById(String id) {
         return vertexIdCache.get(id);
     }
 
+    /**
+     * <p>Getter for the field <code>startVertex</code>.</p>
+     *
+     * @return a {@link org.graphwalker.core.model.Vertex} object.
+     */
     public Vertex getStartVertex() {
         return startVertex;
     }
 
+    /**
+     * <p>getConnectedComponent.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
     public List<ModelElement> getConnectedComponent() {
         return depthFirstSearch.getConnectedComponent();
     }
 
+    /**
+     * <p>getShortestDistance.</p>
+     *
+     * @param source a {@link org.graphwalker.core.model.ModelElement} object.
+     * @param target a {@link org.graphwalker.core.model.ModelElement} object.
+     * @return a int.
+     */
     public int getShortestDistance(ModelElement source, ModelElement target) {
         return floydWarshall.getShortestDistance(source, target);
     }
 
+    /**
+     * <p>getMaximumDistance.</p>
+     *
+     * @param target a {@link org.graphwalker.core.model.ModelElement} object.
+     * @return a int.
+     */
     public int getMaximumDistance(ModelElement target) {
         return floydWarshall.getMaximumDistance(target);
     }
 
+    /**
+     * <p>getShortestPath.</p>
+     *
+     * @param source a {@link org.graphwalker.core.model.ModelElement} object.
+     * @param target a {@link org.graphwalker.core.model.ModelElement} object.
+     * @return a {@link java.util.List} object.
+     */
     public List<ModelElement> getShortestPath(ModelElement source, ModelElement target) {
         return floydWarshall.getShortestPath(source, target);
     }

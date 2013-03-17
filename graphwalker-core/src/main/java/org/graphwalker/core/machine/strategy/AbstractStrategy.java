@@ -23,22 +23,46 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core.annotations;
+package org.graphwalker.core.machine.strategy;
+
+import org.graphwalker.core.model.Model;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
- * <p>AnnotationException class.</p>
+ * <p>Abstract AbstractStrategy class.</p>
  *
  * @author nilols
  * @version $Id: $
  */
-public class AnnotationException extends RuntimeException {
+public abstract class AbstractStrategy implements ExceptionStrategy {
+
+    private final Map<String, List<Throwable>> exceptions = new HashMap<String, List<Throwable>>();
+
+    /** {@inheritDoc} */
+    public boolean hasExceptions(Model model) {
+        return exceptions.containsKey(model.getId());
+    }
 
     /**
-     * <p>Constructor for AnnotationException.</p>
+     * <p>addException.</p>
      *
-     * @param message a {@link java.lang.String} object.
+     * @param model     a {@link org.graphwalker.core.model.Model} object.
+     * @param throwable a {@link java.lang.Throwable} object.
      */
-    public AnnotationException(String message) {
-        super(message);
+    protected void addException(Model model, Throwable throwable) {
+        if (!exceptions.containsKey(model.getId())) {
+            exceptions.put(model.getId(), new ArrayList<Throwable>());
+        }
+        exceptions.get(model.getId()).add(throwable);
+    }
+
+    /** {@inheritDoc} */
+    public List<Throwable> getExceptions(Model model) {
+        List<Throwable> exceptions = this.exceptions.get(model.getId());
+        return (null!=exceptions? this.exceptions.get(model.getId()):new ArrayList<Throwable>());
     }
 }

@@ -32,14 +32,26 @@ import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.utils.Resource;
 
+/**
+ * <p>Callback class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public class Callback implements StopCondition {
 
     private final String methodName;
 
+    /**
+     * <p>Constructor for Callback.</p>
+     *
+     * @param methodName a {@link java.lang.String} object.
+     */
     public Callback(String methodName) {
         this.methodName = methodName;
     }
 
+    /** {@inheritDoc} */
     public boolean isFulfilled(Model model, Element element) {
         // TODO:
         /*
@@ -52,6 +64,7 @@ public class Callback implements StopCondition {
         throw new StopConditionException(Resource.getText(Bundle.NAME, "exception.condition.wrong.type"));
     }
 
+    /** {@inheritDoc} */
     public double getFulfilment(Model model, Element element) {
         /*
         if (isBoolean(model)) {

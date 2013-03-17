@@ -25,15 +25,32 @@
  */
 package org.graphwalker.core.model;
 
+/**
+ * <p>Abstract NamedElement class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public abstract class NamedElement extends Element {
 
     private final String name;
 
+    /**
+     * <p>Constructor for NamedElement.</p>
+     *
+     * @param id a {@link java.lang.String} object.
+     * @param name a {@link java.lang.String} object.
+     */
     public NamedElement(String id, String name) {
         super(id);
         this.name = name;
     }
 
+    /**
+     * <p>Getter for the field <code>name</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getName() {
         return name;
     }

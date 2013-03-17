@@ -29,6 +29,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * <p>Edge class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public final class Edge extends ModelElement {
 
     private final Double weight;
@@ -37,6 +43,19 @@ public final class Edge extends ModelElement {
     private final Guard guard;
     private final List<Action> actions;
 
+    /**
+     * <p>Constructor for Edge.</p>
+     *
+     * @param id a {@link java.lang.String} object.
+     * @param name a {@link java.lang.String} object.
+     * @param blocked a {@link java.lang.Boolean} object.
+     * @param comment a {@link java.lang.String} object.
+     * @param weight a {@link java.lang.Double} object.
+     * @param source a {@link org.graphwalker.core.model.Vertex} object.
+     * @param target a {@link org.graphwalker.core.model.Vertex} object.
+     * @param guard a {@link org.graphwalker.core.model.Guard} object.
+     * @param actions a {@link java.util.List} object.
+     */
     public Edge(String id, String name, Boolean blocked, String comment, Double weight, Vertex source, Vertex target, Guard guard, List<Action> actions) {
         super(id, name, blocked, comment);
         this.weight = (null!=weight?weight:1.0);
@@ -46,22 +65,47 @@ public final class Edge extends ModelElement {
         this.actions = Collections.unmodifiableList(null!=actions?actions:new ArrayList<Action>(0));
     }
 
+    /**
+     * <p>Getter for the field <code>weight</code>.</p>
+     *
+     * @return a {@link java.lang.Double} object.
+     */
     public Double getWeight() {
         return weight;
     }
 
+    /**
+     * <p>Getter for the field <code>source</code>.</p>
+     *
+     * @return a {@link org.graphwalker.core.model.Vertex} object.
+     */
     public Vertex getSource() {
         return source;
     }
 
+    /**
+     * <p>Getter for the field <code>target</code>.</p>
+     *
+     * @return a {@link org.graphwalker.core.model.Vertex} object.
+     */
     public Vertex getTarget() {
         return target;
     }
 
+    /**
+     * <p>Getter for the field <code>guard</code>.</p>
+     *
+     * @return a {@link org.graphwalker.core.model.Guard} object.
+     */
     public Guard getGuard() {
         return guard;
     }
 
+    /**
+     * <p>Getter for the field <code>actions</code>.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
     public List<Action> getActions() {
         return actions;
     }

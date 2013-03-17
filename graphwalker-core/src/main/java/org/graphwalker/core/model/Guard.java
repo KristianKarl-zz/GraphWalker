@@ -25,8 +25,20 @@
  */
 package org.graphwalker.core.model;
 
+/**
+ * <p>Guard class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public final class Guard extends ScriptElement {
 
+    /**
+     * <p>Constructor for Guard.</p>
+     *
+     * @param id a {@link java.lang.String} object.
+     * @param script a {@link java.lang.String} object.
+     */
     public Guard(String id, String script) {
         super(id, script);
     }

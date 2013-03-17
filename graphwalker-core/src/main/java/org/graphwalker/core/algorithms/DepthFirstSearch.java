@@ -26,8 +26,8 @@
 package org.graphwalker.core.algorithms;
 
 import org.graphwalker.core.model.Edge;
-import org.graphwalker.core.model.ModelElement;
 import org.graphwalker.core.model.Model;
+import org.graphwalker.core.model.ModelElement;
 import org.graphwalker.core.model.Vertex;
 import org.graphwalker.core.model.status.ElementStatus;
 
@@ -43,6 +43,11 @@ public final class DepthFirstSearch implements Algorithm {
 
     private final List<ModelElement> connectedComponent;
 
+    /**
+     * <p>Constructor for DepthFirstSearch.</p>
+     *
+     * @param model a {@link org.graphwalker.core.model.Model} object.
+     */
     public DepthFirstSearch(Model model) {
         Map<ModelElement, ElementStatus> elementStatus = new HashMap<ModelElement, ElementStatus>();
         for (ModelElement element: model.getModelElements()) {

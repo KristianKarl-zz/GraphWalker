@@ -25,8 +25,20 @@
  */
 package org.graphwalker.core.model;
 
+/**
+ * <p>Action class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public final class Action extends ScriptElement {
 
+    /**
+     * <p>Constructor for Action.</p>
+     *
+     * @param id a {@link java.lang.String} object.
+     * @param script a {@link java.lang.String} object.
+     */
     public Action(String id, String script) {
         super(id, script);
     }

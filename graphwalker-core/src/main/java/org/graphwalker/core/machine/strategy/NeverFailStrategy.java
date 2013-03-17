@@ -23,42 +23,20 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core;
+package org.graphwalker.core.machine.strategy;
+
+import org.graphwalker.core.machine.Machine;
 
 /**
- * <p>GraphWalkerExecutor class.</p>
+ * <p>NeverFailStrategy class.</p>
  *
  * @author nilols
  * @version $Id: $
  */
-public class GraphWalkerExecutor implements Runnable {
+public class NeverFailStrategy extends AbstractStrategy {
 
-    private final GraphWalker graphWalker;
-
-    /**
-     * <p>Constructor for GraphWalkerExecutor.</p>
-     *
-     * @param graphWalker a {@link org.graphwalker.core.GraphWalker} object.
-     */
-    public GraphWalkerExecutor(GraphWalker graphWalker) {
-        this.graphWalker = graphWalker;
-    }
-
-    /**
-     * <p>getGraphWalker.</p>
-     *
-     * @return a {@link org.graphwalker.core.GraphWalker} object.
-     */
-    public GraphWalker getGraphWalker() {
-        return graphWalker;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void run() {
-        while (getGraphWalker().hasNextStep()) {
-            getGraphWalker().getNextStep();
-        }
+    /** {@inheritDoc} */
+    public void handleException(Machine machine, Throwable throwable) {
+        //addException(machine.getCurrentModel(), throwable);
     }
 }

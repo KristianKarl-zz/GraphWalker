@@ -44,13 +44,11 @@ public class RandomLeastVisitedPath extends AbstractPathGenerator {
 
     private final Random randomGenerator = new Random(System.nanoTime());
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     public Element getNextStep(Machine machine) {
         // TODO:
         /*
-        List<Element> possibleElements = machine.getPossibleElements(machine.getCurrentElement());
+        List<Element> possibleElements = machine.getPossibleSteps(machine.getCurrentElement());
         long leastVisitedCount = Long.MAX_VALUE;
         List<Element> leastVisitedElements = new ArrayList<Element>();
         for (Element element : possibleElements) {

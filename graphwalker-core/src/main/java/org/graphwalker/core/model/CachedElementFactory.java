@@ -29,6 +29,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * <p>CachedElementFactory class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public class CachedElementFactory {
 
     private Map<Integer, Immutable> cache = new HashMap<Integer, Immutable>();
@@ -40,26 +46,81 @@ public class CachedElementFactory {
         return cache.get(immutable.hashCode());
     }
 
+    /**
+     * <p>createModel.</p>
+     *
+     * @param id a {@link java.lang.String} object.
+     * @param vertices a {@link java.util.List} object.
+     * @param edges a {@link java.util.List} object.
+     * @param startVertex a {@link org.graphwalker.core.model.Vertex} object.
+     * @return a {@link org.graphwalker.core.model.Model} object.
+     */
     public Model createModel(String id, List<Vertex> vertices, List<Edge> edges, Vertex startVertex) {
         return (Model)getCached(new Model(id, vertices, edges, startVertex));
     }
 
+    /**
+     * <p>createVertex.</p>
+     *
+     * @param id a {@link java.lang.String} object.
+     * @param name a {@link java.lang.String} object.
+     * @param blocked a {@link java.lang.Boolean} object.
+     * @param comment a {@link java.lang.String} object.
+     * @param modelSwitchId a {@link java.lang.String} object.
+     * @param requirements a {@link java.util.List} object.
+     * @return a {@link org.graphwalker.core.model.Vertex} object.
+     */
     public Vertex createVertex(String id, String name, Boolean blocked, String comment, String modelSwitchId, List<Requirement> requirements) {
         return (Vertex)getCached(new Vertex(id, name, blocked, comment, modelSwitchId, requirements));
     }
 
+    /**
+     * <p>createEdge.</p>
+     *
+     * @param id a {@link java.lang.String} object.
+     * @param name a {@link java.lang.String} object.
+     * @param blocked a {@link java.lang.Boolean} object.
+     * @param comment a {@link java.lang.String} object.
+     * @param weight a {@link java.lang.Double} object.
+     * @param source a {@link org.graphwalker.core.model.Vertex} object.
+     * @param target a {@link org.graphwalker.core.model.Vertex} object.
+     * @param guard a {@link org.graphwalker.core.model.Guard} object.
+     * @param actions a {@link java.util.List} object.
+     * @return a {@link org.graphwalker.core.model.Edge} object.
+     */
     public Edge createEdge(String id, String name, Boolean blocked, String comment, Double weight, Vertex source, Vertex target, Guard guard, List<Action> actions) {
         return (Edge)getCached(new Edge(id, name, blocked, comment, weight, source, target, guard, actions));
     }
 
+    /**
+     * <p>createRequirement.</p>
+     *
+     * @param id a {@link java.lang.String} object.
+     * @param name a {@link java.lang.String} object.
+     * @return a {@link org.graphwalker.core.model.Requirement} object.
+     */
     public Requirement createRequirement(String id, String name) {
         return (Requirement)getCached(new Requirement(id, name));
     }
 
+    /**
+     * <p>createGuard.</p>
+     *
+     * @param id a {@link java.lang.String} object.
+     * @param script a {@link java.lang.String} object.
+     * @return a {@link org.graphwalker.core.model.Guard} object.
+     */
     public Guard createGuard(String id, String script) {
         return (Guard)getCached(new Guard(id, script));
     }
 
+    /**
+     * <p>createAction.</p>
+     *
+     * @param id a {@link java.lang.String} object.
+     * @param script a {@link java.lang.String} object.
+     * @return a {@link org.graphwalker.core.model.Action} object.
+     */
     public Action createAction(String id, String script) {
         return (Action)getCached(new Action(id, script));
     }

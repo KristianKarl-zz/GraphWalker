@@ -25,9 +25,25 @@
  */
 package org.graphwalker.core.model;
 
+/**
+ * <p>Immutable interface.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public interface Immutable {
 
+    /**
+     * <p>getId.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     String getId();
+    /**
+     * <p>hashCode.</p>
+     *
+     * @return a int.
+     */
     int hashCode();
 
 }

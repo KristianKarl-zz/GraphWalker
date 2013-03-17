@@ -25,21 +25,45 @@
  */
 package org.graphwalker.core.model;
 
+/**
+ * <p>Abstract ModelElement class.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public abstract class ModelElement extends NamedElement {
 
     private final Boolean blocked;
     private final String comment;
 
+    /**
+     * <p>Constructor for ModelElement.</p>
+     *
+     * @param id a {@link java.lang.String} object.
+     * @param name a {@link java.lang.String} object.
+     * @param blocked a {@link java.lang.Boolean} object.
+     * @param comment a {@link java.lang.String} object.
+     */
     public ModelElement(String id, String name, Boolean blocked, String comment) {
         super(id, name);
         this.blocked = (null!=blocked?blocked:false);
         this.comment = comment;
     }
 
+    /**
+     * <p>isBlocked.</p>
+     *
+     * @return a {@link java.lang.Boolean} object.
+     */
     public Boolean isBlocked() {
         return blocked;
     }
 
+    /**
+     * <p>Getter for the field <code>comment</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getComment() {
         return comment;
     }

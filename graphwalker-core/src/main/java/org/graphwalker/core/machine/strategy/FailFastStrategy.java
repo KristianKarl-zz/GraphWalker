@@ -23,29 +23,30 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core;
+package org.graphwalker.core.machine.strategy;
 
-import org.graphwalker.core.configuration.Configuration;
+import org.graphwalker.core.machine.Machine;
 
 /**
- * <p>GraphWalkerFactory class.</p>
+ * <p>FailFastStrategy class.</p>
  *
  * @author nilols
  * @version $Id: $
  */
-public class GraphWalkerFactory {
+public class FailFastStrategy extends AbstractStrategy {
 
-    private GraphWalkerFactory() {
-    }
+    //private final AnnotationProcessor annotationProcessor = new AnnotationProcessorImpl();
 
-    /**
-     * <p>create.</p>
-     *
-     * @param configuration a {@link org.graphwalker.core.configuration.Configuration} object.
-     * @return a {@link org.graphwalker.core.GraphWalker} object.
-     */
-    public static GraphWalker create(Configuration configuration) {
-        return new GraphWalker(configuration);
+    /** {@inheritDoc} */
+    public void handleException(Machine machine, Throwable throwable) {
+        // TODO:
+        /*
+        if (!ModelStatus.FAILED.equals(machine.getCurrentModel().getModelStatus())) {
+            addException(machine.getCurrentModel(), throwable);
+            machine.getCurrentModel().setModelStatus(ModelStatus.FAILED);
+            annotationProcessor.process(AfterModel.class, machine, machine.getCurrentModel(), null);
+        }
+        */
     }
 
 }

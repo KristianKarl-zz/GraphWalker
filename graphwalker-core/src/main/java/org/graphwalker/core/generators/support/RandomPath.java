@@ -32,7 +32,6 @@ import org.graphwalker.core.machine.Machine;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.utils.Resource;
 
-import java.util.List;
 import java.util.Random;
 
 /**
@@ -47,10 +46,10 @@ public class RandomPath extends AbstractPathGenerator {
 
     /** {@inheritDoc} */
     public Element getNextStep(Machine machine) {
-        List<Element> possibleElements = machine.getPossibleElements(machine.getCurrentElement());
-        if (0<possibleElements.size()) {
-            return possibleElements.get(randomGenerator.nextInt(possibleElements.size()));
-        }
+        //List<Element> possibleElements = machine.getPossibleSteps(machine.getCurrentElement());
+        //if (0<possibleElements.size()) {
+        //    return possibleElements.get(randomGenerator.nextInt(possibleElements.size()));
+        //}
         throw new PathGeneratorException(Resource.getText(Bundle.NAME, "exception.generator.path.missing"));
     }
 }

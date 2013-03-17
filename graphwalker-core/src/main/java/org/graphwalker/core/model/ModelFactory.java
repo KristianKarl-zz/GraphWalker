@@ -25,8 +25,27 @@
  */
 package org.graphwalker.core.model;
 
+/**
+ * <p>ModelFactory interface.</p>
+ *
+ * @author nilols
+ * @version $Id: $
+ */
 public interface ModelFactory {
 
+    /**
+     * <p>accept.</p>
+     *
+     * @param type a {@link java.lang.String} object.
+     * @return a boolean.
+     */
     boolean accept(String type);
+    /**
+     * <p>create.</p>
+     *
+     * @param id a {@link java.lang.String} object.
+     * @param filename a {@link java.lang.String} object.
+     * @return a {@link org.graphwalker.core.model.Model} object.
+     */
     Model create(String id, String filename);
 }

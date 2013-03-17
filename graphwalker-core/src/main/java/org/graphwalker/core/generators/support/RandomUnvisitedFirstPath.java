@@ -44,12 +44,10 @@ public class RandomUnvisitedFirstPath extends AbstractPathGenerator {
 
     private final Random randomGenerator = new Random(System.nanoTime());
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     public Element getNextStep(Machine machine) {
         /*
-        List<Element> possibleElements = machine.getPossibleElements(machine.getCurrentElement());
+        List<Element> possibleElements = machine.getPossibleSteps(machine.getCurrentElement());
         List<Element> unvisitedElements = new ArrayList<Element>();
         for (Element element : possibleElements) {
             if (!element.isVisited()) {

@@ -67,6 +67,8 @@ public class Configuration {
 
     /**
      * {@inheritDoc}
+     *
+     * @param id a {@link java.lang.String} object.
      */
     public void setDefaultModelId(String id) {
         defaultModelId = id;
@@ -83,6 +85,8 @@ public class Configuration {
 
     /**
      * {@inheritDoc}
+     *
+     * @param pathGenerator a {@link org.graphwalker.core.generators.PathGenerator} object.
      */
     public void setDefaultPathGenerator(PathGenerator pathGenerator) {
         defaultGenerator = pathGenerator;
@@ -90,6 +94,9 @@ public class Configuration {
 
     /**
      * {@inheritDoc}
+     *
+     * @param model a {@link org.graphwalker.core.model.Model} object.
+     * @return a {@link org.graphwalker.core.model.Model} object.
      */
     public Model addModel(Model model) {
         if (null == defaultModelId) {
@@ -101,9 +108,22 @@ public class Configuration {
 
     /**
      * {@inheritDoc}
+     *
+     * @param id a {@link java.lang.String} object.
+     * @return a {@link org.graphwalker.core.model.Model} object.
      */
     public Model getModel(String id) {
         return models.get(id);
+    }
+
+    /**
+     * <p>hasModel.</p>
+     *
+     * @param id a {@link java.lang.String} object.
+     * @return a boolean.
+     */
+    public boolean hasModel(String id) {
+        return models.containsKey(id);
     }
 
     /**
@@ -126,6 +146,8 @@ public class Configuration {
 
     /**
      * {@inheritDoc}
+     *
+     * @param edgeFilter a {@link org.graphwalker.core.filter.EdgeFilter} object.
      */
     public void setEdgeFilter(EdgeFilter edgeFilter) {
         this.edgeFilter = edgeFilter;

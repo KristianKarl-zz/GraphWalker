@@ -37,7 +37,6 @@ import java.util.ResourceBundle;
  * <p>CommandParser class.</p>
  *
  * @author nilols
- * @version $Id: $
  */
 public final class CommandParser {
 

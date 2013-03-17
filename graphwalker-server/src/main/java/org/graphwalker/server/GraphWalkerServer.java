@@ -30,7 +30,7 @@ import org.apache.thrift.server.TThreadPoolServer;
 import org.apache.thrift.transport.TServerSocket;
 import org.apache.thrift.transport.TServerTransport;
 import org.apache.thrift.transport.TTransportException;
-import org.graphwalker.api.GraphWalker;
+import org.graphwalker.service.GraphWalkerService;
 import org.graphwalker.core.utils.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,7 +42,6 @@ import java.util.Properties;
  * <p>GraphWalkerServer class.</p>
  *
  * @author nilols
- * @version $Id: $
  */
 public class GraphWalkerServer {
 
@@ -77,6 +76,7 @@ public class GraphWalkerServer {
         this.commandParser = new CommandParser(args, loadProperties("/default.properties"));
         logger.info(Resource.getText(Bundle.NAME, "info.separator"));
         this.server = createServer();
+
         this.thread = Thread.currentThread();
         Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
             public void run() {
@@ -103,8 +103,8 @@ public class GraphWalkerServer {
 
     private TServer createServer() {
         try {
-            GraphWalker.Iface service = new GraphWalkerImpl();
-            GraphWalker.Processor<GraphWalker.Iface> processor = new GraphWalker.Processor<GraphWalker.Iface>(service);
+            GraphWalkerService.Iface service = new GraphWalkerServiceImpl();
+            GraphWalkerService.Processor<GraphWalkerService.Iface> processor = new GraphWalkerService.Processor<GraphWalkerService.Iface>(service);
             TServerTransport serverTransport = new TServerSocket(Integer.parseInt(commandParser.getProperty("server.port")));
             return new TThreadPoolServer(new TThreadPoolServer.Args(serverTransport).processor(processor));
         } catch (TTransportException e) {
