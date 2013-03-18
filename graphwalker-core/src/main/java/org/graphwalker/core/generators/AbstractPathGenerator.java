@@ -37,6 +37,13 @@ public abstract class AbstractPathGenerator implements PathGenerator {
 
     private StopCondition stopCondition;
 
+    public AbstractPathGenerator() {
+    }
+
+    public AbstractPathGenerator(StopCondition stopCondition) {
+        this.stopCondition = stopCondition;
+    }
+
     /**
      * <p>getStopCondition.</p>
      *

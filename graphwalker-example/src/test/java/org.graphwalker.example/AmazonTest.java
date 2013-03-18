@@ -1,18 +1,41 @@
 package org.graphwalker.example;
 
-import org.graphwalker.core.GraphWalker;
+import org.graphwalker.core.conditions.support.EdgeCoverage;
+import org.graphwalker.core.generators.support.AStarPath;
+import org.graphwalker.java.GraphWalker;
+import org.graphwalker.core.conditions.support.Length;
+import org.graphwalker.core.generators.support.RandomPath;
+import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.support.GraphMLModelFactory;
-import org.graphwalker.core.model.support.ModelContext;
-import org.graphwalker.core.reports.GraphWalkerReportType;
 import org.graphwalker.core.utils.Assert;
 import org.testng.annotations.Test;
 
 public class AmazonTest {
 
-
-    /*
     @Test
-    public void a_star() throws InterruptedException, StopConditionException, URISyntaxException {
+    public void a_star() {
+
+        // Get the model from resources
+        GraphMLModelFactory factory = new GraphMLModelFactory();
+        Model model = factory.create("Amazon", "/models/ShoppingCart.graphml");
+
+        GraphWalker graphWalker = new GraphWalker();
+        graphWalker.addModel(model, new AStarPath(new EdgeCoverage(100)), new Amazon());
+
+        // Start executing the test
+        graphWalker.execute(model.getId());
+
+        // Verify that the execution is complete, fulfilling the criteria from above.
+        Assert.assertFalse(graphWalker.hasMoreSteps(), "Not all models are done");
+
+        //Print the statistics from graphwalker
+        //String actualResult = modelhandler.getStatistics();
+        //System.out.println(actualResult);
+
+
+
+
+        /*
         ModelHandler modelhandler = new ModelHandler();
 
         // Get the model from resources
@@ -36,18 +59,30 @@ public class AmazonTest {
         //Print the statistics from graphwalker
         String actualResult = modelhandler.getStatistics();
         System.out.println(actualResult);
+        */
     }
-    */
 
     @Test
     public void random() {
-        /*
+
+        // Get the model from resources
         GraphMLModelFactory factory = new GraphMLModelFactory();
-        ModelContext context = new ModelContext();
-        context.addModel(factory.create("Amazon", ));
+        Model model = factory.create("Amazon", "/models/ShoppingCart.graphml");
 
         GraphWalker graphWalker = new GraphWalker();
-        */
+        graphWalker.addModel(model, new RandomPath(new Length(20)), new Amazon());
+
+        // Start executing the test
+        graphWalker.execute(model.getId());
+
+        // Verify that the execution is complete, fulfilling the criteria from above.
+        Assert.assertFalse(graphWalker.hasMoreSteps(), "Not all models are done");
+
+        //Print the statistics from graphwalker
+        //String actualResult = modelhandler.getStatistics();
+        //System.out.println(actualResult);
+
+
 
 
         /*

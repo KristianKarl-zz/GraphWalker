@@ -40,7 +40,7 @@ import java.util.*;
  */
 public final class Model extends Element {
 
-    private final Set<ModelElement> modelElementsCache;
+    private final List<ModelElement> modelElementsCache;
     private final Map<String, Edge> edgeIdCache;
     private final Map<String, Vertex> vertexIdCache;
     private final Map<Vertex, List<Edge>> vertexEdgeCache;
@@ -60,7 +60,7 @@ public final class Model extends Element {
      */
     public Model(String id, List<Vertex> vertices, List<Edge> edges, Vertex startVertex) {
         super(id);
-        Set<ModelElement> modelElementsCache = new HashSet<ModelElement>();
+        List<ModelElement> modelElementsCache = new ArrayList<ModelElement>();
         Map<String, Vertex> vertexIdCache = new HashMap<String, Vertex>();
         Map<Vertex, List<Edge>> vertexEdgeCache = new HashMap<Vertex, List<Edge>>();
         if (null != vertices) {
@@ -91,7 +91,7 @@ public final class Model extends Element {
         this.vertexIdCache = Collections.unmodifiableMap(vertexIdCache);
         this.edgeIdCache = Collections.unmodifiableMap(edgeIdCache);
         this.vertexEdgeCache = Collections.unmodifiableMap(unmodifiableVertexEdgeCache);
-        this.modelElementsCache = Collections.unmodifiableSet(modelElementsCache);
+        this.modelElementsCache = Collections.unmodifiableList(modelElementsCache);
         this.depthFirstSearch = new DepthFirstSearch(this);
         this.floydWarshall = new FloydWarshall(this);
         validate();
@@ -115,7 +115,7 @@ public final class Model extends Element {
      *
      * @return a {@link java.util.Set} object.
      */
-    public Set<ModelElement> getModelElements() {
+    public List<ModelElement> getModelElements() {
         return modelElementsCache;
     }
 

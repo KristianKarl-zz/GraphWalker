@@ -47,28 +47,18 @@ import java.util.Map;
 public class ModelContext {
 
     private Model model;
-    private ModelElement element;
-    private Map<Element, ElementStatus> elementStatus = new HashMap<Element, ElementStatus>();
+    private ModelElement currentElement;
+    private ModelStatus modelStatus;
+    private Map<ModelElement, ElementStatus> elementStatus = new HashMap<ModelElement, ElementStatus>();
     private Map<Element, Long> elementCount = new HashMap<Element, Long>();
     private Map<Requirement, RequirementStatus> requirementStatus = new HashMap<Requirement, RequirementStatus>();
     private PathGenerator pathGenerator;
-    private ModelStatus modelStatus;
     private ExceptionStrategy exceptionStrategy;
 
-    /**
-     * <p>Constructor for ModelContext.</p>
-     *
-     * @param model a {@link org.graphwalker.core.model.Model} object.
-     */
     public ModelContext(Model model) {
         this.model = model;
     }
 
-    /**
-     * <p>Getter for the field <code>model</code>.</p>
-     *
-     * @return a {@link org.graphwalker.core.model.Model} object.
-     */
     public Model getModel() {
         return model;
     }
@@ -79,7 +69,7 @@ public class ModelContext {
      * @param element a {@link org.graphwalker.core.model.ModelElement} object.
      */
     public void setCurrentElement(ModelElement element) {
-        this.element = element;
+        currentElement = element;
     }
 
     /**
@@ -88,7 +78,7 @@ public class ModelContext {
      * @return a {@link org.graphwalker.core.model.ModelElement} object.
      */
     public ModelElement getCurrentElement() {
-        return element;
+        return currentElement;
     }
 
     /**
@@ -135,7 +125,7 @@ public class ModelContext {
      * @param element a {@link org.graphwalker.core.model.ModelElement} object.
      * @return a {@link java.lang.Long} object.
      */
-    public Long getCount(ModelElement element) {
+    public Long getVisitCount(ModelElement element) {
         return elementCount.get(element);
     }
 

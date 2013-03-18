@@ -26,6 +26,7 @@
 package org.graphwalker.core.generators.support;
 
 import org.graphwalker.core.Bundle;
+import org.graphwalker.core.conditions.StopCondition;
 import org.graphwalker.core.generators.AbstractPathGenerator;
 import org.graphwalker.core.generators.PathGeneratorException;
 import org.graphwalker.core.machine.Machine;
@@ -43,6 +44,13 @@ import java.util.Random;
 public class RandomPath extends AbstractPathGenerator {
 
     private final Random randomGenerator = new Random(System.nanoTime());
+
+    public RandomPath() {
+    }
+
+    public RandomPath(StopCondition stopCondition) {
+        super(stopCondition);
+    }
 
     /** {@inheritDoc} */
     public Element getNextStep(Machine machine) {

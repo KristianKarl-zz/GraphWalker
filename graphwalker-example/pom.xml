@@ -17,7 +17,7 @@
     <dependencies>
         <dependency>
             <groupId>org.graphwalker</groupId>
-            <artifactId>graphwalker-core</artifactId>
+            <artifactId>graphwalker-java</artifactId>
             <version>LATEST</version>
         </dependency>
         <dependency>
