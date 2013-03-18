@@ -104,13 +104,15 @@ enum Device {                                        // Classify the execution
 
 struct ExecutionContext {                            //
     1: optional UUID uuid;                           // Unique id for the execution
-    2: required Model model;                         //
+    2: required list<Model> models;                  //
     3: optional Step currentStep;                    //
     4: required PathGenerator pathGenerator;         //
     5: required StopCondition stopCondition;         //
     6: optional Status status;                       //
     7: optional Timestamp started;                   //
-    8: optional Device device;                       //
+    8: optional i32 duration;                        //
+    9: optional double fulfillment;                  //
+   10: optional Device device;                       //
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -154,7 +156,7 @@ service GraphWalkerService {
     // Models
     //------------------------------------------------------------------------------------------------------------------
     list<Model> listModels(1:Token token),
-    Model getModel(1:Token token, 2:Model model),    // 2:Model = Hibernate Example object
+    Model getModel(1:Token token, 2:Model model),    // Object 2:Model = Hibernate Example object
     Model createModel(1:Token token, 2:Model model),
     Model updateModel(1:Token token, 2:Model model),
     void deleteModel(1:Token token, 2:Model model),
@@ -171,5 +173,10 @@ service GraphWalkerService {
     // Result
     //------------------------------------------------------------------------------------------------------------------
     ResultList findResults(1:Token token, 2:ResultFilter filter),
+
+    //------------------------------------------------------------------------------------------------------------------
+    // Result
+    //------------------------------------------------------------------------------------------------------------------
+    list<ExecutionContext> getCurrentExecutionContexts(1:Token token),
 
 }
