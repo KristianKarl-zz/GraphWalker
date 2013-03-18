@@ -23,6 +23,7 @@
         <module>graphwalker-php</module>
         <module>graphwalker-python</module>
         <module>graphwalker-server</module>
+        <module>graphwalker-example</module>
     </modules>
 
     <organization>
