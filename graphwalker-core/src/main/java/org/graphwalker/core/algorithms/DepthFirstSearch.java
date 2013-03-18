@@ -39,7 +39,7 @@ import java.util.*;
  * @author nilols
  * @version $Id: $
  */
-public final class DepthFirstSearch implements Algorithm {
+public final class DepthFirstSearch {
 
     private final List<ModelElement> connectedComponent;
 

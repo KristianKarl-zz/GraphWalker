@@ -40,9 +40,9 @@ import java.util.List;
  * @author nilols
  * @version $Id: $
  */
-public final class FloydWarshall implements Algorithm {
+public final class FloydWarshall {
 
-    private List<ModelElement> elements;
+    private final List<ModelElement> elements;
     private final int[][] distances;
     private final ModelElement[][] predecessors;
 
