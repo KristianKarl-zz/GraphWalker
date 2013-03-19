@@ -23,7 +23,7 @@ public class AmazonTest {
         graphWalker.addModel(model, new AStarPath(new EdgeCoverage(100)), new Amazon());
 
         // Start executing the test
-        graphWalker.execute(model.getId());
+        graphWalker.execute(model);
 
         // Verify that the execution is complete, fulfilling the criteria from above.
         Assert.assertFalse(graphWalker.hasMoreSteps(), "Not all models are done");
@@ -73,7 +73,7 @@ public class AmazonTest {
         graphWalker.addModel(model, new RandomPath(new Length(20)), new Amazon());
 
         // Start executing the test
-        graphWalker.execute(model.getId());
+        graphWalker.execute(model);
 
         // Verify that the execution is complete, fulfilling the criteria from above.
         Assert.assertFalse(graphWalker.hasMoreSteps(), "Not all models are done");

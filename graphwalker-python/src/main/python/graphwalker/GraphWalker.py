@@ -10,7 +10,7 @@ from service.ttypes import *
 
 class GraphWalker:
 
-    def __init__(self, host, port):
+    def __init__(self, host, port, username, password):
         # create connection with the server
         self.socket = TSocket.TSocket(host, port)
         self.transport = TTransport.TBufferedTransport(self.socket)
