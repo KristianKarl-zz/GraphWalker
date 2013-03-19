@@ -28,6 +28,9 @@
     <build>
         <resources>
             <resource>
+                <directory>${project.basedir}/src/main/python</directory>
+            </resource>
+            <resource>
                 <directory>${project.build.directory}/thrift/gen-py</directory>
             </resource>
         </resources>
