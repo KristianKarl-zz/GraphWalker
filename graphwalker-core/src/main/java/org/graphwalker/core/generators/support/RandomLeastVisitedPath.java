@@ -31,6 +31,8 @@ import org.graphwalker.core.generators.AbstractPathGenerator;
 import org.graphwalker.core.generators.PathGeneratorException;
 import org.graphwalker.core.machine.Machine;
 import org.graphwalker.core.model.Element;
+import org.graphwalker.core.model.ModelElement;
+import org.graphwalker.core.model.support.ModelContext;
 import org.graphwalker.core.utils.Resource;
 
 import java.util.Random;
@@ -41,7 +43,7 @@ import java.util.Random;
  * @author nilols
  * @version $Id: $
  */
-public class RandomLeastVisitedPath extends AbstractPathGenerator {
+public final class RandomLeastVisitedPath extends AbstractPathGenerator {
 
     private final Random randomGenerator = new Random(System.nanoTime());
 
@@ -53,7 +55,7 @@ public class RandomLeastVisitedPath extends AbstractPathGenerator {
     }
 
     /** {@inheritDoc} */
-    public Element getNextStep(Machine machine) {
+    public ModelElement getNextStep(ModelContext context) {
         // TODO:
         /*
         List<Element> possibleElements = machine.getPossibleSteps(machine.getCurrentElement());

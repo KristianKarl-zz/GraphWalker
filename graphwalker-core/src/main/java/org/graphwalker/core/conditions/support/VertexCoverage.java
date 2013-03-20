@@ -28,6 +28,7 @@ package org.graphwalker.core.conditions.support;
 import org.graphwalker.core.conditions.StopCondition;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Model;
+import org.graphwalker.core.model.support.ModelContext;
 
 /**
  * <p>VertexCoverage class.</p>
@@ -35,7 +36,7 @@ import org.graphwalker.core.model.Model;
  * @author nilols
  * @version $Id: $
  */
-public class VertexCoverage implements StopCondition {
+public final class VertexCoverage implements StopCondition {
 
     private final double limit;
 
@@ -58,7 +59,7 @@ public class VertexCoverage implements StopCondition {
     }
 
     /** {@inheritDoc} */
-    public boolean isFulfilled(Model model, Element element) {
+    public boolean isFulfilled(ModelContext context) {
         // TODO:
         /*
         double totalVertexCount = model.getVertices().size();
@@ -69,7 +70,7 @@ public class VertexCoverage implements StopCondition {
     }
 
     /** {@inheritDoc} */
-    public double getFulfilment(Model model, Element element) {
+    public double getFulfilment(ModelContext context) {
         // TODO:
         /*
         double totalVertexCount = model.getVertices().size();

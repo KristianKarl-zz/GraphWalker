@@ -28,6 +28,7 @@ package org.graphwalker.core.conditions.support;
 import org.graphwalker.core.conditions.StopCondition;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Model;
+import org.graphwalker.core.model.support.ModelContext;
 
 /**
  * <p>RequirementCoverage class.</p>
@@ -35,7 +36,7 @@ import org.graphwalker.core.model.Model;
  * @author nilols
  * @version $Id: $
  */
-public class RequirementCoverage implements StopCondition {
+public final class RequirementCoverage implements StopCondition {
 
     private final double limit;
 
@@ -58,7 +59,7 @@ public class RequirementCoverage implements StopCondition {
     }
 
     /** {@inheritDoc} */
-    public boolean isFulfilled(Model model, Element element) {
+    public boolean isFulfilled(ModelContext context) {
         // TODO:
         /*
         double totalCount = model.getRequirements().size();
@@ -73,7 +74,7 @@ public class RequirementCoverage implements StopCondition {
     }
 
     /** {@inheritDoc} */
-    public double getFulfilment(Model model, Element element) {
+    public double getFulfilment(ModelContext context) {
         // TODO:
         /*
         double totalCount = model.getRequirements().size();

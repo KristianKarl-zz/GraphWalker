@@ -33,6 +33,11 @@ package org.graphwalker.core.utils;
  */
 public class ResourceException extends RuntimeException {
 
+
+    public ResourceException() {
+        super();
+    }
+
     /**
      * <p>Constructor for ResourceException.</p>
      *

@@ -28,6 +28,7 @@ package org.graphwalker.core.conditions.support;
 import org.graphwalker.core.conditions.StopCondition;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Model;
+import org.graphwalker.core.model.support.ModelContext;
 
 /**
  * <p>TimeDuration class.</p>
@@ -35,7 +36,7 @@ import org.graphwalker.core.model.Model;
  * @author nilols
  * @version $Id: $
  */
-public class TimeDuration implements StopCondition {
+public final class TimeDuration implements StopCondition {
 
     private final long duration;
     private final long timestamp;
@@ -60,12 +61,12 @@ public class TimeDuration implements StopCondition {
     }
 
     /** {@inheritDoc} */
-    public boolean isFulfilled(Model model, Element element) {
-        return getFulfilment(model, element) >= FULFILLMENT_LEVEL;
+    public boolean isFulfilled(ModelContext context) {
+        return getFulfilment(context) >= FULFILLMENT_LEVEL;
     }
 
     /** {@inheritDoc} */
-    public double getFulfilment(Model model, Element element) {
+    public double getFulfilment(ModelContext context) {
         return (double) (System.currentTimeMillis() - timestamp) / duration;
     }
 }

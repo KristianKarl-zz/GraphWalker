@@ -28,6 +28,7 @@ package org.graphwalker.core.conditions.support;
 import org.graphwalker.core.conditions.StopCondition;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Model;
+import org.graphwalker.core.model.support.ModelContext;
 
 /**
  * <p>Length class.</p>
@@ -35,7 +36,7 @@ import org.graphwalker.core.model.Model;
  * @author nilols
  * @version $Id: $
  */
-public class Length implements StopCondition {
+public final class Length implements StopCondition {
 
     private final long length;
 
@@ -49,14 +50,14 @@ public class Length implements StopCondition {
     }
 
     /** {@inheritDoc} */
-    public boolean isFulfilled(Model model, Element element) {
+    public boolean isFulfilled(ModelContext context) {
         // TODO:
         //return model.getTotalVisitCount() >= length;
         return false;
     }
 
     /** {@inheritDoc} */
-    public double getFulfilment(Model model, Element element) {
+    public double getFulfilment(ModelContext context) {
         // TODO:
         //return (double) model.getTotalVisitCount() / length;
         return 0;

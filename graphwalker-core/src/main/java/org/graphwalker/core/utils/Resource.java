@@ -68,10 +68,14 @@ public final class Resource {
      * @return a {@link java.lang.String} object.
      */
     public static String getText(final String bundle, final Locale locale, final String key, final Object... params) {
-        MessageFormat messageFormat = new MessageFormat("");
-        messageFormat.setLocale(locale);
-        messageFormat.applyPattern(ResourceBundle.getBundle(bundle, locale).getString(key));
-        return messageFormat.format(params);
+        String message = ResourceBundle.getBundle(bundle, locale).getString(key);
+        if (null != message) {
+            MessageFormat messageFormat = new MessageFormat("");
+            messageFormat.setLocale(locale);
+            messageFormat.applyPattern(message);
+            return messageFormat.format(params);
+        }
+        throw new ResourceException();
     }
 
     /**

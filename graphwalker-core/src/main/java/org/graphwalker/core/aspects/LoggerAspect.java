@@ -46,7 +46,7 @@ import java.util.UUID;
  * @version $Id: $
  */
 @Aspect
-public class LoggerAspect {
+public final class LoggerAspect {
 
     private final ILoggerFactory loggerFactory = LoggerFactory.getILoggerFactory();
 

@@ -4,8 +4,10 @@ import org.graphwalker.core.conditions.StopCondition;
 import org.graphwalker.core.generators.AbstractPathGenerator;
 import org.graphwalker.core.machine.Machine;
 import org.graphwalker.core.model.Element;
+import org.graphwalker.core.model.ModelElement;
+import org.graphwalker.core.model.support.ModelContext;
 
-public class AStarPath extends AbstractPathGenerator {
+public final class AStarPath extends AbstractPathGenerator {
 
     public AStarPath() {
     }
@@ -14,7 +16,7 @@ public class AStarPath extends AbstractPathGenerator {
         super(stopCondition);
     }
 
-    public Element getNextStep(Machine machine) {
+    public ModelElement getNextStep(ModelContext context) {
         return null;  // TODO: Fix me (Auto generated)
     }
 }

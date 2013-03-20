@@ -28,9 +28,11 @@ package org.graphwalker.core.machine;
 import org.graphwalker.core.Bundle;
 import org.graphwalker.core.filter.EdgeFilter;
 import org.graphwalker.core.model.Model;
+import org.graphwalker.core.model.ModelElement;
 import org.graphwalker.core.model.support.ModelContext;
 import org.graphwalker.core.utils.Resource;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -41,30 +43,36 @@ import java.util.List;
  */
 public class Machine {
 
-    private List<ModelContext> contexts;
+    private final List<ModelContext> contexts;
     private ModelContext currentContext;
-    private EdgeFilter edgeFilter;
+    //private EdgeFilter edgeFilter;
 
-    public Machine(List<ModelContext> contexts, ModelContext currentContext) {
-        this.contexts = contexts;
-        this.currentContext = currentContext;
-        this.edgeFilter = new EdgeFilter(Resource.getText(Bundle.NAME, "default.language"));
+    public Machine(List<ModelContext> contexts) {
+        this.contexts = Collections.unmodifiableList(contexts);
+        //this.edgeFilter = new EdgeFilter(Resource.getText(Bundle.NAME, "default.language"));
+    }
+
+    public void setCurrentContext(ModelContext context) {
+        if (!contexts.contains(context)) {
+            throw new MachineException(Resource.getText(Bundle.NAME, "exception.context.unknown"));
+        }
+        this.currentContext = context;
+    }
+
+    public ModelContext getCurrentContext() {
+        return currentContext;
     }
 
     public boolean hasMoreSteps() {
-        return false;
+        return !currentContext.getPathGenerator().getStopCondition().isFulfilled(currentContext);
     }
 
-    public String getCurrentStep() {
-        return "";
+    public ModelElement getCurrentStep() {
+        return currentContext.getCurrentElement();
     }
 
-    public String getNextStep() {
-        return "";
-    }
-
-    public Model getCurrentModel() {
-        return null;
+    public ModelElement getNextStep() {
+        return currentContext.getPathGenerator().getNextStep(currentContext);
     }
 
 }

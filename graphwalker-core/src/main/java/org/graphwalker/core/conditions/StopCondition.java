@@ -28,6 +28,7 @@ package org.graphwalker.core.conditions;
 
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Model;
+import org.graphwalker.core.model.support.ModelContext;
 
 /**
  * <p>StopCondition interface.</p>
@@ -44,21 +45,9 @@ public interface StopCondition {
     /** Constant <code>SECOND_SCALE=1000</code> */
     int SECOND_SCALE = 1000;
 
-    /**
-     * <p>isFulfilled.</p>
-     *
-     * @return a boolean.
-     * @param model a {@link org.graphwalker.core.model.Model} object.
-     * @param element a {@link org.graphwalker.core.model.Element} object.
-     */
-    boolean isFulfilled(Model model, Element element);
 
-    /**
-     * <p>getFulfilment.</p>
-     *
-     * @return a double.
-     * @param model a {@link org.graphwalker.core.model.Model} object.
-     * @param element a {@link org.graphwalker.core.model.Element} object.
-     */
-    double getFulfilment(Model model, Element element);
+    boolean isFulfilled(ModelContext context);
+
+
+    double getFulfilment(ModelContext context);
 }

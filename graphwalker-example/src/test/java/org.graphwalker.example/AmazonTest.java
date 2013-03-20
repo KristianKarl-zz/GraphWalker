@@ -2,6 +2,7 @@ package org.graphwalker.example;
 
 import org.graphwalker.core.conditions.support.EdgeCoverage;
 import org.graphwalker.core.generators.support.AStarPath;
+import org.graphwalker.core.model.ModelFactory;
 import org.graphwalker.java.GraphWalker;
 import org.graphwalker.core.conditions.support.Length;
 import org.graphwalker.core.generators.support.RandomPath;
@@ -16,7 +17,7 @@ public class AmazonTest {
     public void a_star() {
 
         // Get the model from resources
-        GraphMLModelFactory factory = new GraphMLModelFactory();
+        ModelFactory factory = new GraphMLModelFactory();
         Model model = factory.create("Amazon", "/models/ShoppingCart.graphml");
 
         GraphWalker graphWalker = new GraphWalker();
@@ -26,7 +27,7 @@ public class AmazonTest {
         graphWalker.execute(model);
 
         // Verify that the execution is complete, fulfilling the criteria from above.
-        Assert.assertFalse(graphWalker.hasMoreSteps(), "Not all models are done");
+        Assert.assertFalse(graphWalker.isAllModelsDone(), "Not all models are done");
 
         //Print the statistics from graphwalker
         //String actualResult = modelhandler.getStatistics();
@@ -76,7 +77,7 @@ public class AmazonTest {
         graphWalker.execute(model);
 
         // Verify that the execution is complete, fulfilling the criteria from above.
-        Assert.assertFalse(graphWalker.hasMoreSteps(), "Not all models are done");
+        Assert.assertFalse(graphWalker.isAllModelsDone(), "Not all models are done");
 
         //Print the statistics from graphwalker
         //String actualResult = modelhandler.getStatistics();

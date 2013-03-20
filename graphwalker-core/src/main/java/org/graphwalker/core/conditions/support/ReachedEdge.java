@@ -28,6 +28,7 @@ package org.graphwalker.core.conditions.support;
 import org.graphwalker.core.conditions.StopCondition;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Model;
+import org.graphwalker.core.model.support.ModelContext;
 
 /**
  * <p>ReachedEdge class.</p>
@@ -35,7 +36,7 @@ import org.graphwalker.core.model.Model;
  * @author nilols
  * @version $Id: $
  */
-public class ReachedEdge implements StopCondition {
+public final class ReachedEdge implements StopCondition {
 
     private final String name;
 
@@ -49,12 +50,12 @@ public class ReachedEdge implements StopCondition {
     }
 
     /** {@inheritDoc} */
-    public boolean isFulfilled(Model model, Element element) {
-        return getFulfilment(model, element) >= FULFILLMENT_LEVEL;
+    public boolean isFulfilled(ModelContext context) {
+        return getFulfilment(context) >= FULFILLMENT_LEVEL;
     }
 
     /** {@inheritDoc} */
-    public double getFulfilment(Model model, Element element) {
+    public double getFulfilment(ModelContext context) {
         /*
         Edge edge = model.getEdgeByName(name);
         if (null != edge) {

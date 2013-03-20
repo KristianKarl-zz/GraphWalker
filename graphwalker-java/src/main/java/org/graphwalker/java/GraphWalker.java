@@ -5,7 +5,9 @@ import org.graphwalker.core.generators.PathGenerator;
 import org.graphwalker.core.generators.support.RandomPath;
 import org.graphwalker.core.machine.Machine;
 import org.graphwalker.core.model.Model;
+import org.graphwalker.core.model.ModelElement;
 import org.graphwalker.core.model.support.ModelContext;
+import org.graphwalker.java.utils.Reflection;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,53 +16,38 @@ import java.util.Map;
 
 public class GraphWalker {
 
-    private List<ModelContext> contexts = new ArrayList<ModelContext>();
-    private Map<Model, Object> implementations = new HashMap<Model, Object>();
-    private Machine machine = null;
+    private final Map<Model, ModelContext> contexts = new HashMap<Model, ModelContext>();
+    private final Map<Model, Object> implementations = new HashMap<Model, Object>();
+    private Machine machine;
 
     public void addModel(Model model, Object object) {
         ModelContext context = new ModelContext(model);
         context.setPathGenerator(new RandomPath(new EdgeCoverage(100)));
-        contexts.add(context);
+        contexts.put(model, context);
         implementations.put(model, object);
     }
 
     public void addModel(Model model, PathGenerator pathGenerator, Object object) {
         ModelContext context = new ModelContext(model);
         context.setPathGenerator(pathGenerator);
-        contexts.add(context);
+        contexts.put(model, context);
         implementations.put(model, object);
     }
 
-    private Machine getMachine() {
-        //if (null == machine) {
-        //    machine = new Machine();
-        //}
-        return machine;
-    }
-
     public void execute(Model model) {
-        /*
-        Machine machine = new Machine(contexts, model);
+        machine = new Machine(new ArrayList<ModelContext>(contexts.values()));
+        machine.setCurrentContext(contexts.get(model));
         while (machine.hasMoreSteps()) {
-            String step = machine.getNextStep();
-            Machine currentModel = machine.getCurrentModel();
+            ModelElement element = machine.getNextStep();
+            ModelContext context = machine.getCurrentContext();
             if (implementations.containsKey(model)) {
-                // execute method
+                // TODO: Lägg till så argument skickas med till metoden
+                Reflection.execute(implementations.get(context.getModel()), element.getName());
             }
         }
-        */
     }
 
-    public boolean hasMoreSteps() {
-        return getMachine().hasMoreSteps();
-    }
-
-    public String getNextStep() {
-        return getMachine().getNextStep();
-    }
-
-    public String getCurrentStep() {
-        return getMachine().getCurrentStep();
+    public boolean isAllModelsDone() {
+        return machine.hasMoreSteps();
     }
 }

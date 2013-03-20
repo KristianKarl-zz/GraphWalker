@@ -35,7 +35,7 @@ import org.graphwalker.core.utils.Resource;
  * @author nilols
  * @version $Id: $
  */
-public class StopConditionFactory {
+public final class StopConditionFactory {
 
     private StopConditionFactory() {
     }
@@ -75,8 +75,6 @@ public class StopConditionFactory {
             return create(type, Integer.parseInt(value));
         } else if ("TimeDuration".equalsIgnoreCase(type)) {
             return create(type, Integer.parseInt(value));
-        } else if ("Callback".equalsIgnoreCase(type)) {
-            return new Callback(value);
         }
         throw new StopConditionException(Resource.getText(Bundle.NAME, "exception.condition.unknown"));
     }
