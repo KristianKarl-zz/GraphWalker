@@ -76,6 +76,9 @@ public class Machine {
         ModelElement nextElement = currentContext.getPathGenerator().getNextStep(currentContext, getPossibleSteps());
         currentContext.setCurrentElement(nextElement);
         currentContext.visit(nextElement);
+        if (nextElement instanceof Edge) {
+            currentContext.getEdgeFilter().executeActions(currentContext, (Edge)nextElement);
+        }
         return nextElement;
     }
 

@@ -8,8 +8,10 @@ import org.graphwalker.core.machine.Machine;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.ModelElement;
 import org.graphwalker.core.model.support.ModelContext;
+import org.graphwalker.java.annotations.*;
 import org.graphwalker.java.utils.Reflection;
 
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,6 +19,7 @@ import java.util.Map;
 
 public class GraphWalker {
 
+    private final AnnotationProcessor annotationProcessor = new AnnotationProcessor();
     private final Map<Model, ModelContext> contexts = new HashMap<Model, ModelContext>();
     private final Map<Model, Object> implementations = new HashMap<Model, Object>();
     private Machine machine;
@@ -46,13 +49,22 @@ public class GraphWalker {
     public void execute(Model model) {
         machine = new Machine(new ArrayList<ModelContext>(contexts.values()));
         machine.setCurrentContext(contexts.get(model));
+        processAnnotation(BeforeModel.class, machine, implementations.get(model));
         while (machine.hasMoreSteps()) {
             ModelElement element = machine.getNextStep();
             ModelContext context = machine.getCurrentContext();
             if (implementations.containsKey(model)) {
-                // TODO: Lägg till så argument skickas med till metoden
+                processAnnotation(BeforeElement.class, machine, implementations.get(model));
                 Reflection.execute(implementations.get(context.getModel()), element.getName());
+                processAnnotation(AfterElement.class, machine, implementations.get(model));
             }
+        }
+        processAnnotation(AfterModel.class, machine, implementations);
+    }
+
+    private void processAnnotation(Class<? extends Annotation> annotation, Machine machine, Object object) {
+        if (null != object) {
+            annotationProcessor.process(annotation, machine, object);
         }
     }
 
