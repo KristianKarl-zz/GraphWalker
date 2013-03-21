@@ -21,7 +21,7 @@ public class AmazonTest {
         Model model = factory.create("Amazon", "/models/ShoppingCart.graphml");
 
         GraphWalker graphWalker = new GraphWalker();
-        graphWalker.addModel(model, new AStarPath(new EdgeCoverage(100)), new Amazon());
+        graphWalker.addModel(model, new AStarPath(new EdgeCoverage(100)), "JavaScript", new Amazon());
 
         // Start executing the test
         graphWalker.execute(model);
@@ -71,7 +71,7 @@ public class AmazonTest {
         Model model = factory.create("Amazon", "/models/ShoppingCart.graphml");
 
         GraphWalker graphWalker = new GraphWalker();
-        graphWalker.addModel(model, new RandomPath(new Length(20)), new Amazon());
+        graphWalker.addModel(model, new RandomPath(new Length(20)), "JavaScript", new Amazon());
 
         // Start executing the test
         graphWalker.execute(model);

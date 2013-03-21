@@ -7,6 +7,8 @@ import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.ModelElement;
 import org.graphwalker.core.model.support.ModelContext;
 
+import java.util.List;
+
 public final class AStarPath extends AbstractPathGenerator {
 
     public AStarPath() {
@@ -16,7 +18,7 @@ public final class AStarPath extends AbstractPathGenerator {
         super(stopCondition);
     }
 
-    public ModelElement getNextStep(ModelContext context) {
+    public ModelElement getNextStep(ModelContext context, List<ModelElement> elements) {
         return null;  // TODO: Fix me (Auto generated)
     }
 }

@@ -9,7 +9,9 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.safari.SafariDriver;
 
 public class Amazon {
 
@@ -70,9 +72,10 @@ public class Amazon {
      * This method implements the Edge 'e_StartBrowser'
      */
     public void e_StartBrowser() {
-        driver = new FirefoxDriver();
-        // driver = new ChromeDriver();
-        driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+        //driver = new FirefoxDriver();
+        //driver = new ChromeDriver();
+        driver = new SafariDriver();
+        driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
     }
 
     /**

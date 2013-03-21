@@ -1,6 +1,7 @@
 package org.graphwalker.java;
 
 import org.graphwalker.core.conditions.support.EdgeCoverage;
+import org.graphwalker.core.filter.EdgeFilter;
 import org.graphwalker.core.generators.PathGenerator;
 import org.graphwalker.core.generators.support.RandomPath;
 import org.graphwalker.core.machine.Machine;
@@ -30,6 +31,14 @@ public class GraphWalker {
     public void addModel(Model model, PathGenerator pathGenerator, Object object) {
         ModelContext context = new ModelContext(model);
         context.setPathGenerator(pathGenerator);
+        contexts.put(model, context);
+        implementations.put(model, object);
+    }
+
+    public void addModel(Model model, PathGenerator pathGenerator, String scriptLanguage, Object object) {
+        ModelContext context = new ModelContext(model);
+        context.setPathGenerator(pathGenerator);
+        context.setEdgeFilter(new EdgeFilter(scriptLanguage));
         contexts.put(model, context);
         implementations.put(model, object);
     }

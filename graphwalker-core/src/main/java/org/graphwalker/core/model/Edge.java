@@ -101,6 +101,10 @@ public final class Edge extends ModelElement {
         return guard;
     }
 
+    public boolean hasGuard() {
+        return null!=guard;
+    }
+
     /**
      * <p>Getter for the field <code>actions</code>.</p>
      *

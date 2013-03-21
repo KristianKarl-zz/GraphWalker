@@ -35,6 +35,7 @@ import org.graphwalker.core.model.ModelElement;
 import org.graphwalker.core.model.support.ModelContext;
 import org.graphwalker.core.utils.Resource;
 
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -55,7 +56,7 @@ public final class RandomUnvisitedFirstPath extends AbstractPathGenerator {
     }
 
     /** {@inheritDoc} */
-    public ModelElement getNextStep(ModelContext context) {
+    public ModelElement getNextStep(ModelContext context, List<ModelElement> elements) {
         /*
         List<Element> possibleElements = machine.getPossibleSteps(machine.getCurrentElement());
         List<Element> unvisitedElements = new ArrayList<Element>();

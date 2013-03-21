@@ -25,6 +25,8 @@
  */
 package org.graphwalker.core.model.support;
 
+import org.graphwalker.core.Bundle;
+import org.graphwalker.core.filter.EdgeFilter;
 import org.graphwalker.core.generators.PathGenerator;
 import org.graphwalker.core.machine.strategy.ExceptionStrategy;
 import org.graphwalker.core.model.Element;
@@ -34,6 +36,7 @@ import org.graphwalker.core.model.Requirement;
 import org.graphwalker.core.model.status.ElementStatus;
 import org.graphwalker.core.model.status.ModelStatus;
 import org.graphwalker.core.model.status.RequirementStatus;
+import org.graphwalker.core.utils.Resource;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -54,6 +57,7 @@ public class ModelContext {
     private Map<Requirement, RequirementStatus> requirementStatus = new HashMap<Requirement, RequirementStatus>();
     private PathGenerator pathGenerator;
     private ExceptionStrategy exceptionStrategy;
+    private EdgeFilter edgeFilter;
 
     public ModelContext(Model model) {
         this.model = model;
@@ -61,6 +65,17 @@ public class ModelContext {
 
     public Model getModel() {
         return model;
+    }
+
+    public EdgeFilter getEdgeFilter() {
+        if (null == edgeFilter) {
+            edgeFilter = new EdgeFilter(Resource.getText(Bundle.NAME, "default.language"));
+        }
+        return edgeFilter;
+    }
+
+    public void setEdgeFilter(EdgeFilter edgeFilter) {
+        this.edgeFilter = edgeFilter;
     }
 
     /**
@@ -78,6 +93,9 @@ public class ModelContext {
      * @return a {@link org.graphwalker.core.model.ModelElement} object.
      */
     public ModelElement getCurrentElement() {
+        if (null == currentElement) {
+            currentElement = getModel().getStartVertex();
+        }
         return currentElement;
     }
 

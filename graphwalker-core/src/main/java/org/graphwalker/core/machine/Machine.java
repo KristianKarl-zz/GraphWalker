@@ -27,11 +27,14 @@ package org.graphwalker.core.machine;
 
 import org.graphwalker.core.Bundle;
 import org.graphwalker.core.filter.EdgeFilter;
+import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.ModelElement;
+import org.graphwalker.core.model.Vertex;
 import org.graphwalker.core.model.support.ModelContext;
 import org.graphwalker.core.utils.Resource;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -45,11 +48,9 @@ public class Machine {
 
     private final List<ModelContext> contexts;
     private ModelContext currentContext;
-    //private EdgeFilter edgeFilter;
 
     public Machine(List<ModelContext> contexts) {
         this.contexts = Collections.unmodifiableList(contexts);
-        //this.edgeFilter = new EdgeFilter(Resource.getText(Bundle.NAME, "default.language"));
     }
 
     public void setCurrentContext(ModelContext context) {
@@ -72,7 +73,25 @@ public class Machine {
     }
 
     public ModelElement getNextStep() {
-        return currentContext.getPathGenerator().getNextStep(currentContext);
+        ModelElement nextElement = currentContext.getPathGenerator().getNextStep(currentContext, getPossibleSteps());
+        currentContext.setCurrentElement(nextElement);
+        return nextElement;
     }
 
+    public List<ModelElement> getPossibleSteps() {
+        List<ModelElement> elements = new ArrayList<ModelElement>();
+        if (currentContext.getCurrentElement() instanceof Vertex) {
+            Vertex vertex = (Vertex)currentContext.getCurrentElement() ;
+            EdgeFilter edgeFilter = currentContext.getEdgeFilter();
+            Model model = currentContext.getModel();
+            for (Edge edge: model.getEdges(vertex)) {
+                if (!edge.isBlocked() && edgeFilter.acceptEdge(currentContext, edge)) {
+                    elements.add(edge);
+                }
+            }
+        } else if (currentContext.getCurrentElement() instanceof Edge) {
+            elements.add(((Edge)currentContext.getCurrentElement()).getTarget());
+        }
+        return elements;
+    }
 }

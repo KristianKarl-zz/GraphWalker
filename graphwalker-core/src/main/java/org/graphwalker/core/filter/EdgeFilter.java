@@ -25,11 +25,16 @@
  */
 package org.graphwalker.core.filter;
 
+import org.graphwalker.core.Bundle;
+import org.graphwalker.core.model.Action;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Model;
+import org.graphwalker.core.model.support.ModelContext;
+import org.graphwalker.core.utils.Resource;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 
 /**
  * <p>EdgeFilterImpl class.</p>
@@ -37,7 +42,7 @@ import javax.script.ScriptEngineManager;
  * @author nilols
  * @version $Id: $
  */
-public class EdgeFilter {
+public final class EdgeFilter {
 
     private final ScriptEngine scriptEngine;
     private final String scriptEngineName;
@@ -53,70 +58,34 @@ public class EdgeFilter {
         scriptEngine = scriptEngineManager.getEngineByName(scriptEngineName);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param model a {@link org.graphwalker.core.model.Model} object.
-     * @param edge a {@link org.graphwalker.core.model.Edge} object.
-     */
-    public void executeActions(Model model, Edge edge) {
-        /*
+    public void executeActions(ModelContext context, Edge edge) {
         if (null == scriptEngine) {
             throw new EdgeFilterException(Resource.getText(Bundle.NAME, "exception.script.engine.missing", scriptEngineName));
         }
-        if (null != edge.getEdgeActions() && 0 < edge.getEdgeActions().size()) {
-            addImplementationToFilter(model);
-            for (Action action : edge.getEdgeActions()) {
+        if (null != edge.getActions() && 0 < edge.getActions().size()) {
+            for (Action action: edge.getActions()) {
                 try {
                     scriptEngine.eval(action.getScript());
                 } catch (ScriptException e) {
-                    removeImplementationFromFilter();
                     throw new EdgeFilterException(Resource.getText(Bundle.NAME, "exception.script.error", e.getMessage()));
                 }
             }
-            removeImplementationFromFilter();
         }
-        */
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param model a {@link org.graphwalker.core.model.Model} object.
-     * @param edge a {@link org.graphwalker.core.model.Edge} object.
-     * @return a boolean.
-     */
-    public boolean acceptEdge(Model model, Edge edge) {
-        /*
+    public boolean acceptEdge(ModelContext context, Edge edge) {
         if (null == scriptEngine) {
             throw new EdgeFilterException(Resource.getText(Bundle.NAME, "exception.script.engine.missing", scriptEngineName));
         }
         boolean isEdgeAccepted = true;
-        if (edge.hasEdgeGuard()) {
-            addImplementationToFilter(model);
+        if (edge.hasGuard()) {
             try {
-                isEdgeAccepted = (Boolean) scriptEngine.eval(edge.getEdgeGuard().getScript());
+                isEdgeAccepted = (Boolean) scriptEngine.eval(edge.getGuard().getScript());
             } catch (ScriptException e) {
-                removeImplementationFromFilter();
                 throw new EdgeFilterException(Resource.getText(Bundle.NAME, "exception.script.error", e.getMessage()));
             }
-            removeImplementationFromFilter();
         }
         return isEdgeAccepted;
-        */
-        return false;
-    }
-    /*
-    private void addImplementationToFilter(Model model) {
-        if (null != model && model.hasImplementation()) {
-            scriptEngine.put(Resource.getText(Bundle.NAME, "script.implementation.name"), model.getImplementation());
-        }
     }
 
-    private void removeImplementationFromFilter() {
-        if (null != scriptEngine) {
-            scriptEngine.put(Resource.getText(Bundle.NAME, "script.implementation.name"), null);
-        }
-    }
-    */
 }

@@ -35,6 +35,7 @@ import org.graphwalker.core.model.ModelElement;
 import org.graphwalker.core.model.support.ModelContext;
 import org.graphwalker.core.utils.Resource;
 
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -55,11 +56,10 @@ public final class RandomPath extends AbstractPathGenerator {
     }
 
     /** {@inheritDoc} */
-    public ModelElement getNextStep(ModelContext context) {
-        //List<Element> possibleElements = machine.getPossibleSteps(machine.getCurrentElement());
-        //if (0<possibleElements.size()) {
-        //    return possibleElements.get(randomGenerator.nextInt(possibleElements.size()));
-        //}
-        throw new PathGeneratorException(Resource.getText(Bundle.NAME, "exception.generator.path.missing"));
+    public ModelElement getNextStep(ModelContext context, List<ModelElement> elements) {
+        if (elements.isEmpty()) {
+            throw new PathGeneratorException(Resource.getText(Bundle.NAME, "exception.generator.path.missing"));
+        }
+        return elements.get(randomGenerator.nextInt(elements.size()));
     }
 }
