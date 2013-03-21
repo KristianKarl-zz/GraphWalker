@@ -75,6 +75,7 @@ public class Machine {
     public ModelElement getNextStep() {
         ModelElement nextElement = currentContext.getPathGenerator().getNextStep(currentContext, getPossibleSteps());
         currentContext.setCurrentElement(nextElement);
+        currentContext.visit(nextElement);
         return nextElement;
     }
 

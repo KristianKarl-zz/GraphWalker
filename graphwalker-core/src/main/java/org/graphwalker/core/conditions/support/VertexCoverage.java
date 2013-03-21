@@ -60,23 +60,15 @@ public final class VertexCoverage implements StopCondition {
 
     /** {@inheritDoc} */
     public boolean isFulfilled(ModelContext context) {
-        // TODO:
-        /*
-        double totalVertexCount = model.getVertices().size();
-        double visitedVertexCount = model.getVisitedVertices().size();
+        double totalVertexCount = context.getModel().getVertices().size();
+        double visitedVertexCount = context.getVisitedVertices().size();
         return (visitedVertexCount / totalVertexCount) >= limit;
-        */
-        return false;
     }
 
     /** {@inheritDoc} */
     public double getFulfilment(ModelContext context) {
-        // TODO:
-        /*
-        double totalVertexCount = model.getVertices().size();
-        double visitedVertexCount = model.getVisitedVertices().size();
+        double totalVertexCount = context.getModel().getVertices().size();
+        double visitedVertexCount = context.getVisitedVertices().size();
         return (visitedVertexCount / totalVertexCount) / limit;
-        */
-        return 0;
     }
 }

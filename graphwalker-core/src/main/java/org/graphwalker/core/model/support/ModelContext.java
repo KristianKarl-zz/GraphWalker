@@ -29,17 +29,13 @@ import org.graphwalker.core.Bundle;
 import org.graphwalker.core.filter.EdgeFilter;
 import org.graphwalker.core.generators.PathGenerator;
 import org.graphwalker.core.machine.strategy.ExceptionStrategy;
-import org.graphwalker.core.model.Element;
-import org.graphwalker.core.model.Model;
-import org.graphwalker.core.model.ModelElement;
-import org.graphwalker.core.model.Requirement;
+import org.graphwalker.core.model.*;
 import org.graphwalker.core.model.status.ElementStatus;
 import org.graphwalker.core.model.status.ModelStatus;
 import org.graphwalker.core.model.status.RequirementStatus;
 import org.graphwalker.core.utils.Resource;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * <p>ModelContext class.</p>
@@ -47,17 +43,20 @@ import java.util.Map;
  * @author nilols
  * @version $Id: $
  */
-public class ModelContext {
+public final class ModelContext {
 
     private Model model;
     private ModelElement currentElement;
     private ModelStatus modelStatus;
     private Map<ModelElement, ElementStatus> elementStatus = new HashMap<ModelElement, ElementStatus>();
-    private Map<Element, Long> elementCount = new HashMap<Element, Long>();
+    private Map<Element, Long> elementVisitCount = new HashMap<Element, Long>();
+    private Set<Edge> visitedEdges = new HashSet<Edge>();
+    private Set<Vertex> visitedVertices = new HashSet<Vertex>();
     private Map<Requirement, RequirementStatus> requirementStatus = new HashMap<Requirement, RequirementStatus>();
     private PathGenerator pathGenerator;
     private ExceptionStrategy exceptionStrategy;
     private EdgeFilter edgeFilter;
+    private Long visitCount = 0L;
 
     public ModelContext(Model model) {
         this.model = model;
@@ -137,6 +136,24 @@ public class ModelContext {
         elementStatus.put(element, status);
     }
 
+    public List<Edge> getVisitedEdges() {
+        return new ArrayList<Edge>(visitedEdges);
+    }
+
+    public List<Vertex> getVisitedVertices() {
+        return new ArrayList<Vertex>(visitedVertices);
+    }
+
+    public Set<Requirement> getRequirements(RequirementStatus status) {
+        Set<Requirement> requirements = new HashSet<Requirement>();
+        for (Requirement requirement: getModel().getRequirements()) {
+            if (requirementStatus.get(requirement).equals(status)) {
+                requirements.add(requirement);
+            }
+        }
+        return requirements;
+    }
+
     /**
      * <p>getCount.</p>
      *
@@ -144,7 +161,15 @@ public class ModelContext {
      * @return a {@link java.lang.Long} object.
      */
     public Long getVisitCount(ModelElement element) {
-        return elementCount.get(element);
+        Long visitCount = 0L;
+        if (elementVisitCount.containsKey(element)) {
+            visitCount = elementVisitCount.get(element);
+        }
+        return visitCount;
+    }
+
+    public Long getVisitCount() {
+        return visitCount;
     }
 
     /**
@@ -153,8 +178,25 @@ public class ModelContext {
      * @param element a {@link org.graphwalker.core.model.ModelElement} object.
      */
     public void visit(ModelElement element) {
-        Long count = elementCount.get(element);
-        elementCount.put(element, ++count);
+        this.visitCount++;
+        this.elementVisitCount.put(element, getVisitCount(element)+1);
+        if (element instanceof Edge) {
+            visit((Edge)element);
+        } else {
+            visit((Vertex)element);
+        }
+    }
+
+    private void visit(Edge edge) {
+        if (!visitedEdges.contains(edge)) {
+            visitedEdges.add(edge);
+        }
+    }
+
+    private void visit(Vertex vertex) {
+        if (!visitedVertices.contains(vertex)) {
+            visitedVertices.add(vertex);
+        }
     }
 
     /**
@@ -175,7 +217,7 @@ public class ModelContext {
      * @return a boolean.
      */
     public boolean isVisited(ModelElement element) {
-        Long count = elementCount.get(element);
+        Long count = elementVisitCount.get(element);
         return 0 < count;
     }
 

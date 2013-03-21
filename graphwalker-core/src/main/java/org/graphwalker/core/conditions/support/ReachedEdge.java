@@ -26,6 +26,7 @@
 package org.graphwalker.core.conditions.support;
 
 import org.graphwalker.core.conditions.StopCondition;
+import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.support.ModelContext;
@@ -38,15 +39,10 @@ import org.graphwalker.core.model.support.ModelContext;
  */
 public final class ReachedEdge implements StopCondition {
 
-    private final String name;
+    private final Edge edge;
 
-    /**
-     * <p>Constructor for ReachedEdge.</p>
-     *
-     * @param name a {@link java.lang.String} object.
-     */
-    public ReachedEdge(String name) {
-        this.name = name;
+    public ReachedEdge(Edge edge) {
+        this.edge = edge;
     }
 
     /** {@inheritDoc} */
@@ -56,18 +52,15 @@ public final class ReachedEdge implements StopCondition {
 
     /** {@inheritDoc} */
     public double getFulfilment(ModelContext context) {
-        /*
-        Edge edge = model.getEdgeByName(name);
         if (null != edge) {
-            if (edge.equals(element)) {
+            if (edge.equals(context.getCurrentElement())) {
                 return 1;
             } else {
-                int distance = model.getShortestDistance(element, edge);
-                int max = model.getMaximumDistance(edge);
+                int distance = context.getModel().getShortestDistance(context.getCurrentElement(), edge);
+                int max = context.getModel().getMaximumDistance(edge);
                 return 1 - (double)distance/max;
             }
         }
-        */
         return 0;
     }
 

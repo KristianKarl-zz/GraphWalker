@@ -60,23 +60,15 @@ public final class EdgeCoverage implements StopCondition {
 
     /** {@inheritDoc} */
     public boolean isFulfilled(ModelContext context) {
-        // TODO:
-        /*
-        double totalEdgesCount = model.getEdges().size();
-        double visitedEdgesCount = model.getVisitedEdges().size();
+        double totalEdgesCount = context.getModel().getEdges().size();
+        double visitedEdgesCount = context.getVisitedEdges().size();
         return (visitedEdgesCount / totalEdgesCount) >= limit;
-        */
-        return false;
     }
 
     /** {@inheritDoc} */
     public double getFulfilment(ModelContext context) {
-        // TODO:
-        /*
-        double totalEdgesCount = model.getEdges().size();
-        double visitedEdgesCount = model.getVisitedEdges().size();
+        double totalEdgesCount = context.getModel().getEdges().size();
+        double visitedEdgesCount = context.getVisitedEdges().size();
         return (visitedEdgesCount / totalEdgesCount) / limit;
-        */
-        return 0;
     }
 }

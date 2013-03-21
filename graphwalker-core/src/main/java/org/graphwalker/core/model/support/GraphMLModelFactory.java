@@ -44,7 +44,7 @@ import java.util.regex.Pattern;
  * @author nilols
  * @version $Id: $
  */
-public class GraphMLModelFactory implements ModelFactory {
+public final class GraphMLModelFactory implements ModelFactory {
 
     // TODO: Update support for keywords
 

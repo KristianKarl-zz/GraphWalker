@@ -35,6 +35,7 @@ import org.graphwalker.core.model.ModelElement;
 import org.graphwalker.core.model.support.ModelContext;
 import org.graphwalker.core.utils.Resource;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -57,20 +58,19 @@ public final class RandomUnvisitedFirstPath extends AbstractPathGenerator {
 
     /** {@inheritDoc} */
     public ModelElement getNextStep(ModelContext context, List<ModelElement> elements) {
-        /*
-        List<Element> possibleElements = machine.getPossibleSteps(machine.getCurrentElement());
-        List<Element> unvisitedElements = new ArrayList<Element>();
-        for (Element element : possibleElements) {
-            if (!element.isVisited()) {
+        if (elements.isEmpty()) {
+            throw new PathGeneratorException(Resource.getText(Bundle.NAME, "exception.generator.path.missing"));
+        }
+        List<ModelElement> unvisitedElements = new ArrayList<ModelElement>();
+        for (ModelElement element : elements) {
+            if (!context.isVisited(element)) {
                 unvisitedElements.add(element);
             }
         }
         if (0 < unvisitedElements.size()) {
             return unvisitedElements.get(randomGenerator.nextInt(unvisitedElements.size()));
-        } else if (0 < possibleElements.size()) {
-            return possibleElements.get(randomGenerator.nextInt(possibleElements.size()));
+        } else {
+            return elements.get(randomGenerator.nextInt(elements.size()));
         }
-        */
-        throw new PathGeneratorException(Resource.getText(Bundle.NAME, "exception.generator.path.missing"));
     }
 }

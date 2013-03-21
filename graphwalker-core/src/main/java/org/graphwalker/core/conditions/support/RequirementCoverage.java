@@ -28,6 +28,7 @@ package org.graphwalker.core.conditions.support;
 import org.graphwalker.core.conditions.StopCondition;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Model;
+import org.graphwalker.core.model.status.RequirementStatus;
 import org.graphwalker.core.model.support.ModelContext;
 
 /**
@@ -60,32 +61,24 @@ public final class RequirementCoverage implements StopCondition {
 
     /** {@inheritDoc} */
     public boolean isFulfilled(ModelContext context) {
-        // TODO:
-        /*
-        double totalCount = model.getRequirements().size();
+        double totalCount = context.getModel().getRequirements().size();
         if (0 == totalCount) {
             return true;
         }
-        double passedCount = model.getRequirements(RequirementStatus.PASSED).size();
-        double failedCount = model.getRequirements(RequirementStatus.FAILED).size();
+        double passedCount = context.getRequirements(RequirementStatus.PASSED).size();
+        double failedCount = context.getRequirements(RequirementStatus.FAILED).size();
         return ((passedCount+failedCount) / totalCount) >= limit;
-        */
-        return false;
     }
 
     /** {@inheritDoc} */
     public double getFulfilment(ModelContext context) {
-        // TODO:
-        /*
-        double totalCount = model.getRequirements().size();
+        double totalCount = context.getModel().getRequirements().size();
         if (0 == totalCount) {
             return 1.0;
         }
-        double passedCount = model.getRequirements(RequirementStatus.PASSED).size();
-        double failedCount = model.getRequirements(RequirementStatus.FAILED).size();
+        double passedCount = context.getRequirements(RequirementStatus.PASSED).size();
+        double failedCount = context.getRequirements(RequirementStatus.FAILED).size();
         return ((passedCount+failedCount) / totalCount) / limit;
-        */
-        return 0;
     }
 
 }

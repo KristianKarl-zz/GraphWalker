@@ -35,6 +35,7 @@ import org.graphwalker.core.model.ModelElement;
 import org.graphwalker.core.model.support.ModelContext;
 import org.graphwalker.core.utils.Resource;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -57,16 +58,16 @@ public final class RandomLeastVisitedPath extends AbstractPathGenerator {
 
     /** {@inheritDoc} */
     public ModelElement getNextStep(ModelContext context, List<ModelElement> elements) {
-        // TODO:
-        /*
-        List<Element> possibleElements = machine.getPossibleSteps(machine.getCurrentElement());
+        if (elements.isEmpty()) {
+            throw new PathGeneratorException(Resource.getText(Bundle.NAME, "exception.generator.path.missing"));
+        }
         long leastVisitedCount = Long.MAX_VALUE;
-        List<Element> leastVisitedElements = new ArrayList<Element>();
-        for (Element element : possibleElements) {
-            long visitCount = element.getVisitCount();
+        List<ModelElement> leastVisitedElements = new ArrayList<ModelElement>();
+        for (ModelElement element: elements) {
+            long visitCount = context.getVisitCount(element);
             if (visitCount < leastVisitedCount) {
                 leastVisitedCount = visitCount;
-                leastVisitedElements = new ArrayList<Element>();
+                leastVisitedElements = new ArrayList<ModelElement>();
                 leastVisitedElements.add(element);
             } else if (visitCount == leastVisitedCount) {
                 leastVisitedElements.add(element);
@@ -74,10 +75,8 @@ public final class RandomLeastVisitedPath extends AbstractPathGenerator {
         }
         if (0 < leastVisitedElements.size()) {
             return leastVisitedElements.get(randomGenerator.nextInt(leastVisitedElements.size()));
-        } else if (0 < possibleElements.size()) {
-            return possibleElements.get(randomGenerator.nextInt(possibleElements.size()));
+        } else {
+            return elements.get(randomGenerator.nextInt(elements.size()));
         }
-        */
-        throw new PathGeneratorException(Resource.getText(Bundle.NAME, "exception.generator.path.missing"));
     }
 }

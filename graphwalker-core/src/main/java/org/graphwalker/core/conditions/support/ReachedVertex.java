@@ -28,6 +28,7 @@ package org.graphwalker.core.conditions.support;
 import org.graphwalker.core.conditions.StopCondition;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Model;
+import org.graphwalker.core.model.Vertex;
 import org.graphwalker.core.model.support.ModelContext;
 
 /**
@@ -38,15 +39,10 @@ import org.graphwalker.core.model.support.ModelContext;
  */
 public final class ReachedVertex implements StopCondition {
 
-    private final String name;
+    private final Vertex vertex;
 
-    /**
-     * <p>Constructor for ReachedVertex.</p>
-     *
-     * @param name a {@link java.lang.String} object.
-     */
-    public ReachedVertex(String name) {
-        this.name = name;
+    public ReachedVertex(Vertex vertex) {
+        this.vertex = vertex;
     }
 
     /** {@inheritDoc} */
@@ -56,18 +52,15 @@ public final class ReachedVertex implements StopCondition {
 
     /** {@inheritDoc} */
     public double getFulfilment(ModelContext context) {
-        /*
-        Vertex vertex = model.getVertexByName(name);
         if (null != vertex) {
-            if (vertex.equals(element)) {
+            if (vertex.equals(context.getCurrentElement())) {
                 return 1;
             } else {
-                int distance = model.getShortestDistance(element, vertex);
-                int max = model.getMaximumDistance(vertex);
+                int distance = context.getModel().getShortestDistance(context.getCurrentElement(), vertex);
+                int max = context.getModel().getMaximumDistance(vertex);
                 return 1 - (double)distance/max;
             }
         }
-        */
         return 0;
     }
 }

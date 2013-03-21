@@ -51,15 +51,11 @@ public final class Length implements StopCondition {
 
     /** {@inheritDoc} */
     public boolean isFulfilled(ModelContext context) {
-        // TODO:
-        //return model.getTotalVisitCount() >= length;
-        return false;
+        return context.getVisitCount() >= length;
     }
 
     /** {@inheritDoc} */
     public double getFulfilment(ModelContext context) {
-        // TODO:
-        //return (double) model.getTotalVisitCount() / length;
-        return 0;
+        return (double) context.getVisitCount() / length;
     }
 }

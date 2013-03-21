@@ -40,10 +40,11 @@ import java.util.*;
  */
 public final class Model extends Element {
 
-    private final List<ModelElement> modelElementsCache;
+    private final Set<ModelElement> modelElementsCache;
     private final Map<String, Edge> edgeIdCache;
     private final Map<String, Vertex> vertexIdCache;
     private final Map<Vertex, List<Edge>> vertexEdgeCache;
+    private final Set<Requirement> requirementsCache;
 
     private final Vertex startVertex;
     private final DepthFirstSearch depthFirstSearch;
@@ -60,7 +61,7 @@ public final class Model extends Element {
      */
     public Model(String id, List<Vertex> vertices, List<Edge> edges, Vertex startVertex) {
         super(id);
-        List<ModelElement> modelElementsCache = new ArrayList<ModelElement>();
+        Set<ModelElement> modelElementsCache = new HashSet<ModelElement>();
         Map<String, Vertex> vertexIdCache = new HashMap<String, Vertex>();
         Map<Vertex, List<Edge>> vertexEdgeCache = new HashMap<Vertex, List<Edge>>();
         if (null != vertices) {
@@ -83,15 +84,18 @@ public final class Model extends Element {
                 }
             }
         }
+        Set<Requirement> requirementsCache = new HashSet<Requirement>();
         Map<Vertex, List<Edge>> unmodifiableVertexEdgeCache = new HashMap<Vertex, List<Edge>>();
         for (Vertex vertex: vertexEdgeCache.keySet()) {
             unmodifiableVertexEdgeCache.put(vertex, Collections.unmodifiableList(vertexEdgeCache.get(vertex)));
+            requirementsCache.addAll(vertex.getRequirements());
         }
+        this.requirementsCache = Collections.unmodifiableSet(requirementsCache);
         this.startVertex = startVertex;
         this.vertexIdCache = Collections.unmodifiableMap(vertexIdCache);
         this.edgeIdCache = Collections.unmodifiableMap(edgeIdCache);
         this.vertexEdgeCache = Collections.unmodifiableMap(unmodifiableVertexEdgeCache);
-        this.modelElementsCache = Collections.unmodifiableList(modelElementsCache);
+        this.modelElementsCache = Collections.unmodifiableSet(modelElementsCache);
         this.depthFirstSearch = new DepthFirstSearch(this);
         this.floydWarshall = new FloydWarshall(this);
         validate();
@@ -115,9 +119,14 @@ public final class Model extends Element {
      *
      * @return a {@link java.util.Set} object.
      */
-    public List<ModelElement> getModelElements() {
+    public Set<ModelElement> getModelElements() {
         return modelElementsCache;
     }
+
+    public Set<Requirement> getRequirements() {
+        return requirementsCache;
+    }
+
 
     /**
      * <p>getEdges.</p>
@@ -129,6 +138,10 @@ public final class Model extends Element {
         return vertexEdgeCache.get(vertex);
     }
 
+    public List<Edge> getEdges() {
+        return new ArrayList<Edge>(edgeIdCache.values());
+    }
+
     /**
      * <p>getEdgeById.</p>
      *
@@ -137,6 +150,10 @@ public final class Model extends Element {
      */
     public Edge getEdgeById(String id) {
         return edgeIdCache.get(id);
+    }
+
+    public List<Vertex> getVertices() {
+        return new ArrayList<Vertex>(vertexIdCache.values());
     }
 
     /**
