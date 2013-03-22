@@ -6,7 +6,7 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(java.lang.annotation.ElementType.METHOD)
-public @interface Exception {
+public @interface ExceptionHandler {
 
     public Class<? extends Throwable> filter() default Throwable.class;
 }

@@ -5,17 +5,32 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.graphwalker.core.utils.Assert;
+import org.graphwalker.java.annotations.AfterModel;
+import org.graphwalker.java.annotations.BeforeModel;
+import org.graphwalker.java.annotations.ExceptionHandler;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.safari.SafariDriver;
 
 public class Amazon {
 
     private WebDriver driver = null;
+
+    @BeforeModel
+    public void createBrowser() {
+        driver = new FirefoxDriver();
+        driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+    }
+
+    @AfterModel
+    @ExceptionHandler
+    public void handleExceptions() {
+        if (null != driver) {
+            driver.close();
+        }
+    }
 
     /**
      * This method implements the Edge 'e_AddBookToCart'
@@ -72,10 +87,7 @@ public class Amazon {
      * This method implements the Edge 'e_StartBrowser'
      */
     public void e_StartBrowser() {
-        //driver = new FirefoxDriver();
-        //driver = new ChromeDriver();
-        driver = new SafariDriver();
-        driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+        // the browser creation is moved
     }
 
     /**

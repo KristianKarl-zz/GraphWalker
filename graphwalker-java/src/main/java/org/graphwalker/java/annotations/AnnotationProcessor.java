@@ -50,10 +50,8 @@ public class AnnotationProcessor {
 
     private static final Set<Class<? extends Annotation>> mySupportedAnnotations = new HashSet<Class<? extends Annotation>>() {{
         add(AfterElement.class);
-        add(AfterGroup.class);
         add(AfterModel.class);
         add(BeforeElement.class);
-        add(BeforeGroup.class);
         add(BeforeModel.class);
     }};
 
@@ -72,28 +70,7 @@ public class AnnotationProcessor {
                 for (Method method : object.getClass().getMethods()) {
                     if (method.isAnnotationPresent(annotation)) {
                         if (hasNoReturnType(method)) {
-                            /*
-                            if (hasNoParameter(method)) {
-                                Reflection.execute(object, method);
-                            } else if (hasOneParameter(method)) {
-                                if (isElementAnnotation(annotation) && isElementArgument(method)) {
-                                    Reflection.execute(object, method, element);
-                                } else if (isElementAnnotation(annotation) && isVertexArgument(method) && isVertex(element)) {
-                                    Reflection.execute(object, method, (Vertex) element);
-                                } else if (isElementAnnotation(annotation) && isEdgeArgument(method) && isEdge(element)) {
-                                    Reflection.execute(object, method, (Edge) element);
-                                } else if (isModelAnnotation(annotation) && isModelArgument(method)) {
-                                    Reflection.execute(object, method, context);
-                                }
-                            } else {
-                                throw new AnnotationException(Resource.getText(Bundle.NAME, "exception.not.supported.argument")); // wrong ammount of arguments
-                            }
-                            */
-
-
-
-
-
+                            Reflection.execute(object, method, machine.getCurrentContext());
                         } else {
                             throw new AnnotationException(Resource.getText(Bundle.NAME, "exception.wrong.return.type")); // wrong type of return value
                         }

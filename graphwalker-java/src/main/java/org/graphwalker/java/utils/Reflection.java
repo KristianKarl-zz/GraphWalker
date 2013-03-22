@@ -85,35 +85,34 @@ public final class Reflection {
         }
     }
 
-    /**
-     * <p>execute.</p>
-     *
-     * @param object     a {@link java.lang.Object} object.
-     * @param methodName a {@link java.lang.String} object.
-     */
-    public static void execute(Object object, String methodName) {
-        execute(object, methodName, Void.class);
+    public static void execute(Object object, String methodName, Object... arguments) {
+        execute(object, methodName, Void.class, arguments);
     }
 
-    /**
-     * <p>execute.</p>
-     *
-     * @param object a {@link java.lang.Object} object.
-     * @param method a {@link java.lang.reflect.Method} object.
-     */
-    public static void execute(Object object, Method method) {
-        execute(object, method, Void.class);
-    }
-
-    /**
-     * <p>execute.</p>
-     *
-     * @param object    a {@link java.lang.Object} object.
-     * @param method    a {@link java.lang.reflect.Method} object.
-     * @param arguments a {@link java.lang.Object} object.
-     */
     public static void execute(Object object, Method method, Object... arguments) {
         execute(object, method, Void.class, arguments);
+    }
+
+    public static <T> T execute(Object object, String methodName, Class<T> type, Object... arguments) {
+        try {
+            return execute(object, object.getClass().getMethod(methodName), type, arguments);
+        } catch (NoSuchMethodException e) {
+            throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.method.missing", methodName), e);
+        }
+    }
+
+    public static <T> T execute(Object object, Method method, Class<T> type, Object... arguments) {
+        try {
+            if (0<method.getParameterTypes().length) {
+                return type.cast(method.invoke(object, arguments));
+            } else {
+                return type.cast(method.invoke(object));
+            }
+        } catch (IllegalAccessException e) {
+            throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.method.access", method.getName()), e);
+        } catch (InvocationTargetException e) {
+            throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.method.invocation", method.getName()), e);
+        }
     }
 
     private static Class<?>[] getTypes(Object... arguments) {
@@ -122,34 +121,6 @@ public final class Reflection {
             types.add(argument.getClass());
         }
         return types.toArray(new Class<?>[types.size()]);
-    }
-
-    public static <T> T execute(Object object, String methodName, Class<T> type) {
-        try {
-            return execute(object, object.getClass().getMethod(methodName), type);
-        } catch (NoSuchMethodException e) {
-            throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.method.missing", methodName), e);
-        }
-    }
-
-    public static <T> T execute(Object object, Method method, Class<T> type) {
-        try {
-            return type.cast(method.invoke(object));
-        } catch (IllegalAccessException e) {
-            throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.method.access", method.getName()), e);
-        } catch (InvocationTargetException e) {
-            throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.method.invocation", method.getName()), e);
-        }
-    }
-
-    public static <T> T execute(Object object, Method method, Class<T> type, Object... arguments) {
-        try {
-            return type.cast(method.invoke(object, arguments));
-        } catch (IllegalAccessException e) {
-            throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.method.access", method.getName()), e);
-        } catch (InvocationTargetException e) {
-            throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.method.invocation", method.getName()), e);
-        }
     }
 
     public static boolean isReturnType(Object object, String methodName, Class<?> type) {

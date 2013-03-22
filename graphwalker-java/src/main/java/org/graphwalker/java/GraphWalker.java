@@ -49,17 +49,21 @@ public class GraphWalker {
     public void execute(Model model) {
         machine = new Machine(new ArrayList<ModelContext>(contexts.values()));
         machine.setCurrentContext(contexts.get(model));
-        processAnnotation(BeforeModel.class, machine, implementations.get(model));
-        while (machine.hasMoreSteps()) {
-            ModelElement element = machine.getNextStep();
-            ModelContext context = machine.getCurrentContext();
-            if (implementations.containsKey(model)) {
-                processAnnotation(BeforeElement.class, machine, implementations.get(model));
-                Reflection.execute(implementations.get(context.getModel()), element.getName());
-                processAnnotation(AfterElement.class, machine, implementations.get(model));
+        try {
+            processAnnotation(BeforeModel.class, machine, implementations.get(model));
+            while (machine.hasMoreSteps()) {
+                ModelElement element = machine.getNextStep();
+                ModelContext context = machine.getCurrentContext();
+                if (implementations.containsKey(model)) {
+                    processAnnotation(BeforeElement.class, machine, implementations.get(model));
+                    Reflection.execute(implementations.get(context.getModel()), element.getName(), machine.getCurrentContext());
+                    processAnnotation(AfterElement.class, machine, implementations.get(model));
+                }
             }
+            processAnnotation(AfterModel.class, machine, implementations.get(model));
+        } catch (Throwable t) {
+            processAnnotation(ExceptionHandler.class, machine, implementations.get(model));
         }
-        processAnnotation(AfterModel.class, machine, implementations);
     }
 
     private void processAnnotation(Class<? extends Annotation> annotation, Machine machine, Object object) {
