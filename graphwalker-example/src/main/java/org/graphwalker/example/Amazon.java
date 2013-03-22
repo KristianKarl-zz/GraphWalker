@@ -26,7 +26,7 @@ public class Amazon {
 
     @AfterModel
     @ExceptionHandler
-    public void handleExceptions() {
+    public void closeBrowser() {
         if (null != driver) {
             driver.close();
         }
