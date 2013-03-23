@@ -38,11 +38,13 @@ import java.util.*;
  * @author nilols
  * @version $Id: $
  */
-public final class Model extends Element {
+public final class Model extends ImmutableElement {
 
     private final Set<ModelElement> modelElementsCache;
     private final Map<String, Edge> edgeIdCache;
+    private final Map<String, List<Edge>> edgeNameCache;
     private final Map<String, Vertex> vertexIdCache;
+    private final Map<String, List<Vertex>> vertexNameCache;
     private final Map<Vertex, List<Edge>> vertexEdgeCache;
     private final Set<Requirement> requirementsCache;
 
@@ -63,19 +65,35 @@ public final class Model extends Element {
         super(id);
         Set<ModelElement> modelElementsCache = new HashSet<ModelElement>();
         Map<String, Vertex> vertexIdCache = new HashMap<String, Vertex>();
+        Map<String, List<Vertex>> vertexNameCache = new HashMap<String, List<Vertex>>();
         Map<Vertex, List<Edge>> vertexEdgeCache = new HashMap<Vertex, List<Edge>>();
         if (null != vertices) {
             for (Vertex vertex: vertices) {
                 vertexIdCache.put(vertex.getId(), vertex);
                 vertexEdgeCache.put(vertex, new ArrayList<Edge>());
                 modelElementsCache.add(vertex);
+                if (vertex.hasName()) {
+                    if (vertexNameCache.containsKey(vertex.getName())) {
+                        vertexNameCache.get(vertex.getName()).add(vertex);
+                    } else {
+                        vertexNameCache.put(vertex.getName(), Arrays.asList(vertex));
+                    }
+                }
             }
         }
         Map<String, Edge> edgeIdCache = new HashMap<String, Edge>();
+        Map<String, List<Edge>> edgeNameCache = new HashMap<String, List<Edge>>();
         if (null != edges) {
             for (Edge edge: edges) {
                 edgeIdCache.put(edge.getId(), edge);
                 modelElementsCache.add(edge);
+                if (edge.hasName()) {
+                    if (edgeNameCache.containsKey(edge.getName())) {
+                        edgeNameCache.get(edge.getName()).add(edge);
+                    } else {
+                        edgeNameCache.put(edge.getName(), Arrays.asList(edge));
+                    }
+                }
                 Vertex vertex = edge.getSource();
                 if (vertexEdgeCache.containsKey(vertex)) {
                     vertexEdgeCache.get(vertex).add(edge);
@@ -90,10 +108,20 @@ public final class Model extends Element {
             unmodifiableVertexEdgeCache.put(vertex, Collections.unmodifiableList(vertexEdgeCache.get(vertex)));
             requirementsCache.addAll(vertex.getRequirements());
         }
+        Map<String, List<Edge>> unmodifiableEdgeNameCache = new HashMap<String, List<Edge>>();
+        for (String name: edgeNameCache.keySet()) {
+            unmodifiableEdgeNameCache.put(name, Collections.unmodifiableList(edgeNameCache.get(name)));
+        }
+        Map<String, List<Vertex>> unmodifiableVertexNameCache = new HashMap<String, List<Vertex>>();
+        for (String name: vertexNameCache.keySet()) {
+            unmodifiableVertexNameCache.put(name, Collections.unmodifiableList(vertexNameCache.get(name)));
+        }
         this.requirementsCache = Collections.unmodifiableSet(requirementsCache);
         this.startVertex = startVertex;
         this.vertexIdCache = Collections.unmodifiableMap(vertexIdCache);
+        this.vertexNameCache = Collections.unmodifiableMap(unmodifiableVertexNameCache);
         this.edgeIdCache = Collections.unmodifiableMap(edgeIdCache);
+        this.edgeNameCache = Collections.unmodifiableMap(unmodifiableEdgeNameCache);
         this.vertexEdgeCache = Collections.unmodifiableMap(unmodifiableVertexEdgeCache);
         this.modelElementsCache = Collections.unmodifiableSet(modelElementsCache);
         this.depthFirstSearch = new DepthFirstSearch(this);
@@ -127,7 +155,6 @@ public final class Model extends Element {
         return requirementsCache;
     }
 
-
     /**
      * <p>getEdges.</p>
      *
@@ -152,6 +179,10 @@ public final class Model extends Element {
         return edgeIdCache.get(id);
     }
 
+    public List<Edge> getEdgesByName(String name) {
+        return edgeNameCache.get(name);
+    }
+
     public List<Vertex> getVertices() {
         return new ArrayList<Vertex>(vertexIdCache.values());
     }
@@ -164,6 +195,10 @@ public final class Model extends Element {
      */
     public Vertex getVertexById(String id) {
         return vertexIdCache.get(id);
+    }
+
+    public List<Vertex> getVerticesByName(String name) {
+        return vertexNameCache.get(name);
     }
 
     /**

@@ -26,8 +26,6 @@
 
 package org.graphwalker.core.conditions;
 
-import org.graphwalker.core.model.Element;
-import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.support.ModelContext;
 
 /**

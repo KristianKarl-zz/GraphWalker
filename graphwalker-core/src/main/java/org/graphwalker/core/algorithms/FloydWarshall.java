@@ -97,23 +97,10 @@ public final class FloydWarshall {
         return predecessors;
     }
 
-    /**
-     * <p>getShortestDistance.</p>
-     *
-     * @param source a {@link org.graphwalker.core.model.Element} object.
-     * @param target a {@link org.graphwalker.core.model.Element} object.
-     * @return a int.
-     */
     public int getShortestDistance(final ModelElement source, final ModelElement target) {
         return distances[elements.indexOf(source)][elements.indexOf(target)];
     }
 
-    /**
-     * <p>getMaximumDistance.</p>
-     *
-     * @param target a {@link org.graphwalker.core.model.Element} object.
-     * @return a int.
-     */
     public int getMaximumDistance(ModelElement target) {
         int maximumDistance = Integer.MIN_VALUE;
         for (int[] distance : distances) {
@@ -125,13 +112,6 @@ public final class FloydWarshall {
         return maximumDistance;
     }
 
-    /**
-     * <p>getShortestPath.</p>
-     *
-     * @param source a {@link org.graphwalker.core.model.Element} object.
-     * @param target a {@link org.graphwalker.core.model.Element} object.
-     * @return a {@link java.util.List} object.
-     */
     public List<ModelElement> getShortestPath(final ModelElement source, final ModelElement target) {
         if (distances[elements.indexOf(source)][elements.indexOf(target)] == Integer.MAX_VALUE) {
             return new ArrayList<ModelElement>();

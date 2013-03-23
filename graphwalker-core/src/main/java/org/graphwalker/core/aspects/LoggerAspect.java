@@ -29,7 +29,7 @@ import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
-import org.graphwalker.core.model.Element;
+import org.graphwalker.core.model.ImmutableElement;
 import org.graphwalker.core.model.Model;
 import org.slf4j.ILoggerFactory;
 import org.slf4j.Logger;
@@ -82,7 +82,7 @@ public final class LoggerAspect {
     }
 
     @Pointcut("execution(* *.executeElement(..)) && args(model, element)")
-    void executeElement(Model model, Element element) {
+    void executeElement(Model model, ImmutableElement element) {
     }
 
     /**
@@ -90,10 +90,10 @@ public final class LoggerAspect {
      *
      * @param joinPoint a {@link org.aspectj.lang.JoinPoint} object.
      * @param model     a {@link org.graphwalker.core.model.Model} object.
-     * @param element   a {@link org.graphwalker.core.model.Element} object.
+     * @param element   a {@link org.graphwalker.core.model.ImmutableElement} object.
      */
     @Before("machine() && executeElement(model, element)")
-    public void beforeExecuteElement(JoinPoint joinPoint, Model model, Element element) {
+    public void beforeExecuteElement(JoinPoint joinPoint, Model model, ImmutableElement element) {
         // TODO:
         //getLogger(joinPoint).info(Resource.getText(Bundle.NAME, "log.method.call", model.getId(), (element instanceof Edge ? "edge" : "vertex"), element.getId(), element.getName(), element.getVisitCount()));
     }

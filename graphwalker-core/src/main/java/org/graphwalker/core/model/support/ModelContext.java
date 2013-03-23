@@ -49,7 +49,7 @@ public final class ModelContext {
     private ModelElement currentElement;
     private ModelStatus modelStatus;
     private Map<ModelElement, ElementStatus> elementStatus = new HashMap<ModelElement, ElementStatus>();
-    private Map<Element, Long> elementVisitCount = new HashMap<Element, Long>();
+    private Map<ModelElement, Long> elementVisitCount = new HashMap<ModelElement, Long>();
     private Set<Edge> visitedEdges = new HashSet<Edge>();
     private Set<Vertex> visitedVertices = new HashSet<Vertex>();
     private Map<Requirement, RequirementStatus> requirementStatus = new HashMap<Requirement, RequirementStatus>();

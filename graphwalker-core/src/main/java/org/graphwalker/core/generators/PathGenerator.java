@@ -27,8 +27,6 @@
 package org.graphwalker.core.generators;
 
 import org.graphwalker.core.conditions.StopCondition;
-import org.graphwalker.core.machine.Machine;
-import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.ModelElement;
 import org.graphwalker.core.model.support.ModelContext;
 

@@ -29,8 +29,6 @@ import org.graphwalker.core.Bundle;
 import org.graphwalker.core.conditions.StopCondition;
 import org.graphwalker.core.generators.AbstractPathGenerator;
 import org.graphwalker.core.generators.PathGeneratorException;
-import org.graphwalker.core.machine.Machine;
-import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.ModelElement;
 import org.graphwalker.core.model.support.ModelContext;
 import org.graphwalker.core.utils.Resource;

@@ -44,7 +44,7 @@ import java.util.List;
  * @author nilols
  * @version $Id: $
  */
-public class Machine {
+public final class Machine {
 
     private final List<ModelContext> contexts;
     private ModelContext currentContext;

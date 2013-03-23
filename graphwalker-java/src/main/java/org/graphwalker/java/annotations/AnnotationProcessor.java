@@ -28,10 +28,9 @@ package org.graphwalker.java.annotations;
 import org.graphwalker.core.Bundle;
 import org.graphwalker.core.machine.Machine;
 import org.graphwalker.core.model.Edge;
-import org.graphwalker.core.model.Element;
+import org.graphwalker.core.model.ImmutableElement;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Vertex;
-import org.graphwalker.core.model.support.ModelContext;
 import org.graphwalker.core.utils.Resource;
 import org.graphwalker.java.utils.Reflection;
 
@@ -91,16 +90,16 @@ public class AnnotationProcessor {
         return mySupportedAnnotations;
     }
 
-    private boolean isVertex(Element element) {
+    private boolean isVertex(ImmutableElement element) {
         return element instanceof Vertex;
     }
 
-    private boolean isEdge(Element element) {
+    private boolean isEdge(ImmutableElement element) {
         return element instanceof Edge;
     }
 
     private boolean isElementArgument(Method method) {
-        return (1 == method.getParameterTypes().length) && (Element.class.equals(method.getParameterTypes()[0]));
+        return (1 == method.getParameterTypes().length) && (ImmutableElement.class.equals(method.getParameterTypes()[0]));
     }
 
     private boolean isEdgeArgument(Method method) {

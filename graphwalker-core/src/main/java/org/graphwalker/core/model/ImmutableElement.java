@@ -31,7 +31,7 @@ package org.graphwalker.core.model;
  * @author nilols
  * @version $Id: $
  */
-public abstract class Element implements Immutable {
+public abstract class ImmutableElement implements Immutable {
 
     private final String id;
 
@@ -40,7 +40,7 @@ public abstract class Element implements Immutable {
      *
      * @param id a {@link java.lang.String} object.
      */
-    public Element(String id) {
+    public ImmutableElement(String id) {
         this.id = id;
     }
 

@@ -27,8 +27,6 @@ package org.graphwalker.core.conditions.support;
 
 import org.graphwalker.core.conditions.StopCondition;
 import org.graphwalker.core.model.Edge;
-import org.graphwalker.core.model.Element;
-import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.support.ModelContext;
 
 /**

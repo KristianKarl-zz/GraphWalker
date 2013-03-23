@@ -31,7 +31,7 @@ package org.graphwalker.core.model;
  * @author nilols
  * @version $Id: $
  */
-public abstract class NamedElement extends Element {
+public abstract class NamedElement extends ImmutableElement {
 
     private final String name;
 
@@ -53,5 +53,9 @@ public abstract class NamedElement extends Element {
      */
     public String getName() {
         return name;
+    }
+
+    public boolean hasName() {
+        return null != name && !"".equals(name);
     }
 }
