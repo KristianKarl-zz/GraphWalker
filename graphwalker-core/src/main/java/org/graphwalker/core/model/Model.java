@@ -73,11 +73,10 @@ public final class Model extends ImmutableElement {
                 vertexEdgeCache.put(vertex, new ArrayList<Edge>());
                 modelElementsCache.add(vertex);
                 if (vertex.hasName()) {
-                    if (vertexNameCache.containsKey(vertex.getName())) {
-                        vertexNameCache.get(vertex.getName()).add(vertex);
-                    } else {
-                        vertexNameCache.put(vertex.getName(), Arrays.asList(vertex));
+                    if (!vertexNameCache.containsKey(vertex.getName())) {
+                        vertexNameCache.put(vertex.getName(), new ArrayList<Vertex>());
                     }
+                    vertexNameCache.get(vertex.getName()).add(vertex);
                 }
             }
         }
@@ -88,11 +87,10 @@ public final class Model extends ImmutableElement {
                 edgeIdCache.put(edge.getId(), edge);
                 modelElementsCache.add(edge);
                 if (edge.hasName()) {
-                    if (edgeNameCache.containsKey(edge.getName())) {
-                        edgeNameCache.get(edge.getName()).add(edge);
-                    } else {
-                        edgeNameCache.put(edge.getName(), Arrays.asList(edge));
+                    if (!edgeNameCache.containsKey(edge.getName())) {
+                        edgeNameCache.put(edge.getName(), new ArrayList<Edge>());
                     }
+                    edgeNameCache.get(edge.getName()).add(edge);
                 }
                 Vertex vertex = edge.getSource();
                 if (vertexEdgeCache.containsKey(vertex)) {

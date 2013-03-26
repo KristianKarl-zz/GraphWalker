@@ -47,11 +47,12 @@ import java.util.Set;
  */
 public class AnnotationProcessor {
 
-    private static final Set<Class<? extends Annotation>> mySupportedAnnotations = new HashSet<Class<? extends Annotation>>() {{
+    private static final Set<Class<? extends Annotation>> supportedAnnotations = new HashSet<Class<? extends Annotation>>() {{
         add(AfterElement.class);
         add(AfterModel.class);
         add(BeforeElement.class);
         add(BeforeModel.class);
+        add(ExceptionHandler.class);
     }};
 
     /**
@@ -87,7 +88,7 @@ public class AnnotationProcessor {
      * @return a {@link java.util.Set} object.
      */
     protected Set<Class<? extends Annotation>> getSupportedAnnotations() {
-        return mySupportedAnnotations;
+        return supportedAnnotations;
     }
 
     private boolean isVertex(ImmutableElement element) {

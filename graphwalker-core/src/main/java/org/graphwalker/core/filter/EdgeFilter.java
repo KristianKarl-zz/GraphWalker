@@ -32,9 +32,7 @@ import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.support.ModelContext;
 import org.graphwalker.core.utils.Resource;
 
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
+import javax.script.*;
 
 /**
  * <p>EdgeFilterImpl class.</p>
@@ -88,4 +86,9 @@ public final class EdgeFilter {
         return isEdgeAccepted;
     }
 
+    @SuppressWarnings("unchecked")
+    public <T> T getDataValue(String name, Class<T> type) {
+        Bindings bindings = scriptEngine.getBindings(ScriptContext.ENGINE_SCOPE);
+        return type.cast(bindings.get(name));
+    }
 }

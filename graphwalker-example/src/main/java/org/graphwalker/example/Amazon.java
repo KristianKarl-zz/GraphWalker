@@ -4,6 +4,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.graphwalker.core.model.support.ModelContext;
 import org.graphwalker.core.utils.Assert;
 import org.graphwalker.java.annotations.AfterModel;
 import org.graphwalker.java.annotations.BeforeModel;
@@ -72,15 +73,7 @@ public class Amazon {
      * This method implements the Edge 'e_ShoppingCart'
      */
     public void e_ShoppingCart() {
-        try {
-            driver.findElement(By.cssSelector("#navCartEmpty > a.destination > span.text")).click();
-        } catch (NoSuchElementException e) {
-            try {
-                driver.findElement(By.cssSelector("a.destination.count")).click();
-            } catch (NoSuchElementException e1) {
-                driver.findElement(By.xpath("//*[@id='nav-cart-count']")).click();
-            }
-        }
+        driver.findElement(By.id("nav-cart")).click();
     }
 
     /**
@@ -126,9 +119,9 @@ public class Amazon {
     /**
      * This method implements the Vertex 'v_ShoppingCart'
      */
-    public void v_ShoppingCart() {
+    public void v_ShoppingCart(ModelContext context) {
         Assert.assertTrue(driver.getTitle().matches("^Amazon\\.com Shopping Cart.*"));
-        Integer expected_num_of_books = 0; //Integer.valueOf(getMbt().getDataValue("num_of_books"));
+        Integer expected_num_of_books = context.getEdgeFilter().getDataValue("num_of_books", Double.class).intValue();
         Integer actual_num_of_books = null;
 
         if (expected_num_of_books == 0) {

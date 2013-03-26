@@ -95,7 +95,13 @@ public final class Reflection {
 
     public static <T> T execute(Object object, String methodName, Class<T> type, Object... arguments) {
         try {
-            return execute(object, object.getClass().getMethod(methodName), type, arguments);
+            Method method = null;
+            try {
+                method = object.getClass().getMethod(methodName, getTypes(arguments));
+            } catch (NoSuchMethodException e) {
+                method = object.getClass().getMethod(methodName);
+            }
+            return execute(object, method, type, arguments);
         } catch (NoSuchMethodException e) {
             throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.method.missing", methodName), e);
         }
