@@ -45,7 +45,7 @@ public final class TimeDuration implements StopCondition {
      * @param value a {@link java.lang.String} object.
      */
     public TimeDuration(String value) {
-        this(Long.parseLong(value));
+        this(!"".equals(value)?Long.parseLong(value):0);
     }
 
     /**

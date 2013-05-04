@@ -44,7 +44,7 @@ public final class VertexCoverage implements StopCondition {
      * @param value a {@link java.lang.String} object.
      */
     public VertexCoverage(String value) {
-        this(!"".equals(value) ? Long.parseLong(value) : 100);
+        this(!"".equals(value)?Long.parseLong(value) : 100);
     }
 
     /**
