@@ -23,7 +23,16 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core.machine;
+package org.graphwalker.core.algorithms;
 
-public class MachineTest {
+import org.graphwalker.core.model.ModelElement;
+import org.graphwalker.core.model.support.ModelContext;
+
+import java.util.List;
+
+public class JumpPointSearch {
+
+    public static List<ModelElement> getPath(ModelContext context, ModelElement start, ModelElement destination) {
+        return null;
+    }
 }

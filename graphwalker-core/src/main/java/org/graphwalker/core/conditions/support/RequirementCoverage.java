@@ -45,7 +45,7 @@ public final class RequirementCoverage implements StopCondition {
      * @param value a {@link java.lang.String} object.
      */
     public RequirementCoverage(String value) {
-        this(Long.parseLong(value));
+        this(!"".equals(value) ? Long.parseLong(value) : 100);
     }
 
     /**

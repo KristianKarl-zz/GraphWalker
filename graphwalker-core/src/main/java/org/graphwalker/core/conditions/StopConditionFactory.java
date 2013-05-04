@@ -86,7 +86,7 @@ public final class StopConditionFactory {
      * @param value a {@link java.lang.Integer} object.
      * @return a {@link org.graphwalker.core.conditions.StopCondition} object.
      */
-    public static StopCondition create(String type, int value) {
+    public static StopCondition create(String type, long value) {
         if ("EdgeCoverage".equalsIgnoreCase(type)) {
             return new EdgeCoverage(value);
         } else if ("VertexCoverage".equalsIgnoreCase(type)) {
