@@ -1,0 +1,61 @@
+<j:jelly xmlns:j="jelly:core">
+<j:new className="java.text.DecimalFormat" var="format">
+    <j:arg type="java.lang.String" value="0%" />
+</j:new>
+<j:set var="result" value="${it.getResult()}"/>
+<div aligin="center">
+    <div align="left" style="border:1px solid #999999; background-color:#F0F0F0; padding:4px; font-weight:bold;">Requirements Grid</div>
+    <table class="pane" style="margin-top:0px; border-top:none;">
+        <tbody>
+            <tr>
+                <td>
+                    <div align="center">
+                        <table class="pane" style="margin-top:0px; border-top:none;">
+                            <tbody>
+                                <tr>
+                                    <td style="vertical-align:middle" rowspan="2" class="pane-header">Model Implementation</td>
+                                    <td colspan="2" class="pane-header">Passed</td>
+                                    <td colspan="2" class="pane-header">Failed</td>
+                                    <td colspan="2" class="pane-header">Not Covered</td>
+                                    <td class="pane-header">Total</td>
+                                </tr>
+                                <tr>
+                                    <td class="pane-header">#</td>
+                                    <td class="pane-header">%</td>
+                                    <td class="pane-header">#</td>
+                                    <td class="pane-header">%</td>
+                                    <td class="pane-header">#</td>
+                                    <td class="pane-header">%</td>
+                                    <td class="pane-header">#</td>
+                                </tr>
+                                <j:forEach var="reportResult" items="${result.reportResults}">
+                                    <tr style="border:1px #bbb solid;">
+                                        <td>${reportResult.clazz}</td>
+                                        <td>${reportResult.passedRequirementCount}</td>
+                                        <td>${it.format(format, reportResult.passedRequirementPercentage)}</td>
+                                        <td>${reportResult.failedRequirementCount}</td>
+                                        <td>${it.format(format, reportResult.failedRequirementPercentage)}</td>
+                                        <td>${reportResult.notCoveredRequirementCount}</td>
+                                        <td>${it.format(format, reportResult.notCoveredRequirementPercentage)}</td>
+                                        <td>${reportResult.totalRequirementCount}</td>
+                                    </tr>
+                                </j:forEach>
+                                <tr>
+                                    <td>Total</td>
+                                    <td>${result.passedRequirementCount}</td>
+                                    <td>${it.format(format, result.passedRequirementPercentage)}</td>
+                                    <td>${result.failedRequirementCount}</td>
+                                    <td>${it.format(format, result.failedRequirementPercentage)}</td>
+                                    <td>${result.notCoveredRequirementCount}</td>
+                                    <td>${it.format(format, result.notCoveredRequirementPercentage)}</td>
+                                    <td>${result.totalRequirementCount}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+</j:jelly>

@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 
 import org.graphwalker.core.model.support.ModelContext;
 import org.graphwalker.core.utils.Assert;
-import org.graphwalker.java.annotations.AfterModel;
+import org.graphwalker.maven.plugin.annotations.AfterModel;
 import org.graphwalker.java.annotations.BeforeModel;
 import org.graphwalker.java.annotations.ExceptionHandler;
 import org.openqa.selenium.By;

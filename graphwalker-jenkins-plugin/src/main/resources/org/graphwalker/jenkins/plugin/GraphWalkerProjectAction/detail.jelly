@@ -1,0 +1,27 @@
+<j:jelly xmlns:j="jelly:core">
+<div aligin="center">
+    <div align="left" style="border: 1px solid #999999; background-color: #F0F0F0; padding: 4px; font-weight: bold;">Requirements Trend</div>
+    <table class="pane" style="margin-top:0px; border-top:none;">
+        <tbody>
+            <tr>
+                <td>
+                    <div align="center">
+                        <img src="graph" alt="[Project Trend Graph]"/>
+                        <!--img id="graph" alt="[Project Trend Graph]"/-->
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>
+</j:jelly>
+
+        <!--
+          src="portlet/dashboard_portlet_7/summaryGraph/png?width=300&amp;height=220"
+
+         lazymap="portlet/dashboard_portlet_7/summaryGraph/map" usemap="#map0"
+
+<table class="pane" style="margin-top: 0px; border-top: none;" id="dashboard_portlet_7"><tbody><tr><td><div align="center"><img src="portlet/dashboard_portlet_7/summaryGraph/png?width=300&amp;height=220" alt="[Test Summary graph]" lazymap="portlet/dashboard_portlet_7/summaryGraph/map" id="graph" usemap="#map0"></div></td></tr></tbody></table>
+
+                                -->

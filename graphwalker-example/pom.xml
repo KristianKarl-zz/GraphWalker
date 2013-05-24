@@ -31,7 +31,7 @@
     <dependencies>
         <dependency>
             <groupId>org.graphwalker</groupId>
-            <artifactId>graphwalker-java</artifactId>
+            <artifactId>graphwalker</artifactId>
             <version>3.0-SNAPSHOT</version>
         </dependency>
         <dependency>

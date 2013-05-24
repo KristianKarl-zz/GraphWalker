@@ -18,12 +18,9 @@
 
     <modules>
         <module>graphwalker-core</module>
-        <module>graphwalker-api</module>
-        <module>graphwalker-java</module>
-        <module>graphwalker-php</module>
-        <module>graphwalker-python</module>
-        <module>graphwalker-server</module>
         <module>graphwalker-example</module>
+        <module>graphwalker-maven-plugin</module>
+        <module>graphwalker-jenkins-plugin</module>
     </modules>
 
     <organization>

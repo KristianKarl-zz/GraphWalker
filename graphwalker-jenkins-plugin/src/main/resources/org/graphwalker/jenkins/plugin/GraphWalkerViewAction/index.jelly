@@ -1,0 +1,291 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:t="/lib/hudson" xmlns:l="/lib/layout" xmlns:i="jelly:fmt" xmlns:x="jelly:xml">
+    <st:header name="Expires" value="0" />
+    <st:header name="Cache-Control" value="no-cache,must-revalidate" />
+    <st:contentType value="text/html;charset=UTF-8" />
+    <j:new var="h" className="hudson.Functions" />
+    <j:set var="rootURL" value="${request.contextPath}" />
+    <j:set var="resURL"  value="${rootURL}${h.resourcePath}" />
+    <j:set var="imagesURL"  value="${rootURL}${h.resourcePath}/images" />
+    <j:set var="instance" value="${it}" />
+    <j:set var="descriptor" value="${it.descriptor}" />
+    <x:doctype name="html" />
+    <html>
+        <head>
+            ${h.checkPermission(it,permission)}
+            <title>${h.appendIfNotNull(title, ' [Jenkins]', 'Jenkins')}</title>
+            <link rel="stylesheet" href="${resURL}/css/style.css" type="text/css" />
+            <link rel="stylesheet" href="${resURL}/css/color.css" type="text/css" />
+            <script src="${resURL}/scripts/prototype.js" type="text/javascript"/>
+            <script src="${resURL}/scripts/behavior.js" type="text/javascript"/>
+            <st:adjunct assumes="org.kohsuke.stapler.framework.prototype.prototype" includes="org.kohsuke.stapler.bind"/>
+            <style type="text/css">
+                body {
+                    font-family:sans-serif;
+                    font-weight:bold;
+                    overflow:hidden;
+                }
+                html, body {
+                    padding:0;
+                    margin:0;
+                }
+                #ruler {
+                    position:absolute;
+                    visibility: hidden;
+                    white-space:nowrap;
+                    text-align:center;
+                }
+                span {
+                    vertical-align: middle;
+                }
+                .job {
+                    position:absolute;
+                    border-radius:20px;
+                    -moz-border-radius:20px;
+                    text-align:center;
+                    color:#FFFFFF;
+                    white-space:nowrap;
+                    overflow:hidden;
+                }
+                .job-spinner {
+                    position:absolute;
+                    top: 0px;
+                    left: 0px;
+                    width:100%;
+                    height:100%;
+                    opacity:0.75;
+                    border-radius:20px;
+                    -moz-border-radius:20px;
+                    z-index:99999;
+                    background:#ABABAB;
+                }
+                .job-title {
+                    vertical-align:middle;
+                    text-align:center;
+                    overflow:hidden;
+                }
+                .job-time {
+                    float:left;
+                    vertical-align:middle;
+                    text-align:left;
+                }
+                .job-result {
+                    float:right;
+                    vertical-align:middle;
+                    text-align:right;
+                }
+                .job-building {
+                    background-color:#204a87;
+                }
+                .job-default {
+                    background-color:#ABABAB;
+                }
+                .job-success {
+                    background-color:#4e9a06;
+                }
+                .job-failure {
+                    background-color:#EF2929;
+                }
+            </style>
+            <meta name="ROBOTS" content="INDEX,NOFOLLOW" />
+        </head>
+        <body>
+            <div id="ruler">
+                <div style="padding:10px;">
+                    <div class="job-title"/>
+                    <div style="padding:10px;margin:8px;">
+                        <div class="job-time">2012-01-01 12:00:00</div>
+                        <div class="job-result">resultstring</div>
+                    </div>
+                </div>
+            </div>
+
+            <script type="text/javascript">
+                var proxy;
+            </script>
+            <st:bind var="proxy" value="${it}"/>
+            <script type="text/javascript">
+
+                var jobNames = new Hash();
+                var buildQueue = [];
+                var maxFontSize = 0;
+                var rows = 0;
+                var columns = 0;
+                var margin = 10;
+
+                function updateEverything() {
+                    proxy.getJobNames(function(message) {
+                        var newJobNames = message.responseObject();
+                        jobNames.keys().without(newJobNames).each(function(name) {
+                            jobNames.get(name).remove();
+                        });
+                        newJobNames.without(jobNames.keys()).each(function(name) {
+                            var job = new Element("div", {"id":name, "class":"job job-default"});
+                            var content = new Element("div", {"style":"padding:"+margin+"px;"});
+                            content.insert(
+                                new Element("div", {"class":"job-title"}).update(name)
+                            );
+                            content.insert(
+                                new Element("div", {"style":"padding:10px;margin:8px;"}).insert(
+                                    new Element("div", {"class":"job-time"})
+                                ).insert(
+                                    new Element("div", {"class":"job-result"}).update("result")
+                                )
+                            );
+                            job.insert(content);
+                            var spinner = new Element("div", {"class":"job-spinner"});
+                            spinner.setStyle({"visibility":"hidden"});
+                            var spinnerTarget = new Element("div", {"class":"job-spinner-target", "style":"position:absolute;top:50%;left:50%;"});
+                            spinner.insert(spinnerTarget);
+                            job.insert(spinner);
+                            Spinner({radius:32,length:32,lines:12,width:10,trail:60,shadow:false}).spin(spinnerTarget);
+                            jobNames.set(name, job);
+                            $(document.body).insert(job);
+                        });
+                        calculateJobSize();
+                        updateJobPosition();
+                        updateJobStatus();
+                    });
+                }
+
+                function calculateJobSize() {
+                    var longestName = "";
+                    jobNames.keys().each(function (name) {
+                        if (longestName.length &lt; name.length) {
+                            longestName = name;
+                        }
+                    });
+                    var ruler  = $("ruler");
+                    var title  = ruler.getElementsBySelector(".job-title")[0];
+                    var time   = ruler.getElementsBySelector(".job-time")[0];
+                    var result = ruler.getElementsBySelector(".job-result")[0];
+                    title.update(longestName);
+                    maxFontSize = 0;
+                    var maxWidth = document.viewport.getWidth();
+                    var maxHeight = document.viewport.getHeight();
+                    for (var columnCount = 1; columnCount &lt;= jobNames.keys().length; columnCount++) {
+                        for (var fontSize = 10; fontSize &lt;= 302; fontSize++) {
+                            var rowCount = Math.ceil(jobNames.keys().length/columnCount);
+                            title.setStyle({"fontSize":fontSize+"px"});
+                            time.setStyle({"fontSize":Math.round(maxFontSize*0.5)+"px"});
+                            result.setStyle({"fontSize":Math.round(maxFontSize*0.5)+"px"});
+                            var dimensions = ruler.getDimensions();
+                            var totalWidth = (dimensions.width+margin)*columnCount+margin;
+                            var totalHeight = (dimensions.height+margin)*rowCount+margin;
+                            if (totalWidth &lt;= maxWidth &amp;&amp; totalHeight &lt;= maxHeight) {
+                                if (maxFontSize &lt; fontSize) {
+                                    maxFontSize = fontSize;
+                                    rows = rowCount;
+                                    columns = columnCount;
+                                }
+                            } else {
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                function updateJobPosition() {
+                    var maxWidth = document.viewport.getWidth();
+                    var maxHeight = document.viewport.getHeight();
+                    var width = Math.round((maxWidth-(columns+1)*margin)/columns);
+                    var height = Math.round((maxHeight-(rows+1)*margin)/rows);
+                    var offsetX = margin;
+                    var offsetY = margin;
+                    jobNames.keys().each(function(name) {
+                        $(name).setStyle({"top": offsetY+"px"
+                            , "left": offsetX+"px"
+                            , "width": width+"px"
+                            , "height": height+"px"});
+                        $(name).getElementsBySelector(".job-title")[0].setStyle({"fontSize":maxFontSize+"px"});
+                        $(name).getElementsBySelector(".job-time")[0].setStyle({"fontSize":Math.round(maxFontSize*0.5)+"px"});
+                        $(name).getElementsBySelector(".job-result")[0].setStyle({"fontSize":Math.round(maxFontSize*0.5)+"px"});
+                        offsetY += height+margin;
+                        if (maxHeight-margin &lt;= offsetY) {
+                            offsetY = margin;
+                            offsetX += width+margin;
+                        }
+                    });
+                }
+
+                function updateJobStatus() {
+                    proxy.getJobAttributes(jobNames.keys().without(buildQueue), function(message) {
+                        var jobs = new Hash(message.responseObject());
+                        jobs.keys().each(function(key) {
+                            var attributes = new Hash(jobs.get(key));
+                            updateElement(key, attributes);
+                            if (attributes.get("isBuilding") === "true") {
+                                buildQueue.unshift(key);
+                            }
+                        });
+                    });
+                }
+
+                function updateBuildStatus() {
+                    if (buildQueue.size()) {
+                        proxy.getJobAttributes(buildQueue, function(message) {
+                            var jobs = new Hash(message.responseObject());
+                            jobs.keys().each(function(key) {
+                                var attributes = new Hash(jobs.get(key));
+                                updateElement(key, attributes);
+                                if (attributes.get("isBuilding") === "false") {
+                                    buildQueue = buildQueue.without(key);
+                                }
+                            });
+                        });
+                    }
+                }
+
+                function updateElement(key, attributes) {
+                    if (attributes.get("isBuilding") === "true") {
+                        $(key).getElementsBySelector(".job-spinner")[0].setStyle({"visibility":"visible"});
+                    } else {
+                        $(key).getElementsBySelector(".job-spinner")[0].setStyle({"visibility":"hidden"});
+                        if (attributes.get("isDisabled") === "true") {
+                            $(key).removeClassName("job-building");
+                            $(key).addClassName("job-default");
+                            $(key).removeClassName("job-success");
+                            $(key).removeClassName("job-failure");
+                        } else {
+                            $(key).getElementsBySelector(".job-time")[0].update(attributes.get("time"));
+                            if (attributes.get("success") === "true") {
+                                $(key).removeClassName("job-building");
+                                $(key).removeClassName("job-default");
+                                $(key).addClassName("job-success");
+                                $(key).removeClassName("job-failure");
+                            }
+                            if (attributes.get("failure") === "true") {
+                                $(key).removeClassName("job-building");
+                                $(key).removeClassName("job-default");
+                                $(key).removeClassName("job-success");
+                                $(key).addClassName("job-failure");
+                            }
+                        }
+                    }
+                }
+
+                Event.observe(document, "dom:loaded", function() {
+                    updateEverything();
+                });
+
+                Event.observe(window, "resize", function() {
+                    calculateJobSize();
+                    updateJobPosition();
+                });
+
+                var jobStatusExecutor = new PeriodicalExecuter(function(executor) {
+                    updateJobStatus();
+                }, 10);
+
+                var buildStatusExecutor = new PeriodicalExecuter(function(executor) {
+                    updateBuildStatus();
+                }, 3);
+
+            </script>
+            <script type="text/javascript">
+                var crumb={fieldName:null,value:null,init:function(crumbField,crumbValue){if(crumbField=="")return;this.fieldName=crumbField;this.value=crumbValue;},wrap:function(headers){if(this.fieldName!=null){if(headers instanceof Array){headers.push(this.fieldName, this.value);}else{headers[this.fieldName]=this.value;}}return headers;},appendToForm:function(form){if(this.fieldName==null)return;var div=document.createElement("div");var input=document.createElement("input");input.type="hidden";input.name=this.fieldName;input.value=this.value;div.appendChild(input);form.appendChild(div);}};crumb.init("${h.getCrumbRequestField()}","${h.getCrumb(request)}");
+                !function(e,t,n){function o(e,n){var r=t.createElement(e||"div"),i;for(i in n)r[i]=n[i];return r}function u(e){for(var t=1,n=arguments.length;t&lt;n;t++)e.appendChild(arguments[t]);return e}function f(e,t,n,r){var o=["opacity",t,~~(e*100),n,r].join("-"),u=.01+n/r*100,f=Math.max(1-(1-e)/t*(100-u),e),l=s.substring(0,s.indexOf("Animation")).toLowerCase(),c=l&amp;&amp;"-"+l+"-"||"";return i[o]||(a.insertRule("@"+c+"keyframes "+o+"{"+"0%{opacity:"+f+"}"+u+"%{opacity:"+e+"}"+(u+.01)+"%{opacity:1}"+(u+t)%100+"%{opacity:"+e+"}"+"100%{opacity:"+f+"}"+"}",a.cssRules.length),i[o]=1),o}function l(e,t){var i=e.style,s,o;if(i[t]!==n)return t;t=t.charAt(0).toUpperCase()+t.slice(1);for(o=0;o&lt;r.length;o++){s=r[o]+t;if(i[s]!==n)return s}}function c(e,t){for(var n in t)e.style[l(e,n)||n]=t[n];return e}function h(e){for(var t=1;t&lt;arguments.length;t++){var r=arguments[t];for(var i in r)e[i]===n&amp;&amp;(e[i]=r[i])}return e}function p(e){var t={x:e.offsetLeft,y:e.offsetTop};while(e=e.offsetParent)t.x+=e.offsetLeft,t.y+=e.offsetTop;return t}var r=["webkit","Moz","ms","O"],i={},s,a=function(){var e=o("style",{type:"text/css"});return u(t.getElementsByTagName("head")[0],e),e.sheet||e.styleSheet}(),d={lines:12,length:7,width:5,radius:10,rotate:0,corners:1,color:"#000",speed:1,trail:100,opacity:.25,fps:20,zIndex:2e9,className:"mySpinner",top:"auto",left:"auto"},v=function m(e){if(!this.spin)return new m(e);this.opts=h(e||{},m.defaults,d)};v.defaults={},h(v.prototype,{spin:function(e){this.stop();var t=this,n=t.opts,r=t.el=c(o(0,{className:n.className}),{position:"relative",width:0,zIndex:n.zIndex}),i=n.radius+n.length+n.width,u,a;e&amp;&amp;(e.insertBefore(r,e.firstChild||null),a=p(e),u=p(r),c(r,{left:(n.left=="auto"?a.x-u.x+(e.offsetWidth>>1):parseInt(n.left,10)+i)+"px",top:(n.top=="auto"?a.y-u.y+(e.offsetHeight>>1):parseInt(n.top,10)+i)+"px"})),r.setAttribute("aria-role","progressbar"),t.lines(r,t.opts);if(!s){var f=0,l=n.fps,h=l/n.speed,d=(1-n.opacity)/(h*n.trail/100),v=h/n.lines;(function m(){f++;for(var e=n.lines;e;e--){var i=Math.max(1-(f+e*v)%h*d,n.opacity);t.opacity(r,n.lines-e,i,n)}t.timeout=t.el&amp;&amp;setTimeout(m,~~(1e3/l))})()}return t},stop:function(){var e=this.el;return e&amp;&amp;(clearTimeout(this.timeout),e.parentNode&amp;&amp;e.parentNode.removeChild(e),this.el=n),this},lines:function(e,t){function i(e,r){return c(o(),{position:"absolute",width:t.length+t.width+"px",height:t.width+"px",background:e,boxShadow:r,transformOrigin:"left",transform:"rotate("+~~(360/t.lines*n+t.rotate)+"deg) translate("+t.radius+"px"+",0)",borderRadius:(t.corners*t.width>>1)+"px"})}var n=0,r;for(;n&lt;t.lines;n++)r=c(o(),{position:"absolute",top:1+~(t.width/2)+"px",transform:t.hwaccel?"translate3d(0,0,0)":"",opacity:t.opacity,animation:s&amp;&amp;f(t.opacity,t.trail,n,t.lines)+" "+1/t.speed+"s linear infinite"}),t.shadow&amp;&amp;u(r,c(i("#000","0 0 4px #000"),{top:"2px"})),u(e,u(r,i(t.color,"0 0 1px rgba(0,0,0,.1)")));return e},opacity:function(e,t,n){t&lt;e.childNodes.length&amp;&amp;(e.childNodes[t].style.opacity=n)}}),function(){function e(e,t){return o("&lt;"+e+' xmlns="urn:schemas-microsoft.com:vml" class="spin-vml">',t)}var t=c(o("group"),{behavior:"url(#default#VML)"});!l(t,"transform")&amp;&amp;t.adj?(a.addRule(".spin-vml","behavior:url(#default#VML)"),v.prototype.lines=function(t,n){function s(){return c(e("group",{coordsize:i+" "+i,coordorigin:-r+" "+ -r}),{width:i,height:i})}function l(t,i,o){u(a,u(c(s(),{rotation:360/n.lines*t+"deg",left:~~i}),u(c(e("roundrect",{arcsize:n.corners}),{width:r,height:n.width,left:n.radius,top:-n.width>>1,filter:o}),e("fill",{color:n.color,opacity:n.opacity}),e("stroke",{opacity:0}))))}var r=n.length+n.width,i=2*r,o=-(n.width+n.length)*2+"px",a=c(s(),{position:"absolute",top:o,left:o}),f;if(n.shadow)for(f=1;f&lt;=n.lines;f++)l(f,-2,"progid:DXImageTransform.Microsoft.Blur(pixelradius=2,makeshadow=1,shadowopacity=.3)");for(f=1;f&lt;=n.lines;f++)l(f);return u(t,a)},v.prototype.opacity=function(e,t,n,r){var i=e.firstChild;r=r.shadow&amp;&amp;r.lines||0,i&amp;&amp;t+r&lt;i.childNodes.length&amp;&amp;(i=i.childNodes[t+r],i=i&amp;&amp;i.firstChild,i=i&amp;&amp;i.firstChild,i&amp;&amp;(i.opacity=n))}):s=l(t,"animation")}(),typeof define=="function"&amp;&amp;define.amd?define(function(){return v}):e.Spinner=v}(window,document);
+            </script>
+        </body>
+    </html>
+</j:jelly>
