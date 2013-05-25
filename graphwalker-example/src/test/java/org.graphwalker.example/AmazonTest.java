@@ -13,7 +13,7 @@ import org.testng.annotations.Test;
 
 public class AmazonTest {
 
-    @Test
+    //Test
     public void a_star() {
 
         // Get the model from resources
@@ -63,7 +63,7 @@ public class AmazonTest {
         */
     }
 
-    @Test
+    //Test
     public void random() {
 
         // Get the model from resources
@@ -71,7 +71,7 @@ public class AmazonTest {
         Model model = factory.create("Amazon", "/models/ShoppingCart.graphml");
 
         GraphWalker graphWalker = new GraphWalker();
-        graphWalker.addModel(model, new RandomPath(new Length(20)), "JavaScript", new Amazon());
+        graphWalker.addModel(model, new RandomPath(new EdgeCoverage(100)), "JavaScript", new Amazon());
 
         // Start executing the test
         graphWalker.execute(model);

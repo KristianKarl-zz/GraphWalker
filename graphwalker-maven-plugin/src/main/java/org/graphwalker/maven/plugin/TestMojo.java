@@ -25,30 +25,13 @@
  */
 package org.graphwalker.maven.plugin;
 
-import org.apache.maven.execution.MavenSession;
-import org.apache.maven.plugin.AbstractMojo;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.project.MavenProject;
 import org.graphwalker.core.GraphWalker;
-import org.graphwalker.core.GraphWalkerExecutor;
-import org.graphwalker.core.GraphWalkerFactory;
-import org.graphwalker.core.configuration.Configuration;
-import org.graphwalker.core.configuration.ConfigurationFactory;
-import org.graphwalker.core.model.Model;
+import org.graphwalker.core.utils.Resource;
 import org.graphwalker.maven.plugin.reports.ReportWriter;
 import org.graphwalker.maven.plugin.reports.XMLReport;
-import org.graphwalker.core.utils.Resource;
 import org.graphwalker.maven.plugin.utils.TestUtil;
 
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 /**
  * <p>ExecuteMojo class.</p>
@@ -62,101 +45,62 @@ import java.util.concurrent.TimeUnit;
  */
 public class TestMojo extends AbstractMojo {
 
-    /**
-     * The current build session instance.
-     *
-     * @parameter expression="${session}"
-     */
-    private MavenSession session;
-
-    /**
-     * @parameter expression="${project}"
-     */
-    private MavenProject mavenProject;
-
-    /**
-     * @parameter expression="${project.testClasspathElements}"
-     */
-    private List<String> classpathElements;
-
-    /**
-     * @parameter expression="${skipTests}" default-value="false"
-     */
-    private boolean skipTests;
-
-    /**
-     * @parameter expression="${graphwalker.test.skip}" default-value="false"
-     */
-    private boolean skipTestsProperty;
-
-    /**
-     * @parameter expression="${maven.test.skip}" default-value="false"
-     */
-    private boolean skipAllTests;
-
-    /**
-     * @parameter expression="${test}"
-     */
-    private String test;
-
-    /**
-     * @parameter default-value="${project.build.testOutputDirectory}"
-     */
-    private File testClassesDirectory;
-
-    /**
-     * @parameter default-value="${project.build.directory}/graphwalker-reports"
-     */
-    private File reportsDirectory;
-
-    /**
-     * @parameter property="includes"
-     */
-    private List<String> includes;
-
-    /**
-     * @parameter property="excludes"
-     */
-    private List<String> excludes;
-
     private List<GraphWalker> graphWalkers = new ArrayList<GraphWalker>();
 
     private ReportWriter reportWriter = new XMLReport();
 
-    /**
-     * <p>execute.</p>
-     *
-     * @throws org.apache.maven.plugin.MojoExecutionException
-     *          if any.
-     * @throws org.apache.maven.plugin.MojoFailureException
-     *          if any.
-     */
-    public void execute() throws MojoExecutionException, MojoFailureException {
+    public void executeMojo() {
         if (!skipTests()) {
-            logHeader();
-            ClassLoader classLoader = switchClassLoader(createClassLoader());
-            Properties properties = switchProperties(createProperties());
+            displayHeader();
+            List<Class<?>> tests = TestUtil.findTests(getIncludes(), getExcludes(), getTestClassesDirectory(), getClassesDirectory());
+            displayConfiguration(tests);
+            // kör testerna
+            /*
             createInstances();
             executeInstances();
-            logResult();
             reportExecution();
-            switchProperties(properties);
-            switchClassLoader(classLoader);
+            */
+            displayResult();
         }
     }
 
-    private void logHeader() {
-        getLog().info("-------------------------------------------------------");
-        getLog().info(" G r a p h W a l k e r                                 ");
-        getLog().info("-------------------------------------------------------");
+    private void displayHeader() {
+        getLog().info("------------------------------------------------------------------------");
+        getLog().info(" G r a p h W a l k e r                                                  ");
+        getLog().info("------------------------------------------------------------------------");
     }
 
-    private void logResult() {
+    private void displayConfiguration(List<Class<?>> tests) {
+        getLog().info("Arguments:");
+        // parametrar/argument, typ: antal trådar, version, timestamp (start)
+        getLog().info("");
+        getLog().info("Tests:");
+        if (0<tests.size()) {
+            for (Class<?> test: tests) {
+                getLog().info("  "+test.getName());
+            }
+            getLog().info("");
+        } else {
+            getLog().info("  No tests found");
+        }
+        getLog().info("------------------------------------------------------------------------");
+    }
+
+    private String convert(List<Class<?>> tests) {
+        StringBuilder builder = new StringBuilder();
+        for (Class<?> test: tests) {
+            builder.append(", ").append(test.getSimpleName());
+        }
+        return builder.toString();
+    }
+
+    private void displayResult() {
         getLog().info("");
         getLog().info(Resource.getText(Bundle.NAME, "result.label"));
         getLog().info("");
-        List<Model> failedModels = new ArrayList<Model>();
         long group = 0, total = 0, completed = 0, failed = 0, notExecuted = 0;
+        /*
+        List<Model> failedModels = new ArrayList<Model>();
         for (GraphWalker graphWalker : graphWalkers) {
             group++;
             for (Model model : graphWalker.getConfiguration().getModels()) {
@@ -185,41 +129,41 @@ public class TestMojo extends AbstractMojo {
             }
             getLog().info("");
         }
+        */
         getLog().info(Resource.getText(Bundle.NAME, "result.summary", group, total, completed, failed, notExecuted));
         getLog().info("");
     }
 
-    private ClassLoader createClassLoader() throws MojoExecutionException {
-        try {
-            return new URLClassLoader(convertToURL(classpathElements), getClass().getClassLoader());
-        } catch (MalformedURLException e) {
-            throw new MojoExecutionException(Resource.getText(Bundle.NAME, "exception.create.classloader"));
-        }
-    }
 
-    private ClassLoader switchClassLoader(ClassLoader newClassLoader) {
-        ClassLoader oldClassLoader = Thread.currentThread().getContextClassLoader();
-        Thread.currentThread().setContextClassLoader(newClassLoader);
-        return oldClassLoader;
-    }
 
-    private Properties createProperties() {
-        Properties properties = (Properties) System.getProperties().clone();
-        properties.putAll((Properties) mavenProject.getProperties().clone());
-        properties.putAll((Properties) session.getUserProperties().clone());
-        return properties;
-    }
 
-    private Properties switchProperties(Properties properties) {
-        Properties oldProperties = (Properties) System.getProperties().clone();
-        System.setProperties(properties);
-        return oldProperties;
-    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+
+
+
+
 
     private void createInstances() throws MojoExecutionException {
         try {
             Map<String, List<Class<?>>> testGroups = new HashMap<String, List<Class<?>>>();
-            List<Class<?>> tests = TestUtil.findTests(testClassesDirectory, getIncludes(), excludes);
+            List<Class<?>> tests = TestUtil.findTests(testClassesDirectory, updateIncludes(), excludes);
             for (Class<?> test : tests) {
                 String group = TestUtil.getGroup(test);
                 if (!testGroups.containsKey(group)) {
@@ -271,36 +215,7 @@ public class TestMojo extends AbstractMojo {
         }
     }
 
-    private List<String> getIncludes() {
-        if (null != test) {
-            includes = new ArrayList<String>();
-            for (String regex : test.split(",")) {
-                if (regex.endsWith(".java")) {
-                    regex = regex.substring(0, regex.length() - 5);
-                }
-                if (regex.endsWith(".class")) {
-                    regex = regex.substring(0, regex.length() - 6);
-                }
-                regex = regex.replace('.', '/');
-                includes.add("**/" + regex + ".class");
-            }
-        } else if (null == includes) {
-            includes = new ArrayList<String>();
-            includes.add("**/*.class");
-        }
-        return includes;
-    }
 
-    private URL[] convertToURL(List<String> elements) throws MalformedURLException {
-        List<URL> urlList = new ArrayList<URL>();
-        for (String element : elements) {
-            urlList.add(new File(element).toURI().toURL());
-        }
-        return urlList.toArray(new URL[urlList.size()]);
-    }
 
-    private boolean skipTests() {
-        return skipAllTests || skipTestsProperty || skipTests;
-    }
-
+ */
 }

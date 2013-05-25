@@ -50,19 +50,20 @@ public class XMLReport implements ReportWriter {
     private ObjectFactory objectFactory = new ObjectFactory();
 
     public void writeReport(GraphWalker graphWalker, File reportDirectory, Date startTime) {
-        for (Model model : graphWalker.getConfiguration().getModels()) {
-            writeReport(model, reportDirectory);
-        }
+        //for (Model model : graphWalker.getConfiguration().getModels()) {
+        //    writeReport(model, reportDirectory);
+        //}
     }
 
     public GraphWalkerReportType readReport(File file) {
-        try {
-            return ((JAXBElement<GraphWalkerReportType>)createUnmarshaller().unmarshal(file)).getValue();
-        } catch (JAXBException e) {
-            throw new ReportException(Resource.getText(Bundle.NAME, "exception.report.failure"), e);
-        }
+        //try {
+        //    return ((JAXBElement<GraphWalkerReportType>)createUnmarshaller().unmarshal(file)).getValue();
+        //} catch (JAXBException e) {
+        //    throw new ReportException(Resource.getText(Bundle.NAME, "exception.report.failure"), e);
+        //}
+        return null;
     }
-
+    /*
     private Marshaller createMarshaller() {
         Marshaller marshaller = null;
         try {
@@ -226,4 +227,5 @@ public class XMLReport implements ReportWriter {
             appendStackTraceCause(stringBuilder, stackTraceElements, throwable.getCause());
         }
     }
+    */
 }

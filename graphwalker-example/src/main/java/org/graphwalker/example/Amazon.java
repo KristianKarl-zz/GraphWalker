@@ -14,6 +14,7 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.safari.SafariDriver;
 
 public class Amazon {
 
@@ -21,7 +22,8 @@ public class Amazon {
 
     @BeforeModel
     public void createBrowser() {
-        driver = new FirefoxDriver();
+        //driver = new FirefoxDriver();
+        driver = new SafariDriver();
         driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
     }
 

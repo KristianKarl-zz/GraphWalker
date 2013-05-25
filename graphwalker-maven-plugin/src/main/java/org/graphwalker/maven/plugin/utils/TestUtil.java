@@ -45,21 +45,33 @@ public final class TestUtil {
     private TestUtil() {
     }
 
+    public static List<Class<?>> findTests(List<String> includes, List<String> excludes, File... directories) {
+        List<Class<?>> tests = new ArrayList<Class<?>>();
+        for (File directory: directories) {
+            tests.addAll(findTests(includes, excludes, directory));
+        }
+        return tests;
+    }
+
     /**
      * <p>findTests.</p>
      *
-     * @param basedir a {@link java.io.File} object.
      * @param includes an {@link java.util.List} of {@link java.lang.String} objects.
      * @param excludes an {@link java.util.List} of {@link java.lang.String} objects.
+     * @param directory a {@link java.io.File} object.
      * @return a {@link java.util.List} object.
      * @throws java.lang.ClassNotFoundException if any.
      */
-    public static List<Class<?>> findTests(File basedir, List<String> includes, List<String> excludes) throws ClassNotFoundException {
+    public static List<Class<?>> findTests(List<String> includes, List<String> excludes, File directory) {
         List<Class<?>> tests = new ArrayList<Class<?>>();
-        for (String fileName: findFiles(basedir, includes, excludes)) {
-            Class<?> clazz = loadClass(getClassName(fileName));
-            if (acceptClass(clazz)) {
-                tests.add(clazz);
+        for (String fileName: findFiles(includes, excludes, directory)) {
+            try {
+                Class<?> clazz = loadClass(getClassName(fileName));
+                if (acceptClass(clazz)) {
+                    tests.add(clazz);
+                }
+            } catch (ClassNotFoundException e) {
+                // ignore
             }
         }
         return tests;
@@ -73,8 +85,7 @@ public final class TestUtil {
      */
     public static String getGroup(Class<?> clazz) {
         if (acceptClass(clazz)) {
-            GraphWalker metadata = clazz.getAnnotation(GraphWalker.class);
-            return metadata.group();
+            return clazz.getAnnotation(GraphWalker.class).group();
         }
         return null; // TODO: throw exception
     }
@@ -96,11 +107,11 @@ public final class TestUtil {
         return methods;
     }
     
-    private static String[] findFiles(File basedir, List<String> includes, List<String> excludes) {
+    private static String[] findFiles(List<String> includes, List<String> excludes, File directory) {
         DirectoryScanner directoryScanner = new DirectoryScanner();
         directoryScanner.setIncludes(null!=includes?includes.toArray(new String[includes.size()]):null);
         directoryScanner.setExcludes(null!=excludes?excludes.toArray(new String[excludes.size()]):null);
-        directoryScanner.setBasedir(basedir);
+        directoryScanner.setBasedir(directory);
         directoryScanner.setCaseSensitive(true);
         directoryScanner.scan();
         return directoryScanner.getIncludedFiles();        

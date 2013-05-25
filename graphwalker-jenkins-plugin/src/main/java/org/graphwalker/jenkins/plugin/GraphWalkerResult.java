@@ -12,52 +12,52 @@ public class GraphWalkerResult implements ModelObject, Serializable {
 
     private static final long serialVersionUID = 1341889337197236412L;
 
-    private String myClazz;
-    private int myPassedRequirementCount = 0;
-    private int myFailedRequirementCount = 0;
-    private int myNotCoveredRequirementCount = 0;
-    private int myTotalRequirementCount = 0;
-    private long myTimestamp = 0;
+    private String clazz;
+    private int passedRequirementCount = 0;
+    private int failedRequirementCount = 0;
+    private int notCoveredRequirementCount = 0;
+    private int totalRequirementCount = 0;
+    private long timestamp = 0;
 
-    List<GraphWalkerResult> myReportResults = new ArrayList<GraphWalkerResult>();
+    List<GraphWalkerResult> reportResults = new ArrayList<GraphWalkerResult>();
 
     public GraphWalkerResult() {}
 
     public GraphWalkerResult(String clazz, RequirementsType requirements, long timestamp) {
-        myClazz = clazz;
-        myFailedRequirementCount = requirements.getFailed().intValue();
-        myNotCoveredRequirementCount = requirements.getNotCovered().intValue();
-        myPassedRequirementCount = requirements.getPassed().intValue();
-        myTotalRequirementCount = requirements.getCount().intValue();
-        myTimestamp = timestamp;
+        this.clazz = clazz;
+        failedRequirementCount = requirements.getFailed().intValue();
+        notCoveredRequirementCount = requirements.getNotCovered().intValue();
+        passedRequirementCount = requirements.getPassed().intValue();
+        totalRequirementCount = requirements.getCount().intValue();
+        this.timestamp = timestamp;
     }
 
     public void addReport(GraphWalkerReportType report) {
         GraphWalkerResult reportResult = new GraphWalkerResult(report.getClazz(), report.getRequirements(), report.getTimestamp());
-        myReportResults.add(reportResult);
-        myFailedRequirementCount += reportResult.getFailedRequirementCount();
-        myNotCoveredRequirementCount += reportResult.getNotCoveredRequirementCount();
-        myPassedRequirementCount += reportResult.getPassedRequirementCount();
-        myTotalRequirementCount += reportResult.getTotalRequirementCount();
-        if (0 == myTimestamp || myTimestamp > report.getTimestamp()) {
-            myTimestamp = report.getTimestamp();
+        reportResults.add(reportResult);
+        failedRequirementCount += reportResult.getFailedRequirementCount();
+        notCoveredRequirementCount += reportResult.getNotCoveredRequirementCount();
+        passedRequirementCount += reportResult.getPassedRequirementCount();
+        totalRequirementCount += reportResult.getTotalRequirementCount();
+        if (0 == timestamp || timestamp > report.getTimestamp()) {
+            timestamp = report.getTimestamp();
         }
     }
 
     public List<GraphWalkerResult> getReportResults() {
-        return myReportResults;
+        return reportResults;
     }
 
     public String getClazz() {
-        return myClazz;
+        return clazz;
     }
 
     public long getTimestamp() {
-        return myTimestamp;
+        return timestamp;
     }
 
     public int getFailedRequirementCount() {
-        return myFailedRequirementCount;
+        return failedRequirementCount;
     }
 
     public double getFailedRequirementPercentage() {
@@ -65,7 +65,7 @@ public class GraphWalkerResult implements ModelObject, Serializable {
     }
 
     public int getPassedRequirementCount() {
-        return myPassedRequirementCount;
+        return passedRequirementCount;
     }
 
     public double getPassedRequirementPercentage() {
@@ -73,7 +73,7 @@ public class GraphWalkerResult implements ModelObject, Serializable {
     }
 
     public int getNotCoveredRequirementCount() {
-        return myNotCoveredRequirementCount;
+        return notCoveredRequirementCount;
     }
 
     public double getNotCoveredRequirementPercentage() {
@@ -81,7 +81,7 @@ public class GraphWalkerResult implements ModelObject, Serializable {
     }
 
     public int getTotalRequirementCount() {
-        return myTotalRequirementCount;
+        return totalRequirementCount;
     }
 
     public String getDisplayName() {

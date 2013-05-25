@@ -32,7 +32,7 @@ import org.graphwalker.core.model.ImmutableElement;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Vertex;
 import org.graphwalker.core.utils.Resource;
-import org.graphwalker.maven.plugin.utils.Reflection;
+import org.graphwalker.core.utils.Reflection;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;

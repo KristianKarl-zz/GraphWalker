@@ -1,6 +1,6 @@
 /*
  * #%L
- * GraphWalker Core
+ * GraphWalker Maven Plugin
  * %%
  * Copyright (C) 2011 - 2013 GraphWalker
  * %%
@@ -23,15 +23,9 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core.annotations;
+package org.graphwalker.maven.plugin;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
-@Retention(RetentionPolicy.RUNTIME)
-@Target(java.lang.annotation.ElementType.METHOD)
-public @interface ExceptionHandler {
-
-    public Class<? extends Throwable> filter() default Throwable.class;
+public class VerifyMojo {
+    // Tänkt att änvändas automatiskt innan TestMojo'n exekveras för att validera modeller och implementationer innan de körs
+    // eftersom det kan dröja länge innan man märker ett fel i runtime (like dry run)
 }
