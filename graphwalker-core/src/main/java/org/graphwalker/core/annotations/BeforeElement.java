@@ -23,22 +23,27 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.maven.plugin.annotations;
+package org.graphwalker.core.annotations;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * <p>AnnotationException class.</p>
+ * <p>AfterModel class.</p>
  *
  * @author nilols
  * @version $Id: $
  */
-public class AnnotationException extends RuntimeException {
+@Retention(RetentionPolicy.RUNTIME)
+@Target(java.lang.annotation.ElementType.METHOD)
+public @interface BeforeElement {
 
     /**
-     * <p>Constructor for AnnotationException.</p>
+     * <p>filter.</p>
      *
-     * @param message a {@link java.lang.String} object.
+     * @return a {@link java.lang.String} object.
      */
-    public AnnotationException(String message) {
-        super(message);
-    }
+    public String filter() default "";
+
 }

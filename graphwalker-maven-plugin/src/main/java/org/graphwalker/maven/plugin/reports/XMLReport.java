@@ -34,7 +34,7 @@ import org.graphwalker.core.statistics.EdgeStatistics;
 import org.graphwalker.core.statistics.RequirementStatistics;
 import org.graphwalker.core.statistics.VertexStatistics;
 import org.graphwalker.core.utils.Resource;
-import org.graphwalker.maven.plugin.GraphWalker;
+import org.graphwalker.core.GraphWalker;
 
 import javax.xml.bind.*;
 import java.io.File;

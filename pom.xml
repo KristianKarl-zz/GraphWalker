@@ -91,27 +91,7 @@
             </dependency>
             <dependency>
                 <groupId>org.graphwalker</groupId>
-                <artifactId>graphwalker-api</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.graphwalker</groupId>
-                <artifactId>graphwalker-java</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.graphwalker</groupId>
-                <artifactId>graphwalker-php</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.graphwalker</groupId>
-                <artifactId>graphwalker-python</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.graphwalker</groupId>
-                <artifactId>graphwalker-server</artifactId>
+                <artifactId>graphwalker-maven-plugin</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

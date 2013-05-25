@@ -23,10 +23,9 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.maven.plugin.utils;
+package org.graphwalker.core.utils;
 
 import org.graphwalker.core.Bundle;
-import org.graphwalker.core.utils.Resource;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;

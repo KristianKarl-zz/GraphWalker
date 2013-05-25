@@ -1,4 +1,4 @@
-package org.graphwalker.maven.plugin;
+package org.graphwalker.core;
 
 import org.graphwalker.core.conditions.support.EdgeCoverage;
 import org.graphwalker.core.filter.EdgeFilter;
@@ -8,8 +8,8 @@ import org.graphwalker.core.machine.Machine;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.ModelElement;
 import org.graphwalker.core.model.support.ModelContext;
-import org.graphwalker.maven.plugin.annotations.*;
-import org.graphwalker.maven.plugin.utils.Reflection;
+import org.graphwalker.core.annotations.*;
+import org.graphwalker.core.utils.Reflection;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;

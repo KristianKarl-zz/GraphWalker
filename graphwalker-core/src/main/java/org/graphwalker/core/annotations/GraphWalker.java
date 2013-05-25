@@ -23,7 +23,7 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.maven.plugin.annotations;
+package org.graphwalker.core.annotations;
 
 import org.graphwalker.core.conditions.StopCondition;
 import org.graphwalker.core.conditions.support.VertexCoverage;

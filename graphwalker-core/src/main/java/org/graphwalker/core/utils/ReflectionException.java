@@ -1,4 +1,4 @@
-package org.graphwalker.maven.plugin.utils;
+package org.graphwalker.core.utils;
 
 /**
  * <p>ReflectionException class.</p>

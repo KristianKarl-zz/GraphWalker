@@ -25,7 +25,7 @@
  */
 package org.graphwalker.maven.plugin.reports;
 
-import org.graphwalker.maven.plugin.GraphWalker;
+import org.graphwalker.core.GraphWalker;
 
 import java.io.File;
 import java.util.Date;
