@@ -47,6 +47,7 @@ public class ValidateMojo extends AbstractGraphWalkerMojo {
     // 1. Hitta alla tester (ska vi bry oss om att filtrera bort tester)
     // 2. Ladda in modeller och implementationer
     // 3. verifiera att implementationerna innehåller alla metoder och rätt argument
+    // 4. spara undan allt i AbstractGraphWalkerMojo så att TestMojo kan använda en validerad version utan att behöva göra om allt
 
     @Override
     public void executeMojo() {
