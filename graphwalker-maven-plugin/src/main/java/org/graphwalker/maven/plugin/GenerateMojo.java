@@ -25,8 +25,22 @@
  */
 package org.graphwalker.maven.plugin;
 
-public class GenerateMojo {
+/**
+ * <p>ExecuteMojo class.</p>
+ *
+ * @author nilols
+ * @goal generate
+ * @phase generate-test-sources
+ * @execute phase="generate-test-sources"
+ * @requiresDependencyResolution test
+ */
+public class GenerateMojo extends AbstractMojo {
     // Tänkt att användas för att generera klasser (enklast kanske att bara generera/uppdatera interface)
     // utifrån modeller, och alt. uppdatera befintliga klasser med ny metoder
     //
+
+    @Override
+    public void executeMojo() {
+        int i = 0;
+    }
 }

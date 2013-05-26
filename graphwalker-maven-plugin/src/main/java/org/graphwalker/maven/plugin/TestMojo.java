@@ -37,10 +37,9 @@ import java.util.*;
  * <p>ExecuteMojo class.</p>
  *
  * @author nilols
- * @version $Id: $
  * @goal test
  * @phase test
- * @execute phase="test-compile"
+ * @execute goal="validate"
  * @requiresDependencyResolution test
  */
 public class TestMojo extends AbstractMojo {

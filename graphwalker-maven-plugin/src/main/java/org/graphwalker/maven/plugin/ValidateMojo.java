@@ -25,7 +25,26 @@
  */
 package org.graphwalker.maven.plugin;
 
-public class VerifyMojo {
+/**
+ * <p>ExecuteMojo class.</p>
+ *
+ * @author nilols
+ * @goal validate
+ * @phase process-test-classes
+ * @execute phase="test-compile"
+ * @requiresDependencyResolution test
+ */
+public class ValidateMojo extends AbstractMojo {
+
     // Tänkt att änvändas automatiskt innan TestMojo'n exekveras för att validera modeller och implementationer innan de körs
     // eftersom det kan dröja länge innan man märker ett fel i runtime (like dry run)
+
+    // 1. Hitta alla tester (ska vi bry oss om att filtrera bort tester)
+    // 2. Ladda in modeller och implementationer
+    // 3. verifiera att implementationerna innehåller alla metoder och rätt argument
+
+    @Override
+    public void executeMojo() {
+        int i = 0;
+    }
 }
