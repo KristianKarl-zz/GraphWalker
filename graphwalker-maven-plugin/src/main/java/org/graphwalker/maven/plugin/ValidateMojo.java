@@ -25,16 +25,21 @@
  */
 package org.graphwalker.maven.plugin;
 
+import org.apache.maven.plugins.annotations.Execute;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.ResolutionScope;
+
 /**
- * <p>ExecuteMojo class.</p>
+ * <p>ValidateMojo class.</p>
  *
  * @author nilols
- * @goal validate
- * @phase process-test-classes
- * @execute phase="test-compile"
- * @requiresDependencyResolution test
  */
-public class ValidateMojo extends AbstractMojo {
+@Mojo(name = "validate"
+        , defaultPhase = LifecyclePhase.PROCESS_TEST_CLASSES
+        , requiresDependencyResolution = ResolutionScope.TEST)
+@Execute(phase = LifecyclePhase.TEST_COMPILE)
+public class ValidateMojo extends AbstractGraphWalkerMojo {
 
     // Tänkt att änvändas automatiskt innan TestMojo'n exekveras för att validera modeller och implementationer innan de körs
     // eftersom det kan dröja länge innan man märker ett fel i runtime (like dry run)

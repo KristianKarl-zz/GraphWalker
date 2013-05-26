@@ -25,16 +25,21 @@
  */
 package org.graphwalker.maven.plugin;
 
+import org.apache.maven.plugins.annotations.Execute;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.ResolutionScope;
+
 /**
- * <p>ExecuteMojo class.</p>
+ * <p>GenerateMojo class.</p>
  *
  * @author nilols
- * @goal generate
- * @phase generate-test-sources
- * @execute phase="generate-test-sources"
- * @requiresDependencyResolution test
  */
-public class GenerateMojo extends AbstractMojo {
+@Mojo(name = "generate"
+        , defaultPhase = LifecyclePhase.GENERATE_TEST_SOURCES
+        , requiresDependencyResolution = ResolutionScope.TEST)
+@Execute(phase = LifecyclePhase.PROCESS_CLASSES)
+public class GenerateMojo extends AbstractGraphWalkerMojo {
     // Tänkt att användas för att generera klasser (enklast kanske att bara generera/uppdatera interface)
     // utifrån modeller, och alt. uppdatera befintliga klasser med ny metoder
     //
@@ -42,5 +47,10 @@ public class GenerateMojo extends AbstractMojo {
     @Override
     public void executeMojo() {
         int i = 0;
+        // hitta alla modeller som stödjs, leta i både source och test, ta hänsyn till include/exclude
+        // kolla om filer för dessa finns, package namn blir samma som katalog strukturen
+        // finns det inga interface, generera nya
+        // finna det, om vi ska uppdatera så genererar vi om filerna.
+
     }
 }

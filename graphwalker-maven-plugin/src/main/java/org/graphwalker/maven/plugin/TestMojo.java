@@ -25,6 +25,10 @@
  */
 package org.graphwalker.maven.plugin;
 
+import org.apache.maven.plugins.annotations.Execute;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.graphwalker.core.GraphWalker;
 import org.graphwalker.core.utils.Resource;
 import org.graphwalker.maven.plugin.reports.ReportWriter;
@@ -34,15 +38,15 @@ import org.graphwalker.maven.plugin.utils.TestUtil;
 import java.util.*;
 
 /**
- * <p>ExecuteMojo class.</p>
+ * <p>TestMojo class.</p>
  *
  * @author nilols
- * @goal test
- * @phase test
- * @execute goal="validate"
- * @requiresDependencyResolution test
  */
-public class TestMojo extends AbstractMojo {
+@Mojo(name = "test"
+        , defaultPhase = LifecyclePhase.TEST
+        , requiresDependencyResolution = ResolutionScope.TEST)
+@Execute(goal = "validate")
+public class TestMojo extends AbstractGraphWalkerMojo {
 
     private List<GraphWalker> graphWalkers = new ArrayList<GraphWalker>();
 
@@ -76,7 +80,7 @@ public class TestMojo extends AbstractMojo {
         getLog().info("Tests:");
         if (0<tests.size()) {
             for (Class<?> test: tests) {
-                getLog().info("  "+test.getName());
+                getLog().info("  " + test.getName());
             }
             getLog().info("");
         } else {

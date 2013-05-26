@@ -26,8 +26,11 @@
 package org.graphwalker.maven.plugin;
 
 import org.apache.maven.execution.MavenSession;
+import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.Component;
+import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.graphwalker.core.utils.Resource;
 
@@ -39,68 +42,42 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-public abstract class AbstractMojo extends org.apache.maven.plugin.AbstractMojo {
+public abstract class AbstractGraphWalkerMojo extends AbstractMojo {
 
-    /**
-     * The current build session instance.
-     *
-     * @parameter expression="${session}"
-     */
+    @Component
     private MavenSession session;
 
-    /**
-     * @parameter expression="${project}"
-     */
+    @Component
     private MavenProject mavenProject;
 
-    /**
-     * @parameter expression="${project.testClasspathElements}"
-     */
+    @Parameter(property = "project.testClasspathElements")
     private List<String> classpathElements;
 
-    /**
-     * @parameter expression="${skipTests}" default-value="false"
-     */
+    @Parameter(property = "skipTests", defaultValue = "false")
     private boolean skipTests;
 
-    /**
-     * @parameter expression="${graphwalker.test.skip}" default-value="false"
-     */
+    @Parameter(property = "graphwalker.test.skip", defaultValue = "false")
     private boolean skipTestsProperty;
 
-    /**
-     * @parameter expression="${maven.test.skip}" default-value="false"
-     */
+    @Parameter(property = "maven.test.skip", defaultValue="false")
     private boolean skipAllTests;
 
-    /**
-     * @parameter expression="${test}"
-     */
+    @Parameter(property = "test")
     private String test;
 
-    /**
-     * @parameter default-value="${project.build.testOutputDirectory}"
-     */
+    @Parameter(defaultValue="${project.build.testOutputDirectory}")
     private File testClassesDirectory;
 
-    /**
-     * @parameter default-value="${project.build.outputDirectory}"
-     */
+    @Parameter(defaultValue="${project.build.outputDirectory}")
     private File classesDirectory;
 
-    /**
-     * @parameter default-value="${project.build.directory}/graphwalker-reports"
-     */
+    @Parameter(defaultValue = "${project.build.directory}/graphwalker-reports")
     private File reportsDirectory;
 
-    /**
-     * @parameter property="includes"
-     */
+    @Parameter(property = "includes")
     private List<String> includes = new ArrayList<String>();
 
-    /**
-     * @parameter property="excludes"
-     */
+    @Parameter(property = "excludes")
     private List<String> excludes;
 
     protected MavenSession getSession() {
@@ -151,7 +128,7 @@ public abstract class AbstractMojo extends org.apache.maven.plugin.AbstractMojo 
         return excludes;
     }
 
-    public AbstractMojo() {
+    public AbstractGraphWalkerMojo() {
         updateIncludeFilter(includes, test);
     }
 
