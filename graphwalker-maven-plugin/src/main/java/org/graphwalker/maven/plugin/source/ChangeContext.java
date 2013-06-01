@@ -23,45 +23,41 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.maven.plugin.io;
+package org.graphwalker.maven.plugin.source;
 
-import org.codehaus.plexus.util.FileUtils;
+import japa.parser.ast.body.MethodDeclaration;
+import org.graphwalker.core.model.Model;
+import org.graphwalker.core.model.ModelElement;
 
-import java.io.File;
+import java.util.HashSet;
+import java.util.Set;
 
-public class FileInfo {
+public class ChangeContext {
 
-    private File parent;
-    private String filename;
+    private final Set<String> methodNames;
+    private final Set<MethodDeclaration> methodDeclarations = new HashSet<MethodDeclaration>();
 
-    public FileInfo(File parent, String filename) {
-        this.parent = parent;
-        String parentPath = parent.getAbsolutePath()+File.separator;
-        this.filename = filename.substring(parentPath.length());
+    public ChangeContext(Model model) {
+        methodNames = extractMethodNames(model);
     }
 
-    public File getOutputFile() {
-        File outputParent = new File(parent.getParentFile(), "java");
-        return new File(outputParent, FileUtils.removeExtension(filename)+".java");
+    public Set<String> getMethodsName() {
+        return methodNames;
     }
 
-    public String getFilename() {
-        return filename;
+    public void addMethodDeclaration(MethodDeclaration methodDeclaration) {
+        methodDeclarations.add(methodDeclaration);
     }
 
-    public String getPath() {
-        return FileUtils.getPath(filename);
+    public Set<MethodDeclaration> getMethodDeclarations() {
+        return methodDeclarations;
     }
 
-    public String getExtension() {
-        return FileUtils.extension(filename);
-    }
-
-    public String getBaseName() {
-        return FileUtils.basename(FileUtils.removeExtension(filename));
-    }
-
-    public boolean exists() {
-        return new File(parent, filename).exists();
+    private Set<String> extractMethodNames(Model model) {
+        Set<String> methodNames = new HashSet<String>();
+        for (ModelElement element: model.getModelElements()) {
+            methodNames.add(element.getName());
+        }
+        return methodNames;
     }
 }

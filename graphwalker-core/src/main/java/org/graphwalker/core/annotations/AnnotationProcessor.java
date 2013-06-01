@@ -61,9 +61,6 @@ public class AnnotationProcessor {
     public AnnotationProcessor() {
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public void process(Class<? extends Annotation> annotation, Machine machine, Object object) {
         if (getSupportedAnnotations().contains(annotation)) {
             try {

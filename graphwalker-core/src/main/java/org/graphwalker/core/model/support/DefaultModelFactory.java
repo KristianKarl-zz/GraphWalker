@@ -23,18 +23,33 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core.annotations;
+package org.graphwalker.core.model.support;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import org.graphwalker.core.model.Model;
+import org.graphwalker.core.model.ModelFactory;
 
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-public @interface Model {
+import java.util.ArrayList;
+import java.util.List;
 
-    public String file();
-    public String type();
+public class DefaultModelFactory implements ModelFactory {
 
+    private final GraphMLModelFactory graphMLModelFactory = new GraphMLModelFactory();
+    private final List<String> supportedTypes = new ArrayList<String>();
+
+    public DefaultModelFactory() {
+        supportedTypes.addAll(graphMLModelFactory.getSupportedFileTypes());
+    }
+
+    public boolean accept(String type) {
+        return supportedTypes.contains(type);
+    }
+
+    public Model create(String id, String filename, String type) {
+        //TODO: we need to handle this better, when/if we add more factories
+        return graphMLModelFactory.create(id, filename, type);
+    }
+
+    public List<String> getSupportedFileTypes() {
+        return supportedTypes;
+    }
 }

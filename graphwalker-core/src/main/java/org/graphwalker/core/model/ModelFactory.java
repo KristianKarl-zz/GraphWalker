@@ -25,6 +25,8 @@
  */
 package org.graphwalker.core.model;
 
+import java.util.List;
+
 /**
  * <p>ModelFactory interface.</p>
  *
@@ -47,5 +49,7 @@ public interface ModelFactory {
      * @param filename a {@link java.lang.String} object.
      * @return a {@link org.graphwalker.core.model.Model} object.
      */
-    Model create(String id, String filename);
+    Model create(String id, String filename, String type);
+
+    List<String> getSupportedFileTypes();
 }

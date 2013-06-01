@@ -1,6 +1,6 @@
 /*
  * #%L
- * GraphWalker Core
+ * GraphWalker Maven Plugin
  * %%
  * Copyright (C) 2011 - 2013 GraphWalker
  * %%
@@ -23,18 +23,45 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core.annotations;
+package org.graphwalker.maven.plugin.source;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import org.codehaus.plexus.util.FileUtils;
 
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-public @interface Model {
+import java.io.File;
 
-    public String file();
-    public String type();
+public class SourceFile {
 
+    private File parent;
+    private String filename;
+
+    public SourceFile(File parent, String filename) {
+        this.parent = parent;
+        String parentPath = parent.getAbsolutePath()+File.separator;
+        this.filename = filename.substring(parentPath.length());
+    }
+
+    public File getOutputFile() {
+        File outputParent = new File(parent.getParentFile(), "java");
+        return new File(outputParent, FileUtils.removeExtension(filename)+".java");
+    }
+
+    public String getFilename() {
+        return filename;
+    }
+
+    public String getPath() {
+        return FileUtils.getPath(filename);
+    }
+
+    public String getExtension() {
+        return FileUtils.extension(filename);
+    }
+
+    public String getBaseName() {
+        return FileUtils.basename(FileUtils.removeExtension(filename));
+    }
+
+    public boolean exists() {
+        return new File(parent, filename).exists();
+    }
 }

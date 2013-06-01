@@ -85,6 +85,11 @@
             <artifactId>httpclient</artifactId>
             <version>4.1.2</version>
         </dependency>
+        <dependency>
+            <groupId>com.google.code.javaparser</groupId>
+            <artifactId>javaparser</artifactId>
+            <version>1.0.9</version>
+        </dependency>
     </dependencies>
 
     <reporting>

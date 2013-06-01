@@ -57,6 +57,10 @@ public final class GraphMLModelFactory implements ModelFactory {
     public GraphMLModelFactory() {
     }
 
+    public List<String> getSupportedFileTypes() {
+        return Arrays.asList("**/*.graphml");
+    }
+
     /** {@inheritDoc} */
     public boolean accept(String type) {
         return FILE_TYPE.equalsIgnoreCase(type);
@@ -67,7 +71,7 @@ public final class GraphMLModelFactory implements ModelFactory {
      * <p/>
      * <p>create.</p>
      */
-    public Model create(String id, String filename) {
+    public Model create(String id, String filename, String type) {
         return parse(id, Resource.getResourceAsStream(filename));
     }
 

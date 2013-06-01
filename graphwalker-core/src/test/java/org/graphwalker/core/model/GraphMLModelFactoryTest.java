@@ -35,21 +35,21 @@ public class GraphMLModelFactoryTest {
     @Test
     public void singleModelTest() {
         ModelFactory modelFactory = new GraphMLModelFactory();
-        Model model = modelFactory.create("m1", "/models/singleModel.graphml");
+        Model model = modelFactory.create("m1", "/models/singleModel.graphml", "graphml");
         Assert.assertNotNull(model);
     }
 
     @Test
     public void multiModelATest() {
         ModelFactory modelFactory = new GraphMLModelFactory();
-        Model model = modelFactory.create("m1", "/models/multiModelA.graphml");
+        Model model = modelFactory.create("m1", "/models/multiModelA.graphml", "graphml");
         Assert.assertNotNull(model);
     }
 
     @Test
     public void edgeFilterModelATest() {
         ModelFactory modelFactory = new GraphMLModelFactory();
-        Model model = modelFactory.create("m1", "/models/edgeFilterModelA.graphml");
+        Model model = modelFactory.create("m1", "/models/edgeFilterModelA.graphml", "graphml");
         Assert.assertNotNull(model);
         Assert.assertNotNull(model.getEdges(model.getStartVertex()));
         Assert.assertEquals(1, model.getEdges(model.getStartVertex()).size());
@@ -60,26 +60,26 @@ public class GraphMLModelFactoryTest {
     @Test(expected = ResourceException.class)
     public void fileNotFoundTest() {
         ModelFactory modelFactory = new GraphMLModelFactory();
-        modelFactory.create("m1", "FileNotFound");
+        modelFactory.create("m1", "FileNotFound", "graphml");
     }
 
     @Test(expected = ModelException.class)
     public void brokenModelTest() {
         ModelFactory modelFactory = new GraphMLModelFactory();
-        modelFactory.create("m1", "/models/brokenModel.graphml");
+        modelFactory.create("m1", "/models/brokenModel.graphml", "graphml");
     }
 
     @Test
     public void readModelWithRequirementsTest() {
         ModelFactory modelFactory = new GraphMLModelFactory();
-        Model model = modelFactory.create("m1", "/models/requirementModel.graphml");
+        Model model = modelFactory.create("m1", "/models/requirementModel.graphml", "graphml");
         Assert.assertNotNull(model);
     }
 
     @Test
     public void keyWordsTest() {
         ModelFactory modelFactory = new GraphMLModelFactory();
-        Model model = modelFactory.create("m1", "/models/keywords.graphml");
+        Model model = modelFactory.create("m1", "/models/keywords.graphml", "graphml");
 
         Edge edge = model.getEdgeById("e1");
         Assert.assertNotNull(edge);
