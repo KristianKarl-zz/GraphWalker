@@ -31,12 +31,13 @@ import org.apache.maven.plugins.annotations.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Mojo(name = "generate"
-        , defaultPhase = LifecyclePhase.GENERATE_SOURCES
-        , requiresDependencyResolution = ResolutionScope.COMPILE)
-public class GenerateMojo extends AbstractGenerateMojo {
+@Mojo(name = "test-generate"
+        , defaultPhase = LifecyclePhase.GENERATE_TEST_SOURCES
+        , requiresDependencyResolution = ResolutionScope.TEST)
+@Execute(goal = "generate")
+public class TestGenerateMojo extends AbstractGenerateMojo {
 
-    @Parameter(defaultValue = "${project.resources}", required = true, readonly = true)
+    @Parameter(defaultValue = "${project.testResources}", required = true, readonly = true)
     private List<Resource> resources;
 
     @Override

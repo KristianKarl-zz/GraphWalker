@@ -78,8 +78,10 @@ public class CodeGenerator extends VoidVisitorAdapter {
     }
 
     private void removeMethods(CompilationUnit compilationUnit, ChangeContext changeContext) {
-        ClassOrInterfaceDeclaration body = (ClassOrInterfaceDeclaration)compilationUnit.getTypes().get(0);
-        body.getMembers().removeAll(changeContext.getMethodDeclarations());
+        if (0<changeContext.getMethodDeclarations().size()) {
+            ClassOrInterfaceDeclaration body = (ClassOrInterfaceDeclaration)compilationUnit.getTypes().get(0);
+            body.getMembers().removeAll(changeContext.getMethodDeclarations());
+        }
     }
 
     private void generateMethods(CompilationUnit compilationUnit, ChangeContext changeContext) {
