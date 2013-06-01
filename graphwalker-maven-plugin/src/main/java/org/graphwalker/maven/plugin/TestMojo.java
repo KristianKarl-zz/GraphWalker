@@ -45,7 +45,7 @@ import java.util.*;
 @Mojo(name = "test"
         , defaultPhase = LifecyclePhase.TEST
         , requiresDependencyResolution = ResolutionScope.TEST)
-@Execute(goal = "validate")
+@Execute(goal = "test-validate")
 public class TestMojo extends AbstractGraphWalkerMojo {
 
     private List<GraphWalker> graphWalkers = new ArrayList<GraphWalker>();

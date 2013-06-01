@@ -34,7 +34,7 @@ import java.util.List;
 @Mojo(name = "test-generate"
         , defaultPhase = LifecyclePhase.GENERATE_TEST_SOURCES
         , requiresDependencyResolution = ResolutionScope.TEST)
-@Execute(goal = "generate")
+@Execute(goal = "validate")
 public class TestGenerateMojo extends AbstractGenerateMojo {
 
     @Parameter(defaultValue = "${project.testResources}", required = true, readonly = true)

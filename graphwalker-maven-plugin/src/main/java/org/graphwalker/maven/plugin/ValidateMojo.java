@@ -36,18 +36,15 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
  * @author nilols
  */
 @Mojo(name = "validate"
-        , defaultPhase = LifecyclePhase.PROCESS_TEST_CLASSES
-        , requiresDependencyResolution = ResolutionScope.TEST)
+        , defaultPhase = LifecyclePhase.PROCESS_CLASSES
+        , requiresDependencyResolution = ResolutionScope.COMPILE)
 @Execute(goal = "generate")
-public class ValidateMojo extends AbstractGraphWalkerMojo {
+public class ValidateMojo extends AbstractValidateMojo {
 
-    // Tänkt att änvändas automatiskt innan TestMojo'n exekveras för att validera modeller och implementationer innan de körs
-    // eftersom det kan dröja länge innan man märker ett fel i runtime (like dry run)
 
-    // 1. Hitta alla tester (ska vi bry oss om att filtrera bort tester)
+    // 1. Hitta alla tester
     // 2. Ladda in modeller och implementationer
     // 3. verifiera att implementationerna innehåller alla metoder och rätt argument
-    // 4. spara undan allt i AbstractGraphWalkerMojo så att TestMojo kan använda en validerad version utan att behöva göra om allt
 
     @Override
     public void executeMojo() {
