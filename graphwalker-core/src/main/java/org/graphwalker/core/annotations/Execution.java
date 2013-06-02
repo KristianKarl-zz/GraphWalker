@@ -2,7 +2,7 @@
  * #%L
  * GraphWalker Core
  * %%
- * Copyright (C) 2011 - 2012 GraphWalker
+ * Copyright (C) 2011 - 2013 GraphWalker
  * %%
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -37,12 +37,42 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-/**
- * <p>GraphWalker class.</p>
- */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface GraphWalker {
+public @interface Execution {
 
-    Execution[] value();
+    /**
+     * <p>group.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
+    public String group() default "global";
+
+    /**
+     * <p>pathGenerator.</p>
+     *
+     * @return a {@link java.lang.Class} object.
+     */
+    public Class<? extends PathGenerator> pathGenerator() default RandomPath.class;
+
+    /**
+     * <p>stopCondition.</p>
+     *
+     * @return a {@link java.lang.Class} object.
+     */
+    public Class<? extends StopCondition> stopCondition() default VertexCoverage.class;
+
+    /**
+     * <p>stopConditionValue.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
+    public String stopConditionValue() default "";
+
+    /**
+     * <p>exceptionStrategy.</p>
+     *
+     * @return a {@link java.lang.Class} object.
+     */
+    public Class<? extends ExceptionStrategy> exceptionStrategy() default FailFastStrategy.class;
 }
