@@ -6,6 +6,7 @@ import org.graphwalker.core.conditions.support.EdgeCoverage;
 import org.graphwalker.core.conditions.support.Length;
 import org.graphwalker.core.generators.support.AStarPath;
 import org.graphwalker.core.generators.support.RandomPath;
+import org.graphwalker.example.models.ShoppingCart;
 
 @GraphWalker({
     @Execute(group = "shortest"
