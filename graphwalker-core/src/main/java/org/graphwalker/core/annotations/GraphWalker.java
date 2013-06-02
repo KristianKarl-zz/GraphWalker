@@ -25,13 +25,6 @@
  */
 package org.graphwalker.core.annotations;
 
-import org.graphwalker.core.conditions.StopCondition;
-import org.graphwalker.core.conditions.support.VertexCoverage;
-import org.graphwalker.core.generators.PathGenerator;
-import org.graphwalker.core.generators.support.RandomPath;
-import org.graphwalker.core.machine.strategy.ExceptionStrategy;
-import org.graphwalker.core.machine.strategy.FailFastStrategy;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -44,5 +37,5 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface GraphWalker {
 
-    Execution[] value();
+    Execute[] value();
 }

@@ -1,150 +1,87 @@
 package org.graphwalker.example;
 
-import java.util.concurrent.TimeUnit;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import org.graphwalker.core.annotations.Execute;
+import org.graphwalker.core.annotations.GraphWalker;
+import org.graphwalker.core.conditions.support.EdgeCoverage;
+import org.graphwalker.core.conditions.support.Length;
+import org.graphwalker.core.generators.support.AStarPath;
+import org.graphwalker.core.generators.support.RandomPath;
 
-import org.graphwalker.core.model.support.ModelContext;
-import org.graphwalker.core.utils.Assert;
-import org.graphwalker.core.annotations.AfterModel;
-import org.graphwalker.core.annotations.BeforeModel;
-import org.graphwalker.core.annotations.ExceptionHandler;
-import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.safari.SafariDriver;
+@GraphWalker({
+    @Execute(group = "shortest"
+            , pathGenerator = AStarPath.class
+            , stopCondition = EdgeCoverage.class
+            , stopConditionValue = "100"),
 
-public class Amazon {
+    @Execute(group = "random"
+            , pathGenerator = RandomPath.class
+            , stopCondition = Length.class
+            , stopConditionValue = "20")
+})
+public class Amazon implements ShoppingCart {
 
-    private WebDriver driver = null;
-
-    @BeforeModel
-    public void createBrowser() {
-        //driver = new FirefoxDriver();
-        driver = new SafariDriver();
-        driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
-    }
-
-    @AfterModel
-    @ExceptionHandler
-    public void closeBrowser() {
-        if (null != driver) {
-            driver.close();
-        }
-    }
-
-    /**
-     * This method implements the Edge 'e_AddBookToCart'
-     */
-    public void e_AddBookToCart() {
-        driver.findElement(By.id("bb_atc_button")).click();
-    }
-
-    /**
-     * This method implements the Edge 'e_ClickBook'
-     */
-    public void e_ClickBook() {
-        driver.findElement(By.linkText("Practical Model-Based Testing: A Tools Approach")).click();
-    }
-
-    /**
-     * This method implements the Edge 'e_EnterBaseURL'
-     */
-    public void e_EnterBaseURL() {
-        driver.get("http://www.amazon.com");
-    }
-
-    /**
-     * This method implements the Edge 'e_SearchBook'
-     */
-    public void e_SearchBook() {
-        WebElement element;
-        element = driver.findElement(By.id("twotabsearchtextbox"));
-        element.clear();
-        element.sendKeys("Model-based testing");
-        try {
-            driver.findElement(By.xpath("//*[@id='navGoButton']/input")).click();
-        } catch (NoSuchElementException e) {
-            driver.findElement(By.xpath("//*[@class='nav-submit-button nav-sprite']/input")).click();
-        }
-    }
-
-    /**
-     * This method implements the Edge 'e_ShoppingCart'
-     */
+    @Override
     public void e_ShoppingCart() {
-        driver.findElement(By.id("nav-cart")).click();
+        int i = 0;
     }
 
-    /**
-     * This method implements the Edge 'e_StartBrowser'
-     */
-    public void e_StartBrowser() {
-        // the browser creation is moved
-    }
-
-    /**
-     * This method implements the Vertex 'v_BaseURL'
-     */
-    public void v_BaseURL() {
-        Assert.assertTrue(driver.getTitle().matches("^Amazon\\.com: .*"));
-    }
-
-    /**
-     * This method implements the Vertex 'v_BookInformation'
-     */
-    public void v_BookInformation() {}
-
-    /**
-     * This method implements the Vertex 'v_BrowserStarted'
-     */
+    @Override
     public void v_BrowserStarted() {
-        Assert.assertNotNull(driver);
+        int i = 0;
     }
 
-    /**
-     * This method implements the Vertex 'v_OtherBoughtBooks'
-     */
+    @Override
+    public void Start() {
+        int i = 0;
+    }
+
+    @Override
     public void v_OtherBoughtBooks() {
-        Assert.assertTrue(verifyTextPresent("Customers Who Bought "));
+        int i = 0;
     }
 
-    /**
-     * This method implements the Vertex 'v_SearchResult'
-     */
+    @Override
+    public void e_EnterBaseURL() {
+        int i = 0;
+    }
+
+    @Override
+    public void e_AddBookToCart() {
+        int i = 0;
+    }
+
+    @Override
+    public void e_SearchBook() {
+        int i = 0;
+    }
+
+    @Override
+    public void e_StartBrowser() {
+        int i = 0;
+    }
+
+    @Override
+    public void v_BookInformation() {
+        int i = 0;
+    }
+
+    @Override
+    public void v_ShoppingCart() {
+        int i = 0;
+    }
+
+    @Override
     public void v_SearchResult() {
-        Assert.assertTrue(driver.findElement(By.linkText("Practical Model-Based Testing: A Tools Approach")) != null);
+        int i = 0;
     }
 
-    /**
-     * This method implements the Vertex 'v_ShoppingCart'
-     */
-    public void v_ShoppingCart(ModelContext context) {
-        Assert.assertTrue(driver.getTitle().matches("^Amazon\\.com Shopping Cart.*"));
-        Integer expected_num_of_books = context.getEdgeFilter().getDataValue("num_of_books", Double.class).intValue();
-        Integer actual_num_of_books = null;
-
-        if (expected_num_of_books == 0) {
-            Assert.assertTrue(verifyTextPresent("Your Shopping Cart is empty"));
-            return;
-        }
-
-        String itemsInCart = driver.findElement(By.id("gutterCartViewForm")).getText();
-        Pattern pattern = Pattern.compile("Subtotal \\(([0-9]+) items*\\):", Pattern.MULTILINE);
-        Matcher matcher = pattern.matcher(itemsInCart);
-        if (matcher.find()) {
-            actual_num_of_books = Integer.valueOf(matcher.group(1));
-        }
-        Assert.assertEquals(expected_num_of_books, actual_num_of_books);
+    @Override
+    public void v_BaseURL() {
+        int i = 0;
     }
 
-    /**
-     * @param text The text to verify
-     * @return true if the test is present on the web page
-     */
-    public boolean verifyTextPresent(String text) {
-        return driver.findElements(By.xpath("//*[contains(text(),\"" + text + "\")]")).size() > 0;
+    @Override
+    public void e_ClickBook() {
+        int i = 0;
     }
 }
