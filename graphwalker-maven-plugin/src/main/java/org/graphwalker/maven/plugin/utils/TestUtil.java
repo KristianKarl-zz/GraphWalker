@@ -84,7 +84,7 @@ public final class TestUtil {
      */
     public static String getGroup(Class<?> clazz) {
         if (acceptClass(clazz)) {
-            return clazz.getAnnotation(GraphWalker.class).group();
+            //return clazz.getAnnotation(GraphWalker.class).group();
         }
         return null; // TODO: throw exception
     }

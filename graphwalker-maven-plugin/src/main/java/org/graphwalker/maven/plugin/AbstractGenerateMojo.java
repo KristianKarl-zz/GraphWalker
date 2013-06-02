@@ -90,13 +90,15 @@ public abstract class AbstractGenerateMojo extends AbstractGraphWalkerMojo {
     private List<SourceFile> findModels(String includes, String excludes, File... directories) {
         List<SourceFile> models = new ArrayList<SourceFile>();
         for (File directory : directories) {
-            try {
-                for (Object filename : FileUtils.getFileNames(directory, includes, excludes, true, true)) {
-                    models.add(new SourceFile(directory, (String) filename));
+            if (directory.exists()) {
+                try {
+                    for (Object filename : FileUtils.getFileNames(directory, includes, excludes, true, true)) {
+                        models.add(new SourceFile(directory, (String) filename));
+                    }
+                } catch (Throwable t) {
+                    getLog().info("Failed to generate interfaces for " + directory.getAbsolutePath());
+                    getLog().debug("Failed to generate interfaces for " + directory.getAbsolutePath(), t);
                 }
-            } catch (Throwable t) {
-                getLog().info("Failed to generate interfaces for " + directory.getAbsolutePath());
-                getLog().debug("Failed to generate interfaces for " + directory.getAbsolutePath(), t);
             }
         }
         return models;

@@ -25,10 +25,7 @@
  */
 package org.graphwalker.maven.plugin;
 
-import org.apache.maven.plugins.annotations.Execute;
-import org.apache.maven.plugins.annotations.LifecyclePhase;
-import org.apache.maven.plugins.annotations.Mojo;
-import org.apache.maven.plugins.annotations.ResolutionScope;
+import org.apache.maven.plugins.annotations.*;
 import org.graphwalker.core.GraphWalker;
 import org.graphwalker.core.utils.Resource;
 import org.graphwalker.maven.plugin.utils.TestUtil;
@@ -48,6 +45,14 @@ public class TestMojo extends AbstractGraphWalkerMojo {
     // 1. kunna definera hur många trådar som exekverar ett test
     // 2. rapport ska genereras
     // 3.
+
+    @Parameter(property = "groups")
+    private String groups;
+
+
+
+
+
 
 
     private List<GraphWalker> graphWalkers = new ArrayList<GraphWalker>();
