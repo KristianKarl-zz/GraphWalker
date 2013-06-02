@@ -31,14 +31,18 @@ import japa.parser.ast.CompilationUnit;
 import japa.parser.ast.ImportDeclaration;
 import japa.parser.ast.LineComment;
 import japa.parser.ast.PackageDeclaration;
-import japa.parser.ast.body.*;
+import japa.parser.ast.body.ClassOrInterfaceDeclaration;
+import japa.parser.ast.body.MethodDeclaration;
+import japa.parser.ast.body.ModifierSet;
 import japa.parser.ast.expr.*;
 import japa.parser.ast.visitor.VoidVisitorAdapter;
 import org.graphwalker.core.model.Model;
 
 import java.io.File;
 import java.lang.reflect.Modifier;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class CodeGenerator extends VoidVisitorAdapter {
 

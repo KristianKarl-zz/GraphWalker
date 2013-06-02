@@ -23,7 +23,7 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.maven.plugin.utils;
+package org.graphwalker.maven.plugin.scanner;
 
 import org.codehaus.plexus.util.DirectoryScanner;
 import org.graphwalker.core.annotations.GraphWalker;
@@ -107,13 +107,17 @@ public final class TestUtil {
     }
     
     private static String[] findFiles(List<String> includes, List<String> excludes, File directory) {
-        DirectoryScanner directoryScanner = new DirectoryScanner();
-        directoryScanner.setIncludes(null!=includes?includes.toArray(new String[includes.size()]):null);
-        directoryScanner.setExcludes(null!=excludes?excludes.toArray(new String[excludes.size()]):null);
-        directoryScanner.setBasedir(directory);
-        directoryScanner.setCaseSensitive(true);
-        directoryScanner.scan();
-        return directoryScanner.getIncludedFiles();        
+        if (directory.exists()) {
+            DirectoryScanner directoryScanner = new DirectoryScanner();
+            directoryScanner.setIncludes(null!=includes?includes.toArray(new String[includes.size()]):null);
+            directoryScanner.setExcludes(null!=excludes?excludes.toArray(new String[excludes.size()]):null);
+            directoryScanner.setBasedir(directory);
+            directoryScanner.setCaseSensitive(true);
+            directoryScanner.scan();
+            return directoryScanner.getIncludedFiles();
+        } else {
+            return new String[]{};
+        }
     } 
     
     private static Class<?> loadClass(String className) throws ClassNotFoundException {

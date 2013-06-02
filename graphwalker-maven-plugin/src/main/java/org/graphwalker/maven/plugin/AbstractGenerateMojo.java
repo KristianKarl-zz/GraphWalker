@@ -26,7 +26,7 @@
 package org.graphwalker.maven.plugin;
 
 import org.apache.maven.model.Resource;
-import org.apache.maven.plugins.annotations.*;
+import org.apache.maven.plugins.annotations.Parameter;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
 import org.graphwalker.core.model.Model;
@@ -36,7 +36,8 @@ import org.graphwalker.maven.plugin.source.CodeGenerator;
 import org.graphwalker.maven.plugin.source.SourceFile;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>AbstractGenerateMojo class.</p>

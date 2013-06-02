@@ -26,7 +26,10 @@
 package org.graphwalker.maven.plugin;
 
 import org.apache.maven.model.Resource;
-import org.apache.maven.plugins.annotations.*;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.plugins.annotations.ResolutionScope;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +37,6 @@ import java.util.List;
 @Mojo(name = "test-generate"
         , defaultPhase = LifecyclePhase.GENERATE_TEST_SOURCES
         , requiresDependencyResolution = ResolutionScope.TEST)
-@Execute(goal = "validate")
 public class TestGenerateMojo extends AbstractGenerateMojo {
 
     @Parameter(defaultValue = "${project.testResources}", required = true, readonly = true)
