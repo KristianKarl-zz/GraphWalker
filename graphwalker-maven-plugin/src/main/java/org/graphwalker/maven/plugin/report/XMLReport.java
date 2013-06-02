@@ -23,28 +23,14 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.maven.plugin.reports;
+package org.graphwalker.maven.plugin.report;
 
-import org.graphwalker.core.Bundle;
-import org.graphwalker.core.model.Edge;
-import org.graphwalker.core.model.Model;
-import org.graphwalker.core.model.Requirement;
-import org.graphwalker.core.model.Vertex;
-import org.graphwalker.core.statistics.EdgeStatistics;
-import org.graphwalker.core.statistics.RequirementStatistics;
-import org.graphwalker.core.statistics.VertexStatistics;
-import org.graphwalker.core.utils.Resource;
 import org.graphwalker.core.GraphWalker;
 
-import javax.xml.bind.*;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
-import java.math.BigInteger;
 import java.util.Date;
 
-public class XMLReport implements ReportWriter {
+public class XMLReport {
 
     private static final String LINE_SEPARATOR = System.getProperty("line.separator");
     private ObjectFactory objectFactory = new ObjectFactory();

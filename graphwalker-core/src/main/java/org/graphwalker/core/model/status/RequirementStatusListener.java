@@ -29,9 +29,6 @@ import org.graphwalker.core.model.Requirement;
 
 /**
  * <p>RequirementStatusListener interface.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public interface RequirementStatusListener {
     /**

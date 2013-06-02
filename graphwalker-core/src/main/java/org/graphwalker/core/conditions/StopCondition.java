@@ -30,9 +30,6 @@ import org.graphwalker.core.model.support.ModelContext;
 
 /**
  * <p>StopCondition interface.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public interface StopCondition {
 
@@ -44,8 +41,20 @@ public interface StopCondition {
     int SECOND_SCALE = 1000;
 
 
+    /**
+     * <p>isFulfilled.</p>
+     *
+     * @param context a {@link org.graphwalker.core.model.support.ModelContext} object.
+     * @return a boolean.
+     */
     boolean isFulfilled(ModelContext context);
 
 
+    /**
+     * <p>getFulfilment.</p>
+     *
+     * @param context a {@link org.graphwalker.core.model.support.ModelContext} object.
+     * @return a double.
+     */
     double getFulfilment(ModelContext context);
 }

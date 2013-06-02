@@ -31,9 +31,6 @@ import org.graphwalker.core.model.support.ModelContext;
 
 /**
  * <p>RequirementCoverage class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public final class RequirementCoverage implements StopCondition {
 

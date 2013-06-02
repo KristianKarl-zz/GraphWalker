@@ -31,9 +31,6 @@ import java.util.List;
 
 /**
  * <p>Edge class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public final class Edge extends ModelElement {
 
@@ -101,6 +98,11 @@ public final class Edge extends ModelElement {
         return guard;
     }
 
+    /**
+     * <p>hasGuard.</p>
+     *
+     * @return a boolean.
+     */
     public boolean hasGuard() {
         return null!=guard;
     }

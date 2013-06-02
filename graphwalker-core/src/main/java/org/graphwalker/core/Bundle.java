@@ -27,9 +27,6 @@ package org.graphwalker.core;
 
 /**
  * <p>Bundle interface.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public interface Bundle {
     /** Constant <code>NAME="core"</code> */

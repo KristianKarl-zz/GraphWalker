@@ -31,9 +31,6 @@ import org.graphwalker.core.utils.Resource;
 
 /**
  * <p>StopConditionFactory class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public final class StopConditionFactory {
 

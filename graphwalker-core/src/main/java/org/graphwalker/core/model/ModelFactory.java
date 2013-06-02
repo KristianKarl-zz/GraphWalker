@@ -29,9 +29,6 @@ import java.util.List;
 
 /**
  * <p>ModelFactory interface.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public interface ModelFactory {
 
@@ -49,7 +46,22 @@ public interface ModelFactory {
      * @param filename a {@link java.lang.String} object.
      * @return a {@link org.graphwalker.core.model.Model} object.
      */
+    Model create(String id, String filename);
+
+    /**
+     * <p>create.</p>
+     *
+     * @param id a {@link java.lang.String} object.
+     * @param filename a {@link java.lang.String} object.
+     * @param type a {@link java.lang.String} object.
+     * @return a {@link org.graphwalker.core.model.Model} object.
+     */
     Model create(String id, String filename, String type);
 
+    /**
+     * <p>getSupportedFileTypes.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
     List<String> getSupportedFileTypes();
 }

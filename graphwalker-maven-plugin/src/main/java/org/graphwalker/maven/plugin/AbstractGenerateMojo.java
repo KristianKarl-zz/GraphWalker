@@ -41,7 +41,6 @@ import java.util.*;
 /**
  * <p>AbstractGenerateMojo class.</p>
  *
- * @author nilols
  */
 
 public abstract class AbstractGenerateMojo extends AbstractGraphWalkerMojo {

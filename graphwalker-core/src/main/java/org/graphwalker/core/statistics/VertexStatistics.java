@@ -31,9 +31,6 @@ import java.util.List;
 
 /**
  * <p>VertexStatistics class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public class VertexStatistics {
 

@@ -27,9 +27,6 @@ package org.graphwalker.core.model;
 
 /**
  * <p>Requirement class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public final class Requirement extends NamedElement {
 

@@ -31,9 +31,6 @@ import java.util.List;
 
 /**
  * <p>Vertex class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public final class Vertex extends ModelElement {
 

@@ -32,9 +32,6 @@ import java.util.List;
 
 /**
  * <p>ExceptionStrategy interface.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public interface ExceptionStrategy {
     

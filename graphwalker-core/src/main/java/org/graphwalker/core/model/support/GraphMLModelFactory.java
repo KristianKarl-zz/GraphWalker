@@ -39,12 +39,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * <p>ModelFactory class.</p>
- *
- * @author nilols
- * @version $Id: $
+ * <p>GraphMLModelFactory class.</p>
  */
-public final class GraphMLModelFactory implements ModelFactory {
+public final class GraphMLModelFactory extends AbstractModelFactory {
 
     // TODO: Update support for keywords
 
@@ -57,6 +54,11 @@ public final class GraphMLModelFactory implements ModelFactory {
     public GraphMLModelFactory() {
     }
 
+    /**
+     * <p>getSupportedFileTypes.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
     public List<String> getSupportedFileTypes() {
         return Arrays.asList("**/*.graphml");
     }

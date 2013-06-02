@@ -39,17 +39,22 @@ import java.util.Random;
 
 /**
  * <p>RandomLeastVisitedPath class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public final class RandomLeastVisitedPath extends AbstractPathGenerator {
 
     private final Random randomGenerator = new Random(System.nanoTime());
 
+    /**
+     * <p>Constructor for RandomLeastVisitedPath.</p>
+     */
     public RandomLeastVisitedPath() {
     }
 
+    /**
+     * <p>Constructor for RandomLeastVisitedPath.</p>
+     *
+     * @param stopCondition a {@link org.graphwalker.core.conditions.StopCondition} object.
+     */
     public RandomLeastVisitedPath(StopCondition stopCondition) {
         super(stopCondition);
     }

@@ -30,8 +30,19 @@ import org.graphwalker.core.model.support.ModelContext;
 
 import java.util.List;
 
+/**
+ * <p>JumpPointSearch class.</p>
+ */
 public class JumpPointSearch {
 
+    /**
+     * <p>getPath.</p>
+     *
+     * @param context a {@link org.graphwalker.core.model.support.ModelContext} object.
+     * @param start a {@link org.graphwalker.core.model.ModelElement} object.
+     * @param destination a {@link org.graphwalker.core.model.ModelElement} object.
+     * @return a {@link java.util.List} object.
+     */
     public static List<ModelElement> getPath(ModelContext context, ModelElement start, ModelElement destination) {
         return null;
     }

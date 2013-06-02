@@ -30,9 +30,6 @@ import org.graphwalker.core.model.support.ModelContext;
 
 /**
  * <p>TimeDuration class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public final class TimeDuration implements StopCondition {
 

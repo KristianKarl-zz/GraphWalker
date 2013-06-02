@@ -139,7 +139,7 @@
                         <configuration>
                             <schemaDirectory>${basedir}/src/main/resources</schemaDirectory>
                             <schemaFiles>graphwalker-report.xsd</schemaFiles>
-                            <packageName>org.graphwalker.maven.plugin.reports</packageName>
+                            <packageName>org.graphwalker.maven.plugin.report</packageName>
                         </configuration>
                     </execution>
                 </executions>

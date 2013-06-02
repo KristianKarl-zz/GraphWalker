@@ -27,9 +27,6 @@ package org.graphwalker.core.annotations;
 
 /**
  * <p>AnnotationException class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public class AnnotationException extends RuntimeException {
 

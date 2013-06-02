@@ -29,9 +29,6 @@ import org.graphwalker.core.machine.Machine;
 
 /**
  * <p>NeverFailStrategy class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public class NeverFailStrategy extends AbstractStrategy {
 

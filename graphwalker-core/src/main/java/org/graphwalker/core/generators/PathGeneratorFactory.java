@@ -33,9 +33,6 @@ import org.graphwalker.core.utils.Resource;
 
 /**
  * <p>PathGeneratorFactory class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public final class PathGeneratorFactory {
 

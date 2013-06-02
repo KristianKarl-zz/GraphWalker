@@ -33,7 +33,6 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
 /**
  * <p>ValidateMojo class.</p>
  *
- * @author nilols
  */
 @Mojo(name = "validate"
         , defaultPhase = LifecyclePhase.PROCESS_CLASSES

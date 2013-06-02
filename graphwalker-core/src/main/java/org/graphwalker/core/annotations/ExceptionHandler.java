@@ -29,9 +29,17 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * <p>ExceptionHandler class.</p>
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(java.lang.annotation.ElementType.METHOD)
 public @interface ExceptionHandler {
 
+    /**
+     * <p>filter.</p>
+     *
+     * @return a {@link java.lang.Class} object.
+     */
     public Class<? extends Throwable> filter() default Throwable.class;
 }

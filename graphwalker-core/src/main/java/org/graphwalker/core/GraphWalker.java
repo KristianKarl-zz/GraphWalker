@@ -41,6 +41,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * <p>GraphWalker class.</p>
+ */
 public class GraphWalker {
 
     private final AnnotationProcessor annotationProcessor = new AnnotationProcessor();
@@ -48,6 +51,12 @@ public class GraphWalker {
     private final Map<Model, Object> implementations = new HashMap<Model, Object>();
     private Machine machine;
 
+    /**
+     * <p>addModel.</p>
+     *
+     * @param model a {@link org.graphwalker.core.model.Model} object.
+     * @param object a {@link java.lang.Object} object.
+     */
     public void addModel(Model model, Object object) {
         ModelContext context = new ModelContext(model);
         context.setPathGenerator(new RandomPath(new EdgeCoverage(100)));
@@ -55,6 +64,13 @@ public class GraphWalker {
         implementations.put(model, object);
     }
 
+    /**
+     * <p>addModel.</p>
+     *
+     * @param model a {@link org.graphwalker.core.model.Model} object.
+     * @param pathGenerator a {@link org.graphwalker.core.generators.PathGenerator} object.
+     * @param object a {@link java.lang.Object} object.
+     */
     public void addModel(Model model, PathGenerator pathGenerator, Object object) {
         ModelContext context = new ModelContext(model);
         context.setPathGenerator(pathGenerator);
@@ -62,6 +78,14 @@ public class GraphWalker {
         implementations.put(model, object);
     }
 
+    /**
+     * <p>addModel.</p>
+     *
+     * @param model a {@link org.graphwalker.core.model.Model} object.
+     * @param pathGenerator a {@link org.graphwalker.core.generators.PathGenerator} object.
+     * @param scriptLanguage a {@link java.lang.String} object.
+     * @param object a {@link java.lang.Object} object.
+     */
     public void addModel(Model model, PathGenerator pathGenerator, String scriptLanguage, Object object) {
         ModelContext context = new ModelContext(model);
         context.setPathGenerator(pathGenerator);
@@ -70,6 +94,11 @@ public class GraphWalker {
         implementations.put(model, object);
     }
 
+    /**
+     * <p>execute.</p>
+     *
+     * @param model a {@link org.graphwalker.core.model.Model} object.
+     */
     public void execute(Model model) {
         machine = new Machine(new ArrayList<ModelContext>(contexts.values()));
         machine.setCurrentContext(contexts.get(model));
@@ -96,6 +125,11 @@ public class GraphWalker {
         }
     }
 
+    /**
+     * <p>isAllModelsDone.</p>
+     *
+     * @return a boolean.
+     */
     public boolean isAllModelsDone() {
         return machine.hasMoreSteps();
     }

@@ -27,9 +27,6 @@ package org.graphwalker.core.model.status;
 
 /**
  * <p>ElementStatus class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public enum ElementStatus {
     UNREACHABLE, REACHABLE, VISITED, BLOCKED

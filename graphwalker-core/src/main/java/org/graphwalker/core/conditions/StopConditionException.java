@@ -27,9 +27,6 @@ package org.graphwalker.core.conditions;
 
 /**
  * <p>StopConditionException class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public class StopConditionException extends RuntimeException {
 

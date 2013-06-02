@@ -28,7 +28,6 @@ package org.graphwalker.maven.plugin;
 /**
  * <p>Bundle interface.</p>
  *
- * @author nilols
  * @version $Id: $
  */
 public interface Bundle {

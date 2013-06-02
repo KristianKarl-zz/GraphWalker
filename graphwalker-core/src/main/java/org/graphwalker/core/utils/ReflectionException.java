@@ -27,9 +27,6 @@ package org.graphwalker.core.utils;
 
 /**
  * <p>ReflectionException class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public class ReflectionException extends RuntimeException {
 

@@ -39,9 +39,6 @@ import java.lang.annotation.Target;
 
 /**
  * <p>GraphWalker class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

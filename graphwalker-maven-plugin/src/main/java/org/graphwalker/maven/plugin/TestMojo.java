@@ -31,8 +31,6 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.graphwalker.core.GraphWalker;
 import org.graphwalker.core.utils.Resource;
-import org.graphwalker.maven.plugin.reports.ReportWriter;
-import org.graphwalker.maven.plugin.reports.XMLReport;
 import org.graphwalker.maven.plugin.utils.TestUtil;
 
 import java.util.*;
@@ -40,7 +38,6 @@ import java.util.*;
 /**
  * <p>TestMojo class.</p>
  *
- * @author nilols
  */
 @Mojo(name = "test"
         , defaultPhase = LifecyclePhase.TEST
@@ -48,9 +45,14 @@ import java.util.*;
 @Execute(goal = "test-validate")
 public class TestMojo extends AbstractGraphWalkerMojo {
 
+    // 1. kunna definera hur många trådar som exekverar ett test
+    // 2. rapport ska genereras
+    // 3.
+
+
     private List<GraphWalker> graphWalkers = new ArrayList<GraphWalker>();
 
-    private ReportWriter reportWriter = new XMLReport();
+    //private ReportWriter reportWriter = new XMLReport();
 
     public void executeMojo() {
         if (!skipTests()) {

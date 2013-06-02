@@ -31,11 +31,8 @@ import java.util.Map;
 
 /**
  * <p>CachedElementFactory class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
-public class CachedElementFactory {
+public final class CachedElementFactory {
 
     private Map<Integer, Immutable> cache = new HashMap<Integer, Immutable>();
 

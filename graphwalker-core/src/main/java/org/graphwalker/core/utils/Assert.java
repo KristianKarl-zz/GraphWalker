@@ -32,9 +32,6 @@ import java.util.*;
 
 /**
  * <p>Assert class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public final class Assert {
 

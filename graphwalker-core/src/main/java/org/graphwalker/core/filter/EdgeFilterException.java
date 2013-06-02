@@ -27,9 +27,6 @@ package org.graphwalker.core.filter;
 
 /**
  * <p>EdgeFilterException class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public class EdgeFilterException extends RuntimeException {
 

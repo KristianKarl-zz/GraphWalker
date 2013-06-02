@@ -27,9 +27,6 @@ package org.graphwalker.core.model;
 
 /**
  * <p>Abstract NamedElement class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public abstract class NamedElement extends ImmutableElement {
 
@@ -55,6 +52,11 @@ public abstract class NamedElement extends ImmutableElement {
         return name;
     }
 
+    /**
+     * <p>hasName.</p>
+     *
+     * @return a boolean.
+     */
     public boolean hasName() {
         return null != name && !"".equals(name);
     }

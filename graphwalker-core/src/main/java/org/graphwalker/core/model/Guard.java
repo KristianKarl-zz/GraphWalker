@@ -27,9 +27,6 @@ package org.graphwalker.core.model;
 
 /**
  * <p>Guard class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public final class Guard extends ScriptElement {
 

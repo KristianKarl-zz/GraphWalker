@@ -30,11 +30,24 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * <p>Model class.</p>
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface Model {
 
+    /**
+     * <p>file.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String file();
+    /**
+     * <p>type.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String type();
 
 }

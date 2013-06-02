@@ -23,12 +23,11 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.maven.plugin.reports;
+package org.graphwalker.maven.plugin.report;
 
 /**
  * <p>ReportException class.</p>
  *
- * @author nilols
  * @version $Id: $
  */
 public class ReportException extends RuntimeException {

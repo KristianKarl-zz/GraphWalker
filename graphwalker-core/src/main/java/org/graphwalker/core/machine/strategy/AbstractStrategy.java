@@ -34,9 +34,6 @@ import java.util.Map;
 
 /**
  * <p>Abstract AbstractStrategy class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public abstract class AbstractStrategy implements ExceptionStrategy {
 

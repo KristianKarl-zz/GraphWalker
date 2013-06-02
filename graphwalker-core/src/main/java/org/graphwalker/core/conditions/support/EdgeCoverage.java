@@ -30,9 +30,6 @@ import org.graphwalker.core.model.support.ModelContext;
 
 /**
  * <p>EdgeCoverage class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public final class EdgeCoverage implements StopCondition {
 

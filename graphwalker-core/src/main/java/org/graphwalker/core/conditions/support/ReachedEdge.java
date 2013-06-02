@@ -33,15 +33,17 @@ import javax.validation.constraints.NotNull;
 
 /**
  * <p>ReachedEdge class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public final class ReachedEdge implements StopCondition {
 
     @NotNull
     private final String name;
 
+    /**
+     * <p>Constructor for ReachedEdge.</p>
+     *
+     * @param name a {@link java.lang.String} object.
+     */
     public ReachedEdge(String name) {
         this.name = name;
     }

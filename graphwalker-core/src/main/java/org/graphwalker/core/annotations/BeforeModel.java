@@ -31,9 +31,6 @@ import java.lang.annotation.Target;
 
 /**
  * <p>BeforeModel class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(java.lang.annotation.ElementType.METHOD)

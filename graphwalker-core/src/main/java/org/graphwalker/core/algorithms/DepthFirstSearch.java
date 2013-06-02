@@ -35,9 +35,6 @@ import java.util.*;
 
 /**
  * <p>DepthFirstSearch class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public final class DepthFirstSearch {
 

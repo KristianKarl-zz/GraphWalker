@@ -39,9 +39,6 @@ import java.util.*;
 
 /**
  * <p>ModelContext class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public final class ModelContext {
 
@@ -58,14 +55,29 @@ public final class ModelContext {
     private EdgeFilter edgeFilter;
     private Long visitCount = 0L;
 
+    /**
+     * <p>Constructor for ModelContext.</p>
+     *
+     * @param model a {@link org.graphwalker.core.model.Model} object.
+     */
     public ModelContext(Model model) {
         this.model = model;
     }
 
+    /**
+     * <p>Getter for the field <code>model</code>.</p>
+     *
+     * @return a {@link org.graphwalker.core.model.Model} object.
+     */
     public Model getModel() {
         return model;
     }
 
+    /**
+     * <p>Getter for the field <code>edgeFilter</code>.</p>
+     *
+     * @return a {@link org.graphwalker.core.filter.EdgeFilter} object.
+     */
     public EdgeFilter getEdgeFilter() {
         if (null == edgeFilter) {
             edgeFilter = new EdgeFilter(Resource.getText(Bundle.NAME, "default.language"));
@@ -73,6 +85,11 @@ public final class ModelContext {
         return edgeFilter;
     }
 
+    /**
+     * <p>Setter for the field <code>edgeFilter</code>.</p>
+     *
+     * @param edgeFilter a {@link org.graphwalker.core.filter.EdgeFilter} object.
+     */
     public void setEdgeFilter(EdgeFilter edgeFilter) {
         this.edgeFilter = edgeFilter;
     }
@@ -136,14 +153,30 @@ public final class ModelContext {
         elementStatus.put(element, status);
     }
 
+    /**
+     * <p>Getter for the field <code>visitedEdges</code>.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
     public List<Edge> getVisitedEdges() {
         return new ArrayList<Edge>(visitedEdges);
     }
 
+    /**
+     * <p>Getter for the field <code>visitedVertices</code>.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
     public List<Vertex> getVisitedVertices() {
         return new ArrayList<Vertex>(visitedVertices);
     }
 
+    /**
+     * <p>getRequirements.</p>
+     *
+     * @param status a {@link org.graphwalker.core.model.status.RequirementStatus} object.
+     * @return a {@link java.util.Set} object.
+     */
     public Set<Requirement> getRequirements(RequirementStatus status) {
         Set<Requirement> requirements = new HashSet<Requirement>();
         for (Requirement requirement: getModel().getRequirements()) {
@@ -168,6 +201,11 @@ public final class ModelContext {
         return visitCount;
     }
 
+    /**
+     * <p>Getter for the field <code>visitCount</code>.</p>
+     *
+     * @return a {@link java.lang.Long} object.
+     */
     public Long getVisitCount() {
         return visitCount;
     }

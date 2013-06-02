@@ -40,19 +40,26 @@ import java.util.List;
 
 /**
  * <p>MachineImpl class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public final class Machine {
 
     private final List<ModelContext> contexts;
     private ModelContext currentContext;
 
+    /**
+     * <p>Constructor for Machine.</p>
+     *
+     * @param contexts a {@link java.util.List} object.
+     */
     public Machine(List<ModelContext> contexts) {
         this.contexts = Collections.unmodifiableList(contexts);
     }
 
+    /**
+     * <p>Setter for the field <code>currentContext</code>.</p>
+     *
+     * @param context a {@link org.graphwalker.core.model.support.ModelContext} object.
+     */
     public void setCurrentContext(ModelContext context) {
         if (!contexts.contains(context)) {
             throw new MachineException(Resource.getText(Bundle.NAME, "exception.context.unknown"));
@@ -60,18 +67,38 @@ public final class Machine {
         this.currentContext = context;
     }
 
+    /**
+     * <p>Getter for the field <code>currentContext</code>.</p>
+     *
+     * @return a {@link org.graphwalker.core.model.support.ModelContext} object.
+     */
     public ModelContext getCurrentContext() {
         return currentContext;
     }
 
+    /**
+     * <p>hasMoreSteps.</p>
+     *
+     * @return a boolean.
+     */
     public boolean hasMoreSteps() {
         return !currentContext.getPathGenerator().getStopCondition().isFulfilled(currentContext);
     }
 
+    /**
+     * <p>getCurrentStep.</p>
+     *
+     * @return a {@link org.graphwalker.core.model.ModelElement} object.
+     */
     public ModelElement getCurrentStep() {
         return currentContext.getCurrentElement();
     }
 
+    /**
+     * <p>getNextStep.</p>
+     *
+     * @return a {@link org.graphwalker.core.model.ModelElement} object.
+     */
     public ModelElement getNextStep() {
         ModelElement nextElement = currentContext.getPathGenerator().getNextStep(currentContext, getPossibleSteps());
         currentContext.setCurrentElement(nextElement);
@@ -82,6 +109,11 @@ public final class Machine {
         return nextElement;
     }
 
+    /**
+     * <p>getPossibleSteps.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
     public List<ModelElement> getPossibleSteps() {
         List<ModelElement> elements = new ArrayList<ModelElement>();
         if (currentContext.getCurrentElement() instanceof Vertex) {

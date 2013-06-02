@@ -29,9 +29,6 @@ import org.graphwalker.core.machine.Machine;
 
 /**
  * <p>FailFastStrategy class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public class FailFastStrategy extends AbstractStrategy {
 

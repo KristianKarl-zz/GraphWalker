@@ -29,17 +29,22 @@ import org.graphwalker.core.conditions.StopCondition;
 
 /**
  * <p>Abstract AbstractPathGenerator class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public abstract class AbstractPathGenerator implements PathGenerator {
 
     private StopCondition stopCondition;
 
+    /**
+     * <p>Constructor for AbstractPathGenerator.</p>
+     */
     public AbstractPathGenerator() {
     }
 
+    /**
+     * <p>Constructor for AbstractPathGenerator.</p>
+     *
+     * @param stopCondition a {@link org.graphwalker.core.conditions.StopCondition} object.
+     */
     public AbstractPathGenerator(StopCondition stopCondition) {
         this.stopCondition = stopCondition;
     }

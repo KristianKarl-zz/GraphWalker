@@ -37,9 +37,6 @@ import java.util.ResourceBundle;
 
 /**
  * <p>Resource class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public final class Resource {
 

@@ -34,9 +34,6 @@ import java.util.*;
 
 /**
  * <p>Model class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public final class Model extends ImmutableElement {
 
@@ -149,6 +146,11 @@ public final class Model extends ImmutableElement {
         return modelElementsCache;
     }
 
+    /**
+     * <p>getRequirements.</p>
+     *
+     * @return a {@link java.util.Set} object.
+     */
     public Set<Requirement> getRequirements() {
         return requirementsCache;
     }
@@ -163,6 +165,11 @@ public final class Model extends ImmutableElement {
         return vertexEdgeCache.get(vertex);
     }
 
+    /**
+     * <p>getEdges.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
     public List<Edge> getEdges() {
         return new ArrayList<Edge>(edgeIdCache.values());
     }
@@ -177,10 +184,21 @@ public final class Model extends ImmutableElement {
         return edgeIdCache.get(id);
     }
 
+    /**
+     * <p>getEdgesByName.</p>
+     *
+     * @param name a {@link java.lang.String} object.
+     * @return a {@link java.util.List} object.
+     */
     public List<Edge> getEdgesByName(String name) {
         return edgeNameCache.get(name);
     }
 
+    /**
+     * <p>getVertices.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
     public List<Vertex> getVertices() {
         return new ArrayList<Vertex>(vertexIdCache.values());
     }
@@ -195,6 +213,12 @@ public final class Model extends ImmutableElement {
         return vertexIdCache.get(id);
     }
 
+    /**
+     * <p>getVerticesByName.</p>
+     *
+     * @param name a {@link java.lang.String} object.
+     * @return a {@link java.util.List} object.
+     */
     public List<Vertex> getVerticesByName(String name) {
         return vertexNameCache.get(name);
     }

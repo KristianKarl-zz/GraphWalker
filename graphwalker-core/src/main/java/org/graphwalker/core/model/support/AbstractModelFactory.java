@@ -1,8 +1,8 @@
 /*
  * #%L
- * Maven GraphWalker Plugin
+ * GraphWalker Core
  * %%
- * Copyright (C) 2011 - 2012 GraphWalker
+ * Copyright (C) 2011 - 2013 GraphWalker
  * %%
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,24 +23,18 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.maven.plugin.reports;
+package org.graphwalker.core.model.support;
 
-import org.graphwalker.core.GraphWalker;
-
-import java.io.File;
-import java.util.Date;
+import org.graphwalker.core.model.Model;
+import org.graphwalker.core.model.ModelFactory;
 
 /**
- * <p>ReportGenerator interface.</p>
- *
- * @author nilols
- * @version $Id: $
+ * <p>Abstract AbstractModelFactory class.</p>
  */
-public interface ReportWriter {
-    /**
-     * <p>writeReport.</p>
-     */
-    void writeReport(GraphWalker graphWalker, File folder, Date startTime);
-    GraphWalkerReportType readReport(File file);
+public abstract class AbstractModelFactory implements ModelFactory {
 
+    /** {@inheritDoc} */
+    public Model create(String id, String filename) {
+        return create(id,filename, "");
+    }
 }

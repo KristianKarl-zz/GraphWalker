@@ -27,9 +27,6 @@ package org.graphwalker.core.model.status;
 
 /**
  * <p>RequirementStatus class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public enum RequirementStatus {
     NOT_COVERED, PASSED, FAILED

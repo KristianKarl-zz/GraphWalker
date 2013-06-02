@@ -33,15 +33,17 @@ import javax.validation.constraints.NotNull;
 
 /**
  * <p>ReachedVertex class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public final class ReachedVertex implements StopCondition {
 
     @NotNull
     private final String name;
 
+    /**
+     * <p>Constructor for ReachedVertex.</p>
+     *
+     * @param name a {@link java.lang.String} object.
+     */
     public ReachedVertex(String name) {
         this.name = name;
     }

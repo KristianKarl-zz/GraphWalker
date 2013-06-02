@@ -35,15 +35,27 @@ import org.graphwalker.core.utils.Resource;
 
 import java.util.List;
 
+/**
+ * <p>AStarPath class.</p>
+ */
 public final class AStarPath extends AbstractPathGenerator {
 
+    /**
+     * <p>Constructor for AStarPath.</p>
+     */
     public AStarPath() {
     }
 
+    /**
+     * <p>Constructor for AStarPath.</p>
+     *
+     * @param stopCondition a {@link org.graphwalker.core.conditions.StopCondition} object.
+     */
     public AStarPath(StopCondition stopCondition) {
         super(stopCondition);
     }
 
+    /** {@inheritDoc} */
     public ModelElement getNextStep(ModelContext context, List<ModelElement> elements) {
         if (elements.isEmpty()) {
             throw new PathGeneratorException(Resource.getText(Bundle.NAME, "exception.generator.path.missing"));

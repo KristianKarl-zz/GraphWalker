@@ -39,17 +39,22 @@ import java.util.Random;
 
 /**
  * <p>RandomUnvisitedFirstPath class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public final class RandomUnvisitedFirstPath extends AbstractPathGenerator {
 
     private final Random randomGenerator = new Random(System.nanoTime());
 
+    /**
+     * <p>Constructor for RandomUnvisitedFirstPath.</p>
+     */
     public RandomUnvisitedFirstPath() {
     }
 
+    /**
+     * <p>Constructor for RandomUnvisitedFirstPath.</p>
+     *
+     * @param stopCondition a {@link org.graphwalker.core.conditions.StopCondition} object.
+     */
     public RandomUnvisitedFirstPath(StopCondition stopCondition) {
         super(stopCondition);
     }

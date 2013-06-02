@@ -38,17 +38,22 @@ import java.util.Random;
 
 /**
  * <p>RandomPath class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public final class RandomPath extends AbstractPathGenerator {
 
     private final Random randomGenerator = new Random(System.nanoTime());
 
+    /**
+     * <p>Constructor for RandomPath.</p>
+     */
     public RandomPath() {
     }
 
+    /**
+     * <p>Constructor for RandomPath.</p>
+     *
+     * @param stopCondition a {@link org.graphwalker.core.conditions.StopCondition} object.
+     */
     public RandomPath(StopCondition stopCondition) {
         super(stopCondition);
     }

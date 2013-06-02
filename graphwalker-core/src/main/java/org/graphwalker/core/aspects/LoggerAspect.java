@@ -41,9 +41,6 @@ import java.util.UUID;
 
 /**
  * <p>LoggerAspect class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 @Aspect
 public final class LoggerAspect {

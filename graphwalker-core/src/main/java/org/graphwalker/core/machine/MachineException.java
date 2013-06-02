@@ -27,9 +27,6 @@ package org.graphwalker.core.machine;
 
 /**
  * <p>MachineException class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public class MachineException extends RuntimeException {
 

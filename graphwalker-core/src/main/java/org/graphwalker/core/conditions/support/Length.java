@@ -30,9 +30,6 @@ import org.graphwalker.core.model.support.ModelContext;
 
 /**
  * <p>Length class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public final class Length implements StopCondition {
 

@@ -30,9 +30,6 @@ import org.graphwalker.core.model.support.ModelContext;
 
 /**
  * <p>VertexCoverage class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public final class VertexCoverage implements StopCondition {
 

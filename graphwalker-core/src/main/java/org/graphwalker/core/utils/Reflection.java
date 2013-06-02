@@ -35,9 +35,6 @@ import java.util.List;
 
 /**
  * <p>Reflection class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public final class Reflection {
 
@@ -84,14 +81,38 @@ public final class Reflection {
         }
     }
 
+    /**
+     * <p>execute.</p>
+     *
+     * @param object a {@link java.lang.Object} object.
+     * @param methodName a {@link java.lang.String} object.
+     * @param arguments a {@link java.lang.Object} object.
+     */
     public static void execute(Object object, String methodName, Object... arguments) {
         execute(object, methodName, Void.class, arguments);
     }
 
+    /**
+     * <p>execute.</p>
+     *
+     * @param object a {@link java.lang.Object} object.
+     * @param method a {@link java.lang.reflect.Method} object.
+     * @param arguments a {@link java.lang.Object} object.
+     */
     public static void execute(Object object, Method method, Object... arguments) {
         execute(object, method, Void.class, arguments);
     }
 
+    /**
+     * <p>execute.</p>
+     *
+     * @param object a {@link java.lang.Object} object.
+     * @param methodName a {@link java.lang.String} object.
+     * @param type a {@link java.lang.Class} object.
+     * @param arguments a {@link java.lang.Object} object.
+     * @param <T> a T object.
+     * @return a T object.
+     */
     public static <T> T execute(Object object, String methodName, Class<T> type, Object... arguments) {
         try {
             Method method;
@@ -106,6 +127,16 @@ public final class Reflection {
         }
     }
 
+    /**
+     * <p>execute.</p>
+     *
+     * @param object a {@link java.lang.Object} object.
+     * @param method a {@link java.lang.reflect.Method} object.
+     * @param type a {@link java.lang.Class} object.
+     * @param arguments a {@link java.lang.Object} object.
+     * @param <T> a T object.
+     * @return a T object.
+     */
     public static <T> T execute(Object object, Method method, Class<T> type, Object... arguments) {
         try {
             if (0<method.getParameterTypes().length) {
@@ -128,6 +159,14 @@ public final class Reflection {
         return types.toArray(new Class<?>[types.size()]);
     }
 
+    /**
+     * <p>isReturnType.</p>
+     *
+     * @param object a {@link java.lang.Object} object.
+     * @param methodName a {@link java.lang.String} object.
+     * @param type a {@link java.lang.Class} object.
+     * @return a boolean.
+     */
     public static boolean isReturnType(Object object, String methodName, Class<?> type) {
         if (null != object) {
             try {
@@ -139,6 +178,13 @@ public final class Reflection {
         return false;
     }
 
+    /**
+     * <p>isReturnType.</p>
+     *
+     * @param method a {@link java.lang.reflect.Method} object.
+     * @param type a {@link java.lang.Class} object.
+     * @return a boolean.
+     */
     public static boolean isReturnType(Method method, Class<?> type) {
         return null != method && method.getReturnType().equals(type);
     }

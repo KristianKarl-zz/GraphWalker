@@ -37,7 +37,6 @@ import java.util.List;
 /**
  * <p>TestUtil class.</p>
  *
- * @author nilols
  * @version $Id: $
  */
 public final class TestUtil {

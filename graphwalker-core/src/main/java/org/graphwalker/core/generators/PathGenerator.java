@@ -34,12 +34,16 @@ import java.util.List;
 
 /**
  * <p>PathGenerator interface.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public interface PathGenerator {
 
+    /**
+     * <p>getNextStep.</p>
+     *
+     * @param context a {@link org.graphwalker.core.model.support.ModelContext} object.
+     * @param elements a {@link java.util.List} object.
+     * @return a {@link org.graphwalker.core.model.ModelElement} object.
+     */
     ModelElement getNextStep(ModelContext context, List<ModelElement> elements);
     /**
      * <p>getStopCondition.</p>

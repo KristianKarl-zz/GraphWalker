@@ -31,24 +31,37 @@ import org.graphwalker.core.model.ModelFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DefaultModelFactory implements ModelFactory {
+/**
+ * <p>DefaultModelFactory class.</p>
+ */
+public final class DefaultModelFactory extends AbstractModelFactory {
 
     private final GraphMLModelFactory graphMLModelFactory = new GraphMLModelFactory();
     private final List<String> supportedTypes = new ArrayList<String>();
 
+    /**
+     * <p>Constructor for DefaultModelFactory.</p>
+     */
     public DefaultModelFactory() {
         supportedTypes.addAll(graphMLModelFactory.getSupportedFileTypes());
     }
 
+    /** {@inheritDoc} */
     public boolean accept(String type) {
         return supportedTypes.contains(type);
     }
 
+    /** {@inheritDoc} */
     public Model create(String id, String filename, String type) {
         //TODO: we need to handle this better, when/if we add more factories
         return graphMLModelFactory.create(id, filename, type);
     }
 
+    /**
+     * <p>getSupportedFileTypes.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
     public List<String> getSupportedFileTypes() {
         return supportedTypes;
     }

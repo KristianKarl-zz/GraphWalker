@@ -36,9 +36,6 @@ import javax.script.*;
 
 /**
  * <p>EdgeFilterImpl class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public final class EdgeFilter {
 
@@ -56,6 +53,12 @@ public final class EdgeFilter {
         scriptEngine = scriptEngineManager.getEngineByName(scriptEngineName);
     }
 
+    /**
+     * <p>executeActions.</p>
+     *
+     * @param context a {@link org.graphwalker.core.model.support.ModelContext} object.
+     * @param edge a {@link org.graphwalker.core.model.Edge} object.
+     */
     public void executeActions(ModelContext context, Edge edge) {
         if (null == scriptEngine) {
             throw new EdgeFilterException(Resource.getText(Bundle.NAME, "exception.script.engine.missing", scriptEngineName));
@@ -71,6 +74,13 @@ public final class EdgeFilter {
         }
     }
 
+    /**
+     * <p>acceptEdge.</p>
+     *
+     * @param context a {@link org.graphwalker.core.model.support.ModelContext} object.
+     * @param edge a {@link org.graphwalker.core.model.Edge} object.
+     * @return a boolean.
+     */
     public boolean acceptEdge(ModelContext context, Edge edge) {
         if (null == scriptEngine) {
             throw new EdgeFilterException(Resource.getText(Bundle.NAME, "exception.script.engine.missing", scriptEngineName));
@@ -86,6 +96,14 @@ public final class EdgeFilter {
         return isEdgeAccepted;
     }
 
+    /**
+     * <p>getDataValue.</p>
+     *
+     * @param name a {@link java.lang.String} object.
+     * @param type a {@link java.lang.Class} object.
+     * @param <T> a T object.
+     * @return a T object.
+     */
     @SuppressWarnings("unchecked")
     public <T> T getDataValue(String name, Class<T> type) {
         Bindings bindings = scriptEngine.getBindings(ScriptContext.ENGINE_SCOPE);

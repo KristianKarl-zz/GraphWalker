@@ -41,9 +41,6 @@ import java.util.Set;
 
 /**
  * <p>AnnotationProcessorImpl class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public class AnnotationProcessor {
 
@@ -61,6 +58,13 @@ public class AnnotationProcessor {
     public AnnotationProcessor() {
     }
 
+    /**
+     * <p>process.</p>
+     *
+     * @param annotation a {@link java.lang.Class} object.
+     * @param machine a {@link org.graphwalker.core.machine.Machine} object.
+     * @param object a {@link java.lang.Object} object.
+     */
     public void process(Class<? extends Annotation> annotation, Machine machine, Object object) {
         if (getSupportedAnnotations().contains(annotation)) {
             try {

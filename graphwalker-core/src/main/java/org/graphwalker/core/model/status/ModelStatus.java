@@ -27,9 +27,6 @@ package org.graphwalker.core.model.status;
 
 /**
  * <p>ModelStatus class.</p>
- *
- * @author nilols
- * @version $Id: $
  */
 public enum ModelStatus {
     NOT_EXECUTED, EXECUTING, COMPLETED, FAILED
