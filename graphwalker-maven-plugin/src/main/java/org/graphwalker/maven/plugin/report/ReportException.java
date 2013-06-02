@@ -28,9 +28,9 @@ package org.graphwalker.maven.plugin.report;
 /**
  * <p>ReportException class.</p>
  *
- * @version $Id: $
+ *
  */
-public class ReportException extends RuntimeException {
+public final class ReportException extends RuntimeException {
 
     /**
      * <p>Constructor for ReportException.</p>

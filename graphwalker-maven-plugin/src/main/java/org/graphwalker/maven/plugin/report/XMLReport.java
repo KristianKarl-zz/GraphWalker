@@ -30,7 +30,7 @@ import org.graphwalker.core.GraphWalker;
 import java.io.File;
 import java.util.Date;
 
-public class XMLReport {
+public final class XMLReport {
 
     private static final String LINE_SEPARATOR = System.getProperty("line.separator");
     private ObjectFactory objectFactory = new ObjectFactory();

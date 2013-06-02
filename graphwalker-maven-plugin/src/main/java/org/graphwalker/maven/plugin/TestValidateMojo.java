@@ -32,7 +32,7 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
 @Mojo(name = "test-validate"
         , defaultPhase = LifecyclePhase.PROCESS_TEST_CLASSES
         , requiresDependencyResolution = ResolutionScope.TEST)
-public class TestValidateMojo extends AbstractValidateMojo {
+public final class TestValidateMojo extends AbstractValidateMojo {
 
     @Override
     public void executeMojo() {

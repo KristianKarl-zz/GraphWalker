@@ -23,45 +23,29 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.maven.plugin.source;
+package org.graphwalker.maven.plugin.test;
 
-import org.codehaus.plexus.util.FileUtils;
+import java.util.ArrayList;
+import java.util.List;
 
-import java.io.File;
+public final class Group {
 
-public final class SourceFile {
+    private final String name;
+    private final List<Test> tests = new ArrayList<Test>();
 
-    private File parent;
-    private String filename;
-
-    public SourceFile(File parent, String filename) {
-        this.parent = parent;
-        String parentPath = parent.getAbsolutePath()+File.separator;
-        this.filename = filename.substring(parentPath.length());
+    public Group(String name) {
+        this.name = name;
     }
 
-    public File getOutputFile() {
-        File outputParent = new File(parent.getParentFile(), "java");
-        return new File(outputParent, FileUtils.removeExtension(filename)+".java");
+    public String getName() {
+        return name;
     }
 
-    public String getFilename() {
-        return filename;
+    public void addTest(Test test) {
+        tests.add(test);
     }
 
-    public String getPath() {
-        return FileUtils.getPath(filename);
-    }
-
-    public String getExtension() {
-        return FileUtils.extension(filename);
-    }
-
-    public String getBaseName() {
-        return FileUtils.basename(FileUtils.removeExtension(filename));
-    }
-
-    public boolean exists() {
-        return new File(parent, filename).exists();
+    public List<Test> getTests() {
+        return tests;
     }
 }

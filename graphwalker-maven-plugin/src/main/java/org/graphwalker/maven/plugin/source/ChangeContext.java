@@ -32,7 +32,7 @@ import org.graphwalker.core.model.ModelElement;
 import java.util.HashSet;
 import java.util.Set;
 
-public class ChangeContext {
+public final class ChangeContext {
 
     private final Set<String> methodNames;
     private final Set<MethodDeclaration> methodDeclarations = new HashSet<MethodDeclaration>();

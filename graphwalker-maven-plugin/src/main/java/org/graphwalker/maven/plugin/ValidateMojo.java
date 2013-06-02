@@ -36,7 +36,7 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
 @Mojo(name = "validate"
         , defaultPhase = LifecyclePhase.PROCESS_CLASSES
         , requiresDependencyResolution = ResolutionScope.COMPILE)
-public class ValidateMojo extends AbstractValidateMojo {
+public final class ValidateMojo extends AbstractValidateMojo {
 
 
     // 1. Hitta alla tester

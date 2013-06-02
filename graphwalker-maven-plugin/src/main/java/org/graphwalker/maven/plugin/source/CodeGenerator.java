@@ -44,7 +44,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class CodeGenerator extends VoidVisitorAdapter {
+public final class CodeGenerator extends VoidVisitorAdapter {
 
     private final SourceFile sourceFile;
     private final Model model;

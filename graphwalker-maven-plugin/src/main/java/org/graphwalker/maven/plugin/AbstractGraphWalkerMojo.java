@@ -39,6 +39,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
@@ -62,8 +63,11 @@ public abstract class AbstractGraphWalkerMojo extends AbstractMojo {
     @Parameter(property = "maven.test.skip", defaultValue="false")
     private boolean skipAllTests;
 
-    @Parameter(property = "test")
+    @Parameter(property = "test", defaultValue = "")
     private String test;
+
+    @Parameter(property = "graphwalker.test.groups", defaultValue = "")
+    private String groups;
 
     @Parameter(defaultValue="${project.build.testOutputDirectory}")
     private File testClassesDirectory;
@@ -106,6 +110,10 @@ public abstract class AbstractGraphWalkerMojo extends AbstractMojo {
 
     protected String getTest() {
         return test;
+    }
+
+    protected String getGroups() {
+        return groups;
     }
 
     protected File getTestClassesDirectory() {

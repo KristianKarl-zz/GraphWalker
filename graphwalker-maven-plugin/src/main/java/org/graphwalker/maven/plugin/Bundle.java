@@ -28,7 +28,7 @@ package org.graphwalker.maven.plugin;
 /**
  * <p>Bundle interface.</p>
  *
- * @version $Id: $
+ *
  */
 public interface Bundle {
     /** Constant <code>NAME="plugin"</code> */

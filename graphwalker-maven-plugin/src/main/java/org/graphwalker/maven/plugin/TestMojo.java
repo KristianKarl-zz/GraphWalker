@@ -27,7 +27,7 @@ package org.graphwalker.maven.plugin;
 
 import org.apache.maven.plugins.annotations.*;
 import org.graphwalker.core.utils.Resource;
-import org.graphwalker.maven.plugin.scanner.TestUtil;
+import org.graphwalker.maven.plugin.test.*;
 
 import java.util.List;
 
@@ -39,20 +39,11 @@ import java.util.List;
         , defaultPhase = LifecyclePhase.TEST
         , requiresDependencyResolution = ResolutionScope.TEST)
 @Execute(phase = LifecyclePhase.TEST, lifecycle = "graphwalker")
-public class TestMojo extends AbstractGraphWalkerMojo {
+public final class TestMojo extends AbstractGraphWalkerMojo {
 
     // 1. kunna definera hur många trådar som exekverar ett test
     // 2. rapport ska genereras
     // 3.
-
-    @Parameter(property = "groups")
-    private String groups;
-
-
-
-
-
-
 
     //private List<GraphWalker> graphWalkers = new ArrayList<GraphWalker>();
 
@@ -61,8 +52,19 @@ public class TestMojo extends AbstractGraphWalkerMojo {
     public void executeMojo() {
         if (!skipTests()) {
             displayHeader();
-            List<Class<?>> tests = TestUtil.findTests(getIncludes(), getExcludes(), getTestClassesDirectory(), getClassesDirectory());
-            displayConfiguration(tests);
+            Configuration configuration = new Configuration();
+            configuration.setIncludes(getIncludes());
+            configuration.setExcludes(getExcludes());
+            configuration.setTest(getTest());
+            configuration.setSkipTests(isSkipTests());
+            configuration.setClassesDirectory(getClassesDirectory());
+            configuration.setTestClassesDirectory(getTestClassesDirectory());
+            configuration.setReportsDirectory(getReportsDirectory());
+            configuration.setGroups(getGroups());
+            Scanner scanner = new Scanner(configuration);
+            Manager manager = new Manager(configuration, scanner.scan(getTestClassesDirectory(), getClassesDirectory()));
+            displayConfiguration(manager);
+
             // kör testerna
             /*
             createInstances();
@@ -79,16 +81,24 @@ public class TestMojo extends AbstractGraphWalkerMojo {
         getLog().info("------------------------------------------------------------------------");
     }
 
-    private void displayConfiguration(List<Class<?>> tests) {
-        getLog().info("Arguments:");
-        // parametrar/argument, typ: antal trådar, version, timestamp (start)
+    private void displayConfiguration(Manager manager) {
+        getLog().info("Configuration:");
+        getLog().info("        Skip Tests = "+manager.getConfiguration().getSkipTests());
+        getLog().info("              Test = "+manager.getConfiguration().getTest());
+        getLog().info("           Include = "+manager.getConfiguration().getIncludes());
+        getLog().info("           Exclude = "+manager.getConfiguration().getExcludes());
+        getLog().info("            Groups = "+manager.getConfiguration().getGroups().toString());
+        getLog().info("  Threads per Test = "+1); // TODO: gör så att man kan låta flera trådar köra samma test (kunna utföra lasttest)
         getLog().info("");
         getLog().info("Tests:");
-        if (0<tests.size()) {
-            for (Class<?> test: tests) {
-                getLog().info("  " + test.getName());
+        if (0<manager.getTestGroups().size()) {
+            for (Group group: manager.getTestGroups()) {
+                getLog().info("  [" + group.getName()+"]");
+                for (Test test: group.getTests()) {
+                    getLog().info("    "+test.getName());
+                }
+                getLog().info("");
             }
-            getLog().info("");
         } else {
             getLog().info("  No tests found");
         }
@@ -172,9 +182,9 @@ public class TestMojo extends AbstractGraphWalkerMojo {
     private void createInstances() throws MojoExecutionException {
         try {
             Map<String, List<Class<?>>> testGroups = new HashMap<String, List<Class<?>>>();
-            List<Class<?>> tests = TestUtil.findTests(testClassesDirectory, updateIncludes(), excludes);
+            List<Class<?>> tests = Scanner.findTests(testClassesDirectory, updateIncludes(), excludes);
             for (Class<?> test : tests) {
-                String group = TestUtil.getGroup(test);
+                String group = Scanner.getGroup(test);
                 if (!testGroups.containsKey(group)) {
                     testGroups.put(group, new ArrayList<Class<?>>());
                 }

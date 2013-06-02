@@ -37,7 +37,7 @@ import java.util.List;
 @Mojo(name = "generate"
         , defaultPhase = LifecyclePhase.GENERATE_SOURCES
         , requiresDependencyResolution = ResolutionScope.COMPILE)
-public class GenerateMojo extends AbstractGenerateMojo {
+public final class GenerateMojo extends AbstractGenerateMojo {
 
     @Parameter(defaultValue = "${project.resources}", required = true, readonly = true)
     private List<Resource> resources;

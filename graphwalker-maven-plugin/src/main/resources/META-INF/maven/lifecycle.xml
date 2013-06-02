@@ -76,6 +76,9 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <failIfNoTests>false</failIfNoTests>
+                </configuration>
             </phase>
         </phases>
     </lifecycle>
