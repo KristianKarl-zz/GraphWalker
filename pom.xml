@@ -18,8 +18,9 @@
     <modules>
         <module>graphwalker-core</module>
         <module>graphwalker-example</module>
-        <module>graphwalker-maven-plugin</module>
         <module>graphwalker-jenkins-plugin</module>
+        <module>graphwalker-maven-plugin</module>
+        <module>graphwalker-report</module>
     </modules>
 
     <organization>
@@ -86,6 +87,11 @@
             <dependency>
                 <groupId>org.graphwalker</groupId>
                 <artifactId>graphwalker-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.graphwalker</groupId>
+                <artifactId>graphwalker-report</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

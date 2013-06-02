@@ -7,6 +7,7 @@
         <groupId>org.jenkins-ci.plugins</groupId>
         <artifactId>plugin</artifactId>
         <version>1.481</version>
+        <relativePath/>
     </parent>
 
     <groupId>org.graphwalker</groupId>
@@ -35,24 +36,29 @@
     </pluginRepositories>
 
     <dependencies>
-        <!--dependency>
+        <dependency>
+            <groupId>org.graphwalker</groupId>
+            <artifactId>graphwalker-core</artifactId>
+            <version>3.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.graphwalker</groupId>
+            <artifactId>graphwalker-report</artifactId>
+            <version>3.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
             <groupId>org.jvnet.hudson.plugins</groupId>
             <artifactId>analysis-core</artifactId>
             <version>1.45</version>
-        </dependency-->
+        </dependency>
         <dependency>
             <groupId>org.jenkins-ci.main</groupId>
             <artifactId>maven-plugin</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.graphwalker</groupId>
-            <artifactId>graphwalker</artifactId>
-            <version>3.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>jfree</groupId>
+            <groupId>org.jfree</groupId>
             <artifactId>jfreechart</artifactId>
-            <version>1.0.13</version>
+            <version>1.0.14</version>
         </dependency>
     </dependencies>
 

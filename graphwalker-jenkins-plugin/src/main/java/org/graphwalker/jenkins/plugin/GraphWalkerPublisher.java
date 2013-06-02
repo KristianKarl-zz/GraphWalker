@@ -9,9 +9,8 @@ import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Publisher;
 import hudson.tasks.Recorder;
-import org.graphwalker.core.reports.GraphWalkerReportType;
-import org.graphwalker.maven.plugin.reports.ReportWriter;
-import org.graphwalker.core.reports.XMLReport;
+import org.graphwalker.report.GraphWalkerReportType;
+import org.graphwalker.report.XMLReport;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 import java.io.File;
@@ -41,7 +40,7 @@ public class GraphWalkerPublisher extends Recorder {
                     final FilePath reportDirectory = targetDirectory.child(Messages.plugin_report_directory());
                     if (reportDirectory.exists() && reportDirectory.isDirectory()) {
                         GraphWalkerResult result = new GraphWalkerResult();
-                        ReportWriter parser = new XMLReport();
+                        XMLReport parser = new XMLReport();
                         for (FilePath file: reportDirectory.list()) {
                             processReport(parser, file, result);
                         }
@@ -57,7 +56,7 @@ public class GraphWalkerPublisher extends Recorder {
         return true;
     }
 
-    private void processReport(Report parser, FilePath file, GraphWalkerResult result) throws IOException, InterruptedException {
+    private void processReport(XMLReport parser, FilePath file, GraphWalkerResult result) throws IOException, InterruptedException {
         if (file.exists() && !file.isDirectory()) {
             File reportFile = new File(file.getRemote());
             GraphWalkerReportType report = parser.readReport(reportFile);

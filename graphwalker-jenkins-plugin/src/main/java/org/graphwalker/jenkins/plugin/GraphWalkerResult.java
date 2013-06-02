@@ -1,8 +1,8 @@
 package org.graphwalker.jenkins.plugin;
 
 import hudson.model.ModelObject;
-import org.graphwalker.core.reports.GraphWalkerReportType;
-import org.graphwalker.core.reports.RequirementsType;
+import org.graphwalker.report.GraphWalkerReportType;
+import org.graphwalker.report.RequirementsType;
 
 import java.io.Serializable;
 import java.util.ArrayList;
