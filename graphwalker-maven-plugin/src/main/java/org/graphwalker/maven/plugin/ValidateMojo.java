@@ -38,11 +38,6 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
         , requiresDependencyResolution = ResolutionScope.COMPILE)
 public final class ValidateMojo extends AbstractValidateMojo {
 
-
-    // 1. Hitta alla tester
-    // 2. Ladda in modeller och implementationer
-    // 3. verifiera att implementationerna innehåller alla metoder och rätt argument
-
     @Override
     public void executeMojo() {
         int i = 0;

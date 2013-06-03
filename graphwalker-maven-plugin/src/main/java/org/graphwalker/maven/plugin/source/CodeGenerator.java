@@ -34,6 +34,7 @@ import japa.parser.ast.PackageDeclaration;
 import japa.parser.ast.body.ClassOrInterfaceDeclaration;
 import japa.parser.ast.body.MethodDeclaration;
 import japa.parser.ast.body.ModifierSet;
+import japa.parser.ast.body.Parameter;
 import japa.parser.ast.expr.*;
 import japa.parser.ast.visitor.VoidVisitorAdapter;
 import org.graphwalker.core.model.Model;
@@ -77,7 +78,10 @@ public final class CodeGenerator extends VoidVisitorAdapter {
             if (!"".equals(sourceFile.getPath())) {
                 compilationUnit.setPackage(getPackageName(sourceFile));
             }
-            compilationUnit.setImports(Arrays.asList(new ImportDeclaration(new NameExpr("org.graphwalker.core.annotations.Model"), false, false)));
+            compilationUnit.setImports(Arrays.asList(
+                    new ImportDeclaration(new NameExpr("org.graphwalker.core.annotations.Model"), false, false),
+                    new ImportDeclaration(new NameExpr("org.graphwalker.core.machine.Context"), false, false)
+            ));
             ASTHelper.addTypeDeclaration(compilationUnit, getInterfaceName(sourceFile));
         }
         return compilationUnit;
@@ -94,6 +98,8 @@ public final class CodeGenerator extends VoidVisitorAdapter {
         ClassOrInterfaceDeclaration body = (ClassOrInterfaceDeclaration)compilationUnit.getTypes().get(0);
         for (String methodName: changeContext.getMethodsName()) {
             MethodDeclaration method = new MethodDeclaration(Modifier.INTERFACE, ASTHelper.VOID_TYPE, methodName);
+            Parameter parameter = ASTHelper.createParameter(ASTHelper.createReferenceType("Context", 0), "context");
+            ASTHelper.addParameter(method, parameter);
             ASTHelper.addMember(body, method);
         }
     }

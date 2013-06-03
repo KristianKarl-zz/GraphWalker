@@ -28,8 +28,7 @@ package org.graphwalker.core.filter;
 import org.graphwalker.core.Bundle;
 import org.graphwalker.core.model.Action;
 import org.graphwalker.core.model.Edge;
-import org.graphwalker.core.model.Model;
-import org.graphwalker.core.model.support.ModelContext;
+import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.utils.Resource;
 
 import javax.script.*;
@@ -56,10 +55,10 @@ public final class EdgeFilter {
     /**
      * <p>executeActions.</p>
      *
-     * @param context a {@link org.graphwalker.core.model.support.ModelContext} object.
+     * @param context a {@link org.graphwalker.core.machine.Context} object.
      * @param edge a {@link org.graphwalker.core.model.Edge} object.
      */
-    public void executeActions(ModelContext context, Edge edge) {
+    public void executeActions(Context context, Edge edge) {
         if (null == scriptEngine) {
             throw new EdgeFilterException(Resource.getText(Bundle.NAME, "exception.script.engine.missing", scriptEngineName));
         }
@@ -77,11 +76,11 @@ public final class EdgeFilter {
     /**
      * <p>acceptEdge.</p>
      *
-     * @param context a {@link org.graphwalker.core.model.support.ModelContext} object.
+     * @param context a {@link org.graphwalker.core.machine.Context} object.
      * @param edge a {@link org.graphwalker.core.model.Edge} object.
      * @return a boolean.
      */
-    public boolean acceptEdge(ModelContext context, Edge edge) {
+    public boolean acceptEdge(Context context, Edge edge) {
         if (null == scriptEngine) {
             throw new EdgeFilterException(Resource.getText(Bundle.NAME, "exception.script.engine.missing", scriptEngineName));
         }

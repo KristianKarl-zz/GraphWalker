@@ -32,7 +32,7 @@ import org.graphwalker.core.generators.support.RandomPath;
 import org.graphwalker.core.machine.Machine;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.ModelElement;
-import org.graphwalker.core.model.support.ModelContext;
+import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.annotations.*;
 import org.graphwalker.core.utils.Reflection;
 
@@ -40,14 +40,69 @@ import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 /**
  * <p>GraphWalker class.</p>
  */
-public class GraphWalker {
+public class GraphWalker implements Runnable {
+
+    private final Object object;
+
+    public GraphWalker(Class<?> testClass) {
+        this.object = Reflection.newInstance(testClass);
+    }
+
+    public void run(int threads) {
+        if (0<threads) {
+            ExecutorService executorService = Executors.newFixedThreadPool(threads);
+            executorService.execute(this);
+            executorService.shutdown();
+            try {
+                executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.DAYS);
+            } catch (InterruptedException e) {
+                // ignore
+            }
+        }
+    }
+
+    public void run() {
+        // en test klass kan innehålla flera modeller, hitta alla @Model annoteringar, Modell klasser ska vi dela mellan trådar
+        int i = 0;
+        // skapa en model context
+        // exekvera model context med en machine
+        // model contexten måste vara sparad så att vi kan hämta information om exekveringen (byt namn till Context)
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     private final AnnotationProcessor annotationProcessor = new AnnotationProcessor();
-    private final Map<Model, ModelContext> contexts = new HashMap<Model, ModelContext>();
+    private final Map<Model, Context> contexts = new HashMap<Model, Context>();
     private final Map<Model, Object> implementations = new HashMap<Model, Object>();
     private Machine machine;
 
@@ -58,7 +113,7 @@ public class GraphWalker {
      * @param object a {@link java.lang.Object} object.
      */
     public void addModel(Model model, Object object) {
-        ModelContext context = new ModelContext(model);
+        Context context = new Context(model);
         context.setPathGenerator(new RandomPath(new EdgeCoverage(100)));
         contexts.put(model, context);
         implementations.put(model, object);
@@ -72,7 +127,7 @@ public class GraphWalker {
      * @param object a {@link java.lang.Object} object.
      */
     public void addModel(Model model, PathGenerator pathGenerator, Object object) {
-        ModelContext context = new ModelContext(model);
+        Context context = new Context(model);
         context.setPathGenerator(pathGenerator);
         contexts.put(model, context);
         implementations.put(model, object);
@@ -87,7 +142,7 @@ public class GraphWalker {
      * @param object a {@link java.lang.Object} object.
      */
     public void addModel(Model model, PathGenerator pathGenerator, String scriptLanguage, Object object) {
-        ModelContext context = new ModelContext(model);
+        Context context = new Context(model);
         context.setPathGenerator(pathGenerator);
         context.setEdgeFilter(new EdgeFilter(scriptLanguage));
         contexts.put(model, context);
@@ -100,13 +155,13 @@ public class GraphWalker {
      * @param model a {@link org.graphwalker.core.model.Model} object.
      */
     public void execute(Model model) {
-        machine = new Machine(new ArrayList<ModelContext>(contexts.values()));
+        machine = new Machine(new ArrayList<Context>(contexts.values()));
         machine.setCurrentContext(contexts.get(model));
         try {
             processAnnotation(BeforeModel.class, machine, implementations.get(model));
             while (machine.hasMoreSteps()) {
                 ModelElement element = machine.getNextStep();
-                ModelContext context = machine.getCurrentContext();
+                Context context = machine.getCurrentContext();
                 if (implementations.containsKey(model)) {
                     processAnnotation(BeforeElement.class, machine, implementations.get(model));
                     Reflection.execute(implementations.get(context.getModel()), element.getName(), machine.getCurrentContext());
@@ -133,4 +188,6 @@ public class GraphWalker {
     public boolean isAllModelsDone() {
         return machine.hasMoreSteps();
     }
+
+
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:y="http://www.yworks.com/xml/graphml" xmlns:yed="http://www.yworks.com/xml/yed/3" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://www.yworks.com/xml/schema/graphml/1.1/ygraphml.xsd">
-  <!--Created by yFiles for Java 2.8-->
+  <!--Created by yFiles for Java 2.10-->
   <key for="graphml" id="d0" yfiles.type="resources"/>
   <key for="port" id="d1" yfiles.type="portgraphics"/>
   <key for="port" id="d2" yfiles.type="portgeometry"/>
@@ -44,8 +44,8 @@
           <y:Geometry height="44.2529296875" width="147.72607421875" x="129.40442320808532" y="155.92578125"/>
           <y:Fill color="#FFCC00" color2="#FFFF00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="34.62109375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="236.44482421875" x="-44.359375" y="4.81591796875">v_BaseURL
-                        REQTAG=UC01 2.2.1</y:NodeLabel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="34.62109375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="109.26318359375" x="19.2314453125" y="4.81591796875">v_BaseURL
+REQ(UC01 2.2.1)</y:NodeLabel>
           <y:Shape type="rectangle3d"/>
           <y:DropShadow color="#B3A691" offsetX="1" offsetY="1"/>
         </y:ShapeNode>
@@ -58,8 +58,8 @@
           <y:Geometry height="44.2529296875" width="147.72607421875" x="147.87029622395832" y="278.1416015625"/>
           <y:Fill color="#FFCC00" color2="#FFFF00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="34.62109375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="236.44482421875" x="-44.359375" y="4.81591796875">v_SearchResult
-                        REQTAG=UC01 2.2.2</y:NodeLabel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="34.62109375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="109.26318359375" x="19.2314453125" y="4.81591796875">v_SearchResult
+REQ(UC01 2.2.2)</y:NodeLabel>
           <y:Shape type="rectangle3d"/>
           <y:DropShadow color="#B3A691" offsetX="1" offsetY="1"/>
         </y:ShapeNode>
@@ -73,8 +73,8 @@ Practical Model-Based Testing: A Tools Approach' is correct.]]></data>
           <y:Geometry height="44.2529296875" width="147.72607421875" x="184.80164543030753" y="385.357421875"/>
           <y:Fill color="#FFCC00" color2="#FFFF00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="34.62109375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="236.44482421875" x="-44.359375" y="4.81591796875">v_BookInformation
-                        REQTAG=UC01 2.2.3</y:NodeLabel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="34.62109375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="122.16162109375" x="12.7822265625" y="4.81591796875">v_BookInformation
+REQ(UC01 2.2.3)</y:NodeLabel>
           <y:Shape type="rectangle3d"/>
           <y:DropShadow color="#B3A691" offsetX="1" offsetY="1"/>
         </y:ShapeNode>
@@ -100,8 +100,8 @@ Practical Model-Based Testing: A Tools Approach' is correct.]]></data>
           <y:Geometry height="44.2529296875" width="135.392578125" x="141.72632998511904" y="648.7913147941468"/>
           <y:Fill color="#FFCC00" color2="#FFFF00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="34.62109375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="224.111328125" x="-44.359375" y="4.81591796875">v_ShoppingCart
-                        REQTAG=UC01 2.3</y:NodeLabel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="34.62109375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="102.9345703125" x="16.22900390625" y="4.81591796875">v_ShoppingCart
+REQ(UC01 2.3)</y:NodeLabel>
           <y:Shape type="rectangle3d"/>
           <y:DropShadow color="#B3A691" offsetX="1" offsetY="1"/>
         </y:ShapeNode>
@@ -114,7 +114,8 @@ Practical Model-Based Testing: A Tools Approach' is correct.]]></data>
           <y:Path sx="0.0" sy="15.0" tx="0.0" ty="-15.0"/>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel alignment="center" backgroundColor="#FFFF99" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" height="18.1328125" lineColor="#FFFF00" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" ratio="0.5" textColor="#000000" visible="true" width="217.515625" x="-108.75780823722721" y="14.9150390625">e_StartBrowser / num_of_books = 0;</y:EdgeLabel>
+          <y:EdgeLabel alignment="center" backgroundColor="#FFFF99" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" height="18.1328125" lineColor="#FFFF00" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" ratio="0.5" textColor="#000000" visible="true" width="217.515625" x="-108.75780823722721" y="14.9150390625">e_StartBrowser / num_of_books = 0;<y:PreferredPlacementDescriptor angle="0.0" angleOffsetOnRightSide="0" angleReference="absolute" angleRotationOnRightSide="co" distance="-1.0" frozen="true" placement="anywhere" side="on_edge" sideReference="relative_to_edge_flow"/>
+          </y:EdgeLabel>
           <y:BendStyle smoothed="true"/>
         </y:PolyLineEdge>
       </data>
@@ -126,7 +127,8 @@ Practical Model-Based Testing: A Tools Approach' is correct.]]></data>
           <y:Path sx="0.0" sy="15.0" tx="0.0" ty="-22.12646484375"/>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel alignment="center" backgroundColor="#FFFF99" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" height="18.1328125" lineColor="#FFFF00" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" ratio="0.5" textColor="#000000" visible="true" width="95.353515625" x="-47.67675354972718" y="14.9150390625">e_EnterBaseURL</y:EdgeLabel>
+          <y:EdgeLabel alignment="center" backgroundColor="#FFFF99" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" height="18.1328125" lineColor="#FFFF00" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" ratio="0.5" textColor="#000000" visible="true" width="95.353515625" x="-47.67675354972718" y="14.9150390625">e_EnterBaseURL<y:PreferredPlacementDescriptor angle="0.0" angleOffsetOnRightSide="0" angleReference="absolute" angleRotationOnRightSide="co" distance="-1.0" frozen="true" placement="anywhere" side="on_edge" sideReference="relative_to_edge_flow"/>
+          </y:EdgeLabel>
           <y:BendStyle smoothed="true"/>
         </y:PolyLineEdge>
       </data>
@@ -138,7 +140,8 @@ Practical Model-Based Testing: A Tools Approach' is correct.]]></data>
           <y:Path sx="0.0" sy="22.12646484375" tx="-18.46575927734375" ty="-22.12646484375"/>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel alignment="center" backgroundColor="#FFFF99" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" height="18.1328125" lineColor="#FFFF00" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" ratio="0.5" textColor="#000000" visible="true" width="83.623046875" x="-41.81151917472718" y="14.9150390625">e_SearchBook</y:EdgeLabel>
+          <y:EdgeLabel alignment="center" backgroundColor="#FFFF99" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" height="18.1328125" lineColor="#FFFF00" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" ratio="0.5" textColor="#000000" visible="true" width="83.623046875" x="-41.81151917472718" y="14.9150390625">e_SearchBook<y:PreferredPlacementDescriptor angle="0.0" angleOffsetOnRightSide="0" angleReference="absolute" angleRotationOnRightSide="co" distance="-1.0" frozen="true" placement="anywhere" side="on_edge" sideReference="relative_to_edge_flow"/>
+          </y:EdgeLabel>
           <y:BendStyle smoothed="true"/>
         </y:PolyLineEdge>
       </data>
@@ -151,7 +154,8 @@ Practical Model-Based Testing: A Tools Approach']]></data>
           <y:Path sx="36.93151855468753" sy="22.12646484375" tx="0.0" ty="-22.12646484375"/>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel alignment="center" backgroundColor="#FFFF99" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" height="18.1328125" lineColor="#FFFF00" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" ratio="0.5" textColor="#000000" visible="true" width="73.744140625" x="-36.87224372984872" y="29.9150390625">e_ClickBook</y:EdgeLabel>
+          <y:EdgeLabel alignment="center" backgroundColor="#FFFF99" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" height="18.1328125" lineColor="#FFFF00" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" ratio="0.5" textColor="#000000" visible="true" width="73.744140625" x="-36.87224372984872" y="29.9150390625">e_ClickBook<y:PreferredPlacementDescriptor angle="0.0" angleOffsetOnRightSide="0" angleReference="absolute" angleRotationOnRightSide="co" distance="-1.0" frozen="true" placement="anywhere" side="on_edge" sideReference="relative_to_edge_flow"/>
+          </y:EdgeLabel>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
@@ -166,7 +170,8 @@ Practical Model-Based Testing: A Tools Approach']]></data>
           </y:Path>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel alignment="center" backgroundColor="#FFFF99" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" height="18.1328125" lineColor="#FFFF00" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" ratio="0.5" textColor="#000000" visible="true" width="353.658203125" x="-34.2417902870784" y="65.56186445932542">e_AddBookToCart [num_of_books&lt;=3] / num_of_books++;</y:EdgeLabel>
+          <y:EdgeLabel alignment="center" backgroundColor="#FFFF99" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" height="18.1328125" lineColor="#FFFF00" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" ratio="0.5" textColor="#000000" visible="true" width="353.658203125" x="-34.2417902870784" y="65.56186445932542">e_AddBookToCart [num_of_books&lt;=3] / num_of_books++;<y:PreferredPlacementDescriptor angle="0.0" angleOffsetOnRightSide="0" angleReference="absolute" angleRotationOnRightSide="co" distance="-1.0" frozen="true" placement="anywhere" side="on_edge" sideReference="relative_to_edge_flow"/>
+          </y:EdgeLabel>
           <y:BendStyle smoothed="true"/>
         </y:PolyLineEdge>
       </data>
@@ -181,7 +186,8 @@ Practical Model-Based Testing: A Tools Approach']]></data>
           </y:Path>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel alignment="center" backgroundColor="#FFFF99" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" height="18.1328125" lineColor="#FFFF00" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" ratio="0.5" textColor="#000000" visible="true" width="95.798828125" x="-47.89947829473584" y="29.91501387338792">e_ShoppingCart</y:EdgeLabel>
+          <y:EdgeLabel alignment="center" backgroundColor="#FFFF99" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" height="18.1328125" lineColor="#FFFF00" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" ratio="0.5" textColor="#000000" visible="true" width="95.798828125" x="-47.89947829473584" y="29.91501387338792">e_ShoppingCart<y:PreferredPlacementDescriptor angle="0.0" angleOffsetOnRightSide="0" angleReference="absolute" angleRotationOnRightSide="co" distance="-1.0" frozen="true" placement="anywhere" side="on_edge" sideReference="relative_to_edge_flow"/>
+          </y:EdgeLabel>
           <y:BendStyle smoothed="true"/>
         </y:PolyLineEdge>
       </data>
@@ -198,7 +204,8 @@ Practical Model-Based Testing: A Tools Approach']]></data>
           </y:Path>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel alignment="center" backgroundColor="#FFFF99" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" height="18.1328125" lineColor="#FFFF00" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" ratio="0.5" textColor="#000000" visible="true" width="95.798828125" x="-86.17821703714043" y="172.77768477182542">e_ShoppingCart</y:EdgeLabel>
+          <y:EdgeLabel alignment="center" backgroundColor="#FFFF99" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" height="18.1328125" lineColor="#FFFF00" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" ratio="0.5" textColor="#000000" visible="true" width="95.798828125" x="-86.17821703714043" y="172.77768477182542">e_ShoppingCart<y:PreferredPlacementDescriptor angle="0.0" angleOffsetOnRightSide="0" angleReference="absolute" angleRotationOnRightSide="co" distance="-1.0" frozen="true" placement="anywhere" side="on_edge" sideReference="relative_to_edge_flow"/>
+          </y:EdgeLabel>
           <y:BendStyle smoothed="true"/>
         </y:PolyLineEdge>
       </data>
@@ -210,7 +217,8 @@ Practical Model-Based Testing: A Tools Approach']]></data>
           <y:Path sx="-49.242024739583314" sy="22.12646484375" tx="0.0" ty="-22.12646484375"/>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel alignment="center" backgroundColor="#FFFF99" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" height="18.1328125" lineColor="#FFFF00" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" ratio="0.5" textColor="#000000" visible="true" width="95.798828125" x="-47.89944821312315" y="104.54330977182542">e_ShoppingCart</y:EdgeLabel>
+          <y:EdgeLabel alignment="center" backgroundColor="#FFFF99" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" height="18.1328125" lineColor="#FFFF00" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" ratio="0.5" textColor="#000000" visible="true" width="95.798828125" x="-47.89944821312315" y="104.54330977182542">e_ShoppingCart<y:PreferredPlacementDescriptor angle="0.0" angleOffsetOnRightSide="0" angleReference="absolute" angleRotationOnRightSide="co" distance="-1.0" frozen="true" placement="anywhere" side="on_edge" sideReference="relative_to_edge_flow"/>
+          </y:EdgeLabel>
           <y:BendStyle smoothed="true"/>
         </y:PolyLineEdge>
       </data>
@@ -227,7 +235,8 @@ Practical Model-Based Testing: A Tools Approach']]></data>
           </y:Path>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel alignment="center" backgroundColor="#FFFF99" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" height="18.1328125" lineColor="#FFFF00" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" ratio="0.5" textColor="#000000" visible="true" width="83.623046875" x="-209.4222413562593" y="-197.87203446645583">e_SearchBook</y:EdgeLabel>
+          <y:EdgeLabel alignment="center" backgroundColor="#FFFF99" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" height="18.1328125" lineColor="#FFFF00" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" ratio="0.5" textColor="#000000" visible="true" width="83.623046875" x="-209.4222413562593" y="-197.87203446645583">e_SearchBook<y:PreferredPlacementDescriptor angle="0.0" angleOffsetOnRightSide="0" angleReference="absolute" angleRotationOnRightSide="co" distance="-1.0" frozen="true" placement="anywhere" side="on_edge" sideReference="relative_to_edge_flow"/>
+          </y:EdgeLabel>
           <y:BendStyle smoothed="true"/>
         </y:PolyLineEdge>
       </data>
@@ -244,7 +253,8 @@ Practical Model-Based Testing: A Tools Approach']]></data>
           </y:Path>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel alignment="center" backgroundColor="#FFFF99" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" height="18.1328125" lineColor="#FFFF00" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" ratio="0.5" textColor="#000000" visible="true" width="83.623046875" x="113.75282747783353" y="-159.8026123046875">e_SearchBook</y:EdgeLabel>
+          <y:EdgeLabel alignment="center" backgroundColor="#FFFF99" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" height="18.1328125" lineColor="#FFFF00" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" ratio="0.5" textColor="#000000" visible="true" width="83.623046875" x="113.75282747783353" y="-159.8026123046875">e_SearchBook<y:PreferredPlacementDescriptor angle="0.0" angleOffsetOnRightSide="0" angleReference="absolute" angleRotationOnRightSide="co" distance="-1.0" frozen="true" placement="anywhere" side="on_edge" sideReference="relative_to_edge_flow"/>
+          </y:EdgeLabel>
           <y:BendStyle smoothed="true"/>
         </y:PolyLineEdge>
       </data>
@@ -261,7 +271,8 @@ Practical Model-Based Testing: A Tools Approach']]></data>
           </y:Path>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel alignment="center" backgroundColor="#FFFF99" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" height="18.1328125" lineColor="#FFFF00" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" ratio="0.5" textColor="#000000" visible="true" width="83.623046875" x="2.6301814972408124" y="-77.30078125">e_SearchBook</y:EdgeLabel>
+          <y:EdgeLabel alignment="center" backgroundColor="#FFFF99" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" height="18.1328125" lineColor="#FFFF00" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" ratio="0.5" textColor="#000000" visible="true" width="83.623046875" x="2.6301814972408124" y="-77.30078125">e_SearchBook<y:PreferredPlacementDescriptor angle="0.0" angleOffsetOnRightSide="0" angleReference="absolute" angleRotationOnRightSide="co" distance="-1.0" frozen="true" placement="anywhere" side="on_edge" sideReference="relative_to_edge_flow"/>
+          </y:EdgeLabel>
           <y:BendStyle smoothed="true"/>
         </y:PolyLineEdge>
       </data>

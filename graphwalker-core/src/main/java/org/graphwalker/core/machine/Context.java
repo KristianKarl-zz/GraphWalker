@@ -23,7 +23,7 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core.model.support;
+package org.graphwalker.core.machine;
 
 import org.graphwalker.core.Bundle;
 import org.graphwalker.core.filter.EdgeFilter;
@@ -38,9 +38,9 @@ import org.graphwalker.core.utils.Resource;
 import java.util.*;
 
 /**
- * <p>ModelContext class.</p>
+ * <p>Context class.</p>
  */
-public final class ModelContext {
+public final class Context {
 
     private Model model;
     private ModelElement currentElement;
@@ -56,11 +56,11 @@ public final class ModelContext {
     private Long visitCount = 0L;
 
     /**
-     * <p>Constructor for ModelContext.</p>
+     * <p>Constructor for Context.</p>
      *
      * @param model a {@link org.graphwalker.core.model.Model} object.
      */
-    public ModelContext(Model model) {
+    public Context(Model model) {
         this.model = model;
     }
 

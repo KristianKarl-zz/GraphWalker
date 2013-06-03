@@ -26,7 +26,7 @@
 
 package org.graphwalker.core.conditions;
 
-import org.graphwalker.core.model.support.ModelContext;
+import org.graphwalker.core.machine.Context;
 
 /**
  * <p>StopCondition interface.</p>
@@ -44,17 +44,17 @@ public interface StopCondition {
     /**
      * <p>isFulfilled.</p>
      *
-     * @param context a {@link org.graphwalker.core.model.support.ModelContext} object.
+     * @param context a {@link org.graphwalker.core.machine.Context} object.
      * @return a boolean.
      */
-    boolean isFulfilled(ModelContext context);
+    boolean isFulfilled(Context context);
 
 
     /**
      * <p>getFulfilment.</p>
      *
-     * @param context a {@link org.graphwalker.core.model.support.ModelContext} object.
+     * @param context a {@link org.graphwalker.core.machine.Context} object.
      * @return a double.
      */
-    double getFulfilment(ModelContext context);
+    double getFulfilment(Context context);
 }

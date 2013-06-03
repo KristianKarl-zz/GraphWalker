@@ -25,11 +25,17 @@
  */
 package org.graphwalker.maven.plugin;
 
+import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.*;
+import org.graphwalker.core.GraphWalker;
 import org.graphwalker.core.utils.Resource;
 import org.graphwalker.maven.plugin.test.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 /**
  * <p>TestMojo class.</p>
@@ -40,14 +46,6 @@ import java.util.List;
         , requiresDependencyResolution = ResolutionScope.TEST)
 @Execute(phase = LifecyclePhase.TEST, lifecycle = "graphwalker")
 public final class TestMojo extends AbstractGraphWalkerMojo {
-
-    // 1. kunna definera hur många trådar som exekverar ett test
-    // 2. rapport ska genereras
-    // 3.
-
-    //private List<GraphWalker> graphWalkers = new ArrayList<GraphWalker>();
-
-    //private ReportWriter reportWriter = new XMLReport();
 
     public void executeMojo() {
         if (!skipTests()) {
@@ -64,13 +62,8 @@ public final class TestMojo extends AbstractGraphWalkerMojo {
             Scanner scanner = new Scanner(configuration);
             Manager manager = new Manager(configuration, scanner.scan(getTestClassesDirectory(), getClassesDirectory()));
             displayConfiguration(manager);
-
-            // kör testerna
-            /*
-            createInstances();
-            executeInstances();
-            reportExecution();
-            */
+            executeTests(manager);
+            reportResults(manager);
             displayResult();
         }
     }
@@ -83,12 +76,12 @@ public final class TestMojo extends AbstractGraphWalkerMojo {
 
     private void displayConfiguration(Manager manager) {
         getLog().info("Configuration:");
-        getLog().info("        Skip Tests = "+manager.getConfiguration().getSkipTests());
-        getLog().info("              Test = "+manager.getConfiguration().getTest());
-        getLog().info("           Include = "+manager.getConfiguration().getIncludes());
-        getLog().info("           Exclude = "+manager.getConfiguration().getExcludes());
-        getLog().info("            Groups = "+manager.getConfiguration().getGroups().toString());
-        getLog().info("  Threads per Test = "+1); // TODO: gör så att man kan låta flera trådar köra samma test (kunna utföra lasttest)
+        getLog().info("    Skip Tests = "+manager.getConfiguration().getSkipTests());
+        getLog().info("          Test = "+manager.getConfiguration().getTest());
+        getLog().info("       Include = "+manager.getConfiguration().getIncludes());
+        getLog().info("       Exclude = "+manager.getConfiguration().getExcludes());
+        getLog().info("        Groups = "+manager.getConfiguration().getGroups().toString());
+        getLog().info("  Threads/Test = "+1); // TODO: gör så att man kan låta flera trådar köra samma test (kunna utföra lasttest)
         getLog().info("");
         getLog().info("Tests:");
         if (0<manager.getTestGroups().size()) {
@@ -105,12 +98,39 @@ public final class TestMojo extends AbstractGraphWalkerMojo {
         getLog().info("------------------------------------------------------------------------");
     }
 
-    private String convert(List<Class<?>> tests) {
-        StringBuilder builder = new StringBuilder();
-        for (Class<?> test: tests) {
-            builder.append(", ").append(test.getSimpleName());
+    private void executeTests(Manager manager) {
+        /*
+        if (0<manager.getTestGroups().size()) {
+            List<GraphWalker> instances = new ArrayList<GraphWalker>();
+            for (Group group: manager.getTestGroups()) {
+                GraphWalker instance = new GraphWalker();
+                for (Test test: group.getTests()) {
+                    //instance.addModel();
+                }
+                instances.add(instance);
+            }
+            try {
+                ExecutorService executorService = Executors.newFixedThreadPool(instances.size());
+                for (GraphWalker instance : instances) {
+                    //for (Model model : instance.getConfiguration().getModels()) {
+                    //    StringBuilder stringBuilder = new StringBuilder("Running [");
+                    //    stringBuilder.append(model.getGroup()).append("] ");
+                    //    stringBuilder.append(model.getImplementation().getClass().getName());
+                    //    getLog().info(stringBuilder.toString());
+                    //}
+                    executorService.execute(new Executor(instance));
+                }
+                executorService.shutdown();
+                executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.DAYS);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(Resource.getText(Bundle.NAME, "exception.execution.interrupted")); // TODO: byt exception
+            }
         }
-        return builder.toString();
+        */
+    }
+
+    private void reportResults(Manager manager) {
+
     }
 
     private void displayResult() {
@@ -175,7 +195,13 @@ public final class TestMojo extends AbstractGraphWalkerMojo {
 
 /*
 
-
+    private String convert(List<Class<?>> tests) {
+        StringBuilder builder = new StringBuilder();
+        for (Class<?> test: tests) {
+            builder.append(", ").append(test.getSimpleName());
+        }
+        return builder.toString();
+    }
 
 
 

@@ -26,4 +26,9 @@
 package org.graphwalker.maven.plugin;
 
 public abstract class AbstractValidateMojo extends AbstractGraphWalkerMojo {
+
+    // 1. Hitta alla tester
+    // 2. Ladda in modeller och implementationer
+    // 3. verifiera att implementationerna innehåller alla metoder och rätt argument
+
 }

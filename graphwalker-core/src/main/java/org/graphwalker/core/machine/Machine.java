@@ -31,7 +31,6 @@ import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.ModelElement;
 import org.graphwalker.core.model.Vertex;
-import org.graphwalker.core.model.support.ModelContext;
 import org.graphwalker.core.utils.Resource;
 
 import java.util.ArrayList;
@@ -43,24 +42,24 @@ import java.util.List;
  */
 public final class Machine {
 
-    private final List<ModelContext> contexts;
-    private ModelContext currentContext;
+    private final List<Context> contexts;
+    private Context currentContext;
 
     /**
      * <p>Constructor for Machine.</p>
      *
      * @param contexts a {@link java.util.List} object.
      */
-    public Machine(List<ModelContext> contexts) {
+    public Machine(List<Context> contexts) {
         this.contexts = Collections.unmodifiableList(contexts);
     }
 
     /**
      * <p>Setter for the field <code>currentContext</code>.</p>
      *
-     * @param context a {@link org.graphwalker.core.model.support.ModelContext} object.
+     * @param context a {@link Context} object.
      */
-    public void setCurrentContext(ModelContext context) {
+    public void setCurrentContext(Context context) {
         if (!contexts.contains(context)) {
             throw new MachineException(Resource.getText(Bundle.NAME, "exception.context.unknown"));
         }
@@ -70,9 +69,9 @@ public final class Machine {
     /**
      * <p>Getter for the field <code>currentContext</code>.</p>
      *
-     * @return a {@link org.graphwalker.core.model.support.ModelContext} object.
+     * @return a {@link Context} object.
      */
-    public ModelContext getCurrentContext() {
+    public Context getCurrentContext() {
         return currentContext;
     }
 
