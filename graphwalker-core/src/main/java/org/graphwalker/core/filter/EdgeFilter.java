@@ -50,6 +50,11 @@ public final class EdgeFilter {
         scriptEngineName = name;
         ScriptEngineManager scriptEngineManager = new ScriptEngineManager();
         scriptEngine = scriptEngineManager.getEngineByName(scriptEngineName);
+        scriptEngine.setContext(new Context());
+    }
+
+    public Context getScriptContext() {      //
+        return (Context)scriptEngine.getContext();
     }
 
     /**
@@ -95,17 +100,4 @@ public final class EdgeFilter {
         return isEdgeAccepted;
     }
 
-    /**
-     * <p>getDataValue.</p>
-     *
-     * @param name a {@link java.lang.String} object.
-     * @param type a {@link java.lang.Class} object.
-     * @param <T> a T object.
-     * @return a T object.
-     */
-    @SuppressWarnings("unchecked")
-    public <T> T getDataValue(String name, Class<T> type) {
-        Bindings bindings = scriptEngine.getBindings(ScriptContext.ENGINE_SCOPE);
-        return type.cast(bindings.get(name));
-    }
 }

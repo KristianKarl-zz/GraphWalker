@@ -4,18 +4,11 @@ import org.graphwalker.core.annotations.Execute;
 import org.graphwalker.core.annotations.GraphWalker;
 import org.graphwalker.core.common.Assert;
 import org.graphwalker.core.conditions.support.EdgeCoverage;
-import org.graphwalker.core.conditions.support.Length;
+import org.graphwalker.core.filter.Context;
 import org.graphwalker.core.generators.support.AStarPath;
 import org.graphwalker.core.generators.support.RandomPath;
-import org.graphwalker.core.machine.ExecutionContext;
 import org.graphwalker.example.models.ShoppingCart;
 import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebElement;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 
 @GraphWalker({
         @Execute(group = "shortest"
@@ -25,97 +18,80 @@ import java.util.regex.Pattern;
 
         @Execute(group = "random"
                 , pathGenerator = RandomPath.class
-                , stopCondition = Length.class
-                , stopConditionValue = "20")
+                , stopCondition = EdgeCoverage.class
+                , stopConditionValue = "100")
 })
 public class Amazon extends AbstractTest implements ShoppingCart {
 
     @Override
-    public void e_ShoppingCart(ExecutionContext executionContext) {
-        try {
-            getDriver().findElement(By.cssSelector("#navCartEmpty > a.destination > span.text")).click();
-        } catch (NoSuchElementException e) {
-            try {
-                getDriver().findElement(By.cssSelector("a.destination.count")).click();
-            } catch (NoSuchElementException e1) {
-                getDriver().findElement(By.xpath("//*[@id='nav-cart-count']")).click();
-            }
-        }
+    public void e_ShoppingCart(Context context) {
+        getDriver().findElement(By.id("nav-cart")).click();
     }
 
     @Override
-    public void v_BrowserStarted(ExecutionContext executionContext) {
+    public void v_BrowserStarted(Context context) {
         Assert.assertNotNull(getDriver());
     }
 
     @Override
-    public void v_OtherBoughtBooks(ExecutionContext executionContext) {
-        Assert.assertTrue(verifyTextPresent("Customers Who Bought "));
+    public void v_OtherBoughtBooks(Context context) {
+        Assert.assertTrue(verifyTextPresent(By.id("hlb-upsell"), "Customers Who Bought "));
     }
 
     @Override
-    public void e_EnterBaseURL(ExecutionContext executionContext) {
+    public void e_EnterBaseURL(Context context) {
         getDriver().get("http://www.amazon.com");
     }
 
     @Override
-    public void e_AddBookToCart(ExecutionContext executionContext) {
+    public void e_AddBookToCart(Context context) {
         getDriver().findElement(By.id("bb_atc_button")).click();
     }
 
     @Override
-    public void e_SearchBook(ExecutionContext executionContext) {
-        WebElement element = getDriver().findElement(By.id("twotabsearchtextbox"));
-        element.clear();
-        element.sendKeys("Model-based testing");
-        try {
-            getDriver().findElement(By.xpath("//*[@id='navGoButton']/input")).click();
-        } catch (NoSuchElementException e) {
-            getDriver().findElement(By.xpath("//*[@class='nav-submit-button nav-sprite']/input")).click();
-        }
+    public void e_SearchBook(Context context) {
+        getDriver().findElement(By.id("twotabsearchtextbox")).clear();
+        getDriver().findElement(By.id("twotabsearchtextbox")).sendKeys("Model-based testing");
+        getDriver().findElement(By.id("twotabsearchtextbox")).submit();
     }
 
     @Override
-    public void e_StartBrowser(ExecutionContext executionContext) {
+    public void e_StartBrowser(Context context) {
         getDriver();
     }
 
     @Override
-    public void v_BookInformation(ExecutionContext executionContext) {
+    public void v_BookInformation(Context context) {
     }
 
     @Override
-    public void v_ShoppingCart(ExecutionContext executionContext) {
-        Assert.assertTrue("^Amazon\\.com Shopping Cart.*".matches(getDriver().getTitle()));
-        Integer expected_num_of_books = 0; //Integer.valueOf(getMbt().getDataValue("num_of_books"));
-        Integer actual_num_of_books = null;
-
+    public void v_ShoppingCart(Context context) {
+        Assert.assertTrue(verifyTitle("^Amazon\\.com Shopping Cart.*"));
+        Integer expected_num_of_books = (Integer)context.getAttribute("num_of_books");
         if (0 == expected_num_of_books) {
-            Assert.assertTrue(verifyTextPresent("Your Shopping Cart is empty"));
-            return;
+            Assert.assertTrue(verifyTextPresent(By.id("cart-active-items"), "Your Shopping Cart is empty"));
+        } else {
+            Integer actual_num_of_books = Integer.parseInt(getDriver().findElement(By.id("nav-cart-count")).getText());
+            Assert.assertEquals(expected_num_of_books, actual_num_of_books);
         }
-
-        String itemsInCart = getDriver().findElement(By.id("gutterCartViewForm")).getText();
-        Pattern pattern = Pattern.compile("Subtotal \\(([0-9]+) items*\\):", Pattern.MULTILINE);
-        Matcher matcher = pattern.matcher(itemsInCart);
-        if (matcher.find()) {
-            actual_num_of_books = Integer.valueOf(matcher.group(1));
-        }
-        Assert.assertEquals(expected_num_of_books, actual_num_of_books);
     }
 
     @Override
-    public void v_SearchResult(ExecutionContext executionContext) {
+    public void v_SearchResult(Context context) {
         Assert.assertNotNull(getDriver().findElement(By.linkText("Practical Model-Based Testing: A Tools Approach")));
     }
 
     @Override
-    public void v_BaseURL(ExecutionContext executionContext) {
-        Assert.assertTrue(getDriver().getTitle().matches("^Amazon\\.com:.*$"));
+    public void v_BaseURL(Context context) {
+        Assert.assertTrue(verifyTitle("^Amazon\\.com:.*$"));
+        Integer num_of_books = Integer.parseInt(getDriver().findElement(By.id("nav-cart-count")).getText());
+        if (num_of_books != (Integer)context.getAttribute("num_of_books")) {
+            context.setAttribute("num_of_books", num_of_books);
+        }
     }
 
     @Override
-    public void e_ClickBook(ExecutionContext executionContext) {
+    public void e_ClickBook(Context context) {
         getDriver().findElement(By.linkText("Practical Model-Based Testing: A Tools Approach")).click();
     }
 

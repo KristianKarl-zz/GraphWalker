@@ -25,7 +25,12 @@
  */
 package org.graphwalker.core.machine;
 
+import org.graphwalker.core.Bundle;
+import org.graphwalker.core.annotations.AfterModel;
+import org.graphwalker.core.annotations.BeforeModel;
+import org.graphwalker.core.common.AnnotationUtils;
 import org.graphwalker.core.common.ReflectionUtils;
+import org.graphwalker.core.common.ResourceUtils;
 import org.graphwalker.core.filter.EdgeFilter;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Model;
@@ -55,13 +60,14 @@ public final class Machine implements Runnable {
     }
 
     public void run() {
+        AnnotationUtils.execute(BeforeModel.class, getExecutionContext());
         while (hasMoreSteps()) {
             ModelElement element = getNextStep();
-            executionContext.getExecutionProfiler().start(element);
-            ReflectionUtils.execute(executionContext.getImplementation(), element.getName(), executionContext);
-            executionContext.getExecutionProfiler().stop(element);
+            getExecutionContext().getExecutionProfiler().start(element);
+            ReflectionUtils.execute(getExecutionContext().getImplementation(), element.getName(), getExecutionContext().getEdgeFilter().getScriptContext());
+            getExecutionContext().getExecutionProfiler().stop(element);
         }
-        int i = 0;
+        AnnotationUtils.execute(AfterModel.class, getExecutionContext());
     }
 
 
@@ -74,7 +80,7 @@ public final class Machine implements Runnable {
      *
      * @return a {@link ExecutionContext} object.
      */
-    public ExecutionContext getExecutionContext() {
+    private ExecutionContext getExecutionContext() {
         if (null == executionContext) {
             for (ExecutionContext context: executionContexts) {
                 if (ExecutionStatus.NOT_EXECUTED.equals(context.getExecutionStatus())) {
@@ -85,6 +91,9 @@ public final class Machine implements Runnable {
         }
         return executionContext;
     }
+
+
+
 
     /**
      * <p>hasMoreSteps.</p>
@@ -124,14 +133,13 @@ public final class Machine implements Runnable {
      *
      * @return a {@link java.util.List} object.
      */
-    public List<ModelElement> getPossibleSteps() {
+    private List<ModelElement> getPossibleSteps() {
         List<ModelElement> elements = new ArrayList<ModelElement>();
         if (getExecutionContext().getCurrentElement() instanceof Vertex) {
             Vertex vertex = (Vertex) getExecutionContext().getCurrentElement() ;
-            EdgeFilter edgeFilter = getExecutionContext().getEdgeFilter();
             Model model = getExecutionContext().getModel();
             for (Edge edge: model.getEdges(vertex)) {
-                if (!edge.isBlocked() && edgeFilter.acceptEdge(getExecutionContext(), edge)) {
+                if (!edge.isBlocked() && getExecutionContext().getEdgeFilter().acceptEdge(getExecutionContext(), edge)) {
                     elements.add(edge);
                 }
             }

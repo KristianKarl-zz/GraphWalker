@@ -28,6 +28,7 @@ package org.graphwalker.core.machine;
 import org.graphwalker.core.Bundle;
 import org.graphwalker.core.conditions.StopCondition;
 import org.graphwalker.core.conditions.StopConditionFactory;
+import org.graphwalker.core.filter.Context;
 import org.graphwalker.core.filter.EdgeFilter;
 import org.graphwalker.core.generators.PathGenerator;
 import org.graphwalker.core.machine.strategy.ExceptionStrategy;
@@ -52,6 +53,7 @@ public final class ExecutionContext {
     private final Map<Model, ModelStatus> modelStatus = new HashMap<Model, ModelStatus>();
     private final ExecutionProfiler executionProfiler = new ExecutionProfiler();
 
+    private EdgeFilter edgeFilter;
     private ExecutionStatus executionStatus;
     private Model currentModel;
 
@@ -83,6 +85,13 @@ public final class ExecutionContext {
 
     public ExecutionProfiler getExecutionProfiler() {
         return executionProfiler;
+    }
+
+    public EdgeFilter getEdgeFilter() {
+        if (null == edgeFilter) {
+            edgeFilter = new EdgeFilter(ResourceUtils.getText(Bundle.NAME, "default.language"));
+        }
+        return edgeFilter;
     }
 
     public ExecutionStatus getExecutionStatus() {
@@ -119,7 +128,7 @@ public final class ExecutionContext {
     private Set<Vertex> visitedVertices = new HashSet<Vertex>();
     private Map<Requirement, RequirementStatus> requirementStatus = new HashMap<Requirement, RequirementStatus>();
     private ExceptionStrategy exceptionStrategy;
-    private EdgeFilter edgeFilter;
+    //private EdgeFilter edgeFilter;
     private Long visitCount = 0L;
 
 
@@ -128,21 +137,21 @@ public final class ExecutionContext {
      *
      * @return a {@link org.graphwalker.core.filter.EdgeFilter} object.
      */
-    public EdgeFilter getEdgeFilter() {
-        if (null == edgeFilter) {
-            edgeFilter = new EdgeFilter(ResourceUtils.getText(Bundle.NAME, "default.language"));
-        }
-        return edgeFilter;
-    }
+    //public EdgeFilter getEdgeFilter() {
+    //    if (null == edgeFilter) {
+    //        edgeFilter = new EdgeFilter(ResourceUtils.getText(Bundle.NAME, "default.language"));
+    //    }
+    //    return edgeFilter;
+    //}
 
     /**
      * <p>Setter for the field <code>edgeFilter</code>.</p>
      *
      * @param edgeFilter a {@link org.graphwalker.core.filter.EdgeFilter} object.
      */
-    public void setEdgeFilter(EdgeFilter edgeFilter) {
-        this.edgeFilter = edgeFilter;
-    }
+    //public void setEdgeFilter(EdgeFilter edgeFilter) {
+    //    this.edgeFilter = edgeFilter;
+    //}
 
     /**
      * <p>setCurrentElement.</p>

@@ -46,19 +46,6 @@ public class GraphWalker implements Runnable {
     }
 
     public void run() {
-
-        double y = 0;
-        for (int i = 1; i<100000; i++) {
-            y = (y*(i-1)+i)/i;
-        }
-
-        double x = 4999950000L/(100000-1);
-
-        System.out.println(y);
-        System.out.println(x);
-
-
-
         Set<ExecutionContext> executionContexts = new HashSet<ExecutionContext>();
         for (Execution execution: executions) {
             executionContexts.add(new ExecutionContext(execution));

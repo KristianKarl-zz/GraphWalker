@@ -23,34 +23,13 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core.common;
+package org.graphwalker.core.filter;
 
-import org.graphwalker.core.machine.ExecutionContext;
+import javax.script.SimpleScriptContext;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-import java.util.HashSet;
-import java.util.Set;
+public class Context extends SimpleScriptContext {// HashMap<String, Object> implements ScriptContext {
 
-public class AnnotationUtils {
-
-    private AnnotationUtils() {}
-
-    public static Set<Annotation> getAnnotations(final Class<?> clazz, final Class<? extends Annotation> annotation) {
-        Set<Annotation> annotations = new HashSet<Annotation>();
-        for (Class<?> interfaceClass: clazz.getInterfaces()) {
-            if (interfaceClass.isAnnotationPresent(annotation)) {
-                annotations.add(interfaceClass.getAnnotation(annotation));
-            }
-        }
-        return annotations;
-    }
-
-    public static void execute(Class<? extends Annotation> annotation, ExecutionContext executionContext) {
-        for (Method method: executionContext.getImplementation().getClass().getMethods()) {
-            if (method.isAnnotationPresent(annotation)) {
-                ReflectionUtils.execute(executionContext.getImplementation(), method, executionContext.getEdgeFilter());
-            }
-        }
+    public void setAttribute(String key, Object value) {
+        setAttribute(key, value, ENGINE_SCOPE);
     }
 }

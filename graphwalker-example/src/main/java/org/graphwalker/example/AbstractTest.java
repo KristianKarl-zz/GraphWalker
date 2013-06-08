@@ -1,13 +1,19 @@
 package org.graphwalker.example;
 
+import org.graphwalker.core.annotations.AfterModel;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.safari.SafariDriver;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.concurrent.TimeUnit;
 
 public abstract class AbstractTest {
+
+    private final static int TIMEOUT = 5;
 
     private WebDriver driver = null;
 
@@ -18,12 +24,29 @@ public abstract class AbstractTest {
             } else {
                 driver = new FirefoxDriver();
             }
-            driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+            driver.manage().timeouts().implicitlyWait(TIMEOUT, TimeUnit.SECONDS);
         }
         return driver;
     }
 
-    public boolean verifyTextPresent(String text) {
-        return driver.findElements(By.xpath("//*[contains(text(),\"" + text + "\")]")).size() > 0;
+    protected boolean verifyTextPresent(final By locator, final String text) {
+        WebDriverWait wait = new WebDriverWait(driver, TIMEOUT);
+        return wait.until(ExpectedConditions.textToBePresentInElement(locator, text));
+    }
+
+    protected boolean verifyTitle(final String regexp) {
+        WebDriverWait wait = new WebDriverWait(driver, TIMEOUT);
+        return wait.until(new ExpectedCondition<Boolean>() {
+            public Boolean apply(WebDriver driver) {
+                return driver.getTitle().matches(regexp);
+            }
+        });
+    }
+
+    @AfterModel
+    public void tearDown() {
+        if (null != driver) {
+            driver.close();
+        }
     }
 }

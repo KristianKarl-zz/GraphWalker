@@ -114,7 +114,7 @@ REQ(UC01 2.3)</y:NodeLabel>
           <y:Path sx="0.0" sy="15.0" tx="0.0" ty="-15.0"/>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel alignment="center" backgroundColor="#FFFF99" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" height="18.1328125" lineColor="#FFFF00" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" ratio="0.5" textColor="#000000" visible="true" width="217.515625" x="-108.75780823722721" y="14.9150390625">e_StartBrowser / num_of_books = 0;<y:PreferredPlacementDescriptor angle="0.0" angleOffsetOnRightSide="0" angleReference="absolute" angleRotationOnRightSide="co" distance="-1.0" frozen="true" placement="anywhere" side="on_edge" sideReference="relative_to_edge_flow"/>
+          <y:EdgeLabel alignment="center" backgroundColor="#FFFF99" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" height="18.1328125" lineColor="#FFFF00" modelName="free" modelPosition="anywhere" preferredPlacement="on_edge" ratio="0.5" textColor="#000000" visible="true" width="220.984375" x="-110.49218323722721" y="14.9150390625">e_StartBrowser / num_of_books = 0i;<y:PreferredPlacementDescriptor angle="0.0" angleOffsetOnRightSide="0" angleReference="absolute" angleRotationOnRightSide="co" distance="-1.0" frozen="true" placement="anywhere" side="on_edge" sideReference="relative_to_edge_flow"/>
           </y:EdgeLabel>
           <y:BendStyle smoothed="true"/>
         </y:PolyLineEdge>

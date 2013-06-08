@@ -71,14 +71,14 @@ public class AnnotationProcessor {
                 for (Method method : object.getClass().getMethods()) {
                     if (method.isAnnotationPresent(annotation)) {
                         if (hasNoReturnType(method)) {
-                            ReflectionUtils.execute(object, method, machine.getExecutionContext());
+                            //ReflectionUtils.execute(object, method, machine.getExecutionContext());
                         } else {
                             throw new AnnotationException(ResourceUtils.getText(Bundle.NAME, "exception.wrong.return.type")); // wrong type of return value
                         }
                     }
                 }
             } catch (Throwable throwable) {
-                machine.getExecutionContext().getExceptionStrategy().handleException(machine, throwable);
+                //machine.getExecutionContext().getExceptionStrategy().handleException(machine, throwable);
             }
         }
     }
