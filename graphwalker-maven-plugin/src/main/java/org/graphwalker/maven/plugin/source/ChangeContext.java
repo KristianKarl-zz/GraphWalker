@@ -56,7 +56,9 @@ public final class ChangeContext {
     private Set<String> extractMethodNames(Model model) {
         Set<String> methodNames = new HashSet<String>();
         for (ModelElement element: model.getModelElements()) {
-            methodNames.add(element.getName());
+            if (!"Start".equalsIgnoreCase(element.getName())) {
+                methodNames.add(element.getName());
+            }
         }
         return methodNames;
     }
