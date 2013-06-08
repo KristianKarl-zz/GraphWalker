@@ -25,6 +25,7 @@
  */
 package org.graphwalker.core.machine;
 
+import org.graphwalker.core.common.ReflectionUtils;
 import org.graphwalker.core.filter.EdgeFilter;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Model;
@@ -39,7 +40,7 @@ import java.util.Set;
 /**
  * <p>MachineImpl class.</p>
  */
-public final class Machine {
+public final class Machine implements Runnable {
 
     private final Set<ExecutionContext> executionContexts;
     private ExecutionContext executionContext;
@@ -51,8 +52,22 @@ public final class Machine {
      */
     public Machine(Set<ExecutionContext> executionContexts) {
         this.executionContexts = Collections.unmodifiableSet(executionContexts);
-
     }
+
+    public void run() {
+        while (hasMoreSteps()) {
+            ModelElement element = getNextStep();
+            executionContext.getExecutionProfiler().start(element);
+            ReflectionUtils.execute(executionContext.getImplementation(), element.getName(), executionContext);
+            executionContext.getExecutionProfiler().stop(element);
+        }
+        int i = 0;
+    }
+
+
+
+
+
 
     /**
      * <p>Getter for the field <code>executionContext</code>.</p>

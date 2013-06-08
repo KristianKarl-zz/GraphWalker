@@ -37,6 +37,7 @@ import org.graphwalker.core.model.status.ModelStatus;
 import org.graphwalker.core.model.status.RequirementStatus;
 import org.graphwalker.core.common.ReflectionUtils;
 import org.graphwalker.core.common.ResourceUtils;
+import org.graphwalker.core.statistics.ExecutionProfiler;
 
 import java.util.*;
 
@@ -49,6 +50,7 @@ public final class ExecutionContext {
     private final Execution execution;
     private final PathGenerator pathGenerator;
     private final Map<Model, ModelStatus> modelStatus = new HashMap<Model, ModelStatus>();
+    private final ExecutionProfiler executionProfiler = new ExecutionProfiler();
 
     private ExecutionStatus executionStatus;
     private Model currentModel;
@@ -71,8 +73,16 @@ public final class ExecutionContext {
         }
     }
 
+    public Object getImplementation() {
+        return implementation;
+    }
+
     public PathGenerator getPathGenerator() {
         return pathGenerator;
+    }
+
+    public ExecutionProfiler getExecutionProfiler() {
+        return executionProfiler;
     }
 
     public ExecutionStatus getExecutionStatus() {
