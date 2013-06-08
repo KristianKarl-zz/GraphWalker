@@ -23,7 +23,7 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core.utils;
+package org.graphwalker.core.common;
 
 import org.graphwalker.core.Bundle;
 
@@ -46,7 +46,7 @@ public final class Assert {
      */
     public static void assertTrue(boolean condition, String message) {
         if (!condition) {
-            fail(Resource.getText(Bundle.NAME, "assert.message", condition, true, message));
+            fail(ResourceUtils.getText(Bundle.NAME, "assert.message", condition, true, message));
         }
     }
 
@@ -67,7 +67,7 @@ public final class Assert {
      */
     public static void assertFalse(boolean condition, String message) {
         if (condition) {
-            fail(Resource.getText(Bundle.NAME, "assert.message", condition, false, message));
+            fail(ResourceUtils.getText(Bundle.NAME, "assert.message", condition, false, message));
         }
     }
 
@@ -125,7 +125,7 @@ public final class Assert {
                     return;
                 }
             }
-            fail(Resource.getText(Bundle.NAME, "assert.message", actual, expected, message));
+            fail(ResourceUtils.getText(Bundle.NAME, "assert.message", actual, expected, message));
         }
     }
 
@@ -139,13 +139,13 @@ public final class Assert {
                     try {
                         assertEquals(_actual, _expected);
                     } catch (AssertionError ae) {
-                        fail(Resource.getText(Bundle.NAME, "assert.message", actual, expected, message));
+                        fail(ResourceUtils.getText(Bundle.NAME, "assert.message", actual, expected, message));
                     }
                 }
                 return;
             }
         }
-        fail(Resource.getText(Bundle.NAME, "assert.message", actual, expected, message));
+        fail(ResourceUtils.getText(Bundle.NAME, "assert.message", actual, expected, message));
     }
 
     /**
@@ -190,10 +190,10 @@ public final class Assert {
     public static void assertEquals(double actual, double expected, double delta, String message) {
         if (Double.isInfinite(expected)) {
             if (!(expected == actual)) {
-                fail(Resource.getText(Bundle.NAME, "assert.message", actual, expected, message));
+                fail(ResourceUtils.getText(Bundle.NAME, "assert.message", actual, expected, message));
             }
         } else if (!(Math.abs(expected - actual) <= delta)) {
-            fail(Resource.getText(Bundle.NAME, "assert.message", actual, expected, message));
+            fail(ResourceUtils.getText(Bundle.NAME, "assert.message", actual, expected, message));
         }
     }
 
@@ -219,10 +219,10 @@ public final class Assert {
     public static void assertEquals(float actual, float expected, float delta, String message) {
         if (Float.isInfinite(expected)) {
             if (!(expected == actual)) {
-                fail(Resource.getText(Bundle.NAME, "assert.message", actual, expected, message));
+                fail(ResourceUtils.getText(Bundle.NAME, "assert.message", actual, expected, message));
             }
         } else if (!(Math.abs(expected - actual) <= delta)) {
-            fail(Resource.getText(Bundle.NAME, "assert.message", actual, expected, message));
+            fail(ResourceUtils.getText(Bundle.NAME, "assert.message", actual, expected, message));
         }
     }
 
@@ -380,7 +380,7 @@ public final class Assert {
      */
     public static void assertNotNull(Object object, String message) {
         if (null == object) {
-            fail(Resource.getText(Bundle.NAME, "assert.message", object, "not null", message));
+            fail(ResourceUtils.getText(Bundle.NAME, "assert.message", object, "not null", message));
         }
     }
 
@@ -401,7 +401,7 @@ public final class Assert {
      */
     public static void assertNull(Object object, String message) {
         if (null != object) {
-            fail(Resource.getText(Bundle.NAME, "assert.message", object, null, message));
+            fail(ResourceUtils.getText(Bundle.NAME, "assert.message", object, null, message));
         }
     }
 
@@ -452,11 +452,11 @@ public final class Assert {
     }
 
     private static void failSame(Object actual, Object expected, String message) {
-        fail(Resource.getText(Bundle.NAME, "assert.same.message", actual, expected, message));
+        fail(ResourceUtils.getText(Bundle.NAME, "assert.same.message", actual, expected, message));
     }
 
     private static void failNotSame(Object actual, Object expected, String message) {
-        fail(Resource.getText(Bundle.NAME, "assert.message", actual, expected, message));
+        fail(ResourceUtils.getText(Bundle.NAME, "assert.message", actual, expected, message));
     }
 
     /**
@@ -479,7 +479,7 @@ public final class Assert {
     public static void assertEquals(Collection actual, Collection expected, String message) {
         if (actual != expected) {
             if (actual == null || expected == null) {
-                fail(Resource.getText(Bundle.NAME, "assert.message", actual, expected, message));
+                fail(ResourceUtils.getText(Bundle.NAME, "assert.message", actual, expected, message));
             } else {
                 Iterator actualIterator = actual.iterator();
                 Iterator expectedIterator = expected.iterator();
@@ -502,7 +502,7 @@ public final class Assert {
     public static void assertEquals(Object[] actual, Object[] expected, String message) {
         if (actual != expected) {
             if (null == actual || null == expected) {
-                fail(Resource.getText(Bundle.NAME, "assert.message", Arrays.toString(expected), Arrays.toString(actual), message));
+                fail(ResourceUtils.getText(Bundle.NAME, "assert.message", Arrays.toString(expected), Arrays.toString(actual), message));
             } else {
                 assertEquals(Arrays.asList(actual), Arrays.asList(expected), message);
             }
@@ -519,7 +519,7 @@ public final class Assert {
     public static void assertEqualsNoOrder(Object[] actual, Object[] expected, String message) {
         if (actual != expected) {
             if (null == actual || null == expected) {
-                fail(Resource.getText(Bundle.NAME, "assert.message", Arrays.toString(expected), Arrays.toString(actual), message));
+                fail(ResourceUtils.getText(Bundle.NAME, "assert.message", Arrays.toString(expected), Arrays.toString(actual), message));
             } else {
                 List<Object> actualCollection = new ArrayList<Object>();
                 java.util.Collections.addAll(actualCollection, actual);
@@ -527,7 +527,7 @@ public final class Assert {
                 java.util.Collections.addAll(expectedCollection, expected);
                 actualCollection.removeAll(expectedCollection);
                 if (actualCollection.size() != 0) {
-                    fail(Resource.getText(Bundle.NAME, "assert.message", Arrays.toString(expected), Arrays.toString(actual), message));
+                    fail(ResourceUtils.getText(Bundle.NAME, "assert.message", Arrays.toString(expected), Arrays.toString(actual), message));
                 }
             }
         }
@@ -573,11 +573,11 @@ public final class Assert {
     public static void assertEquals(byte[] actual, byte[] expected, String message) {
         if (expected != actual) {
             if (null == actual || null == expected) {
-                fail(Resource.getText(Bundle.NAME, "assert.message", Arrays.toString(expected), Arrays.toString(actual), message));
+                fail(ResourceUtils.getText(Bundle.NAME, "assert.message", Arrays.toString(expected), Arrays.toString(actual), message));
             } else {
                 for (int i = 0; i < expected.length; i++) {
                     if (expected[i] != actual[i]) {
-                        fail(Resource.getText(Bundle.NAME, "assert.message", expected[i], actual[i], message));
+                        fail(ResourceUtils.getText(Bundle.NAME, "assert.message", expected[i], actual[i], message));
                     }
                 }
             }
@@ -604,9 +604,9 @@ public final class Assert {
     public static void assertEquals(Set actual, Set expected, String message) {
         if (actual != expected) {
             if (null == actual || null == expected) {
-                fail(Resource.getText(Bundle.NAME, "assert.message", actual, expected, message));
+                fail(ResourceUtils.getText(Bundle.NAME, "assert.message", actual, expected, message));
             } else if (!actual.equals(expected)) {
-                fail(Resource.getText(Bundle.NAME, "assert.message", actual, expected, message));
+                fail(ResourceUtils.getText(Bundle.NAME, "assert.message", actual, expected, message));
             }
         }
     }
@@ -631,9 +631,9 @@ public final class Assert {
     public static void assertEquals(Map actual, Map expected, String message) {
         if (actual != expected) {
             if (null == actual || null == expected) {
-                fail(Resource.getText(Bundle.NAME, "assert.message", actual, expected, message));
+                fail(ResourceUtils.getText(Bundle.NAME, "assert.message", actual, expected, message));
             } else if (!actual.equals(expected)) {
-                fail(Resource.getText(Bundle.NAME, "assert.message", actual, expected, message));
+                fail(ResourceUtils.getText(Bundle.NAME, "assert.message", actual, expected, message));
             }
         }
     }

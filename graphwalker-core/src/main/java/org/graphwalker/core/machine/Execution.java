@@ -1,6 +1,6 @@
 /*
  * #%L
- * GraphWalker Maven Plugin
+ * GraphWalker Core
  * %%
  * Copyright (C) 2011 - 2013 GraphWalker
  * %%
@@ -23,26 +23,50 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.maven.plugin.test;
+package org.graphwalker.core.machine;
 
 import org.graphwalker.core.conditions.StopCondition;
 import org.graphwalker.core.generators.PathGenerator;
 import org.graphwalker.core.machine.strategy.ExceptionStrategy;
+import org.graphwalker.core.model.Model;
+import org.graphwalker.core.model.ModelFactory;
+import org.graphwalker.core.model.support.DefaultModelFactory;
 
-public final class Test {
+import java.lang.annotation.Annotation;
+import java.util.HashSet;
+import java.util.Set;
+
+import static org.graphwalker.core.common.AnnotationUtils.getAnnotations;
+
+public final class Execution {
 
     private final Class<?> testClass;
     private final Class<? extends PathGenerator> pathGenerator;
     private final Class<? extends StopCondition> stopCondition;
     private final String stopConditionValue;
     private final Class<? extends ExceptionStrategy> exceptionStrategy;
+    private final Set<Model> models;
 
-    public Test(Class<?> testClass, Class<? extends PathGenerator> pathGenerator, Class<? extends StopCondition> stopCondition, String stopConditionValue, Class<? extends ExceptionStrategy> exceptionStrategy) {
+    public Execution(final Class<?> testClass, final Class<? extends PathGenerator> pathGenerator, final Class<? extends StopCondition> stopCondition, String stopConditionValue, final Class<? extends ExceptionStrategy> exceptionStrategy) {
         this.testClass = testClass;
-        this.pathGenerator = pathGenerator;
         this.stopCondition = stopCondition;
+        this.pathGenerator = pathGenerator;
         this.stopConditionValue = stopConditionValue;
         this.exceptionStrategy = exceptionStrategy;
+        this.models = createModels(testClass);
+    }
+
+    private Set<Model> createModels(final Class<?> testClass) {
+        Set<Model> models = new HashSet<Model>();
+        ModelFactory factory = new DefaultModelFactory();
+        for (Annotation annotation: getAnnotations(testClass, org.graphwalker.core.annotations.Model.class)) {
+            String type = ((org.graphwalker.core.annotations.Model)annotation).type();
+            String file = ((org.graphwalker.core.annotations.Model)annotation).file();
+            if (factory.accept(type)) {
+                models.add(factory.create(file, type));
+            }
+        }
+        return models;
     }
 
     public String getName() {
@@ -67,5 +91,9 @@ public final class Test {
 
     public Class<? extends ExceptionStrategy> getExceptionStrategy() {
         return exceptionStrategy;
+    }
+
+    public Set<Model> getModels() {
+        return models;
     }
 }

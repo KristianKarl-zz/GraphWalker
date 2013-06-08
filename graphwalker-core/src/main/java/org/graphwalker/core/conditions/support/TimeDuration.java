@@ -26,7 +26,7 @@
 package org.graphwalker.core.conditions.support;
 
 import org.graphwalker.core.conditions.StopCondition;
-import org.graphwalker.core.machine.Context;
+import org.graphwalker.core.machine.ExecutionContext;
 
 /**
  * <p>TimeDuration class.</p>
@@ -56,12 +56,12 @@ public final class TimeDuration implements StopCondition {
     }
 
     /** {@inheritDoc} */
-    public boolean isFulfilled(Context context) {
-        return getFulfilment(context) >= FULFILLMENT_LEVEL;
+    public boolean isFulfilled(ExecutionContext executionContext) {
+        return getFulfilment(executionContext) >= FULFILLMENT_LEVEL;
     }
 
     /** {@inheritDoc} */
-    public double getFulfilment(Context context) {
+    public double getFulfilment(ExecutionContext executionContext) {
         return (double) (System.currentTimeMillis() - timestamp) / duration;
     }
 }

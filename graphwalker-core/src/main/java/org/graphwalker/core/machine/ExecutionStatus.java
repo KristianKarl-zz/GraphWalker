@@ -2,7 +2,7 @@
  * #%L
  * GraphWalker Core
  * %%
- * Copyright (C) 2011 - 2012 GraphWalker
+ * Copyright (C) 2011 - 2013 GraphWalker
  * %%
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,27 +23,8 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core.utils;
+package org.graphwalker.core.machine;
 
-/**
- * <p>ResourceException class.</p>
- */
-public class ResourceException extends RuntimeException {
-
-
-    /**
-     * <p>Constructor for ResourceException.</p>
-     */
-    public ResourceException() {
-        super();
-    }
-
-    /**
-     * <p>Constructor for ResourceException.</p>
-     *
-     * @param cause a {@link java.lang.String} object.
-     */
-    public ResourceException(String cause) {
-        super(cause);
-    }
+public enum ExecutionStatus {
+    NOT_EXECUTED, EXECUTING, COMPLETED, FAILED
 }

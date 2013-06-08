@@ -26,8 +26,8 @@
 package org.graphwalker.core.model;
 
 import org.graphwalker.core.Bundle;
-import org.graphwalker.core.utils.Assert;
-import org.graphwalker.core.utils.Resource;
+import org.graphwalker.core.common.Assert;
+import org.graphwalker.core.common.ResourceUtils;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -83,22 +83,22 @@ public class ModelTest {
 
     @Test
     public void testStartNode() {
-        Vertex vertex = new Vertex("v_0", Resource.getText(Bundle.NAME, "start.vertex"), null, null, null, null);
+        Vertex vertex = new Vertex("v_0", ResourceUtils.getText(Bundle.NAME, "start.vertex"), null, null, null, null);
         Model model = new Model("m1", Arrays.asList(vertex), null, vertex);
         Assert.assertNotNull(model.getStartVertex());
-        Assert.assertEquals(Resource.getText(Bundle.NAME, "start.vertex"), model.getStartVertex().getName());
+        Assert.assertEquals(ResourceUtils.getText(Bundle.NAME, "start.vertex"), model.getStartVertex().getName());
     }
 
     @Test
     public void testStartNodeWithDifferentCase() {
-        Vertex vertex1 = new Vertex("v_0", Resource.getText(Bundle.NAME, "start.vertex").toLowerCase(), null, null, null, null);
+        Vertex vertex1 = new Vertex("v_0", ResourceUtils.getText(Bundle.NAME, "start.vertex").toLowerCase(), null, null, null, null);
         Model model = new Model("m1", Arrays.asList(vertex1), null, vertex1);
         Assert.assertNotNull(model.getStartVertex());
     }
 
     @Test(expected = ModelException.class)
     public void testStartNodeWithSeveralOutEdges() {
-        Vertex vertex1 = new Vertex("v_1", Resource.getText(Bundle.NAME, "start.vertex"), null, null, null, null);
+        Vertex vertex1 = new Vertex("v_1", ResourceUtils.getText(Bundle.NAME, "start.vertex"), null, null, null, null);
         Vertex vertex2 = new Vertex("v_2", "v_2", null, null, null, null);
         Edge edge1 = new Edge("e_1", "e_1", null, null, null, vertex1, vertex2, null, null);
         Edge edge2 = new Edge("e_2", "e_2", null, null, null, vertex1, vertex2, null, null);
@@ -108,7 +108,7 @@ public class ModelTest {
 
     @Test(expected = ModelException.class)
     public void testStartNodeWithInEdge() {
-        Vertex vertex1 = new Vertex("v_1", Resource.getText(Bundle.NAME, "start.vertex"), null, null, null, null);
+        Vertex vertex1 = new Vertex("v_1", ResourceUtils.getText(Bundle.NAME, "start.vertex"), null, null, null, null);
         Vertex vertex2 = new Vertex("v_2", "v_2", null, null, null, null);
         Edge edge1 = new Edge("e_1", "e_1", null, null, null, vertex1, vertex2, null, null);
         Edge edge2 = new Edge("e_2", "e_2", null, null, null, vertex2, vertex1, null, null);
@@ -118,7 +118,7 @@ public class ModelTest {
 
     @Test(expected = ModelException.class)
     public void testStartNodeWithLoopEdge() {
-        Vertex vertex1 = new Vertex("v_1", Resource.getText(Bundle.NAME, "start.vertex"), null, null, null, null);
+        Vertex vertex1 = new Vertex("v_1", ResourceUtils.getText(Bundle.NAME, "start.vertex"), null, null, null, null);
         Vertex vertex2 = new Vertex("v_2", "v_2", null, null, null, null);
         Edge edge1 = new Edge("e_1", "e_1", null, null, null, vertex1, vertex2, null, null);
         Edge edge2 = new Edge("e_2", "e_2", null, null, null, vertex1, vertex1, null, null);

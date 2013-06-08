@@ -29,7 +29,7 @@ import org.graphwalker.core.Bundle;
 import org.graphwalker.core.generators.support.RandomLeastVisitedPath;
 import org.graphwalker.core.generators.support.RandomPath;
 import org.graphwalker.core.generators.support.RandomUnvisitedFirstPath;
-import org.graphwalker.core.utils.Resource;
+import org.graphwalker.core.common.ResourceUtils;
 
 /**
  * <p>PathGeneratorFactory class.</p>
@@ -53,6 +53,6 @@ public final class PathGeneratorFactory {
         } else if ("RandomLeastVisited".equalsIgnoreCase(type)) {
             return new RandomLeastVisitedPath();
         }
-        throw new PathGeneratorException(Resource.getText(Bundle.NAME, "exception.generator.unknown"));
+        throw new PathGeneratorException(ResourceUtils.getText(Bundle.NAME, "exception.generator.unknown"));
     }
 }

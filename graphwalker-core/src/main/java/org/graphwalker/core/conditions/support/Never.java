@@ -26,7 +26,7 @@
 package org.graphwalker.core.conditions.support;
 
 import org.graphwalker.core.conditions.StopCondition;
-import org.graphwalker.core.machine.Context;
+import org.graphwalker.core.machine.ExecutionContext;
 
 /**
  * <p>Never class.</p>
@@ -48,12 +48,12 @@ public final class Never implements StopCondition {
     }
 
     /** {@inheritDoc} */
-    public boolean isFulfilled(Context context) {
+    public boolean isFulfilled(ExecutionContext executionContext) {
         return false;
     }
 
     /** {@inheritDoc} */
-    public double getFulfilment(Context context) {
+    public double getFulfilment(ExecutionContext executionContext) {
         return 0;
     }
 }

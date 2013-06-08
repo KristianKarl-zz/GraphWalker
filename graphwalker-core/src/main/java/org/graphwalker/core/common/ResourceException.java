@@ -2,7 +2,7 @@
  * #%L
  * GraphWalker Core
  * %%
- * Copyright (C) 2011 - 2013 GraphWalker
+ * Copyright (C) 2011 - 2012 GraphWalker
  * %%
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,36 +23,27 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core.model;
-
-import java.util.List;
+package org.graphwalker.core.common;
 
 /**
- * <p>ModelFactory interface.</p>
+ * <p>ResourceException class.</p>
  */
-public interface ModelFactory {
+public class ResourceException extends RuntimeException {
+
 
     /**
-     * <p>accept.</p>
-     *
-     * @param type a {@link java.lang.String} object.
-     * @return a boolean.
+     * <p>Constructor for ResourceException.</p>
      */
-    boolean accept(String type);
+    public ResourceException() {
+        super();
+    }
 
     /**
-     * <p>create.</p>
+     * <p>Constructor for ResourceException.</p>
      *
-     * @param filename a {@link java.lang.String} object.
-     * @param type a {@link java.lang.String} object.
-     * @return a {@link org.graphwalker.core.model.Model} object.
+     * @param cause a {@link java.lang.String} object.
      */
-    Model create(String filename, String type);
-
-    /**
-     * <p>getSupportedFileTypes.</p>
-     *
-     * @return a {@link java.util.List} object.
-     */
-    List<String> getSupportedFileTypes();
+    public ResourceException(String cause) {
+        super(cause);
+    }
 }

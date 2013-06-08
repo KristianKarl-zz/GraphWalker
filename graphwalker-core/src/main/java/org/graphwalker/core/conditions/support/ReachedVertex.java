@@ -26,8 +26,8 @@
 package org.graphwalker.core.conditions.support;
 
 import org.graphwalker.core.conditions.StopCondition;
+import org.graphwalker.core.machine.ExecutionContext;
 import org.graphwalker.core.model.Vertex;
-import org.graphwalker.core.machine.Context;
 
 import javax.validation.constraints.NotNull;
 
@@ -49,19 +49,19 @@ public final class ReachedVertex implements StopCondition {
     }
 
     /** {@inheritDoc} */
-    public boolean isFulfilled(Context context) {
-        return getFulfilment(context) >= FULFILLMENT_LEVEL;
+    public boolean isFulfilled(ExecutionContext executionContext) {
+        return getFulfilment(executionContext) >= FULFILLMENT_LEVEL;
     }
 
     /** {@inheritDoc} */
-    public double getFulfilment(Context context) {
-        if (name.equals(context.getCurrentElement().getName())) {
+    public double getFulfilment(ExecutionContext executionContext) {
+        if (name.equals(executionContext.getCurrentElement().getName())) {
             return 1;
         } else {
             double maxFulfilment = 0;
-            for (Vertex vertex: context.getModel().getVerticesByName(name)) {
-                int distance = context.getModel().getShortestDistance(context.getCurrentElement(), vertex);
-                int max = context.getModel().getMaximumDistance(vertex);
+            for (Vertex vertex: executionContext.getModel().getVerticesByName(name)) {
+                int distance = executionContext.getModel().getShortestDistance(executionContext.getCurrentElement(), vertex);
+                int max = executionContext.getModel().getMaximumDistance(vertex);
                 double fulfilment = 1 - (double)distance/max;
                 if (maxFulfilment < fulfilment) {
                     maxFulfilment = fulfilment;

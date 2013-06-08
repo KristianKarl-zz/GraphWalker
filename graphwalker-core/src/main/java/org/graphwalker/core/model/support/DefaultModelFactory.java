@@ -52,9 +52,9 @@ public final class DefaultModelFactory extends AbstractModelFactory {
     }
 
     /** {@inheritDoc} */
-    public Model create(String id, String filename, String type) {
+    public Model create(String filename, String type) {
         //TODO: we need to handle this better, when/if we add more factories
-        return graphMLModelFactory.create(id, filename, type);
+        return graphMLModelFactory.create(filename, type);
     }
 
     /**

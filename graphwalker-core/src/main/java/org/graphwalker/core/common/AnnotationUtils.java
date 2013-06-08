@@ -23,36 +23,23 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core.model;
+package org.graphwalker.core.common;
 
-import java.util.List;
+import java.lang.annotation.Annotation;
+import java.util.HashSet;
+import java.util.Set;
 
-/**
- * <p>ModelFactory interface.</p>
- */
-public interface ModelFactory {
+public class AnnotationUtils {
 
-    /**
-     * <p>accept.</p>
-     *
-     * @param type a {@link java.lang.String} object.
-     * @return a boolean.
-     */
-    boolean accept(String type);
+    private AnnotationUtils() {}
 
-    /**
-     * <p>create.</p>
-     *
-     * @param filename a {@link java.lang.String} object.
-     * @param type a {@link java.lang.String} object.
-     * @return a {@link org.graphwalker.core.model.Model} object.
-     */
-    Model create(String filename, String type);
-
-    /**
-     * <p>getSupportedFileTypes.</p>
-     *
-     * @return a {@link java.util.List} object.
-     */
-    List<String> getSupportedFileTypes();
+    public static Set<Annotation> getAnnotations(final Class<?> clazz, final Class<? extends Annotation> annotation) {
+        Set<Annotation> annotations = new HashSet<Annotation>();
+        for (Class<?> interfaceClass: clazz.getInterfaces()) {
+            if (interfaceClass.isAnnotationPresent(annotation)) {
+                annotations.add(interfaceClass.getAnnotation(annotation));
+            }
+        }
+        return annotations;
+    }
 }

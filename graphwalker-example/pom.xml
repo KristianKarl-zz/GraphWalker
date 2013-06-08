@@ -31,7 +31,7 @@
                 <version>${project.version}</version>
                 <!--executions>
                     <execution>
-                        <id>execute-tests</id>
+                        <id>execution-tests</id>
                         <phase>test</phase>
                         <goals>
                             <goal>test-validate</goal>

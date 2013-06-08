@@ -25,7 +25,7 @@
  */
 package org.graphwalker.core.conditions;
 
-import org.graphwalker.core.utils.Assert;
+import org.graphwalker.core.common.Assert;
 import org.junit.Test;
 
 import javax.validation.ConstraintViolation;

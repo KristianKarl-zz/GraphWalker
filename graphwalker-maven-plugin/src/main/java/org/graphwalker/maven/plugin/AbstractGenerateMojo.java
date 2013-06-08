@@ -54,7 +54,9 @@ public abstract class AbstractGenerateMojo extends AbstractGraphWalkerMojo {
     protected List<String> getIncludes() {
         List<String> includes = super.getIncludes();
         if (includes.isEmpty()) {
-            includes.addAll(modelFactory.getSupportedFileTypes());
+            for (String type: modelFactory.getSupportedFileTypes()) {
+                includes.add("**/*."+type);
+            }
         }
         return includes;
     }
@@ -77,7 +79,7 @@ public abstract class AbstractGenerateMojo extends AbstractGraphWalkerMojo {
 
     private void generate(SourceFile sourceFile) {
         try {
-            Model model = modelFactory.create(sourceFile.getBaseName(), sourceFile.getFilename(), sourceFile.getExtension());
+            Model model = modelFactory.create(sourceFile.getFilename(), sourceFile.getExtension());
             String source = new CodeGenerator(sourceFile, model).generate();
             FileUtils.mkdir(sourceFile.getOutputFile().getParent());
             FileUtils.fileDelete(sourceFile.getOutputFile().getAbsolutePath());

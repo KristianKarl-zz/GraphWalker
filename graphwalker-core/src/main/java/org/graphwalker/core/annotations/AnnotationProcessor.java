@@ -31,8 +31,8 @@ import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.ImmutableElement;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Vertex;
-import org.graphwalker.core.utils.Resource;
-import org.graphwalker.core.utils.Reflection;
+import org.graphwalker.core.common.ResourceUtils;
+import org.graphwalker.core.common.ReflectionUtils;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -71,14 +71,14 @@ public class AnnotationProcessor {
                 for (Method method : object.getClass().getMethods()) {
                     if (method.isAnnotationPresent(annotation)) {
                         if (hasNoReturnType(method)) {
-                            Reflection.execute(object, method, machine.getCurrentContext());
+                            ReflectionUtils.execute(object, method, machine.getExecutionContext());
                         } else {
-                            throw new AnnotationException(Resource.getText(Bundle.NAME, "exception.wrong.return.type")); // wrong type of return value
+                            throw new AnnotationException(ResourceUtils.getText(Bundle.NAME, "exception.wrong.return.type")); // wrong type of return value
                         }
                     }
                 }
             } catch (Throwable throwable) {
-                machine.getCurrentContext().getExceptionStrategy().handleException(machine, throwable);
+                machine.getExecutionContext().getExceptionStrategy().handleException(machine, throwable);
             }
         }
     }

@@ -23,7 +23,7 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core.utils;
+package org.graphwalker.core.common;
 
 import org.graphwalker.core.Bundle;
 
@@ -36,11 +36,11 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 /**
- * <p>Resource class.</p>
+ * <p>ResourceUtils class.</p>
  */
-public final class Resource {
+public final class ResourceUtils {
 
-    private Resource() {
+    private ResourceUtils() {
     }
 
     /**
@@ -116,7 +116,7 @@ public final class Resource {
         if (file.exists()) {
             return file;
         } else {
-            URL resource = Resource.class.getResource(filename);
+            URL resource = ResourceUtils.class.getResource(filename);
             if (null == resource) {
                 resource = Thread.currentThread().getContextClassLoader().getResource(filename);
             }
@@ -142,7 +142,7 @@ public final class Resource {
                 throw new ResourceException(getText(Bundle.NAME, "exception.file.missing", filename));
             }
         } else {
-            InputStream resource = Resource.class.getResourceAsStream(filename);
+            InputStream resource = ResourceUtils.class.getResourceAsStream(filename);
             if (null == resource) {
                 resource = Thread.currentThread().getContextClassLoader().getResourceAsStream(filename);
             }

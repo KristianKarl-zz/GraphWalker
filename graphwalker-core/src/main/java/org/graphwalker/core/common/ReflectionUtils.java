@@ -23,9 +23,10 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core.utils;
+package org.graphwalker.core.common;
 
 import org.graphwalker.core.Bundle;
+import org.graphwalker.core.conditions.StopCondition;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -34,11 +35,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * <p>Reflection class.</p>
+ * <p>ReflectionUtils class.</p>
  */
-public final class Reflection {
+public final class ReflectionUtils {
 
-    private Reflection() {
+    private ReflectionUtils() {
     }
 
     /**
@@ -52,9 +53,9 @@ public final class Reflection {
         try {
             return clazz.newInstance();
         } catch (InstantiationException e) {
-            throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.class.instantiation", clazz.getName()), e);
+            throw new ReflectionException(ResourceUtils.getText(Bundle.NAME, "exception.class.instantiation", clazz.getName()), e);
         } catch (IllegalAccessException e) {
-            throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.class.instantiation", clazz.getName()), e);
+            throw new ReflectionException(ResourceUtils.getText(Bundle.NAME, "exception.class.instantiation", clazz.getName()), e);
         }
     }
 
@@ -71,13 +72,13 @@ public final class Reflection {
             Constructor<T> constructor = clazz.getConstructor(getTypes(arguments));
             return constructor.newInstance(arguments);
         } catch (NoSuchMethodException e) {
-            throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.class.instantiation", clazz.getName()), e);
+            throw new ReflectionException(ResourceUtils.getText(Bundle.NAME, "exception.class.instantiation", clazz.getName()), e);
         } catch (InvocationTargetException e) {
-            throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.class.instantiation", clazz.getName()), e);
+            throw new ReflectionException(ResourceUtils.getText(Bundle.NAME, "exception.class.instantiation", clazz.getName()), e);
         } catch (InstantiationException e) {
-            throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.class.instantiation", clazz.getName()), e);
+            throw new ReflectionException(ResourceUtils.getText(Bundle.NAME, "exception.class.instantiation", clazz.getName()), e);
         } catch (IllegalAccessException e) {
-            throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.class.instantiation", clazz.getName()), e);
+            throw new ReflectionException(ResourceUtils.getText(Bundle.NAME, "exception.class.instantiation", clazz.getName()), e);
         }
     }
 
@@ -123,7 +124,7 @@ public final class Reflection {
             }
             return execute(object, method, type, arguments);
         } catch (NoSuchMethodException e) {
-            throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.method.missing", methodName), e);
+            throw new ReflectionException(ResourceUtils.getText(Bundle.NAME, "exception.method.missing", methodName), e);
         }
     }
 
@@ -145,16 +146,20 @@ public final class Reflection {
                 return type.cast(method.invoke(object));
             }
         } catch (IllegalAccessException e) {
-            throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.method.access", method.getName()), e);
+            throw new ReflectionException(ResourceUtils.getText(Bundle.NAME, "exception.method.access", method.getName()), e);
         } catch (InvocationTargetException e) {
-            throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.method.invocation", method.getName()), e);
+            throw new ReflectionException(ResourceUtils.getText(Bundle.NAME, "exception.method.invocation", method.getName()), e);
         }
     }
 
     private static Class<?>[] getTypes(Object... arguments) {
         List<Class<?>> types = new ArrayList<Class<?>>();
         for (Object argument : arguments) {
-            types.add(argument.getClass());
+            if (argument instanceof StopCondition) {
+                types.add(StopCondition.class);
+            } else {
+                types.add(argument.getClass());
+            }
         }
         return types.toArray(new Class<?>[types.size()]);
     }
@@ -172,7 +177,7 @@ public final class Reflection {
             try {
                 return isReturnType(object.getClass().getMethod(methodName), type);
             } catch (NoSuchMethodException e) {
-                throw new ReflectionException(Resource.getText(Bundle.NAME, "exception.method.missing", methodName), e);
+                throw new ReflectionException(ResourceUtils.getText(Bundle.NAME, "exception.method.missing", methodName), e);
             }
         }
         return false;

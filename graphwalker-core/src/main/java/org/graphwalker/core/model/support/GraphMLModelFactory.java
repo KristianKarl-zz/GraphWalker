@@ -27,7 +27,7 @@ package org.graphwalker.core.model.support;
 
 import org.graphwalker.core.Bundle;
 import org.graphwalker.core.model.*;
-import org.graphwalker.core.utils.Resource;
+import org.graphwalker.core.common.ResourceUtils;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.filter.ElementFilter;
@@ -60,7 +60,7 @@ public final class GraphMLModelFactory extends AbstractModelFactory {
      * @return a {@link java.util.List} object.
      */
     public List<String> getSupportedFileTypes() {
-        return Arrays.asList("**/*.graphml");
+        return Arrays.asList("graphml");
     }
 
     /** {@inheritDoc} */
@@ -73,8 +73,8 @@ public final class GraphMLModelFactory extends AbstractModelFactory {
      * <p/>
      * <p>create.</p>
      */
-    public Model create(String id, String filename, String type) {
-        return parse(id, Resource.getResourceAsStream(filename));
+    public Model create(String filename, String type) {
+        return parse(filename, ResourceUtils.getResourceAsStream(filename));
     }
 
     private Model parse(String id, InputStream inputStream) {
@@ -102,9 +102,9 @@ public final class GraphMLModelFactory extends AbstractModelFactory {
                 String vertexId = nodeElement.getAttribute("id").getValue();
                 Vertex vertex = parseVertex(vertexId, text);
                 vertices.put(vertex.getId(), vertex);
-                if (Resource.getText(Bundle.NAME, "start.vertex").equalsIgnoreCase(vertex.getName())) {
+                if (ResourceUtils.getText(Bundle.NAME, "start.vertex").equalsIgnoreCase(vertex.getName())) {
                     if (null != startVertex) {
-                        throw new ModelException(Resource.getText(Bundle.NAME, "exception.duplicate.start.vertex"));
+                        throw new ModelException(ResourceUtils.getText(Bundle.NAME, "exception.duplicate.start.vertex"));
                     }
                     startVertex = vertex;
                 }
@@ -154,7 +154,7 @@ public final class GraphMLModelFactory extends AbstractModelFactory {
     }
 
     private Tupel<String, String> parseSwitchModelId(String text) {
-        Pattern pattern = Pattern.compile(Resource.getText(Bundle.NAME, "label.switch.model") + "\\s*\\((.*)\\)", Pattern.MULTILINE);
+        Pattern pattern = Pattern.compile(ResourceUtils.getText(Bundle.NAME, "label.switch.model") + "\\s*\\((.*)\\)", Pattern.MULTILINE);
         Matcher matcher = pattern.matcher(text);
         String switchModelId = "";
         if (matcher.find()) {
@@ -164,7 +164,7 @@ public final class GraphMLModelFactory extends AbstractModelFactory {
     }
 
     private Tupel<List<Requirement>, String> parseRequirements(String text) {
-        Pattern pattern = Pattern.compile(Resource.getText(Bundle.NAME, "label.requirement") + "\\s*\\((.*)\\)", Pattern.MULTILINE);
+        Pattern pattern = Pattern.compile(ResourceUtils.getText(Bundle.NAME, "label.requirement") + "\\s*\\((.*)\\)", Pattern.MULTILINE);
         Matcher matcher = pattern.matcher(text);
         List<Requirement> requirements = new ArrayList<Requirement>();
         while (matcher.find()) {
@@ -203,7 +203,7 @@ public final class GraphMLModelFactory extends AbstractModelFactory {
     }
 
     private Tupel<Boolean, String> parseBlocked(String text) {
-        Pattern pattern = Pattern.compile(Resource.getText(Bundle.NAME, "label.blocked"), Pattern.MULTILINE);
+        Pattern pattern = Pattern.compile(ResourceUtils.getText(Bundle.NAME, "label.blocked"), Pattern.MULTILINE);
         Matcher matcher = pattern.matcher(text);
         Boolean blocked = false;
         if (matcher.find()) {

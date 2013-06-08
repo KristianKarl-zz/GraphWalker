@@ -27,7 +27,7 @@ package org.graphwalker.core.conditions;
 
 import org.graphwalker.core.Bundle;
 import org.graphwalker.core.conditions.support.*;
-import org.graphwalker.core.utils.Resource;
+import org.graphwalker.core.common.ResourceUtils;
 
 /**
  * <p>StopConditionFactory class.</p>
@@ -47,7 +47,7 @@ public final class StopConditionFactory {
         if ("Never".equalsIgnoreCase(type)) {
             return new Never();
         }
-        throw new StopConditionException(Resource.getText(Bundle.NAME, "exception.condition.unknown"));
+        throw new StopConditionException(ResourceUtils.getText(Bundle.NAME, "exception.condition.unknown"));
     }
 
     /**
@@ -73,7 +73,7 @@ public final class StopConditionFactory {
         } else if ("TimeDuration".equalsIgnoreCase(type)) {
             return create(type, Integer.parseInt(value));
         }
-        throw new StopConditionException(Resource.getText(Bundle.NAME, "exception.condition.unknown"));
+        throw new StopConditionException(ResourceUtils.getText(Bundle.NAME, "exception.condition.unknown"));
     }
 
     /**
@@ -93,6 +93,6 @@ public final class StopConditionFactory {
         } else if ("Length".equalsIgnoreCase(type)) {
             return new Length(value);
         }
-        throw new StopConditionException(Resource.getText(Bundle.NAME, "exception.condition.unknown"));
+        throw new StopConditionException(ResourceUtils.getText(Bundle.NAME, "exception.condition.unknown"));
     }
 }

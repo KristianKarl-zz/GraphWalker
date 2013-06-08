@@ -27,6 +27,7 @@ package org.graphwalker.maven.plugin.test;
 
 import org.graphwalker.core.annotations.Execute;
 import org.graphwalker.core.annotations.GraphWalker;
+import org.graphwalker.core.machine.Execution;
 
 import java.util.*;
 
@@ -39,14 +40,13 @@ public final class Manager {
     public Manager(Configuration configuration, List<Class<?>> testClasses) {
         this.configuration = configuration;
         this.testClasses = testClasses;
-        getTestGroups();
     }
 
     public Configuration getConfiguration() {
         return configuration;
     }
 
-    public Collection<Group> getTestGroups() {
+    public Collection<Group> getGroups() {
         if (null == groups) {
             groups = new HashMap<String,Group>();
             for (Class<?> testClass: testClasses) {
@@ -55,8 +55,8 @@ public final class Manager {
                         if (!groups.containsKey(execute.group())) {
                             groups.put(execute.group(), new Group(execute.group()));
                         }
-                        Test test = new Test(testClass, execute.pathGenerator(), execute.stopCondition(), execute.stopConditionValue(), execute.exceptionStrategy());
-                        groups.get(execute.group()).addTest(test);
+                        Execution execution = new Execution(testClass, execute.pathGenerator(), execute.stopCondition(), execute.stopConditionValue(), execute.exceptionStrategy());
+                        groups.get(execute.group()).addExecution(execution);
                     }
                 }
             }

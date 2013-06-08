@@ -26,6 +26,8 @@
 package org.graphwalker.core.machine;
 
 import org.graphwalker.core.Bundle;
+import org.graphwalker.core.conditions.StopCondition;
+import org.graphwalker.core.conditions.StopConditionFactory;
 import org.graphwalker.core.filter.EdgeFilter;
 import org.graphwalker.core.generators.PathGenerator;
 import org.graphwalker.core.machine.strategy.ExceptionStrategy;
@@ -33,45 +35,83 @@ import org.graphwalker.core.model.*;
 import org.graphwalker.core.model.status.ElementStatus;
 import org.graphwalker.core.model.status.ModelStatus;
 import org.graphwalker.core.model.status.RequirementStatus;
-import org.graphwalker.core.utils.Resource;
+import org.graphwalker.core.common.ReflectionUtils;
+import org.graphwalker.core.common.ResourceUtils;
 
 import java.util.*;
 
 /**
- * <p>Context class.</p>
+ * <p>ExecutionContext class.</p>
  */
-public final class Context {
+public final class ExecutionContext {
 
-    private Model model;
+    private final Object implementation;
+    private final Execution execution;
+    private final PathGenerator pathGenerator;
+    private final Map<Model, ModelStatus> modelStatus = new HashMap<Model, ModelStatus>();
+
+    private ExecutionStatus executionStatus;
+    private Model currentModel;
+
+    public ExecutionContext(final Execution execution) {
+        this.execution = execution;
+        this.implementation = ReflectionUtils.newInstance(execution.getTestClass());
+        this.pathGenerator = ReflectionUtils.newInstance(execution.getPathGenerator(), createStopCondition(execution));
+        this.executionStatus = ExecutionStatus.NOT_EXECUTED;
+        initializeModelStatus(execution);
+    }
+
+    private StopCondition createStopCondition(final Execution execution) {
+        return StopConditionFactory.create(execution.getStopCondition().getSimpleName(), execution.getStopConditionValue());
+    }
+
+    private void initializeModelStatus(final Execution execution) {
+        for (Model model: execution.getModels()) {
+            modelStatus.put(model, ModelStatus.NOT_EXECUTED);
+        }
+    }
+
+    public PathGenerator getPathGenerator() {
+        return pathGenerator;
+    }
+
+    public ExecutionStatus getExecutionStatus() {
+        return executionStatus;
+    }
+
+    public Model getModel() {
+        if (null == currentModel) {
+            for (Model model: execution.getModels()) {
+                if (ModelStatus.NOT_EXECUTED.equals(modelStatus.get(model))) {
+                    currentModel = model;
+                    break;
+                }
+            }
+        }
+        return currentModel;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
     private ModelElement currentElement;
-    private ModelStatus modelStatus;
     private Map<ModelElement, ElementStatus> elementStatus = new HashMap<ModelElement, ElementStatus>();
     private Map<ModelElement, Long> elementVisitCount = new HashMap<ModelElement, Long>();
     private Set<Edge> visitedEdges = new HashSet<Edge>();
     private Set<Vertex> visitedVertices = new HashSet<Vertex>();
     private Map<Requirement, RequirementStatus> requirementStatus = new HashMap<Requirement, RequirementStatus>();
-    private PathGenerator pathGenerator;
     private ExceptionStrategy exceptionStrategy;
     private EdgeFilter edgeFilter;
     private Long visitCount = 0L;
 
-    /**
-     * <p>Constructor for Context.</p>
-     *
-     * @param model a {@link org.graphwalker.core.model.Model} object.
-     */
-    public Context(Model model) {
-        this.model = model;
-    }
-
-    /**
-     * <p>Getter for the field <code>model</code>.</p>
-     *
-     * @return a {@link org.graphwalker.core.model.Model} object.
-     */
-    public Model getModel() {
-        return model;
-    }
 
     /**
      * <p>Getter for the field <code>edgeFilter</code>.</p>
@@ -80,7 +120,7 @@ public final class Context {
      */
     public EdgeFilter getEdgeFilter() {
         if (null == edgeFilter) {
-            edgeFilter = new EdgeFilter(Resource.getText(Bundle.NAME, "default.language"));
+            edgeFilter = new EdgeFilter(ResourceUtils.getText(Bundle.NAME, "default.language"));
         }
         return edgeFilter;
     }
@@ -115,23 +155,6 @@ public final class Context {
         return currentElement;
     }
 
-    /**
-     * <p>getStatus.</p>
-     *
-     * @return a {@link org.graphwalker.core.model.status.ModelStatus} object.
-     */
-    public ModelStatus getStatus() {
-        return modelStatus;
-    }
-
-    /**
-     * <p>setStatus.</p>
-     *
-     * @param status a {@link org.graphwalker.core.model.status.ModelStatus} object.
-     */
-    public void setStatus(ModelStatus status) {
-        this.modelStatus = status;
-    }
 
     /**
      * <p>getStatus.</p>
@@ -277,24 +300,6 @@ public final class Context {
      */
     public void setStatus(Requirement requirement, RequirementStatus status) {
         requirementStatus.put(requirement, status);
-    }
-
-    /**
-     * <p>Getter for the field <code>pathGenerator</code>.</p>
-     *
-     * @return a {@link org.graphwalker.core.generators.PathGenerator} object.
-     */
-    public PathGenerator getPathGenerator() {
-        return pathGenerator;
-    }
-
-    /**
-     * <p>Setter for the field <code>pathGenerator</code>.</p>
-     *
-     * @param generator a {@link org.graphwalker.core.generators.PathGenerator} object.
-     */
-    public void setPathGenerator(PathGenerator generator) {
-        this.pathGenerator = generator;
     }
 
     /**

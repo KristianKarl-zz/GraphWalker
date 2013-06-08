@@ -28,7 +28,7 @@ package org.graphwalker.core.generators;
 
 import org.graphwalker.core.conditions.StopCondition;
 import org.graphwalker.core.model.ModelElement;
-import org.graphwalker.core.machine.Context;
+import org.graphwalker.core.machine.ExecutionContext;
 
 import java.util.List;
 
@@ -40,11 +40,11 @@ public interface PathGenerator {
     /**
      * <p>getNextStep.</p>
      *
-     * @param context a {@link org.graphwalker.core.machine.Context} object.
+     * @param executionContext a {@link org.graphwalker.core.machine.ExecutionContext} object.
      * @param elements a {@link java.util.List} object.
      * @return a {@link org.graphwalker.core.model.ModelElement} object.
      */
-    ModelElement getNextStep(Context context, List<ModelElement> elements);
+    ModelElement getNextStep(ExecutionContext executionContext, List<ModelElement> elements);
     /**
      * <p>getStopCondition.</p>
      *

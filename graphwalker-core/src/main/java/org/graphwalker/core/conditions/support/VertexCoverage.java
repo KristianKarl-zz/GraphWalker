@@ -26,7 +26,7 @@
 package org.graphwalker.core.conditions.support;
 
 import org.graphwalker.core.conditions.StopCondition;
-import org.graphwalker.core.machine.Context;
+import org.graphwalker.core.machine.ExecutionContext;
 
 /**
  * <p>VertexCoverage class.</p>
@@ -54,16 +54,16 @@ public final class VertexCoverage implements StopCondition {
     }
 
     /** {@inheritDoc} */
-    public boolean isFulfilled(Context context) {
-        double totalVertexCount = context.getModel().getVertices().size();
-        double visitedVertexCount = context.getVisitedVertices().size();
+    public boolean isFulfilled(ExecutionContext executionContext) {
+        double totalVertexCount = executionContext.getModel().getVertices().size();
+        double visitedVertexCount = executionContext.getVisitedVertices().size();
         return (visitedVertexCount / totalVertexCount) >= limit;
     }
 
     /** {@inheritDoc} */
-    public double getFulfilment(Context context) {
-        double totalVertexCount = context.getModel().getVertices().size();
-        double visitedVertexCount = context.getVisitedVertices().size();
+    public double getFulfilment(ExecutionContext executionContext) {
+        double totalVertexCount = executionContext.getModel().getVertices().size();
+        double visitedVertexCount = executionContext.getVisitedVertices().size();
         return (visitedVertexCount / totalVertexCount) / limit;
     }
 }

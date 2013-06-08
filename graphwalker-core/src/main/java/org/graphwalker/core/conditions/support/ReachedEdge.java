@@ -27,7 +27,7 @@ package org.graphwalker.core.conditions.support;
 
 import org.graphwalker.core.conditions.StopCondition;
 import org.graphwalker.core.model.Edge;
-import org.graphwalker.core.machine.Context;
+import org.graphwalker.core.machine.ExecutionContext;
 
 import javax.validation.constraints.NotNull;
 
@@ -49,19 +49,19 @@ public final class ReachedEdge implements StopCondition {
     }
 
     /** {@inheritDoc} */
-    public boolean isFulfilled(Context context) {
-        return getFulfilment(context) >= FULFILLMENT_LEVEL;
+    public boolean isFulfilled(ExecutionContext executionContext) {
+        return getFulfilment(executionContext) >= FULFILLMENT_LEVEL;
     }
 
     /** {@inheritDoc} */
-    public double getFulfilment(Context context) {
-        if (name.equals(context.getCurrentElement().getName())) {
+    public double getFulfilment(ExecutionContext executionContext) {
+        if (name.equals(executionContext.getCurrentElement().getName())) {
             return 1;
         } else {
             double maxFulfilment = 0;
-            for (Edge edge: context.getModel().getEdgesByName(name)) {
-                int distance = context.getModel().getShortestDistance(context.getCurrentElement(), edge);
-                int max = context.getModel().getMaximumDistance(edge);
+            for (Edge edge: executionContext.getModel().getEdgesByName(name)) {
+                int distance = executionContext.getModel().getShortestDistance(executionContext.getCurrentElement(), edge);
+                int max = executionContext.getModel().getMaximumDistance(edge);
                 double fulfilment = 1 - (double)distance/max;
                 if (maxFulfilment < fulfilment) {
                     maxFulfilment = fulfilment;

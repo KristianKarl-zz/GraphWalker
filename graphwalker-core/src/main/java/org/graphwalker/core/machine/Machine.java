@@ -25,54 +25,50 @@
  */
 package org.graphwalker.core.machine;
 
-import org.graphwalker.core.Bundle;
 import org.graphwalker.core.filter.EdgeFilter;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.ModelElement;
 import org.graphwalker.core.model.Vertex;
-import org.graphwalker.core.utils.Resource;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 /**
  * <p>MachineImpl class.</p>
  */
 public final class Machine {
 
-    private final List<Context> contexts;
-    private Context currentContext;
+    private final Set<ExecutionContext> executionContexts;
+    private ExecutionContext executionContext;
 
     /**
      * <p>Constructor for Machine.</p>
      *
-     * @param contexts a {@link java.util.List} object.
+     * @param executionContexts a {@link java.util.List} object.
      */
-    public Machine(List<Context> contexts) {
-        this.contexts = Collections.unmodifiableList(contexts);
+    public Machine(Set<ExecutionContext> executionContexts) {
+        this.executionContexts = Collections.unmodifiableSet(executionContexts);
+
     }
 
     /**
-     * <p>Setter for the field <code>currentContext</code>.</p>
+     * <p>Getter for the field <code>executionContext</code>.</p>
      *
-     * @param context a {@link Context} object.
+     * @return a {@link ExecutionContext} object.
      */
-    public void setCurrentContext(Context context) {
-        if (!contexts.contains(context)) {
-            throw new MachineException(Resource.getText(Bundle.NAME, "exception.context.unknown"));
+    public ExecutionContext getExecutionContext() {
+        if (null == executionContext) {
+            for (ExecutionContext context: executionContexts) {
+                if (ExecutionStatus.NOT_EXECUTED.equals(context.getExecutionStatus())) {
+                    executionContext = context;
+                    break;
+                }
+            }
         }
-        this.currentContext = context;
-    }
-
-    /**
-     * <p>Getter for the field <code>currentContext</code>.</p>
-     *
-     * @return a {@link Context} object.
-     */
-    public Context getCurrentContext() {
-        return currentContext;
+        return executionContext;
     }
 
     /**
@@ -81,7 +77,7 @@ public final class Machine {
      * @return a boolean.
      */
     public boolean hasMoreSteps() {
-        return !currentContext.getPathGenerator().getStopCondition().isFulfilled(currentContext);
+        return !getExecutionContext().getPathGenerator().getStopCondition().isFulfilled(getExecutionContext());
     }
 
     /**
@@ -90,7 +86,7 @@ public final class Machine {
      * @return a {@link org.graphwalker.core.model.ModelElement} object.
      */
     public ModelElement getCurrentStep() {
-        return currentContext.getCurrentElement();
+        return getExecutionContext().getCurrentElement();
     }
 
     /**
@@ -99,11 +95,11 @@ public final class Machine {
      * @return a {@link org.graphwalker.core.model.ModelElement} object.
      */
     public ModelElement getNextStep() {
-        ModelElement nextElement = currentContext.getPathGenerator().getNextStep(currentContext, getPossibleSteps());
-        currentContext.setCurrentElement(nextElement);
-        currentContext.visit(nextElement);
+        ModelElement nextElement = getExecutionContext().getPathGenerator().getNextStep(getExecutionContext(), getPossibleSteps());
+        getExecutionContext().setCurrentElement(nextElement);
+        getExecutionContext().visit(nextElement);
         if (nextElement instanceof Edge) {
-            currentContext.getEdgeFilter().executeActions(currentContext, (Edge)nextElement);
+            getExecutionContext().getEdgeFilter().executeActions(getExecutionContext(), (Edge)nextElement);
         }
         return nextElement;
     }
@@ -115,17 +111,17 @@ public final class Machine {
      */
     public List<ModelElement> getPossibleSteps() {
         List<ModelElement> elements = new ArrayList<ModelElement>();
-        if (currentContext.getCurrentElement() instanceof Vertex) {
-            Vertex vertex = (Vertex)currentContext.getCurrentElement() ;
-            EdgeFilter edgeFilter = currentContext.getEdgeFilter();
-            Model model = currentContext.getModel();
+        if (getExecutionContext().getCurrentElement() instanceof Vertex) {
+            Vertex vertex = (Vertex) getExecutionContext().getCurrentElement() ;
+            EdgeFilter edgeFilter = getExecutionContext().getEdgeFilter();
+            Model model = getExecutionContext().getModel();
             for (Edge edge: model.getEdges(vertex)) {
-                if (!edge.isBlocked() && edgeFilter.acceptEdge(currentContext, edge)) {
+                if (!edge.isBlocked() && edgeFilter.acceptEdge(getExecutionContext(), edge)) {
                     elements.add(edge);
                 }
             }
-        } else if (currentContext.getCurrentElement() instanceof Edge) {
-            elements.add(((Edge)currentContext.getCurrentElement()).getTarget());
+        } else if (getExecutionContext().getCurrentElement() instanceof Edge) {
+            elements.add(((Edge) getExecutionContext().getCurrentElement()).getTarget());
         }
         return elements;
     }

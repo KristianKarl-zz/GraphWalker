@@ -92,7 +92,7 @@ public final class LoggerAspect {
     @Before("machine() && executeElement(model, element)")
     public void beforeExecuteElement(JoinPoint joinPoint, Model model, ImmutableElement element) {
         // TODO:
-        //getLogger(joinPoint).info(Resource.getText(Bundle.NAME, "log.method.call", model.getId(), (element instanceof Edge ? "edge" : "vertex"), element.getId(), element.getName(), element.getVisitCount()));
+        //getLogger(joinPoint).info(ResourceUtils.getText(Bundle.NAME, "log.method.call", model.getId(), (element instanceof Edge ? "edge" : "vertex"), element.getId(), element.getName(), element.getVisitCount()));
     }
 
     /**

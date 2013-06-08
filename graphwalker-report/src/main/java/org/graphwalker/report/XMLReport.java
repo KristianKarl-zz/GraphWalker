@@ -45,7 +45,7 @@ public final class XMLReport {
         //try {
         //    return ((JAXBElement<GraphWalkerReportType>)createUnmarshaller().unmarshal(file)).getValue();
         //} catch (JAXBException e) {
-        //    throw new ReportException(Resource.getText(Bundle.NAME, "exception.report.failure"), e);
+        //    throw new ReportException(ResourceUtils.getText(Bundle.NAME, "exception.report.failure"), e);
         //}
         return null;
     }
@@ -55,7 +55,7 @@ public final class XMLReport {
         try {
             marshaller = JAXBContext.newInstance(ObjectFactory.class).createMarshaller();
         } catch (JAXBException e) {
-            throw new ReportException(Resource.getText(Bundle.NAME, "exception.report.failure"), e);
+            throw new ReportException(ResourceUtils.getText(Bundle.NAME, "exception.report.failure"), e);
         }
         return marshaller;
     }
@@ -65,7 +65,7 @@ public final class XMLReport {
         try {
             unmarshaller = JAXBContext.newInstance(ObjectFactory.class).createUnmarshaller();
         } catch (JAXBException e) {
-            throw new ReportException(Resource.getText(Bundle.NAME, "exception.report.failure"), e);
+            throw new ReportException(ResourceUtils.getText(Bundle.NAME, "exception.report.failure"), e);
         }
         return unmarshaller;
     }
@@ -76,7 +76,7 @@ public final class XMLReport {
             JAXBElement<GraphWalkerReportType> report = objectFactory.createGraphwalkerReport(graphWalkerReportType);
             createMarshaller().marshal(report, getOutputStream(model, reportDirectory));
         } catch (JAXBException e) {
-            throw new ReportException(Resource.getText(Bundle.NAME, "exception.report.failure"), e);
+            throw new ReportException(ResourceUtils.getText(Bundle.NAME, "exception.report.failure"), e);
         }
     }
 
@@ -157,7 +157,7 @@ public final class XMLReport {
     private OutputStream getOutputStream(Model model, File reportDirectory) {
         if (!reportDirectory.mkdirs()) {
             if (!reportDirectory.exists()) {
-                throw new ReportException(Resource.getText(Bundle.NAME, "exception.report.directory"));
+                throw new ReportException(ResourceUtils.getText(Bundle.NAME, "exception.report.directory"));
             }
         }
         File reportFile = new File(reportDirectory, model.getImplementation().getClass().getName() + ".xml");
@@ -165,7 +165,7 @@ public final class XMLReport {
         try {
             outputStream = new FileOutputStream(reportFile);
         } catch (FileNotFoundException e) {
-            throw new ReportException(Resource.getText(Bundle.NAME, "exception.report.creating", e.getMessage()), e);
+            throw new ReportException(ResourceUtils.getText(Bundle.NAME, "exception.report.creating", e.getMessage()), e);
         }
         return outputStream;
     }

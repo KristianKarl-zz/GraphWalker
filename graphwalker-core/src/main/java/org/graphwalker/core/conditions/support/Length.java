@@ -26,7 +26,7 @@
 package org.graphwalker.core.conditions.support;
 
 import org.graphwalker.core.conditions.StopCondition;
-import org.graphwalker.core.machine.Context;
+import org.graphwalker.core.machine.ExecutionContext;
 
 /**
  * <p>Length class.</p>
@@ -45,12 +45,12 @@ public final class Length implements StopCondition {
     }
 
     /** {@inheritDoc} */
-    public boolean isFulfilled(Context context) {
-        return context.getVisitCount() >= length;
+    public boolean isFulfilled(ExecutionContext executionContext) {
+        return executionContext.getVisitCount() >= length;
     }
 
     /** {@inheritDoc} */
-    public double getFulfilment(Context context) {
-        return (double) context.getVisitCount() / length;
+    public double getFulfilment(ExecutionContext executionContext) {
+        return (double) executionContext.getVisitCount() / length;
     }
 }

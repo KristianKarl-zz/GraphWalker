@@ -28,7 +28,7 @@ package org.graphwalker.core.model;
 import org.graphwalker.core.Bundle;
 import org.graphwalker.core.algorithms.DepthFirstSearch;
 import org.graphwalker.core.algorithms.FloydWarshall;
-import org.graphwalker.core.utils.Resource;
+import org.graphwalker.core.common.ResourceUtils;
 
 import java.util.*;
 
@@ -128,11 +128,11 @@ public final class Model extends ImmutableElement {
         if (null != startVertex) {
             for (Edge edge: edgeIdCache.values()) {
                 if (startVertex.equals(edge.getTarget())) {
-                    throw new ModelException(Resource.getText(Bundle.NAME, "exception.start.vertex.in.edge"));
+                    throw new ModelException(ResourceUtils.getText(Bundle.NAME, "exception.start.vertex.in.edge"));
                 }
             }
             if (1 < getEdges(startVertex).size()) {
-                throw new ModelException(Resource.getText(Bundle.NAME, "exception.start.vertex.out.edges"));
+                throw new ModelException(ResourceUtils.getText(Bundle.NAME, "exception.start.vertex.out.edges"));
             }
         }
     }

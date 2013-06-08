@@ -23,7 +23,7 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core.utils;
+package org.graphwalker.core.common;
 
 /**
  * <p>ReflectionException class.</p>

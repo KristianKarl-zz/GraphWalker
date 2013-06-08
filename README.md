@@ -46,7 +46,7 @@ Has two goals ```graphwalker:test``` and ```graphwalker:report```
 
 <a name="example-pom-xml"></a>
 ### 2\.1 pom.xml
-Defines the dependencies needed to implement the model and the plugin needed to execute the model. A model can use actions and guards of any JSR 223 engine, but we need to add the dependency for the script engine.  
+Defines the dependencies needed to implement the model and the plugin needed to execution the model. A model can use actions and guards of any JSR 223 engine, but we need to add the dependency for the script engine.
 
 ```xml
 ...

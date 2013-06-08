@@ -25,10 +25,10 @@
  */
 package org.graphwalker.maven.plugin;
 
-import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.*;
 import org.graphwalker.core.GraphWalker;
-import org.graphwalker.core.utils.Resource;
+import org.graphwalker.core.machine.Execution;
+import org.graphwalker.core.common.ResourceUtils;
 import org.graphwalker.maven.plugin.test.*;
 
 import java.util.ArrayList;
@@ -64,7 +64,7 @@ public final class TestMojo extends AbstractGraphWalkerMojo {
             displayConfiguration(manager);
             executeTests(manager);
             reportResults(manager);
-            displayResult();
+            displayResult(manager);
         }
     }
 
@@ -84,11 +84,11 @@ public final class TestMojo extends AbstractGraphWalkerMojo {
         getLog().info("  Threads/Test = "+1); // TODO: gör så att man kan låta flera trådar köra samma test (kunna utföra lasttest)
         getLog().info("");
         getLog().info("Tests:");
-        if (0<manager.getTestGroups().size()) {
-            for (Group group: manager.getTestGroups()) {
+        if (0<manager.getGroups().size()) {
+            for (Group group: manager.getGroups()) {
                 getLog().info("  [" + group.getName()+"]");
-                for (Test test: group.getTests()) {
-                    getLog().info("    "+test.getName());
+                for (Execution execution: group.getExecutions()) {
+                    getLog().info("    "+execution.getName());
                 }
                 getLog().info("");
             }
@@ -99,15 +99,10 @@ public final class TestMojo extends AbstractGraphWalkerMojo {
     }
 
     private void executeTests(Manager manager) {
-        /*
-        if (0<manager.getTestGroups().size()) {
+        if (0<manager.getGroups().size()) {
             List<GraphWalker> instances = new ArrayList<GraphWalker>();
-            for (Group group: manager.getTestGroups()) {
-                GraphWalker instance = new GraphWalker();
-                for (Test test: group.getTests()) {
-                    //instance.addModel();
-                }
-                instances.add(instance);
+            for (Group group: manager.getGroups()) {
+                instances.add(new GraphWalker(group.getExecutions(), 1));
             }
             try {
                 ExecutorService executorService = Executors.newFixedThreadPool(instances.size());
@@ -118,24 +113,23 @@ public final class TestMojo extends AbstractGraphWalkerMojo {
                     //    stringBuilder.append(model.getImplementation().getClass().getName());
                     //    getLog().info(stringBuilder.toString());
                     //}
-                    executorService.execute(new Executor(instance));
+                    executorService.execute(instance);
                 }
                 executorService.shutdown();
                 executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.DAYS);
             } catch (InterruptedException e) {
-                throw new RuntimeException(Resource.getText(Bundle.NAME, "exception.execution.interrupted")); // TODO: byt exception
+                throw new RuntimeException(ResourceUtils.getText(Bundle.NAME, "exception.execution.interrupted")); // TODO: byt exception
             }
         }
-        */
     }
 
     private void reportResults(Manager manager) {
 
     }
 
-    private void displayResult() {
+    private void displayResult(Manager manager) {
         getLog().info("");
-        getLog().info(Resource.getText(Bundle.NAME, "result.label"));
+        getLog().info(ResourceUtils.getText(Bundle.NAME, "result.label"));
         getLog().info("");
         long group = 0, total = 0, completed = 0, failed = 0, notExecuted = 0;
         /*
@@ -169,7 +163,7 @@ public final class TestMojo extends AbstractGraphWalkerMojo {
             getLog().info("");
         }
         */
-        getLog().info(Resource.getText(Bundle.NAME, "result.summary", group, total, completed, failed, notExecuted));
+        getLog().info(ResourceUtils.getText(Bundle.NAME, "result.summary", group, total, completed, failed, notExecuted));
         getLog().info("");
     }
 
@@ -222,7 +216,7 @@ public final class TestMojo extends AbstractGraphWalkerMojo {
                 graphWalkers.add(GraphWalkerFactory.create(configuration));
             }
         } catch (ClassNotFoundException e) {
-            throw new MojoExecutionException(Resource.getText(Bundle.NAME, "exception.create.test"));
+            throw new MojoExecutionException(ResourceUtils.getText(Bundle.NAME, "exception.create.test"));
         }
     }
 
@@ -242,7 +236,7 @@ public final class TestMojo extends AbstractGraphWalkerMojo {
                 executorService.shutdown();
                 executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.DAYS);
             } catch (InterruptedException e) {
-                throw new MojoExecutionException(Resource.getText(Bundle.NAME, "exception.execution.interrupted"));
+                throw new MojoExecutionException(ResourceUtils.getText(Bundle.NAME, "exception.execution.interrupted"));
             }
         }
     }
@@ -256,7 +250,7 @@ public final class TestMojo extends AbstractGraphWalkerMojo {
             }
         }
         if (hasExceptions) {
-            throw new MojoExecutionException(Resource.getText(Bundle.NAME, "exception.execution.failed", reportsDirectory.getAbsolutePath()));
+            throw new MojoExecutionException(ResourceUtils.getText(Bundle.NAME, "exception.execution.failed", reportsDirectory.getAbsolutePath()));
         }
     }
 

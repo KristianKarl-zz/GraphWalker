@@ -26,7 +26,7 @@
 package org.graphwalker.core.conditions.support;
 
 import org.graphwalker.core.conditions.StopCondition;
-import org.graphwalker.core.machine.Context;
+import org.graphwalker.core.machine.ExecutionContext;
 
 /**
  * <p>EdgeCoverage class.</p>
@@ -54,16 +54,16 @@ public final class EdgeCoverage implements StopCondition {
     }
 
     /** {@inheritDoc} */
-    public boolean isFulfilled(Context context) {
-        double totalEdgesCount = context.getModel().getEdges().size();
-        double visitedEdgesCount = context.getVisitedEdges().size();
+    public boolean isFulfilled(ExecutionContext executionContext) {
+        double totalEdgesCount = executionContext.getModel().getEdges().size();
+        double visitedEdgesCount = executionContext.getVisitedEdges().size();
         return (visitedEdgesCount / totalEdgesCount) >= limit;
     }
 
     /** {@inheritDoc} */
-    public double getFulfilment(Context context) {
-        double totalEdgesCount = context.getModel().getEdges().size();
-        double visitedEdgesCount = context.getVisitedEdges().size();
+    public double getFulfilment(ExecutionContext executionContext) {
+        double totalEdgesCount = executionContext.getModel().getEdges().size();
+        double visitedEdgesCount = executionContext.getVisitedEdges().size();
         return (visitedEdgesCount / totalEdgesCount) / limit;
     }
 }

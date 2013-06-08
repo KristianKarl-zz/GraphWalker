@@ -26,8 +26,8 @@
 package org.graphwalker.core.model;
 
 import org.graphwalker.core.model.support.GraphMLModelFactory;
-import org.graphwalker.core.utils.Assert;
-import org.graphwalker.core.utils.ResourceException;
+import org.graphwalker.core.common.Assert;
+import org.graphwalker.core.common.ResourceException;
 import org.junit.Test;
 
 public class GraphMLModelFactoryTest {

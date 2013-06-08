@@ -80,7 +80,7 @@ public final class CodeGenerator extends VoidVisitorAdapter {
             }
             compilationUnit.setImports(Arrays.asList(
                     new ImportDeclaration(new NameExpr("org.graphwalker.core.annotations.Model"), false, false),
-                    new ImportDeclaration(new NameExpr("org.graphwalker.core.machine.Context"), false, false)
+                    new ImportDeclaration(new NameExpr("org.graphwalker.core.machine.ExecutionContext"), false, false)
             ));
             ASTHelper.addTypeDeclaration(compilationUnit, getInterfaceName(sourceFile));
         }
@@ -98,7 +98,7 @@ public final class CodeGenerator extends VoidVisitorAdapter {
         ClassOrInterfaceDeclaration body = (ClassOrInterfaceDeclaration)compilationUnit.getTypes().get(0);
         for (String methodName: changeContext.getMethodsName()) {
             MethodDeclaration method = new MethodDeclaration(Modifier.INTERFACE, ASTHelper.VOID_TYPE, methodName);
-            Parameter parameter = ASTHelper.createParameter(ASTHelper.createReferenceType("Context", 0), "context");
+            Parameter parameter = ASTHelper.createParameter(ASTHelper.createReferenceType("ExecutionContext", 0), "context");
             ASTHelper.addParameter(method, parameter);
             ASTHelper.addMember(body, method);
         }

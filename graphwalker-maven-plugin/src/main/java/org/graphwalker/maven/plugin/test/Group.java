@@ -25,13 +25,17 @@
  */
 package org.graphwalker.maven.plugin.test;
 
+import org.graphwalker.core.machine.Execution;
+
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public final class Group {
 
     private final String name;
-    private final List<Test> tests = new ArrayList<Test>();
+    private final Set<Execution> executions = new HashSet<Execution>();
 
     public Group(String name) {
         this.name = name;
@@ -41,11 +45,11 @@ public final class Group {
         return name;
     }
 
-    public void addTest(Test test) {
-        tests.add(test);
+    public void addExecution(Execution execution) {
+        executions.add(execution);
     }
 
-    public List<Test> getTests() {
-        return tests;
+    public Set<Execution> getExecutions() {
+        return executions;
     }
 }

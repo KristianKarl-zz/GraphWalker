@@ -33,8 +33,4 @@ import org.graphwalker.core.model.ModelFactory;
  */
 public abstract class AbstractModelFactory implements ModelFactory {
 
-    /** {@inheritDoc} */
-    public Model create(String id, String filename) {
-        return create(id,filename, "");
-    }
 }

@@ -32,14 +32,13 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
-import org.graphwalker.core.utils.Resource;
+import org.graphwalker.core.common.ResourceUtils;
 
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
@@ -158,7 +157,7 @@ public abstract class AbstractGraphWalkerMojo extends AbstractMojo {
         try {
             return new URLClassLoader(convertToURL(getClasspathElements()), getClass().getClassLoader());
         } catch (MalformedURLException e) {
-            throw new MojoExecutionException(Resource.getText(Bundle.NAME, "exception.create.classloader"));
+            throw new MojoExecutionException(ResourceUtils.getText(Bundle.NAME, "exception.create.classloader"));
         }
     }
 

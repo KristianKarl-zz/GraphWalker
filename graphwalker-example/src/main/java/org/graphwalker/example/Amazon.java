@@ -6,7 +6,7 @@ import org.graphwalker.core.conditions.support.EdgeCoverage;
 import org.graphwalker.core.conditions.support.Length;
 import org.graphwalker.core.generators.support.AStarPath;
 import org.graphwalker.core.generators.support.RandomPath;
-import org.graphwalker.core.machine.Context;
+import org.graphwalker.core.machine.ExecutionContext;
 import org.graphwalker.example.models.ShoppingCart;
 
 @GraphWalker({
@@ -23,67 +23,67 @@ import org.graphwalker.example.models.ShoppingCart;
 public class Amazon implements ShoppingCart {
 
     @Override
-    public void e_ShoppingCart(Context context) {
+    public void e_ShoppingCart(ExecutionContext executionContext) {
         int i = 0;
     }
 
     @Override
-    public void v_BrowserStarted(Context context) {
+    public void v_BrowserStarted(ExecutionContext executionContext) {
         int i = 0;
     }
 
     @Override
-    public void Start(Context context) {
+    public void Start(ExecutionContext executionContext) {
         int i = 0;
     }
 
     @Override
-    public void v_OtherBoughtBooks(Context context) {
+    public void v_OtherBoughtBooks(ExecutionContext executionContext) {
         int i = 0;
     }
 
     @Override
-    public void e_EnterBaseURL(Context context) {
+    public void e_EnterBaseURL(ExecutionContext executionContext) {
         int i = 0;
     }
 
     @Override
-    public void e_AddBookToCart(Context context) {
+    public void e_AddBookToCart(ExecutionContext executionContext) {
         int i = 0;
     }
 
     @Override
-    public void e_SearchBook(Context context) {
+    public void e_SearchBook(ExecutionContext executionContext) {
         int i = 0;
     }
 
     @Override
-    public void e_StartBrowser(Context context) {
+    public void e_StartBrowser(ExecutionContext executionContext) {
         int i = 0;
     }
 
     @Override
-    public void v_BookInformation(Context context) {
+    public void v_BookInformation(ExecutionContext executionContext) {
         int i = 0;
     }
 
     @Override
-    public void v_ShoppingCart(Context context) {
+    public void v_ShoppingCart(ExecutionContext executionContext) {
         int i = 0;
     }
 
     @Override
-    public void v_SearchResult(Context context) {
+    public void v_SearchResult(ExecutionContext executionContext) {
         int i = 0;
     }
 
     @Override
-    public void v_BaseURL(Context context) {
+    public void v_BaseURL(ExecutionContext executionContext) {
         int i = 0;
     }
 
     @Override
-    public void e_ClickBook(Context context) {
+    public void e_ClickBook(ExecutionContext executionContext) {
         int i = 0;
     }
 }

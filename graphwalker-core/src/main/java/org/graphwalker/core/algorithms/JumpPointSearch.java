@@ -25,8 +25,8 @@
  */
 package org.graphwalker.core.algorithms;
 
+import org.graphwalker.core.machine.ExecutionContext;
 import org.graphwalker.core.model.ModelElement;
-import org.graphwalker.core.machine.Context;
 
 import java.util.List;
 
@@ -38,12 +38,12 @@ public class JumpPointSearch {
     /**
      * <p>getPath.</p>
      *
-     * @param context a {@link org.graphwalker.core.machine.Context} object.
+     * @param executionContext a {@link org.graphwalker.core.machine.ExecutionContext} object.
      * @param start a {@link org.graphwalker.core.model.ModelElement} object.
      * @param destination a {@link org.graphwalker.core.model.ModelElement} object.
      * @return a {@link java.util.List} object.
      */
-    public static List<ModelElement> getPath(Context context, ModelElement start, ModelElement destination) {
+    public static List<ModelElement> getPath(ExecutionContext executionContext, ModelElement start, ModelElement destination) {
         return null;
     }
 }

@@ -27,7 +27,7 @@ package org.graphwalker.core.conditions.support;
 
 import org.graphwalker.core.conditions.StopCondition;
 import org.graphwalker.core.model.status.RequirementStatus;
-import org.graphwalker.core.machine.Context;
+import org.graphwalker.core.machine.ExecutionContext;
 
 /**
  * <p>RequirementCoverage class.</p>
@@ -55,24 +55,24 @@ public final class RequirementCoverage implements StopCondition {
     }
 
     /** {@inheritDoc} */
-    public boolean isFulfilled(Context context) {
-        double totalCount = context.getModel().getRequirements().size();
+    public boolean isFulfilled(ExecutionContext executionContext) {
+        double totalCount = executionContext.getModel().getRequirements().size();
         if (0 == totalCount) {
             return true;
         }
-        double passedCount = context.getRequirements(RequirementStatus.PASSED).size();
-        double failedCount = context.getRequirements(RequirementStatus.FAILED).size();
+        double passedCount = executionContext.getRequirements(RequirementStatus.PASSED).size();
+        double failedCount = executionContext.getRequirements(RequirementStatus.FAILED).size();
         return ((passedCount+failedCount) / totalCount) >= limit;
     }
 
     /** {@inheritDoc} */
-    public double getFulfilment(Context context) {
-        double totalCount = context.getModel().getRequirements().size();
+    public double getFulfilment(ExecutionContext executionContext) {
+        double totalCount = executionContext.getModel().getRequirements().size();
         if (0 == totalCount) {
             return 1.0;
         }
-        double passedCount = context.getRequirements(RequirementStatus.PASSED).size();
-        double failedCount = context.getRequirements(RequirementStatus.FAILED).size();
+        double passedCount = executionContext.getRequirements(RequirementStatus.PASSED).size();
+        double failedCount = executionContext.getRequirements(RequirementStatus.FAILED).size();
         return ((passedCount+failedCount) / totalCount) / limit;
     }
 
