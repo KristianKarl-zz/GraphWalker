@@ -33,7 +33,7 @@ import java.util.List;
 /**
  * <p>JumpPointSearch class.</p>
  */
-public class JumpPointSearch {
+public final class JumpPointSearch {
 
     /**
      * <p>getPath.</p>

@@ -25,8 +25,7 @@
  */
 package org.graphwalker.core.machine;
 
-import org.graphwalker.core.annotations.AfterModel;
-import org.graphwalker.core.annotations.BeforeModel;
+import org.graphwalker.core.annotations.*;
 import org.graphwalker.core.common.AnnotationUtils;
 import org.graphwalker.core.common.ReflectionUtils;
 import org.graphwalker.core.model.Edge;
@@ -57,14 +56,21 @@ public final class Machine implements Runnable {
     }
 
     public void run() {
-        AnnotationUtils.execute(BeforeModel.class, getExecutionContext());
+        try {
+        AnnotationUtils.execute(BeforeExecution.class, getExecutionContext());
         while (hasMoreSteps()) {
             ModelElement element = getNextStep();
+            AnnotationUtils.execute(BeforeElement.class, getExecutionContext());
             getExecutionContext().getExecutionProfiler().start(element);
             ReflectionUtils.execute(getExecutionContext().getImplementation(), element.getName(), getExecutionContext().getEdgeFilter().getScriptContext());
             getExecutionContext().getExecutionProfiler().stop(element);
+            AnnotationUtils.execute(AfterElement.class, getExecutionContext());
         }
-        AnnotationUtils.execute(AfterModel.class, getExecutionContext());
+        AnnotationUtils.execute(AfterExecution.class, getExecutionContext());
+        } catch (Throwable throwable) {
+            AnnotationUtils.execute(getExecutionContext(), throwable);
+            // TODO: cast a new UnhandledException(..)
+        }
     }
 
 

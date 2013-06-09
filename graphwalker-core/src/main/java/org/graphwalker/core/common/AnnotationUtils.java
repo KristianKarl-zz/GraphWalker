@@ -25,6 +25,7 @@
  */
 package org.graphwalker.core.common;
 
+import org.graphwalker.core.annotations.ExceptionHandler;
 import org.graphwalker.core.machine.ExecutionContext;
 
 import java.lang.annotation.Annotation;
@@ -32,7 +33,7 @@ import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Set;
 
-public class AnnotationUtils {
+public final class AnnotationUtils {
 
     private AnnotationUtils() {}
 
@@ -50,6 +51,17 @@ public class AnnotationUtils {
         for (Method method: executionContext.getImplementation().getClass().getMethods()) {
             if (method.isAnnotationPresent(annotation)) {
                 ReflectionUtils.execute(executionContext.getImplementation(), method, executionContext.getEdgeFilter());
+            }
+        }
+    }
+
+    public static void execute(ExecutionContext executionContext, Throwable throwable) {
+        for (Method method: executionContext.getImplementation().getClass().getMethods()) {
+            if (method.isAnnotationPresent(ExceptionHandler.class)) {
+                Class<? extends Throwable> filter = method.getAnnotation(ExceptionHandler.class).filter();
+                if (null == filter || filter.equals(throwable.getClass())) {
+                    ReflectionUtils.execute(executionContext.getImplementation(), method, executionContext.getEdgeFilter());
+                }
             }
         }
     }

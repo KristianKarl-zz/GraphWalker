@@ -33,7 +33,7 @@ import java.util.List;
 /**
  * <p>AStar class.</p>
  */
-public class AStar {
+public final class AStar {
 
     /**
      * <p>getPath.</p>

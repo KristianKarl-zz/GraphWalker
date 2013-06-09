@@ -30,9 +30,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * <p>AfterModel class.</p>
+ * <p>BeforeExecution class.</p>
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(java.lang.annotation.ElementType.METHOD)
-public @interface AfterModel {
+public @interface BeforeExecution {
 }

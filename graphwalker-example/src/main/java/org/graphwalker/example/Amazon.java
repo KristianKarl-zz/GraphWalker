@@ -68,7 +68,7 @@ public class Amazon extends AbstractTest implements ShoppingCart {
     public void v_ShoppingCart(Context context) {
         Assert.assertTrue(verifyTitle("^Amazon\\.com Shopping Cart.*"));
         Integer expected_num_of_books = (Integer)context.getAttribute("num_of_books");
-        if (0 == expected_num_of_books) {
+        if (expected_num_of_books.equals(0)) {
             Assert.assertTrue(verifyTextPresent(By.id("cart-active-items"), "Your Shopping Cart is empty"));
         } else {
             Integer actual_num_of_books = Integer.parseInt(getDriver().findElement(By.id("nav-cart-count")).getText());
@@ -85,7 +85,7 @@ public class Amazon extends AbstractTest implements ShoppingCart {
     public void v_BaseURL(Context context) {
         Assert.assertTrue(verifyTitle("^Amazon\\.com:.*$"));
         Integer num_of_books = Integer.parseInt(getDriver().findElement(By.id("nav-cart-count")).getText());
-        if (num_of_books != (Integer)context.getAttribute("num_of_books")) {
+        if (!num_of_books.equals(context.getAttribute("num_of_books"))) {
             context.setAttribute("num_of_books", num_of_books);
         }
     }

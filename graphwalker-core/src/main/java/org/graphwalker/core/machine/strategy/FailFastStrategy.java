@@ -41,7 +41,7 @@ public class FailFastStrategy extends AbstractStrategy {
         if (!ModelStatus.FAILED.equals(machine.getCurrentModel().getModelStatus())) {
             addException(machine.getCurrentModel(), throwable);
             machine.getCurrentModel().setModelStatus(ModelStatus.FAILED);
-            annotationProcessor.process(AfterModel.class, machine, machine.getCurrentModel(), null);
+            annotationProcessor.process(AfterExecution.class, machine, machine.getCurrentModel(), null);
         }
         */
     }

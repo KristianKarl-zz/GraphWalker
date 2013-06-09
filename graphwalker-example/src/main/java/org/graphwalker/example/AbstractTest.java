@@ -1,6 +1,7 @@
 package org.graphwalker.example;
 
-import org.graphwalker.core.annotations.AfterModel;
+import org.graphwalker.core.annotations.AfterExecution;
+import org.graphwalker.core.annotations.ExceptionHandler;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -41,10 +42,12 @@ public abstract class AbstractTest {
         });
     }
 
-    @AfterModel
+    @ExceptionHandler
+    @AfterExecution
     public void tearDown() {
         if (null != driver) {
             driver.quit();
         }
     }
+
 }

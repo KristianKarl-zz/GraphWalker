@@ -156,7 +156,7 @@ public class GraphWalker implements Runnable {
         machine = new Machine(new ArrayList<ExecutionContext>(contexts.values()));
         machine.setCurrentExecutionContext(contexts.get(model));
         try {
-            processAnnotation(BeforeModel.class, machine, implementations.get(model));
+            processAnnotation(BeforeExecution.class, machine, implementations.get(model));
             while (machine.hasMoreSteps()) {
                 ModelElement element = machine.getNextStep();
                 ExecutionContext context = machine.getExecutionContext();
@@ -166,7 +166,7 @@ public class GraphWalker implements Runnable {
                     processAnnotation(AfterElement.class, machine, implementations.get(model));
                 }
             }
-            processAnnotation(AfterModel.class, machine, implementations.get(model));
+            processAnnotation(AfterExecution.class, machine, implementations.get(model));
         } catch (Throwable t) {
             processAnnotation(ExceptionHandler.class, machine, implementations.get(model));
         }
