@@ -37,7 +37,7 @@ import java.lang.annotation.Target;
 public @interface ExceptionHandler {
 
     /**
-     * <p>filter.</p>
+     * <p>script.</p>
      *
      * @return a {@link java.lang.Class} object.
      */

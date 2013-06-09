@@ -80,7 +80,7 @@ public final class CodeGenerator extends VoidVisitorAdapter {
             }
             compilationUnit.setImports(Arrays.asList(
                     new ImportDeclaration(new NameExpr("org.graphwalker.core.annotations.Model"), false, false),
-                    new ImportDeclaration(new NameExpr("org.graphwalker.core.filter.Context"), false, false)
+                    new ImportDeclaration(new NameExpr("org.graphwalker.core.script.Context"), false, false)
             ));
             ASTHelper.addTypeDeclaration(compilationUnit, getInterfaceName(sourceFile));
         }

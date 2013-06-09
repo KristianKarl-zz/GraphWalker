@@ -37,7 +37,7 @@ import java.lang.annotation.Target;
 public @interface BeforeElement {
 
     /**
-     * <p>filter.</p>
+     * <p>script.</p>
      *
      * @return a {@link java.lang.String} object.
      */

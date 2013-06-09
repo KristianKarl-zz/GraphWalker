@@ -23,7 +23,7 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core.filter;
+package org.graphwalker.core.script;
 
 import javax.script.SimpleScriptContext;
 

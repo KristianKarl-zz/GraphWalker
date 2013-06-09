@@ -4,7 +4,7 @@ import org.graphwalker.core.annotations.Execute;
 import org.graphwalker.core.annotations.GraphWalker;
 import org.graphwalker.core.common.Assert;
 import org.graphwalker.core.conditions.support.EdgeCoverage;
-import org.graphwalker.core.filter.Context;
+import org.graphwalker.core.script.Context;
 import org.graphwalker.core.generators.support.AStarPath;
 import org.graphwalker.core.generators.support.RandomPath;
 import org.graphwalker.example.models.ShoppingCart;

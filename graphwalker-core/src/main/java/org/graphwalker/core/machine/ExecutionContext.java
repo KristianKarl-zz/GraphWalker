@@ -28,8 +28,7 @@ package org.graphwalker.core.machine;
 import org.graphwalker.core.Bundle;
 import org.graphwalker.core.conditions.StopCondition;
 import org.graphwalker.core.conditions.StopConditionFactory;
-import org.graphwalker.core.filter.Context;
-import org.graphwalker.core.filter.EdgeFilter;
+import org.graphwalker.core.script.EdgeFilter;
 import org.graphwalker.core.generators.PathGenerator;
 import org.graphwalker.core.machine.strategy.ExceptionStrategy;
 import org.graphwalker.core.model.*;
@@ -135,7 +134,7 @@ public final class ExecutionContext {
     /**
      * <p>Getter for the field <code>edgeFilter</code>.</p>
      *
-     * @return a {@link org.graphwalker.core.filter.EdgeFilter} object.
+     * @return a {@link org.graphwalker.core.script.EdgeFilter} object.
      */
     //public EdgeFilter getEdgeFilter() {
     //    if (null == edgeFilter) {
@@ -147,7 +146,7 @@ public final class ExecutionContext {
     /**
      * <p>Setter for the field <code>edgeFilter</code>.</p>
      *
-     * @param edgeFilter a {@link org.graphwalker.core.filter.EdgeFilter} object.
+     * @param edgeFilter a {@link org.graphwalker.core.script.EdgeFilter} object.
      */
     //public void setEdgeFilter(EdgeFilter edgeFilter) {
     //    this.edgeFilter = edgeFilter;

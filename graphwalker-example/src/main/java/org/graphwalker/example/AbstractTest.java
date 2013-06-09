@@ -30,13 +30,11 @@ public abstract class AbstractTest {
     }
 
     protected boolean verifyTextPresent(final By locator, final String text) {
-        WebDriverWait wait = new WebDriverWait(driver, TIMEOUT);
-        return wait.until(ExpectedConditions.textToBePresentInElement(locator, text));
+        return new WebDriverWait(driver, TIMEOUT).until(ExpectedConditions.textToBePresentInElement(locator, text));
     }
 
     protected boolean verifyTitle(final String regexp) {
-        WebDriverWait wait = new WebDriverWait(driver, TIMEOUT);
-        return wait.until(new ExpectedCondition<Boolean>() {
+        return new WebDriverWait(driver, TIMEOUT).until(new ExpectedCondition<Boolean>() {
             public Boolean apply(WebDriver driver) {
                 return driver.getTitle().matches(regexp);
             }
@@ -46,7 +44,7 @@ public abstract class AbstractTest {
     @AfterModel
     public void tearDown() {
         if (null != driver) {
-            driver.close();
+            driver.quit();
         }
     }
 }

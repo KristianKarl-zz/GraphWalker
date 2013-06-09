@@ -70,7 +70,7 @@ public final class LoggerAspect {
     void machine() {
     }
 
-    @Pointcut("within(org.graphwalker.core.filter.EdgeFilter+)")
+    @Pointcut("within(org.graphwalker.core.script.EdgeFilter+)")
     void edgeFilter() {
     }
 

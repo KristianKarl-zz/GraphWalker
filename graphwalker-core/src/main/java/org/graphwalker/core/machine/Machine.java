@@ -25,13 +25,10 @@
  */
 package org.graphwalker.core.machine;
 
-import org.graphwalker.core.Bundle;
 import org.graphwalker.core.annotations.AfterModel;
 import org.graphwalker.core.annotations.BeforeModel;
 import org.graphwalker.core.common.AnnotationUtils;
 import org.graphwalker.core.common.ReflectionUtils;
-import org.graphwalker.core.common.ResourceUtils;
-import org.graphwalker.core.filter.EdgeFilter;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.ModelElement;
