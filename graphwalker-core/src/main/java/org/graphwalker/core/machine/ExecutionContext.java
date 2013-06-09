@@ -27,7 +27,6 @@ package org.graphwalker.core.machine;
 
 import org.graphwalker.core.Bundle;
 import org.graphwalker.core.conditions.StopCondition;
-import org.graphwalker.core.conditions.StopConditionFactory;
 import org.graphwalker.core.script.EdgeFilter;
 import org.graphwalker.core.generators.PathGenerator;
 import org.graphwalker.core.machine.strategy.ExceptionStrategy;
@@ -65,7 +64,7 @@ public final class ExecutionContext {
     }
 
     private StopCondition createStopCondition(final Execution execution) {
-        return StopConditionFactory.create(execution.getStopCondition().getSimpleName(), execution.getStopConditionValue());
+        return ReflectionUtils.newInstance(execution.getStopCondition(), execution.getStopConditionValue());
     }
 
     private void initializeModelStatus(final Execution execution) {

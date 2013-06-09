@@ -69,10 +69,12 @@ public final class ReflectionUtils {
      */
     public static <T> T newInstance(Class<T> clazz, Object... arguments) {
         try {
-            Constructor<T> constructor = clazz.getConstructor(getTypes(arguments));
-            return constructor.newInstance(arguments);
-        } catch (NoSuchMethodException e) {
-            throw new ReflectionException(ResourceUtils.getText(Bundle.NAME, "exception.class.instantiation", clazz.getName()), e);
+            try {
+                return clazz.getConstructor(getTypes(arguments)).newInstance(arguments);
+            } catch (NoSuchMethodException e) {
+                // ignore
+            }
+            return newInstance(clazz);
         } catch (InvocationTargetException e) {
             throw new ReflectionException(ResourceUtils.getText(Bundle.NAME, "exception.class.instantiation", clazz.getName()), e);
         } catch (InstantiationException e) {

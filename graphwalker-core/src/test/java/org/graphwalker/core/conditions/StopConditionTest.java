@@ -26,6 +26,8 @@
 package org.graphwalker.core.conditions;
 
 import org.graphwalker.core.common.Assert;
+import org.graphwalker.core.common.ReflectionUtils;
+import org.graphwalker.core.conditions.support.ReachedEdge;
 import org.junit.Test;
 
 import javax.validation.ConstraintViolation;
@@ -38,7 +40,7 @@ public class StopConditionTest {
 
     @Test
     public void validateStopCondition() {
-        StopCondition condition = StopConditionFactory.create("ReachedEdge", null);
+        StopCondition condition = new ReachedEdge(null);
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         Validator validator = factory.getValidator();
         Set<ConstraintViolation<StopCondition>> violations = validator.validate(condition);

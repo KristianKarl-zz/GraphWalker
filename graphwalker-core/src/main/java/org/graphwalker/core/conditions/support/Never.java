@@ -39,14 +39,6 @@ public final class Never implements StopCondition {
     public Never() {
     }
 
-    /**
-     * <p>Constructor for Never.</p>
-     *
-     * @param value a {@link java.lang.String} object.
-     */
-    public Never(String value) {
-    }
-
     /** {@inheritDoc} */
     public boolean isFulfilled(ExecutionContext executionContext) {
         return false;

@@ -42,12 +42,17 @@ public abstract class AbstractTest {
         });
     }
 
-    @ExceptionHandler
+
     @AfterExecution
     public void tearDown() {
         if (null != driver) {
             driver.quit();
         }
+    }
+
+    @ExceptionHandler
+    public void handleException() {
+        tearDown();
     }
 
 }
