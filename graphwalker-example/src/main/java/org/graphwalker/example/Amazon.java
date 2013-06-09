@@ -96,4 +96,14 @@ public class Amazon extends AbstractTest implements ShoppingCart {
         getDriver().findElement(By.linkText("Practical Model-Based Testing: A Tools Approach")).click();
     }
 
+    @Override
+    public void v_ClearShoppingCart(Context context) {
+        Assert.assertEquals(Integer.parseInt(getDriver().findElement(By.id("nav-cart-count")).getText()), 0);
+    }
+
+    @Override
+    public void e_ClearShoppingCart(Context context) {
+        int i = 0;
+    }
+
 }
