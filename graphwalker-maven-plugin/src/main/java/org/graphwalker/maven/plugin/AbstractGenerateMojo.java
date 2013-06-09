@@ -81,6 +81,12 @@ public abstract class AbstractGenerateMojo extends AbstractGraphWalkerMojo {
         try {
             Model model = modelFactory.create(sourceFile.getFilename(), sourceFile.getExtension());
             String source = new CodeGenerator(sourceFile, model).generate();
+            if (sourceFile.getOutputFile().exists()) {
+                String existingSource = StringUtils.removeDuplicateWhitespace(FileUtils.fileRead(sourceFile.getOutputFile(), sourceEncoding));
+                if (existingSource.equals(StringUtils.removeDuplicateWhitespace(new String(source.getBytes(), sourceEncoding)))) {
+                    return;
+                }
+            }
             FileUtils.mkdir(sourceFile.getOutputFile().getParent());
             FileUtils.fileDelete(sourceFile.getOutputFile().getAbsolutePath());
             FileUtils.fileWrite(sourceFile.getOutputFile(), sourceEncoding, source);
