@@ -33,6 +33,7 @@ import org.graphwalker.core.machine.ExecutionContext;
  */
 public final class TimeDuration implements StopCondition {
 
+    private final String value;
     private final long duration;
     private final long timestamp;
 
@@ -42,17 +43,13 @@ public final class TimeDuration implements StopCondition {
      * @param value a {@link java.lang.String} object.
      */
     public TimeDuration(String value) {
-        this(!"".equals(value)?Long.parseLong(value):0);
+        this.value = value;
+        this.timestamp = System.currentTimeMillis();
+        this.duration = Long.parseLong(value) * SECOND_SCALE;
     }
 
-    /**
-     * <p>Constructor for TimeDuration.</p>
-     *
-     * @param seconds a long.
-     */
-    public TimeDuration(long seconds) {
-        timestamp = System.currentTimeMillis();
-        duration = seconds * SECOND_SCALE;
+    public String getValue() {
+        return value;
     }
 
     /** {@inheritDoc} */

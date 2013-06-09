@@ -68,8 +68,10 @@ public final class Machine implements Runnable {
         }
         AnnotationUtils.execute(AfterExecution.class, getExecutionContext());
         } catch (Throwable throwable) {
+            throwable.printStackTrace();
             AnnotationUtils.execute(getExecutionContext(), throwable);
             // TODO: cast a new UnhandledException(..)
+
         }
     }
 

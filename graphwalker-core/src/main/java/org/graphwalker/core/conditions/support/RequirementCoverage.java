@@ -34,6 +34,7 @@ import org.graphwalker.core.machine.ExecutionContext;
  */
 public final class RequirementCoverage implements StopCondition {
 
+    private final String value;
     private final double limit;
 
     /**
@@ -42,16 +43,12 @@ public final class RequirementCoverage implements StopCondition {
      * @param value a {@link java.lang.String} object.
      */
     public RequirementCoverage(String value) {
-        this(!"".equals(value)?Long.parseLong(value):100);
+        this.value = value;
+        this.limit = (double)Long.parseLong(value)/ PERCENTAGE_SCALE;
     }
 
-    /**
-     * <p>Constructor for EdgeCoverage.</p>
-     *
-     * @param limit a long.
-     */
-    public RequirementCoverage(long limit) {
-        this.limit = (double)limit/ PERCENTAGE_SCALE;
+    public String getValue() {
+        return value;
     }
 
     /** {@inheritDoc} */

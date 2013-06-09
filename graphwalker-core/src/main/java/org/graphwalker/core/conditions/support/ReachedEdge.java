@@ -36,16 +36,19 @@ import javax.validation.constraints.NotNull;
  */
 public final class ReachedEdge implements StopCondition {
 
-    @NotNull
-    private final String name;
+    @NotNull private final String value;
 
     /**
      * <p>Constructor for ReachedEdge.</p>
      *
-     * @param name a {@link java.lang.String} object.
+     * @param value a {@link java.lang.String} object.
      */
-    public ReachedEdge(String name) {
-        this.name = name;
+    public ReachedEdge(String value) {
+        this.value = value;
+    }
+
+    public String getValue() {
+        return value;
     }
 
     /** {@inheritDoc} */
@@ -55,11 +58,11 @@ public final class ReachedEdge implements StopCondition {
 
     /** {@inheritDoc} */
     public double getFulfilment(ExecutionContext executionContext) {
-        if (name.equals(executionContext.getCurrentElement().getName())) {
+        if (value.equals(executionContext.getCurrentElement().getName())) {
             return 1;
         } else {
             double maxFulfilment = 0;
-            for (Edge edge: executionContext.getModel().getEdgesByName(name)) {
+            for (Edge edge: executionContext.getModel().getEdgesByName(value)) {
                 int distance = executionContext.getModel().getShortestDistance(executionContext.getCurrentElement(), edge);
                 int max = executionContext.getModel().getMaximumDistance(edge);
                 double fulfilment = 1 - (double)distance/max;

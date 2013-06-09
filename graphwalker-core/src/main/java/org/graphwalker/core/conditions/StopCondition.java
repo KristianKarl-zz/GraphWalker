@@ -40,6 +40,7 @@ public interface StopCondition {
     /** Constant <code>SECOND_SCALE=1000</code> */
     int SECOND_SCALE = 1000;
 
+    String getValue();
 
     /**
      * <p>isFulfilled.</p>
@@ -49,7 +50,6 @@ public interface StopCondition {
      */
     boolean isFulfilled(ExecutionContext executionContext);
 
-
     /**
      * <p>getFulfilment.</p>
      *
@@ -57,4 +57,5 @@ public interface StopCondition {
      * @return a double.
      */
     double getFulfilment(ExecutionContext executionContext);
+
 }

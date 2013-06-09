@@ -36,16 +36,19 @@ import javax.validation.constraints.NotNull;
  */
 public final class ReachedVertex implements StopCondition {
 
-    @NotNull
-    private final String name;
+    @NotNull private final String value;
 
     /**
      * <p>Constructor for ReachedVertex.</p>
      *
-     * @param name a {@link java.lang.String} object.
+     * @param value a {@link java.lang.String} object.
      */
-    public ReachedVertex(String name) {
-        this.name = name;
+    public ReachedVertex(String value) {
+        this.value = value;
+    }
+
+    public String getValue() {
+        return value;
     }
 
     /** {@inheritDoc} */
@@ -55,11 +58,11 @@ public final class ReachedVertex implements StopCondition {
 
     /** {@inheritDoc} */
     public double getFulfilment(ExecutionContext executionContext) {
-        if (name.equals(executionContext.getCurrentElement().getName())) {
+        if (value.equals(executionContext.getCurrentElement().getName())) {
             return 1;
         } else {
             double maxFulfilment = 0;
-            for (Vertex vertex: executionContext.getModel().getVerticesByName(name)) {
+            for (Vertex vertex: executionContext.getModel().getVerticesByName(value)) {
                 int distance = executionContext.getModel().getShortestDistance(executionContext.getCurrentElement(), vertex);
                 int max = executionContext.getModel().getMaximumDistance(vertex);
                 double fulfilment = 1 - (double)distance/max;

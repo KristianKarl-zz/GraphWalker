@@ -43,7 +43,7 @@ public final class JumpPointSearch {
      * @param destination a {@link org.graphwalker.core.model.ModelElement} object.
      * @return a {@link java.util.List} object.
      */
-    public static List<ModelElement> getPath(ExecutionContext executionContext, ModelElement start, ModelElement destination) {
+    public List<ModelElement> getPath(ExecutionContext executionContext, ModelElement start, ModelElement destination) {
         return null;
     }
 }

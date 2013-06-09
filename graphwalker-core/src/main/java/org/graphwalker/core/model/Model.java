@@ -146,6 +146,14 @@ public final class Model extends ImmutableElement {
         return modelElementsCache;
     }
 
+    public List<ModelElement> getModelElements(ModelElement element) {
+        if (element instanceof Vertex) {
+            return (List<ModelElement>)(List<?>)getEdges((Vertex)element);
+        } else {
+            return Arrays.asList((ModelElement)((Edge)element).getTarget());
+        }
+    }
+
     /**
      * <p>getRequirements.</p>
      *

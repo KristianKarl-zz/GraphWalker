@@ -39,6 +39,10 @@ public final class Never implements StopCondition {
     public Never() {
     }
 
+    public String getValue() {
+        return null;
+    }
+
     /** {@inheritDoc} */
     public boolean isFulfilled(ExecutionContext executionContext) {
         return false;

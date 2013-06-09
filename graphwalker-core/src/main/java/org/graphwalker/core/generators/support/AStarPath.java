@@ -26,12 +26,16 @@
 package org.graphwalker.core.generators.support;
 
 import org.graphwalker.core.Bundle;
+import org.graphwalker.core.algorithms.AStar;
 import org.graphwalker.core.conditions.StopCondition;
 import org.graphwalker.core.generators.AbstractPathGenerator;
 import org.graphwalker.core.generators.PathGeneratorException;
+import org.graphwalker.core.model.Edge;
+import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.ModelElement;
 import org.graphwalker.core.machine.ExecutionContext;
 import org.graphwalker.core.common.ResourceUtils;
+import org.graphwalker.core.model.Vertex;
 
 import java.util.List;
 
@@ -39,6 +43,9 @@ import java.util.List;
  * <p>AStarPath class.</p>
  */
 public final class AStarPath extends AbstractPathGenerator {
+
+    private AStar algorithm = new AStar();
+    private String name;
 
     /**
      * <p>Constructor for AStarPath.</p>
@@ -53,6 +60,8 @@ public final class AStarPath extends AbstractPathGenerator {
      */
     public AStarPath(StopCondition stopCondition) {
         super(stopCondition);
+        name = stopCondition.getValue();
+
     }
 
     /** {@inheritDoc} */
@@ -61,7 +70,28 @@ public final class AStarPath extends AbstractPathGenerator {
             throw new PathGeneratorException(ResourceUtils.getText(Bundle.NAME, "exception.generator.path.missing"));
         }
 
+        ModelElement target = null;
+        Model model = executionContext.getModel();
+        int distance = Integer.MAX_VALUE;
+        if (null != model.getEdgesByName(name)) {
+            for (Edge edge: model.getEdgesByName(name)) {
+                int edgeDistance = model.getShortestDistance(executionContext.getCurrentElement(), edge);
+                if (edgeDistance < distance) {
+                    distance = edgeDistance;
+                    target = edge;
+                }
+            }
+        }
+        if (null != model.getVerticesByName(name)) {
+            for (Vertex vertex: model.getVerticesByName(name)) {
+                int vertexDistance = model.getShortestDistance(executionContext.getCurrentElement(), vertex);
+                if (vertexDistance < distance) {
+                    distance = vertexDistance;
+                    target = vertex;
+                }
+            }
+        }
+        return algorithm.getPath(executionContext, executionContext.getCurrentElement(), target).get(1);
 
-        return null;  // TODO: Fix me (Auto generated)
     }
 }
