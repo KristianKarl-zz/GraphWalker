@@ -20,7 +20,6 @@
         <module>graphwalker-example</module>
         <module>graphwalker-jenkins-plugin</module>
         <module>graphwalker-maven-plugin</module>
-        <module>graphwalker-report</module>
     </modules>
 
     <organization>

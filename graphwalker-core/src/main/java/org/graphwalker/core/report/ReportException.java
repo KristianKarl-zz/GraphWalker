@@ -23,7 +23,7 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.report;
+package org.graphwalker.core.report;
 
 /**
  * <p>ReportException class.</p>

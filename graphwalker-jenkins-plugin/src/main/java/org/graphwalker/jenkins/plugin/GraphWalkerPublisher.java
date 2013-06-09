@@ -10,7 +10,7 @@ import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Publisher;
 import hudson.tasks.Recorder;
 import org.graphwalker.report.GraphWalkerReportType;
-import org.graphwalker.report.XMLReport;
+import org.graphwalker.core.report.XMLReport;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 import java.io.File;
