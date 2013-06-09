@@ -4,7 +4,6 @@ import org.graphwalker.core.annotations.Execute;
 import org.graphwalker.core.annotations.GraphWalker;
 import org.graphwalker.core.common.Assert;
 import org.graphwalker.core.conditions.support.EdgeCoverage;
-import org.graphwalker.core.conditions.support.Never;
 import org.graphwalker.core.script.Context;
 import org.graphwalker.core.generators.support.AStarPath;
 import org.graphwalker.core.generators.support.RandomPath;
@@ -19,7 +18,7 @@ import org.openqa.selenium.By;
 
         @Execute(group = "random"
                 , pathGenerator = RandomPath.class
-                , stopCondition = Never.class
+                , stopCondition = EdgeCoverage.class
                 , stopConditionValue = "100")
 })
 public class Amazon extends AbstractTest implements ShoppingCart {
@@ -103,7 +102,8 @@ public class Amazon extends AbstractTest implements ShoppingCart {
 
     @Override
     public void e_ClearShoppingCart(Context context) {
-        int i = 0;
+        getDriver().findElement(By.id("nav-cart")).click();
+        getDriver().findElement(By.linkText("Delete")).click();
     }
 
 }

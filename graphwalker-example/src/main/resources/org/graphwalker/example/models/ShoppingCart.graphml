@@ -112,7 +112,7 @@ REQ(UC01 2.3)</y:NodeLabel>
       <data key="d5"><![CDATA[Verify that Amazon's home page is properly displayed.]]></data>
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="30.0" width="147.72607421875" x="362.701425677721" y="185.1787109375"/>
+          <y:Geometry height="30.0" width="147.72607421875" x="425.35527498759916" y="185.1787109375"/>
           <y:Fill color="#FFCC00" color2="#FFFF00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="19.310546875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="139.54150390625" x="4.09228515625" y="5.3447265625">v_ClearShoppingCart 
@@ -299,6 +299,14 @@ Practical Model-Based Testing: A Tools Approach']]></data>
           <y:Path sx="0.0" sy="0.0" tx="73.86526127920607" ty="17.286893403096656"/>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="standard"/>
+          <y:EdgeLabel alignment="center" backgroundColor="#FFFF99" configuration="AutoFlippingLabel" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasLineColor="false" height="18.1328125" modelName="custom" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="95.353515625" x="-121.7772859119234" y="-9.06640625">e_EnterBaseURL<y:LabelModel>
+              <y:SmartEdgeLabelModel autoRotationEnabled="false" defaultAngle="0.0" defaultDistance="10.0"/>
+            </y:LabelModel>
+            <y:ModelParameter>
+              <y:SmartEdgeLabelModelParameter angle="0.0" distance="30.0" distanceToCenter="true" position="center" ratio="0.5" segment="0"/>
+            </y:ModelParameter>
+            <y:PreferredPlacementDescriptor angle="0.0" angleOffsetOnRightSide="0" angleReference="absolute" angleRotationOnRightSide="co" distance="-1.0" frozen="true" placement="anywhere" side="anywhere" sideReference="relative_to_edge_flow"/>
+          </y:EdgeLabel>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
@@ -308,11 +316,11 @@ Practical Model-Based Testing: A Tools Approach']]></data>
       <data key="d9">
         <y:PolyLineEdge>
           <y:Path sx="73.88339323969129" sy="-16.32391215369165" tx="0.0" ty="0.0">
-            <y:Point x="436.564462787096" y="166.5679053807117"/>
+            <y:Point x="499.21831209697416" y="166.5679053807117"/>
           </y:Path>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel alignment="center" backgroundColor="#FFFF99" configuration="AutoFlippingLabel" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasLineColor="false" height="18.1328125" modelName="custom" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="247.421875" x="35.7026768984241" y="-20.202759726169916">e_ClearShoppingCart [num_of_books &gt; 0]<y:LabelModel>
+          <y:EdgeLabel alignment="center" backgroundColor="#FFFF99" configuration="AutoFlippingLabel" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasLineColor="false" height="18.1328125" modelName="custom" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="247.421875" x="98.35652620830228" y="-20.202759726169916">e_ClearShoppingCart [num_of_books &gt; 0]<y:LabelModel>
               <y:SmartEdgeLabelModel autoRotationEnabled="false" defaultAngle="0.0" defaultDistance="10.0"/>
             </y:LabelModel>
             <y:ModelParameter>
