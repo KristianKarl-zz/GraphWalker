@@ -75,16 +75,6 @@ public final class Machine implements Runnable {
         }
     }
 
-
-
-
-
-
-    /**
-     * <p>Getter for the field <code>executionContext</code>.</p>
-     *
-     * @return a {@link ExecutionContext} object.
-     */
     private ExecutionContext getExecutionContext() {
         if (null == executionContext) {
             for (ExecutionContext context: executionContexts) {
@@ -96,9 +86,6 @@ public final class Machine implements Runnable {
         }
         return executionContext;
     }
-
-
-
 
     /**
      * <p>hasMoreSteps.</p>
@@ -124,7 +111,7 @@ public final class Machine implements Runnable {
      * @return a {@link org.graphwalker.core.model.ModelElement} object.
      */
     public ModelElement getNextStep() {
-        ModelElement nextElement = getExecutionContext().getPathGenerator().getNextStep(getExecutionContext(), getPossibleSteps());
+        ModelElement nextElement = getExecutionContext().getPathGenerator().getNextStep(getExecutionContext(), getExecutionContext().getPossibleSteps());
         getExecutionContext().setCurrentElement(nextElement);
         getExecutionContext().visit(nextElement);
         if (nextElement instanceof Edge) {
@@ -133,24 +120,4 @@ public final class Machine implements Runnable {
         return nextElement;
     }
 
-    /**
-     * <p>getPossibleSteps.</p>
-     *
-     * @return a {@link java.util.List} object.
-     */
-    private List<ModelElement> getPossibleSteps() {
-        List<ModelElement> elements = new ArrayList<ModelElement>();
-        if (getExecutionContext().getCurrentElement() instanceof Vertex) {
-            Vertex vertex = (Vertex) getExecutionContext().getCurrentElement() ;
-            Model model = getExecutionContext().getModel();
-            for (Edge edge: model.getEdges(vertex)) {
-                if (!edge.isBlocked() && getExecutionContext().getEdgeFilter().acceptEdge(getExecutionContext(), edge)) {
-                    elements.add(edge);
-                }
-            }
-        } else if (getExecutionContext().getCurrentElement() instanceof Edge) {
-            elements.add(((Edge) getExecutionContext().getCurrentElement()).getTarget());
-        }
-        return elements;
-    }
 }

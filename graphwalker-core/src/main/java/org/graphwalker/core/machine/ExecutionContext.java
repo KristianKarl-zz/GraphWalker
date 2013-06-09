@@ -108,7 +108,24 @@ public final class ExecutionContext {
         return currentModel;
     }
 
+    public List<ModelElement> getPossibleSteps() {
+        return getPossibleSteps(getCurrentElement());
+    }
 
+    public List<ModelElement> getPossibleSteps(ModelElement element) {
+        List<ModelElement> elements = new ArrayList<ModelElement>();
+        if (element instanceof Vertex) {
+            Vertex vertex = (Vertex)element;
+            for (Edge edge: getModel().getEdges(vertex)) {
+                if (!edge.isBlocked() && getEdgeFilter().acceptEdge(this, edge)) {
+                    elements.add(edge);
+                }
+            }
+        } else if (element instanceof Edge) {
+            elements.add(((Edge)element).getTarget());
+        }
+        return elements;
+    }
 
 
 

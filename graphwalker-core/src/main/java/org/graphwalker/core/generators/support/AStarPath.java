@@ -27,7 +27,6 @@ package org.graphwalker.core.generators.support;
 
 import org.graphwalker.core.Bundle;
 import org.graphwalker.core.algorithms.AStar;
-import org.graphwalker.core.conditions.StopCondition;
 import org.graphwalker.core.conditions.support.ReachedEdge;
 import org.graphwalker.core.conditions.support.ReachedVertex;
 import org.graphwalker.core.generators.AbstractPathGenerator;
