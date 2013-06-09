@@ -69,12 +69,7 @@ public final class ReflectionUtils {
      */
     public static <T> T newInstance(Class<T> clazz, Object... arguments) {
         try {
-            try {
-                return clazz.getConstructor(getTypes(arguments)).newInstance(arguments);
-            } catch (NoSuchMethodException e) {
-                // ignore
-            }
-            return newInstance(clazz);
+            return getConstructor(clazz, arguments).newInstance(arguments);
         } catch (InvocationTargetException e) {
             throw new ReflectionException(ResourceUtils.getText(Bundle.NAME, "exception.class.instantiation", clazz.getName()), e);
         } catch (InstantiationException e) {
@@ -83,6 +78,24 @@ public final class ReflectionUtils {
             throw new ReflectionException(ResourceUtils.getText(Bundle.NAME, "exception.class.instantiation", clazz.getName()), e);
         }
     }
+
+    @SuppressWarnings("unchecked")
+    public static <T> Constructor<T> getConstructor(Class<T> clazz, Object... arguments) {
+        for (Constructor<?> constructor: clazz.getConstructors()) {
+            Class<?>[] types = constructor.getParameterTypes();
+            if (types.length == arguments.length) {
+                boolean foundMatchingConstructor = true;
+                for (int i = 0; i<types.length; i++) {
+                    foundMatchingConstructor &= types[i].isInstance(arguments[i]);
+                }
+                if (foundMatchingConstructor) {
+                    return (Constructor<T>)constructor;
+                }
+            }
+        }
+        throw new ReflectionException(ResourceUtils.getText(Bundle.NAME, "exception.class.instantiation", clazz.getName()));
+    }
+
 
     /**
      * <p>execute.</p>

@@ -28,6 +28,8 @@ package org.graphwalker.core.generators.support;
 import org.graphwalker.core.Bundle;
 import org.graphwalker.core.algorithms.AStar;
 import org.graphwalker.core.conditions.StopCondition;
+import org.graphwalker.core.conditions.support.ReachedEdge;
+import org.graphwalker.core.conditions.support.ReachedVertex;
 import org.graphwalker.core.generators.AbstractPathGenerator;
 import org.graphwalker.core.generators.PathGeneratorException;
 import org.graphwalker.core.model.Edge;
@@ -45,23 +47,18 @@ import java.util.List;
 public final class AStarPath extends AbstractPathGenerator {
 
     private AStar algorithm = new AStar();
-    private String name;
-
-    /**
-     * <p>Constructor for AStarPath.</p>
-     */
-    public AStarPath() {
-    }
 
     /**
      * <p>Constructor for AStarPath.</p>
      *
      * @param stopCondition a {@link org.graphwalker.core.conditions.StopCondition} object.
      */
-    public AStarPath(StopCondition stopCondition) {
+    public AStarPath(ReachedVertex stopCondition) {
         super(stopCondition);
-        name = stopCondition.getValue();
+    }
 
+    public AStarPath(ReachedEdge stopCondition) {
+        super(stopCondition);
     }
 
     /** {@inheritDoc} */
@@ -73,8 +70,10 @@ public final class AStarPath extends AbstractPathGenerator {
         ModelElement target = null;
         Model model = executionContext.getModel();
         int distance = Integer.MAX_VALUE;
-        if (null != model.getEdgesByName(name)) {
-            for (Edge edge: model.getEdgesByName(name)) {
+
+
+        if (null != model.getEdgesByName(getStopCondition().getValue())) {
+            for (Edge edge: model.getEdgesByName(getStopCondition().getValue())) {
                 int edgeDistance = model.getShortestDistance(executionContext.getCurrentElement(), edge);
                 if (edgeDistance < distance) {
                     distance = edgeDistance;
@@ -82,8 +81,8 @@ public final class AStarPath extends AbstractPathGenerator {
                 }
             }
         }
-        if (null != model.getVerticesByName(name)) {
-            for (Vertex vertex: model.getVerticesByName(name)) {
+        if (null != model.getVerticesByName(getStopCondition().getValue())) {
+            for (Vertex vertex: model.getVerticesByName(getStopCondition().getValue())) {
                 int vertexDistance = model.getShortestDistance(executionContext.getCurrentElement(), vertex);
                 if (vertexDistance < distance) {
                     distance = vertexDistance;
@@ -91,6 +90,7 @@ public final class AStarPath extends AbstractPathGenerator {
                 }
             }
         }
+
         return algorithm.getPath(executionContext, executionContext.getCurrentElement(), target).get(1);
 
     }
