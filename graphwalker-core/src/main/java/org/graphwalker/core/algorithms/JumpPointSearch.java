@@ -39,11 +39,11 @@ public final class JumpPointSearch {
      * <p>getPath.</p>
      *
      * @param executionContext a {@link org.graphwalker.core.machine.ExecutionContext} object.
-     * @param start a {@link org.graphwalker.core.model.ModelElement} object.
-     * @param destination a {@link org.graphwalker.core.model.ModelElement} object.
+     * @param source a {@link org.graphwalker.core.model.ModelElement} object.
+     * @param target a {@link org.graphwalker.core.model.ModelElement} object.
      * @return a {@link java.util.List} object.
      */
-    public List<ModelElement> getPath(ExecutionContext executionContext, ModelElement start, ModelElement destination) {
-        return null;
+    public List<ModelElement> getPath(ExecutionContext executionContext, ModelElement source, ModelElement target) {
+        throw new NoPathFoundException();
     }
 }

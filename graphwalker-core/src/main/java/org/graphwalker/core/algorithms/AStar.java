@@ -92,7 +92,7 @@ public final class AStar {
             Collections.reverse(path);
             return path;
         }
-        return null;
+        throw new NoPathFoundException();
     }
 
     private class AStarNode {
