@@ -26,9 +26,9 @@
 package org.graphwalker.maven.plugin;
 
 import org.apache.maven.plugins.annotations.*;
-import org.graphwalker.core.GraphWalker;
 import org.graphwalker.core.machine.Execution;
 import org.graphwalker.core.common.ResourceUtils;
+import org.graphwalker.core.machine.Machine;
 import org.graphwalker.maven.plugin.test.*;
 
 import java.util.ArrayList;
@@ -100,20 +100,14 @@ public final class TestMojo extends AbstractGraphWalkerMojo {
 
     private void executeTests(Manager manager) {
         if (0<manager.getGroups().size()) {
-            List<GraphWalker> instances = new ArrayList<GraphWalker>();
+            List<Machine> machines = new ArrayList<Machine>();
             for (Group group: manager.getGroups()) {
-                instances.add(new GraphWalker(group.getExecutions(), 1));
+                machines.add(new Machine(group.getExecutions()));
             }
             try {
-                ExecutorService executorService = Executors.newFixedThreadPool(instances.size());
-                for (GraphWalker instance : instances) {
-                    //for (Model model : instance.getConfiguration().getModels()) {
-                    //    StringBuilder stringBuilder = new StringBuilder("Running [");
-                    //    stringBuilder.append(model.getGroup()).append("] ");
-                    //    stringBuilder.append(model.getImplementation().getClass().getName());
-                    //    getLog().info(stringBuilder.toString());
-                    //}
-                    executorService.execute(instance);
+                ExecutorService executorService = Executors.newFixedThreadPool(machines.size());
+                for (Machine machine : machines) {
+                    executorService.execute(machine);
                 }
                 executorService.shutdown();
                 executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.DAYS);
@@ -128,10 +122,13 @@ public final class TestMojo extends AbstractGraphWalkerMojo {
     }
 
     private void displayResult(Manager manager) {
+        getLog().info("------------------------------------------------------------------------");
         getLog().info("");
         getLog().info(ResourceUtils.getText(Bundle.NAME, "result.label"));
         getLog().info("");
         long group = 0, total = 0, completed = 0, failed = 0, notExecuted = 0;
+
+
         /*
         List<Model> failedModels = new ArrayList<Model>();
         for (GraphWalker graphWalker : graphWalkers) {

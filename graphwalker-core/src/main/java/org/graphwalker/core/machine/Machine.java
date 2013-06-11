@@ -33,26 +33,20 @@ import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.ModelElement;
 import org.graphwalker.core.model.Vertex;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * <p>MachineImpl class.</p>
  */
 public final class Machine implements Runnable {
 
-    private final Set<ExecutionContext> executionContexts;
+    private final Set<ExecutionContext> executionContexts = new HashSet<ExecutionContext>();
     private ExecutionContext executionContext;
 
-    /**
-     * <p>Constructor for Machine.</p>
-     *
-     * @param executionContexts a {@link java.util.List} object.
-     */
-    public Machine(Set<ExecutionContext> executionContexts) {
-        this.executionContexts = Collections.unmodifiableSet(executionContexts);
+    public Machine(Set<Execution> executions) {
+        for (Execution execution: executions) {
+            executionContexts.add(new ExecutionContext(execution));
+        }
     }
 
     public void run() {

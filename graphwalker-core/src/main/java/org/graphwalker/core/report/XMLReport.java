@@ -25,8 +25,6 @@
  */
 package org.graphwalker.core.report;
 
-import org.graphwalker.core.GraphWalker;
-
 import java.io.File;
 import java.util.Date;
 
@@ -35,7 +33,7 @@ public final class XMLReport {
     private static final String LINE_SEPARATOR = System.getProperty("line.separator");
     private ObjectFactory objectFactory = new ObjectFactory();
 
-    public void writeReport(GraphWalker graphWalker, File reportDirectory, Date startTime) {
+    public void writeReport(File reportDirectory, Date startTime) {
         //for (Model model : graphWalker.getConfiguration().getModels()) {
         //    writeReport(model, reportDirectory);
         //}
