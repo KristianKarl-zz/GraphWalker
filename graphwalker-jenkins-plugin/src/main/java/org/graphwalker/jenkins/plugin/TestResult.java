@@ -1,14 +1,14 @@
 package org.graphwalker.jenkins.plugin;
 
 import hudson.model.ModelObject;
-import org.graphwalker.report.GraphWalkerReportType;
-import org.graphwalker.report.RequirementsType;
+import org.graphwalker.core.report.GraphWalkerReportType;
+import org.graphwalker.core.report.RequirementsType;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GraphWalkerResult implements ModelObject, Serializable {
+public class TestResult implements ModelObject, Serializable {
 
     private static final long serialVersionUID = 1341889337197236412L;
 
@@ -19,11 +19,11 @@ public class GraphWalkerResult implements ModelObject, Serializable {
     private int totalRequirementCount = 0;
     private long timestamp = 0;
 
-    List<GraphWalkerResult> reportResults = new ArrayList<GraphWalkerResult>();
+    List<TestResult> reportResults = new ArrayList<TestResult>();
 
-    public GraphWalkerResult() {}
+    public TestResult() {}
 
-    public GraphWalkerResult(String clazz, RequirementsType requirements, long timestamp) {
+    public TestResult(String clazz, RequirementsType requirements, long timestamp) {
         this.clazz = clazz;
         failedRequirementCount = requirements.getFailed().intValue();
         notCoveredRequirementCount = requirements.getNotCovered().intValue();
@@ -33,7 +33,7 @@ public class GraphWalkerResult implements ModelObject, Serializable {
     }
 
     public void addReport(GraphWalkerReportType report) {
-        GraphWalkerResult reportResult = new GraphWalkerResult(report.getClazz(), report.getRequirements(), report.getTimestamp());
+        TestResult reportResult = new TestResult(report.getClazz(), report.getRequirements(), report.getTimestamp());
         reportResults.add(reportResult);
         failedRequirementCount += reportResult.getFailedRequirementCount();
         notCoveredRequirementCount += reportResult.getNotCoveredRequirementCount();
@@ -44,7 +44,7 @@ public class GraphWalkerResult implements ModelObject, Serializable {
         }
     }
 
-    public List<GraphWalkerResult> getReportResults() {
+    public List<TestResult> getReportResults() {
         return reportResults;
     }
 

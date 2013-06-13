@@ -2,21 +2,20 @@ package org.graphwalker.jenkins.plugin;
 
 import hudson.model.AbstractProject;
 import hudson.tasks.BuildStepDescriptor;
-import hudson.tasks.Publisher;
 import net.sf.json.JSONObject;
 import org.kohsuke.stapler.StaplerRequest;
 
-public class GraphWalkerDescriptor extends BuildStepDescriptor<Publisher> {
+public class Descriptor extends BuildStepDescriptor<hudson.tasks.Publisher> {
 
-    private static GraphWalkerDescriptor descriptor = null;
+    private static Descriptor descriptor = null;
 
-    private GraphWalkerDescriptor() {
-        super(GraphWalkerPublisher.class);
+    private Descriptor() {
+        super(Publisher.class);
     }
 
-    public static GraphWalkerDescriptor getInstance() {
+    public static Descriptor getInstance() {
         if (null == descriptor) {
-            descriptor = new GraphWalkerDescriptor();
+            descriptor = new Descriptor();
         }
         return descriptor;
     }
@@ -39,8 +38,8 @@ public class GraphWalkerDescriptor extends BuildStepDescriptor<Publisher> {
     }
 
     @Override
-    public GraphWalkerPublisher newInstance(StaplerRequest request, JSONObject data) throws FormException {
-        GraphWalkerPublisher publisher = request.bindParameters(GraphWalkerPublisher.class, Messages.plugin_id());
+    public Publisher newInstance(StaplerRequest request, JSONObject data) throws FormException {
+        Publisher publisher = request.bindParameters(Publisher.class, Messages.plugin_id());
 
         return publisher;
     }

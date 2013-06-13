@@ -59,21 +59,6 @@
                     z-index:99999;
                     background:#ABABAB;
                 }
-                .job-title {
-                    vertical-align:middle;
-                    text-align:center;
-                    overflow:hidden;
-                }
-                .job-time {
-                    float:left;
-                    vertical-align:middle;
-                    text-align:left;
-                }
-                .job-result {
-                    float:right;
-                    vertical-align:middle;
-                    text-align:right;
-                }
                 .job-building {
                     background-color:#204a87;
                 }
@@ -91,13 +76,7 @@
         </head>
         <body>
             <div id="ruler">
-                <div style="padding:10px;">
-                    <div class="job-title"/>
-                    <div style="padding:10px;margin:8px;">
-                        <div class="job-time">2012-01-01 12:00:00</div>
-                        <div class="job-result">resultstring</div>
-                    </div>
-                </div>
+                <div style="padding:10px;"/>
             </div>
 
             <script type="text/javascript">
@@ -120,19 +99,8 @@
                             jobNames.get(name).remove();
                         });
                         newJobNames.without(jobNames.keys()).each(function(name) {
+                            var link = new Element("a", {"href":"/job/"+name+"/graphwalker"});
                             var job = new Element("div", {"id":name, "class":"job job-default"});
-                            var content = new Element("div", {"style":"padding:"+margin+"px;"});
-                            content.insert(
-                                new Element("div", {"class":"job-title"}).update(name)
-                            );
-                            content.insert(
-                                new Element("div", {"style":"padding:10px;margin:8px;"}).insert(
-                                    new Element("div", {"class":"job-time"})
-                                ).insert(
-                                    new Element("div", {"class":"job-result"}).update("result")
-                                )
-                            );
-                            job.insert(content);
                             var spinner = new Element("div", {"class":"job-spinner"});
                             spinner.setStyle({"visibility":"hidden"});
                             var spinnerTarget = new Element("div", {"class":"job-spinner-target", "style":"position:absolute;top:50%;left:50%;"});
@@ -140,7 +108,8 @@
                             job.insert(spinner);
                             Spinner({radius:32,length:32,lines:12,width:10,trail:60,shadow:false}).spin(spinnerTarget);
                             jobNames.set(name, job);
-                            $(document.body).insert(job);
+                            link.insert(job);
+                            $(document.body).insert(link);
                         });
                         calculateJobSize();
                         updateJobPosition();
@@ -156,19 +125,12 @@
                         }
                     });
                     var ruler  = $("ruler");
-                    var title  = ruler.getElementsBySelector(".job-title")[0];
-                    var time   = ruler.getElementsBySelector(".job-time")[0];
-                    var result = ruler.getElementsBySelector(".job-result")[0];
-                    title.update(longestName);
                     maxFontSize = 0;
                     var maxWidth = document.viewport.getWidth();
                     var maxHeight = document.viewport.getHeight();
                     for (var columnCount = 1; columnCount &lt;= jobNames.keys().length; columnCount++) {
                         for (var fontSize = 10; fontSize &lt;= 302; fontSize++) {
                             var rowCount = Math.ceil(jobNames.keys().length/columnCount);
-                            title.setStyle({"fontSize":fontSize+"px"});
-                            time.setStyle({"fontSize":Math.round(maxFontSize*0.5)+"px"});
-                            result.setStyle({"fontSize":Math.round(maxFontSize*0.5)+"px"});
                             var dimensions = ruler.getDimensions();
                             var totalWidth = (dimensions.width+margin)*columnCount+margin;
                             var totalHeight = (dimensions.height+margin)*rowCount+margin;
@@ -197,9 +159,6 @@
                             , "left": offsetX+"px"
                             , "width": width+"px"
                             , "height": height+"px"});
-                        $(name).getElementsBySelector(".job-title")[0].setStyle({"fontSize":maxFontSize+"px"});
-                        $(name).getElementsBySelector(".job-time")[0].setStyle({"fontSize":Math.round(maxFontSize*0.5)+"px"});
-                        $(name).getElementsBySelector(".job-result")[0].setStyle({"fontSize":Math.round(maxFontSize*0.5)+"px"});
                         offsetY += height+margin;
                         if (maxHeight-margin &lt;= offsetY) {
                             offsetY = margin;

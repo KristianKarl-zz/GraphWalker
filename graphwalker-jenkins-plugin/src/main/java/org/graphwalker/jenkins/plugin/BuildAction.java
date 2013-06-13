@@ -5,11 +5,11 @@ import hudson.model.Action;
 
 import java.text.DecimalFormat;
 
-public class GraphWalkerBuildAction implements Action {
+public class BuildAction implements Action {
 
     private final AbstractBuild<?, ?> build;
 
-    public GraphWalkerBuildAction(AbstractBuild<?, ?> build) {
+    public BuildAction(AbstractBuild<?, ?> build) {
         this.build = build;
     }
 
@@ -29,8 +29,8 @@ public class GraphWalkerBuildAction implements Action {
         return Messages.build_action_url_name();
     }
 
-    public GraphWalkerResult getResult() {
-        return build.getAction(GraphWalkerResultAction.class).getResult();
+    public TestResult getResult() {
+        return build.getAction(ResultAction.class).getResult();
     }
 
     public String format(DecimalFormat decimalFormat, double value) {

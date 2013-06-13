@@ -10,12 +10,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class GraphWalkerViewAction implements RootAction, ModelObject {
+public class ViewAction implements RootAction, ModelObject {
 
     private final View view;
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-    public GraphWalkerViewAction(View view) {
+    public ViewAction(View view) {
         this.view = view;
     }
 

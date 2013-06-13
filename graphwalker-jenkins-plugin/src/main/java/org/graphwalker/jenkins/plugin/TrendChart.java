@@ -17,13 +17,13 @@ import org.jfree.ui.RectangleInsets;
 
 import java.awt.*;
 
-public class GraphWalkerTrendChart extends Graph {
+public class TrendChart extends Graph {
 
     private static final int DEFAULT_HEIGHT = 220;
     private static final int DEFAULT_WIDTH = 300;
     private final CategoryDataset dataset;
 
-    protected GraphWalkerTrendChart(CategoryDataset dataset) {
+    protected TrendChart(CategoryDataset dataset) {
         super(-1, DEFAULT_WIDTH, DEFAULT_HEIGHT);
         this.dataset = dataset;
     }

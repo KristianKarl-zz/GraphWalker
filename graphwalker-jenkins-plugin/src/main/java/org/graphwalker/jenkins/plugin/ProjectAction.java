@@ -11,11 +11,11 @@ import org.kohsuke.stapler.StaplerResponse;
 
 import java.io.IOException;
 
-public class GraphWalkerProjectAction extends Actionable implements ProminentProjectAction {
+public class ProjectAction extends Actionable implements ProminentProjectAction {
 
     private final AbstractProject<?,?> project;
 
-    public GraphWalkerProjectAction(AbstractProject<?,?> project) {
+    public ProjectAction(AbstractProject<?, ?> project) {
         this.project = project;
     }
 
@@ -40,16 +40,16 @@ public class GraphWalkerProjectAction extends Actionable implements ProminentPro
     }
 
     public void doGraph(final StaplerRequest request, StaplerResponse response) throws IOException {
-        GraphWalkerTrendChart trendChart = new GraphWalkerTrendChart(createDataSet());
+        TrendChart trendChart = new TrendChart(createDataSet());
         trendChart.doPng(request, response);
     }
 
     private CategoryDataset createDataSet() {
         DataSetBuilder<String, Long> dataSetBuilder = new DataSetBuilder<String, Long>();
         for (AbstractBuild<?, ?> build: getProject().getBuilds()) {
-            GraphWalkerResultAction action = build.getAction(GraphWalkerResultAction.class);
+            ResultAction action = build.getAction(ResultAction.class);
             if (null != action) {
-                GraphWalkerResult result = action.getResult();
+                TestResult result = action.getResult();
                 if (null != result) {
                     dataSetBuilder.add(result.getPassedRequirementCount(), Messages.project_trend_passed(), result.getTimestamp());
                     dataSetBuilder.add(result.getFailedRequirementCount(), Messages.project_trend_failed(), result.getTimestamp());

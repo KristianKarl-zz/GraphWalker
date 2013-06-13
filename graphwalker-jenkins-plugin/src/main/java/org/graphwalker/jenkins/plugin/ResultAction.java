@@ -11,23 +11,23 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 
-public class GraphWalkerResultAction extends AbstractTestResultAction<GraphWalkerResultAction> {
+public class ResultAction extends AbstractTestResultAction<ResultAction> {
 
     private static final XStream XSTREAM = new XStream2();
-    private transient WeakReference<GraphWalkerResult> result = null;
+    private transient WeakReference<TestResult> result = null;
 
-    protected GraphWalkerResultAction(AbstractBuild owner, GraphWalkerResult result, BuildListener listener) {
+    protected ResultAction(AbstractBuild owner, TestResult result, BuildListener listener) {
         super(owner);
         setResult(result, listener);
     }
 
-    public synchronized void setResult(GraphWalkerResult result, BuildListener listener) {
+    public synchronized void setResult(TestResult result, BuildListener listener) {
         saveResult(result, listener);
-        this.result = new WeakReference<GraphWalkerResult>(result);
+        this.result = new WeakReference<TestResult>(result);
     }
 
-    public synchronized GraphWalkerResult getResult() {
-        GraphWalkerResult result = null;
+    public synchronized TestResult getResult() {
+        TestResult result = null;
         if (null != this.result && null != this.result.get()) {
             result = this.result.get();
         } else {
@@ -36,7 +36,7 @@ public class GraphWalkerResultAction extends AbstractTestResultAction<GraphWalke
         return result;
     }
 
-    private void saveResult(GraphWalkerResult result, BuildListener listener) {
+    private void saveResult(TestResult result, BuildListener listener) {
         try {
             getPersistentFile().write(result);
         } catch (IOException e) {
@@ -44,11 +44,11 @@ public class GraphWalkerResultAction extends AbstractTestResultAction<GraphWalke
         }
     }
 
-    public GraphWalkerResult loadResult() {
+    public TestResult loadResult() {
         try {
-            result = new WeakReference<GraphWalkerResult>((GraphWalkerResult)getPersistentFile().read());
+            result = new WeakReference<TestResult>((TestResult)getPersistentFile().read());
         } catch (IOException e) {
-            result = new WeakReference<GraphWalkerResult>(new GraphWalkerResult());
+            result = new WeakReference<TestResult>(new TestResult());
         }
         return result.get();
     }
