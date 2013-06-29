@@ -1,0 +1,48 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:t="/lib/hudson" xmlns:l="/lib/layout" xmlns:i="jelly:fmt" xmlns:x="jelly:xml">
+    <st:header name="Expires" value="0" />
+    <st:header name="Cache-Control" value="no-cache,must-revalidate" />
+    <st:contentType value="text/html;charset=UTF-8" />
+    <j:new var="h" className="hudson.Functions" />
+    <j:set var="rootURL" value="${request.contextPath}" />
+    <j:set var="resURL"  value="${rootURL}${h.resourcePath}" />
+    <j:set var="imagesURL"  value="${rootURL}${h.resourcePath}/images" />
+    <j:set var="instance" value="${it}" />
+    <j:set var="descriptor" value="${it.descriptor}" />
+    <x:doctype name="html" />
+    <html>
+        <head>
+            ${h.checkPermission(it,permission)}
+            <title>${h.appendIfNotNull(title, ' [Jenkins]', 'Jenkins')}</title>
+            <link rel="stylesheet" href="${resURL}/plugin/graphwalker-jenkins-plugin/css/fontello.css" />
+            <link rel="stylesheet" href="${resURL}/plugin/graphwalker-jenkins-plugin/css/animation.css" /><!--[if IE 7]>
+            <link rel="stylesheet" href="${resURL}/plugin/graphwalker-jenkins-plugin/css/fontello-ie7.css" /><![endif]-->
+            <link rel="stylesheet" href="${resURL}/plugin/graphwalker-jenkins-plugin/css/styles.css" />
+            <st:adjunct assumes="org.kohsuke.stapler.framework.prototype.prototype" includes="org.kohsuke.stapler.bind"/>
+            <meta name="ROBOTS" content="INDEX,NOFOLLOW" />
+        </head>
+        <body>
+            <section>
+                <aside class="sidebar">
+                    <div class="title">
+                        <span>GraphWalker</span>
+                        Dashboard
+                    </div>
+                    <nav class="menu">
+                        <button type="button" onclick="select(this);" class="icon-docs">
+                            <span>docs</span>
+                        </button>
+                        <button type="button" onclick="select(this);" class="icon-picture">
+                            <span>picture</span>
+                        </button>
+                        <button type="button" onclick="select(this);" class="icon-chart-bar">
+                            <span>chart</span>
+                        </button>
+                    </nav>
+                </aside>
+                <canvas id="canvas"></canvas>
+            </section>
+        </body>
+        <script type="text/javascript" src="${resURL}/plugin/graphwalker-jenkins-plugin/scripts/menu.js"></script>
+    </html>
+</j:jelly>
