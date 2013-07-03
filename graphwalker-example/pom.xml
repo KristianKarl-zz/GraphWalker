@@ -35,6 +35,11 @@
             <artifactId>selenium-java</artifactId>
             <version>2.33.0</version>
         </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.10</version>
+        </dependency>
     </dependencies>
 
 </project>

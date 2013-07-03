@@ -38,8 +38,8 @@ public class AStarTest {
 
     //Test
     public void simplePath() {
-        ModelFactory factory = new GraphMLModelFactory();
-        Model model = factory.create("simple", "/models/algorithms/simple.graphml", "graphml");
+        //ModelFactory factory = new GraphMLModelFactory();
+        //Model model = factory.create("simple", "/models/algorithms/simple.graphml", "graphml");
         //ExecutionContext executionContext = new ExecutionContext(model);
         //List<ModelElement> path = AStar.getPath(executionContext, model.getStartVertex(), model.getVerticesByName("Goal").get(0));
 
@@ -48,8 +48,8 @@ public class AStarTest {
 
     //Test
     public void blockedPath() {
-        ModelFactory factory = new GraphMLModelFactory();
-        Model model = factory.create("simpleBlocked", "/models/algorithms/blocked.graphml", "graphml");
+        //ModelFactory factory = new GraphMLModelFactory();
+        //Model model = factory.create("simpleBlocked", "/models/algorithms/blocked.graphml", "graphml");
         //ExecutionContext executionContext = new ExecutionContext(model);
         //List<ModelElement> path = AStar.getPath(executionContext, model.getStartVertex(), model.getVerticesByName("Goal").get(0));
 
