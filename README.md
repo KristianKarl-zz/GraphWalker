@@ -31,7 +31,9 @@ https://github.com/KristianKarl/GraphWalker/issues
 
 ## Build
 
-mvn assembly:assembly
+mvn package
+
+A standalone jar file will be created in the target folder.
 
 ## Test
 
