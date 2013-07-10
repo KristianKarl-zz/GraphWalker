@@ -37,13 +37,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
-import org.graphwalker.GUI.App;
-import org.graphwalker.GUI.Status;
 import org.graphwalker.conditions.TimeDuration;
-import org.graphwalker.events.MbtEvent;
 import org.graphwalker.exceptions.FoundNoEdgeException;
 import org.graphwalker.exceptions.GeneratorException;
-import org.graphwalker.exceptions.GuiStoppedExecution;
 import org.graphwalker.exceptions.InvalidDataException;
 import org.graphwalker.generators.CodeGenerator;
 import org.graphwalker.generators.NonOptimizedShortestPath;
@@ -79,8 +75,6 @@ public class ModelBasedTesting {
   private boolean runRandomGeneratorOnce = false;
   private boolean dryRun = false;
   private boolean useJsScriptEngine = false;
-  private boolean useGUI = false;
-  private MbtEvent notifyApp = null;
   private String javaExecutorClass = null;
   private volatile Thread stopFlag = null;
   private volatile boolean finishedFlag = false;
@@ -139,8 +133,6 @@ public class ModelBasedTesting {
     runRandomGeneratorOnce = false;
     dryRun = false;
     useJsScriptEngine = false;
-    useGUI = false;
-    notifyApp = null;
     javaExecutorClass = null;
     stopFlag = null;
     finishedFlag = false;
@@ -152,15 +144,6 @@ public class ModelBasedTesting {
 
   public void reload() {
     machine.setAllUnvisited();
-  }
-
-  public boolean isUseGUI() {
-    return useGUI;
-  }
-
-  public void setUseGUI() {
-    useGUI = true;
-    notifyApp = App.getInstance();
   }
 
   public boolean isDryRun() {
@@ -394,20 +377,6 @@ public class ModelBasedTesting {
   }
 
   public String[] getNextStep() throws InterruptedException {
-    if (isUseGUI()) {
-
-      while (true) {
-        if (App.getInstance().getStatus().isStopped()) throw new GuiStoppedExecution();
-
-        if (App.getInstance().getStatus().isNext() || App.getInstance().getStatus().isRunning()
-            || App.getInstance().getStatus().isExecutingJavaTest() || App.getInstance().getStatus().isExecutingSoapTest()
-            && !App.getInstance().getStatus().isPaused()) {
-          break;
-        }
-        Thread.sleep(500);
-      }
-    }
-
     if (threadSuspended) {
       logger.debug("Execution is now suspended: " + getGraph().getLabelKey());
       synchronized (lock) {
@@ -449,19 +418,6 @@ public class ModelBasedTesting {
         runRandomGeneratorOnce = false;
         setGenerator(backupGenerator);
       }
-      if (notifyApp != null) {
-        notifyApp.getNextEvent();
-      }
-      if (isUseGUI()) {
-        if (App.getInstance().getStatus().isStopped()) {
-          throw new GuiStoppedExecution();
-        }
-
-        if (App.getInstance().getStatus().isNext()) {
-          App.getInstance().getStatus().unsetState(Status.next);
-          App.getInstance().setButtons();
-        }
-      }
     }
   }
 
@@ -485,10 +441,6 @@ public class ModelBasedTesting {
 
     if (this.machine != null) {
       getMachine().setModel(getGraph());
-    }
-
-    if (isUseGUI() && App.getInstance() != null) {
-      App.getInstance().updateLayout();
     }
   }
 
@@ -701,10 +653,6 @@ public class ModelBasedTesting {
   public void executePath(Object objInstance) throws InterruptedException {
     if (objInstance == null) {
       throw new RuntimeException("Needed execution instance is missing as parameter.");
-    }
-    if (isUseGUI()) {
-      App.getInstance().pause();
-      App.getInstance().updateLayout();
     }
     executePath(null, objInstance);
   }
@@ -926,9 +874,6 @@ public class ModelBasedTesting {
         return;
       }
       try {
-        if (isUseGUI()) {
-          App.getInstance().executingJavaTest(true);
-        }
         Method m = clsClass.getMethod(strMethod, null);
         m.invoke(objInstance, null);
       } catch (InvocationTargetException e) {
@@ -947,10 +892,6 @@ public class ModelBasedTesting {
           logger.error("Method: " + getMachine().getCurrentVertex() + ", is missing in class: " + clsClass);
         }
         throw new RuntimeException("NoSuchMethodException.", e);
-      } finally {
-        if (isUseGUI()) {
-          App.getInstance().executingJavaTest(false);
-        }
       }
     }
   }

@@ -40,7 +40,6 @@ import java.net.SocketException;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -553,11 +552,9 @@ public class Util {
               throw new RuntimeException("file '" + executorParam + "' could not be created or is writeprotected.", e);
             }
           }
-          if (!mbt.isUseGUI()) {
-            mbt.writePath(out);
-            if (out != System.out) {
-              out.close();
-            }
+          mbt.writePath(out);
+          if (out != System.out) {
+            out.close();
           }
         } else if (executor.equalsIgnoreCase("manual")) {
           PrintStream out = System.out;
@@ -568,33 +565,25 @@ public class Util {
               throw new RuntimeException("file '" + executorParam + "' could not be created or is writeprotected.", e);
             }
           }
-          if (!mbt.isUseGUI()) {
-            Vector<String[]> testSequence = new Vector<String[]>();
-            mbt.writePath(testSequence);
+          Vector<String[]> testSequence = new Vector<String[]>();
+          mbt.writePath(testSequence);
 
-            new PrintHTMLTestSequence(testSequence, out);
-            if (out != System.out) {
-              out.close();
-            }
+          new PrintHTMLTestSequence(testSequence, out);
+          if (out != System.out) {
+            out.close();
           }
         } else if (executor.equalsIgnoreCase("java")) {
           if (executorParam == null || executorParam.equals("")) {
             throw new RuntimeException("No java class specified for execution");
           }
 
-          if (!mbt.isUseGUI()) {
-            mbt.executePath(executorParam);
-          } else {
-            mbt.setJavaExecutorClass(executorParam);
-          }
+          mbt.executePath(executorParam);
         } else if (executor.equalsIgnoreCase("online")) {
           if (mbt.isDryRun()) {
             Util.logger.debug("Executing a dry run");
             mbt.executePath(null, null);
           }
-          if (!mbt.isUseGUI()) {
-            mbt.interractivePath();
-          }
+          mbt.interractivePath();
 
         } else if (executor.equalsIgnoreCase("none") || executor.equals("")) {
           // no execution (for debug purpose)
@@ -606,7 +595,7 @@ public class Util {
         if (Util.timer != null) {
           Util.timer.cancel();
         }
-        if (reportName != null && reportTemplate != null && !mbt.isUseGUI()) {
+        if (reportName != null && reportTemplate != null) {
           mbt.getStatisticsManager().writeFullReport(reportName);
         }
       }
@@ -748,11 +737,9 @@ public class Util {
               throw new RuntimeException("file '" + executorParam + "' could not be created or is writeprotected.", e);
             }
           }
-          if (!mbt.isUseGUI()) {
-            mbt.writePath(out);
-            if (out != System.out) {
-              out.close();
-            }
+          mbt.writePath(out);
+          if (out != System.out) {
+            out.close();
           }
         } else if (executor.equalsIgnoreCase("manual")) {
           PrintStream out = System.out;
@@ -763,33 +750,25 @@ public class Util {
               throw new RuntimeException("file '" + executorParam + "' could not be created or is writeprotected.", e);
             }
           }
-          if (!mbt.isUseGUI()) {
-            Vector<String[]> testSequence = new Vector<String[]>();
-            mbt.writePath(testSequence);
+          Vector<String[]> testSequence = new Vector<String[]>();
+          mbt.writePath(testSequence);
 
-            new PrintHTMLTestSequence(testSequence, out);
-            if (out != System.out) {
-              out.close();
-            }
+          new PrintHTMLTestSequence(testSequence, out);
+          if (out != System.out) {
+            out.close();
           }
         } else if (executor.equalsIgnoreCase("java")) {
           if (executorParam == null || executorParam.equals("")) {
             throw new RuntimeException("No java class specified for execution");
           }
 
-          if (!mbt.isUseGUI()) {
-            mbt.executePath(executorParam);
-          } else {
-            mbt.setJavaExecutorClass(executorParam);
-          }
+          mbt.executePath(executorParam);
         } else if (executor.equalsIgnoreCase("online")) {
           if (mbt.isDryRun()) {
             Util.logger.debug("Executing a dry run");
             mbt.executePath(null, null);
           }
-          if (!mbt.isUseGUI()) {
-            mbt.interractivePath();
-          }
+          mbt.interractivePath();
 
           // } else if (executor.equalsIgnoreCase("none") ||
           // executor.equals("")) {
@@ -802,7 +781,7 @@ public class Util {
         if (Util.timer != null) {
           Util.timer.cancel();
         }
-        if (reportName != null && reportTemplate != null && !mbt.isUseGUI()) {
+        if (reportName != null && reportTemplate != null) {
           mbt.getStatisticsManager().writeFullReport(reportName);
         }
       }
@@ -999,33 +978,6 @@ public class Util {
       Util.logger.debug("Setting port to: 9090");
     }
     return port;
-  }
-
-  public static Boolean readSoapGuiStartupState() {
-    PropertiesConfiguration conf = null;
-    if (new File("graphwalker.properties").canRead()) {
-      try {
-        conf = new PropertiesConfiguration("graphwalker.properties");
-      } catch (ConfigurationException e) {
-        Util.logger.error(e.getMessage());
-      }
-    } else {
-      conf = new PropertiesConfiguration();
-      try {
-        conf.load(Util.class.getResourceAsStream("/org/graphwalker/resources/graphwalker.properties"));
-      } catch (ConfigurationException e) {
-        Util.logger.error(e.getMessage());
-      }
-    }
-    Boolean soapGuiState = false;
-    try {
-      soapGuiState = conf.getBoolean("org.graphwalker.GUI.startSOAP");
-    } catch (NoSuchElementException e) {
-      Util.logger.debug("org.graphwalker.GUI.startSOAP not found in graphwalker.properties");
-      soapGuiState = false;
-    }
-    Util.logger.debug("Read org.graphwalker.GUI.startSOAP from graphwalker.properties: " + soapGuiState);
-    return soapGuiState;
   }
 
   public static void logStackTraceToError(final Exception e) {

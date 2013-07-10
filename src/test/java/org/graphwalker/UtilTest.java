@@ -77,8 +77,4 @@ public class UtilTest extends TestCase {
     Logger logger = Util.setupLogger(UtilTest.class);
     logger.debug("Working");
   }
-
-  public void testReadPropertySOAP_GUI() {
-    assertEquals(true, Util.readSoapGuiStartupState() == true || Util.readSoapGuiStartupState() == false);
-  }
 }

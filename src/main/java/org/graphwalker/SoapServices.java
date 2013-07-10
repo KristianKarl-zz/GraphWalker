@@ -30,7 +30,6 @@ import java.util.Vector;
 import javax.jws.WebService;
 
 import org.apache.log4j.Logger;
-import org.graphwalker.GUI.App;
 import org.graphwalker.exceptions.InvalidDataException;
 
 @WebService
@@ -95,44 +94,37 @@ public class SoapServices {
 
   public String GetNextStep() {
     logger.debug("SOAP service getNextStep");
-    try {
-      String value = "";
+    String value = "";
 
-      if (!mbt.hasNextStep() && (stepPair.size() == 0)) {
-        return value;
-      }
-
-      if (stepPair.size() == 0) {
-        try {
-          stepPair = new Vector<String>(Arrays.asList(mbt.getNextStep()));
-        } catch (Exception e) {
-          hardStop = true;
-          return "";
-        }
-      }
-
-      value = stepPair.remove(0);
-      value = value.replaceAll("/.*$", "");
-      String addInfo = "";
-
-      if (stepPair.size() == 1) {
-        mbt.logExecution(mbt.getMachine().getLastEdge(), addInfo);
-        if (mbt.isUseStatisticsManager()) {
-          mbt.getStatisticsManager().addProgress(mbt.getMachine().getLastEdge());
-        }
-      } else {
-        mbt.logExecution(mbt.getMachine().getCurrentVertex(), addInfo);
-        if (mbt.isUseStatisticsManager()) {
-          mbt.getStatisticsManager().addProgress(mbt.getMachine().getCurrentVertex());
-        }
-      }
+    if (!mbt.hasNextStep() && (stepPair.size() == 0)) {
       return value;
-    } finally {
-      if (mbt.isUseGUI()) {
-        App.getInstance().setButtons();
-        App.getInstance().updateLayout();
+    }
+
+    if (stepPair.size() == 0) {
+      try {
+        stepPair = new Vector<String>(Arrays.asList(mbt.getNextStep()));
+      } catch (Exception e) {
+        hardStop = true;
+        return "";
       }
     }
+
+    value = stepPair.remove(0);
+    value = value.replaceAll("/.*$", "");
+    String addInfo = "";
+
+    if (stepPair.size() == 1) {
+      mbt.logExecution(mbt.getMachine().getLastEdge(), addInfo);
+      if (mbt.isUseStatisticsManager()) {
+        mbt.getStatisticsManager().addProgress(mbt.getMachine().getLastEdge());
+      }
+    } else {
+      mbt.logExecution(mbt.getMachine().getCurrentVertex(), addInfo);
+      if (mbt.isUseStatisticsManager()) {
+        mbt.getStatisticsManager().addProgress(mbt.getMachine().getCurrentVertex());
+      }
+    }
+    return value;
   }
 
   public boolean HasNextStep() {
@@ -153,23 +145,13 @@ public class SoapServices {
   public boolean Reload() {
     logger.debug("SOAP service reload");
     boolean retValue = true;
-    boolean useGui = mbt.isUseGUI();
     try {
       if (!this.xmlFile.isEmpty()) {
         mbt = Util.loadMbtAsWSFromXml(Util.getFile(this.xmlFile));
-        if (useGui) {
-          mbt.setUseGUI();
-        }
       }
     } catch (Exception e) {
       Util.logStackTraceToError(e);
       retValue = false;
-    } finally {
-      if (mbt.isUseGUI()) {
-        App.getInstance().setMbt(mbt);
-        App.getInstance().setButtons();
-        App.getInstance().updateLayout();
-      }
     }
     Reset();
     logger.debug("SOAP service reload returning: " + retValue);
@@ -190,21 +172,11 @@ public class SoapServices {
     }
     this.xmlFile = xmlFile;
     boolean retValue = true;
-    boolean useGui = mbt.isUseGUI();
     try {
       mbt = Util.loadMbtAsWSFromXml(Util.getFile(this.xmlFile));
-      if (useGui) {
-        mbt.setUseGUI();
-      }
     } catch (Exception e) {
       Util.logStackTraceToError(e);
       retValue = false;
-    } finally {
-      if (mbt.isUseGUI()) {
-        App.getInstance().setMbt(mbt);
-        App.getInstance().setButtons();
-        App.getInstance().updateLayout();
-      }
     }
     Reset();
     logger.debug("SOAP service load returning: " + retValue);
