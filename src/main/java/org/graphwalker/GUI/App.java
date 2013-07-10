@@ -229,7 +229,8 @@ public class App extends JFrame implements ActionListener, MbtEvent {
     endpoint = Endpoint.publish(wsURL, soapService);
 
     try {
-      String msg = "Now running as a SOAP server. For the WSDL file, see: " + wsURL.replace("0.0.0.0", InetAddress.getLocalHost().getHostName()) + "?WSDL";
+      String msg =
+          "Now running as a SOAP server. For the WSDL file, see: " + wsURL.replace("0.0.0.0", InetAddress.getLocalHost().getHostName()) + "?WSDL";
       logger.info(msg);
       if (!Util.readSoapGuiStartupState()) {
         JOptionPane.showMessageDialog(App.getInstance(), msg);
@@ -327,7 +328,9 @@ public class App extends JFrame implements ActionListener, MbtEvent {
     }
     statisticsTextArea.setText(mbt.getStatisticsString());
 
-    String str = (mbt.getMachine().getLastEdge() == null ? "" : "Edge: " + mbt.getMachine().getLastEdge().getLabelKey()) + (mbt.getMachine().getCurrentVertex() == null ? "" : "   Vertex: " + mbt.getMachine().getCurrentVertex().getLabelKey());
+    String str =
+        (mbt.getMachine().getLastEdge() == null ? "" : "Edge: " + mbt.getMachine().getLastEdge().getLabelKey())
+            + (mbt.getMachine().getCurrentVertex() == null ? "" : "   Vertex: " + mbt.getMachine().getCurrentVertex().getLabelKey());
     getLatestVertexLabel().setText(str);
 
     if (status.isExecutingLogTest()) {
@@ -917,7 +920,8 @@ public class App extends JFrame implements ActionListener, MbtEvent {
     soapButton.setSelected(Util.readSoapGuiStartupState());
     toolBar.add(soapButton);
 
-    centerOnVertexButton = makeNavigationCheckBoxButton("centerOnVertex", CENTERONVERTEX, "Center the layout on the current vertex", "Center on current vertex");
+    centerOnVertexButton =
+        makeNavigationCheckBoxButton("centerOnVertex", CENTERONVERTEX, "Center the layout on the current vertex", "Center on current vertex");
     toolBar.add(centerOnVertexButton);
 
     @SuppressWarnings("rawtypes")

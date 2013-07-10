@@ -189,7 +189,8 @@ public class Util {
    * @param strAction The action to be performed.
    * @return The newly created edge.
    */
-  public static Edge addEdgeToGraph(final Graph graph, final Vertex vertexFrom, final Vertex vertexTo, final String strLabel, final String strParameter, final String strGuard, final String strAction) {
+  public static Edge addEdgeToGraph(final Graph graph, final Vertex vertexFrom, final Vertex vertexTo, final String strLabel,
+      final String strParameter, final String strGuard, final String strAction) {
     Edge retur = new Edge();
     retur.setIndexKey(graph.getEdgeCount() + graph.getVertexCount() + 1);
     if (strLabel != null) {
@@ -217,7 +218,8 @@ public class Util {
    * @return The newly created stop condition.
    * @throws StopConditionException
    */
-  public static StopCondition getCondition(final FiniteStateMachine machine, final int conditionType, final String conditionValue) throws StopConditionException {
+  public static StopCondition getCondition(final FiniteStateMachine machine, final int conditionType, final String conditionValue)
+      throws StopConditionException {
     StopCondition condition = null;
     try {
       switch (conditionType) {
@@ -229,7 +231,8 @@ public class Util {
             throw new StopConditionException("The name of reached edge must not be empty");
           }
           if (machine != null && machine.findEdge(Edge.getLabelAndParameter(conditionValue)[0]) == null) {
-            throw new StopConditionException("The name of reached edge: '" + Edge.getLabelAndParameter(conditionValue)[0] + "' (in stop condition: '" + conditionValue + "') does not exists in the model.");
+            throw new StopConditionException("The name of reached edge: '" + Edge.getLabelAndParameter(conditionValue)[0] + "' (in stop condition: '"
+                + conditionValue + "') does not exists in the model.");
           }
           condition = new ReachedEdge(conditionValue);
           break;
@@ -238,7 +241,8 @@ public class Util {
             throw new StopConditionException("The name of reached vertex must not be empty");
           }
           if (machine != null && machine.getModel().findVertex(Vertex.getLabel(conditionValue)) == null) {
-            throw new StopConditionException("The name of reached vertex: '" + Vertex.getLabel(conditionValue) + "' (in stop condition: '" + conditionValue + "') does not exists in the model.");
+            throw new StopConditionException("The name of reached vertex: '" + Vertex.getLabel(conditionValue) + "' (in stop condition: '"
+                + conditionValue + "') does not exists in the model.");
           }
           condition = new ReachedVertex(conditionValue);
           break;
@@ -330,7 +334,8 @@ public class Util {
    * @throws JDOMException
    * @throws InterruptedException
    */
-  public static ModelBasedTesting loadMbtAsWSFromXml(final File file) throws StopConditionException, IOException, JDOMException, InterruptedException, GeneratorException {
+  public static ModelBasedTesting loadMbtAsWSFromXml(final File file) throws StopConditionException, IOException, JDOMException,
+      InterruptedException, GeneratorException {
     return loadXml(file, true, false, false);
   }
 
@@ -346,7 +351,8 @@ public class Util {
    * @throws JDOMException
    * @throws InterruptedException
    */
-  protected static ModelBasedTesting loadMbtFromXml(final File file, final boolean dryRun) throws StopConditionException, GeneratorException, IOException, JDOMException, InterruptedException {
+  protected static ModelBasedTesting loadMbtFromXml(final File file, final boolean dryRun) throws StopConditionException, GeneratorException,
+      IOException, JDOMException, InterruptedException {
     return loadXml(file, false, dryRun, false);
   }
 
@@ -361,7 +367,8 @@ public class Util {
    * @throws JDOMException
    * @throws InterruptedException
    */
-  public static ModelBasedTesting loadMbtFromXml(final File file) throws StopConditionException, GeneratorException, IOException, JDOMException, InterruptedException {
+  public static ModelBasedTesting loadMbtFromXml(final File file) throws StopConditionException, GeneratorException, IOException, JDOMException,
+      InterruptedException {
     return loadXml(file, false, false, false);
   }
 
@@ -376,7 +383,8 @@ public class Util {
    * @throws JDOMException
    * @throws InterruptedException
    */
-  public static ModelBasedTesting getNewMbtFromXml(final File file) throws StopConditionException, GeneratorException, IOException, JDOMException, InterruptedException {
+  public static ModelBasedTesting getNewMbtFromXml(final File file) throws StopConditionException, GeneratorException, IOException, JDOMException,
+      InterruptedException {
     return loadXml(file, false, false, true);
   }
 
@@ -391,7 +399,8 @@ public class Util {
    * @throws JDOMException
    * @throws InterruptedException
    */
-  public ModelBasedTesting loadMbtFromXmlNonStatic(final File file) throws StopConditionException, GeneratorException, IOException, JDOMException, InterruptedException {
+  public ModelBasedTesting loadMbtFromXmlNonStatic(final File file) throws StopConditionException, GeneratorException, IOException, JDOMException,
+      InterruptedException {
     return loadXmlNonStatic(file, false, false);
   }
 
@@ -409,7 +418,8 @@ public class Util {
    * @throws JDOMException
    * @throws InterruptedException
    */
-  private static ModelBasedTesting loadXml(final File file, final boolean runningSoapServices, final boolean dryRun, final boolean generateNewModel) throws StopConditionException, GeneratorException, IOException, JDOMException, InterruptedException {
+  private static ModelBasedTesting loadXml(final File file, final boolean runningSoapServices, final boolean dryRun, final boolean generateNewModel)
+      throws StopConditionException, GeneratorException, IOException, JDOMException, InterruptedException {
 
     final ModelBasedTesting mbt = new ModelBasedTesting();
     mbt.setDryRun(dryRun);
@@ -436,7 +446,8 @@ public class Util {
           ClassPathHack.addFile(getFile(classPath2));
           Util.logger.debug("Added to classpath: " + classPath2);
         } catch (Exception e) {
-          throw new RuntimeException(e.getMessage() + "\nCould not add: '" + classPath2 + "' to CLASSPATH\n" + "Please review your xml file: '" + file + "' at CLASS PATH", e);
+          throw new RuntimeException(e.getMessage() + "\nCould not add: '" + classPath2 + "' to CLASSPATH\n" + "Please review your xml file: '"
+              + file + "' at CLASS PATH", e);
         }
       }
     }
@@ -603,7 +614,8 @@ public class Util {
     return mbt;
   }
 
-  private ModelBasedTesting loadXmlNonStatic(final File file, final boolean runningSoapServices, final boolean dryRun) throws StopConditionException, GeneratorException, IOException, JDOMException, InterruptedException {
+  private ModelBasedTesting loadXmlNonStatic(final File file, final boolean runningSoapServices, final boolean dryRun) throws StopConditionException,
+      GeneratorException, IOException, JDOMException, InterruptedException {
     final ModelBasedTesting mbt = new ModelBasedTesting();
     mbt.setDryRun(dryRun);
 
@@ -629,7 +641,8 @@ public class Util {
           ClassPathHack.addFile(getFile(classPath2));
           Util.logger.debug("Added to classpath: " + classPath2);
         } catch (Exception e) {
-          throw new RuntimeException(e.getMessage() + "\nCould not add: '" + classPath2 + "' to CLASSPATH\n" + "Please review your xml file: '" + file + "' at CLASS PATH", e);
+          throw new RuntimeException(e.getMessage() + "\nCould not add: '" + classPath2 + "' to CLASSPATH\n" + "Please review your xml file: '"
+              + file + "' at CLASS PATH", e);
         }
       }
     }
@@ -814,7 +827,8 @@ public class Util {
     return stringBuilder.toString();
   }
 
-  private static PathGenerator getGenerator(final FiniteStateMachine machine, final Element generator) throws StopConditionException, GeneratorException, IOException {
+  private static PathGenerator getGenerator(final FiniteStateMachine machine, final Element generator) throws StopConditionException,
+      GeneratorException, IOException {
     int generatorType = Keywords.getGenerator(generator.getAttributeValue("TYPE"));
     PathGenerator generatorObject = getGenerator(generatorType);
     if (generatorObject instanceof CodeGenerator) {

@@ -142,7 +142,8 @@ public class A_StarPathGenerator extends PathGenerator {
         }
       }
     }
-    throw new RuntimeException("No path found to satisfy stop condition " + getStopCondition() + ", best path satified only " + (int) (maxWeight * 100) + "% of condition.");
+    throw new RuntimeException("No path found to satisfy stop condition " + getStopCondition() + ", best path satified only "
+        + (int) (maxWeight * 100) + "% of condition.");
   }
 
   private WeightedPath getWeightedPath(Stack<Edge> path) {

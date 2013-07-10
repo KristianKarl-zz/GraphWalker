@@ -9,22 +9,17 @@ import org.graphwalker.multipleModels.ModelAPI;
  */
 public class Model_B_API extends ModelAPI {
 
-	public Model_B_API(String model, boolean efsm, PathGenerator generator) {
-		super(model, efsm, generator, false);
-	}
+  public Model_B_API(String model, boolean efsm, PathGenerator generator) {
+    super(model, efsm, generator, false);
+  }
 
-	public void e_CreatePlaylist() {
-	}
+  public void e_CreatePlaylist() {}
 
-	public void e_DeletePlaylist() {
-	}
+  public void e_DeletePlaylist() {}
 
-	public void e_Init() {
-	}
+  public void e_Init() {}
 
-	public void v_PaylistCreated() {
-	}
+  public void v_PaylistCreated() {}
 
-	public void v_WhatsNew() {
-	}
+  public void v_WhatsNew() {}
 }

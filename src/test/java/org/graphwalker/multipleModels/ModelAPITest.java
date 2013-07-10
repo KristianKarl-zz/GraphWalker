@@ -21,7 +21,7 @@ public class ModelAPITest {
     ModelAPI model = new ModelAPI("graphml/org.graphwalker.multipleModels/a.graphml");
     model.setWeighted(false);
     model.setExtended(true);
-    
+
     CombinationalCondition combinationalCondition = new CombinationalCondition();
     combinationalCondition.add(new RequirementCoverage(1.0));
     combinationalCondition.add(new EdgeCoverage(1.0));
@@ -29,11 +29,11 @@ public class ModelAPITest {
     AlternativeCondition alternativeCondition = new AlternativeCondition();
     alternativeCondition.add(combinationalCondition);
     alternativeCondition.add(new TimeDuration(900));
-    
+
     CombinedPathGenerator generator = new CombinedPathGenerator();
     generator.addPathGenerator(new A_StarPathGenerator(new ReachedVertex("C")));
     generator.addPathGenerator(new RandomPathGenerator(alternativeCondition));
-    
+
     model.setGenerator(generator);
     Assert.assertTrue("Failed setting up the model", model.getMbt().hasNextStep());
   }

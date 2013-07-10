@@ -121,7 +121,8 @@ public class GraphML extends AbstractModelHandler {
           setMerged(false);
         }
       } else {
-        throw new RuntimeException("'" + fileOrfolder + "' is not a file or a directory. Please specify a valid .graphml file or a directory containing .graphml files");
+        throw new RuntimeException("'" + fileOrfolder
+            + "' is not a file or a directory. Please specify a valid .graphml file or a directory containing .graphml files");
       }
     }
     mergeAllGraphs();
@@ -261,7 +262,8 @@ public class GraphML extends AbstractModelHandler {
               logger.debug("  y position: '" + geometry.getAttributeValue("y") + "'");
               currentVertex.setWidth(Float.parseFloat(geometry.getAttributeValue("width")));
               currentVertex.setHeight(Float.parseFloat(geometry.getAttributeValue("height")));
-              currentVertex.setLocation(new Point2D.Float(Float.parseFloat(geometry.getAttributeValue("x")), Float.parseFloat(geometry.getAttributeValue("y"))));
+              currentVertex.setLocation(new Point2D.Float(Float.parseFloat(geometry.getAttributeValue("x")), Float.parseFloat(geometry
+                  .getAttributeValue("y"))));
             }
           }
           Iterator<Element> iterFill = element.getDescendants(new ElementFilter("Fill"));
@@ -531,7 +533,8 @@ public class GraphML extends AbstractModelHandler {
               if (!tmp_graph.getLabelKey().isEmpty()) {
                 String name = tmp_graph.getLabelKey();
                 if (name.equals(g.getDest(edge).getLabelKey())) {
-                  throw new RuntimeException("Found 2 subgraphs using the same name: '" + g.getDest(edge).getLabelKey() + "', they are defined in files: '" + g.getFileKey() + "', and :'" + tmp_graph.getFileKey() + "'");
+                  throw new RuntimeException("Found 2 subgraphs using the same name: '" + g.getDest(edge).getLabelKey()
+                      + "', they are defined in files: '" + g.getFileKey() + "', and :'" + tmp_graph.getFileKey() + "'");
                 }
               }
             }
@@ -589,7 +592,8 @@ public class GraphML extends AbstractModelHandler {
           }
 
           logger.error("Vertex: " + label + ", with id: " + v.getIndexKey() + ", is a duplicate in a subgraph");
-          throw new RuntimeException("Found a subgraph containing a duplicate vertex with name: '" + v.getLabelKey() + "', in file: '" + g.getFileKey() + "'");
+          throw new RuntimeException("Found a subgraph containing a duplicate vertex with name: '" + v.getLabelKey() + "', in file: '"
+              + g.getFileKey() + "'");
 
         }
       }
@@ -625,7 +629,8 @@ public class GraphML extends AbstractModelHandler {
             continue;
           }
 
-          logger.debug("A subgraph'ed vertex: '" + v1.getLabelKey() + "' in graph: " + g.getFileKey() + ", equals a node in the graph in file: '" + graph.getFileKey() + "'");
+          logger.debug("A subgraph'ed vertex: '" + v1.getLabelKey() + "' in graph: " + g.getFileKey() + ", equals a node in the graph in file: '"
+              + graph.getFileKey() + "'");
 
           appendGraph(graph, g);
           copySubGraphs(graph, g, v1);
@@ -822,7 +827,8 @@ public class GraphML extends AbstractModelHandler {
       Vertex v = (Vertex) vertice;
       if (v.getLabelKey().equalsIgnoreCase(Keywords.STOP_NODE)) {
         if (stopVertex != null) {
-          throw new RuntimeException("Found more than 1 Stop vertex in file (Only one Stop vertex per file is allowed): '" + mainGraph.getFileKey() + "'");
+          throw new RuntimeException("Found more than 1 Stop vertex in file (Only one Stop vertex per file is allowed): '" + mainGraph.getFileKey()
+              + "'");
         }
         stopVertex = v;
       }
@@ -860,7 +866,8 @@ public class GraphML extends AbstractModelHandler {
             logger.debug(element + ", was found and removed from graph,: '" + mainGraph.getFileKey() + "'");
             mainGraph.removeEdge(element);
           } catch (IllegalArgumentException e) {
-            logger.debug(element + ", was not found in graph: '" + mainGraph.getFileKey() + "', this is ok, since it probably been removed before. (I know, not ver good progamming practice here)");
+            logger.debug(element + ", was not found in graph: '" + mainGraph.getFileKey()
+                + "', this is ok, since it probably been removed before. (I know, not ver good progamming practice here)");
           }
         }
       }
@@ -986,8 +993,9 @@ public class GraphML extends AbstractModelHandler {
     Graph g = getModel();
 
     ps.println("<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>");
-    ps.println("<graphml xmlns=\"http://graphml.graphdrawing.org/xmlns/graphml\"  " + "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" " + "xsi:schemaLocation=\"http://graphml.graphdrawing.org/xmlns/graphml "
-        + "http://www.yworks.com/xml/schema/graphml/1.0/ygraphml.xsd\" " + "xmlns:y=\"http://www.yworks.com/xml/graphml\">");
+    ps.println("<graphml xmlns=\"http://graphml.graphdrawing.org/xmlns/graphml\"  " + "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
+        + "xsi:schemaLocation=\"http://graphml.graphdrawing.org/xmlns/graphml " + "http://www.yworks.com/xml/schema/graphml/1.0/ygraphml.xsd\" "
+        + "xmlns:y=\"http://www.yworks.com/xml/graphml\">");
     ps.println("  <key id=\"d0\" for=\"node\" yfiles.type=\"nodegraphics\"/>");
     ps.println("  <key id=\"d1\" for=\"edge\" yfiles.type=\"edgegraphics\"/>");
     ps.println("  <graph id=\"G\" edgedefault=\"directed\">");
@@ -1006,8 +1014,10 @@ public class GraphML extends AbstractModelHandler {
 
       ps.println("          <y:Fill color=\"#CCCCFF\"  transparent=\"false\"/>");
       ps.println("          <y:BorderStyle type=\"line\" width=\"1.0\" color=\"#000000\" />");
-      ps.print("          <y:NodeLabel x=\"1.5\" y=\"5.6494140625\" width=\"92.0\" height=\"18.701171875\" " + "visible=\"true\" alignment=\"center\" fontFamily=\"Dialog\" fontSize=\"12\" "
-          + "fontStyle=\"plain\" textColor=\"#000000\" modelName=\"internal\" modelPosition=\"c\" " + "autoSizePolicy=\"content\">" + v.getFullLabelKey());
+      ps.print("          <y:NodeLabel x=\"1.5\" y=\"5.6494140625\" width=\"92.0\" height=\"18.701171875\" "
+          + "visible=\"true\" alignment=\"center\" fontFamily=\"Dialog\" fontSize=\"12\" "
+          + "fontStyle=\"plain\" textColor=\"#000000\" modelName=\"internal\" modelPosition=\"c\" " + "autoSizePolicy=\"content\">"
+          + v.getFullLabelKey());
       if (printIndex) {
         ps.print("&#xA;INDEX=" + v.getIndexKey());
       }
@@ -1051,8 +1061,10 @@ public class GraphML extends AbstractModelHandler {
         label = label.replaceAll("'", "&apos;");
         label = label.replaceAll("\"", "&quot;");
 
-        ps.println("          <y:EdgeLabel x=\"-148.25\" y=\"30.000000000000014\" width=\"169.0\" height=\"18.701171875\" " + "visible=\"true\" alignment=\"center\" fontFamily=\"Dialog\" fontSize=\"12\" "
-            + "fontStyle=\"plain\" textColor=\"#000000\" modelName=\"free\" modelPosition=\"anywhere\" " + "preferredPlacement=\"on_edge\" distance=\"2.0\" ratio=\"0.5\">" + label);
+        ps.println("          <y:EdgeLabel x=\"-148.25\" y=\"30.000000000000014\" width=\"169.0\" height=\"18.701171875\" "
+            + "visible=\"true\" alignment=\"center\" fontFamily=\"Dialog\" fontSize=\"12\" "
+            + "fontStyle=\"plain\" textColor=\"#000000\" modelName=\"free\" modelPosition=\"anywhere\" "
+            + "preferredPlacement=\"on_edge\" distance=\"2.0\" ratio=\"0.5\">" + label);
         if (printIndex) {
           ps.print("&#xA;INDEX=" + e.getIndexKey());
         }

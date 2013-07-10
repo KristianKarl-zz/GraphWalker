@@ -92,7 +92,9 @@ public class NonOptimizedShortestPath extends RandomPathGenerator {
       logger.debug("Current vertex: " + getMachine().getCurrentVertex());
       logger.debug("Will try to reach unvisited edge: " + e);
 
-      dijkstraShortestPath = new DijkstraShortestPath<Vertex, Edge>(getMachine().getModel()).getPath(getMachine().getCurrentVertex(), getMachine().getModel().getSource(e));
+      dijkstraShortestPath =
+          new DijkstraShortestPath<Vertex, Edge>(getMachine().getModel()).getPath(getMachine().getCurrentVertex(),
+              getMachine().getModel().getSource(e));
 
       // DijkstraShortestPath.getPath returns 0 if there is no way to reach the
       // destination. But,

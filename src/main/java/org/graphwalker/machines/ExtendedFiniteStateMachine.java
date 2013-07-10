@@ -224,7 +224,8 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
     if (jsEngine != null) {
       Set<Entry<String, Object>> dataTable = getCurrentJsEngineData();
       for (Entry<String, Object> entry : dataTable) {
-        if (!entry.getKey().equals("println") && !entry.getKey().equals("print") && !entry.getKey().equals("context")) retur += entry.getKey() + "=" + entry.getValue() + ";";
+        if (!entry.getKey().equals("println") && !entry.getKey().equals("print") && !entry.getKey().equals("context"))
+          retur += entry.getKey() + "=" + entry.getValue() + ";";
       }
     } else if (beanShellEngine != null) {
       Hashtable<String, Object> dataTable = getCurrentBeanShellData();
@@ -258,7 +259,8 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
             logger.error("Problem when running: '" + getAction(edge) + "' in Java Script engine");
             logger.error("EvalError: " + e);
             logger.error(e.getCause());
-            throw new RuntimeException("Malformed action sequence\n\t" + edge + "\n\tAction sequence: " + edge.getActionsKey() + "\n\tJava Script error message: '" + e.getMessage() + "'\nDetails: " + e.getCause());
+            throw new RuntimeException("Malformed action sequence\n\t" + edge + "\n\tAction sequence: " + edge.getActionsKey()
+                + "\n\tJava Script error message: '" + e.getMessage() + "'\nDetails: " + e.getCause());
           } finally {
             System.setOut(ps);
           }
@@ -269,7 +271,8 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
             logger.error("Problem when running: '" + getAction(edge) + "' in BeanShell");
             logger.error("EvalError: " + e);
             logger.error(e.getCause());
-            throw new RuntimeException("Malformed action sequence\n\t" + edge + "\n\tAction sequence: " + edge.getActionsKey() + "\n\tBeanShell error message: '" + e.getMessage() + "'\nDetails: " + e.getCause());
+            throw new RuntimeException("Malformed action sequence\n\t" + edge + "\n\tAction sequence: " + edge.getActionsKey()
+                + "\n\tBeanShell error message: '" + e.getMessage() + "'\nDetails: " + e.getCause());
           } finally {
             System.setOut(ps);
           }

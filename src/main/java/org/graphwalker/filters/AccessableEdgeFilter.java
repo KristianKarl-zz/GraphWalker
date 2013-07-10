@@ -57,13 +57,15 @@ public class AccessableEdgeFilter {
       try {
         return (Boolean) jsEngine.eval(edge.getGuardKey());
       } catch (ScriptException e) {
-        throw new RuntimeException("Malformed Edge guard\n\t" + edge + "\n\tGuard: " + edge.getGuardKey() + "\n\tBeanShell error message: '" + e.getMessage() + "'");
+        throw new RuntimeException("Malformed Edge guard\n\t" + edge + "\n\tGuard: " + edge.getGuardKey() + "\n\tBeanShell error message: '"
+            + e.getMessage() + "'");
       }
     } else if (beanShellEngine != null) {
       try {
         return (Boolean) beanShellEngine.eval(edge.getGuardKey());
       } catch (EvalError e) {
-        throw new RuntimeException("Malformed Edge guard\n\t" + edge + "\n\tGuard: " + edge.getGuardKey() + "\n\tBeanShell error message: '" + e.getMessage() + "'");
+        throw new RuntimeException("Malformed Edge guard\n\t" + edge + "\n\tGuard: " + edge.getGuardKey() + "\n\tBeanShell error message: '"
+            + e.getMessage() + "'");
       }
     }
     return false;

@@ -322,13 +322,19 @@ public class Keywords {
    */
   static {
     Keywords.stopConditions.add(new StopCondition("REACHED_EDGE", "REACHED_EDGE:<Edge label>", Keywords.CONDITION_REACHED_EDGE));
-    Keywords.stopConditions.add(new StopCondition("REACHED_VERTEX", "REACHED_VERTEX:<Vertex label[/variable1=value1;variable2=value2;...]>", Keywords.CONDITION_REACHED_VERTEX));
-    Keywords.stopConditions.add(new StopCondition("EDGE_COVERAGE", "EDGE_COVERAGE:<Coverage in %, between 1 and 100>", Keywords.CONDITION_EDGE_COVERAGE));
-    Keywords.stopConditions.add(new StopCondition("VERTEX_COVERAGE", "VERTEX_COVERAGE:<Coverage in %, between 1 and 100>", Keywords.CONDITION_VERTEX_COVERAGE));
-    Keywords.stopConditions.add(new StopCondition("TEST_LENGTH", "TEST_LENGTH:<Number of edge and vertex pairs to execute>", Keywords.CONDITION_TEST_LENGTH));
+    Keywords.stopConditions.add(new StopCondition("REACHED_VERTEX", "REACHED_VERTEX:<Vertex label[/variable1=value1;variable2=value2;...]>",
+        Keywords.CONDITION_REACHED_VERTEX));
+    Keywords.stopConditions.add(new StopCondition("EDGE_COVERAGE", "EDGE_COVERAGE:<Coverage in %, between 1 and 100>",
+        Keywords.CONDITION_EDGE_COVERAGE));
+    Keywords.stopConditions.add(new StopCondition("VERTEX_COVERAGE", "VERTEX_COVERAGE:<Coverage in %, between 1 and 100>",
+        Keywords.CONDITION_VERTEX_COVERAGE));
+    Keywords.stopConditions.add(new StopCondition("TEST_LENGTH", "TEST_LENGTH:<Number of edge and vertex pairs to execute>",
+        Keywords.CONDITION_TEST_LENGTH));
     Keywords.stopConditions.add(new StopCondition("TEST_DURATION", "TEST_DURATION:<Time in seconds>", Keywords.CONDITION_TEST_DURATION));
-    Keywords.stopConditions.add(new StopCondition("REQUIREMENT_COVERAGE", "REQUIREMENT_COVERAGE:<Coverage in %, between 1 and 100>", Keywords.CONDITION_REQUIREMENT_COVERAGE));
-    Keywords.stopConditions.add(new StopCondition("REACHED_REQUIREMENT", "REACHED_REQUIREMENT:<Requirement id>", Keywords.CONDITION_REACHED_REQUIREMENT));
+    Keywords.stopConditions.add(new StopCondition("REQUIREMENT_COVERAGE", "REQUIREMENT_COVERAGE:<Coverage in %, between 1 and 100>",
+        Keywords.CONDITION_REQUIREMENT_COVERAGE));
+    Keywords.stopConditions.add(new StopCondition("REACHED_REQUIREMENT", "REACHED_REQUIREMENT:<Requirement id>",
+        Keywords.CONDITION_REACHED_REQUIREMENT));
     Keywords.stopConditions.add(new StopCondition("NEVER", "NEVER", Keywords.CONDITION_NEVER));
   }
 

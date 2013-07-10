@@ -256,7 +256,8 @@ public class FiniteStateMachine {
     int req = stats[5];
     int reqc = stats[6];
 
-    return (req > 0 ? "RC: " + reqc + "/" + req + " => " + (100 * reqc) / req + "% " : "") + "EC: " + ec + "/" + e + " => " + (100 * ec) / e + "% " + "SC: " + vc + "/" + v + " => " + (100 * vc) / v + "% " + "L: " + len;
+    return (req > 0 ? "RC: " + reqc + "/" + req + " => " + (100 * reqc) / req + "% " : "") + "EC: " + ec + "/" + e + " => " + (100 * ec) / e + "% "
+        + "SC: " + vc + "/" + v + " => " + (100 * vc) / v + "% " + "L: " + len;
   }
 
   public String getStatisticsString() {
@@ -272,8 +273,8 @@ public class FiniteStateMachine {
     String str = "";
     if (e > 0 && v > 0) {
       str =
-          "Coverage Edges: " + ec + "/" + e + " => " + (100 * ec) / e + "%\n" + "Coverage Vertices: " + vc + "/" + v + " => " + (100 * vc) / v + "%\n" + "Unvisited Edges:  " + (e - ec) + "\n" + "Unvisited Vertices: " + (v - vc) + "\n"
-              + "Test sequence length:  " + len;
+          "Coverage Edges: " + ec + "/" + e + " => " + (100 * ec) / e + "%\n" + "Coverage Vertices: " + vc + "/" + v + " => " + (100 * vc) / v
+              + "%\n" + "Unvisited Edges:  " + (e - ec) + "\n" + "Unvisited Vertices: " + (v - vc) + "\n" + "Test sequence length:  " + len;
     } else if (req > 0) {
       str = "Coverage Requirements: " + reqc + "/" + req + " => " + (100 * reqc) / req + "%\n";
     } else {
@@ -286,7 +287,9 @@ public class FiniteStateMachine {
     Collection<Edge> e = model.getEdges();
     Collection<Vertex> v = model.getVertices();
 
-    int[] retur = {e.size(), getEdgeCoverage(e), v.size(), getVertexCoverage(v), numberOfEdgesTravesed, getAllRequirements().size(), getCoveredRequirements().size()};
+    int[] retur =
+        {e.size(), getEdgeCoverage(e), v.size(), getVertexCoverage(v), numberOfEdgesTravesed, getAllRequirements().size(),
+            getCoveredRequirements().size()};
     return retur;
   }
 

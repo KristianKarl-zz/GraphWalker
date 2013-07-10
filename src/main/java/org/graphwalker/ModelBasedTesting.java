@@ -399,7 +399,8 @@ public class ModelBasedTesting {
       while (true) {
         if (App.getInstance().getStatus().isStopped()) throw new GuiStoppedExecution();
 
-        if (App.getInstance().getStatus().isNext() || App.getInstance().getStatus().isRunning() || App.getInstance().getStatus().isExecutingJavaTest() || App.getInstance().getStatus().isExecutingSoapTest()
+        if (App.getInstance().getStatus().isNext() || App.getInstance().getStatus().isRunning()
+            || App.getInstance().getStatus().isExecutingJavaTest() || App.getInstance().getStatus().isExecutingSoapTest()
             && !App.getInstance().getStatus().isPaused()) {
           break;
         }
@@ -652,7 +653,8 @@ public class ModelBasedTesting {
     if (element instanceof Edge) {
       logger.info(getMachine().getLastEdge() + req + additionalInfo);
     } else if (element instanceof Vertex) {
-      logger.info(getMachine().getCurrentVertex() + req + (getMachine().hasInternalVariables() ? " DATA: " + getMachine().getCurrentDataString() : "") + additionalInfo);
+      logger.info(getMachine().getCurrentVertex() + req
+          + (getMachine().hasInternalVariables() ? " DATA: " + getMachine().getCurrentDataString() : "") + additionalInfo);
     }
   }
 
@@ -727,7 +729,9 @@ public class ModelBasedTesting {
       clsClass = Class.forName(strClassName);
       logger.debug("Got class for name: " + strClassName);
     } catch (LinkageError e) {
-      String str = "Could not load class: " + e.getMessage() + "\nProblem occured when loading class: " + strClassName + ".\n Current class path is: " + System.getProperty("java.class.path");
+      String str =
+          "Could not load class: " + e.getMessage() + "\nProblem occured when loading class: " + strClassName + ".\n Current class path is: "
+              + System.getProperty("java.class.path");
       logger.error(str);
       Util.logStackTraceToError(e);
       throw new RuntimeException(str, e);
@@ -883,7 +887,8 @@ public class ModelBasedTesting {
     }
   }
 
-  private void executeMethod(Class<?> clsClass, Object objInstance, String strMethod, boolean isEdge) throws IllegalArgumentException, SecurityException, IllegalAccessException {
+  private void executeMethod(Class<?> clsClass, Object objInstance, String strMethod, boolean isEdge) throws IllegalArgumentException,
+      SecurityException, IllegalAccessException {
     if (strMethod.contains("/")) {
       strMethod = strMethod.substring(0, strMethod.indexOf('/'));
     }
@@ -1071,7 +1076,8 @@ public class ModelBasedTesting {
         return false;
       }
       if (!getMachine().hasVertex(newVertex)) {
-        logger.error("Could not manually change the vertex from: " + getMachine().getCurrentVertexName() + " to: " + newVertex + " beacuse it does not exist in the model.");
+        logger.error("Could not manually change the vertex from: " + getMachine().getCurrentVertexName() + " to: " + newVertex
+            + " beacuse it does not exist in the model.");
         return false;
       }
       logger.info("Manually changing vertex from: " + getMachine().getCurrentVertexName() + " to: " + newVertex);

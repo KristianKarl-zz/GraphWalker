@@ -268,7 +268,8 @@ public class ModelHandler {
               model.getMbt().setGenerator(new RandomPathGenerator(new NeverCondition()));
               model.getMbt().setCurrentVertex(Keywords.START_NODE);
             } else {
-              logger.debug("  Model has not reached it's stop condition, so restarting model and resetting current vertex to Start: " + model.getName());
+              logger.debug("  Model has not reached it's stop condition, so restarting model and resetting current vertex to Start: "
+                  + model.getName());
               model.setExecutionRestarted(true);
               model.getMbt().setCurrentVertex(Keywords.START_NODE);
             }

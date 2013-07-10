@@ -1,6 +1,6 @@
 package org.graphwalker.analyze;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 import org.graphwalker.ModelBasedTesting;
 import org.junit.Test;
@@ -13,7 +13,7 @@ public class AnalyzeTest {
     mbt.readGraph("graphml/analyze/infinite-loop.graphml");
     String str = Analyze.unreachableVertices(mbt);
     assertTrue("We should have found vertices not reachable from one another", str.length() > 0);
-    
+
     mbt = new ModelBasedTesting();
     mbt.readGraph("graphml/analyze/non-infinite-loop.graphml");
     str = Analyze.unreachableVertices(mbt);
