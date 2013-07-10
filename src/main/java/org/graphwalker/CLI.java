@@ -154,7 +154,9 @@ public class CLI {
     CLI cli = new CLI();
     try {
       cli.run(args);
-      endpoint = cli.GetEndpoint();
+      if ( cli.GetEndpoint() != null ) {
+        cli.GetEndpoint().stop();
+      }
     } catch (Exception e) {
       Util.logStackTraceToError(e);
     }
