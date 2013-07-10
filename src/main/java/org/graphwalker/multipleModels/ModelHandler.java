@@ -27,6 +27,7 @@ import org.apache.log4j.Logger;
 import org.graphwalker.Keywords;
 import org.graphwalker.ModelBasedTesting;
 import org.graphwalker.Util;
+import org.graphwalker.WebRenderer;
 import org.graphwalker.conditions.NeverCondition;
 import org.graphwalker.generators.RandomPathGenerator;
 import org.graphwalker.graph.Graph;
@@ -64,6 +65,7 @@ public class ModelHandler {
   ArrayList<ModelRunnable> models = new ArrayList<ModelRunnable>();
   static private Random random = new Random();
   private String currentVertex;
+  private WebRenderer webdriver = null;
 
   private static class ModelRunnable implements Runnable {
 
@@ -132,6 +134,14 @@ public class ModelHandler {
    * @param modelAPI
    */
   public synchronized void add(String name, ModelAPI modelAPI) {
+    if (WebRenderer.readRunProperty()) {
+      if (webdriver == null) {
+        webdriver = new WebRenderer(name, modelAPI);
+      }
+      else {
+        webdriver.addModel(name, modelAPI);
+      }
+    }
     if (hasModel(name)) {
       throw new IllegalArgumentException("The model name " + name + " has already been used.");
     }
@@ -168,6 +178,11 @@ public class ModelHandler {
   public void execute(String name) throws InterruptedException {
     if (!hasModel(name)) {
       throw new IllegalArgumentException("The model name " + name + " does not exist in the model handler. Have you forgotten to add it?");
+    }
+
+    // All models are set and we are ready to start the websocket.
+    if (webdriver != null) {
+      webdriver.startup();
     }
 
     ModelRunnable model = getModel(name);

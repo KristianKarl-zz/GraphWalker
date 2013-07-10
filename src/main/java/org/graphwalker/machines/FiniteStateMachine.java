@@ -52,6 +52,7 @@ public class FiniteStateMachine {
   private static Logger logger = Util.setupLogger(FiniteStateMachine.class);
 
   private Graph model = null;
+  private AbstractElement currentAbstractElement = null;
   private Vertex currentVertex = null;
   private boolean weighted = false;
   private Edge lastEdge = null;
@@ -667,5 +668,13 @@ public class FiniteStateMachine {
     for (Edge edge : model.getEdges()) {
       edge.setVisitedKey(0);
     }
+  }
+
+  public AbstractElement getCurrentAbstractElement() {
+    return currentAbstractElement;
+  }
+
+  public void setCurrentAbstractElement(AbstractElement currentAbstractElement) {
+    this.currentAbstractElement = currentAbstractElement;
   }
 }

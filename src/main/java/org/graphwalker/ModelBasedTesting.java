@@ -30,6 +30,7 @@ import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Observable;
 import java.util.Properties;
 import java.util.Vector;
 import java.util.concurrent.Future;
@@ -64,7 +65,7 @@ import org.graphwalker.statistics.VertexCoverageStatistics;
  * @author krikar
  * 
  */
-public class ModelBasedTesting {
+public class ModelBasedTesting extends Observable {
   private static Logger logger = Util.setupLogger(ModelBasedTesting.class);
 
   private AbstractModelHandler modelHandler;
@@ -773,6 +774,9 @@ public class ModelBasedTesting {
 
           try {
             logExecution(getMachine().getLastEdge(), "");
+            getMachine().setCurrentAbstractElement(getMachine().getLastEdge());
+            setChanged();
+            notifyObservers(getMachine().getLastEdge());
             executeMethod(clsClass, objInstance, stepPair[0], true);
             if (isUseStatisticsManager()) {
               getStatisticsManager().addProgress(getMachine().getLastEdge());
@@ -785,6 +789,9 @@ public class ModelBasedTesting {
             }
 
             logExecution(getMachine().getCurrentVertex(), "");
+            getMachine().setCurrentAbstractElement(getMachine().getCurrentVertex());
+            setChanged();
+            notifyObservers(getMachine().getCurrentVertex());
             executeMethod(clsClass, objInstance, stepPair[1], false);
             if (isUseStatisticsManager()) {
               getStatisticsManager().addProgress(getMachine().getCurrentVertex());
@@ -987,6 +994,12 @@ public class ModelBasedTesting {
 
   public void setWeighted(boolean b) {
     getMachine().setWeighted(b);
+  }
+
+  public AbstractElement getCurrentAbstractElement() {
+    if (this.machine != null) return getMachine().getCurrentAbstractElement();
+    logger.warn("Trying to retrieve current edge without specifying machine");
+    return null;
   }
 
   public Edge getCurrentEdge() {

@@ -23,6 +23,8 @@
 
 package org.graphwalker.graph;
 
+import java.awt.geom.Point2D;
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -33,6 +35,18 @@ public class Edge extends AbstractElement {
   private String guardKey = "";
   private Float weightKey = 0f;
 
+  // Label
+  private Point2D labelLocation = new Point2D.Float();
+  private Float labelWidth = 0f;
+  private Float labelHeight = 0f;
+
+  // Path
+  private Point2D pathSourceLocation = new Point2D.Float(); // Source node offset position
+  private Point2D pathTargetLocation = new Point2D.Float(); // Target node offset position
+
+  private ArrayList<Point2D> pathPoints = new ArrayList<Point2D>(); // Array of additional points on
+                                                                    // the edge path
+
   public Edge() {
     super();
   }
@@ -41,6 +55,12 @@ public class Edge extends AbstractElement {
     super(edge);
     this.guardKey = edge.guardKey;
     this.weightKey = edge.weightKey;
+    this.labelLocation = edge.labelLocation;
+    this.labelWidth = edge.labelWidth;
+    this.labelHeight = edge.labelHeight;
+    this.pathSourceLocation = edge.pathSourceLocation;
+    this.pathTargetLocation = edge.pathTargetLocation;
+    this.pathPoints = edge.pathPoints;
   }
 
   public Edge(Edge A, Edge B) {
@@ -48,9 +68,21 @@ public class Edge extends AbstractElement {
     if (A.getFullLabelKey().length() > B.getFullLabelKey().length()) {
       this.guardKey = A.guardKey;
       this.weightKey = A.weightKey;
+      this.labelLocation = A.labelLocation;
+      this.labelWidth = A.labelWidth;
+      this.labelHeight = A.labelHeight;
+      this.pathSourceLocation = A.pathSourceLocation;
+      this.pathTargetLocation = A.pathTargetLocation;
+      this.pathPoints = A.pathPoints;
     } else {
       this.guardKey = B.guardKey;
       this.weightKey = B.weightKey;
+      this.labelLocation = B.labelLocation;
+      this.labelWidth = B.labelWidth;
+      this.labelHeight = B.labelHeight;
+      this.pathSourceLocation = B.pathSourceLocation;
+      this.pathTargetLocation = B.pathTargetLocation;
+      this.pathPoints = B.pathPoints;
     }
   }
 
@@ -69,6 +101,54 @@ public class Edge extends AbstractElement {
 
   public void setGuardKey(String guardKey) {
     this.guardKey = guardKey;
+  }
+
+  public void setLabelLocation(Point2D labelLocation) {
+    this.labelLocation = labelLocation;
+  }
+
+  public Point2D getLabelLocation() {
+    return labelLocation;
+  }
+
+  public void setPathSourceLocation(Point2D location) {
+    this.pathSourceLocation = location;
+  }
+
+  public Point2D getPathSourceLocation() {
+    return pathSourceLocation;
+  }
+
+  public void setPathTargetLocation(Point2D location) {
+    this.pathTargetLocation = location;
+  }
+
+  public Point2D getPathTargetLocation() {
+    return pathTargetLocation;
+  }
+
+  public Float getLabelWidth() {
+    return labelWidth;
+  }
+
+  public void setLabelWidth(Float labelWidth) {
+    this.labelWidth = labelWidth;
+  }
+
+  public Float getLabelHeight() {
+    return labelHeight;
+  }
+
+  public void setLabelHeight(Float labelHeight) {
+    this.labelHeight = labelHeight;
+  }
+
+  public ArrayList<Point2D> getPathPoints() {
+    return pathPoints;
+  }
+
+  public void setPathPoints(Point2D points) {
+    pathPoints.add(points);
   }
 
   /**

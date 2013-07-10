@@ -288,6 +288,8 @@ public class GraphML extends AbstractModelHandler {
           Element element = (Element) o;
           logger.debug("  id: " + element.getAttributeValue("id"));
 
+          Edge e = new Edge();
+
           Iterator<Element> iter2 = element.getDescendants(new ElementFilter("EdgeLabel"));
           Element edgeLabel = null;
           if (iter2.hasNext()) {
@@ -296,8 +298,43 @@ public class GraphML extends AbstractModelHandler {
               edgeLabel = (Element) o2;
               logger.debug("  Full name: '" + edgeLabel.getQualifiedName() + "'");
               logger.debug("  Name: '" + edgeLabel.getTextTrim() + "'");
+              logger.debug(" Edge label x: " + edgeLabel.getAttributeValue("x"));
+              logger.debug(" Edge label y: " + edgeLabel.getAttributeValue("y"));
+              logger.debug(" Edge label width: " + edgeLabel.getAttributeValue("width"));
+              logger.debug(" Edge label height: " + edgeLabel.getAttributeValue("height"));
+              e.setLabelHeight(Float.parseFloat(edgeLabel.getAttributeValue("height")));
+              e.setLabelWidth(Float.parseFloat(edgeLabel.getAttributeValue("width")));
+              e.setLabelLocation(new Point2D.Float(Float.parseFloat(edgeLabel.getAttributeValue("x")), Float.parseFloat(edgeLabel.getAttributeValue("y"))));
             }
           }
+          Iterator<Element> iter3 = element.getDescendants(new ElementFilter("Path"));
+          Element edgePath = null;
+          if (iter3.hasNext()) {
+            Object o3 = iter3.next();
+            if (o3 instanceof Element) {
+              edgePath = (Element) o3;
+              logger.debug("  Path sx: '" + edgePath.getAttributeValue("sx"));
+              logger.debug("  Path sy: '" + edgePath.getAttributeValue("sy"));
+              logger.debug("  Path tx: '" + edgePath.getAttributeValue("tx"));
+              logger.debug("  Path ty: '" + edgePath.getAttributeValue("ty"));
+              e.setPathSourceLocation(new Point2D.Float(Float.parseFloat(edgePath.getAttributeValue("sx")), Float.parseFloat(edgePath.getAttributeValue("sy"))));
+              e.setPathTargetLocation(new Point2D.Float(Float.parseFloat(edgePath.getAttributeValue("tx")), Float.parseFloat(edgePath.getAttributeValue("ty"))));
+            }
+          }
+
+          // Add edge path points if there is any.
+          Iterator<Element> iter4 = element.getDescendants(new ElementFilter("Point"));
+          Element edgePathPoint = null;
+          while (iter4.hasNext()) {
+            Object o4 = iter4.next();
+            if (o4 instanceof Element) {
+              edgePathPoint = (Element) o4;
+              logger.debug("  PathPoint x: '" + edgePathPoint.getAttributeValue("x"));
+              logger.debug("  PathPoint y: '" + edgePathPoint.getAttributeValue("y"));
+              e.setPathPoints(new Point2D.Float(Float.parseFloat(edgePathPoint.getAttributeValue("x")), Float.parseFloat(edgePathPoint.getAttributeValue("y"))));
+            }
+          }
+
           logger.debug("  source: " + element.getAttributeValue("source"));
           logger.debug("  target: " + element.getAttributeValue("target"));
 
@@ -326,7 +363,6 @@ public class GraphML extends AbstractModelHandler {
             throw new RuntimeException(msg);
           }
 
-          Edge e = new Edge();
           e.setIdKey(element.getAttributeValue("id"));
           e.setFileKey(fileName);
           e.setIndexKey(getNewVertexAndEdgeIndex());
