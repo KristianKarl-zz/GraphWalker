@@ -79,10 +79,10 @@ import org.graphwalker.graph.Graph;
 import org.graphwalker.graph.Vertex;
 import org.graphwalker.io.PrintHTMLTestSequence;
 import org.graphwalker.machines.FiniteStateMachine;
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.input.SAXBuilder;
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.JDOMException;
+import org.jdom2.input.SAXBuilder;
 
 /**
  * This class has some utility functionality used by org.graphwalker The functionality is:<br>
@@ -330,7 +330,7 @@ public class Util {
    * @throws JDOMException
    * @throws InterruptedException
    */
-  public static ModelBasedTesting loadMbtAsWSFromXml(final File file) throws StopConditionException, GeneratorException, IOException, JDOMException, InterruptedException {
+  public static ModelBasedTesting loadMbtAsWSFromXml(final File file) throws StopConditionException, IOException, JDOMException, InterruptedException, GeneratorException {
     return loadXml(file, true, false, false);
   }
 
@@ -409,7 +409,6 @@ public class Util {
    * @throws JDOMException
    * @throws InterruptedException
    */
-  @SuppressWarnings("unchecked")
   private static ModelBasedTesting loadXml(final File file, final boolean runningSoapServices, final boolean dryRun, final boolean generateNewModel) throws StopConditionException, GeneratorException, IOException, JDOMException, InterruptedException {
 
     final ModelBasedTesting mbt = new ModelBasedTesting();
@@ -604,7 +603,6 @@ public class Util {
     return mbt;
   }
 
-  @SuppressWarnings("unchecked")
   private ModelBasedTesting loadXmlNonStatic(final File file, final boolean runningSoapServices, final boolean dryRun) throws StopConditionException, GeneratorException, IOException, JDOMException, InterruptedException {
     final ModelBasedTesting mbt = new ModelBasedTesting();
     mbt.setDryRun(dryRun);
@@ -816,7 +814,6 @@ public class Util {
     return stringBuilder.toString();
   }
 
-  @SuppressWarnings("unchecked")
   private static PathGenerator getGenerator(final FiniteStateMachine machine, final Element generator) throws StopConditionException, GeneratorException, IOException {
     int generatorType = Keywords.getGenerator(generator.getAttributeValue("TYPE"));
     PathGenerator generatorObject = getGenerator(generatorType);
@@ -858,7 +855,6 @@ public class Util {
     return condition;
   }
 
-  @SuppressWarnings("unchecked")
   private static StopCondition getCondition(final FiniteStateMachine machine, final Element condition) throws StopConditionException {
     StopCondition stopCondition = null;
     if (condition.getName().equalsIgnoreCase("AND")) {

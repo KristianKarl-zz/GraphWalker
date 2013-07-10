@@ -55,7 +55,7 @@ import org.graphwalker.conditions.AlternativeCondition;
 import org.graphwalker.exceptions.GeneratorException;
 import org.graphwalker.exceptions.StopConditionException;
 import org.graphwalker.io.PrintHTMLTestSequence;
-import org.jdom.JDOMException;
+import org.jdom2.JDOMException;
 
 /**
  * Command Line Interface object, to the org.graphwalker package. The object provides a way of

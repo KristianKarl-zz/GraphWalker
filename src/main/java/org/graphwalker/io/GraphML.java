@@ -40,9 +40,11 @@ import org.graphwalker.graph.AbstractElement;
 import org.graphwalker.graph.Edge;
 import org.graphwalker.graph.Graph;
 import org.graphwalker.graph.Vertex;
-import org.jdom.Document;
-import org.jdom.JDOMException;
-import org.jdom.input.SAXBuilder;
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.JDOMException;
+import org.jdom2.filter.ElementFilter;
+import org.jdom2.input.SAXBuilder;
 
 import edu.uci.ics.jung.graph.util.Pair;
 
@@ -135,7 +137,6 @@ public class GraphML extends AbstractModelHandler {
    * @param fileName The graphml file
    * @return The graph
    */
-  @SuppressWarnings("unchecked")
   private Graph parseFile(String fileName) {
     Graph graph = new Graph();
     graph.setFileKey(fileName);
@@ -146,21 +147,21 @@ public class GraphML extends AbstractModelHandler {
       Document doc = parser.build(Util.getFile(fileName));
 
       // Parse all vertices (nodes)
-      Iterator<Object> iter_node = doc.getDescendants(new org.jdom.filter.ElementFilter("node"));
+      Iterator<Element> iter_node = doc.getDescendants(new ElementFilter("node"));
       while (iter_node.hasNext()) {
         Object o = iter_node.next();
-        if (o instanceof org.jdom.Element) {
-          org.jdom.Element element = (org.jdom.Element) o;
+        if (o instanceof Element) {
+          Element element = (Element) o;
           if (element.getAttributeValue("yfiles.foldertype") != null) {
             logger.debug("  Excluded node: " + element.getAttributeValue("yfiles.foldertype"));
             continue;
           }
-          Iterator<Object> iterUMLNoteIter = element.getDescendants(new org.jdom.filter.ElementFilter("UMLNoteNode"));
+          Iterator<Element> iterUMLNoteIter = element.getDescendants(new ElementFilter("UMLNoteNode"));
           if (iterUMLNoteIter.hasNext()) {
-            Iterator<Object> iter_label = element.getDescendants(new org.jdom.filter.ElementFilter("NodeLabel"));
+            Iterator<Element> iter_label = element.getDescendants(new ElementFilter("NodeLabel"));
             if (iter_label.hasNext()) {
               Object o3 = iter_label.next();
-              org.jdom.Element nodeLabel = (org.jdom.Element) o3;
+              Element nodeLabel = (Element) o3;
               logger.debug("  Full name: '" + nodeLabel.getQualifiedName() + "'");
               logger.debug("  Name: '" + nodeLabel.getTextTrim() + "'");
               graph.setDescriptionKey(nodeLabel.getTextTrim());
@@ -172,11 +173,11 @@ public class GraphML extends AbstractModelHandler {
           // Used to remember which vertex to store the image location.
           Vertex currentVertex = null;
 
-          Iterator<Object> iterNodeLabel = element.getDescendants(new org.jdom.filter.ElementFilter("NodeLabel"));
+          Iterator<Element> iterNodeLabel = element.getDescendants(new ElementFilter("NodeLabel"));
           while (iterNodeLabel.hasNext()) {
             Object o2 = iterNodeLabel.next();
-            if (o2 instanceof org.jdom.Element) {
-              org.jdom.Element nodeLabel = (org.jdom.Element) o2;
+            if (o2 instanceof Element) {
+              Element nodeLabel = (Element) o2;
               logger.debug("  Full name: '" + nodeLabel.getQualifiedName() + "'");
               logger.debug("  Name: '" + nodeLabel.getTextTrim() + "'");
               String str = nodeLabel.getTextTrim();
@@ -186,11 +187,11 @@ public class GraphML extends AbstractModelHandler {
               currentVertex = v;
 
               // Parse description
-              Iterator<Object> iter_data = element.getDescendants(new org.jdom.filter.ElementFilter("data"));
+              Iterator<Element> iter_data = element.getDescendants(new ElementFilter("data"));
               while (iter_data.hasNext()) {
                 Object o3 = iter_data.next();
-                if (o instanceof org.jdom.Element) {
-                  org.jdom.Element data = (org.jdom.Element) o3;
+                if (o instanceof Element) {
+                  Element data = (Element) o3;
                   if (!data.getAttributeValue("key").equals("d5")) continue;
                   v.setDesctiptionKey(data.getText());
                   break;
@@ -218,11 +219,11 @@ public class GraphML extends AbstractModelHandler {
           }
 
           // Extract any manual test instructions
-          Iterator<Object> iterData = element.getDescendants(new org.jdom.filter.ElementFilter("data"));
+          Iterator<Element> iterData = element.getDescendants(new ElementFilter("data"));
           while (iterData.hasNext() && currentVertex != null) {
             Object o2 = iterData.next();
-            if (o2 instanceof org.jdom.Element) {
-              org.jdom.Element data = (org.jdom.Element) o2;
+            if (o2 instanceof Element) {
+              Element data = (Element) o2;
               if (!data.getContent().isEmpty() && data.getContent(0) != null) {
                 String text = data.getContent(0).getValue().trim();
                 if (!text.isEmpty()) {
@@ -238,22 +239,22 @@ public class GraphML extends AbstractModelHandler {
           // graphs into one, the code below, stores the image location, which
           // will be used when
           // writing that merged graphml file.
-          Iterator<Object> iterImage = element.getDescendants(new org.jdom.filter.ElementFilter("Image"));
+          Iterator<Element> iterImage = element.getDescendants(new ElementFilter("Image"));
           while (iterImage.hasNext() && currentVertex != null) {
             Object o2 = iterImage.next();
-            if (o2 instanceof org.jdom.Element) {
-              org.jdom.Element image = (org.jdom.Element) o2;
+            if (o2 instanceof Element) {
+              Element image = (Element) o2;
               if (image.getAttributeValue("href") != null) {
                 logger.debug("  Image: '" + image.getAttributeValue("href") + "'");
                 currentVertex.setImageKey(image.getAttributeValue("href"));
               }
             }
           }
-          Iterator<Object> iterGeometry = element.getDescendants(new org.jdom.filter.ElementFilter("Geometry"));
+          Iterator<Element> iterGeometry = element.getDescendants(new ElementFilter("Geometry"));
           while (iterGeometry.hasNext() && currentVertex != null) {
             Object o2 = iterGeometry.next();
-            if (o2 instanceof org.jdom.Element) {
-              org.jdom.Element geometry = (org.jdom.Element) o2;
+            if (o2 instanceof Element) {
+              Element geometry = (Element) o2;
               logger.debug("  width: '" + geometry.getAttributeValue("width") + "'");
               logger.debug("  height: '" + geometry.getAttributeValue("height") + "'");
               logger.debug("  x position: '" + geometry.getAttributeValue("x") + "'");
@@ -263,11 +264,11 @@ public class GraphML extends AbstractModelHandler {
               currentVertex.setLocation(new Point2D.Float(Float.parseFloat(geometry.getAttributeValue("x")), Float.parseFloat(geometry.getAttributeValue("y"))));
             }
           }
-          Iterator<Object> iterFill = element.getDescendants(new org.jdom.filter.ElementFilter("Fill"));
+          Iterator<Element> iterFill = element.getDescendants(new ElementFilter("Fill"));
           while (iterFill.hasNext() && currentVertex != null) {
             Object o2 = iterFill.next();
-            if (o2 instanceof org.jdom.Element) {
-              org.jdom.Element fill = (org.jdom.Element) o2;
+            if (o2 instanceof Element) {
+              Element fill = (Element) o2;
               logger.debug("  fill color: '" + fill.getAttributeValue("color") + "'");
               currentVertex.setFillColor(new Color(Integer.parseInt(fill.getAttributeValue("color").replace("#", ""), 16)));
             }
@@ -278,19 +279,19 @@ public class GraphML extends AbstractModelHandler {
       Object[] vertices = graph.getVertices().toArray();
 
       // Parse all edges (arrows or transitions)
-      Iterator<Object> iter_edge = doc.getDescendants(new org.jdom.filter.ElementFilter("edge"));
+      Iterator<Element> iter_edge = doc.getDescendants(new ElementFilter("edge"));
       while (iter_edge.hasNext()) {
         Object o = iter_edge.next();
-        if (o instanceof org.jdom.Element) {
-          org.jdom.Element element = (org.jdom.Element) o;
+        if (o instanceof Element) {
+          Element element = (Element) o;
           logger.debug("  id: " + element.getAttributeValue("id"));
 
-          Iterator<Object> iter2 = element.getDescendants(new org.jdom.filter.ElementFilter("EdgeLabel"));
-          org.jdom.Element edgeLabel = null;
+          Iterator<Element> iter2 = element.getDescendants(new ElementFilter("EdgeLabel"));
+          Element edgeLabel = null;
           if (iter2.hasNext()) {
             Object o2 = iter2.next();
-            if (o2 instanceof org.jdom.Element) {
-              edgeLabel = (org.jdom.Element) o2;
+            if (o2 instanceof Element) {
+              edgeLabel = (Element) o2;
               logger.debug("  Full name: '" + edgeLabel.getQualifiedName() + "'");
               logger.debug("  Name: '" + edgeLabel.getTextTrim() + "'");
             }
@@ -329,11 +330,11 @@ public class GraphML extends AbstractModelHandler {
           e.setIndexKey(getNewVertexAndEdgeIndex());
 
           // Parse description
-          Iterator<Object> iter_data = element.getDescendants(new org.jdom.filter.ElementFilter("data"));
+          Iterator<Element> iter_data = element.getDescendants(new ElementFilter("data"));
           while (iter_data.hasNext()) {
             Object o3 = iter_data.next();
-            if (o instanceof org.jdom.Element) {
-              org.jdom.Element data = (org.jdom.Element) o3;
+            if (o instanceof Element) {
+              Element data = (Element) o3;
               if (!data.getAttributeValue("key").equals("d9")) continue;
               e.setDesctiptionKey(data.getText());
               break;
@@ -376,11 +377,11 @@ public class GraphML extends AbstractModelHandler {
           logger.debug("  Added edge: '" + e.getLabelKey() + "', with id: " + e.getIndexKey());
 
           // Extract any manual test instructions
-          Iterator<Object> iterData = element.getDescendants(new org.jdom.filter.ElementFilter("data"));
+          Iterator<Element> iterData = element.getDescendants(new ElementFilter("data"));
           while (iterData.hasNext() && e != null) {
             Object o2 = iterData.next();
-            if (o2 instanceof org.jdom.Element) {
-              org.jdom.Element data = (org.jdom.Element) o2;
+            if (o2 instanceof Element) {
+              Element data = (Element) o2;
               if (!data.getContent().isEmpty() && data.getContent(0) != null) {
                 String text = data.getContent(0).getValue().trim();
                 if (!text.isEmpty()) {
@@ -394,9 +395,9 @@ public class GraphML extends AbstractModelHandler {
       }
     } catch (RuntimeException e) {
       throw new RuntimeException("Could not parse file: '" + fileName + "'. " + e.getMessage());
-    } catch (JDOMException e) {
-      throw new RuntimeException("Could not parse file: '" + fileName + "'. " + e.getMessage());
     } catch (IOException e) {
+      throw new RuntimeException("Could not parse file: '" + fileName + "'. " + e.getMessage());
+    } catch (JDOMException e) {
       throw new RuntimeException("Could not parse file: '" + fileName + "'. " + e.getMessage());
     }
 

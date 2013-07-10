@@ -101,7 +101,7 @@ public class TimeDurationTest extends TestCase {
 		while ((System.currentTimeMillis() - startTime) < 900)
 			Thread.sleep(1);
 		assertEquals(false, mbt.getGenerator().getStopCondition().isFulfilled());
-		while ((System.currentTimeMillis() - startTime) < 1000)
+		while ((System.currentTimeMillis() - startTime) < 2000)
 			Thread.sleep(1);
 		System.out.println(mbt.getGenerator().getStopCondition().getFulfilment());
 		assertEquals(true, mbt.getGenerator().getStopCondition().isFulfilled());

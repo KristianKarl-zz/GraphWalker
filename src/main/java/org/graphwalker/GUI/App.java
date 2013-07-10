@@ -84,7 +84,7 @@ import org.graphwalker.graph.Edge;
 import org.graphwalker.graph.Graph;
 import org.graphwalker.graph.Vertex;
 import org.graphwalker.io.ParseLog;
-import org.jdom.JDOMException;
+import org.jdom2.JDOMException;
 
 import edu.uci.ics.jung.algorithms.layout.CircleLayout;
 import edu.uci.ics.jung.algorithms.layout.FRLayout;

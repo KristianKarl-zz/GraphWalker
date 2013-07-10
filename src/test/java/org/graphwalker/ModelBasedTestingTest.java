@@ -39,7 +39,7 @@ import org.graphwalker.exceptions.GeneratorException;
 import org.graphwalker.exceptions.InvalidDataException;
 import org.graphwalker.exceptions.StopConditionException;
 import org.graphwalker.generators.NonOptimizedShortestPath;
-import org.jdom.JDOMException;
+import org.jdom2.JDOMException;
 
 import junit.framework.TestCase;
 

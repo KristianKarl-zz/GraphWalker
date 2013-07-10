@@ -18,7 +18,7 @@ import org.graphwalker.MultipleModels;
 import org.graphwalker.Util;
 import org.graphwalker.exceptions.GeneratorException;
 import org.graphwalker.exceptions.StopConditionException;
-import org.jdom.JDOMException;
+import org.jdom2.JDOMException;
 import org.junit.Test;
 
 public class MultipleModelsTest {
