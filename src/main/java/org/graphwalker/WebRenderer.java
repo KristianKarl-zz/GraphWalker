@@ -27,7 +27,6 @@ import org.webbitserver.WebServer;
 import org.webbitserver.WebServers;
 import org.webbitserver.WebSocketConnection;
 import org.webbitserver.handler.EmbeddedResourceHandler;
-import org.webbitserver.handler.StaticFileHandler;
 
 
 public class WebRenderer extends BaseWebSocketHandler implements Observer {
@@ -139,6 +138,7 @@ public class WebRenderer extends BaseWebSocketHandler implements Observer {
       updateBuffer.add(updateModels);
   }
 
+  @SuppressWarnings("unchecked")
   public JSONObject createInitialJSONString() {
     logger.debug("Creating initial json string for webrenderer");
 
@@ -154,7 +154,7 @@ public class WebRenderer extends BaseWebSocketHandler implements Observer {
 
     while (it.hasNext()) {
 
-      Entry m = (Entry) it.next();
+      Entry<String, ModelBasedTesting> m = (Entry<String, ModelBasedTesting>) it.next();
       String name = (String) m.getKey();
       Graph g = (Graph) ((ModelBasedTesting) m.getValue()).getGraph();
 
@@ -168,7 +168,7 @@ public class WebRenderer extends BaseWebSocketHandler implements Observer {
       variable = new JSONObject();
 
       variable.put("name", name);
-      variable.put("value", ""); // TODO: Vad är denna till för?
+      variable.put("value", "");
 
 
       variables.add(variable);
@@ -286,7 +286,6 @@ public class WebRenderer extends BaseWebSocketHandler implements Observer {
 
   }
 
-  // TODO: Add to property to choose on/off websocket.
   public static Boolean readRunProperty() {
     PropertiesConfiguration conf = null;
     if (new File("graphwalker.properties").canRead()) {
