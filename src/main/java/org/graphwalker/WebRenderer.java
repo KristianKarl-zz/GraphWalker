@@ -13,12 +13,14 @@ import java.util.Set;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
+import org.apache.commons.lang.ObjectUtils;
 import org.apache.log4j.Logger;
 import org.graphwalker.graph.AbstractElement;
 import org.graphwalker.graph.Edge;
 import org.graphwalker.graph.Graph;
 import org.graphwalker.graph.Vertex;
 import org.graphwalker.multipleModels.ModelAPI;
+import org.graphwalker.multipleModels.ModelHandler;
 import org.json.simple.JSONObject;
 import org.webbitserver.BaseWebSocketHandler;
 import org.webbitserver.WebServer;
@@ -50,21 +52,11 @@ public class WebRenderer extends BaseWebSocketHandler implements Observer {
   private ArrayList<JSONObject> points;
   private ArrayList<JSONObject> updateBuffer = new ArrayList<JSONObject>();
 
+  private ModelHandler modelHandler = null;
+  private Map<String, ModelBasedTesting> mbts = new HashMap<String, ModelBasedTesting>();
 
-  // TODO: Varje model har olika.
-  private ModelBasedTesting mbt; // Is needed because of getCurrentModelName()
-  private Map<String, Graph> inputModel = new HashMap<String, Graph>(); // Contains the name of the
-                                                                        // model and the graph from
-                                                                        // the mbt.
-
-  // TODO: CLI.java
-  // public WebRenderer(ModelBasedTesting mbt, Graph g) {
-  // connect();
-  // createInitialJSONString();
-  //
-  // }
-
-  public WebRenderer(String name, ModelAPI api) {
+  public WebRenderer(ModelHandler modelHandler, String name, ModelAPI api) {
+    this.modelHandler = modelHandler;
     addModel(name, api);
   }
 
@@ -75,18 +67,16 @@ public class WebRenderer extends BaseWebSocketHandler implements Observer {
 
   public void addModel(String name, ModelAPI api) {
     logger.debug("Adding model: " + name + ", to web renderer");
-    ModelBasedTesting mbt = api.getMbt();
-    mbt.addObserver(this);
-    this.mbt = mbt;
-    inputModel.put(name, mbt.getGraph());
+    api.getMbt().addObserver(this);
+    mbts.put(name, api.getMbt());
   }
 
   public WebSocketConnection getWSConnection() {
     return wsConnection;
   }
 
-  public ModelBasedTesting getMbt() {
-    return mbt;
+  public ModelBasedTesting getMbt(String name) {
+    return mbts.get(name);
   }
 
   /**
@@ -110,7 +100,7 @@ public class WebRenderer extends BaseWebSocketHandler implements Observer {
     models = new ArrayList<JSONObject>();
     model = new JSONObject();
 
-    model.put("id", mbt.getCurrentModelName());
+    model.put("id", modelHandler.getCurrentRunningModel());
 
     JSONObject startNode = new JSONObject();
     startNode.put("id", "n0");
@@ -119,10 +109,9 @@ public class WebRenderer extends BaseWebSocketHandler implements Observer {
     if (arg instanceof Vertex) {
       node = new JSONObject();
       node.put("id", ((AbstractElement) arg).getIdKey());
-      node.put("state", getState((AbstractElement)arg));
+      node.put("state", getState((AbstractElement) arg));
       node.put("visited", ((AbstractElement) arg).getVisitedKey());
 
-      // TODO:
       nodes = new ArrayList<JSONObject>();
       nodes.add(node);
       nodes.add(startNode);
@@ -130,7 +119,7 @@ public class WebRenderer extends BaseWebSocketHandler implements Observer {
     } else if (arg instanceof Edge) {
       edge = new JSONObject();
       edge.put("id", ((AbstractElement) arg).getIdKey());
-      edge.put("state", getState((AbstractElement)arg));
+      edge.put("state", getState((AbstractElement) arg));
 
       edges = new ArrayList<JSONObject>();
       edges.add(edge);
@@ -150,7 +139,6 @@ public class WebRenderer extends BaseWebSocketHandler implements Observer {
       updateBuffer.add(updateModels);
   }
 
-  @SuppressWarnings({"unchecked"})
   public JSONObject createInitialJSONString() {
     logger.debug("Creating initial json string for webrenderer");
 
@@ -161,14 +149,14 @@ public class WebRenderer extends BaseWebSocketHandler implements Observer {
     models = new ArrayList<JSONObject>();
 
     // Loop over all the input models
-    Set s = inputModel.entrySet();
-    Iterator it = s.iterator();
+    Set<Entry<String, ModelBasedTesting>> s = mbts.entrySet();
+    Iterator<Entry<String, ModelBasedTesting>> it = s.iterator();
 
     while (it.hasNext()) {
 
       Entry m = (Entry) it.next();
       String name = (String) m.getKey();
-      Graph g = (Graph) m.getValue();
+      Graph g = (Graph) ((ModelBasedTesting) m.getValue()).getGraph();
 
       model = new JSONObject();
 
@@ -192,7 +180,7 @@ public class WebRenderer extends BaseWebSocketHandler implements Observer {
         node = new JSONObject();
 
         node.put("id", n.getIdKey()); // Unique node id
-        node.put("state", getState(n));
+        node.put("state", "unvisited");
         node.put("color", "#" + Integer.toHexString(n.getFillColor().getRGB()).substring(2, 8).toUpperCase());
         node.put("label", n.getLabelKey());
 
@@ -219,7 +207,7 @@ public class WebRenderer extends BaseWebSocketHandler implements Observer {
         edge.put("id", e.getIdKey()); // Unique edge id
         edge.put("source", g.getSource(e).getIdKey()); // Source node id
         edge.put("target", g.getDest(e).getIdKey()); // Target node id
-        edge.put("state", getState(e));
+        edge.put("state", "unvisited");
 
         // Edge info, label
         JSONObject edgeLabel = new JSONObject();
@@ -269,13 +257,15 @@ public class WebRenderer extends BaseWebSocketHandler implements Observer {
   }
 
   private String getState(AbstractElement n) {
+    logger.debug("getState AbstractElement n: " + n + ", n.getVisitedKey(): " + n.getVisitedKey() + ", mbt: "
+        + ObjectUtils.identityToString(mbts.get(modelHandler.getCurrentRunningModel()).getCurrentAbstractElement()));
     String state = "";
     if (n.getVisitedKey() == 0) {
       state = "unvisited";
     } else {
       state = "visited";
     }
-    if (mbt.getCurrentAbstractElement() == n) {
+    if (mbts.get(modelHandler.getCurrentRunningModel()).getCurrentAbstractElement() == n) {
       state = "active";
     }
     return state;
@@ -323,9 +313,6 @@ public class WebRenderer extends BaseWebSocketHandler implements Observer {
     return run;
   }
 
-
-
-  // TODO: Add to property to choose on/off websocket.
   public static String readWRPort() {
     PropertiesConfiguration conf = null;
     if (new File("graphwalker.properties").canRead()) {

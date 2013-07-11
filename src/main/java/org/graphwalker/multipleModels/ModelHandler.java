@@ -136,7 +136,7 @@ public class ModelHandler {
   public synchronized void add(String name, ModelAPI modelAPI) {
     if (WebRenderer.readRunProperty()) {
       if (webdriver == null) {
-        webdriver = new WebRenderer(name, modelAPI);
+        webdriver = new WebRenderer(this, name, modelAPI);
       }
       else {
         webdriver.addModel(name, modelAPI);

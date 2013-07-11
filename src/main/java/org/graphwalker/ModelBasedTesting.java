@@ -1146,12 +1146,4 @@ public class ModelBasedTesting extends Observable {
     }
     return false;
   }
-
-  public String getCurrentModelName() {
-    if (getMultiModelHandler() != null) {
-      return getMultiModelHandler().getCurrentRunningModel();
-    }
-
-    return getGraph().getFileKey();
-  }
 }
