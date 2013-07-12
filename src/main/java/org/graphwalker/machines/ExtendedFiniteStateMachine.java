@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -49,6 +50,7 @@ import org.graphwalker.exceptions.FoundNoEdgeException;
 import org.graphwalker.exceptions.InvalidDataException;
 import org.graphwalker.filters.AccessableEdgeFilter;
 import org.graphwalker.graph.Edge;
+import org.json.simple.JSONObject;
 
 import bsh.EvalError;
 import bsh.Interpreter;
@@ -166,6 +168,36 @@ public class ExtendedFiniteStateMachine extends FiniteStateMachine {
       return retur;
     }
     return retur;
+  }
+
+  /**
+   * Walks the data space, and returns all data as an json object.
+   * 
+   * @param dataName
+   * @return json object of the data space
+   */
+  @SuppressWarnings("unchecked")
+  public ArrayList<JSONObject> getDataAsJSON() {
+    ArrayList<JSONObject> data = new ArrayList<JSONObject>();
+
+    if (beanShellEngine != null) {
+      Hashtable<String, Object> dataTable = getCurrentBeanShellData();
+      Enumeration<String> enumKey = dataTable.keys();
+      while (enumKey.hasMoreElements()) {
+        JSONObject jsonObj = new JSONObject();
+        String key = enumKey.nextElement();
+        String value = null;
+        if (dataTable.get(key) instanceof Object[]) {
+          value = Arrays.deepToString((Object[]) dataTable.get(key));
+        } else {
+          value = dataTable.get(key).toString();
+        }
+        jsonObj.put("name", key);
+        jsonObj.put("value", value);
+        data.add(jsonObj);
+      }
+    }
+    return data;
   }
 
   /**

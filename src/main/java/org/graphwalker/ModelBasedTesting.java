@@ -29,6 +29,7 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Observable;
 import java.util.Properties;
@@ -58,6 +59,7 @@ import org.graphwalker.statistics.EdgeCoverageStatistics;
 import org.graphwalker.statistics.EdgeSequenceCoverageStatistics;
 import org.graphwalker.statistics.RequirementCoverageStatistics;
 import org.graphwalker.statistics.VertexCoverageStatistics;
+import org.json.simple.JSONObject;
 
 /**
  * The object handles the test case generation, both online and offline.
@@ -232,6 +234,23 @@ public class ModelBasedTesting extends Observable {
    */
   public void setFuture(Future<?> future) {
     this.future = future;
+  }
+
+  /**
+   * Returns the value of an data object within the data space of the model.
+   * 
+   * @param data The name of the data object, which value is to be retrieved.
+   * @return The value of the data object. The value is always returned a s string. It is the
+   *         calling parties task to parse the string and convert it to correct type.
+   * @throws InvalidDataException If the retrieval of the data fails, the InvalidDataException is
+   *         thrown. For example if a FiniteStateMachine is used, which has no data space, the
+   *         exception is thrown.
+   */
+  public ArrayList<JSONObject> getDataAsJSON() {
+    if (this.machine instanceof ExtendedFiniteStateMachine) {
+      return ((ExtendedFiniteStateMachine) this.machine).getDataAsJSON();
+    }
+    return null;
   }
 
   /**

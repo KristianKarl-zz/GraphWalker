@@ -9,11 +9,26 @@
     position: relative;
 }
 
+.container.activemodel {
+    -moz-box-shadow: inset 0 0 10px #000000;
+    -webkit-box-shadow: inset 0 0 10px #000000;
+}
+
 .model {
     width: 700px;
     height: 700px;
     position: absolute;
 }
+
+.modelname {
+    font-family: "Lucida Sans Unicode", sans-serif;
+    position: absolute;
+    left: 300px;
+    top: 10px;
+    z-index: 2;
+    font-size: 20px;
+}
+
 .model.animated {
     -webkit-transition: all 1s ease-in-out;
     -moz-transition: all 1s ease-in-out;
@@ -115,7 +130,6 @@ table.variables {
     -moz-transition: all 0.2s ease-in-out;
     -o-transition: all 0.2s ease-in-out;
     transition: all 0.2s ease-in-out;        
-
 }
 
 table.animate {

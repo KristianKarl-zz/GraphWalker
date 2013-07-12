@@ -38,7 +38,6 @@ public class WebRenderer extends BaseWebSocketHandler implements Observer {
   private JSONObject edge;
   private JSONObject node;
   private JSONObject point;
-  private JSONObject variable;
   private JSONObject allModels;
   private JSONObject updateModels;
 
@@ -47,7 +46,6 @@ public class WebRenderer extends BaseWebSocketHandler implements Observer {
   private ArrayList<JSONObject> edges;
   private ArrayList<JSONObject> nodes;
   private ArrayList<JSONObject> models;
-  private ArrayList<JSONObject> variables;
   private ArrayList<JSONObject> points;
   private ArrayList<JSONObject> updateBuffer = new ArrayList<JSONObject>();
 
@@ -100,6 +98,8 @@ public class WebRenderer extends BaseWebSocketHandler implements Observer {
     model = new JSONObject();
 
     model.put("id", modelHandler.getCurrentRunningModel());
+    logger.debug(mbts.get(modelHandler.getCurrentRunningModel()).getDataAsJSON());
+    model.put("variables", mbts.get(modelHandler.getCurrentRunningModel()).getDataAsJSON().toString());
 
     JSONObject startNode = new JSONObject();
     startNode.put("id", "n0");
@@ -162,16 +162,7 @@ public class WebRenderer extends BaseWebSocketHandler implements Observer {
 
       model.put("state", "started");
       model.put("id", name);
-
-      // Model info, variables
-      variables = new ArrayList<JSONObject>(); // Array of model variables in the efsm
-      variable = new JSONObject();
-
-      variable.put("name", name);
-      variable.put("value", "");
-
-
-      variables.add(variable);
+      model.put("name", name);
 
       // Node
       nodes = new ArrayList<JSONObject>();
@@ -243,10 +234,10 @@ public class WebRenderer extends BaseWebSocketHandler implements Observer {
         edges.add(edge);
       }
 
-      model.put("variables", variables);
       model.put("edges", edges);
       model.put("nodes", nodes);
-
+      ArrayList<JSONObject> variables = new ArrayList<JSONObject>();
+      model.put("variables", variables );
       models.add(model);
     }
 

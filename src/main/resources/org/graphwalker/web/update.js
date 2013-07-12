@@ -1,5 +1,5 @@
 var ws;
-modelsHash = {};
+var modelsHash = {};
 
 var transformprop = getsupportedprop([ "transform", "MozTransform",
 		"webkitTransform" ]);
@@ -44,9 +44,12 @@ function update(models) {
 	for ( var i = 0; i < activeElements.length; i++) {
 		activeElements[i].classList.add("visited");
 		activeElements[i].classList.remove("active");
-	}
+        
+    }
+   
 	models.forEach(function(model) {
 		var modelId = model.id;
+        highlightContainer(modelId);
 		if (model.nodes) {
 			model.nodes.forEach(function(n) {
 				var node = document.getElementById(n.id + "_" + modelId);
@@ -54,9 +57,8 @@ function update(models) {
 				node.classList.remove("unvisited");
 				node.classList.add(n.state);
 				if (n.state == "active") {
-					modelsHash[modelId].centerOnElement(node)
+					modelsHash[modelId].centerOnElement(node);
 				}
-				;
 			});
 		}
 		if (model.edges) {
@@ -64,7 +66,10 @@ function update(models) {
 				var edge = document.getElementById(e.id + "_" + modelId);
 				edge.classList.remove("unvisited");
 				edge.classList.add(e.state);
-				modelsHash[modelId].centerOnElement(edge);
+                modelsHash[modelId].centerOnElement(edge);
+                if (e.state == "active") {
+                    modelsHash[modelId].centerOnElement(edge);
+                }
 				/*if (e.state == "active") {
 				    var edgeParts = edge.childNodes;
 				    for(var i=0;i<edgeParts.length;i++) {
@@ -92,9 +97,21 @@ function update(models) {
 	});
 }
 
+function highlightContainer(id) {
+    var containers = document.getElementsByClassName("container");
+    for(var i = 0; i < containers.length; i++) {
+        if (containers[i].id == "container_" + id) {
+            containers[i].classList.add("activemodel");
+        } else {
+            containers[i].classList.remove("activemodel");
+        }
+    }
+}
+
 function modelObject(data) {
 	var graph = data;
 	var m_id = graph.id;
+    var modelName = graph.name;
 	var modelsContainer = document.getElementById("modelsContainer");
 	var container = document.createElement("div");
 	container.id = "container_" + m_id;
@@ -172,6 +189,13 @@ function modelObject(data) {
 		});
 		vtable.appendChild(vbody);
 		container.appendChild(vtable);
+        
+        var nameSpan = document.createElement("span");
+        nameSpan.classList.add("modelname");
+        if (modelName) {
+            nameSpan.innerHTML = modelName;
+        }
+        container.appendChild(nameSpan);
 
 		graph.nodes.forEach(function(item) {
 			if (item.geometry.y < minY)
