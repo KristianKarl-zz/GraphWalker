@@ -70,29 +70,25 @@ function update(models) {
                 if (e.state == "active") {
                     modelsHash[modelId].centerOnElement(edge);
                 }
-				/*if (e.state == "active") {
-				    var edgeParts = edge.childNodes;
-				    for(var i=0;i<edgeParts.length;i++) {
-				        console.log(edgeParts[i].tagName);
-				        if (edgeParts[i].tagName == "P") {
-				            console.log(edgeParts[i]);
-				            
-				        }
-				    }
-				};*/
 			});
 		}
 		if (model.variables) {
-			model.variables.forEach(function(v) {
-				var valueTd = document.getElementById(v.name + "_" + modelId);
-				valueTd.innerHTML = v.value;
-				valueTd.parentNode.parentNode.parentNode.classList
-						.add("animate");
-				setTimeout(function() {
-					valueTd.parentNode.parentNode.parentNode.classList
-							.remove("animate");
-				}, 200);
+			var new_tbody = document.createElement("tbody");
+			new_tbody.id = "data_body_" + modelId;
+			model.variables.forEach(function(item) {
+				var row = document.createElement("tr");
+				var key = document.createElement("td");
+				key.innerHTML = item.name + ":";
+				var value = document.createElement("td");
+				value.innerHTML = item.value;
+				value.id = item.name + "_" + modelId;
+				row.appendChild(key);
+				row.appendChild(value);
+				new_tbody.appendChild(row);
 			});
+		    vtable = document.getElementById("data_table_" + modelId);
+			old_tbody = document.getElementById("data_body_" + modelId);
+			vtable.replaceChild(new_tbody, old_tbody)
 		}
 	});
 }
@@ -174,8 +170,10 @@ function modelObject(data) {
 		container.appendChild(zoomControls);
 
 		var vtable = document.createElement("table");
+		vtable.id = "data_table_" + m_id;
 		vtable.classList.add("variables");
 		var vbody = document.createElement("tbody");
+		vbody.id = "data_body_" + m_id;
 		graph.variables.forEach(function(item) {
 			var row = document.createElement("tr");
 			var key = document.createElement("td");
@@ -237,7 +235,6 @@ function modelObject(data) {
 			par.classList.add("label");
 			par.innerHTML = item.label.replace(/,/g, '<br>');
 			div.appendChild(par);
-			//div.onclick = handleVerticeClick;
 			graphDiv.appendChild(div);
 			nodes[div.id] = item;
 		});
@@ -246,10 +243,6 @@ function modelObject(data) {
 			var target = nodes[item.target + "_" + m_id];
 			add_arrow(item, source, target);
 		});
-		/*	graph.variables.forEach(function(item) {
-
-		});*/
-
 	}
 
 	function add_arrow(item, source, target) {

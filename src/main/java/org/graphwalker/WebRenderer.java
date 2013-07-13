@@ -99,7 +99,7 @@ public class WebRenderer extends BaseWebSocketHandler implements Observer {
 
     model.put("id", modelHandler.getCurrentRunningModel());
     logger.debug(mbts.get(modelHandler.getCurrentRunningModel()).getDataAsJSON());
-    model.put("variables", mbts.get(modelHandler.getCurrentRunningModel()).getDataAsJSON().toString());
+    model.put("variables", mbts.get(modelHandler.getCurrentRunningModel()).getDataAsJSON());
 
     JSONObject startNode = new JSONObject();
     startNode.put("id", "n0");
