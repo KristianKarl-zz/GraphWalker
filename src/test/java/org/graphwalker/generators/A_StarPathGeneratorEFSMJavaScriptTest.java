@@ -23,6 +23,8 @@
 
 package org.graphwalker.generators;
 
+import java.awt.GraphicsEnvironment;
+
 import junit.framework.TestCase;
 
 import org.graphwalker.Util;
@@ -67,7 +69,11 @@ public class A_StarPathGeneratorEFSMJavaScriptTest extends TestCase {
     e0 = e1 = e2 = e3 = null;
   }
 
+  @SuppressWarnings("static-access")
   public void test_EFSM_StateStop() throws InterruptedException {
+    GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+    if (ge.isHeadless()) return;
+
     PathGenerator pathGenerator = new A_StarPathGenerator(new ReachedVertex("V1/y=\\[2.0, 3.0, 3.0\\];x=3.0;"));
     ExtendedFiniteStateMachine machine = new ExtendedFiniteStateMachine(true);
     machine.setModel(graph);
@@ -79,7 +85,7 @@ public class A_StarPathGeneratorEFSMJavaScriptTest extends TestCase {
     assertEquals("V1/y=[];x=1.0;", stepPair[1]);
     stepPair = pathGenerator.getNext();
     assertEquals("E1", stepPair[0]);
-    assertTrue(stepPair[1], stepPair[1].matches("V2/y=\\[\\];x=2[.0]*;"));
+    assertEquals("V2/y=[];x=2.0;", stepPair[1]);
     stepPair = pathGenerator.getNext();
     assertEquals("E3", stepPair[0]);
     assertEquals("V1/y=[2.0];x=2.0;", stepPair[1]);
@@ -105,7 +111,11 @@ public class A_StarPathGeneratorEFSMJavaScriptTest extends TestCase {
 
   }
 
+  @SuppressWarnings("static-access")
   public void test_EFSM_EdgeStop() throws InterruptedException {
+    GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+    if (ge.isHeadless()) return;
+
     PathGenerator pathGenerator = new A_StarPathGenerator(new ReachedEdge("E2"));
     ExtendedFiniteStateMachine machine = new ExtendedFiniteStateMachine(true);
     machine.setModel(graph);
@@ -117,7 +127,7 @@ public class A_StarPathGeneratorEFSMJavaScriptTest extends TestCase {
     assertEquals("V1/y=[];x=1.0;", stepPair[1]);
     stepPair = pathGenerator.getNext();
     assertEquals("E1", stepPair[0]);
-    assertTrue(stepPair[1], stepPair[1].matches("V2/y=\\[\\];x=2[.0]*;"));
+    assertEquals("V2/y=[];x=2.0;", stepPair[1]);
     stepPair = pathGenerator.getNext();
     assertEquals("E2", stepPair[0]);
     assertEquals("V2/y=[];x=3.0;", stepPair[1]);
