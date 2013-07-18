@@ -11,7 +11,8 @@ var boxshadowprop = getsupportedprop([ "boxShadow", "MozBoxShadow",
 window.onload = function connect() {
 	var inputField = document.getElementById("serverAdr");
 	port = window.location.port;
-	var wsconnection = "ws://localhost:" + port + "/graphwalker";
+        ipAddr = window.location.hostname;
+	var wsconnection = "ws://" + ipAddr + ":" + port + "/graphwalker";
 	ws = new WebSocket(wsconnection); // "ws://nisse:8080/hellowebsocket"
 
 	ws.onopen = function() {};
