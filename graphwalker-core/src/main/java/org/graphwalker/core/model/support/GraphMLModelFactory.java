@@ -60,7 +60,7 @@ public final class GraphMLModelFactory extends AbstractModelFactory {
      * @return a {@link java.util.List} object.
      */
     public List<String> getSupportedFileTypes() {
-        return Arrays.asList("graphml");
+        return Arrays.asList("**/*.graphml");
     }
 
     /** {@inheritDoc} */

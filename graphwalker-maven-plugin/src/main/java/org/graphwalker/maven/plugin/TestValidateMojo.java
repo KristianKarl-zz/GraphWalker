@@ -29,13 +29,11 @@ import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 
-@Mojo(name = "test-validate"
-        , defaultPhase = LifecyclePhase.PROCESS_TEST_CLASSES
-        , requiresDependencyResolution = ResolutionScope.TEST)
+@Mojo(name = "test-validate", defaultPhase = LifecyclePhase.PROCESS_TEST_CLASSES, requiresDependencyResolution = ResolutionScope.TEST, threadSafe = true)
 public final class TestValidateMojo extends AbstractValidateMojo {
 
     @Override
-    public void executeMojo() {
-        int i = 0;
+    protected void executeMojo() {
+        validate(getMavenProject().getTestResources());
     }
 }

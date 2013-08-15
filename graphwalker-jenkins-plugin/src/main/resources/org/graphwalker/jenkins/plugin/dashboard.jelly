@@ -22,7 +22,23 @@
             <canvas id="canvas"/>
         </body>
         <script type="text/javascript" src="http://code.jquery.com/jquery-2.0.0.min.js"></script>
-        <script type="text/javascript" src="${resURL}/plugin/graphwalker-jenkins-plugin/scripts/treemap.js"></script>
-        <script type="text/javascript" src="${resURL}/plugin/graphwalker-jenkins-plugin/scripts/script.js"></script>
+        <script type="text/javascript" src="${resURL}/plugin/graphwalker-jenkins-plugin/scripts/graphwalker.js"></script>
+        <script type="text/javascript">
+
+            var stage = new graphwalker.Stage("canvas");
+
+            function updateStageSize() {
+                stage.setSize(window.innerWidth, window.innerHeight);
+                stage.update();
+            }
+
+            $(window).on("load", function(event) {
+                updateStageSize();
+            });
+
+            $(window).on("resize", function(event) {
+                updateStageSize();
+            });
+        </script>
     </html>
 </j:jelly>

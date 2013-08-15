@@ -106,6 +106,15 @@
         return Color;
     }());
 
+    Treemap.Bounds = (function() {
+        function Bounds(x, y, width, height) {
+            this.x = x;
+            this.y = y;
+            this.width = width;
+            this.height = height;
+        }
+    }());
+
     Treemap.Rectangle = (function() {
         function Rectangle(x, y, width, height) {
             this.x = x;
@@ -166,18 +175,18 @@
                     var rectangle = element.rectangle;
 
                     var lineWidth = 4;
-                    var halfLineWidth = Math.floor(lineWidth/2);
+                    var halfLineWidth = lineWidth/2;
 
                     var topLineWidth = rectangle.y === 0 ? lineWidth : halfLineWidth;
-                    var halfTopLineWidth = Math.floor(topLineWidth/2);
-                    var rightLineWidth = rectangle.x+rectangle.width === context.canvas.width ? lineWidth : halfLineWidth;
-                    var halfRightLineWidth = Math.floor(rightLineWidth/2);
-                    var bottomLineWidth = rectangle.y+rectangle.height === context.canvas.height ? lineWidth : halfLineWidth;
-                    var halfBottomLineWidth = Math.floor(bottomLineWidth/2);
+                    var halfTopLineWidth = topLineWidth/2;
+                    var rightLineWidth = rectangle.x+rectangle.width == context.canvas.width ? lineWidth : halfLineWidth;
+                    var halfRightLineWidth = rightLineWidth/2;
+                    var bottomLineWidth = rectangle.y+rectangle.height == context.canvas.height ? lineWidth : halfLineWidth;
+                    var halfBottomLineWidth = bottomLineWidth/2;
                     var leftLineWidth = rectangle.x === 0 ? lineWidth : halfLineWidth;
-                    var halfLeftLineWidth = Math.floor(leftLineWidth/2);
+                    var halfLeftLineWidth = leftLineWidth/2;
 
-console.log("w = "+context.canvas.width+" h ="+context.canvas.height);
+//console.log("w = "+context.canvas.width+" h ="+context.canvas.height);
 
                     context.beginPath();
                     context.lineJoin = 'miter';
@@ -198,7 +207,7 @@ console.log("w = "+context.canvas.width+" h ="+context.canvas.height);
                     context.stroke();
 
                 } else {
-
+              /*
                     var rectangle = element.rectangle;
                     context.beginPath();
                     context.rect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
@@ -230,7 +239,7 @@ console.log("w = "+context.canvas.width+" h ="+context.canvas.height);
                     //context.lineWidth = 1;
                     //context.strokeStyle = 'white';
                     //context.stroke();
-
+                */
                 }
             }
         }
@@ -274,7 +283,7 @@ console.log("w = "+context.canvas.width+" h ="+context.canvas.height);
         var maxX = rectangle.x + rectangle.width;
         var maxY = rectangle.y + rectangle.height;
         if (rectangle.width >= rectangle.height) {
-            var width = Math.round(sum / rectangle.height);
+            var width = sum / rectangle.height;
             for (var i = 0; i < row.length; i++) {
                 var height = row[i].normalizedWeight / width;
                 if (y+height > maxY || i+1 == row.length) {
@@ -285,7 +294,7 @@ console.log("w = "+context.canvas.width+" h ="+context.canvas.height);
             }
             return new Treemap.Rectangle(rectangle.x+width, rectangle.y, rectangle.width-width, rectangle.height);
         } else {
-            var height = Math.round(sum / rectangle.width);
+            var height = sum / rectangle.width;
             for (var i = 0; i < row.length; i++) {
                 var width = row[i].normalizedWeight / height;
                 if (x+width > maxX || i+1 == row.length) {
@@ -314,7 +323,7 @@ console.log("w = "+context.canvas.width+" h ="+context.canvas.height);
     }
 
     function place(element, x, y, width, height) {
-console.log(element.weight+"@["+x+","+y+"] w = "+width+" h = "+height);
+//console.log(element.weight+"@["+x+","+y+"] w = "+width+" h = "+height);
         element.rectangle = new Treemap.Rectangle(x, y, width, height);
         if (element instanceof Treemap.Group) {
             squarify(normalize(sort(element.elements, "weight"), element.rectangle).slice(), [], element.rectangle);

@@ -33,8 +33,8 @@ import java.util.Set;
 
 public final class Configuration {
 
-    private List<String> includes;
-    private List<String> excludes;
+    private Set<String> includes;
+    private Set<String> excludes;
     private boolean skipTests;
     private String test;
     private File testClassesDirectory;
@@ -45,7 +45,8 @@ public final class Configuration {
     public Configuration() {
     }
 
-    public List<String> getIncludes() {
+    public Set<String> getIncludes() {
+        /*
         if (null != test) {
             includes = new ArrayList<String>();
             for (String include: test.split(",")) {
@@ -56,24 +57,25 @@ public final class Configuration {
                     include = include.substring(0, include.length() - 6);
                 }
                 include = include.replace('.', '/');
-                includes.add("**/" + include + ".class");
+                includes.add("* * /" + include + ".class");
             }
         } else if (null == includes) {
             includes = new ArrayList<String>();
-            includes.add("**/*.class");
+            includes.add("* * /*.class");
         }
+        */
         return includes;
     }
 
-    public void setIncludes(List<String> includes) {
+    public void setIncludes(Set<String> includes) {
         this.includes = includes;
     }
 
-    public List<String> getExcludes() {
+    public Set<String> getExcludes() {
         return excludes;
     }
 
-    public void setExcludes(List<String> excludes) {
+    public void setExcludes(Set<String> excludes) {
         this.excludes = excludes;
     }
 

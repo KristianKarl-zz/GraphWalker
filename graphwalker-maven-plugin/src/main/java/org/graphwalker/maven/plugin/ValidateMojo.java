@@ -29,17 +29,11 @@ import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 
-/**
- * <p>ValidateMojo class.</p>
- *
- */
-@Mojo(name = "validate"
-        , defaultPhase = LifecyclePhase.PROCESS_CLASSES
-        , requiresDependencyResolution = ResolutionScope.COMPILE)
+@Mojo(name = "validate", defaultPhase = LifecyclePhase.PROCESS_CLASSES, requiresDependencyResolution = ResolutionScope.COMPILE, threadSafe = true)
 public final class ValidateMojo extends AbstractValidateMojo {
 
     @Override
     public void executeMojo() {
-        int i = 0;
+        validate(getMavenProject().getResources());
     }
 }

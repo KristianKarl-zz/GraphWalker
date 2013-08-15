@@ -25,35 +25,29 @@
  */
 package org.graphwalker.maven.plugin;
 
-import org.apache.maven.model.Resource;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.File;
 
-@Mojo(name = "generate"
-        , defaultPhase = LifecyclePhase.GENERATE_SOURCES
-        , requiresDependencyResolution = ResolutionScope.COMPILE)
+@Mojo(name = "generate", defaultPhase = LifecyclePhase.GENERATE_SOURCES, requiresDependencyResolution = ResolutionScope.COMPILE, threadSafe = true)
 public final class GenerateMojo extends AbstractGenerateMojo {
 
-    @Parameter(defaultValue = "${project.resources}", required = true, readonly = true)
-    private List<Resource> resources;
+    @Parameter(defaultValue = "${project.build.directory}/generated-sources/graphwalker")
+    private File generatedSourcesDirectory;
 
     @Override
-    protected List<String> getClasspathElements() {
-        List<String> classpathElements = new ArrayList<String>();
-        for (Resource resource : resources) {
-            classpathElements.add(resource.getDirectory());
-        }
-        classpathElements.addAll(super.getClasspathElements());
-        return classpathElements;
+    protected File getGeneratedSourcesDirectory() {
+        return generatedSourcesDirectory;
     }
 
     @Override
-    public void executeMojo() {
-        generate(getIncludes(), getExcludes(), resources);
+    protected void executeMojo() {
+        generate(getMavenProject().getResources());
+        if (getGeneratedSourcesDirectory().exists()) {
+            getMavenProject().addCompileSourceRoot(getGeneratedSourcesDirectory().getPath());
+        }
     }
 }

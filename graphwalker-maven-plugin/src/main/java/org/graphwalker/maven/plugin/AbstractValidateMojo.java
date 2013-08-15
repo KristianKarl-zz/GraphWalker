@@ -25,10 +25,32 @@
  */
 package org.graphwalker.maven.plugin;
 
+import org.apache.maven.model.Resource;
+
+import java.io.File;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 public abstract class AbstractValidateMojo extends AbstractGraphWalkerMojo {
 
-    // 1. Hitta alla tester
-    // 2. Ladda in modeller och implementationer
-    // 3. verifiera att implementationerna innehåller alla metoder och rätt argument
+    protected void validate(List<Resource> resources) {
+        for (Resource resource: resources) {
+            validate(resource);
+        }
+    }
+
+    protected void validate(Resource resource) {
+        for (File file: findFiles(getIncludes(), getExcludes(), new File(resource.getDirectory()))) {
+            validate(file);
+        }
+    }
+
+    private void validate(File file) {
+        if (getLog().isInfoEnabled()) {
+            getLog().info("Validate: " + file.getAbsolutePath());
+        }
+        // verifiera att modellen är ok (vakter, actions, keywords mm), kanske även generera varningar
+    }
 
 }

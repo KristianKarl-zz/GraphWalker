@@ -12,6 +12,10 @@ import org.graphwalker.example.models.ShoppingCart;
 import org.openqa.selenium.By;
 
 @GraphWalker({
+        @Execute(pathGenerator = AStarPath.class
+                , stopCondition = ReachedVertex.class
+                , stopConditionValue = "v_ShoppingCart"),
+
         @Execute(group = "shortest"
                 , pathGenerator = AStarPath.class
                 , stopCondition = ReachedVertex.class

@@ -32,15 +32,18 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
+import org.codehaus.plexus.util.FileUtils;
+import org.codehaus.plexus.util.StringUtils;
 import org.graphwalker.core.common.ResourceUtils;
+import org.graphwalker.core.model.ModelFactory;
+import org.graphwalker.core.model.support.DefaultModelFactory;
+import org.graphwalker.maven.plugin.source.SourceFile;
 
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 public abstract class AbstractGraphWalkerMojo extends AbstractMojo {
 
@@ -57,10 +60,10 @@ public abstract class AbstractGraphWalkerMojo extends AbstractMojo {
     private boolean skipTests;
 
     @Parameter(property = "graphwalker.test.skip", defaultValue = "false")
-    private boolean skipTestsProperty;
+    private boolean graphwalkerTestSkip;
 
     @Parameter(property = "maven.test.skip", defaultValue="false")
-    private boolean skipAllTests;
+    private boolean mavenTestSkip;
 
     @Parameter(property = "test", defaultValue = "")
     private String test;
@@ -78,10 +81,12 @@ public abstract class AbstractGraphWalkerMojo extends AbstractMojo {
     private File reportsDirectory;
 
     @Parameter(property = "includes")
-    private List<String> includes = new ArrayList<String>();
+    private Set<String> includes;
 
     @Parameter(property = "excludes")
-    private List<String> excludes;
+    private Set<String> excludes;
+
+    private final ModelFactory modelFactory = new DefaultModelFactory();
 
     protected MavenSession getSession() {
         return session;
@@ -92,19 +97,11 @@ public abstract class AbstractGraphWalkerMojo extends AbstractMojo {
     }
 
     protected List<String> getClasspathElements() {
-        return classpathElements;
+        return new ArrayList<String>(classpathElements);
     }
 
-    protected boolean isSkipTests() {
-        return skipTests;
-    }
-
-    protected boolean isSkipTestsProperty() {
-        return skipTestsProperty;
-    }
-
-    protected boolean isSkipAllTests() {
-        return skipAllTests;
+    protected boolean getSkipTests() {
+        return mavenTestSkip || graphwalkerTestSkip || skipTests;
     }
 
     protected String getTest() {
@@ -127,20 +124,19 @@ public abstract class AbstractGraphWalkerMojo extends AbstractMojo {
         return reportsDirectory;
     }
 
-    protected List<String> getIncludes() {
+    protected Set<String> getIncludes() {
+        if (0 == includes.size()) {
+            includes.addAll(getModelFactory().getSupportedFileTypes());
+        }
         return includes;
     }
 
-    protected List<String> getExcludes() {
+    protected Set<String> getExcludes() {
         return excludes;
     }
 
-    public AbstractGraphWalkerMojo() {
-        updateIncludeFilter(includes, test);
-    }
-
-    protected boolean skipTests() {
-        return isSkipAllTests() || isSkipTestsProperty() || isSkipTests();
+    protected ModelFactory getModelFactory() {
+        return modelFactory;
     }
 
     public void execute() throws MojoExecutionException, MojoFailureException {
@@ -151,7 +147,31 @@ public abstract class AbstractGraphWalkerMojo extends AbstractMojo {
         switchClassLoader(classLoader);
     }
 
-    public abstract void executeMojo();
+    protected abstract void executeMojo();
+
+    private String toString(Set<String> set) {
+        return StringUtils.join(set.toArray(new String[set.size()]), ",");
+    }
+
+    protected Set<File> findFiles(Set<String> includes, Set<String> excludes, File... directories) {
+        return findFiles(toString(includes), toString(excludes), directories);
+    }
+
+    protected Set<File> findFiles(String includes, String excludes, File... directories) {
+        Set<File> files = new HashSet<File>();
+        for (File directory : directories) {
+            if (directory.exists()) {
+                try {
+                    for (Object filename: FileUtils.getFileNames(directory, includes, excludes, true, true)) {
+                        files.add(new File((String)filename));
+                    }
+                } catch (Throwable t) {
+                    getLog().debug(t);
+                }
+            }
+        }
+        return files;
+    }
 
     private ClassLoader createClassLoader() throws MojoExecutionException {
         try {
@@ -188,22 +208,4 @@ public abstract class AbstractGraphWalkerMojo extends AbstractMojo {
         return oldProperties;
     }
 
-    private List<String> updateIncludeFilter(List<String> includes, String tests) {
-        if (null != tests) {
-            includes.clear();
-            for (String regex : tests.split(",")) {
-                if (regex.endsWith(".java")) {
-                    regex = regex.substring(0, regex.length() - 5);
-                }
-                if (regex.endsWith(".class")) {
-                    regex = regex.substring(0, regex.length() - 6);
-                }
-                regex = regex.replace('.', '/');
-                includes.add("**/" + regex + ".class");
-            }
-        } else if (includes.isEmpty()) {
-            includes.add("**/*.class");
-        }
-        return includes;
-    }
 }

@@ -41,20 +41,23 @@ import java.util.concurrent.TimeUnit;
  * <p>TestMojo class.</p>
  *
  */
-@Mojo(name = "test"
-        , defaultPhase = LifecyclePhase.TEST
-        , requiresDependencyResolution = ResolutionScope.TEST)
+@Mojo(name = "test", defaultPhase = LifecyclePhase.TEST, requiresDependencyResolution = ResolutionScope.TEST)
 @Execute(phase = LifecyclePhase.TEST, lifecycle = "graphwalker")
 public final class TestMojo extends AbstractGraphWalkerMojo {
 
-    public void executeMojo() {
-        if (!skipTests()) {
+    @Override
+    protected void executeMojo() {
+        System.out.println("Execute tests");
+
+
+        /*
+        if (!getSkipTests()) {
             displayHeader();
             Configuration configuration = new Configuration();
             configuration.setIncludes(getIncludes());
             configuration.setExcludes(getExcludes());
             configuration.setTest(getTest());
-            configuration.setSkipTests(isSkipTests());
+            configuration.setSkipTests(getSkipTests());   // behöver vi ta med denna?
             configuration.setClassesDirectory(getClassesDirectory());
             configuration.setTestClassesDirectory(getTestClassesDirectory());
             configuration.setReportsDirectory(getReportsDirectory());
@@ -65,7 +68,7 @@ public final class TestMojo extends AbstractGraphWalkerMojo {
             executeTests(manager);
             reportResults(manager);
             displayResult(manager);
-        }
+        }   */
     }
 
     private void displayHeader() {

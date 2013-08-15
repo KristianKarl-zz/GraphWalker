@@ -28,40 +28,47 @@ package org.graphwalker.maven.plugin.source;
 import org.codehaus.plexus.util.FileUtils;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
-public final class SourceFile {
+public final class SourceFile extends File {
 
-    private File parent;
-    private String filename;
+    private final Path filePath;
+    private final Path basePath;
+    private final Path outputPath;
 
-    public SourceFile(File parent, String filename) {
-        this.parent = parent;
-        String parentPath = parent.getAbsolutePath()+File.separator;
-        this.filename = filename.substring(parentPath.length());
+    private String packageName;
+    private File outputFile;
+
+
+    public SourceFile(File file, File baseDirectory, File outputDirectory) {
+        super(file.getAbsolutePath());
+        this.filePath = Paths.get(file.getAbsolutePath());
+        this.basePath = Paths.get(baseDirectory.getAbsolutePath());
+        this.outputPath = Paths.get(outputDirectory.getAbsolutePath());
+    }
+
+    public String getPackageName() {
+        if (null == packageName) {
+            packageName = FileUtils.getPath(basePath.relativize(filePath).toFile().getPath()).replaceAll(File.separator, ".");
+        }
+        return packageName;
     }
 
     public File getOutputFile() {
-        File outputParent = new File(parent.getParentFile(), "java");
-        return new File(outputParent, FileUtils.removeExtension(filename)+".java");
-    }
-
-    public String getFilename() {
-        return filename;
-    }
-
-    public String getPath() {
-        return FileUtils.getPath(filename);
+        if (null == outputFile) {
+            File file = outputPath.resolve(basePath.relativize(filePath)).toFile();
+            outputFile = new File(file.getParentFile(), FileUtils.removeExtension(file.getName()).concat(".java"));
+        }
+        return outputFile;
     }
 
     public String getExtension() {
-        return FileUtils.extension(filename);
+        return FileUtils.extension(getName());
     }
 
     public String getBaseName() {
-        return FileUtils.basename(FileUtils.removeExtension(filename));
+        return FileUtils.removeExtension(getName());
     }
 
-    public boolean exists() {
-        return new File(parent, filename).exists();
-    }
 }

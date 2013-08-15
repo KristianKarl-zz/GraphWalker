@@ -32,17 +32,8 @@
                 <executions>
                     <execution>
                         <goals>
-                            <goal>generate</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </phase>
-            <phase>
-                <id>process-classes</id>
-                <executions>
-                    <execution>
-                        <goals>
                             <goal>validate</goal>
+                            <goal>generate</goal>
                         </goals>
                     </execution>
                 </executions>
@@ -52,17 +43,8 @@
                 <executions>
                     <execution>
                         <goals>
-                            <goal>test-generate</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </phase>
-            <phase>
-                <id>process-test-classes</id>
-                <executions>
-                    <execution>
-                        <goals>
                             <goal>test-validate</goal>
+                            <goal>test-generate</goal>
                         </goals>
                     </execution>
                 </executions>
