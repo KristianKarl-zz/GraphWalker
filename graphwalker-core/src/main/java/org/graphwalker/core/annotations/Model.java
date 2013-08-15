@@ -42,12 +42,13 @@ public @interface Model {
      *
      * @return a {@link java.lang.String} object.
      */
-    public String file();
+    public String file() default "${package}/${classname}.${type}";
+
     /**
      * <p>type.</p>
      *
      * @return a {@link java.lang.String} object.
      */
-    public String type();
+    public String type() default "graphml";
 
 }
