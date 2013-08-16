@@ -26,44 +26,22 @@
 package org.graphwalker.maven.plugin.test;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public final class Configuration {
 
     private Set<String> includes;
     private Set<String> excludes;
-    private boolean skipTests;
     private String test;
     private File testClassesDirectory;
     private File classesDirectory;
     private File reportsDirectory;
-    private Set<String> groups;
+    private String groups;
 
     public Configuration() {
     }
 
     public Set<String> getIncludes() {
-        /*
-        if (null != test) {
-            includes = new ArrayList<String>();
-            for (String include: test.split(",")) {
-                if (include.endsWith(".java")) {
-                    include = include.substring(0, include.length() - 5);
-                }
-                if (include.endsWith(".class")) {
-                    include = include.substring(0, include.length() - 6);
-                }
-                include = include.replace('.', '/');
-                includes.add("* * /" + include + ".class");
-            }
-        } else if (null == includes) {
-            includes = new ArrayList<String>();
-            includes.add("* * /*.class");
-        }
-        */
         return includes;
     }
 
@@ -77,14 +55,6 @@ public final class Configuration {
 
     public void setExcludes(Set<String> excludes) {
         this.excludes = excludes;
-    }
-
-    public boolean getSkipTests() {
-        return skipTests;
-    }
-
-    public void setSkipTests(boolean skipTests) {
-        this.skipTests = skipTests;
     }
 
     public String getTest() {
@@ -119,16 +89,11 @@ public final class Configuration {
         this.reportsDirectory = reportsDirectory;
     }
 
-    public Set<String> getGroups() {
+    public String getGroups() {
         return groups;
     }
 
     public void setGroups(String groups) {
-        this.groups = new HashSet<String>();
-        if (null != groups) {
-            for (String group: groups.trim().split(",")) {
-                this.groups.add(group.trim());
-            }
-        }
+        this.groups = groups;
     }
 }

@@ -32,6 +32,8 @@ import java.util.List;
  */
 public interface ModelFactory {
 
+    // TODO: Lägg till support för att kunna validera en modell
+
     /**
      * <p>accept.</p>
      *

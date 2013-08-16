@@ -28,11 +28,9 @@ package org.graphwalker.maven.plugin;
 import org.apache.maven.model.Resource;
 
 import java.io.File;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-public abstract class AbstractValidateMojo extends AbstractGraphWalkerMojo {
+public abstract class AbstractValidateMojo extends AbstractDefaultMojo {
 
     protected void validate(List<Resource> resources) {
         for (Resource resource: resources) {

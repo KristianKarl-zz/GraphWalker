@@ -25,14 +25,23 @@
  */
 package org.graphwalker.maven.plugin;
 
-import org.apache.maven.plugins.annotations.*;
-import org.graphwalker.core.machine.Execution;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.Execute;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.graphwalker.core.common.ResourceUtils;
+import org.graphwalker.core.machine.Execution;
 import org.graphwalker.core.machine.Machine;
-import org.graphwalker.maven.plugin.test.*;
+import org.graphwalker.maven.plugin.test.Configuration;
+import org.graphwalker.maven.plugin.test.Group;
+import org.graphwalker.maven.plugin.test.Manager;
+import org.graphwalker.maven.plugin.test.Scanner;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -43,11 +52,24 @@ import java.util.concurrent.TimeUnit;
  */
 @Mojo(name = "test", defaultPhase = LifecyclePhase.TEST, requiresDependencyResolution = ResolutionScope.TEST)
 @Execute(phase = LifecyclePhase.TEST, lifecycle = "graphwalker")
-public final class TestMojo extends AbstractGraphWalkerMojo {
+public final class TestMojo extends AbstractTestMojo {
 
     @Override
-    protected void executeMojo() {
-        System.out.println("Execute tests");
+    protected void executeMojo() throws MojoExecutionException, MojoFailureException {
+        if (!getSkipTests()) {
+            ClassLoader classLoader = switchClassLoader(createClassLoader());
+            Properties properties = switchProperties(createProperties());
+            displayHeader();
+            Configuration configuration = createConfiguration();
+            Scanner scanner = new Scanner();
+            Manager manager = new Manager(configuration, scanner.scan(getTestClassesDirectory(), getClassesDirectory()));
+            displayConfiguration(manager);
+            //executeTests(manager);
+            //reportResults(manager);
+            //displayResult(manager);
+            switchProperties(properties);
+            switchClassLoader(classLoader);
+        }
 
 
         /*
@@ -72,21 +94,35 @@ public final class TestMojo extends AbstractGraphWalkerMojo {
     }
 
     private void displayHeader() {
-        getLog().info("------------------------------------------------------------------------");
-        getLog().info(" G r a p h W a l k e r                                                  ");
-        getLog().info("------------------------------------------------------------------------");
+        if (getLog().isInfoEnabled()) {
+            getLog().info("------------------------------------------------------------------------");
+            getLog().info(" G r a p h W a l k e r                                                  ");
+            getLog().info("------------------------------------------------------------------------");
+        }
+    }
+
+    private Configuration createConfiguration() {
+        Configuration configuration = new Configuration();
+        configuration.setIncludes(getIncludes());
+        configuration.setExcludes(getExcludes());
+        configuration.setTest(getTest());
+        configuration.setClassesDirectory(getClassesDirectory());
+        configuration.setTestClassesDirectory(getTestClassesDirectory());
+        configuration.setReportsDirectory(getReportsDirectory());
+        configuration.setGroups(getGroups());
+        return configuration;
     }
 
     private void displayConfiguration(Manager manager) {
         getLog().info("Configuration:");
-        getLog().info("    Skip Tests = "+manager.getConfiguration().getSkipTests());
         getLog().info("          Test = "+manager.getConfiguration().getTest());
         getLog().info("       Include = "+manager.getConfiguration().getIncludes());
         getLog().info("       Exclude = "+manager.getConfiguration().getExcludes());
-        getLog().info("        Groups = "+manager.getConfiguration().getGroups().toString());
+        getLog().info("        Groups = "+manager.getConfiguration().getGroups());
         getLog().info("  Threads/Test = "+1); // TODO: gör så att man kan låta flera trådar köra samma test (kunna utföra lasttest)
         getLog().info("");
         getLog().info("Tests:");
+
         if (0<manager.getGroups().size()) {
             for (Group group: manager.getGroups()) {
                 getLog().info("  [" + group.getName()+"]");

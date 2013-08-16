@@ -30,21 +30,17 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
 import org.graphwalker.core.model.Model;
-import org.graphwalker.core.model.ModelFactory;
-import org.graphwalker.core.model.support.DefaultModelFactory;
 import org.graphwalker.maven.plugin.source.CodeGenerator;
 import org.graphwalker.maven.plugin.source.SourceFile;
 
 import java.io.File;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * <p>AbstractGenerateMojo class.</p>
  *
  */
-public abstract class AbstractGenerateMojo extends AbstractGraphWalkerMojo {
+public abstract class AbstractGenerateMojo extends AbstractDefaultMojo {
 
     @Parameter(defaultValue = "${project.build.sourceEncoding}", required = true, readonly = true)
     private String sourceEncoding;

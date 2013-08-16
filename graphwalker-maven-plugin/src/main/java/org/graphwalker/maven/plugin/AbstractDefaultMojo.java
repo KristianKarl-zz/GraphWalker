@@ -34,51 +34,20 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
-import org.graphwalker.core.common.ResourceUtils;
 import org.graphwalker.core.model.ModelFactory;
 import org.graphwalker.core.model.support.DefaultModelFactory;
-import org.graphwalker.maven.plugin.source.SourceFile;
 
 import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 
-public abstract class AbstractGraphWalkerMojo extends AbstractMojo {
+public abstract class AbstractDefaultMojo extends AbstractMojo {
 
     @Component
     private MavenSession session;
 
     @Component
     private MavenProject mavenProject;
-
-    @Parameter(property = "project.testClasspathElements")
-    private List<String> classpathElements;
-
-    @Parameter(property = "skipTests", defaultValue = "false")
-    private boolean skipTests;
-
-    @Parameter(property = "graphwalker.test.skip", defaultValue = "false")
-    private boolean graphwalkerTestSkip;
-
-    @Parameter(property = "maven.test.skip", defaultValue="false")
-    private boolean mavenTestSkip;
-
-    @Parameter(property = "test", defaultValue = "")
-    private String test;
-
-    @Parameter(property = "graphwalker.test.groups", defaultValue = "")
-    private String groups;
-
-    @Parameter(defaultValue="${project.build.testOutputDirectory}")
-    private File testClassesDirectory;
-
-    @Parameter(defaultValue="${project.build.outputDirectory}")
-    private File classesDirectory;
-
-    @Parameter(defaultValue = "${project.build.directory}/graphwalker-reports")
-    private File reportsDirectory;
 
     @Parameter(property = "includes")
     private Set<String> includes;
@@ -94,34 +63,6 @@ public abstract class AbstractGraphWalkerMojo extends AbstractMojo {
 
     protected MavenProject getMavenProject() {
         return mavenProject;
-    }
-
-    protected List<String> getClasspathElements() {
-        return new ArrayList<String>(classpathElements);
-    }
-
-    protected boolean getSkipTests() {
-        return mavenTestSkip || graphwalkerTestSkip || skipTests;
-    }
-
-    protected String getTest() {
-        return test;
-    }
-
-    protected String getGroups() {
-        return groups;
-    }
-
-    protected File getTestClassesDirectory() {
-        return testClassesDirectory;
-    }
-
-    protected File getClassesDirectory() {
-        return classesDirectory;
-    }
-
-    protected File getReportsDirectory() {
-        return reportsDirectory;
     }
 
     protected Set<String> getIncludes() {
@@ -140,14 +81,10 @@ public abstract class AbstractGraphWalkerMojo extends AbstractMojo {
     }
 
     public void execute() throws MojoExecutionException, MojoFailureException {
-        ClassLoader classLoader = switchClassLoader(createClassLoader());
-        Properties properties = switchProperties(createProperties());
         executeMojo();
-        switchProperties(properties);
-        switchClassLoader(classLoader);
     }
 
-    protected abstract void executeMojo();
+    protected abstract void executeMojo() throws MojoExecutionException, MojoFailureException;
 
     private String toString(Set<String> set) {
         return StringUtils.join(set.toArray(new String[set.size()]), ",");
@@ -172,40 +109,4 @@ public abstract class AbstractGraphWalkerMojo extends AbstractMojo {
         }
         return files;
     }
-
-    private ClassLoader createClassLoader() throws MojoExecutionException {
-        try {
-            return new URLClassLoader(convertToURL(getClasspathElements()), getClass().getClassLoader());
-        } catch (MalformedURLException e) {
-            throw new MojoExecutionException(ResourceUtils.getText(Bundle.NAME, "exception.create.classloader"));
-        }
-    }
-
-    private URL[] convertToURL(List<String> elements) throws MalformedURLException {
-        List<URL> urlList = new ArrayList<URL>();
-        for (String element : elements) {
-            urlList.add(new File(element).toURI().toURL());
-        }
-        return urlList.toArray(new URL[urlList.size()]);
-    }
-
-    private ClassLoader switchClassLoader(ClassLoader newClassLoader) {
-        ClassLoader oldClassLoader = Thread.currentThread().getContextClassLoader();
-        Thread.currentThread().setContextClassLoader(newClassLoader);
-        return oldClassLoader;
-    }
-
-    private Properties createProperties() {
-        Properties properties = (Properties) System.getProperties().clone();
-        properties.putAll((Properties) getMavenProject().getProperties().clone());
-        properties.putAll((Properties) getSession().getUserProperties().clone());
-        return properties;
-    }
-
-    private Properties switchProperties(Properties properties) {
-        Properties oldProperties = (Properties) System.getProperties().clone();
-        System.setProperties(properties);
-        return oldProperties;
-    }
-
 }

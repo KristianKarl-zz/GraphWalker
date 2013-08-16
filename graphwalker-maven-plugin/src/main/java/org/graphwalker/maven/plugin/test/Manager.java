@@ -29,15 +29,17 @@ import org.graphwalker.core.annotations.Execute;
 import org.graphwalker.core.annotations.GraphWalker;
 import org.graphwalker.core.machine.Execution;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 public final class Manager {
 
     private final Configuration configuration;
-    private final List<Class<?>> testClasses;
-    private Map<String,Group> groups;
+    private final Collection<Class<?>> testClasses;
+    private Map<String,Group> groups = new HashMap<String,Group>();;
 
-    public Manager(Configuration configuration, List<Class<?>> testClasses) {
+    public Manager(Configuration configuration, Collection<Class<?>> testClasses) {
         this.configuration = configuration;
         this.testClasses = testClasses;
     }
@@ -47,17 +49,14 @@ public final class Manager {
     }
 
     public Collection<Group> getGroups() {
-        if (null == groups) {
-            groups = new HashMap<String,Group>();
+        if (groups.isEmpty()) {
             for (Class<?> testClass: testClasses) {
                 for (Execute execute: testClass.getAnnotation(GraphWalker.class).value()) {
-                    if (configuration.getGroups().contains(execute.group())) {
-                        if (!groups.containsKey(execute.group())) {
-                            groups.put(execute.group(), new Group(execute.group()));
-                        }
-                        Execution execution = new Execution(testClass, execute.pathGenerator(), execute.stopCondition(), execute.stopConditionValue(), execute.exceptionStrategy());
-                        groups.get(execute.group()).addExecution(execution);
+                    if (!groups.containsKey(execute.group())) {
+                        groups.put(execute.group(), new Group(execute.group()));
                     }
+                    Execution execution = new Execution(testClass, execute.pathGenerator(), execute.stopCondition(), execute.stopConditionValue(), execute.exceptionStrategy());
+                    groups.get(execute.group()).addExecution(execution);
                 }
             }
         }

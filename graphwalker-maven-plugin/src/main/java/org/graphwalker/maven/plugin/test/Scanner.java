@@ -29,8 +29,9 @@ import org.codehaus.plexus.util.DirectoryScanner;
 import org.graphwalker.core.annotations.GraphWalker;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * <p>Scanner class.</p>
@@ -39,40 +40,32 @@ import java.util.List;
  */
 public final class Scanner {
 
-    private final Configuration configuration;
-
-    public Scanner(Configuration configuration) {
-        this.configuration = configuration;
-    }
-
-    public List<Class<?>> scan(File... directories) {
-        List<Class<?>> tests = new ArrayList<Class<?>>();
+    public Collection<Class<?>> scan(File... directories) {
+        Map<String, Class<?>> tests = new HashMap<String, Class<?>>();
         for (File directory: directories) {
-            tests.addAll(scan(directory));
+            scan(tests, directory);
         }
-        return tests;
+        return tests.values();
     }
 
-    private List<Class<?>> scan(File directory) {
-        List<Class<?>> tests = new ArrayList<Class<?>>();
+    private void scan(Map<String, Class<?>> tests, File directory) {
         for (String fileName: findFiles(directory)) {
             try {
-                Class<?> clazz = loadClass(getClassName(fileName));
+                String className = getClassName(fileName);
+                Class<?> clazz = loadClass(className);
                 if (acceptClass(clazz)) {
-                    tests.add(clazz);
+                    tests.put(className, clazz);
                 }
             } catch (ClassNotFoundException e) {
                 // ignore
             }
         }
-        return tests;
     }
 
     private String[] findFiles(File directory) {
         if (directory.exists()) {
             DirectoryScanner directoryScanner = new DirectoryScanner();
-            directoryScanner.setIncludes(configuration.getIncludes().toArray(new String[configuration.getIncludes().size()]));
-            directoryScanner.setExcludes(configuration.getExcludes().toArray(new String[configuration.getExcludes().size()]));
+            directoryScanner.setIncludes(new String[]{"**/*.class"});
             directoryScanner.setBasedir(directory);
             directoryScanner.setCaseSensitive(true);
             directoryScanner.scan();
@@ -81,7 +74,6 @@ public final class Scanner {
             return new String[]{};
         }
     }
-
     private boolean acceptClass(Class<?> clazz) {
         return clazz.isAnnotationPresent(GraphWalker.class);
     }
