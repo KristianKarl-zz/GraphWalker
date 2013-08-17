@@ -36,6 +36,7 @@ import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 
 public abstract class AbstractTestMojo extends AbstractDefaultMojo {
 
@@ -60,7 +61,13 @@ public abstract class AbstractTestMojo extends AbstractDefaultMojo {
     @Parameter(property = "maven.test.skip", defaultValue="false")
     private boolean mavenTestSkip;
 
-    @Parameter(property = "test", defaultValue = "*")
+    @Parameter(property = "includes")
+    private Set<String> includes;
+
+    @Parameter(property = "excludes")
+    private Set<String> excludes;
+
+    @Parameter(property = "test")
     private String test;
 
     @Parameter(property = "groups", defaultValue = "*")
@@ -84,6 +91,17 @@ public abstract class AbstractTestMojo extends AbstractDefaultMojo {
 
     protected boolean getSkipTests() {
         return mavenTestSkip || graphwalkerTestSkip || skipTests;
+    }
+
+    protected Set<String> getIncludes() {
+        if (0 == includes.size()) {
+            includes.add("*");
+        }
+        return includes;
+    }
+
+    protected Set<String> getExcludes() {
+        return excludes;
     }
 
     protected String getTest() {

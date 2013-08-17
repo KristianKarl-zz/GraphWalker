@@ -30,7 +30,6 @@ import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Component;
-import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
@@ -49,12 +48,6 @@ public abstract class AbstractDefaultMojo extends AbstractMojo {
     @Component
     private MavenProject mavenProject;
 
-    @Parameter(property = "includes")
-    private Set<String> includes;
-
-    @Parameter(property = "excludes")
-    private Set<String> excludes;
-
     private final ModelFactory modelFactory = new DefaultModelFactory();
 
     protected MavenSession getSession() {
@@ -63,17 +56,6 @@ public abstract class AbstractDefaultMojo extends AbstractMojo {
 
     protected MavenProject getMavenProject() {
         return mavenProject;
-    }
-
-    protected Set<String> getIncludes() {
-        if (0 == includes.size()) {
-            includes.add("**/*");
-        }
-        return includes;
-    }
-
-    protected Set<String> getExcludes() {
-        return excludes;
     }
 
     protected ModelFactory getModelFactory() {

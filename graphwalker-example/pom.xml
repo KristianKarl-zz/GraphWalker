@@ -20,6 +20,11 @@
                 <groupId>org.graphwalker</groupId>
                 <artifactId>graphwalker-maven-plugin</artifactId>
                 <version>${project.version}</version>
+                <configuration>
+                    <excludes>
+                        <exclude>*Amazon</exclude>
+                    </excludes>
+                </configuration>
             </plugin>
         </plugins>
     </build>

@@ -39,7 +39,7 @@ public abstract class AbstractValidateMojo extends AbstractDefaultMojo {
     }
 
     protected void validate(Resource resource) {
-        for (File file: findFiles(getIncludes(), getExcludes(), new File(resource.getDirectory()))) {
+        for (File file: findFiles(getModelFactory().getSupportedFileTypes(), null, new File(resource.getDirectory()))) {
             validate(file);
         }
     }

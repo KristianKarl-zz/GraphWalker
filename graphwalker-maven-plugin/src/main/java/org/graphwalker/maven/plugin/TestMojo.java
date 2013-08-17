@@ -50,7 +50,7 @@ import java.util.concurrent.TimeUnit;
  *
  */
 @Mojo(name = "test", defaultPhase = LifecyclePhase.TEST, requiresDependencyResolution = ResolutionScope.TEST)
-@Execute(phase = LifecyclePhase.TEST, lifecycle = "graphwalker")
+@Execute(phase = LifecyclePhase.TEST_COMPILE, lifecycle = "graphwalker")
 public final class TestMojo extends AbstractTestMojo {
 
     @Override
