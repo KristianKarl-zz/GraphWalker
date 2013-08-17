@@ -26,8 +26,8 @@
 package org.graphwalker.core.model.support;
 
 import org.graphwalker.core.Bundle;
-import org.graphwalker.core.model.*;
 import org.graphwalker.core.common.ResourceUtils;
+import org.graphwalker.core.model.*;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.filter.ElementFilter;
@@ -52,15 +52,7 @@ public final class GraphMLModelFactory extends AbstractModelFactory {
      * <p>Constructor for GraphmlModelFactory.</p>
      */
     public GraphMLModelFactory() {
-    }
-
-    /**
-     * <p>getSupportedFileTypes.</p>
-     *
-     * @return a {@link java.util.List} object.
-     */
-    public List<String> getSupportedFileTypes() {
-        return Arrays.asList("**/*.graphml");
+        super("**/*.graphml");
     }
 
     /** {@inheritDoc} */

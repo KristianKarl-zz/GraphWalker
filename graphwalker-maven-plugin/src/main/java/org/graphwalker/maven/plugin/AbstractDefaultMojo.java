@@ -67,7 +67,7 @@ public abstract class AbstractDefaultMojo extends AbstractMojo {
 
     protected Set<String> getIncludes() {
         if (0 == includes.size()) {
-            includes.addAll(getModelFactory().getSupportedFileTypes());
+            includes.add("**/*");
         }
         return includes;
     }
@@ -87,6 +87,9 @@ public abstract class AbstractDefaultMojo extends AbstractMojo {
     protected abstract void executeMojo() throws MojoExecutionException, MojoFailureException;
 
     private String toString(Set<String> set) {
+        if (null == set) {
+            return "";
+        }
         return StringUtils.join(set.toArray(new String[set.size()]), ",");
     }
 

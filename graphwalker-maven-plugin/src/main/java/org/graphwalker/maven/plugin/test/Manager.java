@@ -25,33 +25,54 @@
  */
 package org.graphwalker.maven.plugin.test;
 
+import org.codehaus.plexus.util.SelectorUtils;
 import org.graphwalker.core.annotations.Execute;
 import org.graphwalker.core.annotations.GraphWalker;
 import org.graphwalker.core.machine.Execution;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public final class Manager {
 
     private final Configuration configuration;
-    private final Collection<Class<?>> testClasses;
-    private Map<String,Group> groups = new HashMap<String,Group>();;
+    private final Collection<Group> executionGroups;
 
     public Manager(Configuration configuration, Collection<Class<?>> testClasses) {
         this.configuration = configuration;
-        this.testClasses = testClasses;
+        this.executionGroups = createExecutionGroups(filterTestClasses(testClasses));
     }
 
-    public Configuration getConfiguration() {
-        return configuration;
+
+    private Collection<Class<?>> filterTestClasses(Collection<Class<?>> testClasses) {
+        Set<Class<?>> filteredClasses = new HashSet<Class<?>>(testClasses.size());
+        for (Class<?> testClass: testClasses) {
+            if (isIncluded(testClass)) {
+                filteredClasses.add(testClass);
+            }
+        }
+        return filteredClasses;
     }
 
-    public Collection<Group> getGroups() {
-        if (groups.isEmpty()) {
-            for (Class<?> testClass: testClasses) {
-                for (Execute execute: testClass.getAnnotation(GraphWalker.class).value()) {
+    private boolean isIncluded(Class<?> testClass) {
+        String name = testClass.getName();
+        for (String excluded: configuration.getExcludes()) {
+            if (SelectorUtils.match(excluded, name, true)) {
+                return false;
+            }
+        }
+        for (String included: configuration.getIncludes()) {
+            if (SelectorUtils.match(included, name, true)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private Collection<Group> createExecutionGroups(Collection<Class<?>> testClasses) {
+        Map<String, Group> groups = new HashMap<String, Group>();
+        for (Class<?> testClass: testClasses) {
+            for (Execute execute: testClass.getAnnotation(GraphWalker.class).value()) {
+                if (isExecutionGroup(execute.group())) {
                     if (!groups.containsKey(execute.group())) {
                         groups.put(execute.group(), new Group(execute.group()));
                     }
@@ -61,5 +82,22 @@ public final class Manager {
             }
         }
         return groups.values();
+    }
+
+    private boolean isExecutionGroup(String name) {
+        for (String group: configuration.getGroups()) {
+            if (SelectorUtils.match(group, name, true)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public Collection<Group> getExecutionGroups() {
+        return executionGroups;
+    }
+
+    public Configuration getConfiguration() {
+        return configuration;
     }
 }

@@ -32,11 +32,10 @@ public final class Configuration {
 
     private Set<String> includes;
     private Set<String> excludes;
-    private String test;
     private File testClassesDirectory;
     private File classesDirectory;
     private File reportsDirectory;
-    private String groups;
+    private Set<String> groups;
 
     public Configuration() {
     }
@@ -55,14 +54,6 @@ public final class Configuration {
 
     public void setExcludes(Set<String> excludes) {
         this.excludes = excludes;
-    }
-
-    public String getTest() {
-        return test;
-    }
-
-    public void setTest(String test) {
-        this.test = test;
     }
 
     public File getTestClassesDirectory() {
@@ -89,11 +80,11 @@ public final class Configuration {
         this.reportsDirectory = reportsDirectory;
     }
 
-    public String getGroups() {
+    public Set<String> getGroups() {
         return groups;
     }
 
-    public void setGroups(String groups) {
+    public void setGroups(Set<String> groups) {
         this.groups = groups;
     }
 }

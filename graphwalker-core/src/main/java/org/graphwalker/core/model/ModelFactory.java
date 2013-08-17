@@ -25,7 +25,7 @@
  */
 package org.graphwalker.core.model;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * <p>ModelFactory interface.</p>
@@ -54,7 +54,7 @@ public interface ModelFactory {
     /**
      * <p>getSupportedFileTypes.</p>
      *
-     * @return a {@link java.util.List} object.
+     * @return a {@link java.util.Set} object.
      */
-    List<String> getSupportedFileTypes();
+    Set<String> getSupportedFileTypes();
 }

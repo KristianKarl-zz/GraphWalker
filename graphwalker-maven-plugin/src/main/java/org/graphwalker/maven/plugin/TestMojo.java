@@ -31,6 +31,7 @@ import org.apache.maven.plugins.annotations.Execute;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.ResolutionScope;
+import org.codehaus.plexus.util.StringUtils;
 import org.graphwalker.core.common.ResourceUtils;
 import org.graphwalker.core.machine.Execution;
 import org.graphwalker.core.machine.Machine;
@@ -39,9 +40,7 @@ import org.graphwalker.maven.plugin.test.Group;
 import org.graphwalker.maven.plugin.test.Manager;
 import org.graphwalker.maven.plugin.test.Scanner;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -66,31 +65,10 @@ public final class TestMojo extends AbstractTestMojo {
             displayConfiguration(manager);
             //executeTests(manager);
             //reportResults(manager);
-            //displayResult(manager);
+            displayResult(manager);
             switchProperties(properties);
             switchClassLoader(classLoader);
         }
-
-
-        /*
-        if (!getSkipTests()) {
-            displayHeader();
-            Configuration configuration = new Configuration();
-            configuration.setIncludes(getIncludes());
-            configuration.setExcludes(getExcludes());
-            configuration.setTest(getTest());
-            configuration.setSkipTests(getSkipTests());   // behöver vi ta med denna?
-            configuration.setClassesDirectory(getClassesDirectory());
-            configuration.setTestClassesDirectory(getTestClassesDirectory());
-            configuration.setReportsDirectory(getReportsDirectory());
-            configuration.setGroups(getGroups());
-            Scanner scanner = new Scanner(configuration);
-            Manager manager = new Manager(configuration, scanner.scan(getTestClassesDirectory(), getClassesDirectory()));
-            displayConfiguration(manager);
-            executeTests(manager);
-            reportResults(manager);
-            displayResult(manager);
-        }   */
     }
 
     private void displayHeader() {
@@ -103,44 +81,67 @@ public final class TestMojo extends AbstractTestMojo {
 
     private Configuration createConfiguration() {
         Configuration configuration = new Configuration();
-        configuration.setIncludes(getIncludes());
-        configuration.setExcludes(getExcludes());
-        configuration.setTest(getTest());
+        if (StringUtils.isBlank(getTest())) {
+            configuration.setIncludes(getIncludes());
+            configuration.setExcludes(getExcludes());
+        } else {
+            Set<String> include = new HashSet<String>();
+            Set<String> exclude = new HashSet<String>();
+            for (String test: getTest().split(",")) {
+                test = test.trim();
+                if (StringUtils.isNotBlank(test)) {
+                    if (test.startsWith("!")) {
+                        test = test.substring(1);
+                        if (StringUtils.isNotBlank(test)) {
+                            exclude.add(test);
+                        }
+                    } else {
+                        include.add(test);
+                    }
+                }
+            }
+            configuration.setIncludes(include);
+            configuration.setExcludes(exclude);
+        }
         configuration.setClassesDirectory(getClassesDirectory());
         configuration.setTestClassesDirectory(getTestClassesDirectory());
         configuration.setReportsDirectory(getReportsDirectory());
-        configuration.setGroups(getGroups());
+        Set<String> groups = new HashSet<String>();
+        for (String group: getGroups().split(",")) {
+            groups.add(group.trim());
+        }
+        configuration.setGroups(groups);
         return configuration;
     }
 
     private void displayConfiguration(Manager manager) {
-        getLog().info("Configuration:");
-        getLog().info("          Test = "+manager.getConfiguration().getTest());
-        getLog().info("       Include = "+manager.getConfiguration().getIncludes());
-        getLog().info("       Exclude = "+manager.getConfiguration().getExcludes());
-        getLog().info("        Groups = "+manager.getConfiguration().getGroups());
-        getLog().info("  Threads/Test = "+1); // TODO: gör så att man kan låta flera trådar köra samma test (kunna utföra lasttest)
-        getLog().info("");
-        getLog().info("Tests:");
-
-        if (0<manager.getGroups().size()) {
-            for (Group group: manager.getGroups()) {
-                getLog().info("  [" + group.getName()+"]");
-                for (Execution execution: group.getExecutions()) {
-                    getLog().info("    "+execution.getName());
+        if (getLog().isInfoEnabled()) {
+            getLog().info("Configuration:");
+            getLog().info("    Include = "+manager.getConfiguration().getIncludes());
+            getLog().info("    Exclude = "+manager.getConfiguration().getExcludes());
+            getLog().info("     Groups = "+manager.getConfiguration().getGroups());
+            getLog().info("   Parallel = false"); // TODO: gör så att man kan låta flera trådar köra samma test (kunna utföra lasttest)
+            getLog().info("");
+            getLog().info("Tests:");
+            if (manager.getExecutionGroups().isEmpty()) {
+                getLog().info("  No tests found");
+            } else {
+                for (Group group: manager.getExecutionGroups()) {
+                    getLog().info("  [" + group.getName()+"]");
+                    for (Execution execution: group.getExecutions()) {
+                        getLog().info("    "+execution.getName());
+                    }
+                    getLog().info("");
                 }
-                getLog().info("");
             }
-        } else {
-            getLog().info("  No tests found");
+            getLog().info("------------------------------------------------------------------------");
         }
-        getLog().info("------------------------------------------------------------------------");
     }
 
     private void executeTests(Manager manager) {
-        if (0<manager.getGroups().size()) {
+        if (0<manager.getExecutionGroups().size()) {
             List<Machine> machines = new ArrayList<Machine>();
-            for (Group group: manager.getGroups()) {
+            for (Group group: manager.getExecutionGroups()) {
                 machines.add(new Machine(group.getExecutions()));
             }
             try {
@@ -161,46 +162,46 @@ public final class TestMojo extends AbstractTestMojo {
     }
 
     private void displayResult(Manager manager) {
-        getLog().info("------------------------------------------------------------------------");
-        getLog().info("");
-        getLog().info(ResourceUtils.getText(Bundle.NAME, "result.label"));
-        getLog().info("");
-        long group = 0, total = 0, completed = 0, failed = 0, notExecuted = 0;
-
-
-        /*
-        List<Model> failedModels = new ArrayList<Model>();
-        for (GraphWalker graphWalker : graphWalkers) {
-            group++;
-            for (Model model : graphWalker.getConfiguration().getModels()) {
-                total++;
-                switch (model.getModelStatus()) {
-                    case COMPLETED: {
-                        completed++;
+        if (getLog().isInfoEnabled()) {
+            getLog().info("------------------------------------------------------------------------");
+            getLog().info("");
+            getLog().info(ResourceUtils.getText(Bundle.NAME, "result.label"));
+            getLog().info("");
+            long group = 0, tests = 0, completed = 0, failed = 0, notExecuted = 0;
+            /*
+            List<Model> failedModels = new ArrayList<Model>();
+            for (GraphWalker graphWalker : graphWalkers) {
+                group++;
+                for (Model model : graphWalker.getConfiguration().getModels()) {
+                    total++;
+                    switch (model.getModelStatus()) {
+                        case COMPLETED: {
+                            completed++;
+                        }
+                        break;
+                        case FAILED: {
+                            failed++;
+                            failedModels.add(model);
+                        }
+                        break;
+                        case NOT_EXECUTED: {
+                            notExecuted++;
+                        }
+                        break;
                     }
-                    break;
-                    case FAILED: {
-                        failed++;
-                        failedModels.add(model);
-                    }
-                    break;
-                    case NOT_EXECUTED: {
-                        notExecuted++;
-                    }
-                    break;
                 }
             }
-        }
-        if (0 < failedModels.size()) {
-            getLog().info("Failed models: ");
-            for (Model model : failedModels) {
-                getLog().info("  " + model.getId() + " [group = " + model.getGroup() + "]");
+            if (0 < failedModels.size()) {
+                getLog().info("Failed models: ");
+                for (Model model : failedModels) {
+                    getLog().info("  " + model.getId() + " [group = " + model.getGroup() + "]");
+                }
+                getLog().info("");
             }
+            */
+            getLog().info(ResourceUtils.getText(Bundle.NAME, "result.summary", group, tests, completed, failed, notExecuted));
             getLog().info("");
         }
-        */
-        getLog().info(ResourceUtils.getText(Bundle.NAME, "result.summary", group, total, completed, failed, notExecuted));
-        getLog().info("");
     }
 
 

@@ -25,12 +25,24 @@
  */
 package org.graphwalker.core.model.support;
 
-import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.ModelFactory;
+
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * <p>Abstract AbstractModelFactory class.</p>
  */
 public abstract class AbstractModelFactory implements ModelFactory {
 
+    private Set<String> supportedTypes = new HashSet<String>();
+
+    public AbstractModelFactory(String... types) {
+        Collections.addAll(supportedTypes, types);
+    }
+
+    public Set<String> getSupportedFileTypes() {
+        return supportedTypes;
+    }
 }

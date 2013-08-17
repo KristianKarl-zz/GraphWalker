@@ -59,7 +59,7 @@ public abstract class AbstractGenerateMojo extends AbstractDefaultMojo {
 
     protected void generate(Resource resource) {
         File baseDirectory = new File(resource.getDirectory());
-        for (File file: findFiles(getIncludes(), getExcludes(), baseDirectory)) {
+        for (File file: findFiles(getModelFactory().getSupportedFileTypes(), getExcludes(), baseDirectory)) {
             generate(file, baseDirectory, getGeneratedSourcesDirectory());
         }
     }

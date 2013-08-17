@@ -26,10 +26,9 @@
 package org.graphwalker.core.model.support;
 
 import org.graphwalker.core.model.Model;
-import org.graphwalker.core.model.ModelFactory;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * <p>DefaultModelFactory class.</p>
@@ -37,7 +36,7 @@ import java.util.List;
 public final class DefaultModelFactory extends AbstractModelFactory {
 
     private final GraphMLModelFactory graphMLModelFactory = new GraphMLModelFactory();
-    private final List<String> supportedTypes = new ArrayList<String>();
+    private final Set<String> supportedTypes = new HashSet<String>();
 
     /**
      * <p>Constructor for DefaultModelFactory.</p>
@@ -60,9 +59,9 @@ public final class DefaultModelFactory extends AbstractModelFactory {
     /**
      * <p>getSupportedFileTypes.</p>
      *
-     * @return a {@link java.util.List} object.
+     * @return a {@link java.util.Set} object.
      */
-    public List<String> getSupportedFileTypes() {
+    public Set<String> getSupportedFileTypes() {
         return supportedTypes;
     }
 }
