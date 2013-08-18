@@ -32,7 +32,7 @@ import java.util.Map;
 
 public class ExecutionProfiler {
 
-    private Map<ModelElement, ExecutionTime> executionTimes = new HashMap<ModelElement, ExecutionTime>();
+    private final Map<ModelElement, ExecutionTime> executionTimes = new HashMap<ModelElement, ExecutionTime>();
     private long startTime;
     private long stopTime;
 

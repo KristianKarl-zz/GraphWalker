@@ -27,15 +27,15 @@ package org.graphwalker.core.generators.support;
 
 import org.graphwalker.core.Bundle;
 import org.graphwalker.core.algorithms.AStar;
+import org.graphwalker.core.common.ResourceUtils;
 import org.graphwalker.core.conditions.support.ReachedEdge;
 import org.graphwalker.core.conditions.support.ReachedVertex;
 import org.graphwalker.core.generators.AbstractPathGenerator;
 import org.graphwalker.core.generators.PathGeneratorException;
+import org.graphwalker.core.machine.ExecutionContext;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.ModelElement;
-import org.graphwalker.core.machine.ExecutionContext;
-import org.graphwalker.core.common.ResourceUtils;
 import org.graphwalker.core.model.Vertex;
 
 import java.util.List;
@@ -45,7 +45,7 @@ import java.util.List;
  */
 public final class AStarPath extends AbstractPathGenerator {
 
-    private AStar algorithm = new AStar();
+    private final AStar algorithm = new AStar();
 
     /**
      * <p>Constructor for AStarPath.</p>

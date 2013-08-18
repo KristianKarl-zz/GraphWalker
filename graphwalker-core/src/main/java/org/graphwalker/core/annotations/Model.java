@@ -44,11 +44,4 @@ public @interface Model {
      */
     public String file() default "${package}/${classname}.${type}";
 
-    /**
-     * <p>type.</p>
-     *
-     * @return a {@link java.lang.String} object.
-     */
-    public String type() default "graphml";
-
 }

@@ -36,7 +36,7 @@ import java.util.Set;
  */
 public abstract class AbstractModelFactory implements ModelFactory {
 
-    private Set<String> supportedTypes = new HashSet<String>();
+    private final Set<String> supportedTypes = new HashSet<String>();
 
     public AbstractModelFactory(String... types) {
         Collections.addAll(supportedTypes, types);

@@ -34,7 +34,7 @@ import java.util.Map;
  */
 public final class CachedElementFactory {
 
-    private Map<Integer, Immutable> cache = new HashMap<Integer, Immutable>();
+    private final Map<Integer, Immutable> cache = new HashMap<Integer, Immutable>();
 
     private Immutable getCached(Immutable immutable) {
         if (!cache.containsKey(immutable.hashCode())) {

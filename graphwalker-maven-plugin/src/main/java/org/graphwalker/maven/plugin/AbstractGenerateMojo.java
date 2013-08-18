@@ -70,7 +70,7 @@ public abstract class AbstractGenerateMojo extends AbstractDefaultMojo {
 
     private void generate(SourceFile sourceFile) {
         try {
-            Model model = getModelFactory().create(sourceFile.getAbsolutePath(), sourceFile.getExtension());
+            Model model = getModelFactory().create(sourceFile.getAbsolutePath());
             String source = new CodeGenerator(sourceFile, model).generate();
             if (sourceFile.getOutputFile().exists()) {
                 String existingSource = StringUtils.removeDuplicateWhitespace(FileUtils.fileRead(sourceFile.getOutputFile(), getSourceEncoding()));

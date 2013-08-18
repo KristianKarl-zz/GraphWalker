@@ -37,19 +37,18 @@ public interface ModelFactory {
     /**
      * <p>accept.</p>
      *
-     * @param type a {@link java.lang.String} object.
+     * @param file a {@link java.lang.String} object.
      * @return a boolean.
      */
-    boolean accept(String type);
+    boolean accept(String file);
 
     /**
      * <p>create.</p>
      *
-     * @param filename a {@link java.lang.String} object.
-     * @param type a {@link java.lang.String} object.
+     * @param file a {@link java.lang.String} object.
      * @return a {@link org.graphwalker.core.model.Model} object.
      */
-    Model create(String filename, String type);
+    Model create(String file);
 
     /**
      * <p>getSupportedFileTypes.</p>

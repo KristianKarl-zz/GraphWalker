@@ -46,14 +46,15 @@ public final class DefaultModelFactory extends AbstractModelFactory {
     }
 
     /** {@inheritDoc} */
-    public boolean accept(String type) {
-        return supportedTypes.contains(type);
+    public boolean accept(String file) {
+        //TODO: we need to handle this better, when/if we add more factories
+        return graphMLModelFactory.accept(file);
     }
 
     /** {@inheritDoc} */
-    public Model create(String filename, String type) {
+    public Model create(String file) {
         //TODO: we need to handle this better, when/if we add more factories
-        return graphMLModelFactory.create(filename, type);
+        return graphMLModelFactory.create(file);
     }
 
     /**

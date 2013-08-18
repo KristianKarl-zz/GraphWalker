@@ -39,7 +39,6 @@ import japa.parser.ast.expr.*;
 import japa.parser.ast.visitor.VoidVisitorAdapter;
 import org.graphwalker.core.model.Model;
 
-import java.io.File;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -119,8 +118,7 @@ public final class CodeGenerator extends VoidVisitorAdapter<ChangeContext> {
     private ClassOrInterfaceDeclaration getInterfaceName(SourceFile sourceFile) {
         ClassOrInterfaceDeclaration classOrInterfaceDeclaration = new ClassOrInterfaceDeclaration(ModifierSet.PUBLIC, false, sourceFile.getBaseName());
         List<MemberValuePair> memberValuePairs = new ArrayList<MemberValuePair>();
-        memberValuePairs.add(new MemberValuePair("file", new StringLiteralExpr(sourceFile.getAbsolutePath())));
-        memberValuePairs.add(new MemberValuePair("type", new StringLiteralExpr(sourceFile.getExtension())));
+        memberValuePairs.add(new MemberValuePair("file", new StringLiteralExpr(sourceFile.getInputFile().getPath())));
         List<AnnotationExpr> annotations = new ArrayList<AnnotationExpr>();
         annotations.add(new NormalAnnotationExpr(ASTHelper.createNameExpr("Model"), memberValuePairs));
         classOrInterfaceDeclaration.setAnnotations(annotations);

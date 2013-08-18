@@ -63,8 +63,8 @@ public final class TestMojo extends AbstractTestMojo {
             Scanner scanner = new Scanner();
             Manager manager = new Manager(configuration, scanner.scan(getTestClassesDirectory(), getClassesDirectory()));
             displayConfiguration(manager);
-            //executeTests(manager);
-            //reportResults(manager);
+            executeTests(manager);
+            reportResults(manager);
             displayResult(manager);
             switchProperties(properties);
             switchClassLoader(classLoader);
@@ -139,7 +139,7 @@ public final class TestMojo extends AbstractTestMojo {
     }
 
     private void executeTests(Manager manager) {
-        if (0<manager.getExecutionGroups().size()) {
+        if (!manager.getExecutionGroups().isEmpty()) {
             List<Machine> machines = new ArrayList<Machine>();
             for (Group group: manager.getExecutionGroups()) {
                 machines.add(new Machine(group.getExecutions()));

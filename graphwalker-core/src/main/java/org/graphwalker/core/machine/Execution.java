@@ -60,10 +60,9 @@ public final class Execution {
         Set<Model> models = new HashSet<Model>();
         ModelFactory factory = new DefaultModelFactory();
         for (Annotation annotation: getAnnotations(testClass, org.graphwalker.core.annotations.Model.class)) {
-            String type = ((org.graphwalker.core.annotations.Model)annotation).type();
             String file = ((org.graphwalker.core.annotations.Model)annotation).file();
-            if (factory.accept(type)) {
-                models.add(factory.create(file, type));
+            if (factory.accept(file)) {
+                models.add(factory.create(file));
             }
         }
         return models;

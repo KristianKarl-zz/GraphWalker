@@ -56,8 +56,8 @@ public final class GraphMLModelFactory extends AbstractModelFactory {
     }
 
     /** {@inheritDoc} */
-    public boolean accept(String type) {
-        return FILE_TYPE.equalsIgnoreCase(type);
+    public boolean accept(String file) {
+        return file.endsWith(FILE_TYPE);
     }
 
     /**
@@ -65,8 +65,8 @@ public final class GraphMLModelFactory extends AbstractModelFactory {
      * <p/>
      * <p>create.</p>
      */
-    public Model create(String filename, String type) {
-        return parse(filename, ResourceUtils.getResourceAsStream(filename));
+    public Model create(String file) {
+        return parse(file, ResourceUtils.getResourceAsStream(file));
     }
 
     private Model parse(String id, InputStream inputStream) {
@@ -216,7 +216,6 @@ public final class GraphMLModelFactory extends AbstractModelFactory {
     }
 
     private Tupel<List<Action>, String> parseEdgeActions(String text) {
-        List<Action> edgeActions = new ArrayList<Action>();
         Pattern pattern = Pattern.compile("/([^\\[]+)");
         Matcher matcher = pattern.matcher(text);
         List<Action> actions = new ArrayList<Action>();
@@ -231,8 +230,8 @@ public final class GraphMLModelFactory extends AbstractModelFactory {
 
     private class Tupel<V, R> {
 
-        private V value;
-        private R reminder;
+        private final V value;
+        private final R reminder;
 
         private Tupel(V value, R reminder) {
             this.value = value;

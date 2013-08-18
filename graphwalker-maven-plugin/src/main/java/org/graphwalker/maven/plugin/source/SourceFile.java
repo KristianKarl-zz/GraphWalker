@@ -39,6 +39,7 @@ public final class SourceFile extends File {
 
     private String packageName;
     private File outputFile;
+    private File inputFile;
 
 
     public SourceFile(File file, File baseDirectory, File outputDirectory) {
@@ -61,6 +62,10 @@ public final class SourceFile extends File {
             outputFile = new File(file.getParentFile(), FileUtils.removeExtension(file.getName()).concat(".java"));
         }
         return outputFile;
+    }
+
+    public File getInputFile() {
+        return basePath.relativize(filePath).toFile();
     }
 
     public String getExtension() {

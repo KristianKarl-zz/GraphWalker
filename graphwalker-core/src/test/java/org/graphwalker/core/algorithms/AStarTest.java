@@ -25,15 +25,6 @@
  */
 package org.graphwalker.core.algorithms;
 
-import org.graphwalker.core.machine.ExecutionContext;
-import org.graphwalker.core.model.Model;
-import org.graphwalker.core.model.ModelElement;
-import org.graphwalker.core.model.ModelFactory;
-import org.graphwalker.core.model.support.GraphMLModelFactory;
-import org.junit.Test;
-
-import java.util.List;
-
 public class AStarTest {
 
     //Test
@@ -42,8 +33,6 @@ public class AStarTest {
         //Model model = factory.create("simple", "/models/algorithms/simple.graphml", "graphml");
         //ExecutionContext executionContext = new ExecutionContext(model);
         //List<ModelElement> path = AStar.getPath(executionContext, model.getStartVertex(), model.getVerticesByName("Goal").get(0));
-
-        int i = 0;
     }
 
     //Test
@@ -52,8 +41,6 @@ public class AStarTest {
         //Model model = factory.create("simpleBlocked", "/models/algorithms/blocked.graphml", "graphml");
         //ExecutionContext executionContext = new ExecutionContext(model);
         //List<ModelElement> path = AStar.getPath(executionContext, model.getStartVertex(), model.getVerticesByName("Goal").get(0));
-
-        int i = 0;
     }
 
 }
