@@ -100,4 +100,17 @@ public final class Manager {
     public Configuration getConfiguration() {
         return configuration;
     }
+
+    public int getGroupCount() {
+        return getExecutionGroups().size();
+    }
+
+    public int getTestCount() {
+        int count = 0;
+        for (Group group: getExecutionGroups()) {
+            count += group.getExecutions().size();
+        }
+        return count;
+    }
+
 }

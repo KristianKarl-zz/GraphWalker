@@ -17,9 +17,9 @@
 
     <modules>
         <module>graphwalker-core</module>
-        <module>graphwalker-example</module>
         <module>graphwalker-jenkins-plugin</module>
         <module>graphwalker-maven-plugin</module>
+        <module>graphwalker-example</module>
     </modules>
 
     <organization>
@@ -256,7 +256,7 @@
                         </goals>
                         <configuration>
                             <!--fixTags>param,return,throws,link</fixTags BUG MJAVADOC-351 in javadoc plugin, can't handle the return parameter -->
-                            <fixTags>param,throws,link</fixTags>
+                            <!--fixTags>param,throws,link</fixTags-->
                             <force>true</force>
                         </configuration>
                     </execution>

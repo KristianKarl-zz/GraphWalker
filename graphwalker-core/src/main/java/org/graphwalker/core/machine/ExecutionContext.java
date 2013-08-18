@@ -26,16 +26,16 @@
 package org.graphwalker.core.machine;
 
 import org.graphwalker.core.Bundle;
+import org.graphwalker.core.common.ReflectionUtils;
+import org.graphwalker.core.common.ResourceUtils;
 import org.graphwalker.core.conditions.StopCondition;
-import org.graphwalker.core.script.EdgeFilter;
 import org.graphwalker.core.generators.PathGenerator;
 import org.graphwalker.core.machine.strategy.ExceptionStrategy;
 import org.graphwalker.core.model.*;
 import org.graphwalker.core.model.status.ElementStatus;
 import org.graphwalker.core.model.status.ModelStatus;
 import org.graphwalker.core.model.status.RequirementStatus;
-import org.graphwalker.core.common.ReflectionUtils;
-import org.graphwalker.core.common.ResourceUtils;
+import org.graphwalker.core.script.EdgeFilter;
 import org.graphwalker.core.statistics.ExecutionProfiler;
 
 import java.util.*;
@@ -90,6 +90,10 @@ public final class ExecutionContext {
             edgeFilter = new EdgeFilter(ResourceUtils.getText(Bundle.NAME, "default.language"));
         }
         return edgeFilter;
+    }
+
+    public void setExecutionStatus(ExecutionStatus executionStatus) {
+        this.executionStatus = executionStatus;
     }
 
     public ExecutionStatus getExecutionStatus() {

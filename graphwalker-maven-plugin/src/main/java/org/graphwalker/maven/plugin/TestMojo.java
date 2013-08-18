@@ -34,6 +34,8 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.codehaus.plexus.util.StringUtils;
 import org.graphwalker.core.common.ResourceUtils;
 import org.graphwalker.core.machine.Execution;
+import org.graphwalker.core.machine.ExecutionContext;
+import org.graphwalker.core.machine.ExecutionStatus;
 import org.graphwalker.core.machine.Machine;
 import org.graphwalker.maven.plugin.test.Configuration;
 import org.graphwalker.maven.plugin.test.Group;
@@ -52,6 +54,8 @@ import java.util.concurrent.TimeUnit;
 @Mojo(name = "test", defaultPhase = LifecyclePhase.TEST, requiresDependencyResolution = ResolutionScope.TEST)
 @Execute(phase = LifecyclePhase.TEST_COMPILE, lifecycle = "graphwalker")
 public final class TestMojo extends AbstractTestMojo {
+
+    private List<Machine> machines = new ArrayList<Machine>();
 
     @Override
     protected void executeMojo() throws MojoExecutionException, MojoFailureException {
@@ -140,7 +144,6 @@ public final class TestMojo extends AbstractTestMojo {
 
     private void executeTests(Manager manager) {
         if (!manager.getExecutionGroups().isEmpty()) {
-            List<Machine> machines = new ArrayList<Machine>();
             for (Group group: manager.getExecutionGroups()) {
                 machines.add(new Machine(group.getExecutions()));
             }
@@ -157,8 +160,18 @@ public final class TestMojo extends AbstractTestMojo {
         }
     }
 
-    private void reportResults(Manager manager) {
-
+    private void reportResults(Manager manager) throws MojoExecutionException {
+        boolean hasExceptions = false;
+        for (Machine machine: machines) {
+            //reportWriter.writeReport(graphWalker, reportsDirectory, session.getStartTime());
+            for (ExecutionContext context: machine.getExecutionContexts()) {
+                hasExceptions |= ExecutionStatus.FAILED.equals(context.getExecutionStatus());
+            }
+        }
+        if (hasExceptions) {
+            //throw new MojoExecutionException(ResourceUtils.getText(Bundle.NAME, "exception.execution.failed", reportsDirectory.getAbsolutePath()));
+            throw new MojoExecutionException(ResourceUtils.getText(Bundle.NAME, "exception.execution.failed", ""));
+        }
     }
 
     private void displayResult(Manager manager) {
@@ -167,21 +180,18 @@ public final class TestMojo extends AbstractTestMojo {
             getLog().info("");
             getLog().info(ResourceUtils.getText(Bundle.NAME, "result.label"));
             getLog().info("");
-            long group = 0, tests = 0, completed = 0, failed = 0, notExecuted = 0;
-            /*
-            List<Model> failedModels = new ArrayList<Model>();
-            for (GraphWalker graphWalker : graphWalkers) {
-                group++;
-                for (Model model : graphWalker.getConfiguration().getModels()) {
-                    total++;
-                    switch (model.getModelStatus()) {
+            long groups = manager.getGroupCount(), tests = manager.getTestCount(), completed = 0, failed = 0, notExecuted = 0;
+            List<ExecutionContext> failedExecutions = new ArrayList<ExecutionContext>();
+            for (Machine machine: machines) {
+                for (ExecutionContext context: machine.getExecutionContexts()) {
+                    switch (context.getExecutionStatus()) {
                         case COMPLETED: {
                             completed++;
                         }
                         break;
                         case FAILED: {
                             failed++;
-                            failedModels.add(model);
+                            failedExecutions.add(context);
                         }
                         break;
                         case NOT_EXECUTED: {
@@ -191,107 +201,15 @@ public final class TestMojo extends AbstractTestMojo {
                     }
                 }
             }
-            if (0 < failedModels.size()) {
-                getLog().info("Failed models: ");
-                for (Model model : failedModels) {
-                    getLog().info("  " + model.getId() + " [group = " + model.getGroup() + "]");
+            if (!failedExecutions.isEmpty()) {
+                getLog().info("Failed executions: ");
+                for (ExecutionContext context: failedExecutions) {
+                    getLog().info("  " + context.toString());
                 }
                 getLog().info("");
             }
-            */
-            getLog().info(ResourceUtils.getText(Bundle.NAME, "result.summary", group, tests, completed, failed, notExecuted));
+            getLog().info(ResourceUtils.getText(Bundle.NAME, "result.summary", groups, tests, completed, failed, notExecuted));
             getLog().info("");
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-
-    private String convert(List<Class<?>> tests) {
-        StringBuilder builder = new StringBuilder();
-        for (Class<?> test: tests) {
-            builder.append(", ").append(test.getSimpleName());
-        }
-        return builder.toString();
-    }
-
-
-
-    private void createInstances() throws MojoExecutionException {
-        try {
-            Map<String, List<Class<?>>> testGroups = new HashMap<String, List<Class<?>>>();
-            List<Class<?>> tests = Scanner.findTests(testClassesDirectory, updateIncludes(), excludes);
-            for (Class<?> test : tests) {
-                String group = Scanner.getGroup(test);
-                if (!testGroups.containsKey(group)) {
-                    testGroups.put(group, new ArrayList<Class<?>>());
-                }
-                testGroups.get(group).add(test);
-            }
-
-            for (String group : testGroups.keySet()) {
-                Configuration configuration = ConfigurationFactory.create(testGroups.get(group));
-                graphWalkers.add(GraphWalkerFactory.create(configuration));
-            }
-        } catch (ClassNotFoundException e) {
-            throw new MojoExecutionException(ResourceUtils.getText(Bundle.NAME, "exception.create.test"));
-        }
-    }
-
-    private void executeInstances() throws MojoExecutionException {
-        if (0< graphWalkers.size()) {
-            try {
-                ExecutorService executorService = Executors.newFixedThreadPool(graphWalkers.size());
-                for (GraphWalker graphWalker : graphWalkers) {
-                    for (Model model : graphWalker.getConfiguration().getModels()) {
-                        StringBuilder stringBuilder = new StringBuilder("Running [");
-                        stringBuilder.append(model.getGroup()).append("] ");
-                        stringBuilder.append(model.getImplementation().getClass().getName());
-                        getLog().info(stringBuilder.toString());
-                    }
-                    executorService.execute(new GraphWalkerExecutor(graphWalker));
-                }
-                executorService.shutdown();
-                executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.DAYS);
-            } catch (InterruptedException e) {
-                throw new MojoExecutionException(ResourceUtils.getText(Bundle.NAME, "exception.execution.interrupted"));
-            }
-        }
-    }
-
-    private void reportExecution() throws MojoExecutionException {
-        boolean hasExceptions = false;
-        for (GraphWalker graphWalker : graphWalkers) {
-            reportWriter.writeReport(graphWalker, reportsDirectory, session.getStartTime());
-            for (Model model:graphWalker.getConfiguration().getModels()) {
-                hasExceptions |= graphWalker.hasExceptions(model);
-            }
-        }
-        if (hasExceptions) {
-            throw new MojoExecutionException(ResourceUtils.getText(Bundle.NAME, "exception.execution.failed", reportsDirectory.getAbsolutePath()));
-        }
-    }
-
-
-
- */
 }

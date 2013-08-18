@@ -20,10 +20,24 @@
                 <groupId>org.graphwalker</groupId>
                 <artifactId>graphwalker-maven-plugin</artifactId>
                 <version>${project.version}</version>
+                <executions>
+                    <execution>
+                        <id>execute-generate-sources</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate-sources</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>execute-tests</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                    </execution>
+                </executions>
                 <configuration>
-                    <excludes>
-                        <exclude>*Amazon</exclude>
-                    </excludes>
+                    <groups>shortest</groups>
                 </configuration>
             </plugin>
         </plugins>

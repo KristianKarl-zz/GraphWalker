@@ -25,15 +25,19 @@
  */
 package org.graphwalker.core.machine;
 
-import org.graphwalker.core.annotations.*;
+import org.graphwalker.core.annotations.AfterElement;
+import org.graphwalker.core.annotations.AfterExecution;
+import org.graphwalker.core.annotations.BeforeElement;
+import org.graphwalker.core.annotations.BeforeExecution;
 import org.graphwalker.core.common.AnnotationUtils;
 import org.graphwalker.core.common.ReflectionUtils;
 import org.graphwalker.core.model.Edge;
-import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.ModelElement;
-import org.graphwalker.core.model.Vertex;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * <p>MachineImpl class.</p>
@@ -51,6 +55,7 @@ public final class Machine implements Runnable {
 
     public void run() {
         try {
+        getExecutionContext().setExecutionStatus(ExecutionStatus.EXECUTING);
         AnnotationUtils.execute(BeforeExecution.class, getExecutionContext());
         while (hasMoreSteps()) {
             ModelElement element = getNextStep();
@@ -62,6 +67,7 @@ public final class Machine implements Runnable {
         }
         AnnotationUtils.execute(AfterExecution.class, getExecutionContext());
         } catch (Throwable throwable) {
+            getExecutionContext().setExecutionStatus(ExecutionStatus.FAILED);
             throwable.printStackTrace();
             AnnotationUtils.execute(getExecutionContext(), throwable);
             // TODO: cast a new UnhandledException(..)
@@ -87,7 +93,11 @@ public final class Machine implements Runnable {
      * @return a boolean.
      */
     public boolean hasMoreSteps() {
-        return !getExecutionContext().getPathGenerator().getStopCondition().isFulfilled(getExecutionContext());
+        boolean isFulfilled = getExecutionContext().getPathGenerator().getStopCondition().isFulfilled(getExecutionContext());
+        if (isFulfilled) {
+            getExecutionContext().setExecutionStatus(ExecutionStatus.COMPLETED);
+        }
+        return !isFulfilled;
     }
 
     /**
@@ -114,4 +124,7 @@ public final class Machine implements Runnable {
         return nextElement;
     }
 
+    public Collection<ExecutionContext> getExecutionContexts() {
+        return Collections.unmodifiableCollection(executionContexts);
+    }
 }

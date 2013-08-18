@@ -34,7 +34,7 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
 
 import java.io.File;
 
-@Mojo(name = "generate", defaultPhase = LifecyclePhase.GENERATE_SOURCES, requiresDependencyResolution = ResolutionScope.COMPILE, threadSafe = true)
+@Mojo(name = "generate-sources", defaultPhase = LifecyclePhase.GENERATE_SOURCES, requiresDependencyResolution = ResolutionScope.COMPILE, threadSafe = true)
 public final class GenerateMojo extends AbstractGenerateMojo {
 
     @Parameter(defaultValue = "${project.build.directory}/generated-sources/graphwalker")

@@ -34,7 +34,7 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
 
 import java.io.File;
 
-@Mojo(name = "test-generate", defaultPhase = LifecyclePhase.GENERATE_TEST_SOURCES, requiresDependencyResolution = ResolutionScope.TEST, threadSafe = true)
+@Mojo(name = "generate-test-sources", defaultPhase = LifecyclePhase.GENERATE_TEST_SOURCES, requiresDependencyResolution = ResolutionScope.TEST, threadSafe = true)
 public final class TestGenerateMojo extends AbstractGenerateMojo {
 
     @Parameter(defaultValue = "${project.build.directory}/generated-test-sources/graphwalker")
