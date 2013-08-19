@@ -27,8 +27,6 @@ package org.graphwalker.maven.plugin;
 
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.FileUtils;
@@ -61,12 +59,6 @@ public abstract class AbstractDefaultMojo extends AbstractMojo {
     protected ModelFactory getModelFactory() {
         return modelFactory;
     }
-
-    public void execute() throws MojoExecutionException, MojoFailureException {
-        executeMojo();
-    }
-
-    protected abstract void executeMojo() throws MojoExecutionException, MojoFailureException;
 
     private String toString(Set<String> set) {
         if (null == set) {

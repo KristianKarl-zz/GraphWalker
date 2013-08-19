@@ -57,8 +57,7 @@ public final class TestMojo extends AbstractTestMojo {
 
     private List<Machine> machines = new ArrayList<Machine>();
 
-    @Override
-    protected void executeMojo() throws MojoExecutionException, MojoFailureException {
+    public void execute() throws MojoExecutionException, MojoFailureException {
         if (!getSkipTests()) {
             ClassLoader classLoader = switchClassLoader(createClassLoader());
             Properties properties = switchProperties(createProperties());

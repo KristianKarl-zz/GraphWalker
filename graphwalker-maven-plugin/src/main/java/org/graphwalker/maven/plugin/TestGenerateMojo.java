@@ -45,8 +45,7 @@ public final class TestGenerateMojo extends AbstractGenerateMojo {
         return generatedSourcesDirectory;
     }
 
-    @Override
-    protected void executeMojo() throws MojoExecutionException, MojoFailureException {
+    public void execute() throws MojoExecutionException, MojoFailureException {
         generate(getMavenProject().getTestResources());
         if (getGeneratedSourcesDirectory().exists()) {
             getMavenProject().addTestCompileSourceRoot(getGeneratedSourcesDirectory().getPath());
