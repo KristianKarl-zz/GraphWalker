@@ -44,6 +44,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * @author Nils Olsson
+ */
 public final class CodeGenerator extends VoidVisitorAdapter<ChangeContext> {
 
     private final SourceFile sourceFile;

@@ -28,6 +28,9 @@ package org.graphwalker.maven.plugin.test;
 import java.io.File;
 import java.util.Set;
 
+/**
+ * @author Nils Olsson
+ */
 public final class Configuration {
 
     private Set<String> includes;

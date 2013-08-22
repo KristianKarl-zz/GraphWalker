@@ -48,15 +48,19 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 /**
- * <p>TestMojo class.</p>
- *
+ * @author Nils Olsson
  */
 @Mojo(name = "test", defaultPhase = LifecyclePhase.TEST, requiresDependencyResolution = ResolutionScope.TEST)
 @Execute(phase = LifecyclePhase.TEST_COMPILE, lifecycle = "graphwalker")
 public final class TestMojo extends AbstractTestMojo {
 
-    private List<Machine> machines = new ArrayList<Machine>();
+    private final List<Machine> machines = new ArrayList<Machine>();
 
+    /**
+     *
+     * @throws MojoExecutionException
+     * @throws MojoFailureException
+     */
     public void execute() throws MojoExecutionException, MojoFailureException {
         if (!getSkipTests()) {
             ClassLoader classLoader = switchClassLoader(createClassLoader());

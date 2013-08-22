@@ -46,7 +46,7 @@ public @interface Execute {
      *
      * @return a {@link java.lang.String} object.
      */
-    public String group() default "global";
+    public String group() default "default";
 
     /**
      * <p>pathGenerator.</p>
@@ -67,7 +67,7 @@ public @interface Execute {
      *
      * @return a {@link java.lang.String} object.
      */
-    public String stopConditionValue() default "";
+    public String stopConditionValue() default "100";
 
     /**
      * <p>exceptionStrategy.</p>

@@ -34,9 +34,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * <p>Scanner class.</p>
- *
- *
+ * @author Nils Olsson
  */
 public final class Scanner {
 

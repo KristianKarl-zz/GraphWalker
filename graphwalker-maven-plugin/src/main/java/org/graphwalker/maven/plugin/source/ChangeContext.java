@@ -32,6 +32,9 @@ import org.graphwalker.core.model.ModelElement;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * @author Nils Olsson
+ */
 public final class ChangeContext {
 
     private final Set<String> methodNames;

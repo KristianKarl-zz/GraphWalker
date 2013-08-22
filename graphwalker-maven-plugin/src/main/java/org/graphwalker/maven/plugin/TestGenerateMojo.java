@@ -34,6 +34,9 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
 
 import java.io.File;
 
+/**
+ * @author Nils Olsson
+ */
 @Mojo(name = "generate-test-sources", defaultPhase = LifecyclePhase.GENERATE_TEST_SOURCES, requiresDependencyResolution = ResolutionScope.TEST, threadSafe = true)
 public final class TestGenerateMojo extends AbstractGenerateMojo {
 
@@ -45,6 +48,11 @@ public final class TestGenerateMojo extends AbstractGenerateMojo {
         return generatedSourcesDirectory;
     }
 
+    /**
+     *
+     * @throws MojoExecutionException
+     * @throws MojoFailureException
+     */
     public void execute() throws MojoExecutionException, MojoFailureException {
         generate(getMavenProject().getTestResources());
         if (getGeneratedSourcesDirectory().exists()) {

@@ -28,10 +28,16 @@ package org.graphwalker.maven.plugin.test;
 import org.codehaus.plexus.util.SelectorUtils;
 import org.graphwalker.core.annotations.Execute;
 import org.graphwalker.core.annotations.GraphWalker;
+import org.graphwalker.core.conditions.StopCondition;
+import org.graphwalker.core.generators.PathGenerator;
 import org.graphwalker.core.machine.Execution;
+import org.graphwalker.core.machine.strategy.ExceptionStrategy;
 
 import java.util.*;
 
+/**
+ * @author Nils Olsson
+ */
 public final class Manager {
 
     private final Configuration configuration;
@@ -71,13 +77,30 @@ public final class Manager {
     private Collection<Group> createExecutionGroups(Collection<Class<?>> testClasses) {
         Map<String, Group> groups = new HashMap<String, Group>();
         for (Class<?> testClass: testClasses) {
-            for (Execute execute: testClass.getAnnotation(GraphWalker.class).value()) {
-                if (isExecutionGroup(execute.group())) {
-                    if (!groups.containsKey(execute.group())) {
-                        groups.put(execute.group(), new Group(execute.group()));
+            Execute[] executions = testClass.getAnnotation(GraphWalker.class).value();
+            if (0 == executions.length) {
+                try {
+                    // if no Execute parameter is supplied the we create a default
+                    String groupName = (String)Execute.class.getMethod("group").getDefaultValue();
+                    Class<? extends PathGenerator> pathGenerator = (Class<? extends PathGenerator>)Execute.class.getMethod("pathGenerator").getDefaultValue();
+                    Class<? extends StopCondition> stopCondition = (Class<? extends StopCondition>)Execute.class.getMethod("stopCondition").getDefaultValue();
+                    String stopConditionValue = (String)Execute.class.getMethod("stopConditionValue").getDefaultValue();
+                    Class<? extends ExceptionStrategy> exceptionStrategy = (Class<? extends ExceptionStrategy>)Execute.class.getMethod("exceptionStrategy").getDefaultValue();
+                    Execution execution = new Execution(testClass, pathGenerator, stopCondition, stopConditionValue, exceptionStrategy);
+                    groups.put(groupName, new Group(groupName));
+                    groups.get(groupName).addExecution(execution);
+                } catch (NoSuchMethodException e) {
+                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                }
+            } else {
+                for (Execute execute: executions) {
+                    if (isExecutionGroup(execute.group())) {
+                        if (!groups.containsKey(execute.group())) {
+                            groups.put(execute.group(), new Group(execute.group()));
+                        }
+                        Execution execution = new Execution(testClass, execute.pathGenerator(), execute.stopCondition(), execute.stopConditionValue(), execute.exceptionStrategy());
+                        groups.get(execute.group()).addExecution(execution);
                     }
-                    Execution execution = new Execution(testClass, execute.pathGenerator(), execute.stopCondition(), execute.stopConditionValue(), execute.exceptionStrategy());
-                    groups.get(execute.group()).addExecution(execution);
                 }
             }
         }

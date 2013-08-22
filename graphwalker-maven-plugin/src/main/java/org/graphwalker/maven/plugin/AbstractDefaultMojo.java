@@ -38,6 +38,9 @@ import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * @author Nils Olsson
+ */
 public abstract class AbstractDefaultMojo extends AbstractMojo {
 
     @Component

@@ -27,11 +27,12 @@ package org.graphwalker.maven.plugin.test;
 
 import org.graphwalker.core.machine.Execution;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
+/**
+ * @author Nils Olsson
+ */
 public final class Group {
 
     private final String name;

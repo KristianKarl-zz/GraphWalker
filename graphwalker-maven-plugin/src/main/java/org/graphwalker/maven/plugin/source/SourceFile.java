@@ -31,6 +31,9 @@ import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+/**
+ * @author Nils Olsson
+ */
 public final class SourceFile extends File {
 
     private final Path filePath;
@@ -39,8 +42,6 @@ public final class SourceFile extends File {
 
     private String packageName;
     private File outputFile;
-    private File inputFile;
-
 
     public SourceFile(File file, File baseDirectory, File outputDirectory) {
         super(file.getAbsolutePath());

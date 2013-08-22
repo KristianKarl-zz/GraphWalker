@@ -37,8 +37,7 @@ import java.io.File;
 import java.util.List;
 
 /**
- * <p>AbstractGenerateMojo class.</p>
- *
+ * @author Nils Olsson
  */
 public abstract class AbstractGenerateMojo extends AbstractDefaultMojo {
 

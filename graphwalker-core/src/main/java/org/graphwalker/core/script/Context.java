@@ -27,7 +27,7 @@ package org.graphwalker.core.script;
 
 import javax.script.SimpleScriptContext;
 
-public class Context extends SimpleScriptContext {// HashMap<String, Object> implements ScriptContext {
+public final class Context extends SimpleScriptContext {
 
     public void setAttribute(String key, Object value) {
         setAttribute(key, value, ENGINE_SCOPE);

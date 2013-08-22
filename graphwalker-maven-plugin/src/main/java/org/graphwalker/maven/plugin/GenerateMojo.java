@@ -34,6 +34,9 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
 
 import java.io.File;
 
+/**
+ * @author Nils Olsson
+ */
 @Mojo(name = "generate-sources", defaultPhase = LifecyclePhase.GENERATE_SOURCES, requiresDependencyResolution = ResolutionScope.COMPILE, threadSafe = true)
 public final class GenerateMojo extends AbstractGenerateMojo {
 
@@ -45,6 +48,11 @@ public final class GenerateMojo extends AbstractGenerateMojo {
         return generatedSourcesDirectory;
     }
 
+    /**
+     *
+     * @throws MojoExecutionException
+     * @throws MojoFailureException
+     */
     public void execute() throws MojoExecutionException, MojoFailureException {
         generate(getMavenProject().getResources());
         if (getGeneratedSourcesDirectory().exists()) {

@@ -5,9 +5,9 @@ GraphWalker is a Model-Based Testing tool. It parses models and generates test s
 ## Table of Contents
 1\. [Modules](#modules)
 1\.1 [graphwalker-core](#graphwalker-core)
-1\.2 [graphwalker-example](#graphwalker-example)
-1\.3 [graphwalker-parent](#graphwalker-parent)
-1\.4 [graphwalker-maven-plugin](#graphwalker-maven-plugin)
+1\.2 [graphwalker-maven-plugin](#graphwalker-maven-plugin)
+1\.3 [graphwalker-jenkins-plugin](#graphwalker-jenkins-plugin)
+1\.4 [graphwalker-example](#graphwalker-example)
 2\. [Example](#example)  
 2\.1  [pom.xml](#example-pom-xml)  
 2\.2  [Example.java](#example-example-java)  
@@ -19,27 +19,19 @@ GraphWalker is a Model-Based Testing tool. It parses models and generates test s
 ### 1\.1 graphwalker-core
 Contains the GraphWalker implementation 
 
+<a name="graphwalker-maven-plugin"></a>
+### 1\.2 graphwalker-maven-plugin
+
+<a name="graphwalker-jenkins-plugin"></a>
+### 1\.3 graphwalker-jenkins-plugin
+
 <a name="graphwalker-example"></a>
-### 1\.2 graphwalker-example
-Showcase the GraphWalker project  
+### 1\.4 graphwalker-example
+Showcase the GraphWalker project
 
 ```sh
 mvn graphwalker:test
-```  
-
-<a name="graphwalker-parent"></a>
-### 1\.3 graphwalker-parent
-Main maven module, open this in your favorit IDE (intellij, eclipse, netbeans) that can handle pom.xml files, and all the other modules should be imported too. This module also manage all the dependencies and plugins used by the graphwalker project. When standing in the graphwalker-parent directory and executing  
-
-```sh
-mvn clean install
 ```
-
-all the artifacts created by this project will be built and installed in the local maven repository.  
-
-<a name="graphwalker-maven-plugin"></a>
-### 1\.4 graphwalker-maven-plugin
-Has two goals ```graphwalker:test``` and ```graphwalker:report```
 
 <a name="example"></a>
 ## 2\. Example

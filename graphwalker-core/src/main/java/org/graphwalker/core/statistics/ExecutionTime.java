@@ -25,7 +25,7 @@
  */
 package org.graphwalker.core.statistics;
 
-public class ExecutionTime {
+public final class ExecutionTime {
 
     private long minTime = Long.MAX_VALUE;
     private long maxTime = Long.MIN_VALUE;

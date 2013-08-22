@@ -250,17 +250,6 @@
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>fix-javadoc</id>
-                        <goals>
-                            <goal>fix</goal>
-                        </goals>
-                        <configuration>
-                            <!--fixTags>param,return,throws,link</fixTags BUG MJAVADOC-351 in javadoc plugin, can't handle the return parameter -->
-                            <!--fixTags>param,throws,link</fixTags-->
-                            <force>true</force>
-                        </configuration>
-                    </execution>
-                    <execution>
                         <id>bundle-javadoc</id>
                         <goals>
                             <goal>jar</goal>

@@ -38,38 +38,74 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
+/**
+ * @author Nils Olsson
+ */
 public abstract class AbstractTestMojo extends AbstractDefaultMojo {
 
+    /**
+     * @since 3.0
+     */
     @Parameter(property = "project.testClasspathElements")
     private List<String> classpathElements;
 
+    /**
+     * @since 3.0
+     */
     @Parameter(defaultValue="${project.build.testOutputDirectory}")
     private File testClassesDirectory;
 
+    /**
+     * @since 3.0
+     */
     @Parameter(defaultValue="${project.build.outputDirectory}")
     private File classesDirectory;
 
+    /**
+     * @since 3.0
+     */
     @Parameter(defaultValue = "${project.build.directory}/graphwalker-reports")
     private File reportsDirectory;
 
-    @Parameter(property = "skipTests", defaultValue = "false")
-    private boolean skipTests;
-
-    @Parameter(property = "graphwalker.test.skip", defaultValue = "false")
-    private boolean graphwalkerTestSkip;
-
+    /**
+     * @since 3.0
+     */
     @Parameter(property = "maven.test.skip", defaultValue="false")
     private boolean mavenTestSkip;
 
+    /**
+     * @since 3.0
+     */
+    @Parameter(property = "skipTests", defaultValue = "false")
+    private boolean skipTests;
+
+    /**
+     * @since 3.0
+     */
+    @Parameter(property = "graphwalker.test.skip", defaultValue = "false")
+    private boolean graphwalkerTestSkip;
+
+    /**
+     * @since 3.0
+     */
     @Parameter(property = "includes")
     private Set<String> includes;
 
+    /**
+     * @since 3.0
+     */
     @Parameter(property = "excludes")
     private Set<String> excludes;
 
-    @Parameter(property = "test")
+    /**
+     * @since 3.0
+     */
+    @Parameter(property = "test", defaultValue = "*")
     private String test;
 
+    /**
+     * @since 3.0
+     */
     @Parameter(property = "groups", defaultValue = "*")
     private String groups;
 
@@ -94,9 +130,6 @@ public abstract class AbstractTestMojo extends AbstractDefaultMojo {
     }
 
     protected Set<String> getIncludes() {
-        if (0 == includes.size()) {
-            includes.add("*");
-        }
         return includes;
     }
 
@@ -105,10 +138,16 @@ public abstract class AbstractTestMojo extends AbstractDefaultMojo {
     }
 
     protected String getTest() {
+        if (System.getProperties().containsKey("test")) {
+            return System.getProperty("test");
+        }
         return test;
     }
 
     protected String getGroups() {
+        if (System.getProperties().containsKey("groups")) {
+            return System.getProperty("groups");
+        }
         return groups;
     }
 
@@ -137,6 +176,8 @@ public abstract class AbstractTestMojo extends AbstractDefaultMojo {
     protected Properties createProperties() {
         Properties properties = (Properties) System.getProperties().clone();
         properties.putAll((Properties) getMavenProject().getProperties().clone());
+        properties.put("groups", groups);
+        properties.put("test", test);
         properties.putAll((Properties) getSession().getUserProperties().clone());
         return properties;
     }

@@ -30,6 +30,9 @@ import org.apache.maven.model.Resource;
 import java.io.File;
 import java.util.List;
 
+/**
+ * @author Nils Olsson
+ */
 public abstract class AbstractValidateMojo extends AbstractDefaultMojo {
 
     protected void validate(List<Resource> resources) {
@@ -48,7 +51,7 @@ public abstract class AbstractValidateMojo extends AbstractDefaultMojo {
         if (getLog().isInfoEnabled()) {
             getLog().info("Validate: " + file.getAbsolutePath());
         }
-        // verifiera att modellen är ok (vakter, actions, keywords mm), kanske även generera varningar
+        //TODO: delegate the validation to the model factory
     }
 
 }
