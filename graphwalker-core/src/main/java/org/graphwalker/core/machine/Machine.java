@@ -55,23 +55,20 @@ public final class Machine implements Runnable {
 
     public void run() {
         try {
-        getExecutionContext().setExecutionStatus(ExecutionStatus.EXECUTING);
-        AnnotationUtils.execute(BeforeExecution.class, getExecutionContext());
-        while (hasMoreSteps()) {
-            ModelElement element = getNextStep();
-            AnnotationUtils.execute(BeforeElement.class, getExecutionContext());
-            getExecutionContext().getExecutionProfiler().start(element);
-            ReflectionUtils.execute(getExecutionContext().getImplementation(), element.getName(), getExecutionContext().getEdgeFilter().getScriptContext());
-            getExecutionContext().getExecutionProfiler().stop(element);
-            AnnotationUtils.execute(AfterElement.class, getExecutionContext());
-        }
-        AnnotationUtils.execute(AfterExecution.class, getExecutionContext());
+            getExecutionContext().setExecutionStatus(ExecutionStatus.EXECUTING);
+            AnnotationUtils.execute(BeforeExecution.class, getExecutionContext());
+            while (hasMoreSteps()) {
+                ModelElement element = getNextStep();
+                AnnotationUtils.execute(BeforeElement.class, getExecutionContext());
+                getExecutionContext().getExecutionProfiler().start(element);
+                ReflectionUtils.execute(getExecutionContext().getImplementation(), element.getName(), getExecutionContext().getEdgeFilter().getScriptContext());
+                getExecutionContext().getExecutionProfiler().stop(element);
+                AnnotationUtils.execute(AfterElement.class, getExecutionContext());
+            }
+            AnnotationUtils.execute(AfterExecution.class, getExecutionContext());
         } catch (Throwable throwable) {
             getExecutionContext().setExecutionStatus(ExecutionStatus.FAILED);
-            throwable.printStackTrace();
             AnnotationUtils.execute(getExecutionContext(), throwable);
-            // TODO: cast a new UnhandledException(..)
-
         }
     }
 
