@@ -30,7 +30,7 @@ public class Amazon extends AbstractTest implements ShoppingCart {
 
     @Override
     public void e_ShoppingCart(Context context) {
-        getDriver().findElement(By.id("nav-cart-2")).click();
+        getDriver().findElement(By.id("nav-cart")).click();
     }
 
     @Override

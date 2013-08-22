@@ -27,7 +27,6 @@ package org.graphwalker.core.machine;
 
 import org.graphwalker.core.conditions.StopCondition;
 import org.graphwalker.core.generators.PathGenerator;
-import org.graphwalker.core.machine.strategy.ExceptionStrategy;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.ModelFactory;
 import org.graphwalker.core.model.support.DefaultModelFactory;
@@ -44,15 +43,13 @@ public final class Execution {
     private final Class<? extends PathGenerator> pathGenerator;
     private final Class<? extends StopCondition> stopCondition;
     private final String stopConditionValue;
-    private final Class<? extends ExceptionStrategy> exceptionStrategy;
     private final Set<Model> models;
 
-    public Execution(final Class<?> testClass, final Class<? extends PathGenerator> pathGenerator, final Class<? extends StopCondition> stopCondition, String stopConditionValue, final Class<? extends ExceptionStrategy> exceptionStrategy) {
+    public Execution(final Class<?> testClass, final Class<? extends PathGenerator> pathGenerator, final Class<? extends StopCondition> stopCondition, String stopConditionValue) {
         this.testClass = testClass;
         this.stopCondition = stopCondition;
         this.pathGenerator = pathGenerator;
         this.stopConditionValue = stopConditionValue;
-        this.exceptionStrategy = exceptionStrategy;
         this.models = createModels(testClass);
     }
 
@@ -86,10 +83,6 @@ public final class Execution {
 
     public String getStopConditionValue() {
         return stopConditionValue;
-    }
-
-    public Class<? extends ExceptionStrategy> getExceptionStrategy() {
-        return exceptionStrategy;
     }
 
     public Set<Model> getModels() {

@@ -31,7 +31,6 @@ import org.graphwalker.core.annotations.GraphWalker;
 import org.graphwalker.core.conditions.StopCondition;
 import org.graphwalker.core.generators.PathGenerator;
 import org.graphwalker.core.machine.Execution;
-import org.graphwalker.core.machine.strategy.ExceptionStrategy;
 
 import java.util.*;
 
@@ -85,8 +84,7 @@ public final class Manager {
                     Class<? extends PathGenerator> pathGenerator = (Class<? extends PathGenerator>)Execute.class.getMethod("pathGenerator").getDefaultValue();
                     Class<? extends StopCondition> stopCondition = (Class<? extends StopCondition>)Execute.class.getMethod("stopCondition").getDefaultValue();
                     String stopConditionValue = (String)Execute.class.getMethod("stopConditionValue").getDefaultValue();
-                    Class<? extends ExceptionStrategy> exceptionStrategy = (Class<? extends ExceptionStrategy>)Execute.class.getMethod("exceptionStrategy").getDefaultValue();
-                    Execution execution = new Execution(testClass, pathGenerator, stopCondition, stopConditionValue, exceptionStrategy);
+                    Execution execution = new Execution(testClass, pathGenerator, stopCondition, stopConditionValue);
                     groups.put(groupName, new Group(groupName));
                     groups.get(groupName).addExecution(execution);
                 } catch (NoSuchMethodException e) {
@@ -98,7 +96,7 @@ public final class Manager {
                         if (!groups.containsKey(execute.group())) {
                             groups.put(execute.group(), new Group(execute.group()));
                         }
-                        Execution execution = new Execution(testClass, execute.pathGenerator(), execute.stopCondition(), execute.stopConditionValue(), execute.exceptionStrategy());
+                        Execution execution = new Execution(testClass, execute.pathGenerator(), execute.stopCondition(), execute.stopConditionValue());
                         groups.get(execute.group()).addExecution(execution);
                     }
                 }

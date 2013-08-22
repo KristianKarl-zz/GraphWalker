@@ -29,8 +29,6 @@ import org.graphwalker.core.conditions.StopCondition;
 import org.graphwalker.core.conditions.support.VertexCoverage;
 import org.graphwalker.core.generators.PathGenerator;
 import org.graphwalker.core.generators.support.RandomPath;
-import org.graphwalker.core.machine.strategy.ExceptionStrategy;
-import org.graphwalker.core.machine.strategy.FailFastStrategy;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -69,10 +67,4 @@ public @interface Execute {
      */
     public String stopConditionValue() default "100";
 
-    /**
-     * <p>exceptionStrategy.</p>
-     *
-     * @return a {@link java.lang.Class} object.
-     */
-    public Class<? extends ExceptionStrategy> exceptionStrategy() default FailFastStrategy.class;
 }

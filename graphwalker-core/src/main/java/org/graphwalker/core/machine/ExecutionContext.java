@@ -30,7 +30,6 @@ import org.graphwalker.core.common.ReflectionUtils;
 import org.graphwalker.core.common.ResourceUtils;
 import org.graphwalker.core.conditions.StopCondition;
 import org.graphwalker.core.generators.PathGenerator;
-import org.graphwalker.core.machine.strategy.ExceptionStrategy;
 import org.graphwalker.core.model.*;
 import org.graphwalker.core.model.status.ElementStatus;
 import org.graphwalker.core.model.status.ModelStatus;
@@ -146,7 +145,7 @@ public final class ExecutionContext {
     private Set<Edge> visitedEdges = new HashSet<Edge>();
     private Set<Vertex> visitedVertices = new HashSet<Vertex>();
     private Map<Requirement, RequirementStatus> requirementStatus = new HashMap<Requirement, RequirementStatus>();
-    private ExceptionStrategy exceptionStrategy;
+
     //private EdgeFilter edgeFilter;
     private Long visitCount = 0L;
 
@@ -340,21 +339,4 @@ public final class ExecutionContext {
         requirementStatus.put(requirement, status);
     }
 
-    /**
-     * <p>Getter for the field <code>exceptionStrategy</code>.</p>
-     *
-     * @return a {@link org.graphwalker.core.machine.strategy.ExceptionStrategy} object.
-     */
-    public ExceptionStrategy getExceptionStrategy() {
-        return exceptionStrategy;
-    }
-
-    /**
-     * <p>Setter for the field <code>exceptionStrategy</code>.</p>
-     *
-     * @param strategy a {@link org.graphwalker.core.machine.strategy.ExceptionStrategy} object.
-     */
-    public void setExceptionStrategy(ExceptionStrategy strategy) {
-        this.exceptionStrategy = strategy;
-    }
 }
