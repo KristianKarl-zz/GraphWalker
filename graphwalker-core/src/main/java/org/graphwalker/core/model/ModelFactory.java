@@ -32,8 +32,6 @@ import java.util.Set;
  */
 public interface ModelFactory {
 
-    // TODO: Lägg till support för att kunna validera en modell
-
     /**
      * <p>accept.</p>
      *
@@ -41,6 +39,14 @@ public interface ModelFactory {
      * @return a boolean.
      */
     boolean accept(String file);
+
+    /**
+     * <p>validate.</p>
+     *
+     * @param file a {@link java.lang.String} object.
+     * @return a boolean.
+     */
+    boolean validate(String file);
 
     /**
      * <p>create.</p>

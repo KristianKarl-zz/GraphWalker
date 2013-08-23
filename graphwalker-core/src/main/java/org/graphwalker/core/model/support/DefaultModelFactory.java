@@ -52,6 +52,12 @@ public final class DefaultModelFactory extends AbstractModelFactory {
     }
 
     /** {@inheritDoc} */
+    public boolean validate(String file) {
+        //TODO: we need to handle this better, when/if we add more factories
+        return graphMLModelFactory.validate(file);
+    }
+
+    /** {@inheritDoc} */
     public Model create(String file) {
         //TODO: we need to handle this better, when/if we add more factories
         return graphMLModelFactory.create(file);

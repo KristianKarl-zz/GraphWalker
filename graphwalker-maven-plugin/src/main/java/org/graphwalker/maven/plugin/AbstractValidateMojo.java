@@ -39,19 +39,22 @@ public abstract class AbstractValidateMojo extends AbstractDefaultMojo {
         for (Resource resource: resources) {
             validate(resource);
         }
+        // TODO: if any execution of the sub method returns false this method should throw a new exception
     }
 
     protected void validate(Resource resource) {
         for (File file: findFiles(getModelFactory().getSupportedFileTypes(), null, new File(resource.getDirectory()))) {
             validate(file);
         }
+        // TODO: if any execution of the sub method returns false this method should return false
     }
 
     private void validate(File file) {
         if (getLog().isInfoEnabled()) {
             getLog().info("Validate: " + file.getAbsolutePath());
         }
-        //TODO: delegate the validation to the model factory
+        getModelFactory().validate(file.getAbsolutePath());
+        //TODO: this should log the validation errors and then return false
     }
 
 }

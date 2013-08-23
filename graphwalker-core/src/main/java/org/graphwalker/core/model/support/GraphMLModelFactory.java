@@ -60,6 +60,11 @@ public final class GraphMLModelFactory extends AbstractModelFactory {
         return file.endsWith(FILE_TYPE);
     }
 
+    /** {@inheritDoc} */
+    public boolean validate(String file) {
+        return true; // TODO: implement
+    }
+
     /**
      * {@inheritDoc}
      * <p/>

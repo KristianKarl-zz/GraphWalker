@@ -207,7 +207,11 @@ public final class TestMojo extends AbstractTestMojo {
             if (!failedExecutions.isEmpty()) {
                 getLog().info("Failed executions: ");
                 for (ExecutionContext context: failedExecutions) {
-                    getLog().info("  " + context.toString());
+                    double fulfilment = context.getPathGenerator().getStopCondition().getFulfilment(context);
+                    String pathGenerator = context.getPathGenerator().getClass().getSimpleName();
+                    String stopCondition = context.getPathGenerator().getStopCondition().getClass().getSimpleName();
+                    String value = context.getPathGenerator().getStopCondition().getValue();
+                    getLog().info("  " + context.getImplementation().getClass().getName()+"("+pathGenerator+", "+stopCondition+", "+value+"): "+Math.round(100*fulfilment)+"%");
                 }
                 getLog().info("");
             }
