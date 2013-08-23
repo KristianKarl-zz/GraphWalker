@@ -33,12 +33,12 @@ import java.util.Set;
 /**
  * @author Nils Olsson
  */
-public final class Group {
+public final class TestGroup {
 
     private final String name;
     private final Set<Execution> executions = new HashSet<Execution>();
 
-    public Group(String name) {
+    public TestGroup(String name) {
         this.name = name;
     }
 

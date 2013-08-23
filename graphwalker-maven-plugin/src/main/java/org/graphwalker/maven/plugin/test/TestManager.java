@@ -37,12 +37,12 @@ import java.util.*;
 /**
  * @author Nils Olsson
  */
-public final class Manager {
+public final class TestManager {
 
     private final Configuration configuration;
-    private final Collection<Group> executionGroups;
+    private final Collection<TestGroup> executionGroups;
 
-    public Manager(Configuration configuration, Collection<Class<?>> testClasses) {
+    public TestManager(Configuration configuration, Collection<Class<?>> testClasses) {
         this.configuration = configuration;
         this.executionGroups = createExecutionGroups(filterTestClasses(testClasses));
     }
@@ -73,8 +73,8 @@ public final class Manager {
         return false;
     }
 
-    private Collection<Group> createExecutionGroups(Collection<Class<?>> testClasses) {
-        Map<String, Group> groups = new HashMap<String, Group>();
+    private Collection<TestGroup> createExecutionGroups(Collection<Class<?>> testClasses) {
+        Map<String, TestGroup> groups = new HashMap<String, TestGroup>();
         for (Class<?> testClass: testClasses) {
             Execute[] executions = testClass.getAnnotation(GraphWalker.class).value();
             if (0 == executions.length) {
@@ -85,7 +85,7 @@ public final class Manager {
                     Class<? extends StopCondition> stopCondition = (Class<? extends StopCondition>)Execute.class.getMethod("stopCondition").getDefaultValue();
                     String stopConditionValue = (String)Execute.class.getMethod("stopConditionValue").getDefaultValue();
                     Execution execution = new Execution(testClass, pathGenerator, stopCondition, stopConditionValue);
-                    groups.put(groupName, new Group(groupName));
+                    groups.put(groupName, new TestGroup(groupName));
                     groups.get(groupName).addExecution(execution);
                 } catch (NoSuchMethodException e) {
                     e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
@@ -94,7 +94,7 @@ public final class Manager {
                 for (Execute execute: executions) {
                     if (isExecutionGroup(execute.group())) {
                         if (!groups.containsKey(execute.group())) {
-                            groups.put(execute.group(), new Group(execute.group()));
+                            groups.put(execute.group(), new TestGroup(execute.group()));
                         }
                         Execution execution = new Execution(testClass, execute.pathGenerator(), execute.stopCondition(), execute.stopConditionValue());
                         groups.get(execute.group()).addExecution(execution);
@@ -114,7 +114,7 @@ public final class Manager {
         return false;
     }
 
-    public Collection<Group> getExecutionGroups() {
+    public Collection<TestGroup> getExecutionGroups() {
         return executionGroups;
     }
 
@@ -128,7 +128,7 @@ public final class Manager {
 
     public int getTestCount() {
         int count = 0;
-        for (Group group: getExecutionGroups()) {
+        for (TestGroup group: getExecutionGroups()) {
             count += group.getExecutions().size();
         }
         return count;

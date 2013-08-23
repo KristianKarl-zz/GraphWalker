@@ -68,7 +68,6 @@ public final class Machine implements Runnable {
             AnnotationUtils.execute(AfterExecution.class, getExecutionContext());
         } catch (Throwable throwable) {
             getExecutionContext().setExecutionStatus(ExecutionStatus.FAILED);
-throwable.printStackTrace(); // TODO: Remove this when report/exception is handled
             AnnotationUtils.execute(getExecutionContext(), throwable);
         }
     }

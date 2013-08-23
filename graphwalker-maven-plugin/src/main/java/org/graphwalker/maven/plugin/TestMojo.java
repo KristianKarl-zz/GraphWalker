@@ -38,9 +38,9 @@ import org.graphwalker.core.machine.ExecutionContext;
 import org.graphwalker.core.machine.ExecutionStatus;
 import org.graphwalker.core.machine.Machine;
 import org.graphwalker.maven.plugin.test.Configuration;
-import org.graphwalker.maven.plugin.test.Group;
-import org.graphwalker.maven.plugin.test.Manager;
 import org.graphwalker.maven.plugin.test.Scanner;
+import org.graphwalker.maven.plugin.test.TestGroup;
+import org.graphwalker.maven.plugin.test.TestManager;
 
 import java.util.*;
 import java.util.concurrent.ExecutorService;
@@ -68,13 +68,13 @@ public final class TestMojo extends AbstractTestMojo {
             displayHeader();
             Configuration configuration = createConfiguration();
             Scanner scanner = new Scanner();
-            Manager manager = new Manager(configuration, scanner.scan(getTestClassesDirectory(), getClassesDirectory()));
+            TestManager manager = new TestManager(configuration, scanner.scan(getTestClassesDirectory(), getClassesDirectory()));
             displayConfiguration(manager);
             executeTests(manager);
-            reportResults(manager);
             displayResult(manager);
             switchProperties(properties);
             switchClassLoader(classLoader);
+            reportResults(manager);
         }
     }
 
@@ -121,7 +121,7 @@ public final class TestMojo extends AbstractTestMojo {
         return configuration;
     }
 
-    private void displayConfiguration(Manager manager) {
+    private void displayConfiguration(TestManager manager) {
         if (getLog().isInfoEnabled()) {
             getLog().info("Configuration:");
             getLog().info("    Include = "+manager.getConfiguration().getIncludes());
@@ -133,7 +133,7 @@ public final class TestMojo extends AbstractTestMojo {
             if (manager.getExecutionGroups().isEmpty()) {
                 getLog().info("  No tests found");
             } else {
-                for (Group group: manager.getExecutionGroups()) {
+                for (TestGroup group: manager.getExecutionGroups()) {
                     getLog().info("  [" + group.getName()+"]");
                     for (Execution execution: group.getExecutions()) {
                         getLog().info("    "+execution.getName()+"("+execution.getPathGenerator().getSimpleName()+", "+execution.getStopCondition().getSimpleName()+", \""+execution.getStopConditionValue()+"\")");
@@ -145,9 +145,9 @@ public final class TestMojo extends AbstractTestMojo {
         }
     }
 
-    private void executeTests(Manager manager) {
+    private void executeTests(TestManager manager) {
         if (!manager.getExecutionGroups().isEmpty()) {
-            for (Group group: manager.getExecutionGroups()) {
+            for (TestGroup group: manager.getExecutionGroups()) {
                 machines.add(new Machine(group.getExecutions()));
             }
             try {
@@ -163,7 +163,7 @@ public final class TestMojo extends AbstractTestMojo {
         }
     }
 
-    private void reportResults(Manager manager) throws MojoExecutionException {
+    private void reportResults(TestManager manager) throws MojoExecutionException {
         boolean hasExceptions = false;
         for (Machine machine: machines) {
             //reportWriter.writeReport(graphWalker, reportsDirectory, session.getStartTime());
@@ -177,7 +177,7 @@ public final class TestMojo extends AbstractTestMojo {
         }
     }
 
-    private void displayResult(Manager manager) {
+    private void displayResult(TestManager manager) {
         if (getLog().isInfoEnabled()) {
             getLog().info("------------------------------------------------------------------------");
             getLog().info("");
