@@ -136,7 +136,7 @@ public final class TestMojo extends AbstractTestMojo {
                 for (Group group: manager.getExecutionGroups()) {
                     getLog().info("  [" + group.getName()+"]");
                     for (Execution execution: group.getExecutions()) {
-                        getLog().info("    "+execution.getName());
+                        getLog().info("    "+execution.getName()+"("+execution.getPathGenerator().getSimpleName()+", "+execution.getStopCondition().getSimpleName()+", \""+execution.getStopConditionValue()+"\")");
                     }
                     getLog().info("");
                 }
