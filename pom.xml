@@ -90,12 +90,12 @@
             </dependency>
             <dependency>
                 <groupId>org.graphwalker</groupId>
-                <artifactId>graphwalker-report</artifactId>
+                <artifactId>graphwalker-maven-plugin</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.graphwalker</groupId>
-                <artifactId>graphwalker-maven-plugin</artifactId>
+                <artifactId>graphwalker-jenkins-plugin</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

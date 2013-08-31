@@ -29,8 +29,11 @@ import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
-import org.graphwalker.core.model.ImmutableElement;
-import org.graphwalker.core.model.Model;
+import org.graphwalker.core.Bundle;
+import org.graphwalker.core.common.ResourceUtils;
+import org.graphwalker.core.machine.ExecutionContext;
+import org.graphwalker.core.model.Edge;
+import org.graphwalker.core.model.ModelElement;
 import org.slf4j.ILoggerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,21 +81,27 @@ public final class LoggerAspect {
     void stopCondition() {
     }
 
-    @Pointcut("execution(* *.executeElement(..)) && args(model, element)")
-    void executeElement(Model model, ImmutableElement element) {
+    @Pointcut("execution(* *.executeElement(..)) && args(context, element)")
+    void executeElement(ExecutionContext context, ModelElement element) {
     }
 
     /**
      * <p>beforeExecuteElement.</p>
      *
      * @param joinPoint a {@link org.aspectj.lang.JoinPoint} object.
-     * @param model     a {@link org.graphwalker.core.model.Model} object.
      * @param element   a {@link org.graphwalker.core.model.ImmutableElement} object.
      */
-    @Before("machine() && executeElement(model, element)")
-    public void beforeExecuteElement(JoinPoint joinPoint, Model model, ImmutableElement element) {
-        // TODO:
-        //getLogger(joinPoint).info(ResourceUtils.getText(Bundle.NAME, "log.method.call", model.getId(), (element instanceof Edge ? "edge" : "vertex"), element.getId(), element.getName(), element.getVisitCount()));
+    @Before("machine() && executeElement(context, element)")
+    public void beforeExecuteElement(JoinPoint joinPoint, ExecutionContext context, ModelElement element) {
+        Logger logger = getLogger(joinPoint);
+        if (logger.isInfoEnabled()) {
+            logger.info(ResourceUtils.getText(Bundle.NAME, "log.method.call"
+                    , context.getModel().getId()
+                    , (element instanceof Edge ? "edge" : "vertex")
+                    , element.getId()
+                    , element.getName()
+                    , context.getVisitCount(element)));
+        }
     }
 
     /**
@@ -100,10 +109,13 @@ public final class LoggerAspect {
      *
      * @param joinPoint a {@link org.aspectj.lang.JoinPoint} object.
      */
-    @Before("publicMethod() && graphWalker()")
+    @Before("publicMethod() && machine()")
     public void logInfoBefore(JoinPoint joinPoint) {
         MDC.put("traceId", UUID.randomUUID().toString());
-        getLogger(joinPoint).debug(toString(joinPoint));
+        Logger logger = getLogger(joinPoint);
+        if (logger.isDebugEnabled()) {
+            logger.debug(toString(joinPoint));
+        }
     }
 
     /**
@@ -113,7 +125,10 @@ public final class LoggerAspect {
      */
     @Before("graphWalkerAnnotation()")
     public void logImplementation(JoinPoint joinPoint) {
-        getLogger(joinPoint).debug(toString(joinPoint));
+        Logger logger = getLogger(joinPoint);
+        if (logger.isDebugEnabled()) {
+            logger.debug(toString(joinPoint));
+        }
     }
 
     /**

@@ -60,9 +60,7 @@ public final class Machine implements Runnable {
             while (hasMoreSteps()) {
                 ModelElement element = getNextStep();
                 AnnotationUtils.execute(BeforeElement.class, getExecutionContext());
-                getExecutionContext().getExecutionProfiler().start(element);
-                ReflectionUtils.execute(getExecutionContext().getImplementation(), element.getName(), getExecutionContext().getEdgeFilter().getScriptContext());
-                getExecutionContext().getExecutionProfiler().stop(element);
+                executeElement(getExecutionContext(), element);
                 AnnotationUtils.execute(AfterElement.class, getExecutionContext());
             }
             AnnotationUtils.execute(AfterExecution.class, getExecutionContext());
@@ -70,6 +68,12 @@ public final class Machine implements Runnable {
             getExecutionContext().setExecutionStatus(ExecutionStatus.FAILED);
             AnnotationUtils.execute(getExecutionContext(), throwable);
         }
+    }
+
+    private void executeElement(ExecutionContext context, ModelElement element) {
+        context.getExecutionProfiler().start(element);
+        ReflectionUtils.execute(context.getImplementation(), element.getName(), context.getEdgeFilter().getScriptContext());
+        context.getExecutionProfiler().stop(element);
     }
 
     private ExecutionContext getExecutionContext() {
@@ -112,9 +116,9 @@ public final class Machine implements Runnable {
      * @return a {@link org.graphwalker.core.model.ModelElement} object.
      */
     public ModelElement getNextStep() {
+        getExecutionContext().visit(getCurrentStep());
         ModelElement nextElement = getExecutionContext().getPathGenerator().getNextStep(getExecutionContext(), getExecutionContext().getPossibleSteps());
         getExecutionContext().setCurrentElement(nextElement);
-        getExecutionContext().visit(nextElement);
         if (nextElement instanceof Edge) {
             getExecutionContext().getEdgeFilter().executeActions(getExecutionContext(), (Edge)nextElement);
         }
