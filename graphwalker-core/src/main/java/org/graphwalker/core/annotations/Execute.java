@@ -26,7 +26,7 @@
 package org.graphwalker.core.annotations;
 
 import org.graphwalker.core.conditions.StopCondition;
-import org.graphwalker.core.conditions.support.VertexCoverage;
+import org.graphwalker.core.conditions.support.EdgeCoverage;
 import org.graphwalker.core.generators.PathGenerator;
 import org.graphwalker.core.generators.support.RandomPath;
 
@@ -61,7 +61,7 @@ public @interface Execute {
      *
      * @return a {@link java.lang.Class} object.
      */
-    public Class<? extends StopCondition> stopCondition() default VertexCoverage.class;
+    public Class<? extends StopCondition> stopCondition() default EdgeCoverage.class;
 
     /**
      * <p>stopConditionValue.</p>
