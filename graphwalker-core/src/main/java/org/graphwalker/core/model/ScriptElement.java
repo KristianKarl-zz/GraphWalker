@@ -26,7 +26,7 @@
 package org.graphwalker.core.model;
 
 /**
- * <p>Abstract ScriptElement class.</p>
+ * @author Nils Olsson
  */
 public abstract class ScriptElement extends ImmutableElement {
 

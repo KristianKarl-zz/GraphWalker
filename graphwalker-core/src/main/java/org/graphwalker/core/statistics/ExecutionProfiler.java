@@ -30,6 +30,9 @@ import org.graphwalker.core.model.ModelElement;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author Nils Olsson
+ */
 public final class ExecutionProfiler {
 
     private final Map<ModelElement, ExecutionTime> executionTimes = new HashMap<ModelElement, ExecutionTime>();

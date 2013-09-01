@@ -28,7 +28,7 @@ package org.graphwalker.core.generators;
 import org.graphwalker.core.conditions.StopCondition;
 
 /**
- * <p>Abstract AbstractPathGenerator class.</p>
+ * @author Nils Olsson
  */
 public abstract class AbstractPathGenerator implements PathGenerator {
 

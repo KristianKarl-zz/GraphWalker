@@ -26,7 +26,7 @@
 package org.graphwalker.core.model;
 
 /**
- * <p>Abstract ModelElement class.</p>
+ * @author Nils Olsson
  */
 public abstract class ModelElement extends NamedElement {
 

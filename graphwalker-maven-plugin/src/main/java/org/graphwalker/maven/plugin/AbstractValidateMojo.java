@@ -26,6 +26,8 @@
 package org.graphwalker.maven.plugin;
 
 import org.apache.maven.model.Resource;
+import org.graphwalker.core.model.ModelFactory;
+import org.graphwalker.core.model.support.DefaultModelFactory;
 
 import java.io.File;
 import java.util.List;
@@ -43,7 +45,8 @@ public abstract class AbstractValidateMojo extends AbstractDefaultMojo {
     }
 
     protected void validate(Resource resource) {
-        for (File file: findFiles(getModelFactory().getSupportedFileTypes(), null, new File(resource.getDirectory()))) {
+        ModelFactory factory = new DefaultModelFactory();
+        for (File file: findFiles(factory.getSupportedFileTypes(), null, new File(resource.getDirectory()))) {
             validate(file);
         }
         // TODO: if any execution of the sub method returns false this method should return false
@@ -53,7 +56,8 @@ public abstract class AbstractValidateMojo extends AbstractDefaultMojo {
         if (getLog().isInfoEnabled()) {
             getLog().info("Validate: " + file.getAbsolutePath());
         }
-        getModelFactory().validate(file.getAbsolutePath());
+        ModelFactory factory = new DefaultModelFactory();
+        factory.validate(file.getAbsolutePath());
         //TODO: this should log the validation errors and then return false
     }
 

@@ -31,7 +31,7 @@ import java.lang.reflect.Array;
 import java.util.*;
 
 /**
- * <p>Assert class.</p>
+ * @author Nils Olsson
  */
 public final class Assert {
 

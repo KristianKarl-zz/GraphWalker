@@ -26,13 +26,13 @@
 package org.graphwalker.core.conditions.support;
 
 import org.graphwalker.core.conditions.StopCondition;
-import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.machine.ExecutionContext;
+import org.graphwalker.core.model.Edge;
 
 import javax.validation.constraints.NotNull;
 
 /**
- * <p>ReachedEdge class.</p>
+ * @author Nils Olsson
  */
 public final class ReachedEdge implements StopCondition {
 

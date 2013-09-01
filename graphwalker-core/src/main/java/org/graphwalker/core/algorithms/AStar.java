@@ -25,14 +25,14 @@
  */
 package org.graphwalker.core.algorithms;
 
+import org.graphwalker.core.machine.ExecutionContext;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.ModelElement;
-import org.graphwalker.core.machine.ExecutionContext;
 
 import java.util.*;
 
 /**
- * <p>AStar class.</p>
+ * @author Nils Olsson
  */
 public final class AStar {
 

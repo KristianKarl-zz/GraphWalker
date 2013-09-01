@@ -28,7 +28,7 @@ package org.graphwalker.core.model;
 import java.util.Set;
 
 /**
- * <p>ModelFactory interface.</p>
+ * @author Nils Olsson
  */
 public interface ModelFactory {
 

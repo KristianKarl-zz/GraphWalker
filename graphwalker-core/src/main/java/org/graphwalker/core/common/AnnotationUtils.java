@@ -33,6 +33,9 @@ import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * @author Nils Olsson
+ */
 public final class AnnotationUtils {
 
     private AnnotationUtils() {}

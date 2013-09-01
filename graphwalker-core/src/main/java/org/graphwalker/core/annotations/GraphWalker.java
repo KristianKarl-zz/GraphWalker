@@ -31,7 +31,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * <p>GraphWalker class.</p>
+ * @author Nils Olsson
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

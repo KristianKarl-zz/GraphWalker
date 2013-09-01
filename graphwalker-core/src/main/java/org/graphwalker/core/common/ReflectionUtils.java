@@ -35,7 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * <p>ReflectionUtils class.</p>
+ * @author Nils Olsson
  */
 public final class ReflectionUtils {
 

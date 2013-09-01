@@ -30,7 +30,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * <p>Vertex class.</p>
+ * @author Nils Olsson
  */
 public final class Vertex extends ModelElement {
 

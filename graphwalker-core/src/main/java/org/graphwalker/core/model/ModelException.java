@@ -26,7 +26,7 @@
 package org.graphwalker.core.model;
 
 /**
- * <p>ModelException class.</p>
+ * @author Nils Olsson
  */
 public class ModelException extends RuntimeException {
 

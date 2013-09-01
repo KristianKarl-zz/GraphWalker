@@ -33,7 +33,7 @@ import org.graphwalker.core.common.ResourceUtils;
 import java.util.*;
 
 /**
- * <p>Model class.</p>
+ * @author Nils Olsson
  */
 public final class Model extends ImmutableElement {
 

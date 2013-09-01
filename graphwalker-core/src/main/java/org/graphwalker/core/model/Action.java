@@ -26,7 +26,7 @@
 package org.graphwalker.core.model;
 
 /**
- * <p>Action class.</p>
+ * @author Nils Olsson
  */
 public final class Action extends ScriptElement {
 

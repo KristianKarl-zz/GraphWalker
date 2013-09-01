@@ -35,7 +35,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * <p>FloydWarshall class.</p>
+ * @author Nils Olsson
  */
 public final class FloydWarshall {
 

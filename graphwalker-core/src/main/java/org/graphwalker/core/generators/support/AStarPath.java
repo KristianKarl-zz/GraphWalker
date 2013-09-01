@@ -41,7 +41,7 @@ import org.graphwalker.core.model.Vertex;
 import java.util.List;
 
 /**
- * <p>AStarPath class.</p>
+ * @author Nils Olsson
  */
 public final class AStarPath extends AbstractPathGenerator {
 

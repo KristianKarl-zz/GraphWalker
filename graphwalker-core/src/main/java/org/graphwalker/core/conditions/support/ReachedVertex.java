@@ -32,7 +32,7 @@ import org.graphwalker.core.model.Vertex;
 import javax.validation.constraints.NotNull;
 
 /**
- * <p>ReachedVertex class.</p>
+ * @author Nils Olsson
  */
 public final class ReachedVertex implements StopCondition {
 

@@ -40,7 +40,7 @@ import org.graphwalker.core.statistics.ExecutionProfiler;
 import java.util.*;
 
 /**
- * <p>ExecutionContext class.</p>
+ * @author Nils Olsson
  */
 public final class ExecutionContext {
 

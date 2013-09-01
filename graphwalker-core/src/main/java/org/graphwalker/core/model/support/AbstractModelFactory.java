@@ -32,7 +32,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * <p>Abstract AbstractModelFactory class.</p>
+ * @author Nils Olsson
  */
 public abstract class AbstractModelFactory implements ModelFactory {
 

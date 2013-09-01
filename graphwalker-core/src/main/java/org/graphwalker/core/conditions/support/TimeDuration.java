@@ -29,7 +29,7 @@ import org.graphwalker.core.conditions.StopCondition;
 import org.graphwalker.core.machine.ExecutionContext;
 
 /**
- * <p>TimeDuration class.</p>
+ * @author Nils Olsson
  */
 public final class TimeDuration implements StopCondition {
 

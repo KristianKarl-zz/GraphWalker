@@ -34,7 +34,7 @@ import org.graphwalker.core.model.status.ElementStatus;
 import java.util.*;
 
 /**
- * <p>DepthFirstSearch class.</p>
+ * @author Nils Olsson
  */
 public final class DepthFirstSearch {
 

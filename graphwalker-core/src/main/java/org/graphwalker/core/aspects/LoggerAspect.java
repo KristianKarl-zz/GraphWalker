@@ -43,7 +43,7 @@ import java.util.UUID;
 
 
 /**
- * <p>LoggerAspect class.</p>
+ * @author Nils Olsson
  */
 @Aspect
 public final class LoggerAspect {

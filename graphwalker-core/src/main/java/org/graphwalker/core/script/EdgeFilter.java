@@ -26,15 +26,17 @@
 package org.graphwalker.core.script;
 
 import org.graphwalker.core.Bundle;
+import org.graphwalker.core.common.ResourceUtils;
+import org.graphwalker.core.machine.ExecutionContext;
 import org.graphwalker.core.model.Action;
 import org.graphwalker.core.model.Edge;
-import org.graphwalker.core.machine.ExecutionContext;
-import org.graphwalker.core.common.ResourceUtils;
 
-import javax.script.*;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 
 /**
- * <p>EdgeFilterImpl class.</p>
+ * @author Nils Olsson
  */
 public final class EdgeFilter {
 

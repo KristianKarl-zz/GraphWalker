@@ -28,6 +28,9 @@ package org.graphwalker.core.report;
 import java.io.File;
 import java.util.Date;
 
+/**
+ * @author Nils Olsson
+ */
 public final class XMLReport {
 
     private static final String LINE_SEPARATOR = System.getProperty("line.separator");

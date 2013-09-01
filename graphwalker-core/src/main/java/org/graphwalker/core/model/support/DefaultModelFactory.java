@@ -31,7 +31,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * <p>DefaultModelFactory class.</p>
+ * @author Nils Olsson
  */
 public final class DefaultModelFactory extends AbstractModelFactory {
 

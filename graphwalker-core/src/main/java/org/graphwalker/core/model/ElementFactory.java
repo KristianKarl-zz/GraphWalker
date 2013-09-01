@@ -2,7 +2,7 @@
  * #%L
  * GraphWalker Core
  * %%
- * Copyright (C) 2011 - 2012 GraphWalker
+ * Copyright (C) 2011 - 2013 GraphWalker
  * %%
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,11 +23,19 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core.model.status;
+package org.graphwalker.core.model;
+
+import java.util.List;
 
 /**
  * @author Nils Olsson
  */
-public enum ElementStatus {
-    UNREACHABLE, REACHABLE, VISITED, BLOCKED
+public interface ElementFactory {
+
+    Model createModel(String id, List<Vertex> vertices, List<Edge> edges, Vertex startVertex);
+    Vertex createVertex(String id, String name, Boolean blocked, String comment, String modelSwitchId, List<Requirement> requirements);
+    Edge createEdge(String id, String name, Boolean blocked, String comment, Double weight, Vertex source, Vertex target, Guard guard, List<Action> actions);
+    Requirement createRequirement(String id, String name);
+    Guard createGuard(String id, String script);
+    Action createAction(String id, String script);
 }

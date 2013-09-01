@@ -30,7 +30,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * <p>Edge class.</p>
+ * @author Nils Olsson
  */
 public final class Edge extends ModelElement {
 

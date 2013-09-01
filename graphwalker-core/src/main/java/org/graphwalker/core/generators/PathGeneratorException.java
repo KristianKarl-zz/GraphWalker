@@ -26,7 +26,7 @@
 package org.graphwalker.core.generators;
 
 /**
- * <p>PathGeneratorException class.</p>
+ * @author Nils Olsson
  */
 public class PathGeneratorException extends RuntimeException {
 

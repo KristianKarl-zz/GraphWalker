@@ -25,5 +25,8 @@
  */
 package org.graphwalker.core.algorithms;
 
+/**
+ * @author Nils Olsson
+ */
 public class NoPathFoundException extends RuntimeException {
 }

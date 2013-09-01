@@ -23,16 +23,18 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core.model;
+package org.graphwalker.core.model.support;
+
+import org.graphwalker.core.model.*;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
- * <p>CachedElementFactory class.</p>
+ * @author Nils Olsson
  */
-public final class CachedElementFactory {
+public final class CachedElementFactory implements ElementFactory {
 
     private final Map<Integer, Immutable> cache = new HashMap<Integer, Immutable>();
 

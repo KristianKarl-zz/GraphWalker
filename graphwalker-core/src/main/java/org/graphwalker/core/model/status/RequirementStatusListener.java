@@ -28,7 +28,7 @@ package org.graphwalker.core.model.status;
 import org.graphwalker.core.model.Requirement;
 
 /**
- * <p>RequirementStatusListener interface.</p>
+ * @author Nils Olsson
  */
 public interface RequirementStatusListener {
     /**

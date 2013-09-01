@@ -26,11 +26,11 @@
 package org.graphwalker.core.conditions.support;
 
 import org.graphwalker.core.conditions.StopCondition;
-import org.graphwalker.core.model.status.RequirementStatus;
 import org.graphwalker.core.machine.ExecutionContext;
+import org.graphwalker.core.model.status.RequirementStatus;
 
 /**
- * <p>RequirementCoverage class.</p>
+ * @author Nils Olsson
  */
 public final class RequirementCoverage implements StopCondition {
 

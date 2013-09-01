@@ -36,7 +36,7 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 /**
- * <p>ResourceUtils class.</p>
+ * @author Nils Olsson
  */
 public final class ResourceUtils {
 

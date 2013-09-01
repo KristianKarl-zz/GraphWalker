@@ -29,7 +29,7 @@ package org.graphwalker.core.conditions;
 import org.graphwalker.core.machine.ExecutionContext;
 
 /**
- * <p>StopCondition interface.</p>
+ * @author Nils Olsson
  */
 public interface StopCondition {
 

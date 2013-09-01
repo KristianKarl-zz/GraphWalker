@@ -31,8 +31,6 @@ import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
-import org.graphwalker.core.model.ModelFactory;
-import org.graphwalker.core.model.support.DefaultModelFactory;
 
 import java.io.File;
 import java.util.HashSet;
@@ -49,18 +47,12 @@ public abstract class AbstractDefaultMojo extends AbstractMojo {
     @Component
     private MavenProject mavenProject;
 
-    private final ModelFactory modelFactory = new DefaultModelFactory();
-
     protected MavenSession getSession() {
         return session;
     }
 
     protected MavenProject getMavenProject() {
         return mavenProject;
-    }
-
-    protected ModelFactory getModelFactory() {
-        return modelFactory;
     }
 
     private String toString(Set<String> set) {

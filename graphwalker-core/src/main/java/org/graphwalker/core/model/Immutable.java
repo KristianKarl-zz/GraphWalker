@@ -26,7 +26,7 @@
 package org.graphwalker.core.model;
 
 /**
- * <p>Immutable interface.</p>
+ * @author Nils Olsson
  */
 public interface Immutable {
 

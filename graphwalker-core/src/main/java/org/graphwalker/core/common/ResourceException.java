@@ -26,7 +26,7 @@
 package org.graphwalker.core.common;
 
 /**
- * <p>ResourceException class.</p>
+ * @author Nils Olsson
  */
 public class ResourceException extends RuntimeException {
 

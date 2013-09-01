@@ -26,7 +26,7 @@
 package org.graphwalker.core.model;
 
 /**
- * <p>Abstract Element class.</p>
+ * @author Nils Olsson
  */
 public abstract class ImmutableElement implements Immutable {
 

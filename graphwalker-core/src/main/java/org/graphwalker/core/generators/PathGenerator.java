@@ -27,13 +27,13 @@
 package org.graphwalker.core.generators;
 
 import org.graphwalker.core.conditions.StopCondition;
-import org.graphwalker.core.model.ModelElement;
 import org.graphwalker.core.machine.ExecutionContext;
+import org.graphwalker.core.model.ModelElement;
 
 import java.util.List;
 
 /**
- * <p>PathGenerator interface.</p>
+ * @author Nils Olsson
  */
 public interface PathGenerator {
 

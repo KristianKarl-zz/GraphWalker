@@ -37,6 +37,9 @@ import java.util.Set;
 
 import static org.graphwalker.core.common.AnnotationUtils.getAnnotations;
 
+/**
+ * @author Nils Olsson
+ */
 public final class Execution {
 
     private final Class<?> testClass;

@@ -26,9 +26,7 @@
 package org.graphwalker.core.report;
 
 /**
- * <p>ReportException class.</p>
- *
- *
+ * @author Nils Olsson
  */
 public final class ReportException extends RuntimeException {
 

@@ -39,14 +39,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * <p>GraphMLModelFactory class.</p>
+ * @author Nils Olsson
  */
 public final class GraphMLModelFactory extends AbstractModelFactory {
 
     // TODO: Update support for keywords
 
     private static final String FILE_TYPE = "graphml";
-    private CachedElementFactory elementFactory = new CachedElementFactory();
+    private ElementFactory elementFactory = new CachedElementFactory();
 
     /**
      * <p>Constructor for GraphmlModelFactory.</p>
