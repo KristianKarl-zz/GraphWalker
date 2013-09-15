@@ -3,14 +3,14 @@ package org.graphwalker.example;
 import org.graphwalker.core.annotations.GraphWalker;
 import org.graphwalker.core.common.Assert;
 import org.graphwalker.core.script.Context;
-import org.graphwalker.example.models.GoogleModel;
-import org.graphwalker.example.models.GoogleModelSearchImage;
-import org.graphwalker.example.models.GoogleModelSearchText;
-import org.graphwalker.example.models.GoogleModelSearchYoutube;
+import org.graphwalker.example.models.google.GoogleStart;
+import org.graphwalker.example.models.google.SearchImage;
+import org.graphwalker.example.models.google.SearchText;
+import org.graphwalker.example.models.google.SearchYoutube;
 import org.openqa.selenium.By;
 
 @GraphWalker
-public class Google extends AbstractTest implements GoogleModel, GoogleModelSearchText, GoogleModelSearchImage, GoogleModelSearchYoutube {
+public class Google extends AbstractTest implements GoogleStart, SearchText, SearchImage, SearchYoutube {
 
     @Override
     public void e_SearchImage(Context context) {
