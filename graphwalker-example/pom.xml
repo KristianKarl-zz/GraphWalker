@@ -6,7 +6,7 @@
 
     <groupId>org.graphwalker</groupId>
     <artifactId>graphwalker-example</artifactId>
-    <version>3.0-SNAPSHOT</version>
+    <version>3.0-BETA-SNAPSHOT</version>
     <name>GraphWalker Example</name>
 
     <properties>
@@ -37,6 +37,7 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <test>*Amazon</test>
                     <groups>shortest</groups>
                 </configuration>
             </plugin>

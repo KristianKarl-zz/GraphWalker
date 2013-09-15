@@ -51,9 +51,9 @@ public class ProjectAction extends Actionable implements ProminentProjectAction 
             if (null != action) {
                 TestResult result = action.getResult();
                 if (null != result) {
-                    dataSetBuilder.add(result.getPassedRequirementCount(), Messages.project_trend_passed(), result.getTimestamp());
-                    dataSetBuilder.add(result.getFailedRequirementCount(), Messages.project_trend_failed(), result.getTimestamp());
-                    dataSetBuilder.add(result.getNotCoveredRequirementCount(), Messages.project_trend_not_covered(), result.getTimestamp());
+                    //dataSetBuilder.add(result.getPassedRequirementCount(), Messages.project_trend_passed(), result.getTimestamp());
+                    //dataSetBuilder.add(result.getFailedRequirementCount(), Messages.project_trend_failed(), result.getTimestamp());
+                    //dataSetBuilder.add(result.getNotCoveredRequirementCount(), Messages.project_trend_not_covered(), result.getTimestamp());
                 }
             }
         }

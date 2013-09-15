@@ -4,16 +4,19 @@ import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
 import hudson.Util;
-import hudson.model.*;
+import hudson.model.AbstractBuild;
+import hudson.model.AbstractProject;
+import hudson.model.Action;
+import hudson.model.BuildListener;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Recorder;
-import org.graphwalker.core.report.GraphWalkerReportType;
-import org.graphwalker.core.report.XMLReport;
 import org.kohsuke.stapler.DataBoundConstructor;
 
-import java.io.File;
 import java.io.IOException;
+
+//import org.graphwalker.core.report.GraphWalkerReportType;
+//import org.graphwalker.core.report.XMLReport;
 
 public class Publisher extends Recorder {
 
@@ -39,9 +42,9 @@ public class Publisher extends Recorder {
                     final FilePath reportDirectory = targetDirectory.child(Messages.plugin_report_directory());
                     if (reportDirectory.exists() && reportDirectory.isDirectory()) {
                         TestResult result = new TestResult();
-                        XMLReport parser = new XMLReport();
+                        //XMLReport parser = new XMLReport();
                         for (FilePath file: reportDirectory.list()) {
-                            processReport(parser, file, result);
+                        //    processReport(parser, file, result);
                         }
                         build.addAction(new ResultAction(build, result, listener));
                     }
@@ -54,7 +57,7 @@ public class Publisher extends Recorder {
         build.addAction(new BuildAction(build));
         return true;
     }
-
+    /*
     private void processReport(XMLReport parser, FilePath file, TestResult result) throws IOException, InterruptedException {
         if (file.exists() && !file.isDirectory()) {
             File reportFile = new File(file.getRemote());
@@ -62,7 +65,7 @@ public class Publisher extends Recorder {
             result.addReport(report);
         }
     }
-
+    */
     @Override
     public Action getProjectAction(AbstractProject<?,?> project) {
         return new ProjectAction(project);

@@ -1,15 +1,14 @@
 package org.graphwalker.jenkins.plugin;
 
 import hudson.model.ModelObject;
-import org.graphwalker.core.report.GraphWalkerReportType;
-import org.graphwalker.core.report.RequirementsType;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+
+//import org.graphwalker.core.report.GraphWalkerReportType;
+//import org.graphwalker.core.report.RequirementsType;
 
 public class TestResult implements ModelObject, Serializable {
-
+/*
     private static final long serialVersionUID = 1341889337197236412L;
 
     private String clazz;
@@ -83,7 +82,7 @@ public class TestResult implements ModelObject, Serializable {
     public int getTotalRequirementCount() {
         return totalRequirementCount;
     }
-
+    */
     public String getDisplayName() {
         return Messages.result_display_name();
     }

@@ -59,12 +59,12 @@ public class ResultAction extends AbstractTestResultAction<ResultAction> {
 
     @Override
     public int getFailCount() {
-        return getResult().getFailedRequirementCount();
+        return 0;//getResult().getFailedRequirementCount();
     }
 
     @Override
     public int getTotalCount() {
-        return getResult().getTotalRequirementCount();
+        return 0;//getResult().getTotalRequirementCount();
     }
 
 

@@ -12,7 +12,7 @@
 
     <groupId>org.graphwalker</groupId>
     <artifactId>graphwalker-jenkins-plugin</artifactId>
-    <version>3.0-SNAPSHOT</version>
+    <version>3.0-BETA-SNAPSHOT</version>
     <name>GraphWalker Jenkins Plugin</name>
     <packaging>hpi</packaging>
 
