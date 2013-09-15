@@ -164,6 +164,7 @@ public final class TestMojo extends AbstractTestMojo {
     }
 
     private void reportResults(TestManager manager) throws MojoExecutionException {
+
         boolean hasExceptions = false;
         for (Machine machine: machines) {
             //reportWriter.writeReport(graphWalker, reportsDirectory, session.getStartTime());
@@ -172,8 +173,7 @@ public final class TestMojo extends AbstractTestMojo {
             }
         }
         if (hasExceptions) {
-            //throw new MojoExecutionException(ResourceUtils.getText(Bundle.NAME, "exception.execution.failed", reportsDirectory.getAbsolutePath()));
-            throw new MojoExecutionException(ResourceUtils.getText(Bundle.NAME, "exception.execution.failed", ""));
+            throw new MojoExecutionException(ResourceUtils.getText(Bundle.NAME, "exception.execution.failed", getReportsDirectory().getAbsolutePath()));
         }
     }
 
