@@ -61,9 +61,13 @@ public final class AnnotationUtils {
     public static void execute(ExecutionContext executionContext, Throwable throwable) {
         for (Method method: executionContext.getImplementation().getClass().getMethods()) {
             if (method.isAnnotationPresent(ExceptionHandler.class)) {
-                Class<? extends Throwable> filter = method.getAnnotation(ExceptionHandler.class).filter();
-                if (filter.isAssignableFrom(throwable.getClass())) {
-                    ReflectionUtils.execute(executionContext.getImplementation(), method, executionContext.getEdgeFilter());
+                Class<?> types[] = method.getParameterTypes();
+                if (0 == types.length) {
+                    ReflectionUtils.execute(executionContext.getImplementation(), method);
+                } else if (1 == types.length) {
+                    if (types[0].isInstance(throwable)) {
+                        ReflectionUtils.execute(executionContext.getImplementation(), method, throwable);
+                    }
                 }
             }
         }

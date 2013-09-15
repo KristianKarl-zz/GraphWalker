@@ -35,11 +35,4 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(java.lang.annotation.ElementType.METHOD)
 public @interface ExceptionHandler {
-
-    /**
-     * <p>script.</p>
-     *
-     * @return a {@link java.lang.Class} object.
-     */
-    public Class<? extends Throwable> filter() default Throwable.class;
 }
