@@ -37,16 +37,16 @@ import java.util.Set;
  * @author Nils Olsson
  */
 public interface Model {
-
-    <T extends Edge> T addEdge(T edge);
-    <T extends Edge> Set<T> getEdges();
-    <T extends Edge> T getEdge(String name);
-    <T extends Vertex> T addVertex(T vertex);
-    <T extends Vertex> Set<T> getVertices();
-    <T extends Vertex> T getVertex(String name);
-    <T extends ModelElement> Set<T> getModelElements();
-    <T extends ModelElement> Collection<T> getConnectedComponent();
-    <T extends ModelElement> int getShortestDistance(T source, T target);
-    <T extends ModelElement> int getMaximumDistance(T target);
-    <T extends ModelElement> Path<T> getShortestPath(T source, T target);
+    Edge addEdge(Edge edge);
+    Set<Edge> getEdges();
+    Edge getEdge(String name);
+    Vertex addVertex(Vertex vertex);
+    Set<Vertex> getVertices();
+    Vertex getVertex(String name);
+    ModelElement getCurrentElement();
+    Set<ModelElement> getModelElements();
+    Collection<ModelElement> getConnectedComponent();
+    int getShortestDistance(ModelElement sourceElement, ModelElement targetElement);
+    int getMaximumDistance(ModelElement targetElement);
+    Path getShortestPath(ModelElement sourceElement, ModelElement targetElement);
 }

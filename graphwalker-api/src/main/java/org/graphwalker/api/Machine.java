@@ -25,12 +25,12 @@
  */
 package org.graphwalker.api;
 
+import org.graphwalker.api.event.EventSource;
 import org.graphwalker.api.model.ModelElement;
 
 /**
  * @author Nils Olsson
  */
-public interface Machine extends Runnable {
-
-    ModelElement walk();
+public interface Machine extends EventSource, Runnable {
+    ModelElement step();
 }
