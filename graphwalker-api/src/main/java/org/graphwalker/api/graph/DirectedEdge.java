@@ -23,17 +23,12 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.api.model;
-
-import java.util.Set;
+package org.graphwalker.api.graph;
 
 /**
  * @author Nils Olsson
  */
-public interface Edge extends ModelElement {
-    Vertex getSourceVertex();
-    Vertex getTargetVertex();
-    Set<Action> getActions();
-    Set<Guard> getGuards();
-    Double getWeight();
+public interface DirectedEdge extends Element {
+    <T extends Vertex> T getSource();
+    <T extends Vertex> T getTarget();
 }

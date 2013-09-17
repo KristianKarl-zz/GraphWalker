@@ -25,10 +25,10 @@
  */
 package org.graphwalker.api;
 
+import org.graphwalker.api.model.Condition;
+
 /**
  * @author Nils Olsson
  */
-public interface StopCondition {
-    Boolean isFulfilled();
-    Double getFulfilment();
+public interface StopCondition extends Condition {
 }

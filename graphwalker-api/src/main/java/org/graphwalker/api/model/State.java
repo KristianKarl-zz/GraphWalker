@@ -23,13 +23,15 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.api.event;
+package org.graphwalker.api.model;
 
-import org.graphwalker.api.graph.Element;
+import org.graphwalker.api.graph.Vertex;
+
+import java.util.Set;
 
 /**
  * @author Nils Olsson
  */
-public interface EventSink {
-    <T extends Element> void walking(T element);
+public interface State extends Vertex {
+    <T extends Requirement> Set<T> getRequirements();
 }

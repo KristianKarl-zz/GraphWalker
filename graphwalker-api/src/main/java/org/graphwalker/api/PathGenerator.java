@@ -25,11 +25,11 @@
  */
 package org.graphwalker.api;
 
-import org.graphwalker.api.model.ModelElement;
+import org.graphwalker.api.graph.Element;
 
 /**
  * @author Nils Olsson
  */
 public interface PathGenerator {
-    ModelElement getNextStep();
+    <T extends Element> T getNextStep();
 }

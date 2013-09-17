@@ -23,13 +23,12 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.api.event;
+package org.graphwalker.api.graph;
 
-import org.graphwalker.api.graph.Element;
+import java.util.Deque;
 
 /**
  * @author Nils Olsson
  */
-public interface EventSink {
-    <T extends Element> void walking(T element);
+public interface Path extends Deque<Element> {
 }

@@ -23,11 +23,14 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.api.model;
+package org.graphwalker.api.graph;
+
+import java.util.Set;
 
 /**
  * @author Nils Olsson
  */
-public interface Guard {
-    String getScript();
+public interface DirectedGraph extends Element {
+    <T extends DirectedEdge> Set<T> getEdges();
+    <T extends Vertex> Set<T> getVertices();
 }

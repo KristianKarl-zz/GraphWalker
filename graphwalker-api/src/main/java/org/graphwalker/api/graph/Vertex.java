@@ -23,16 +23,13 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.api.model;
+package org.graphwalker.api.graph;
 
-import org.graphwalker.api.status.ModelElementStatus;
-
-import java.io.Serializable;
+import java.util.Set;
 
 /**
  * @author Nils Olsson
  */
-public interface ModelElement extends Serializable {
-    String getName();
-    ModelElementStatus getStatus();
+public interface Vertex extends Element {
+    <T extends DirectedEdge> Set<T> getEdges();
 }

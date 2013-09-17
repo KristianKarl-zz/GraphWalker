@@ -25,12 +25,9 @@
  */
 package org.graphwalker.api.model;
 
-import java.util.Set;
-
 /**
  * @author Nils Olsson
  */
-public interface Vertex extends ModelElement {
-    Set<Edge> getEdges();
-    Set<Requirement> getRequirements();
+public interface EntryAction {
+    void execute();
 }

@@ -26,11 +26,11 @@
 package org.graphwalker.api;
 
 import org.graphwalker.api.event.EventSource;
-import org.graphwalker.api.model.ModelElement;
+import org.graphwalker.api.graph.Element;
 
 /**
  * @author Nils Olsson
  */
 public interface Machine extends EventSource, Runnable {
-    ModelElement step();
+    <T extends Element> T step();
 }

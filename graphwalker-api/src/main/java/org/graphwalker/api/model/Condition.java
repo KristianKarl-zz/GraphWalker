@@ -25,10 +25,10 @@
  */
 package org.graphwalker.api.model;
 
-import java.util.Deque;
-
 /**
  * @author Nils Olsson
  */
-public interface Path extends Deque<ModelElement> {
+public interface Condition {
+    Boolean isFulfilled();
+    Double getFulfilment();
 }
