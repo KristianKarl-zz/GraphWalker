@@ -23,12 +23,23 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.api.event;
+package org.graphwalker.core.generator;
+
+import org.graphwalker.api.PathGenerator;
+import org.graphwalker.api.machine.FiniteStateMachine;
 
 /**
  * @author Nils Olsson
  */
-public interface EventSource {
-    void addEventSink(EventSink sink);
-    void removeEventSink(EventSink sink);
+public abstract class BasePathGenerator implements PathGenerator {
+
+    private final FiniteStateMachine model;
+
+    protected BasePathGenerator(FiniteStateMachine model) {
+        this.model = model;
+    }
+
+    public FiniteStateMachine getModel() {
+        return model;
+    }
 }

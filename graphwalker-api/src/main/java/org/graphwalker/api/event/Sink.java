@@ -23,11 +23,10 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.api.machine;
+package org.graphwalker.api.event;
 
 /**
  * @author Nils Olsson
  */
-public interface Requirement {
-    String getId();
+public interface Sink {
 }
