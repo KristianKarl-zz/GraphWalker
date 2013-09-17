@@ -25,12 +25,12 @@
  */
 package org.graphwalker.api.model;
 
-import org.graphwalker.api.graph.DirectedEdge;
+import org.graphwalker.api.graph.Edge;
 
 /**
  * @author Nils Olsson
  */
-public interface Transition extends DirectedEdge {
-    <T extends Condition> T getCondition();
-    <T extends EntryAction> T getActions();
+public interface Transition extends Edge {
+    <G extends Guard> G getGuard();
+    <A extends Action> A getActions();
 }

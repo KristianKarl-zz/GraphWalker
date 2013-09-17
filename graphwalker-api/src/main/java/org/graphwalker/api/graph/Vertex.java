@@ -31,5 +31,5 @@ import java.util.Set;
  * @author Nils Olsson
  */
 public interface Vertex extends Element {
-    <T extends DirectedEdge> Set<T> getEdges();
+    <E extends Edge> Set<E> getEdges();
 }

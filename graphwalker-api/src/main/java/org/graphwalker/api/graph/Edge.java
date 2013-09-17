@@ -23,11 +23,12 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.api.model;
+package org.graphwalker.api.graph;
 
 /**
  * @author Nils Olsson
  */
-public interface EntryAction {
-    void execute();
+public interface Edge extends Element {
+    <V extends Vertex> V getSource();
+    <V extends Vertex> V getTarget();
 }

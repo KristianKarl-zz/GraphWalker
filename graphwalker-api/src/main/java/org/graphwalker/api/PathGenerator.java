@@ -31,5 +31,5 @@ import org.graphwalker.api.graph.Element;
  * @author Nils Olsson
  */
 public interface PathGenerator {
-    <T extends Element> T getNextStep();
+    <E extends Element> E getNextStep();
 }

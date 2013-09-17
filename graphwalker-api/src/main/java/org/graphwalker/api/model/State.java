@@ -33,5 +33,5 @@ import java.util.Set;
  * @author Nils Olsson
  */
 public interface State extends Vertex {
-    <T extends Requirement> Set<T> getRequirements();
+    <R extends Requirement> Set<R> getRequirements();
 }

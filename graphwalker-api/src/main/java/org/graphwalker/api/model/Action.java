@@ -28,7 +28,6 @@ package org.graphwalker.api.model;
 /**
  * @author Nils Olsson
  */
-public interface Condition {
-    Boolean isFulfilled();
-    Double getFulfilment();
+public interface Action {
+    void execute();
 }

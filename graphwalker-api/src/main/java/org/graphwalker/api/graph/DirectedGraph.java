@@ -31,6 +31,6 @@ import java.util.Set;
  * @author Nils Olsson
  */
 public interface DirectedGraph extends Element {
-    <T extends DirectedEdge> Set<T> getEdges();
-    <T extends Vertex> Set<T> getVertices();
+    <E extends Edge> Set<E> getEdges();
+    <V extends Vertex> Set<V> getVertices();
 }

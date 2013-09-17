@@ -32,5 +32,5 @@ import org.graphwalker.api.graph.Element;
  * @author Nils Olsson
  */
 public interface Machine extends EventSource, Runnable {
-    <T extends Element> T step();
+    <E extends Element> E step();
 }

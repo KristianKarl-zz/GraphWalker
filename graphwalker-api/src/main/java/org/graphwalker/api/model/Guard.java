@@ -23,12 +23,11 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.api.graph;
+package org.graphwalker.api.model;
 
 /**
  * @author Nils Olsson
  */
-public interface DirectedEdge extends Element {
-    <T extends Vertex> T getSource();
-    <T extends Vertex> T getTarget();
+public interface Guard {
+    Boolean isFulfilled();
 }

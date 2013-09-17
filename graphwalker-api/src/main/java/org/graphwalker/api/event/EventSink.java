@@ -31,5 +31,5 @@ import org.graphwalker.api.graph.Element;
  * @author Nils Olsson
  */
 public interface EventSink {
-    <T extends Element> void walking(T element);
+    <E extends Element> void walking(E element);
 }
