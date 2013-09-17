@@ -25,9 +25,11 @@
  */
 package org.graphwalker.api.model;
 
+import java.io.Serializable;
+
 /**
  * @author Nils Olsson
  */
-public interface ModelElement {
+public interface ModelElement extends Serializable {
     String getName();
 }

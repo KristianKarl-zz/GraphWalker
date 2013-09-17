@@ -25,9 +25,14 @@
  */
 package org.graphwalker.api.model;
 
+import org.graphwalker.api.status.RequirementStatus;
+
+import java.io.Serializable;
+
 /**
  * @author Nils Olsson
  */
-public interface Requirement {
+public interface Requirement extends Serializable {
     String getId();
+    RequirementStatus getStatus();
 }

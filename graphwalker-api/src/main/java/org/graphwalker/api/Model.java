@@ -45,8 +45,8 @@ public interface Model {
     Vertex getVertex(String name);
     ModelElement getCurrentElement();
     Set<ModelElement> getModelElements();
-    Collection<ModelElement> getConnectedComponent();
-    int getShortestDistance(ModelElement sourceElement, ModelElement targetElement);
-    int getMaximumDistance(ModelElement targetElement);
-    Path getShortestPath(ModelElement sourceElement, ModelElement targetElement);
+    Collection<ModelElement> getConnectedComponent(ModelElement element);
+    int getShortestDistance(ModelElement source, ModelElement target);
+    int getMaximumDistance(ModelElement target);
+    Path getShortestPath(ModelElement source, ModelElement target);
 }
