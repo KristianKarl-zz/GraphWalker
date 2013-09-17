@@ -2,7 +2,7 @@
  * #%L
  * GraphWalker Core
  * %%
- * Copyright (C) 2011 - 2012 GraphWalker
+ * Copyright (C) 2011 - 2013 GraphWalker
  * %%
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,130 +25,44 @@
  */
 package org.graphwalker.core.model;
 
-import org.graphwalker.core.Bundle;
-import org.graphwalker.core.common.Assert;
-import org.graphwalker.core.common.ResourceUtils;
+import org.graphstream.graph.Graph;
+import org.graphstream.graph.implementations.SingleGraph;
+import org.graphwalker.core.Model;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
+/**
+ * @author Nils Olsson
+ */
 public class ModelTest {
 
-    public Model createModel() {
-        Vertex source = new Vertex("v_0", "Start", null, null, null, null);
-        Vertex target = new Vertex("v_1", "target", null, null, null, null);
-        Edge edge = new Edge("e_0", "edge", null, null, null, source, target, null, null);
-        List<Vertex> vertices = new ArrayList<Vertex>();
-        vertices.add(source);
-        vertices.add(target);
-        List<Edge> edges = new ArrayList<Edge>();
-        edges.add(edge);
-        return new Model("m1", vertices, edges, source);
-    }
-
     @Test
-    public void getVertexByIdTest() {
-        Model model = createModel();
-        Vertex source = model.getVertexById("v_0");
-        Vertex vertex = model.getVertexById(source.getId());
-        Assert.assertNotNull(vertex);
-        Assert.assertEquals(source.getId(), vertex.getId());
-        
-    }
-    
-    @Test
-    public void getEdgeByIdTest() {
-        Model model = createModel();
-        Edge edge = model.getEdgeById("e_0");
-        Assert.assertNotNull(model.getEdgeById(edge.getId()));
+    public void createModel() {
+        Model model = new Model("Single model");
+        VerificationPoint v1 = new VerificationPoint("v1");
+        model.addVertex(v1);
+        VerificationPoint v2 = new VerificationPoint("v2");
+        model.addVertex(v2);
+        VerificationPoint v3 = new VerificationPoint("v3");
+        model.addVertex(v3);
+        model.addEdge(new Operation("e1", v1, v2));
+        model.addEdge(new Operation("e2", v2, v3));
+        model.addEdge(new Operation("e3", v3, v1));
+        displayModel(model);
     }
 
-    @Test
-    public void getEdgeSourceTest() {
-        Model model = createModel();
-        Vertex source = model.getVertexById("v_0");
-        Edge edge = model.getEdgeById("e_0");
-        Vertex vertex = edge.getSource();
-        Assert.assertNotNull(vertex);
-        Assert.assertEquals(source.getId(), vertex.getId());
-    }
-
-    @Test
-    public void exceptionTest() {
-        Model model = new Model("m1", null, null, null);
-        Assert.assertNull(model.getStartVertex());
-    }
-
-    @Test
-    public void testStartNode() {
-        Vertex vertex = new Vertex("v_0", ResourceUtils.getText(Bundle.NAME, "start.vertex"), null, null, null, null);
-        Model model = new Model("m1", Arrays.asList(vertex), null, vertex);
-        Assert.assertNotNull(model.getStartVertex());
-        Assert.assertEquals(ResourceUtils.getText(Bundle.NAME, "start.vertex"), model.getStartVertex().getName());
-    }
-
-    @Test
-    public void testStartNodeWithDifferentCase() {
-        Vertex vertex1 = new Vertex("v_0", ResourceUtils.getText(Bundle.NAME, "start.vertex").toLowerCase(), null, null, null, null);
-        Model model = new Model("m1", Arrays.asList(vertex1), null, vertex1);
-        Assert.assertNotNull(model.getStartVertex());
-    }
-
-    @Test(expected = ModelException.class)
-    public void testStartNodeWithSeveralOutEdges() {
-        Vertex vertex1 = new Vertex("v_1", ResourceUtils.getText(Bundle.NAME, "start.vertex"), null, null, null, null);
-        Vertex vertex2 = new Vertex("v_2", "v_2", null, null, null, null);
-        Edge edge1 = new Edge("e_1", "e_1", null, null, null, vertex1, vertex2, null, null);
-        Edge edge2 = new Edge("e_2", "e_2", null, null, null, vertex1, vertex2, null, null);
-        Model model = new Model("m1", Arrays.asList(vertex1, vertex2), Arrays.asList(edge1, edge2), vertex1);
-        model.getStartVertex();
-    }
-
-    @Test(expected = ModelException.class)
-    public void testStartNodeWithInEdge() {
-        Vertex vertex1 = new Vertex("v_1", ResourceUtils.getText(Bundle.NAME, "start.vertex"), null, null, null, null);
-        Vertex vertex2 = new Vertex("v_2", "v_2", null, null, null, null);
-        Edge edge1 = new Edge("e_1", "e_1", null, null, null, vertex1, vertex2, null, null);
-        Edge edge2 = new Edge("e_2", "e_2", null, null, null, vertex2, vertex1, null, null);
-        Model model = new Model("m1", Arrays.asList(vertex1, vertex2), Arrays.asList(edge1, edge2), vertex1);
-        model.getStartVertex();
-    }
-
-    @Test(expected = ModelException.class)
-    public void testStartNodeWithLoopEdge() {
-        Vertex vertex1 = new Vertex("v_1", ResourceUtils.getText(Bundle.NAME, "start.vertex"), null, null, null, null);
-        Vertex vertex2 = new Vertex("v_2", "v_2", null, null, null, null);
-        Edge edge1 = new Edge("e_1", "e_1", null, null, null, vertex1, vertex2, null, null);
-        Edge edge2 = new Edge("e_2", "e_2", null, null, null, vertex1, vertex1, null, null);
-        Model model = new Model("m1", Arrays.asList(vertex1, vertex2), Arrays.asList(edge1, edge2), vertex1);
-        model.getStartVertex();
-    }
-
-    @Test
-    public void getShortestPathToEdge() {
-        Model model = createModel();
-        Vertex source = model.getVertexById("v_0");
-        Edge edge = model.getEdgeById("e_0");
-        List<ModelElement> modelElements = model.getShortestPath(source, edge);
-        Assert.assertNotNull(modelElements);
-        Assert.assertEquals(2, modelElements.size());
-        Assert.assertEquals(source.getName(), modelElements.get(0).getName());
-        Assert.assertEquals(edge.getName(), modelElements.get(1).getName());
-    }
-
-    @Test
-    public void getShortestPathToVertex() {
-        Model model = createModel();
-        Vertex source = model.getVertexById("v_0");
-        Vertex target = model.getVertexById("v_1");
-        Edge edge = model.getEdgeById("e_0");
-        List<ModelElement> modelElements = model.getShortestPath(source, target);
-        Assert.assertNotNull(modelElements);
-        Assert.assertEquals(3, modelElements.size());
-        Assert.assertEquals(source.getName(), modelElements.get(0).getName());
-        Assert.assertEquals(edge.getName(), modelElements.get(1).getName());
-        Assert.assertEquals(target.getName(), modelElements.get(2).getName());
+    private void displayModel(Model model) {
+        Graph graph = new SingleGraph();
+        for (VerificationPoint verificationPoint: model.getVertices()) {
+            graph.addNode(verificationPoint.getName());
+        }
+        for (Operation operation: model.getEdges()) {
+            graph.addEdge(operation.getName(), operation.getSource().getName(), operation.getTarget().getName());
+        }
+        graph.display();
+        try {
+            Thread.sleep(10000l);
+        } catch (InterruptedException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
     }
 }
