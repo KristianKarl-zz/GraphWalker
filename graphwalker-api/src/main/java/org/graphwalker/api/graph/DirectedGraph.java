@@ -31,6 +31,14 @@ import java.util.Set;
  * @author Nils Olsson
  */
 public interface DirectedGraph<V extends Vertex, E extends Edge> extends Element {
+    void addEdge(E edge);
+    E getEdge(String name);
     Set<E> getEdges();
+    void addVertex(V vertex);
+    V getVertex(String name);
     Set<V> getVertices();
+    Set<Element> getConnectedComponent(Element element);
+    int getShortestDistance(Element source, Element target);
+    int getMaximumDistance(Element target);
+    Path getShortestPath(Element source, Element target);
 }

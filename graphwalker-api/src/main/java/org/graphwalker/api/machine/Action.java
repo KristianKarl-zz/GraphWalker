@@ -23,10 +23,11 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.api.model;
+package org.graphwalker.api.machine;
 
 /**
  * @author Nils Olsson
  */
-public interface Requirement {
+public interface Action {
+    void execute();
 }

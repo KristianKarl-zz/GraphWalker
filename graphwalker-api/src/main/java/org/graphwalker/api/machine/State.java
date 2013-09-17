@@ -23,7 +23,7 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.api.model;
+package org.graphwalker.api.machine;
 
 import org.graphwalker.api.graph.Vertex;
 

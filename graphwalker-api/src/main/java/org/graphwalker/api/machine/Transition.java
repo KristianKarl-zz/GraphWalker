@@ -23,16 +23,16 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.api.model;
+package org.graphwalker.api.machine;
 
-import org.graphwalker.api.graph.Edge;
+import org.graphwalker.api.graph.WeightedEdge;
 
 import java.util.Set;
 
 /**
  * @author Nils Olsson
  */
-public interface Transition extends Edge<State> {
+public interface Transition extends WeightedEdge<State> {
     Guard getGuard();
     Set<Action> getActions();
 }

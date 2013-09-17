@@ -23,28 +23,11 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.api;
-
-import org.graphwalker.api.graph.DirectedGraph;
-import org.graphwalker.api.graph.Element;
-import org.graphwalker.api.graph.Path;
-import org.graphwalker.api.model.State;
-import org.graphwalker.api.model.Transition;
-
-import java.util.Set;
+package org.graphwalker.api.machine;
 
 /**
  * @author Nils Olsson
  */
-public interface Model extends DirectedGraph<State, Transition> {
-    State addState(State state);
-    State getState(String name);
-    Set<State> getStates();
-    Transition addTransition(Transition transition);
-    Transition getTransition(String name);
-    Set<Transition> getTransitions();
-    Set<Element> getConnectedComponent(Element element);
-    int getShortestDistance(Element source, Element target);
-    int getMaximumDistance(Element target);
-    Path getShortestPath(Element source, Element target);
+public interface Requirement {
+    String getId();
 }
