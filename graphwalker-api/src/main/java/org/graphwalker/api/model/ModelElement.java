@@ -25,6 +25,8 @@
  */
 package org.graphwalker.api.model;
 
+import org.graphwalker.api.status.ModelElementStatus;
+
 import java.io.Serializable;
 
 /**
@@ -32,4 +34,5 @@ import java.io.Serializable;
  */
 public interface ModelElement extends Serializable {
     String getName();
+    ModelElementStatus getStatus();
 }
