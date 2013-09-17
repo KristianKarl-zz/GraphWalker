@@ -28,7 +28,7 @@ package org.graphwalker.api.graph;
 /**
  * @author Nils Olsson
  */
-public interface Edge extends Element {
-    <V extends Vertex> V getSource();
-    <V extends Vertex> V getTarget();
+public interface Edge<V extends Vertex> extends Element {
+    V getSource();
+    V getTarget();
 }

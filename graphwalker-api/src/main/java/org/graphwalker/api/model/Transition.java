@@ -27,10 +27,12 @@ package org.graphwalker.api.model;
 
 import org.graphwalker.api.graph.Edge;
 
+import java.util.Set;
+
 /**
  * @author Nils Olsson
  */
-public interface Transition extends Edge {
-    <G extends Guard> G getGuard();
-    <A extends Action> A getActions();
+public interface Transition extends Edge<State> {
+    Guard getGuard();
+    Set<Action> getActions();
 }

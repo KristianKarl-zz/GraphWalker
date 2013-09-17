@@ -30,6 +30,6 @@ import org.graphwalker.api.graph.Element;
 /**
  * @author Nils Olsson
  */
-public interface EventSink {
-    <E extends Element> void walking(E element);
+public interface EventSink<E extends Element> {
+    void walking(E element);
 }

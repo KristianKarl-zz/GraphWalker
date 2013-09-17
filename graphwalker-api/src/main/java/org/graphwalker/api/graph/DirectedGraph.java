@@ -30,7 +30,7 @@ import java.util.Set;
 /**
  * @author Nils Olsson
  */
-public interface DirectedGraph extends Element {
-    <E extends Edge> Set<E> getEdges();
-    <V extends Vertex> Set<V> getVertices();
+public interface DirectedGraph<V extends Vertex, E extends Edge> extends Element {
+    Set<E> getEdges();
+    Set<V> getVertices();
 }

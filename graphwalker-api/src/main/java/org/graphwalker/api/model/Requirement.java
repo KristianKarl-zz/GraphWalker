@@ -25,11 +25,8 @@
  */
 package org.graphwalker.api.model;
 
-import java.io.Serializable;
-
 /**
  * @author Nils Olsson
  */
-public interface Requirement extends Serializable {
-
+public interface Requirement {
 }

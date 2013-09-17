@@ -25,11 +25,9 @@
  */
 package org.graphwalker.api.graph;
 
-import java.io.Serializable;
-
 /**
  * @author Nils Olsson
  */
-public interface Element extends Serializable {
+public interface Element {
     String getName();
 }

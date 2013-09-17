@@ -32,6 +32,6 @@ import java.util.Set;
 /**
  * @author Nils Olsson
  */
-public interface State extends Vertex {
-    <R extends Requirement> Set<R> getRequirements();
+public interface State extends Vertex<Transition> {
+    Set<Requirement> getRequirements();
 }

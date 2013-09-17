@@ -30,6 +30,6 @@ import java.util.Set;
 /**
  * @author Nils Olsson
  */
-public interface Vertex extends Element {
-    <E extends Edge> Set<E> getEdges();
+public interface Vertex<E extends Edge> extends Element {
+    Set<E> getEdges();
 }
