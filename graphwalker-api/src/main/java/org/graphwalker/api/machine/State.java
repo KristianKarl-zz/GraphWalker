@@ -27,11 +27,11 @@ package org.graphwalker.api.machine;
 
 import org.graphwalker.api.graph.Vertex;
 
-import java.util.Set;
+import java.util.Collection;
 
 /**
  * @author Nils Olsson
  */
 public interface State extends Vertex<Transition> {
-    Set<Requirement> getRequirements();
+    Collection<Requirement> getRequirements();
 }

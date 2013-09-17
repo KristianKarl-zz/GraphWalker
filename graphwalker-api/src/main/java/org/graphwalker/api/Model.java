@@ -23,9 +23,11 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.api.machine;
+package org.graphwalker.api;
 
 import org.graphwalker.api.graph.Network;
+import org.graphwalker.api.machine.State;
+import org.graphwalker.api.machine.Transition;
 
 /**
  * @author Nils Olsson

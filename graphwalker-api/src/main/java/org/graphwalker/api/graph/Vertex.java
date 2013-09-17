@@ -25,11 +25,11 @@
  */
 package org.graphwalker.api.graph;
 
-import java.util.Set;
+import java.util.Collection;
 
 /**
  * @author Nils Olsson
  */
 public interface Vertex<E extends Edge> extends Element {
-    Set<E> getEdges();
+    Collection<E> getEdges();
 }

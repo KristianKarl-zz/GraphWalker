@@ -25,7 +25,7 @@
  */
 package org.graphwalker.api.graph;
 
-import java.util.Set;
+import java.util.Collection;
 
 /**
  * @author Nils Olsson
@@ -33,11 +33,11 @@ import java.util.Set;
 public interface DirectedGraph<V extends Vertex, E extends Edge> extends Element {
     void addEdge(E edge);
     E getEdge(String name);
-    Set<E> getEdges();
+    Collection<E> getEdges();
     void addVertex(V vertex);
     V getVertex(String name);
-    Set<V> getVertices();
-    Set<Element> getConnectedComponent(Element element);
+    Collection<V> getVertices();
+    Collection<Element> getConnectedComponent(Element element);
     int getShortestDistance(Element source, Element target);
     int getMaximumDistance(Element target);
     Path getShortestPath(Element source, Element target);
