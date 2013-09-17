@@ -32,6 +32,7 @@ import java.util.Collection;
 /**
  * @author Nils Olsson
  */
-public interface State extends Vertex<Transition> {
-    Collection<Requirement> getRequirements();
+public interface State<A extends Action> extends Vertex<Transition> {
+    Collection<A> getEntryActions();
+    Collection<A> getExitActions();
 }

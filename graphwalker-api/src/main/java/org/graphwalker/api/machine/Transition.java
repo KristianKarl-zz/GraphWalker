@@ -27,12 +27,9 @@ package org.graphwalker.api.machine;
 
 import org.graphwalker.api.graph.WeightedEdge;
 
-import java.util.Collection;
-
 /**
  * @author Nils Olsson
  */
-public interface Transition extends WeightedEdge<State> {
-    Guard getGuard();
-    Collection<Action> getActions();
+public interface Transition<C extends Condition> extends WeightedEdge<State> {
+    C getCondition();
 }

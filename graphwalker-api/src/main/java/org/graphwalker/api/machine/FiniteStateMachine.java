@@ -25,9 +25,11 @@
  */
 package org.graphwalker.api.machine;
 
+import org.graphwalker.api.graph.Network;
+
 /**
  * @author Nils Olsson
  */
-public interface Guard {
-    Boolean isFulfilled();
+public interface FiniteStateMachine<S extends State, T extends Transition> extends Network<S, T> {
+
 }

@@ -23,15 +23,11 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.api;
-
-import org.graphwalker.api.graph.Network;
-import org.graphwalker.api.machine.State;
-import org.graphwalker.api.machine.Transition;
+package org.graphwalker.api.machine;
 
 /**
  * @author Nils Olsson
  */
-public interface Model<S extends State, T extends Transition> extends Network<S,T> {
-
+public interface Condition {
+    Boolean isFulfilled();
 }
