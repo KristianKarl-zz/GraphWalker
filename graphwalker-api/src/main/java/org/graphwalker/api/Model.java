@@ -32,6 +32,6 @@ import org.graphwalker.api.machine.Transition;
 /**
  * @author Nils Olsson
  */
-public interface Model extends Network<State, Transition> {
+public interface Model<S extends State, T extends Transition> extends Network<S,T> {
 
 }
