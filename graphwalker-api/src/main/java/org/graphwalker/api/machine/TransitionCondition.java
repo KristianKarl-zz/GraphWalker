@@ -28,6 +28,6 @@ package org.graphwalker.api.machine;
 /**
  * @author Nils Olsson
  */
-public interface Condition {
+public interface TransitionCondition {
     Boolean isFulfilled();
 }

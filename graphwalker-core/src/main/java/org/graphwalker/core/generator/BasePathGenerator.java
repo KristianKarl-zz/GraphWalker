@@ -25,21 +25,21 @@
  */
 package org.graphwalker.core.generator;
 
+import org.graphwalker.api.Model;
 import org.graphwalker.api.PathGenerator;
-import org.graphwalker.api.machine.FiniteStateMachine;
 
 /**
  * @author Nils Olsson
  */
 public abstract class BasePathGenerator implements PathGenerator {
 
-    private final FiniteStateMachine model;
+    private final Model model;
 
-    protected BasePathGenerator(FiniteStateMachine model) {
+    protected BasePathGenerator(Model model) {
         this.model = model;
     }
 
-    public FiniteStateMachine getModel() {
+    public Model getModel() {
         return model;
     }
 }

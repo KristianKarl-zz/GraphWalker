@@ -26,7 +26,7 @@
 package org.graphwalker.maven.plugin.source;
 
 import japa.parser.ast.body.MethodDeclaration;
-import org.graphwalker.core.model.Model;
+import org.graphwalker.core.SimpleModel;
 import org.graphwalker.core.model.ModelElement;
 
 import java.util.HashSet;
@@ -40,7 +40,7 @@ public final class ChangeContext {
     private final Set<String> methodNames;
     private final Set<MethodDeclaration> methodDeclarations = new HashSet<MethodDeclaration>();
 
-    public ChangeContext(Model model) {
+    public ChangeContext(SimpleModel model) {
         methodNames = extractMethodNames(model);
     }
 
@@ -56,7 +56,7 @@ public final class ChangeContext {
         return methodDeclarations;
     }
 
-    private Set<String> extractMethodNames(Model model) {
+    private Set<String> extractMethodNames(SimpleModel model) {
         Set<String> methodNames = new HashSet<String>();
         for (ModelElement element: model.getModelElements()) {
             if (null != element.getName() && !"Start".equalsIgnoreCase(element.getName())) {

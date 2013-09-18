@@ -1,33 +1,36 @@
 package org.graphwalker.core.model;
 
 import org.graphwalker.api.machine.State;
-import org.graphwalker.api.machine.Transition;
 
-import java.util.Arrays;
-import java.util.Collection;
+import java.util.*;
 
 /**
  * @author Nils Olsson
  */
-public class VerificationPoint extends BaseElement implements State<ScriptAction> {
+public class VerificationPoint extends BaseElement implements State<Operation, ScriptAction> {
 
-    protected VerificationPoint(String name) {
+    private final List<Requirement> requirements = new ArrayList<Requirement>();
+    private final Set<Operation> edges = new HashSet<Operation>();
+    private final List<ScriptAction> entryActions = new ArrayList<ScriptAction>();
+    private final List<ScriptAction> exitActions = new ArrayList<ScriptAction>();
+
+    public VerificationPoint(String name) {
         super(name);
     }
 
     public Collection<Requirement> getRequirements() {
-        return Arrays.asList();
+        return requirements;
     }
 
-    public Collection<Transition> getEdges() {
+    public Collection<Operation> getEdges() {
         return Arrays.asList();
     }
 
     public Collection<ScriptAction> getEntryActions() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return entryActions;
     }
 
     public Collection<ScriptAction> getExitActions() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return exitActions;
     }
 }

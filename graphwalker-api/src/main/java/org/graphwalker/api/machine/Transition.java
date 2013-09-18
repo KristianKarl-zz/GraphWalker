@@ -30,6 +30,6 @@ import org.graphwalker.api.graph.WeightedEdge;
 /**
  * @author Nils Olsson
  */
-public interface Transition<C extends Condition> extends WeightedEdge<State> {
-    C getCondition();
+public interface Transition<S extends State, TC extends TransitionCondition> extends WeightedEdge<S> {
+    TC getTransitionCondition();
 }

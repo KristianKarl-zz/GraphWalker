@@ -37,7 +37,7 @@ import japa.parser.ast.body.ModifierSet;
 import japa.parser.ast.body.Parameter;
 import japa.parser.ast.expr.*;
 import japa.parser.ast.visitor.VoidVisitorAdapter;
-import org.graphwalker.core.model.Model;
+import org.graphwalker.core.SimpleModel;
 
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -50,9 +50,9 @@ import java.util.List;
 public final class CodeGenerator extends VoidVisitorAdapter<ChangeContext> {
 
     private final SourceFile sourceFile;
-    private final Model model;
+    private final SimpleModel model;
 
-    public CodeGenerator(SourceFile sourceFile, Model model) {
+    public CodeGenerator(SourceFile sourceFile, SimpleModel model) {
         this.sourceFile = sourceFile;
         this.model = model;
     }

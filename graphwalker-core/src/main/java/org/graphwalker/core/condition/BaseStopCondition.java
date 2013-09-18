@@ -26,20 +26,20 @@
 package org.graphwalker.core.condition;
 
 import org.graphwalker.api.StopCondition;
-import org.graphwalker.api.machine.FiniteStateMachine;
+import org.graphwalker.core.SimpleModel;
 
 /**
  * @author Nils Olsson
  */
 public abstract class BaseStopCondition implements StopCondition {
 
-    private final FiniteStateMachine model;
+    private final SimpleModel model;
 
-    protected BaseStopCondition(FiniteStateMachine model) {
+    protected BaseStopCondition(SimpleModel model) {
         this.model = model;
     }
 
-    public FiniteStateMachine getModel() {
+    public SimpleModel getModel() {
         return model;
     }
 }

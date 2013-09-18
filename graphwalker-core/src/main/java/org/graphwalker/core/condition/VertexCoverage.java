@@ -1,13 +1,13 @@
 package org.graphwalker.core.condition;
 
-import org.graphwalker.api.machine.FiniteStateMachine;
+import org.graphwalker.core.SimpleModel;
 
 /**
  * @author Nils Olsson
  */
 public class VertexCoverage extends BaseStopCondition {
 
-    public VertexCoverage(FiniteStateMachine model) {
+    public VertexCoverage(SimpleModel model) {
         super(model);
     }
 

@@ -1,20 +1,20 @@
 package org.graphwalker.core;
 
+import org.graphwalker.api.Machine;
 import org.graphwalker.api.PathGenerator;
 import org.graphwalker.api.StopCondition;
-import org.graphwalker.api.event.Source;
+import org.graphwalker.api.event.MachineSink;
 import org.graphwalker.api.graph.Element;
-import org.graphwalker.core.event.MachineSink;
 
 /**
  * @author Nils Olsson
  */
-public class Machine implements Source<MachineSink>, Runnable {
+public class SimpleMachine implements Machine {
 
     private final PathGenerator pathGenerator;
     private final StopCondition stopCondition;
 
-    protected Machine(PathGenerator pathGenerator, StopCondition stopCondition) {
+    protected SimpleMachine(PathGenerator pathGenerator, StopCondition stopCondition) {
         this.pathGenerator = pathGenerator;
         this.stopCondition = stopCondition;
     }

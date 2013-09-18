@@ -23,11 +23,12 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core.model;
+package org.graphwalker.core;
 
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.implementations.SingleGraph;
-import org.graphwalker.core.Model;
+import org.graphwalker.core.model.Operation;
+import org.graphwalker.core.model.VerificationPoint;
 import org.junit.Test;
 
 /**
@@ -37,7 +38,8 @@ public class ModelTest {
 
     @Test
     public void createModel() {
-        Model model = new Model("Single model");
+
+        SimpleModel model = new SimpleModel("Single model");
         VerificationPoint v1 = new VerificationPoint("v1");
         model.addVertex(v1);
         VerificationPoint v2 = new VerificationPoint("v2");
@@ -47,20 +49,34 @@ public class ModelTest {
         model.addEdge(new Operation("e1", v1, v2));
         model.addEdge(new Operation("e2", v2, v3));
         model.addEdge(new Operation("e3", v3, v1));
-        displayModel(model);
+        model.addEdge(new Operation("e4", v3, v3));
+
+
+        VerificationPoint v4 = new VerificationPoint("v4");
+        model.addVertex(v4);
+        VerificationPoint v5 = new VerificationPoint("v5");
+        model.addVertex(v5);
+        VerificationPoint v6 = new VerificationPoint("v6");
+        model.addVertex(v6);
+        model.addEdge(new Operation("e5", v4, v5));
+        model.addEdge(new Operation("e6", v5, v6));
+        model.addEdge(new Operation("e7", v6, v4));
+
+
+        displayModel(model, 10000);
     }
 
-    private void displayModel(Model model) {
+    private void displayModel(SimpleModel model, long timeout) {
         Graph graph = new SingleGraph();
         for (VerificationPoint verificationPoint: model.getVertices()) {
             graph.addNode(verificationPoint.getName());
         }
         for (Operation operation: model.getEdges()) {
-            graph.addEdge(operation.getName(), operation.getSource().getName(), operation.getTarget().getName());
+            graph.addEdge(operation.getName(), operation.getSourceVertex().getName(), operation.getTargetVertex().getName());
         }
         graph.display();
         try {
-            Thread.sleep(10000l);
+            Thread.sleep(timeout);
         } catch (InterruptedException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }

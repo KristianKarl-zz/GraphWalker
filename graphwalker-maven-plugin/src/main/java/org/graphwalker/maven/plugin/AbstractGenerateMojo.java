@@ -29,7 +29,7 @@ import org.apache.maven.model.Resource;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
-import org.graphwalker.core.model.Model;
+import org.graphwalker.core.SimpleModel;
 import org.graphwalker.core.model.ModelFactory;
 import org.graphwalker.core.model.support.DefaultModelFactory;
 import org.graphwalker.maven.plugin.source.CodeGenerator;
@@ -73,7 +73,7 @@ public abstract class AbstractGenerateMojo extends AbstractDefaultMojo {
     private void generate(SourceFile sourceFile) {
         try {
             ModelFactory factory = new DefaultModelFactory();
-            Model model = factory.create(sourceFile.getAbsolutePath());
+            SimpleModel model = factory.create(sourceFile.getAbsolutePath());
             String source = new CodeGenerator(sourceFile, model).generate();
             if (sourceFile.getOutputFile().exists()) {
                 String existingSource = StringUtils.removeDuplicateWhitespace(FileUtils.fileRead(sourceFile.getOutputFile(), getSourceEncoding()));

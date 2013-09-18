@@ -25,12 +25,13 @@
  */
 package org.graphwalker.api;
 
+import org.graphwalker.api.event.MachineSink;
 import org.graphwalker.api.event.Source;
 import org.graphwalker.api.graph.Element;
 
 /**
  * @author Nils Olsson
  */
-public interface Machine extends Source, Runnable {
+public interface Machine extends Source<MachineSink>, Runnable {
     Element step();
 }

@@ -32,7 +32,7 @@ import java.util.Collection;
 /**
  * @author Nils Olsson
  */
-public interface State<A extends Action> extends Vertex<Transition> {
+public interface State<T extends Transition, A extends Action> extends Vertex<T> {
     Collection<A> getEntryActions();
     Collection<A> getExitActions();
 }

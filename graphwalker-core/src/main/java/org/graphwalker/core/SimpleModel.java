@@ -1,10 +1,9 @@
 package org.graphwalker.core;
 
-import org.graphwalker.api.event.Source;
+import org.graphwalker.api.Model;
+import org.graphwalker.api.event.ModelSink;
 import org.graphwalker.api.graph.Element;
 import org.graphwalker.api.graph.Path;
-import org.graphwalker.api.machine.FiniteStateMachine;
-import org.graphwalker.core.event.ModelSink;
 import org.graphwalker.core.model.Operation;
 import org.graphwalker.core.model.VerificationPoint;
 
@@ -16,13 +15,13 @@ import java.util.Set;
 /**
  * @author Nils Olsson
  */
-public class Model implements FiniteStateMachine<VerificationPoint, Operation>, Source<ModelSink> {
+public class SimpleModel implements Model<VerificationPoint, Operation> {
 
     private final String name;
     private final Map<String, VerificationPoint> vertices = new HashMap<String, VerificationPoint>();
     private final Map<String, Operation> edges = new HashMap<String, Operation>();
 
-    public Model(String name) {
+    public SimpleModel(String name) {
         this.name = name;
     }
 

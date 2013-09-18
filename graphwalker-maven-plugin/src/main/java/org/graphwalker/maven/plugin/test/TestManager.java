@@ -29,7 +29,7 @@ import org.codehaus.plexus.util.SelectorUtils;
 import org.graphwalker.core.annotations.Execute;
 import org.graphwalker.core.annotations.GraphWalker;
 import org.graphwalker.core.conditions.StopCondition;
-import org.graphwalker.core.generators.PathGenerator;
+import org.graphwalker.core.generator.PathGenerator;
 import org.graphwalker.core.machine.Execution;
 
 import java.util.*;
