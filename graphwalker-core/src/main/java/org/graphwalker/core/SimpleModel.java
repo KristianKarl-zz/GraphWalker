@@ -7,10 +7,7 @@ import org.graphwalker.api.graph.Path;
 import org.graphwalker.core.model.Operation;
 import org.graphwalker.core.model.VerificationPoint;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Nils Olsson
@@ -20,6 +17,7 @@ public class SimpleModel implements Model<VerificationPoint, Operation> {
     private final String name;
     private final Map<String, VerificationPoint> vertices = new HashMap<String, VerificationPoint>();
     private final Map<String, Operation> edges = new HashMap<String, Operation>();
+    private final Set<ModelSink> sinks = new HashSet<ModelSink>();
 
     public SimpleModel(String name) {
         this.name = name;
@@ -27,6 +25,9 @@ public class SimpleModel implements Model<VerificationPoint, Operation> {
 
     public void addEdge(Operation edge) {
         edges.put(edge.getName(), edge);
+        for (ModelSink sink: sinks) {
+            sink.edgeAdded(edge);
+        }
     }
 
     public Operation getEdge(String name) {
@@ -39,6 +40,9 @@ public class SimpleModel implements Model<VerificationPoint, Operation> {
 
     public void addVertex(VerificationPoint vertex) {
         vertices.put(vertex.getName(), vertex);
+        for (ModelSink sink: sinks) {
+            sink.vertexAdded(vertex);
+        }
     }
 
     public VerificationPoint getVertex(String name) {
@@ -70,10 +74,10 @@ public class SimpleModel implements Model<VerificationPoint, Operation> {
     }
 
     public void addSink(ModelSink sink) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        sinks.add(sink);
     }
 
     public void removeSink(ModelSink sink) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        sinks.remove(sink);
     }
 }

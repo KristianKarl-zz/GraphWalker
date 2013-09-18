@@ -27,6 +27,9 @@ package org.graphwalker.core;
 
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.implementations.SingleGraph;
+import org.graphwalker.api.event.ModelSink;
+import org.graphwalker.api.graph.Edge;
+import org.graphwalker.api.graph.Vertex;
 import org.graphwalker.core.model.Operation;
 import org.graphwalker.core.model.VerificationPoint;
 import org.junit.Test;
@@ -34,12 +37,15 @@ import org.junit.Test;
 /**
  * @author Nils Olsson
  */
-public class ModelTest {
+public class ModelTest implements ModelSink {
 
     @Test
     public void createModel() {
 
         SimpleModel model = new SimpleModel("Single model");
+
+        model.addSink(this);
+
         VerificationPoint v1 = new VerificationPoint("v1");
         model.addVertex(v1);
         VerificationPoint v2 = new VerificationPoint("v2");
@@ -80,5 +86,13 @@ public class ModelTest {
         } catch (InterruptedException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
+    }
+
+    public void edgeAdded(Edge edge) {
+        System.out.println("Edge added "+edge.getName());
+    }
+
+    public void vertexAdded(Vertex vertex) {
+        System.out.println("Vertex added "+vertex.getName());
     }
 }

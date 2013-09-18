@@ -6,6 +6,9 @@ import org.graphwalker.api.StopCondition;
 import org.graphwalker.api.event.MachineSink;
 import org.graphwalker.api.graph.Element;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * @author Nils Olsson
  */
@@ -13,6 +16,7 @@ public class SimpleMachine implements Machine {
 
     private final PathGenerator pathGenerator;
     private final StopCondition stopCondition;
+    private final Set<MachineSink> sinks = new HashSet<MachineSink>();
 
     protected SimpleMachine(PathGenerator pathGenerator, StopCondition stopCondition) {
         this.pathGenerator = pathGenerator;
@@ -36,11 +40,11 @@ public class SimpleMachine implements Machine {
     }
 
     public void addSink(MachineSink sink) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        sinks.add(sink);
     }
 
     public void removeSink(MachineSink sink) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        sinks.remove(sink);
     }
 }
 
