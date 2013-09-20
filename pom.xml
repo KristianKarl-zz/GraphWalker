@@ -16,7 +16,6 @@
     </description>
 
     <modules>
-        <module>graphwalker-api</module>
         <module>graphwalker-core</module>
         <!--module>graphwalker-jenkins-plugin</module>
         <module>graphwalker-maven-plugin</module>

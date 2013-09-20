@@ -1,83 +1,87 @@
 package org.graphwalker.core;
 
-import org.graphwalker.api.Model;
-import org.graphwalker.api.event.ModelSink;
-import org.graphwalker.api.graph.Element;
-import org.graphwalker.api.graph.Path;
-import org.graphwalker.core.model.Operation;
-import org.graphwalker.core.model.VerificationPoint;
+import org.graphwalker.core.model.Edge;
+import org.graphwalker.core.model.Element;
+import org.graphwalker.core.model.Path;
+import org.graphwalker.core.model.Vertex;
 
 import java.util.*;
 
 /**
  * @author Nils Olsson
  */
-public class SimpleModel implements Model<VerificationPoint, Operation> {
+public final class SimpleModel implements Model {
 
-    private final String name;
-    private final Map<String, VerificationPoint> vertices = new HashMap<String, VerificationPoint>();
-    private final Map<String, Operation> edges = new HashMap<String, Operation>();
-    private final Set<ModelSink> sinks = new HashSet<ModelSink>();
+    private final Set<Vertex> vertices = new HashSet<Vertex>();
+    private final Map<String, Vertex> vertexNameMap = new HashMap<String, Vertex>();
+    private final List<Edge> edges = new ArrayList<Edge>();
+    private final Map<String, List<Edge>> vertexEdgeMap = new HashMap<String, List<Edge>>();
 
-    public SimpleModel(String name) {
-        this.name = name;
+    public SimpleModel() {
     }
 
-    public void addEdge(Operation edge) {
-        edges.put(edge.getName(), edge);
-        for (ModelSink sink: sinks) {
-            sink.edgeAdded(edge);
+    public Model addEdge(Edge edge, Vertex source, Vertex target) {
+        if (!edges.contains(edge)) {
+
+        } else {
+
         }
+        return this;
     }
 
-    public Operation getEdge(String name) {
-        return edges.get(name);
+    public Model addModel(Model model) {
+        // merge
+        return this;
     }
 
-    public Collection<Operation> getEdges() {
-        return edges.values();
-    }
-
-    public void addVertex(VerificationPoint vertex) {
-        vertices.put(vertex.getName(), vertex);
-        for (ModelSink sink: sinks) {
-            sink.vertexAdded(vertex);
+    public Model addVertex(Vertex vertex) {
+        if (!vertexNameMap.containsKey(vertex.getName())) {
+            vertices.add(vertex);
+            vertexNameMap.put(vertex.getName(), vertex);
+        } else {
+            //merge
         }
+        return this;
     }
 
-    public VerificationPoint getVertex(String name) {
-        return vertices.get(name);
+    public List<Edge> getEdges() {
+        return edges;
     }
 
-    public Collection<VerificationPoint> getVertices() {
-        return vertices.values();
+    public List<Edge> getEdges(String vertex) {
+        return vertexEdgeMap.get(vertex);
     }
 
-    public Set<Element> getConnectedComponent(Element element) {
+    public List<Edge> getEdges(Vertex vertex) {
+        return getEdges(vertex.getName());
+    }
+
+    public Set<Vertex> getVertices() {
+        return vertices;
+    }
+
+    public Vertex getVertex(String name) {
+        return vertexNameMap.get(name);
+    }
+
+    public Element getConnectedComponent(Element element) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public int getShortestDistance(Element source, Element target) {
-        return 0;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    public int getMaximumDistance(Element target) {
-        return 0;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    public Path getShortestPath(Element source, Element target) {
+    public Path getShortestPath() {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public String getName() {
-        return name;
+    public int getShortestDistance() {
+        return 0;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public void addSink(ModelSink sink) {
-        sinks.add(sink);
+    public int getMaximumDistance() {
+        return 0;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public void removeSink(ModelSink sink) {
-        sinks.remove(sink);
+    public Set<Vertex> getStartVertices() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
+
 }

@@ -1,50 +1,33 @@
 package org.graphwalker.core;
 
-import org.graphwalker.api.Machine;
-import org.graphwalker.api.PathGenerator;
-import org.graphwalker.api.StopCondition;
-import org.graphwalker.api.event.MachineSink;
-import org.graphwalker.api.graph.Element;
+import org.graphwalker.core.script.Context;
 
-import java.util.HashSet;
-import java.util.Set;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
 
 /**
  * @author Nils Olsson
  */
-public class SimpleMachine implements Machine {
+public final class SimpleMachine implements Machine {
 
     private final PathGenerator pathGenerator;
     private final StopCondition stopCondition;
-    private final Set<MachineSink> sinks = new HashSet<MachineSink>();
+    private final ScriptEngine scriptEngine;
 
-    protected SimpleMachine(PathGenerator pathGenerator, StopCondition stopCondition) {
+    public SimpleMachine(PathGenerator pathGenerator, StopCondition stopCondition, String scriptLanguage) {
         this.pathGenerator = pathGenerator;
         this.stopCondition = stopCondition;
+        this.scriptEngine = createScriptEngine(scriptLanguage);
     }
 
-    public PathGenerator getPathGenerator() {
-        return pathGenerator;
-    }
-
-    public StopCondition getStopCondition() {
-        return stopCondition;
-    }
-
-    public Element step() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    private ScriptEngine createScriptEngine(String language) {
+        ScriptEngineManager scriptEngineManager = new ScriptEngineManager();
+        ScriptEngine scriptEngine = scriptEngineManager.getEngineByName(language);
+        scriptEngine.setContext(new Context());
+        return scriptEngine;
     }
 
     public void run() {
         //To change body of implemented methods use File | Settings | File Templates.
     }
-
-    public void addSink(MachineSink sink) {
-        sinks.add(sink);
-    }
-
-    public void removeSink(MachineSink sink) {
-        sinks.remove(sink);
-    }
 }
-

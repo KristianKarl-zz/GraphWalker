@@ -1,13 +1,18 @@
 package org.graphwalker.core.model;
 
-import org.graphwalker.api.machine.TransitionCondition;
+import javax.script.ScriptEngine;
+import javax.script.ScriptException;
 
 /**
  * @author Nils Olsson
  */
-public class Guard implements TransitionCondition {
+public final class Guard extends ScriptElement {
 
-    public Boolean isFulfilled() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    public Guard(String script) {
+        super(script);
+    }
+
+    public Boolean isFulfilled(ScriptEngine scriptEngine) throws ScriptException {
+        return (Boolean)scriptEngine.eval(getScript());
     }
 }
