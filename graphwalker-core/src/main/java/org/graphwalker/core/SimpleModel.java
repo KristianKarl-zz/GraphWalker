@@ -175,6 +175,16 @@ public final class SimpleModel implements Model {
         return elementCache;
     }
 
+    public List<Element> getElements(Element element) {
+        if (element instanceof Vertex) {
+            Vertex vertex = (Vertex)element;
+            return new ArrayList<Element>(getEdges(vertex));
+        } else {
+            Edge edge = (Edge)element;
+            return Arrays.<Element>asList(edge.getTargetVertex());
+        }
+    }
+
     public List<Element> getConnectedComponent(Element element) {
         return depthFirstSearch.getConnectedComponent(element);
     }
@@ -187,8 +197,8 @@ public final class SimpleModel implements Model {
         return floydWarshall.getShortestDistance(origin, destination);
     }
 
-    public int getMaximumDistance(Element origin, Element destination) {
-        return floydWarshall.getMaximumDistance(origin, destination);
+    public int getMaximumDistance(Element destination) {
+        return floydWarshall.getMaximumDistance(destination);
     }
 
     public List<Vertex> getStartVertices() {

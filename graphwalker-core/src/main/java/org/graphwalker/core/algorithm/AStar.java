@@ -29,6 +29,8 @@ import org.graphwalker.core.Model;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Path;
 
+import java.util.*;
+
 /**
  * @author Nils Olsson
  */
@@ -41,6 +43,112 @@ public final class AStar implements Algorithm {
     }
 
     public Path getShortestPath(Element origin, Element destination) {
-        return null;
+        Map<Element, AStarNode> openSet = new HashMap<Element, AStarNode>();
+        PriorityQueue<AStarNode> queue = new PriorityQueue<AStarNode>(10, new AStarNodeComparator());
+        Map<Element, AStarNode> closeSet = new HashMap<Element, AStarNode>();
+        AStarNode sourceNode = new AStarNode(origin, 0, model.getShortestDistance(origin, destination));
+        openSet.put(origin, sourceNode);
+        queue.add(sourceNode);
+        AStarNode targetNode = null;
+        while(openSet.size() > 0) {
+            AStarNode node = queue.poll();
+            openSet.remove(node.getElement());
+            if(node.getElement().equals(destination)){
+                targetNode = node;
+                break;
+            }else{
+                closeSet.put(node.getElement(), node);
+                List<Element> neighbors = model.getElements(node.getElement());
+                for (Element neighbor : neighbors) {
+                    AStarNode visited = closeSet.get(neighbor);
+                    if (visited == null) {
+                        double g = node.getG() + model.getShortestDistance(node.getElement(), neighbor);
+                        AStarNode neighborNode = openSet.get(neighbor);
+                        if (null == neighborNode) {
+                            neighborNode = new AStarNode(neighbor, g, model.getShortestDistance(neighbor, destination));
+                            neighborNode.setParent(node);
+                            openSet.put(neighbor, neighborNode);
+                            queue.add(neighborNode);
+                        } else if (g < neighborNode.getG()) {
+                            neighborNode.setParent(node);
+                            neighborNode.setG(g);
+                            neighborNode.setH(model.getShortestDistance(neighbor, destination));
+                        }
+                    }
+                }
+            }
+        }
+        if (null != targetNode) {
+            List<Element> path = new ArrayList<Element>();
+            path.add(targetNode.getElement());
+            AStarNode node = targetNode.getParent();
+            while(null != node) {
+                path.add(node.getElement());
+                node = node.getParent();
+            }
+
+            Collections.reverse(path);
+            return new Path<Element>(path);
+        }
+        throw new NoPathFoundException();
+    }
+
+    private class AStarNode {
+
+        private final Element element;
+        private AStarNode parent;
+        private double g;
+        private double h;
+
+        AStarNode(Element element, double g, double h) {
+            this.element = element;
+            this.g = g;
+            this.h = h;
+        }
+
+        private Element getElement() {
+            return element;
+        }
+
+        private AStarNode getParent() {
+            return parent;
+        }
+
+        private void setParent(AStarNode parent) {
+            this.parent = parent;
+        }
+
+        private double getG() {
+            return g;
+        }
+
+        private void setG(double g) {
+            this.g = g;
+        }
+
+        private double getH() {
+            return h;
+        }
+
+        private void setH(double h) {
+            this.h = h;
+        }
+
+        public double getF() {
+            return g+h;
+        }
+    }
+
+    private class AStarNodeComparator implements Comparator<AStarNode> {
+
+        public int compare(AStarNode first, AStarNode second) {
+            if (first.getF() < second.getF()){
+                return -1;
+            } else if(first.getF() > second.getF()) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
     }
 }

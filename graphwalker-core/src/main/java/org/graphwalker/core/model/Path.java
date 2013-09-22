@@ -25,10 +25,15 @@
  */
 package org.graphwalker.core.model;
 
-import java.util.Deque;
+import java.util.ArrayDeque;
+import java.util.Collection;
 
 /**
  * @author Nils Olsson
  */
-public interface Path<E extends Element> extends Deque<E> {
+public class Path<E extends Element> extends ArrayDeque<E> {
+
+    public Path(Collection<E> collection) {
+        super(collection);
+    }
 }

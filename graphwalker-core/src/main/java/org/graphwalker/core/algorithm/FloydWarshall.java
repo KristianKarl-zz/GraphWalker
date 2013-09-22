@@ -26,7 +26,12 @@
 package org.graphwalker.core.algorithm;
 
 import org.graphwalker.core.Model;
+import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Element;
+import org.graphwalker.core.model.Vertex;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author Nils Olsson
@@ -34,16 +39,67 @@ import org.graphwalker.core.model.Element;
 public final class FloydWarshall implements Algorithm {
 
     private final Model model;
+    private final int[][] distances;
+    private final Element[][] predecessors;
 
     public FloydWarshall(Model model) {
         this.model = model;
+        this.distances = createDistanceMatrix(model, model.getElements());
+        this.predecessors = createPredecessorMatrix(model.getElements(), distances);
+    }
+
+    private int[][] createDistanceMatrix(Model model, List<Element> elements) {
+        int[][] distances = new int[elements.size()][elements.size()];
+        for (int[] row : distances) {
+            Arrays.fill(row, Integer.MAX_VALUE);
+        }
+        for (Element element: elements) {
+            if (element instanceof Edge) {
+                Edge edge = (Edge) element;
+                Vertex target = edge.getTargetVertex();
+                distances[elements.indexOf(edge)][elements.indexOf(target)] = (int) Math.ceil(edge.getWeight());
+            } else if (element instanceof Vertex) {
+                Vertex vertex = (Vertex) element;
+                for (Edge edge : model.getEdges(vertex)) {
+                    if (!edge.isBlocked()) {
+                        distances[elements.indexOf(vertex)][elements.indexOf(edge)] = 1;
+                    }
+                }
+            }
+        }
+        return distances;
+    }
+
+    private Element[][] createPredecessorMatrix(List<Element> elements, int[][] distances) {
+        Element[][] predecessors = new Element[elements.size()][elements.size()];
+        int size = elements.size();
+        for (int k = 0; k < size; k++) {
+            for (int i = 0; i < size; i++) {
+                for (int j = 0; j < size; j++) {
+                    if (distances[i][k] != Integer.MAX_VALUE
+                            && distances[k][j] != Integer.MAX_VALUE
+                            && distances[i][k] + distances[k][j] < distances[i][j]) {
+                        distances[i][j] = distances[i][k] + distances[k][j];
+                        predecessors[i][j] = elements.get(k);
+                    }
+                }
+            }
+        }
+        return predecessors;
     }
 
     public int getShortestDistance(Element origin, Element destination) {
-        return 0;
+        return distances[model.getElements().indexOf(origin)][model.getElements().indexOf(destination)];
     }
 
-    public int getMaximumDistance(Element origin, Element destination) {
-        return 0;
+    public int getMaximumDistance(Element destination) {
+        int maximumDistance = Integer.MIN_VALUE;
+        for (int[] distance : distances) {
+            int value = distance[model.getElements().indexOf(destination)];
+            if (value != Integer.MAX_VALUE && value > maximumDistance) {
+                maximumDistance = value;
+            }
+        }
+        return maximumDistance;
     }
 }

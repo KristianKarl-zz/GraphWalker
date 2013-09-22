@@ -45,9 +45,10 @@ public interface Model {
     Vertex getVertex(String name);
     Vertex getVertex(Vertex vertex);
     List<Element> getElements();
+    List<Element> getElements(Element element);
     List<Element> getConnectedComponent(Element element);
     Path getShortestPath(Element origin, Element destination);
     int getShortestDistance(Element origin, Element destination);
-    int getMaximumDistance(Element origin, Element destination);
+    int getMaximumDistance(Element destination);
     List<Vertex> getStartVertices();
 }

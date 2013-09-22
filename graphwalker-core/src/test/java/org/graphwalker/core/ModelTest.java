@@ -301,7 +301,7 @@ public class ModelTest {
             .addEdge(new Edge("e2", new Vertex("v3"), new Vertex("v4")))
             .addEdge(new Edge("e2", new Vertex("v4"), new Vertex("v5")))
             .addEdge(new Edge("e2", new Vertex("v2"), new Vertex("v5")));
-        Assert.assertEquals(4, model.getShortestPath(model.getVertex("v1"), model.getVertex("v5")).size());
+        Assert.assertEquals(5, model.getShortestPath(model.getVertex("v1"), model.getVertex("v5")).size());
     }
 
     @Test
@@ -313,6 +313,9 @@ public class ModelTest {
             .addEdge(new Edge("e2", new Vertex("v4"), new Vertex("v5")))
             .addEdge(new Edge("e2", new Vertex("v2"), new Vertex("v5")));
         Assert.assertEquals(4, model.getShortestDistance(model.getVertex("v1"), model.getVertex("v5")));
+        Model model2 = new SimpleModel().addEdge(new Edge("e1", new Vertex("v1"), new Vertex("v2")));
+        Assert.assertEquals(model2.getShortestDistance(model2.getVertex("v1"), model2.getVertex("v2"))+1
+                , model2.getShortestPath(model2.getVertex("v1"), model2.getVertex("v2")).size());
     }
 
     @Test
@@ -323,7 +326,10 @@ public class ModelTest {
             .addEdge(new Edge("e2", new Vertex("v3"), new Vertex("v4")))
             .addEdge(new Edge("e2", new Vertex("v4"), new Vertex("v5")))
             .addEdge(new Edge("e2", new Vertex("v2"), new Vertex("v5")));
-        Assert.assertEquals(6, model.getMaximumDistance(model.getVertex("v1"), model.getVertex("v5")));
+        Assert.assertEquals(5, model.getMaximumDistance(model.getVertex("v5")));
+        Model model2 = new SimpleModel().addEdge(new Edge("e1", new Vertex("v1"), new Vertex("v2")));
+        Assert.assertEquals(model2.getShortestDistance(model2.getVertex("v1"), model2.getVertex("v2"))
+                , model2.getMaximumDistance(model2.getVertex("v2")));
     }
 
     @Test
