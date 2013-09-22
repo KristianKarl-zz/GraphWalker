@@ -1,3 +1,28 @@
+/*
+ * #%L
+ * GraphWalker Core
+ * %%
+ * Copyright (C) 2011 - 2013 GraphWalker
+ * %%
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ * #L%
+ */
 package org.graphwalker.core.model;
 
 import org.apache.commons.lang3.Validate;
@@ -20,6 +45,7 @@ public final class Edge implements Element {
     private final Double weight;
     private final Guard guard;
     private final Set<Action> actions;
+    private final int cachedHashCode;
 
     public Edge(String name, Vertex source, Vertex target) {
         this(name, source, target, new Guard("true"), new HashSet<Action>());
@@ -45,6 +71,14 @@ public final class Edge implements Element {
         this.actions = Collections.unmodifiableSet(Validate.notNull(actions));
         this.blocked = Validate.notNull(blocked);
         this.weight = Validate.notNull(weight);
+        this.cachedHashCode = new HashCodeBuilder(23, 47)
+                .appendSuper(super.hashCode())
+                .append(source.hashCode())
+                .append(target.hashCode())
+                .append(actions)
+                .append(blocked)
+                .append(weight)
+                .toHashCode();
     }
 
     public String getName() {
@@ -77,13 +111,7 @@ public final class Edge implements Element {
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(23, 47)
-                .appendSuper(super.hashCode())
-                .append(source.getName())
-                .append(target.getName())
-                .append(blocked)
-                .append(weight)
-                .toHashCode();
+        return this.cachedHashCode;
     }
 
     @Override
@@ -97,9 +125,12 @@ public final class Edge implements Element {
         if (object instanceof Edge) {
             Edge edge = (Edge)object;
             return new EqualsBuilder()
-                    .appendSuper(super.equals(object))
+                    .append(name, edge.getName())
                     .append(source, edge.getSourceVertex())
                     .append(target, edge.getTargetVertex())
+                    .append(actions, edge.getActions())
+                    .append(blocked, edge.isBlocked())
+                    .append(weight, edge.getWeight())
                     .isEquals();
         }
         return false;

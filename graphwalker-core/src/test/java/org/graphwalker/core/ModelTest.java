@@ -75,7 +75,13 @@ public class ModelTest {
         Vertex vertex2 = new Vertex("vertex2");
         Assert.assertEquals(new Action("abc"), new Action("abc"));
         Assert.assertEquals(new Guard("abc"), new Guard("abc"));
-        Assert.assertEquals(new Edge("abc", vertex1, vertex2), new Edge("abc", new Vertex("vertex1"), new Vertex("vertex2")));
+        Assert.assertEquals(new Edge("abc", vertex1, vertex2), new Edge("abc", vertex1, vertex2));
+        Assert.assertEquals(new Edge("abc", vertex1, vertex2, new Guard("true"), new HashSet<Action>())
+                , new Edge("abc", vertex1, vertex2, new Guard("true"), new HashSet<Action>()));
+        Assert.assertEquals(new Edge("abc", vertex1, vertex2, new Guard("true"), new HashSet<Action>(), false)
+                , new Edge("abc", vertex1, vertex2, new Guard("true"), new HashSet<Action>(), false));
+        Assert.assertEquals(new Edge("abc", vertex1, vertex2, new Guard("true"), new HashSet<Action>(), false, 2.0)
+                , new Edge("abc", vertex1, vertex2, new Guard("true"), new HashSet<Action>(), false, 2.0));
         Assert.assertEquals(new Vertex("abc"), new Vertex("abc"));
     }
 
@@ -84,19 +90,27 @@ public class ModelTest {
         Vertex vertex1 = new Vertex("vertex1");
         Vertex vertex2 = new Vertex("vertex2");
         Vertex vertex3 = new Vertex("vertex3");
-        Assert.assertNotSame(new Action("abc"), new Action("def"));
-        Assert.assertNotSame(new Action("abc"), "def");
-        Assert.assertNotSame(new Action("abc"), null);
-        Assert.assertNotSame(new Guard("abc"), new Guard("def"));
-        Assert.assertNotSame(new Guard("abc"), "def");
-        Assert.assertNotSame(new Guard("abc"), null);
-        Assert.assertNotSame(new Edge("abc", vertex1, vertex2), new Edge("abc", vertex1, vertex3));
-        Assert.assertNotSame(new Edge("abc", vertex1, vertex2), new Edge("def", vertex1, vertex2));
-        Assert.assertNotSame(new Edge("abc", vertex1, vertex2), "def");
-        Assert.assertNotSame(new Edge("abc", vertex1, vertex2), null);
-        Assert.assertNotSame(new Vertex("abc"), new Vertex("def"));
-        Assert.assertNotSame(new Vertex("abc"), "def");
-        Assert.assertNotSame(new Vertex("abc"), null);
+        Assert.assertNotEquals(new Action("abc"), new Action("def"));
+        Assert.assertNotEquals(new Action("abc"), "def");
+        Assert.assertNotEquals(new Action("abc"), null);
+        Assert.assertNotEquals(new Guard("abc"), new Guard("def"));
+        Assert.assertNotEquals(new Guard("abc"), "def");
+        Assert.assertNotEquals(new Guard("abc"), null);
+        Assert.assertNotEquals(new Edge("abc", vertex1, vertex2), new Edge("abc", vertex1, vertex3));
+        Assert.assertNotEquals(new Edge("abc", vertex1, vertex2), new Edge("def", vertex1, vertex2));
+        Assert.assertNotEquals(new Edge("abc", vertex1, vertex2, new Guard("123")
+                , new HashSet<Action>(Arrays.asList(new Action("1234"))), true, 2.0)
+                , new Edge("abc", vertex1, vertex2, new Guard("123")
+                , new HashSet<Action>(Arrays.asList(new Action("1234"))), true, 2.1));
+        Assert.assertNotEquals(new Edge("abc", vertex1, vertex2, new Guard("123")
+                , new HashSet<Action>(Arrays.asList(new Action("1234"))), false, 2.0)
+                , new Edge("abc", vertex1, vertex2, new Guard("123")
+                , new HashSet<Action>(Arrays.asList(new Action("1234"))), true, 2.0));
+        Assert.assertNotEquals(new Edge("abc", vertex1, vertex2), "def");
+        Assert.assertNotEquals(new Edge("abc", vertex1, vertex2), null);
+        Assert.assertNotEquals(new Vertex("abc"), new Vertex("def"));
+        Assert.assertNotEquals(new Vertex("abc"), "def");
+        Assert.assertNotEquals(new Vertex("abc"), null);
     }
 
     @Test(expected = UnsupportedOperationException.class)
@@ -114,10 +128,7 @@ public class ModelTest {
 
     @Test(expected = UnsupportedOperationException.class)
     public void modifyVertexRequirements() {
-        Vertex vertex = new Vertex("vertex"
-                , new HashSet<Requirement>(Arrays.asList(new Requirement("1")))
-                , null
-                , null);
+        Vertex vertex = new Vertex("vertex", new HashSet<Requirement>(Arrays.asList(new Requirement("1"))));
         Assert.assertNotNull(vertex.getRequirements());
         Assert.assertEquals(1, vertex.getRequirements().size());
         vertex.getRequirements().clear();
@@ -126,9 +137,8 @@ public class ModelTest {
     @Test(expected = UnsupportedOperationException.class)
     public void modifyVertexEntryActions() {
         Vertex vertex = new Vertex("vertex"
-                , null
-                , new HashSet<Action>(Arrays.asList(new Action("1")))
-                , null);
+                , new HashSet<Requirement>()
+                , new HashSet<Action>(Arrays.asList(new Action("1"))));
         Assert.assertNotNull(vertex.getEntryActions());
         Assert.assertEquals(1, vertex.getEntryActions().size());
         vertex.getEntryActions().clear();
@@ -137,8 +147,8 @@ public class ModelTest {
     @Test(expected = UnsupportedOperationException.class)
     public void modifyVertexExitActions() {
         Vertex vertex = new Vertex("vertex"
-                , null
-                , null
+                , new HashSet<Requirement>()
+                , new HashSet<Action>()
                 , new HashSet<Action>(Arrays.asList(new Action("1"))));
         Assert.assertNotNull(vertex.getExitActions());
         Assert.assertEquals(1, vertex.getExitActions().size());
@@ -189,7 +199,7 @@ public class ModelTest {
         Assert.assertEquals("edge2", edge2.getName());
         Assert.assertFalse(edge2.getGuard().isFulfilled(scriptEngine));
         // execute actions
-        for (Action action: edge2.getActions()) {
+        for (Action action : edge2.getActions()) {
             action.execute(scriptEngine);
         }
         // verify that the guard is satisfied
@@ -205,11 +215,11 @@ public class ModelTest {
                 , new HashSet<Action>(Arrays.<Action>asList(new Action("var x = 5;")))
                 , new HashSet<Action>(Arrays.<Action>asList(new Action("x = 10;"))));
         // execute entry actions
-        for (Action action: vertex2.getEntryActions()) {
+        for (Action action : vertex2.getEntryActions()) {
             action.execute(scriptEngine);
         }
         // execute exit actions
-        for (Action action: vertex2.getExitActions()) {
+        for (Action action : vertex2.getExitActions()) {
             action.execute(scriptEngine);
         }
         // verify that we can access the created variable and that it has the correct value
@@ -241,13 +251,15 @@ public class ModelTest {
     @Test
     public void mergeModel() {
         Model scenario1 = new SimpleModel();
-        scenario1.addVertex(new Vertex("vertex1"));
-        scenario1.addVertex(new Vertex("vertex2", new HashSet<Requirement>(Arrays.<Requirement>asList(new Requirement("123")))));
-        scenario1.addEdge(new Edge("edge1", scenario1.getVertex("vertex1"), scenario1.getVertex("vertex2")));
+        scenario1 = scenario1.addVertex(new Vertex("vertex1"));
+        scenario1 = scenario1.addVertex(new Vertex("vertex2"
+                , new HashSet<Requirement>(Arrays.<Requirement>asList(new Requirement("123")))));
+        scenario1 = scenario1.addEdge(new Edge("edge1", scenario1.getVertex("vertex1"), scenario1.getVertex("vertex2")));
         Model scenario2 = new SimpleModel();
-        scenario2.addVertex(new Vertex("vertex2", new HashSet<Requirement>(Arrays.<Requirement>asList(new Requirement("123"), new Requirement("456")))));
-        scenario2.addVertex(new Vertex("vertex3"));
-        scenario2.addEdge(new Edge("edge2", scenario2.getVertex("vertex2"), scenario2.getVertex("vertex3")));
+        scenario2 = scenario2.addVertex(new Vertex("vertex2"
+                , new HashSet<Requirement>(Arrays.<Requirement>asList(new Requirement("123"), new Requirement("456")))));
+        scenario2 = scenario2.addVertex(new Vertex("vertex3"));
+        scenario2 = scenario2.addEdge(new Edge("edge2", scenario2.getVertex("vertex2"), scenario2.getVertex("vertex3")));
         Model merged = scenario1.addModel(scenario2);
         // assert that the model contains both scenarios, but only one instance of the "same" element
         Assert.assertNotNull(merged.getVertex("vertex1"));
