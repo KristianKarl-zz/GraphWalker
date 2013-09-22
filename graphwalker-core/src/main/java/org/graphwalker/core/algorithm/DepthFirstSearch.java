@@ -25,8 +25,66 @@
  */
 package org.graphwalker.core.algorithm;
 
+import org.graphwalker.core.Model;
+import org.graphwalker.core.model.Edge;
+import org.graphwalker.core.model.Element;
+import org.graphwalker.core.model.Vertex;
+
+import java.util.*;
+
 /**
  * @author Nils Olsson
  */
 public final class DepthFirstSearch implements Algorithm {
+
+    private final Model model;
+
+    public DepthFirstSearch(Model model) {
+        this.model = model;
+    }
+
+    public List<Element> getConnectedComponent(Element root) {
+        return createConnectedComponent(createElementStatusMap(model.getElements()), root);
+    }
+
+    private Map<Element, ElementStatus> createElementStatusMap(List<Element> elements) {
+        Map<Element, ElementStatus> elementStatusMap = new HashMap<Element, ElementStatus>();
+        for (Element element: elements) {
+            elementStatusMap.put(element, ElementStatus.UNREACHABLE);
+            if (element instanceof Edge) {
+                Edge edge = (Edge)element;
+                if (edge.isBlocked()) {
+                    elementStatusMap.put(element, ElementStatus.BLOCKED);
+                }
+            }
+        }
+        return elementStatusMap;
+    }
+
+    private List<Element> createConnectedComponent(Map<Element, ElementStatus> elementStatusMap, Element root) {
+        List<Element> connectedComponent = new ArrayList<Element>();
+        Deque<Element> stack = new ArrayDeque<Element>();
+        stack.push(root);
+        while (!stack.isEmpty()) {
+            Element element = stack.pop();
+            if (ElementStatus.UNREACHABLE.equals(elementStatusMap.get(element))) {
+                connectedComponent.add(element);
+                elementStatusMap.put(element, ElementStatus.REACHABLE);
+                if (element instanceof Vertex) {
+                    Vertex vertex = (Vertex)element;
+                    for (Edge edge: model.getEdges(vertex)) {
+                        stack.push(edge);
+                    }
+                } else if (element instanceof Edge) {
+                    Edge edge = (Edge)element;
+                    stack.push(edge.getTargetVertex());
+                }
+            }
+        }
+        return Collections.unmodifiableList(connectedComponent);
+    }
+
+    private enum ElementStatus {
+        UNREACHABLE, REACHABLE, BLOCKED
+    }
 }

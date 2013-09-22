@@ -25,8 +25,22 @@
  */
 package org.graphwalker.core.algorithm;
 
+import org.graphwalker.core.Model;
+import org.graphwalker.core.model.Element;
+import org.graphwalker.core.model.Path;
+
 /**
  * @author Nils Olsson
  */
 public final class AStar implements Algorithm {
+
+    private final Model model;
+
+    public AStar(Model model) {
+        this.model = model;
+    }
+
+    public Path getShortestPath(Element origin, Element destination) {
+        return null;
+    }
 }

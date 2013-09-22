@@ -271,27 +271,72 @@ public class ModelTest {
 
     @Test
     public void connectedComponent() {
-
+        Model model = new SimpleModel()
+            .addEdge(new Edge("e1", new Vertex("v1"), new Vertex("v2")))
+            .addEdge(new Edge("e1", new Vertex("v1"), new Vertex("v3")))
+            .addEdge(new Edge("e1", new Vertex("v3"), new Vertex("v4")))
+            .addEdge(new Edge("e1", new Vertex("v4"), new Vertex("v5")))
+            .addEdge(new Edge("e1", new Vertex("v2"), new Vertex("v5")));
+        Model anotherModel = new SimpleModel();
+        for (Element element: model.getConnectedComponent(model.getVertex("v1"))) {
+            if (element instanceof Edge) {
+                anotherModel = anotherModel.addEdge((Edge)element);
+            }
+        }
+        Assert.assertEquals(model.getElements().size(), anotherModel.getElements().size());
+        Model smallerModel = new SimpleModel();
+        for (Element element: model.getConnectedComponent(model.getVertex("v2"))) {
+            if (element instanceof Edge) {
+                smallerModel = smallerModel.addEdge((Edge) element);
+            }
+        }
+        Assert.assertEquals(3, smallerModel.getElements().size());
     }
 
     @Test
     public void shortestPath() {
-
+        Model model = new SimpleModel()
+            .addEdge(new Edge("e1", new Vertex("v1"), new Vertex("v2")))
+            .addEdge(new Edge("e2", new Vertex("v1"), new Vertex("v3")))
+            .addEdge(new Edge("e2", new Vertex("v3"), new Vertex("v4")))
+            .addEdge(new Edge("e2", new Vertex("v4"), new Vertex("v5")))
+            .addEdge(new Edge("e2", new Vertex("v2"), new Vertex("v5")));
+        Assert.assertEquals(4, model.getShortestPath(model.getVertex("v1"), model.getVertex("v5")).size());
     }
 
     @Test
     public void shortestDistance() {
-
+        Model model = new SimpleModel()
+            .addEdge(new Edge("e1", new Vertex("v1"), new Vertex("v2")))
+            .addEdge(new Edge("e2", new Vertex("v1"), new Vertex("v3")))
+            .addEdge(new Edge("e2", new Vertex("v3"), new Vertex("v4")))
+            .addEdge(new Edge("e2", new Vertex("v4"), new Vertex("v5")))
+            .addEdge(new Edge("e2", new Vertex("v2"), new Vertex("v5")));
+        Assert.assertEquals(4, model.getShortestDistance(model.getVertex("v1"), model.getVertex("v5")));
     }
 
     @Test
     public void maximumDistance() {
-
+        Model model = new SimpleModel()
+            .addEdge(new Edge("e1", new Vertex("v1"), new Vertex("v2")))
+            .addEdge(new Edge("e2", new Vertex("v1"), new Vertex("v3")))
+            .addEdge(new Edge("e2", new Vertex("v3"), new Vertex("v4")))
+            .addEdge(new Edge("e2", new Vertex("v4"), new Vertex("v5")))
+            .addEdge(new Edge("e2", new Vertex("v2"), new Vertex("v5")));
+        Assert.assertEquals(6, model.getMaximumDistance(model.getVertex("v1"), model.getVertex("v5")));
     }
 
     @Test
     public void startVertices() {
-
+        Model model = new SimpleModel()
+            .addEdge(new Edge("e1", new Vertex("v1"), new Vertex("v2")))
+            .addEdge(new Edge("e2", new Vertex("v1"), new Vertex("v3")))
+            .addEdge(new Edge("e2", new Vertex("v3"), new Vertex("v4")))
+            .addEdge(new Edge("e2", new Vertex("v4"), new Vertex("v5")))
+            .addEdge(new Edge("e2", new Vertex("v2"), new Vertex("v5")));
+        Assert.assertEquals(1, model.getStartVertices().size());
+        model = model.addEdge(new Edge("e0", new Vertex("v0"), new Vertex("v2")));
+        Assert.assertEquals(2, model.getStartVertices().size());
     }
 
 }

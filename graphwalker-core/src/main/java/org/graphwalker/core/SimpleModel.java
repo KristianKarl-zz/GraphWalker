@@ -25,6 +25,9 @@
  */
 package org.graphwalker.core;
 
+import org.graphwalker.core.algorithm.AStar;
+import org.graphwalker.core.algorithm.DepthFirstSearch;
+import org.graphwalker.core.algorithm.FloydWarshall;
 import org.graphwalker.core.model.*;
 
 import java.util.*;
@@ -36,6 +39,12 @@ public final class SimpleModel implements Model {
 
     private final Map<Vertex, Vertex> vertices;
     private final Map<Edge, Edge> edges;
+    private final AStar aStar;
+    private final DepthFirstSearch depthFirstSearch;
+    private final FloydWarshall floydWarshall;
+    private final List<Vertex> startVertices;
+    private final List<Element> elementCache;
+    private final Map<Vertex, List<Edge>> vertexEdgeCache;
 
     public SimpleModel() {
         this(new HashSet<Vertex>(), new HashSet<Edge>());
@@ -44,7 +53,38 @@ public final class SimpleModel implements Model {
     public SimpleModel(Set<Vertex> vertices, Set<Edge> edges) {
         this.vertices = Collections.unmodifiableMap(asMap(vertices));
         this.edges = Collections.unmodifiableMap(asMap(edges));
-        // TODO: compute algorithms
+        this.startVertices = Collections.unmodifiableList(findStartVertices());
+        this.elementCache = Collections.unmodifiableList(createElementCache());
+        this.vertexEdgeCache = Collections.unmodifiableMap(createVertexEdgeCache());
+        this.aStar = new AStar(this);
+        this.depthFirstSearch = new DepthFirstSearch(this);
+        this.floydWarshall = new FloydWarshall(this);
+    }
+
+    private Map<Vertex, List<Edge>> createVertexEdgeCache() {
+        Map<Vertex, List<Edge>> vertexEdgeMap = new HashMap<Vertex, List<Edge>>();
+        for (Vertex vertex: vertices.values()) {
+            vertexEdgeMap.put(vertex, new ArrayList<Edge>());
+        }
+        for (Edge edge: edges.values()) {
+            vertexEdgeMap.get(edge.getSourceVertex()).add(edge);
+        }
+        return vertexEdgeMap;
+    }
+
+    private List<Element> createElementCache() {
+        Set<Element> elementSet = new HashSet<Element>();
+        elementSet.addAll(vertices.values());
+        elementSet.addAll(edges.values());
+        return new ArrayList<Element>(elementSet);
+    }
+
+    private List<Vertex> findStartVertices() {
+        Set<Vertex> vertexSet = new HashSet<Vertex>(vertices.values());
+        for (Edge edge: edges.values()) {
+            vertexSet.remove(edge.getTargetVertex());
+        }
+        return new ArrayList<Vertex>(vertexSet);
     }
 
     private <T> Map<T,T> asMap(Set<T> set) {
@@ -56,7 +96,8 @@ public final class SimpleModel implements Model {
     }
 
     public Model addEdge(Edge edge) {
-        return addModel(new SimpleModel(new HashSet<Vertex>(), new HashSet<Edge>(Arrays.asList(edge))));
+        return addModel(new SimpleModel(new HashSet<Vertex>(Arrays.asList(edge.getSourceVertex()
+                , edge.getTargetVertex())), new HashSet<Edge>(Arrays.asList(edge))));
     }
 
     public Model addVertex(Vertex vertex) {
@@ -114,6 +155,10 @@ public final class SimpleModel implements Model {
         return new ArrayList<Edge>(edges.values());
     }
 
+    public List<Edge> getEdges(Vertex vertex) {
+        return vertexEdgeCache.get(vertex);
+    }
+
     public List<Vertex> getVertices() {
         return new ArrayList<Vertex>(vertices.values());
     }
@@ -126,24 +171,27 @@ public final class SimpleModel implements Model {
         return vertices.get(vertex);
     }
 
+    public List<Element> getElements() {
+        return elementCache;
+    }
+
     public List<Element> getConnectedComponent(Element element) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return depthFirstSearch.getConnectedComponent(element);
     }
 
-    public Path getShortestPath() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    public Path getShortestPath(Element origin, Element destination) {
+        return aStar.getShortestPath(origin, destination);
     }
 
-    public int getShortestDistance() {
-        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+    public int getShortestDistance(Element origin, Element destination) {
+        return floydWarshall.getShortestDistance(origin, destination);
     }
 
-    public int getMaximumDistance() {
-        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+    public int getMaximumDistance(Element origin, Element destination) {
+        return floydWarshall.getMaximumDistance(origin, destination);
     }
 
     public List<Vertex> getStartVertices() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return startVertices;
     }
-
 }

@@ -25,8 +25,25 @@
  */
 package org.graphwalker.core.algorithm;
 
+import org.graphwalker.core.Model;
+import org.graphwalker.core.model.Element;
+
 /**
  * @author Nils Olsson
  */
 public final class FloydWarshall implements Algorithm {
+
+    private final Model model;
+
+    public FloydWarshall(Model model) {
+        this.model = model;
+    }
+
+    public int getShortestDistance(Element origin, Element destination) {
+        return 0;
+    }
+
+    public int getMaximumDistance(Element origin, Element destination) {
+        return 0;
+    }
 }
