@@ -3,5 +3,5 @@ package org.graphwalker.core.algorithm;
 /**
  * @author Nils Olsson
  */
-public final class AStar {
+public final class AStar implements Algorithm {
 }

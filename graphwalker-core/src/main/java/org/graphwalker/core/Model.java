@@ -5,6 +5,7 @@ import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Path;
 import org.graphwalker.core.model.Vertex;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -12,15 +13,13 @@ import java.util.Set;
  * @author Nils Olsson
  */
 public interface Model {
-    Model addEdge(Edge edge, Vertex source, Vertex target);
+    Model addEdge(Edge edge);
     Model addModel(Model model);
     Model addVertex(Vertex vertex);
     List<Edge> getEdges();
-    List<Edge> getEdges(String vertex);
-    List<Edge> getEdges(Vertex vertex);
-    Set<Vertex> getVertices();
+    Collection<Vertex> getVertices();
     Vertex getVertex(String name);
-    Element getConnectedComponent(Element element);
+    Set<Element> getConnectedComponent(Element element);
     Path getShortestPath();
     int getShortestDistance();
     int getMaximumDistance();

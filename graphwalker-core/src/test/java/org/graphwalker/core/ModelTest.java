@@ -35,6 +35,7 @@ import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Nils Olsson
@@ -49,27 +50,99 @@ public class ModelTest {
     }
 
     @Test
+    public void emptyEdgeName() {
+        new Edge("", new Vertex("vertex1"), new Vertex("vertex2"));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void emptyVertexName() {
+        new Vertex("");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void emptyGuard() {
+        new Guard("");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void emptyAction() {
+        new Action("");
+    }
+
+    @Test
     public void equals() {
+        Vertex vertex1 = new Vertex("vertex1");
+        Vertex vertex2 = new Vertex("vertex2");
         Assert.assertEquals(new Action("abc"), new Action("abc"));
         Assert.assertEquals(new Guard("abc"), new Guard("abc"));
-        Assert.assertEquals(new Edge("abc"), new Edge("abc"));
+        Assert.assertEquals(new Edge("abc", vertex1, vertex2), new Edge("abc", new Vertex("vertex1"), new Vertex("vertex2")));
         Assert.assertEquals(new Vertex("abc"), new Vertex("abc"));
     }
 
     @Test
     public void notSame() {
+        Vertex vertex1 = new Vertex("vertex1");
+        Vertex vertex2 = new Vertex("vertex2");
+        Vertex vertex3 = new Vertex("vertex3");
         Assert.assertNotSame(new Action("abc"), new Action("def"));
         Assert.assertNotSame(new Action("abc"), "def");
         Assert.assertNotSame(new Action("abc"), null);
         Assert.assertNotSame(new Guard("abc"), new Guard("def"));
         Assert.assertNotSame(new Guard("abc"), "def");
         Assert.assertNotSame(new Guard("abc"), null);
-        Assert.assertNotSame(new Edge("abc"), new Edge("def"));
-        Assert.assertNotSame(new Edge("abc"), "def");
-        Assert.assertNotSame(new Edge("abc"), null);
+        Assert.assertNotSame(new Edge("abc", vertex1, vertex2), new Edge("abc", vertex1, vertex3));
+        Assert.assertNotSame(new Edge("abc", vertex1, vertex2), new Edge("def", vertex1, vertex2));
+        Assert.assertNotSame(new Edge("abc", vertex1, vertex2), "def");
+        Assert.assertNotSame(new Edge("abc", vertex1, vertex2), null);
         Assert.assertNotSame(new Vertex("abc"), new Vertex("def"));
         Assert.assertNotSame(new Vertex("abc"), "def");
         Assert.assertNotSame(new Vertex("abc"), null);
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void modifyEdgeActions() {
+        Vertex vertex1 = new Vertex("vertex1");
+        Vertex vertex2 = new Vertex("vertex2");
+        Set<Action> actions = new HashSet<Action>();
+        actions.add(new Action("abc"));
+        Edge edge = new Edge("edge1", vertex1, vertex2, actions);
+        Assert.assertNotNull(edge.getActions());
+        Assert.assertEquals(1, edge.getActions().size());
+        edge.getActions().add(new Action("def"));
+        Assert.assertEquals(1, edge.getActions().size());
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void modifyVertexRequirements() {
+        Vertex vertex = new Vertex("vertex"
+                , new HashSet<Requirement>(Arrays.asList(new Requirement("1")))
+                , null
+                , null);
+        Assert.assertNotNull(vertex.getRequirements());
+        Assert.assertEquals(1, vertex.getRequirements().size());
+        vertex.getRequirements().clear();
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void modifyVertexEntryActions() {
+        Vertex vertex = new Vertex("vertex"
+                , null
+                , new HashSet<Action>(Arrays.asList(new Action("1")))
+                , null);
+        Assert.assertNotNull(vertex.getEntryActions());
+        Assert.assertEquals(1, vertex.getEntryActions().size());
+        vertex.getEntryActions().clear();
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void modifyVertexExitActions() {
+        Vertex vertex = new Vertex("vertex"
+                , null
+                , null
+                , new HashSet<Action>(Arrays.asList(new Action("1"))));
+        Assert.assertNotNull(vertex.getExitActions());
+        Assert.assertEquals(1, vertex.getExitActions().size());
+        vertex.getEntryActions().clear();
     }
 
     @Test(expected = Throwable.class)
@@ -84,7 +157,17 @@ public class ModelTest {
 
     @Test(expected = Throwable.class)
     public void nullEdge() {
-        new Edge(null);
+        new Edge(null, null, null);
+    }
+
+    @Test(expected = Throwable.class)
+    public void nullEdgeSourceVertex() {
+        new Edge("abc", null, new Vertex("vertex2"));
+    }
+
+    @Test(expected = Throwable.class)
+    public void nullEdgeTargetVertex() {
+        new Edge("abc", new Vertex("vertex1"), null);
     }
 
     @Test(expected = Throwable.class)
@@ -98,7 +181,11 @@ public class ModelTest {
         ScriptEngine scriptEngine = createScriptEngine("JavaScript");
         scriptEngine.eval("var i = 0;");
         // create edge with a guard and a action, that will change the current context
-        Edge edge2 = new Edge("edge2", new Guard("i > 0"), new HashSet<Action>(Arrays.<Action>asList(new Action("i++"))));
+        Edge edge2 = new Edge("edge2"
+                , new Vertex("vertex1")
+                , new Vertex("vertex2")
+                , new Guard("i > 0")
+                , new HashSet<Action>(Arrays.<Action>asList(new Action("i++"))));
         Assert.assertEquals("edge2", edge2.getName());
         Assert.assertFalse(edge2.getGuard().isFulfilled(scriptEngine));
         // execute actions
@@ -131,35 +218,43 @@ public class ModelTest {
 
     @Test
     public void createModel() {
-        Model model = new SimpleModel();
-        model.addVertex(new Vertex("vertex1"));
-        model.addEdge(new Edge("edge1"), new Vertex("vertex1"), new Vertex("vertex2"));
+        Model model = new SimpleModel()
+                .addVertex(new Vertex("vertex1"))
+                .addVertex(new Vertex("vertex2"))
+                .addEdge(new Edge("edge1"
+                        , new Vertex("vertex1")
+                        , new Vertex("vertex2")));
         // assert model contains the added edges and vertices
         Assert.assertEquals(2, model.getVertices().size());
         Assert.assertEquals(1, model.getEdges().size());
-        Assert.assertNotNull(model.getEdges("edge1"));
         Assert.assertNotNull(model.getVertex("vertex1"));
         Assert.assertNotNull(model.getVertex("vertex2"));
-        Assert.assertNull(model.getEdges("vertex1"));
         Assert.assertNull(model.getVertex("edge1"));
-        Assert.assertNull(model.getEdges("NOT_FOUND"));
+        Assert.assertEquals(model.getEdges().get(0).getSourceVertex(), model.getVertex("vertex1"));
+        // add a new edge with the same name
+        model = model.addEdge(new Edge("edge1", model.getVertex("vertex2"), model.getVertex("vertex1")));
+        Assert.assertEquals(2, model.getEdges().size());
+        Assert.assertEquals(model.getEdges().get(0).getSourceVertex(), model.getEdges().get(1).getTargetVertex());
+        Assert.assertEquals(model.getEdges().get(0).getTargetVertex(), model.getEdges().get(1).getSourceVertex());
     }
 
     @Test
     public void mergeModel() {
-        Model merged = new SimpleModel();
         Model scenario1 = new SimpleModel();
-        scenario1.addEdge(new Edge("edge1"), new Vertex("vertex1"), new Vertex("vertex2"));
+        scenario1.addVertex(new Vertex("vertex1"));
+        scenario1.addVertex(new Vertex("vertex2", new HashSet<Requirement>(Arrays.<Requirement>asList(new Requirement("123")))));
+        scenario1.addEdge(new Edge("edge1", scenario1.getVertex("vertex1"), scenario1.getVertex("vertex2")));
         Model scenario2 = new SimpleModel();
-        scenario2.addEdge(new Edge("edge2"), new Vertex("vertex2"), new Vertex("vertex3"));
-        merged.addModel(scenario1);
-        merged.addModel(scenario2);
+        scenario2.addVertex(new Vertex("vertex2", new HashSet<Requirement>(Arrays.<Requirement>asList(new Requirement("123"), new Requirement("456")))));
+        scenario2.addVertex(new Vertex("vertex3"));
+        scenario2.addEdge(new Edge("edge2", scenario2.getVertex("vertex2"), scenario2.getVertex("vertex3")));
+        Model merged = scenario1.addModel(scenario2);
         // assert that the model contains both scenarios, but only one instance of the "same" element
         Assert.assertNotNull(merged.getVertex("vertex1"));
-        Assert.assertNotNull(merged.getEdges("edge1"));
         Assert.assertNotNull(merged.getVertex("vertex2"));
-        Assert.assertNotNull(merged.getEdges("edge2"));
         Assert.assertNotNull(merged.getVertex("vertex3"));
+        Assert.assertNotNull(merged.getVertex("vertex2").getRequirements());
+        Assert.assertEquals(2, merged.getVertex("vertex2").getRequirements().size());
     }
 
     @Test
@@ -187,76 +282,4 @@ public class ModelTest {
 
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    /*
-    @Test
-    public void createModel() {
-
-        SimpleModel model = new SimpleModel("Single model");
-
-        model.addSink(this);
-
-        VerificationPoint v1 = new VerificationPoint("v1");
-        model.addVertex(v1);
-        VerificationPoint v2 = new VerificationPoint("v2");
-        model.addVertex(v2);
-        VerificationPoint v3 = new VerificationPoint("v3");
-        model.addVertex(v3);
-        model.addEdge(new Operation("e1", v1, v2));
-        model.addEdge(new Operation("e2", v2, v3));
-        model.addEdge(new Operation("e3", v3, v1));
-        model.addEdge(new Operation("e4", v3, v3));
-
-
-        VerificationPoint v4 = new VerificationPoint("v4");
-        model.addVertex(v4);
-        VerificationPoint v5 = new VerificationPoint("v5");
-        model.addVertex(v5);
-        VerificationPoint v6 = new VerificationPoint("v6");
-        model.addVertex(v6);
-        model.addEdge(new Operation("e5", v4, v5));
-        model.addEdge(new Operation("e6", v5, v6));
-        model.addEdge(new Operation("e7", v6, v4));
-
-
-        displayModel(model, 10000);
-    }
-
-    private void displayModel(SimpleModel model, long timeout) {
-        Graph graph = new SingleGraph();
-        for (VerificationPoint verificationPoint: model.getVertices()) {
-            graph.addNode(verificationPoint.getName());
-        }
-        for (Operation operation: model.getEdges()) {
-            graph.addEdge(operation.getName(), operation.getSourceVertex().getName(), operation.getTargetVertex().getName());
-        }
-        graph.display();
-        try {
-            Thread.sleep(timeout);
-        } catch (InterruptedException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
-    }
-
-    public void edgeAdded(Edge edge) {
-        System.out.println("Edge added "+edge.getName());
-    }
-
-    public void vertexAdded(Vertex vertex) {
-        System.out.println("Vertex added "+vertex.getName());
-    }
-    */
 }

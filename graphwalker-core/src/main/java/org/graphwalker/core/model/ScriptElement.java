@@ -1,6 +1,8 @@
 package org.graphwalker.core.model;
 
 import org.apache.commons.lang3.Validate;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * @author Nils Olsson
@@ -19,7 +21,9 @@ public abstract class ScriptElement {
 
     @Override
     public int hashCode() {
-        return script.hashCode();
+        return new HashCodeBuilder(29, 53)
+                .append(script)
+                .hashCode();
     }
 
     @Override
@@ -30,10 +34,12 @@ public abstract class ScriptElement {
         if (this == object) {
             return true;
         }
-        if (!(object instanceof ScriptElement)) {
-            return false;
+        if (object instanceof ScriptElement) {
+            ScriptElement element = (ScriptElement)object;
+            return new EqualsBuilder()
+                    .append(script, element.getScript())
+                    .isEquals();
         }
-        ScriptElement scriptElement = (ScriptElement)object;
-        return scriptElement.getScript().equals(script);
+        return false;
     }
 }

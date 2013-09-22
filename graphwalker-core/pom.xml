@@ -22,12 +22,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.graphstream</groupId>
-            <artifactId>gs-core</artifactId>
-            <version>1.0</version>
+            <version>4.11</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
