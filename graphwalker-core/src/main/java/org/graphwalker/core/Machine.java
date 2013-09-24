@@ -36,5 +36,4 @@ public interface Machine {
     Element getCurrentStep();
     Boolean hasNextStep();
     Context getContext();
-
 }

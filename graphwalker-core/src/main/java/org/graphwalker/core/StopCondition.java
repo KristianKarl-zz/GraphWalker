@@ -29,6 +29,6 @@ package org.graphwalker.core;
  * @author Nils Olsson
  */
 public interface StopCondition {
-    boolean isFulfilled();
-    double getFulfilment();
+    boolean isFulfilled(Machine machine);
+    double getFulfilment(Machine machine);
 }

@@ -1,5 +1,6 @@
 package org.graphwalker.core.generator;
 
+import org.graphwalker.core.Machine;
 import org.graphwalker.core.model.Element;
 
 /**
@@ -7,7 +8,7 @@ import org.graphwalker.core.model.Element;
  */
 public final class RandomUnvisitedFirstPath extends BasePathGenerator {
 
-    public Element getNextStep() {
+    public Element getNextStep(Machine machine) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 }

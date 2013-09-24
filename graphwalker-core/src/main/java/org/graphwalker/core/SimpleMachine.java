@@ -25,16 +25,22 @@
  */
 package org.graphwalker.core;
 
+import org.graphwalker.core.event.EventSink;
+import org.graphwalker.core.event.EventSource;
+import org.graphwalker.core.model.Action;
+import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Element;
+import org.graphwalker.core.model.Vertex;
 import org.graphwalker.core.script.Context;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
+import java.util.Set;
 
 /**
  * @author Nils Olsson
  */
-public final class SimpleMachine implements Machine {
+public final class SimpleMachine implements Machine, EventSource<EventSink> {
 
     private final PathGenerator pathGenerator;
     private final StopCondition stopCondition;
@@ -60,11 +66,29 @@ public final class SimpleMachine implements Machine {
     }
 
     public Element getNextStep() {
-        // 1. om current är en vertex med exit actions så kör vi dem
-        // 2. hämta det nya elementet
-        // 2. om nya är en vertex kör vi entry actions
-        // 3. om nya är en edge så kör vi actions
-        return currentStep = pathGenerator.getNextStep();
+        if (currentStep instanceof Vertex) {
+            Vertex vertex = (Vertex)currentStep;
+            execute(vertex.getExitActions());
+        }
+        currentStep = pathGenerator.getNextStep(this);
+        if (currentStep instanceof Vertex) {
+            Vertex vertex = (Vertex)currentStep;
+            execute(vertex.getExitActions());
+        } else {
+            Edge edge = (Edge)currentStep;
+            execute(edge.getActions());
+        }
+        return currentStep;
+    }
+
+    private void execute(Set<Action> actions) {
+        for (Action action: actions) {
+            try {
+                action.execute(scriptEngine);
+            } catch (Throwable t) {
+                // TODO: hantera felet
+            }
+        }
     }
 
     public Element getCurrentStep() {
@@ -72,10 +96,18 @@ public final class SimpleMachine implements Machine {
     }
 
     public Boolean hasNextStep() {
-        return !stopCondition.isFulfilled();
+        return !stopCondition.isFulfilled(this);
     }
 
     public Context getContext() {
         return context;
+    }
+
+    public void addSink(EventSink sink) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public void removeSink(EventSink sink) {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 }
