@@ -33,6 +33,15 @@ import org.junit.Test;
 public class MachineTest {
 
     @Test
+    public void simpleMachine() {
+        //Model model = new SimpleModel().addEdge(new Edge("e1", new Vertex("v1"), new Vertex("v2")));
+        //Machine machine = new SimpleMachine(model, new RandomPath(), new VertexCoverage());
+        //while (machine.hasNextStep()) {
+        //    machine.getNextStep();
+        //}
+    }
+
+    @Test
     public void stepMachine() {
 
     }

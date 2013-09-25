@@ -28,6 +28,8 @@ package org.graphwalker.core;
 import org.graphwalker.core.algorithm.AStar;
 import org.graphwalker.core.algorithm.DepthFirstSearch;
 import org.graphwalker.core.algorithm.FloydWarshall;
+import org.graphwalker.core.event.EventSource;
+import org.graphwalker.core.event.ModelSink;
 import org.graphwalker.core.model.*;
 
 import java.util.*;
@@ -35,7 +37,7 @@ import java.util.*;
 /**
  * @author Nils Olsson
  */
-public final class SimpleModel implements Model {
+public final class SimpleModel extends EventSource<ModelSink> implements Model {
 
     private final Map<Vertex, Vertex> vertices;
     private final Map<Edge, Edge> edges;

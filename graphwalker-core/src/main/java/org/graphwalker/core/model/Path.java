@@ -31,7 +31,7 @@ import java.util.Collection;
 /**
  * @author Nils Olsson
  */
-public class Path<E extends Element> extends ArrayDeque<E> {
+public final class Path<E extends Element> extends ArrayDeque<E> {
 
     public Path(Collection<E> collection) {
         super(collection);

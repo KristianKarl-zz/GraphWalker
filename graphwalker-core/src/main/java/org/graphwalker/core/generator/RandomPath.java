@@ -25,15 +25,27 @@
  */
 package org.graphwalker.core.generator;
 
-import org.graphwalker.core.Machine;
+import org.graphwalker.core.PathGenerator;
+import org.graphwalker.core.machine.ExecutionContext;
 import org.graphwalker.core.model.Element;
+
+import java.util.Random;
 
 /**
  * @author Nils Olsson
  */
-public final class RandomPath extends BasePathGenerator {
+public final class RandomPath implements PathGenerator {
 
-    public Element getNextStep(Machine machine) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    private final Random random = new Random(System.nanoTime());
+
+    public Element getNextStep(ExecutionContext context) {
+        /*
+        List<Element> elements = model.getElements(machine.getCurrentStep());
+        if (elements.isEmpty()) {
+            throw new NoPathFoundException();
+        }
+        return elements.get(random.nextInt(elements.size()));
+        */
+        return null;
     }
 }

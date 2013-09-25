@@ -25,7 +25,7 @@
  */
 package org.graphwalker.core.condition;
 
-import org.graphwalker.core.Machine;
+import org.graphwalker.core.machine.ExecutionContext;
 
 /**
  * @author Nils Olsson
@@ -40,11 +40,11 @@ public final class VertexCoverage extends BaseStopCondition {
         super(value);
     }
 
-    public boolean isFulfilled(Machine machine) {
+    public boolean isFulfilled(ExecutionContext context) {
         return false;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public double getFulfilment(Machine machine) {
+    public double getFulfilment(ExecutionContext context) {
         return 0;  //To change body of implemented methods use File | Settings | File Templates.
     }
 }

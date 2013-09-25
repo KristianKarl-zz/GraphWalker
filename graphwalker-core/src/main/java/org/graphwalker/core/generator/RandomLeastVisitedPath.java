@@ -25,15 +25,16 @@
  */
 package org.graphwalker.core.generator;
 
-import org.graphwalker.core.Machine;
+import org.graphwalker.core.PathGenerator;
+import org.graphwalker.core.machine.ExecutionContext;
 import org.graphwalker.core.model.Element;
 
 /**
  * @author Nils Olsson
  */
-public final class RandomLeastVisitedPath extends BasePathGenerator {
+public final class RandomLeastVisitedPath implements PathGenerator {
 
-    public Element getNextStep(Machine machine) {
+    public Element getNextStep(ExecutionContext context) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 }

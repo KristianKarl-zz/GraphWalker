@@ -25,10 +25,21 @@
  */
 package org.graphwalker.core.event;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * @author Nils Olsson
  */
-public interface EventSource<T extends EventSink> {
-    void addSink(T sink);
-    void removeSink(T sink);
+public class EventSource<T extends EventSink> {
+
+    private final Set<T> sinks = new HashSet<T>();
+
+    public void addSink(T sink) {
+        sinks.add(sink);
+    }
+
+    public void removeSink(T sink) {
+        sinks.remove(sink);
+    }
 }

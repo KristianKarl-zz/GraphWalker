@@ -25,8 +25,8 @@
  */
 package org.graphwalker.core;
 
-import org.graphwalker.core.event.EventSink;
 import org.graphwalker.core.event.EventSource;
+import org.graphwalker.core.event.MachineSink;
 import org.graphwalker.core.model.Action;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Element;
@@ -40,22 +40,25 @@ import java.util.Set;
 /**
  * @author Nils Olsson
  */
-public final class SimpleMachine implements Machine, EventSource<EventSink> {
+public final class SimpleMachine extends EventSource<MachineSink> implements Machine {
 
+    private final Model model;
     private final PathGenerator pathGenerator;
     private final StopCondition stopCondition;
     private final ScriptEngine scriptEngine;
     private final Context context = new Context();
     private Element currentStep = null;
 
-    public SimpleMachine(PathGenerator pathGenerator, StopCondition stopCondition) {
-        this(pathGenerator, stopCondition, "JavaScript");
+    public SimpleMachine(Model model, PathGenerator pathGenerator, StopCondition stopCondition) {
+        this(model, pathGenerator, stopCondition, "JavaScript");
     }
 
-    public SimpleMachine(PathGenerator pathGenerator, StopCondition stopCondition, String scriptLanguage) {
+    public SimpleMachine(Model model, PathGenerator pathGenerator, StopCondition stopCondition, String scriptLanguage) {
+        this.model = model;
         this.pathGenerator = pathGenerator;
         this.stopCondition = stopCondition;
         this.scriptEngine = createScriptEngine(scriptLanguage);
+        this.currentStep = model.getStartVertices().get(0);
     }
 
     private ScriptEngine createScriptEngine(String language) {
@@ -65,12 +68,16 @@ public final class SimpleMachine implements Machine, EventSource<EventSink> {
         return scriptEngine;
     }
 
+    public Model getModel() {
+        return model;
+    }
+
     public Element getNextStep() {
         if (currentStep instanceof Vertex) {
             Vertex vertex = (Vertex)currentStep;
             execute(vertex.getExitActions());
         }
-        currentStep = pathGenerator.getNextStep(this);
+        currentStep = pathGenerator.getNextStep(null);
         if (currentStep instanceof Vertex) {
             Vertex vertex = (Vertex)currentStep;
             execute(vertex.getExitActions());
@@ -96,18 +103,11 @@ public final class SimpleMachine implements Machine, EventSource<EventSink> {
     }
 
     public Boolean hasNextStep() {
-        return !stopCondition.isFulfilled(this);
+        return !stopCondition.isFulfilled(null);
     }
 
     public Context getContext() {
         return context;
     }
 
-    public void addSink(EventSink sink) {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    public void removeSink(EventSink sink) {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
 }

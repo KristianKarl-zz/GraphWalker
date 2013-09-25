@@ -23,14 +23,14 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core;
-
-import org.graphwalker.core.machine.ExecutionContext;
+package org.graphwalker.core.machine;
 
 /**
  * @author Nils Olsson
  */
-public interface StopCondition {
-    boolean isFulfilled(ExecutionContext context);
-    double getFulfilment(ExecutionContext context);
+public class ExecutionContext {
+
+    public ExecutionContext() {
+
+    }
 }

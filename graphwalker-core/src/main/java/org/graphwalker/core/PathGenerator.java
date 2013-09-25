@@ -25,11 +25,12 @@
  */
 package org.graphwalker.core;
 
+import org.graphwalker.core.machine.ExecutionContext;
 import org.graphwalker.core.model.Element;
 
 /**
  * @author Nils Olsson
  */
 public interface PathGenerator {
-    Element getNextStep(Machine machine);
+    Element getNextStep(ExecutionContext context);
 }

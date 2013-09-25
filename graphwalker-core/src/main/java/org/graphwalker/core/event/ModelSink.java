@@ -23,14 +23,10 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core;
-
-import org.graphwalker.core.machine.ExecutionContext;
+package org.graphwalker.core.event;
 
 /**
  * @author Nils Olsson
  */
-public interface StopCondition {
-    boolean isFulfilled(ExecutionContext context);
-    double getFulfilment(ExecutionContext context);
+public interface ModelSink extends EventSink {
 }
