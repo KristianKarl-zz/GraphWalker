@@ -25,7 +25,9 @@
  */
 package org.graphwalker.core.condition;
 
+import org.graphwalker.core.Model;
 import org.graphwalker.core.machine.ExecutionContext;
+import org.graphwalker.core.model.Vertex;
 
 /**
  * @author Nils Olsson
@@ -37,10 +39,18 @@ public final class ReachedVertex extends BaseStopCondition {
     }
 
     public boolean isFulfilled(ExecutionContext context) {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+        return getFulfilment(context) >= FULFILLMENT_LEVEL;
     }
 
     public double getFulfilment(ExecutionContext context) {
-        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+        if (getValue().equals(context.getCurrentElement().getName())) {
+            return 1;
+        } else {
+            Model model = context.getCurrentModel();
+            Vertex vertex = model.getVertex(getValue());
+            int distance = model.getShortestDistance(context.getCurrentElement(), vertex);
+            int max = model.getMaximumDistance(vertex);
+            return 1 - (double)distance/max;
+        }
     }
 }

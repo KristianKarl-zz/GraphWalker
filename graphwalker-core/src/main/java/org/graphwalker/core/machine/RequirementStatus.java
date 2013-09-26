@@ -23,29 +23,11 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core.condition;
-
-import org.graphwalker.core.machine.ExecutionContext;
+package org.graphwalker.core.machine;
 
 /**
  * @author Nils Olsson
  */
-public final class TimeDuration extends BaseStopCondition {
-
-    private final long duration;
-    private final long timestamp;
-
-    public TimeDuration(String value) {
-        super(value);
-        this.timestamp = System.currentTimeMillis();
-        this.duration = Long.parseLong(value) * SECOND_SCALE;
-    }
-
-    public boolean isFulfilled(ExecutionContext context) {
-        return getFulfilment(context) >= FULFILLMENT_LEVEL;
-    }
-
-    public double getFulfilment(ExecutionContext context) {
-        return (double) (System.currentTimeMillis() - timestamp) / duration;
-    }
+public enum RequirementStatus {
+    NOT_COVERED, PASSED, FAILED
 }

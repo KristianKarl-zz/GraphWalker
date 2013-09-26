@@ -25,12 +25,10 @@
  */
 package org.graphwalker.core;
 
-import org.graphwalker.core.model.Edge;
-import org.graphwalker.core.model.Element;
-import org.graphwalker.core.model.Path;
-import org.graphwalker.core.model.Vertex;
+import org.graphwalker.core.model.*;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author Nils Olsson
@@ -51,4 +49,5 @@ public interface Model {
     int getShortestDistance(Element origin, Element destination);
     int getMaximumDistance(Element destination);
     List<Vertex> getStartVertices();
+    Set<Requirement> getRequirements();
 }

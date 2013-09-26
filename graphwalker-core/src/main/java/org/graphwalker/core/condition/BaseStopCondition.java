@@ -25,6 +25,7 @@
  */
 package org.graphwalker.core.condition;
 
+import org.apache.commons.lang3.Validate;
 import org.graphwalker.core.StopCondition;
 
 /**
@@ -35,7 +36,7 @@ public abstract class BaseStopCondition implements StopCondition {
     private final String value;
 
     public BaseStopCondition(String value) {
-        this.value = value;
+        this.value = Validate.notEmpty(Validate.notNull(value));
     }
 
     public String getValue() {

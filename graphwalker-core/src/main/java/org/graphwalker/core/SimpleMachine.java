@@ -27,14 +27,9 @@ package org.graphwalker.core;
 
 import org.graphwalker.core.event.EventSource;
 import org.graphwalker.core.event.MachineSink;
-import org.graphwalker.core.model.Action;
-import org.graphwalker.core.model.Edge;
+import org.graphwalker.core.machine.ExecutionContext;
 import org.graphwalker.core.model.Element;
-import org.graphwalker.core.model.Vertex;
-import org.graphwalker.core.script.Context;
 
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
 import java.util.Set;
 
 /**
@@ -42,37 +37,14 @@ import java.util.Set;
  */
 public final class SimpleMachine extends EventSource<MachineSink> implements Machine {
 
-    private final Model model;
-    private final PathGenerator pathGenerator;
-    private final StopCondition stopCondition;
-    private final ScriptEngine scriptEngine;
-    private final Context context = new Context();
-    private Element currentStep = null;
+    private final Set<ExecutionContext> contextSet;
 
-    public SimpleMachine(Model model, PathGenerator pathGenerator, StopCondition stopCondition) {
-        this(model, pathGenerator, stopCondition, "JavaScript");
-    }
-
-    public SimpleMachine(Model model, PathGenerator pathGenerator, StopCondition stopCondition, String scriptLanguage) {
-        this.model = model;
-        this.pathGenerator = pathGenerator;
-        this.stopCondition = stopCondition;
-        this.scriptEngine = createScriptEngine(scriptLanguage);
-        this.currentStep = model.getStartVertices().get(0);
-    }
-
-    private ScriptEngine createScriptEngine(String language) {
-        ScriptEngineManager scriptEngineManager = new ScriptEngineManager();
-        ScriptEngine scriptEngine = scriptEngineManager.getEngineByName(language);
-        scriptEngine.setContext(context);
-        return scriptEngine;
-    }
-
-    public Model getModel() {
-        return model;
+    public SimpleMachine(Set<ExecutionContext> contextSet) {
+        this.contextSet = contextSet;
     }
 
     public Element getNextStep() {
+        /*
         if (currentStep instanceof Vertex) {
             Vertex vertex = (Vertex)currentStep;
             execute(vertex.getExitActions());
@@ -86,28 +58,20 @@ public final class SimpleMachine extends EventSource<MachineSink> implements Mac
             execute(edge.getActions());
         }
         return currentStep;
-    }
-
-    private void execute(Set<Action> actions) {
-        for (Action action: actions) {
-            try {
-                action.execute(scriptEngine);
-            } catch (Throwable t) {
-                // TODO: hantera felet
-            }
-        }
+        */
+        return null;
     }
 
     public Element getCurrentStep() {
-        return currentStep;
+        return null;//currentStep;
     }
 
     public Boolean hasNextStep() {
-        return !stopCondition.isFulfilled(null);
+        return null; //!stopCondition.isFulfilled(null);
     }
 
-    public Context getContext() {
-        return context;
+    public ExecutionContext getCurrentContext() {
+        return null;
     }
 
 }

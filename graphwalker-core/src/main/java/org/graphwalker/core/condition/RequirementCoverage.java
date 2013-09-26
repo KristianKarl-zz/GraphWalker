@@ -25,12 +25,16 @@
  */
 package org.graphwalker.core.condition;
 
+import org.apache.commons.lang3.Validate;
 import org.graphwalker.core.machine.ExecutionContext;
+import org.graphwalker.core.machine.RequirementStatus;
 
 /**
  * @author Nils Olsson
  */
 public final class RequirementCoverage extends BaseStopCondition {
+
+    private final double limit;
 
     public RequirementCoverage() {
         this("100");
@@ -38,13 +42,28 @@ public final class RequirementCoverage extends BaseStopCondition {
 
     public RequirementCoverage(String value) {
         super(value);
+        Validate.matchesPattern(value, "\\d+(?:.\\d*)?");
+        this.limit = (double)Long.parseLong(value)/ PERCENTAGE_SCALE;
+        Validate.inclusiveBetween(0.0, 100.0, limit);
     }
 
     public boolean isFulfilled(ExecutionContext context) {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+        double totalCount = context.getCurrentModel().getRequirements().size();
+        if (0 == totalCount) {
+            return true;
+        }
+        double passedCount = context.getRequirements(RequirementStatus.PASSED).size();
+        double failedCount = context.getRequirements(RequirementStatus.FAILED).size();
+        return ((passedCount+failedCount) / totalCount) >= limit;
     }
 
     public double getFulfilment(ExecutionContext context) {
-        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+        double totalCount = context.getCurrentModel().getRequirements().size();
+        if (0 == totalCount) {
+            return 1.0;
+        }
+        double passedCount = context.getRequirements(RequirementStatus.PASSED).size();
+        double failedCount = context.getRequirements(RequirementStatus.FAILED).size();
+        return ((passedCount+failedCount) / totalCount) / limit;
     }
 }

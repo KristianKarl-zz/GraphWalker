@@ -25,6 +25,7 @@
  */
 package org.graphwalker.core.condition;
 
+import org.apache.commons.lang3.Validate;
 import org.graphwalker.core.machine.ExecutionContext;
 
 /**
@@ -32,19 +33,28 @@ import org.graphwalker.core.machine.ExecutionContext;
  */
 public final class VertexCoverage extends BaseStopCondition {
 
+    private final double limit;
+
     public VertexCoverage() {
         this("100");
     }
 
     public VertexCoverage(String value) {
         super(value);
+        Validate.matchesPattern(value, "\\d+(?:.\\d*)?");
+        this.limit = (double)Long.parseLong(value)/PERCENTAGE_SCALE;
+        Validate.inclusiveBetween(0.0, 100.0, limit);
     }
 
     public boolean isFulfilled(ExecutionContext context) {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+        double totalVertexCount = context.getCurrentModel().getVertices().size();
+        double visitedVertexCount = context.getVisitedVertices().size();
+        return (visitedVertexCount / totalVertexCount) >= limit;
     }
 
     public double getFulfilment(ExecutionContext context) {
-        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+        double totalVertexCount = context.getCurrentModel().getVertices().size();
+        double visitedVertexCount = context.getVisitedVertices().size();
+        return (visitedVertexCount / totalVertexCount) / limit;
     }
 }

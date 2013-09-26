@@ -37,10 +37,26 @@ public final class ReachedEdge extends BaseStopCondition {
     }
 
     public boolean isFulfilled(ExecutionContext context) {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+        return getFulfilment(context) >= FULFILLMENT_LEVEL;
     }
 
     public double getFulfilment(ExecutionContext context) {
-        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+        if (getValue().equals(context.getCurrentElement().getName())) {
+            return 1;
+        } else {
+            double maxFulfilment = 0;
+            /*
+            Model model = context.getCurrentModel();
+            for (Edge edge: model.getEdgesByName(value)) {
+                int distance = model.getShortestDistance(context.getCurrentElement(), edge);
+                int max = model.getMaximumDistance(edge);
+                double fulfilment = 1 - (double)distance/max;
+                if (maxFulfilment < fulfilment) {
+                    maxFulfilment = fulfilment;
+                }
+            }
+            */
+            return maxFulfilment;
+        }
     }
 }

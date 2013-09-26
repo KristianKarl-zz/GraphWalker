@@ -25,6 +25,7 @@
  */
 package org.graphwalker.core.condition;
 
+import org.apache.commons.lang3.Validate;
 import org.graphwalker.core.machine.ExecutionContext;
 
 /**
@@ -32,15 +33,19 @@ import org.graphwalker.core.machine.ExecutionContext;
  */
 public final class Length extends BaseStopCondition {
 
+    private final long length;
+
     public Length(String value) {
         super(value);
+        Validate.matchesPattern(value, "\\d+");
+        this.length = Long.parseLong(value);
     }
 
     public boolean isFulfilled(ExecutionContext context) {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+        return context.getVisitCount() >= length;
     }
 
     public double getFulfilment(ExecutionContext context) {
-        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+        return (double) context.getVisitCount() / length;
     }
 }

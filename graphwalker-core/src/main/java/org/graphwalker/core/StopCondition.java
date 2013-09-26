@@ -31,6 +31,14 @@ import org.graphwalker.core.machine.ExecutionContext;
  * @author Nils Olsson
  */
 public interface StopCondition {
+
+    /** Constant <code>FULFILLMENT_LEVEL=0.999999</code> */
+    double FULFILLMENT_LEVEL = 0.999999;
+    /** Constant <code>PERCENTAGE_SCALE=100</code> */
+    int PERCENTAGE_SCALE = 100;
+    /** Constant <code>SECOND_SCALE=1000</code> */
+    int SECOND_SCALE = 1000;
+
     boolean isFulfilled(ExecutionContext context);
     double getFulfilment(ExecutionContext context);
 }

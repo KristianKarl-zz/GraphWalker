@@ -25,12 +25,74 @@
  */
 package org.graphwalker.core.machine;
 
+import org.graphwalker.core.Model;
+import org.graphwalker.core.PathGenerator;
+import org.graphwalker.core.StopCondition;
+import org.graphwalker.core.model.Edge;
+import org.graphwalker.core.model.Element;
+import org.graphwalker.core.model.Requirement;
+import org.graphwalker.core.model.Vertex;
+import org.graphwalker.core.script.Context;
+import org.graphwalker.core.statistics.ExecutionProfiler;
+
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
 /**
- * @author Nils Olsson
+ * @author Nils Olsson                                                            s
  */
-public class ExecutionContext {
+public final class ExecutionContext {
 
-    public ExecutionContext() {
+    private final Set<Model> models;
+    private final PathGenerator pathGenerator;
+    private final StopCondition stopCondition;
+    private final ScriptEngine scriptEngine;
+    private final Context context = new Context();
+    private final ExecutionProfiler profiler = new ExecutionProfiler();
+    private final Map<Model, Element> currentStep = new HashMap<Model, Element>();
 
+    public ExecutionContext(Set<Model> models, PathGenerator pathGenerator, StopCondition stopCondition, String language) {
+        this.models = models;
+        this.pathGenerator = pathGenerator;
+        this.stopCondition = stopCondition;
+        this.scriptEngine = createScriptEngine(language);
+    }
+
+    private ScriptEngine createScriptEngine(String language) {
+        ScriptEngineManager scriptEngineManager = new ScriptEngineManager();
+        ScriptEngine scriptEngine = scriptEngineManager.getEngineByName(language);
+        scriptEngine.setContext(context);
+        return scriptEngine;
+    }
+
+    public ExecutionProfiler getProfiler() {
+        return profiler;
+    }
+
+    public Long getVisitCount() {
+        throw new RuntimeException();
+    }
+
+    public Set<Edge> getVisitedEdges() {
+        throw new RuntimeException();
+    }
+
+    public Set<Vertex> getVisitedVertices() {
+        throw new RuntimeException();
+    }
+
+    public Model getCurrentModel() {
+        throw new RuntimeException();
+    }
+
+    public Element getCurrentElement() {
+        throw new RuntimeException();
+    }
+
+    public Set<Requirement> getRequirements(RequirementStatus status) {
+        throw new RuntimeException();
     }
 }

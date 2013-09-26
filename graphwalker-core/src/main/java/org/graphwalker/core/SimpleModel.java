@@ -47,6 +47,7 @@ public final class SimpleModel extends EventSource<ModelSink> implements Model {
     private final List<Vertex> startVertices;
     private final List<Element> elementCache;
     private final Map<Vertex, List<Edge>> vertexEdgeCache;
+    private final Set<Requirement> requirements;
 
     public SimpleModel() {
         this(new HashSet<Vertex>(), new HashSet<Edge>());
@@ -61,6 +62,7 @@ public final class SimpleModel extends EventSource<ModelSink> implements Model {
         this.aStar = new AStar(this);
         this.depthFirstSearch = new DepthFirstSearch(this);
         this.floydWarshall = new FloydWarshall(this);
+        this.requirements = null; // TODO: aggregate all requirements
     }
 
     private Map<Vertex, List<Edge>> createVertexEdgeCache() {
@@ -205,5 +207,9 @@ public final class SimpleModel extends EventSource<ModelSink> implements Model {
 
     public List<Vertex> getStartVertices() {
         return startVertices;
+    }
+
+    public Set<Requirement> getRequirements() {
+        return requirements;
     }
 }
