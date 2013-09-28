@@ -95,4 +95,12 @@ public final class ExecutionContext {
     public Set<Requirement> getRequirements(RequirementStatus status) {
         throw new RuntimeException();
     }
+
+    public boolean isVisited(Element element) {
+        throw new RuntimeException();
+    }
+
+    public Long getVisitCount(Element element) {
+        throw new RuntimeException();
+    }
 }

@@ -41,9 +41,9 @@ public final class EdgeCoverage extends BaseStopCondition {
 
     public EdgeCoverage(String value) {
         super(value);
-        Validate.matchesPattern(value, "\\d+(?:.\\d*)?");
+        Validate.matchesPattern(value, "\\d+");
         this.limit = (double)Long.parseLong(value)/PERCENTAGE_SCALE;
-        Validate.inclusiveBetween(0.0, 100.0, limit);
+        Validate.inclusiveBetween(0.0, 1.0, limit);
     }
 
     public boolean isFulfilled(ExecutionContext context) {

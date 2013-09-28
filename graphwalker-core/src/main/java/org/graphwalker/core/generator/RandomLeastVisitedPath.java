@@ -25,16 +25,46 @@
  */
 package org.graphwalker.core.generator;
 
-import org.graphwalker.core.PathGenerator;
+import org.graphwalker.core.StopCondition;
 import org.graphwalker.core.machine.ExecutionContext;
 import org.graphwalker.core.model.Element;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 /**
  * @author Nils Olsson
  */
-public final class RandomLeastVisitedPath implements PathGenerator {
+public final class RandomLeastVisitedPath extends BasePathGenerator  {
+
+    private final Random random = new Random(System.nanoTime());
+
+    public RandomLeastVisitedPath(StopCondition stopCondition) {
+        super(stopCondition);
+    }
 
     public Element getNextStep(ExecutionContext context) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        List<Element> elements = context.getCurrentModel().getElements(context.getCurrentElement());
+        if (elements.isEmpty()) {
+            throw new NoPathFoundException();
+        }
+        long leastVisitedCount = Long.MAX_VALUE;
+        List<Element> leastVisitedElements = new ArrayList<Element>();
+        for (Element element: elements) {
+            long visitCount = context.getVisitCount(element);
+            if (visitCount < leastVisitedCount) {
+                leastVisitedCount = visitCount;
+                leastVisitedElements = new ArrayList<Element>();
+                leastVisitedElements.add(element);
+            } else if (visitCount == leastVisitedCount) {
+                leastVisitedElements.add(element);
+            }
+        }
+        if (0 < leastVisitedElements.size()) {
+            return leastVisitedElements.get(random.nextInt(leastVisitedElements.size()));
+        } else {
+            return elements.get(random.nextInt(elements.size()));
+        }
     }
 }

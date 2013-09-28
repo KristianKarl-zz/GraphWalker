@@ -25,7 +25,9 @@
  */
 package org.graphwalker.core.condition;
 
+import org.graphwalker.core.Model;
 import org.graphwalker.core.machine.ExecutionContext;
+import org.graphwalker.core.model.Edge;
 
 /**
  * @author Nils Olsson
@@ -45,9 +47,8 @@ public final class ReachedEdge extends BaseStopCondition {
             return 1;
         } else {
             double maxFulfilment = 0;
-            /*
             Model model = context.getCurrentModel();
-            for (Edge edge: model.getEdgesByName(value)) {
+            for (Edge edge: model.getEdges(getValue())) {
                 int distance = model.getShortestDistance(context.getCurrentElement(), edge);
                 int max = model.getMaximumDistance(edge);
                 double fulfilment = 1 - (double)distance/max;
@@ -55,7 +56,6 @@ public final class ReachedEdge extends BaseStopCondition {
                     maxFulfilment = fulfilment;
                 }
             }
-            */
             return maxFulfilment;
         }
     }

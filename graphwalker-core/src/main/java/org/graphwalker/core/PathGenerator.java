@@ -33,4 +33,6 @@ import org.graphwalker.core.model.Element;
  */
 public interface PathGenerator {
     Element getNextStep(ExecutionContext context);
+    Boolean hasNextStep(ExecutionContext context);
+    StopCondition getStopCondition();
 }

@@ -163,6 +163,10 @@ public final class SimpleModel extends EventSource<ModelSink> implements Model {
         return vertexEdgeCache.get(vertex);
     }
 
+    public List<Edge> getEdges(String name) {
+        return null;//edgeNameCache.get(name);
+    }
+
     public List<Vertex> getVertices() {
         return new ArrayList<Vertex>(vertices.values());
     }
@@ -193,7 +197,7 @@ public final class SimpleModel extends EventSource<ModelSink> implements Model {
         return depthFirstSearch.getConnectedComponent(element);
     }
 
-    public Path getShortestPath(Element origin, Element destination) {
+    public Path<Element> getShortestPath(Element origin, Element destination) {
         return aStar.getShortestPath(origin, destination);
     }
 

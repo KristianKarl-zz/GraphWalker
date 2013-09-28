@@ -38,6 +38,7 @@ public interface Model {
     Model addModel(Model model);
     Model addVertex(Vertex vertex);
     List<Edge> getEdges();
+    List<Edge> getEdges(String name);
     List<Edge> getEdges(Vertex vertex);
     List<Vertex> getVertices();
     Vertex getVertex(String name);
@@ -45,7 +46,7 @@ public interface Model {
     List<Element> getElements();
     List<Element> getElements(Element element);
     List<Element> getConnectedComponent(Element element);
-    Path getShortestPath(Element origin, Element destination);
+    Path<Element> getShortestPath(Element origin, Element destination);
     int getShortestDistance(Element origin, Element destination);
     int getMaximumDistance(Element destination);
     List<Vertex> getStartVertices();

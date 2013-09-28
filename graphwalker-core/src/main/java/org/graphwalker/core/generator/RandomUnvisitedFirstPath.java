@@ -25,16 +25,40 @@
  */
 package org.graphwalker.core.generator;
 
-import org.graphwalker.core.PathGenerator;
+import org.graphwalker.core.StopCondition;
 import org.graphwalker.core.machine.ExecutionContext;
 import org.graphwalker.core.model.Element;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 /**
  * @author Nils Olsson
  */
-public final class RandomUnvisitedFirstPath implements PathGenerator {
+public final class RandomUnvisitedFirstPath extends BasePathGenerator  {
+
+    private final Random random = new Random(System.nanoTime());
+
+    public RandomUnvisitedFirstPath(StopCondition stopCondition) {
+        super(stopCondition);
+    }
 
     public Element getNextStep(ExecutionContext context) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        List<Element> elements = context.getCurrentModel().getElements(context.getCurrentElement());
+        if (elements.isEmpty()) {
+            throw new NoPathFoundException();
+        }
+        List<Element> unvisitedElements = new ArrayList<Element>();
+        for (Element element : elements) {
+            if (!context.isVisited(element)) {
+                unvisitedElements.add(element);
+            }
+        }
+        if (0 < unvisitedElements.size()) {
+            return unvisitedElements.get(random.nextInt(unvisitedElements.size()));
+        } else {
+            return elements.get(random.nextInt(elements.size()));
+        }
     }
 }

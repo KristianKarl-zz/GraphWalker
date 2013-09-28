@@ -42,7 +42,7 @@ public final class AStar implements Algorithm {
         this.model = model;
     }
 
-    public Path getShortestPath(Element origin, Element destination) {
+    public Path<Element> getShortestPath(Element origin, Element destination) {
         Map<Element, AStarNode> openSet = new HashMap<Element, AStarNode>();
         PriorityQueue<AStarNode> queue = new PriorityQueue<AStarNode>(10, new AStarNodeComparator());
         Map<Element, AStarNode> closeSet = new HashMap<Element, AStarNode>();

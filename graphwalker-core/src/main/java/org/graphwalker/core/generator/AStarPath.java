@@ -25,16 +25,47 @@
  */
 package org.graphwalker.core.generator;
 
-import org.graphwalker.core.PathGenerator;
+import org.graphwalker.core.Model;
+import org.graphwalker.core.StopCondition;
 import org.graphwalker.core.machine.ExecutionContext;
+import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Element;
+
+import java.util.List;
 
 /**
  * @author Nils Olsson
  */
-public final class AStarPath implements PathGenerator {
+public final class AStarPath extends BasePathGenerator {
+
+    public AStarPath(StopCondition stopCondition) {
+        super(stopCondition);
+    }
+
+    public Boolean hasNextStep() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
 
     public Element getNextStep(ExecutionContext context) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        List<Element> elements = context.getCurrentModel().getElements(context.getCurrentElement());
+        if (elements.isEmpty()) {
+            throw new NoPathFoundException();
+        }
+        Element target = null;
+        Model model = context.getCurrentModel();
+        if (null != model.getEdges(getStopCondition().getValue())) {
+            int distance = Integer.MAX_VALUE;
+            for (Edge edge: model.getEdges(getStopCondition().getValue())) {
+                int edgeDistance = model.getShortestDistance(context.getCurrentElement(), edge);
+                if (edgeDistance < distance) {
+                    distance = edgeDistance;
+                    target = edge;
+                }
+            }
+        }
+        if (null != model.getVertex(getStopCondition().getValue())) {
+            target = model.getVertex(getStopCondition().getValue());
+        }
+        return model.getShortestPath(context.getCurrentElement(), target).getFirst();
     }
 }

@@ -25,27 +25,29 @@
  */
 package org.graphwalker.core.generator;
 
-import org.graphwalker.core.PathGenerator;
+import org.graphwalker.core.StopCondition;
 import org.graphwalker.core.machine.ExecutionContext;
 import org.graphwalker.core.model.Element;
 
+import java.util.List;
 import java.util.Random;
 
 /**
  * @author Nils Olsson
  */
-public final class RandomPath implements PathGenerator {
+public final class RandomPath extends BasePathGenerator {
 
     private final Random random = new Random(System.nanoTime());
 
+    public RandomPath(StopCondition stopCondition) {
+        super(stopCondition);
+    }
+
     public Element getNextStep(ExecutionContext context) {
-        /*
-        List<Element> elements = model.getElements(machine.getCurrentStep());
+        List<Element> elements = context.getCurrentModel().getElements(context.getCurrentElement());
         if (elements.isEmpty()) {
             throw new NoPathFoundException();
         }
         return elements.get(random.nextInt(elements.size()));
-        */
-        return null;
     }
 }

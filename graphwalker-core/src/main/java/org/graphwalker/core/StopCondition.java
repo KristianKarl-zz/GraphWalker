@@ -41,4 +41,5 @@ public interface StopCondition {
 
     boolean isFulfilled(ExecutionContext context);
     double getFulfilment(ExecutionContext context);
+    String getValue();
 }
