@@ -32,33 +32,61 @@ import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Requirement;
 import org.graphwalker.core.model.Vertex;
-import org.graphwalker.core.script.Context;
+import org.graphwalker.core.script.ScriptContext;
 import org.graphwalker.core.statistics.ExecutionProfiler;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Nils Olsson                                                            s
  */
 public final class ExecutionContext {
 
+    private final static String DEFAULT_SCRIPT_LANGUAGE = "JavaScript";
+
     private final Set<Model> models;
     private final PathGenerator pathGenerator;
-    private final StopCondition stopCondition;
     private final ScriptEngine scriptEngine;
-    private final Context context = new Context();
+    private final ScriptContext context = new ScriptContext();
     private final ExecutionProfiler profiler = new ExecutionProfiler();
-    private final Map<Model, Element> currentStep = new HashMap<Model, Element>();
+    private final Map<Model, Element> currentSteps = new HashMap<Model, Element>();
+    private final Set<Requirement> requirements;
+    private Map<Requirement, RequirementStatus> requirementStatus = new HashMap<Requirement, RequirementStatus>();
+    private final Map<Element, Long> elementVisitCount = new HashMap<Element, Long>();
+    private Long totalVisitCount = 0l;
+    private Set<Edge> visitedEdges = new HashSet<Edge>();
+    private Set<Vertex> visitedVertices = new HashSet<Vertex>();
 
-    public ExecutionContext(Set<Model> models, PathGenerator pathGenerator, StopCondition stopCondition, String language) {
+    public ExecutionContext(Model model, PathGenerator pathGenerator) {
+        this(new HashSet<Model>(Arrays.asList(model)), pathGenerator);
+    }
+
+    public ExecutionContext(Model model, PathGenerator pathGenerator, String language) {
+        this(new HashSet<Model>(Arrays.asList(model)), pathGenerator, language);
+    }
+
+    public ExecutionContext(Set<Model> models, PathGenerator pathGenerator) {
+        this(models, pathGenerator, DEFAULT_SCRIPT_LANGUAGE);
+    }
+
+    public ExecutionContext(Set<Model> models, PathGenerator pathGenerator, String language) {
         this.models = models;
         this.pathGenerator = pathGenerator;
-        this.stopCondition = stopCondition;
         this.scriptEngine = createScriptEngine(language);
+        this.requirements = aggregateRequirements();
+    }
+
+    private Set<Requirement> aggregateRequirements() {
+        Set<Requirement> requirements = new HashSet<Requirement>();
+        for (Model model: models) {
+            requirements.addAll(model.getRequirements());
+            for (Requirement requirement: model.getRequirements()) {
+                requirementStatus.put(requirement, RequirementStatus.NOT_COVERED);
+            }
+        }
+        return requirements;
     }
 
     private ScriptEngine createScriptEngine(String language) {
@@ -68,20 +96,24 @@ public final class ExecutionContext {
         return scriptEngine;
     }
 
+    public PathGenerator getPathGenerator() {
+        return pathGenerator;
+    }
+
+    public StopCondition getStopCondition() {
+        return pathGenerator.getStopCondition();
+    }
+
+    public ScriptEngine getScriptEngine() {
+        return scriptEngine;
+    }
+
+    public ScriptContext getScriptContext() {
+        return context;
+    }
+
     public ExecutionProfiler getProfiler() {
         return profiler;
-    }
-
-    public Long getVisitCount() {
-        throw new RuntimeException();
-    }
-
-    public Set<Edge> getVisitedEdges() {
-        throw new RuntimeException();
-    }
-
-    public Set<Vertex> getVisitedVertices() {
-        throw new RuntimeException();
     }
 
     public Model getCurrentModel() {
@@ -92,15 +124,67 @@ public final class ExecutionContext {
         throw new RuntimeException();
     }
 
-    public Set<Requirement> getRequirements(RequirementStatus status) {
-        throw new RuntimeException();
+    public List<Requirement> getRequirements() {
+        return new ArrayList<Requirement>(requirements);
+    }
+
+    public List<Requirement> getRequirements(RequirementStatus status) {
+        Set<Requirement> requirements = new HashSet<Requirement>();
+        for (Requirement requirement: getRequirements()) {
+            if (requirementStatus.get(requirement).equals(status)) {
+                requirements.add(requirement);
+            }
+        }
+        return new ArrayList<Requirement>(requirements);
+    }
+
+    public RequirementStatus getRequirementStatus(Requirement requirement) {
+        return requirementStatus.get(requirement);
+    }
+
+    public void setRequirementStatus(Requirement requirement, RequirementStatus status) {
+        requirementStatus.put(requirement, status);
     }
 
     public boolean isVisited(Element element) {
-        throw new RuntimeException();
+        return 0 < getVisitCount(element);
     }
 
     public Long getVisitCount(Element element) {
-        throw new RuntimeException();
+        return elementVisitCount.get(element);
+    }
+
+    public Long getVisitCount() {
+        return totalVisitCount;
+    }
+
+    public List<Edge> getVisitedEdges() {
+        return new ArrayList<Edge>(visitedEdges);
+    }
+
+    public List<Vertex> getVisitedVertices() {
+        return new ArrayList<Vertex>(visitedVertices);
+    }
+
+    public void visit(Element element) {
+        this.totalVisitCount++;
+        this.elementVisitCount.put(element, getVisitCount(element)+1);
+        if (element instanceof Edge) {
+            visit((Edge)element);
+        } else {
+            visit((Vertex)element);
+        }
+    }
+
+    private void visit(Edge edge) {
+        if (!visitedEdges.contains(edge)) {
+            visitedEdges.add(edge);
+        }
+    }
+
+    private void visit(Vertex vertex) {
+        if (!visitedVertices.contains(vertex)) {
+            visitedVertices.add(vertex);
+        }
     }
 }

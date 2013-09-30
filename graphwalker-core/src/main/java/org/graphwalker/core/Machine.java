@@ -25,14 +25,18 @@
  */
 package org.graphwalker.core;
 
+import org.graphwalker.core.machine.ExecutionContext;
+import org.graphwalker.core.model.Element;
+import org.graphwalker.core.script.ScriptContext;
+
 /**
  * @author Nils Olsson
  */
 public interface Machine {
-    /*
     Element getNextStep();
     Element getCurrentStep();
     Boolean hasNextStep();
-    Context getContext();
-    */
+    ScriptContext getScriptContext();
+    void restart();
+    ExecutionContext getExecutionContext();
 }

@@ -25,7 +25,20 @@
  */
 package org.graphwalker.core;
 
+import org.graphwalker.core.condition.VertexCoverage;
+import org.graphwalker.core.generator.RandomPath;
+import org.graphwalker.core.machine.ExecutionContext;
+import org.graphwalker.core.model.Action;
+import org.graphwalker.core.model.Edge;
+import org.graphwalker.core.model.Requirement;
+import org.graphwalker.core.model.Vertex;
+import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.ArrayDeque;
+import java.util.Arrays;
+import java.util.Deque;
+import java.util.HashSet;
 
 /**
  * @author Nils Olsson
@@ -34,48 +47,68 @@ public class MachineTest {
 
     @Test
     public void simpleMachine() {
-        //Model model = new SimpleModel().addEdge(new Edge("e1", new Vertex("v1"), new Vertex("v2")));
-        //Machine machine = new SimpleMachine(model, new RandomPath(), new VertexCoverage());
-        //while (machine.hasNextStep()) {
-        //    machine.getNextStep();
-        //}
+        Model model = new SimpleModel().addEdge(new Edge("e1", new Vertex("v1"), new Vertex("v2")));
+        PathGenerator pathGenerator = new RandomPath(new VertexCoverage());
+        ExecutionContext context = new ExecutionContext(model, pathGenerator);
+        Machine machine = new SimpleMachine(context);
+        Deque<String> names = new ArrayDeque<String>(Arrays.asList("ERROR", "v2", "e1", "v1"));
+        while (machine.hasNextStep()) {
+            machine.getNextStep();
+            Assert.assertEquals(names.pop(), machine.getCurrentStep().getName());
+        }
     }
-
-    @Test
-    public void stepMachine() {
-
-    }
-
-    @Test
-    public void runMachine() {
-
-    }
-
 
     @Test
     public void restartMachine() {
+        Model model = new SimpleModel().addEdge(new Edge("e1", new Vertex("v1"), new Vertex("v2")));
+        PathGenerator pathGenerator = new RandomPath(new VertexCoverage());
+        ExecutionContext context = new ExecutionContext(model, pathGenerator);
+        Machine machine = new SimpleMachine(context);
+        Deque<String> names = new ArrayDeque<String>(Arrays.asList("ERROR", "v2", "e1", "v1", "e1", "v1"));
+        Assert.assertEquals(names.pop(), machine.getNextStep().getName());
+        Assert.assertEquals(names.pop(), machine.getNextStep().getName());
+        // if an error occurs or we "reach the end of the road", the reset function will restart the machine but keep current states
+        machine.restart();
+        Assert.assertEquals(names.pop(), machine.getNextStep().getName());
+        Assert.assertEquals(2, machine.getExecutionContext().getVisitCount(machine.getCurrentStep()).longValue());
+        while (machine.hasNextStep()) {
+            Assert.assertEquals(names.pop(), machine.getNextStep().getName());
+        }
+    }
 
+    @Test
+    public void executeAction() {
+        Model model = new SimpleModel().addEdge(new Edge("e1", new Vertex("v1"), new Vertex("v2")
+                , new HashSet<Action>(Arrays.asList(new Action("var i = 3;")))));
+        PathGenerator pathGenerator = new RandomPath(new VertexCoverage());
+        ExecutionContext context = new ExecutionContext(model, pathGenerator);
+        Machine machine = new SimpleMachine(context);
+        Assert.assertEquals("v1", machine.getNextStep().getName());
+        Assert.assertEquals("e1", machine.getNextStep().getName());
+        Assert.assertEquals(3, machine.getScriptContext().getAttribute("i"));
+    }
+
+    @Test
+    public void executeVertexActions() {
+        Model model = new SimpleModel().addEdge(new Edge("e1"
+                , new Vertex("v1", new HashSet<Requirement>(), new HashSet<Action>(), new HashSet<Action>(Arrays.asList(new Action("var i = 1;"))))
+                , new Vertex("v2", new HashSet<Requirement>(), new HashSet<Action>(Arrays.asList(new Action("i = 2;"))))));
+        PathGenerator pathGenerator = new RandomPath(new VertexCoverage());
+        ExecutionContext context = new ExecutionContext(model, pathGenerator);
+        Machine machine = new SimpleMachine(context);
+        Assert.assertNull(context.getScriptContext().getAttribute("i"));
+        Assert.assertEquals("v1", machine.getNextStep());
+        Assert.assertNull(context.getScriptContext().getAttribute("i"));
+        Assert.assertEquals("e1", machine.getNextStep());
+        Assert.assertNotNull(context.getScriptContext().getAttribute("i"));
+        Assert.assertEquals(1, context.getScriptContext().getAttribute("i"));
+        Assert.assertEquals("v2", machine.getNextStep());
+        Assert.assertEquals(2, context.getScriptContext().getAttribute("i"));
+        Assert.assertFalse(machine.hasNextStep());
     }
 
     @Test
     public void switchModel() {
 
     }
-
-    @Test
-    public void executeAction() {
-
-    }
-
-    @Test
-    public void executeEntryAction() {
-
-    }
-
-    @Test
-    public void executeExitAction() {
-
-    }
-
-
 }

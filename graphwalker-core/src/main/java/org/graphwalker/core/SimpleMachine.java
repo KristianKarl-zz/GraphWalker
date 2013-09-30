@@ -28,8 +28,13 @@ package org.graphwalker.core;
 import org.graphwalker.core.event.EventSource;
 import org.graphwalker.core.event.MachineSink;
 import org.graphwalker.core.machine.ExecutionContext;
+import org.graphwalker.core.model.Action;
+import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Element;
+import org.graphwalker.core.model.Vertex;
+import org.graphwalker.core.script.ScriptContext;
 
+import javax.script.ScriptException;
 import java.util.Set;
 
 /**
@@ -37,19 +42,19 @@ import java.util.Set;
  */
 public final class SimpleMachine extends EventSource<MachineSink> implements Machine {
 
-    private final Set<ExecutionContext> contextSet;
+    private final ExecutionContext context;
 
-    public SimpleMachine(Set<ExecutionContext> contextSet) {
-        this.contextSet = contextSet;
+    public SimpleMachine(ExecutionContext context) {
+        this.context = context;
     }
 
     public Element getNextStep() {
-        /*
+        Element currentStep = context.getCurrentElement();
         if (currentStep instanceof Vertex) {
             Vertex vertex = (Vertex)currentStep;
             execute(vertex.getExitActions());
         }
-        currentStep = pathGenerator.getNextStep(null);
+        currentStep = context.getPathGenerator().getNextStep(context);
         if (currentStep instanceof Vertex) {
             Vertex vertex = (Vertex)currentStep;
             execute(vertex.getExitActions());
@@ -58,20 +63,36 @@ public final class SimpleMachine extends EventSource<MachineSink> implements Mac
             execute(edge.getActions());
         }
         return currentStep;
-        */
-        return null;
+    }
+
+    private void execute(Set<Action> actions) {
+        for (Action action: actions) {
+            try {
+                context.getScriptEngine().eval(action.getScript());
+            } catch (ScriptException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
+        }
     }
 
     public Element getCurrentStep() {
-        return null;//currentStep;
+        return context.getCurrentElement();
     }
 
     public Boolean hasNextStep() {
-        return null; //!stopCondition.isFulfilled(null);
+        return context.getStopCondition().isFulfilled(context);
     }
 
-    public ExecutionContext getCurrentContext() {
-        return null;
+    public ScriptContext getScriptContext() {
+        return context.getScriptContext();
+    }
+
+    public void restart() {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public ExecutionContext getExecutionContext() {
+        return context;
     }
 
 }

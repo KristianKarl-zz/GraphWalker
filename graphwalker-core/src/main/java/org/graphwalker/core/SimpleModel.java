@@ -47,40 +47,61 @@ public final class SimpleModel extends EventSource<ModelSink> implements Model {
     private final List<Vertex> startVertices;
     private final List<Element> elementCache;
     private final Map<Vertex, List<Edge>> vertexEdgeCache;
-    private final Set<Requirement> requirements;
+    private final Map<String, List<Edge>> edgeNameCache;
+    private final List<Requirement> requirementCache;
 
     public SimpleModel() {
         this(new HashSet<Vertex>(), new HashSet<Edge>());
     }
 
     public SimpleModel(Set<Vertex> vertices, Set<Edge> edges) {
-        this.vertices = Collections.unmodifiableMap(asMap(vertices));
-        this.edges = Collections.unmodifiableMap(asMap(edges));
-        this.startVertices = Collections.unmodifiableList(findStartVertices());
-        this.elementCache = Collections.unmodifiableList(createElementCache());
-        this.vertexEdgeCache = Collections.unmodifiableMap(createVertexEdgeCache());
+        this.vertices = asUnmodifiableMap(vertices);
+        this.edges = asUnmodifiableMap(edges);
+        this.startVertices = findStartVertices();
+        this.elementCache = createElementCache();
+        this.vertexEdgeCache = createVertexEdgeCache();
+        this.edgeNameCache = createEdgeNameCache();
+        this.requirementCache = aggregateRequirements();
         this.aStar = new AStar(this);
         this.depthFirstSearch = new DepthFirstSearch(this);
         this.floydWarshall = new FloydWarshall(this);
-        this.requirements = null; // TODO: aggregate all requirements
     }
 
     private Map<Vertex, List<Edge>> createVertexEdgeCache() {
-        Map<Vertex, List<Edge>> vertexEdgeMap = new HashMap<Vertex, List<Edge>>();
+        Map<Vertex, List<Edge>> vertexEdgeCache = new HashMap<Vertex, List<Edge>>();
         for (Vertex vertex: vertices.values()) {
-            vertexEdgeMap.put(vertex, new ArrayList<Edge>());
+            vertexEdgeCache.put(vertex, new ArrayList<Edge>());
         }
         for (Edge edge: edges.values()) {
-            vertexEdgeMap.get(edge.getSourceVertex()).add(edge);
+            vertexEdgeCache.get(edge.getSourceVertex()).add(edge);
         }
-        return vertexEdgeMap;
+        Map<Vertex, List<Edge>> unmodifiableVertexEdgeCache = new HashMap<Vertex, List<Edge>>();
+        for (Vertex vertex: vertexEdgeCache.keySet()) {
+            unmodifiableVertexEdgeCache.put(vertex, Collections.unmodifiableList(vertexEdgeCache.get(vertex)));
+        }
+        return Collections.unmodifiableMap(unmodifiableVertexEdgeCache);
+    }
+
+    private Map<String, List<Edge>> createEdgeNameCache() {
+        Map<String, List<Edge>> edgeNameCache = new HashMap<String, List<Edge>>();
+        for (Edge edge: edges.keySet()) {
+            if (!edgeNameCache.containsKey(edge.getName())) {
+                edgeNameCache.put(edge.getName(), new ArrayList<Edge>());
+            }
+            edgeNameCache.get(edge.getName()).add(edge);
+        }
+        Map<String, List<Edge>> unmodifiableEdgeNameCache = new HashMap<String, List<Edge>>();
+        for (String name: edgeNameCache.keySet()) {
+            unmodifiableEdgeNameCache.put(name, Collections.unmodifiableList(edgeNameCache.get(name)));
+        }
+        return Collections.unmodifiableMap(unmodifiableEdgeNameCache);
     }
 
     private List<Element> createElementCache() {
         Set<Element> elementSet = new HashSet<Element>();
         elementSet.addAll(vertices.values());
         elementSet.addAll(edges.values());
-        return new ArrayList<Element>(elementSet);
+        return Collections.unmodifiableList(new ArrayList<Element>(elementSet));
     }
 
     private List<Vertex> findStartVertices() {
@@ -88,15 +109,23 @@ public final class SimpleModel extends EventSource<ModelSink> implements Model {
         for (Edge edge: edges.values()) {
             vertexSet.remove(edge.getTargetVertex());
         }
-        return new ArrayList<Vertex>(vertexSet);
+        return Collections.unmodifiableList(new ArrayList<Vertex>(vertexSet));
     }
 
-    private <T> Map<T,T> asMap(Set<T> set) {
+    private List<Requirement> aggregateRequirements() {
+        Set<Requirement> requirements = new HashSet<Requirement>();
+        for (Vertex vertex: vertices.keySet()) {
+            requirements.addAll(vertex.getRequirements());
+        }
+        return Collections.unmodifiableList(new ArrayList<Requirement>(requirements));
+    }
+
+    private <T> Map<T,T> asUnmodifiableMap(Set<T> set) {
         Map<T,T> map = new HashMap<T, T>();
         for (T entry: set) {
             map.put(entry, entry);
         }
-        return map;
+        return Collections.unmodifiableMap(map);
     }
 
     public Model addEdge(Edge edge) {
@@ -164,7 +193,7 @@ public final class SimpleModel extends EventSource<ModelSink> implements Model {
     }
 
     public List<Edge> getEdges(String name) {
-        return null;//edgeNameCache.get(name);
+        return edgeNameCache.get(name);
     }
 
     public List<Vertex> getVertices() {
@@ -213,7 +242,7 @@ public final class SimpleModel extends EventSource<ModelSink> implements Model {
         return startVertices;
     }
 
-    public Set<Requirement> getRequirements() {
-        return requirements;
+    public List<Requirement> getRequirements() {
+        return requirementCache;
     }
 }

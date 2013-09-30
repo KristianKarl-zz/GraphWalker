@@ -39,9 +39,7 @@ public final class Requirement {
 
     public Requirement(String id) {
         this.id = Validate.notEmpty(Validate.notNull(id));
-        this.cachedHashCode = new HashCodeBuilder(13, 29)
-                .append(id)
-                .hashCode();
+        this.cachedHashCode = new HashCodeBuilder(13, 29).append(id).hashCode();
     }
 
     public String getId() {
@@ -63,9 +61,7 @@ public final class Requirement {
         }
         if (object instanceof Requirement) {
             Requirement element = (Requirement)object;
-            return new EqualsBuilder()
-                    .append(id, element.getId())
-                    .isEquals();
+            return new EqualsBuilder().append(id, element.getId()).isEquals();
         }
         return false;
     }

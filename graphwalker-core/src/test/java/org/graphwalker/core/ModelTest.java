@@ -26,7 +26,7 @@
 package org.graphwalker.core;
 
 import org.graphwalker.core.model.*;
-import org.graphwalker.core.script.Context;
+import org.graphwalker.core.script.ScriptContext;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -45,7 +45,7 @@ public class ModelTest {
     private ScriptEngine createScriptEngine(String language) {
         ScriptEngineManager scriptEngineManager = new ScriptEngineManager();
         ScriptEngine scriptEngine = scriptEngineManager.getEngineByName(language);
-        scriptEngine.setContext(new Context());
+        scriptEngine.setContext(new ScriptContext());
         return scriptEngine;
     }
 
@@ -345,4 +345,14 @@ public class ModelTest {
         Assert.assertEquals(2, model.getStartVertices().size());
     }
 
+    @Test
+    public void aggregateRequirements() {
+        Model model = new SimpleModel()
+            .addVertex(new Vertex("A", new HashSet<Requirement>(Arrays.asList(new Requirement("A1"), new Requirement("A2")))))
+            .addVertex(new Vertex("B", new HashSet<Requirement>(Arrays.asList(new Requirement("B1")))));
+        Assert.assertEquals(3, model.getRequirements().size());
+        Assert.assertTrue(model.getRequirements().contains(new Requirement("A1")));
+        Assert.assertTrue(model.getRequirements().contains(new Requirement("A2")));
+        Assert.assertTrue(model.getRequirements().contains(new Requirement("B1")));
+    }
 }

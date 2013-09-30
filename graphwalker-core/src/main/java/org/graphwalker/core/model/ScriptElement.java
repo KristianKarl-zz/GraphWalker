@@ -39,9 +39,7 @@ public abstract class ScriptElement {
 
     public ScriptElement(String script) {
         this.script = Validate.notEmpty(Validate.notNull(script));
-        this.cachedHashCode = new HashCodeBuilder(29, 53)
-                .append(script)
-                .hashCode();
+        this.cachedHashCode = new HashCodeBuilder(29, 53).append(script).hashCode();
     }
 
     public String getScript() {
@@ -63,9 +61,7 @@ public abstract class ScriptElement {
         }
         if (object instanceof ScriptElement) {
             ScriptElement element = (ScriptElement)object;
-            return new EqualsBuilder()
-                    .append(script, element.getScript())
-                    .isEquals();
+            return new EqualsBuilder().append(script, element.getScript()).isEquals();
         }
         return false;
     }

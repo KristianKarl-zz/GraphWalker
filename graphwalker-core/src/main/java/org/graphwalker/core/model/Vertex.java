@@ -97,9 +97,7 @@ public final class Vertex implements Element {
         }
         if (object instanceof Vertex) {
             Vertex element = (Vertex)object;
-            return new EqualsBuilder()
-                    .append(name, element.getName())
-                    .isEquals();
+            return new EqualsBuilder().append(name, element.getName()).isEquals();
         }
         return false;
     }
