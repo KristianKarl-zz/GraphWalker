@@ -1,6 +1,6 @@
 /*
  * #%L
- * GraphWalker Maven Plugin
+ * GraphWalker Core
  * %%
  * Copyright (C) 2011 - 2013 GraphWalker
  * %%
@@ -23,46 +23,30 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.maven.plugin.source;
-
-import japa.parser.ast.body.MethodDeclaration;
-import org.graphwalker.core.Model;
-import org.graphwalker.core.model.Element;
-
-import java.util.HashSet;
-import java.util.Set;
+package org.graphwalker.maven.plugin.common;
 
 /**
  * @author Nils Olsson
  */
-public final class ChangeContext {
+public class ReflectionException extends RuntimeException {
 
-    private final Set<String> methodNames;
-    private final Set<MethodDeclaration> methodDeclarations = new HashSet<MethodDeclaration>();
-
-    public ChangeContext(Model model) {
-        methodNames = extractMethodNames(model);
+    /**
+     * <p>Constructor for ReflectionException.</p>
+     *
+     * @param cause a {@link java.lang.String} object.
+     */
+    public ReflectionException(String cause) {
+        super(cause);
     }
 
-    public Set<String> getMethodsName() {
-        return methodNames;
-    }
-
-    public void addMethodDeclaration(MethodDeclaration methodDeclaration) {
-        methodDeclarations.add(methodDeclaration);
-    }
-
-    public Set<MethodDeclaration> getMethodDeclarations() {
-        return methodDeclarations;
-    }
-
-    private Set<String> extractMethodNames(Model model) {
-        Set<String> methodNames = new HashSet<String>();
-        for (Element element: model.getElements()) {
-            if (null != element.getName() && !"Start".equalsIgnoreCase(element.getName())) {
-                methodNames.add(element.getName());
-            }
-        }
-        return methodNames;
+    /**
+     * <p>Constructor for ReflectionException.</p>
+     *
+     * @param cause a {@link java.lang.String} object.
+     * @param throwable a {@link java.lang.Throwable} object.
+     */
+    public ReflectionException(String cause, Throwable throwable) {
+        super(cause, throwable);
     }
 }
+

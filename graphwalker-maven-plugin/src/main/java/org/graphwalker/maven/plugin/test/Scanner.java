@@ -26,7 +26,7 @@
 package org.graphwalker.maven.plugin.test;
 
 import org.codehaus.plexus.util.DirectoryScanner;
-import org.graphwalker.core.annotations.GraphWalker;
+import org.graphwalker.core.annotation.GraphWalker;
 
 import java.io.File;
 import java.util.Collection;

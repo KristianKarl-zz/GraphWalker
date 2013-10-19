@@ -40,7 +40,7 @@ public class Amazon extends AbstractTest implements ShoppingCart {
 
     @Override
     public void v_OtherBoughtBooks(ScriptContext context) {
-        Assert.assertTrue(verifyTextPresent(By.id("hlb-upsell"), "Customers Who Bought "));
+        Assert.assertTrue(verifyTextPresent(By.id("hlb-upsell"), "Customers Also Bought these Highly Rated Items"));
     }
 
     @Override
@@ -102,6 +102,11 @@ public class Amazon extends AbstractTest implements ShoppingCart {
 
     @Override
     public void v_ClearShoppingCart(ScriptContext context) {
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
         Assert.assertEquals(Integer.parseInt(getDriver().findElement(By.id("nav-cart-count")).getText()), 0);
     }
 

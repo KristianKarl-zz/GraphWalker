@@ -29,9 +29,9 @@ import org.apache.maven.model.Resource;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
-import org.graphwalker.core.SimpleModel;
-import org.graphwalker.core.model.ModelFactory;
-import org.graphwalker.core.model.support.DefaultModelFactory;
+import org.graphwalker.core.Model;
+import org.graphwalker.maven.plugin.model.GraphMLModelFactory;
+import org.graphwalker.maven.plugin.model.ModelFactory;
 import org.graphwalker.maven.plugin.source.CodeGenerator;
 import org.graphwalker.maven.plugin.source.SourceFile;
 
@@ -60,7 +60,7 @@ public abstract class AbstractGenerateMojo extends AbstractDefaultMojo {
 
     protected void generate(Resource resource) {
         File baseDirectory = new File(resource.getDirectory());
-        ModelFactory factory = new DefaultModelFactory();
+        ModelFactory factory = new GraphMLModelFactory();
         for (File file: findFiles(factory.getSupportedFileTypes(), null, baseDirectory)) {
             generate(file, baseDirectory, getGeneratedSourcesDirectory());
         }
@@ -72,8 +72,8 @@ public abstract class AbstractGenerateMojo extends AbstractDefaultMojo {
 
     private void generate(SourceFile sourceFile) {
         try {
-            ModelFactory factory = new DefaultModelFactory();
-            SimpleModel model = factory.create(sourceFile.getAbsolutePath());
+            ModelFactory factory = new GraphMLModelFactory();
+            Model model = factory.create(sourceFile.getAbsolutePath());
             String source = new CodeGenerator(sourceFile, model).generate();
             if (sourceFile.getOutputFile().exists()) {
                 String existingSource = StringUtils.removeDuplicateWhitespace(FileUtils.fileRead(sourceFile.getOutputFile(), getSourceEncoding()));

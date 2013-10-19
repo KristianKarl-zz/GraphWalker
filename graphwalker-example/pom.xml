@@ -23,7 +23,7 @@
                 <executions>
                     <execution>
                         <id>execute-generate-sources</id>
-                        <phase>generate-sources</phase>
+                        <phase>generate-test-sources</phase>
                         <goals>
                             <goal>generate-sources</goal>
                         </goals>

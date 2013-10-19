@@ -1,6 +1,6 @@
 /*
  * #%L
- * GraphWalker Maven Plugin
+ * GraphWalker Core
  * %%
  * Copyright (C) 2011 - 2013 GraphWalker
  * %%
@@ -23,46 +23,25 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.maven.plugin.source;
+package org.graphwalker.maven.plugin.model;
 
-import japa.parser.ast.body.MethodDeclaration;
-import org.graphwalker.core.Model;
-import org.graphwalker.core.model.Element;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
 /**
  * @author Nils Olsson
  */
-public final class ChangeContext {
+public abstract class AbstractModelFactory implements ModelFactory {
 
-    private final Set<String> methodNames;
-    private final Set<MethodDeclaration> methodDeclarations = new HashSet<MethodDeclaration>();
+    private final Set<String> supportedTypes = new HashSet<String>();
 
-    public ChangeContext(Model model) {
-        methodNames = extractMethodNames(model);
+    public AbstractModelFactory(String... types) {
+        Collections.addAll(supportedTypes, types);
     }
 
-    public Set<String> getMethodsName() {
-        return methodNames;
-    }
-
-    public void addMethodDeclaration(MethodDeclaration methodDeclaration) {
-        methodDeclarations.add(methodDeclaration);
-    }
-
-    public Set<MethodDeclaration> getMethodDeclarations() {
-        return methodDeclarations;
-    }
-
-    private Set<String> extractMethodNames(Model model) {
-        Set<String> methodNames = new HashSet<String>();
-        for (Element element: model.getElements()) {
-            if (null != element.getName() && !"Start".equalsIgnoreCase(element.getName())) {
-                methodNames.add(element.getName());
-            }
-        }
-        return methodNames;
+    public Set<String> getSupportedFileTypes() {
+        return supportedTypes;
     }
 }

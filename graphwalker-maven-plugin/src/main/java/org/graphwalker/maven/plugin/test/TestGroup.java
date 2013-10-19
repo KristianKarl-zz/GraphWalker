@@ -25,8 +25,6 @@
  */
 package org.graphwalker.maven.plugin.test;
 
-import org.graphwalker.core.machine.Execution;
-
 import java.util.HashSet;
 import java.util.Set;
 

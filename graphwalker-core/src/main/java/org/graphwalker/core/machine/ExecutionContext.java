@@ -57,6 +57,7 @@ public final class ExecutionContext {
     private Long totalVisitCount = 0l;
     private Set<Edge> visitedEdges = new HashSet<Edge>();
     private Set<Vertex> visitedVertices = new HashSet<Vertex>();
+    private ExecutionStatus executionStatus = ExecutionStatus.NOT_EXECUTED;
 
     public ExecutionContext(Model model, PathGenerator pathGenerator) {
         this(model, pathGenerator, DEFAULT_SCRIPT_LANGUAGE);
@@ -111,6 +112,10 @@ public final class ExecutionContext {
 
     public ExecutionProfiler getProfiler() {
         return profiler;
+    }
+
+    public ExecutionStatus getExecutionStatus() {
+        return executionStatus;
     }
 
     public Model getModel() {

@@ -35,26 +35,31 @@ import org.graphwalker.core.model.Vertex;
 import org.graphwalker.core.script.ScriptContext;
 
 import javax.script.ScriptException;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Nils Olsson
  */
 public final class SimpleMachine extends EventSource<MachineSink> implements Machine {
 
-    private final ExecutionContext context;
+    private final List<ExecutionContext> executionContexts;
+    private ExecutionContext currentExecutionContext;
 
-    public SimpleMachine(ExecutionContext context) {
-        this.context = context;
+    public SimpleMachine(ExecutionContext executionContext) {
+        this(new ArrayList<ExecutionContext>(Arrays.asList(executionContext)));
+    }
+
+    public SimpleMachine(List<ExecutionContext> executionContexts) {
+        this.executionContexts = Collections.unmodifiableList(executionContexts);
     }
 
     public Element getNextStep() {
-        Element currentStep = context.getCurrentElement();
+        Element currentStep = getCurrentExecutionContext().getCurrentElement();
         if (currentStep instanceof Vertex) {
             Vertex vertex = (Vertex)currentStep;
             execute(vertex.getExitActions());
         }
-        currentStep = context.getPathGenerator().getNextStep(context);
+        currentStep = getCurrentExecutionContext().getPathGenerator().getNextStep(getCurrentExecutionContext());
         if (currentStep instanceof Vertex) {
             Vertex vertex = (Vertex)currentStep;
             execute(vertex.getEntryActions());
@@ -68,7 +73,7 @@ public final class SimpleMachine extends EventSource<MachineSink> implements Mac
     private void execute(Set<Action> actions) {
         for (Action action: actions) {
             try {
-                context.getScriptEngine().eval(action.getScript());
+                getCurrentExecutionContext().getScriptEngine().eval(action.getScript());
             } catch (ScriptException e) {
                 e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
             }
@@ -76,23 +81,29 @@ public final class SimpleMachine extends EventSource<MachineSink> implements Mac
     }
 
     public Element getCurrentStep() {
-        return context.getCurrentElement();
+        return getCurrentExecutionContext().getCurrentElement();
     }
 
     public Boolean hasNextStep() {
-        return !context.getStopCondition().isFulfilled(context);
+        return !getCurrentExecutionContext().getStopCondition().isFulfilled(getCurrentExecutionContext());
     }
 
     public ScriptContext getScriptContext() {
-        return context.getScriptContext();
+        return getCurrentExecutionContext().getScriptContext();
     }
 
     public void restart() {
-        context.setCurrentElement(null);
+        getCurrentExecutionContext().setCurrentElement(null);
     }
 
-    public ExecutionContext getExecutionContext() {
-        return context;
+    public ExecutionContext getCurrentExecutionContext() {
+        if (null == currentExecutionContext) {
+            currentExecutionContext = getExecutionContexts().get(0);
+        }
+        return currentExecutionContext;
     }
 
+    public List<ExecutionContext> getExecutionContexts() {
+        return executionContexts;
+    }
 }

@@ -52,8 +52,8 @@ public final class XMLReport {
 
     }
 
-    public void writeReport(ExecutionContext context) {
-        String name = context.getImplementation().getClass().getName();
+    public void writeReport(ExecutionContext context, Object implementation) {
+        String name = implementation.getClass().getName();
         Testsuite testsuite = factory.createTestsuite();
         testsuite.setName(name);
         // add properties that were used in this context

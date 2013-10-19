@@ -23,23 +23,11 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core;
-
-import org.graphwalker.core.machine.ExecutionContext;
-import org.graphwalker.core.model.Element;
-import org.graphwalker.core.script.ScriptContext;
-
-import java.util.List;
+package org.graphwalker.core.machine;
 
 /**
  * @author Nils Olsson
  */
-public interface Machine {
-    Element getNextStep();
-    Element getCurrentStep();
-    Boolean hasNextStep();
-    ScriptContext getScriptContext();
-    void restart();
-    ExecutionContext getCurrentExecutionContext();
-    List<ExecutionContext> getExecutionContexts();
+public enum ExecutionStatus {
+    NOT_EXECUTED, EXECUTING, COMPLETED, FAILED
 }

@@ -37,7 +37,7 @@ import japa.parser.ast.body.ModifierSet;
 import japa.parser.ast.body.Parameter;
 import japa.parser.ast.expr.*;
 import japa.parser.ast.visitor.VoidVisitorAdapter;
-import org.graphwalker.core.SimpleModel;
+import org.graphwalker.core.Model;
 
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -50,9 +50,9 @@ import java.util.List;
 public final class CodeGenerator extends VoidVisitorAdapter<ChangeContext> {
 
     private final SourceFile sourceFile;
-    private final SimpleModel model;
+    private final Model model;
 
-    public CodeGenerator(SourceFile sourceFile, SimpleModel model) {
+    public CodeGenerator(SourceFile sourceFile, Model model) {
         this.sourceFile = sourceFile;
         this.model = model;
     }
@@ -81,8 +81,8 @@ public final class CodeGenerator extends VoidVisitorAdapter<ChangeContext> {
                 compilationUnit.setPackage(createPackageDeclaration(sourceFile));
             }
             compilationUnit.setImports(Arrays.asList(
-                    new ImportDeclaration(new NameExpr("org.graphwalker.core.annotations.Model"), false, false),
-                    new ImportDeclaration(new NameExpr("org.graphwalker.core.script.Context"), false, false)
+                    new ImportDeclaration(new NameExpr("org.graphwalker.core.annotation.Model"), false, false),
+                    new ImportDeclaration(new NameExpr("org.graphwalker.core.script.ScriptContext"), false, false)
             ));
             ASTHelper.addTypeDeclaration(compilationUnit, getInterfaceName(sourceFile));
         }
@@ -100,7 +100,7 @@ public final class CodeGenerator extends VoidVisitorAdapter<ChangeContext> {
         ClassOrInterfaceDeclaration body = (ClassOrInterfaceDeclaration)compilationUnit.getTypes().get(0);
         for (String methodName: changeContext.getMethodsName()) {
             MethodDeclaration method = new MethodDeclaration(Modifier.INTERFACE, ASTHelper.VOID_TYPE, methodName);
-            Parameter parameter = ASTHelper.createParameter(ASTHelper.createReferenceType("Context", 0), "context");
+            Parameter parameter = ASTHelper.createParameter(ASTHelper.createReferenceType("ScriptContext", 0), "context");
             ASTHelper.addParameter(method, parameter);
             ASTHelper.addMember(body, method);
         }

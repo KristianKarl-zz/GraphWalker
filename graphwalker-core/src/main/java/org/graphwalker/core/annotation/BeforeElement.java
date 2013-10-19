@@ -2,7 +2,7 @@
  * #%L
  * GraphWalker Core
  * %%
- * Copyright (C) 2011 - 2013 GraphWalker
+ * Copyright (C) 2011 - 2012 GraphWalker
  * %%
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,23 +23,24 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core;
+package org.graphwalker.core.annotation;
 
-import org.graphwalker.core.machine.ExecutionContext;
-import org.graphwalker.core.model.Element;
-import org.graphwalker.core.script.ScriptContext;
-
-import java.util.List;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * @author Nils Olsson
  */
-public interface Machine {
-    Element getNextStep();
-    Element getCurrentStep();
-    Boolean hasNextStep();
-    ScriptContext getScriptContext();
-    void restart();
-    ExecutionContext getCurrentExecutionContext();
-    List<ExecutionContext> getExecutionContexts();
+@Retention(RetentionPolicy.RUNTIME)
+@Target(java.lang.annotation.ElementType.METHOD)
+public @interface BeforeElement {
+
+    /**
+     * <p>script.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
+    public String filter() default "";
+
 }

@@ -67,7 +67,7 @@ public class MachineTest {
         // e.g. if an error occurs or we "reach the end of the road", the reset function can restart the machine and keep the current states
         machine.restart();
         Assert.assertEquals(names.pop(), machine.getNextStep().getName());
-        Assert.assertEquals(2, machine.getExecutionContext().getVisitCount(machine.getCurrentStep()).longValue());
+        Assert.assertEquals(2, machine.getCurrentExecutionContext().getVisitCount(machine.getCurrentStep()).longValue());
         while (machine.hasNextStep()) {
             Assert.assertEquals(names.pop(), machine.getNextStep().getName());
         }

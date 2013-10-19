@@ -23,23 +23,16 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core;
+package org.graphwalker.core.annotation;
 
-import org.graphwalker.core.machine.ExecutionContext;
-import org.graphwalker.core.model.Element;
-import org.graphwalker.core.script.ScriptContext;
-
-import java.util.List;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * @author Nils Olsson
  */
-public interface Machine {
-    Element getNextStep();
-    Element getCurrentStep();
-    Boolean hasNextStep();
-    ScriptContext getScriptContext();
-    void restart();
-    ExecutionContext getCurrentExecutionContext();
-    List<ExecutionContext> getExecutionContexts();
+@Retention(RetentionPolicy.RUNTIME)
+@Target(java.lang.annotation.ElementType.METHOD)
+public @interface ExceptionHandler {
 }

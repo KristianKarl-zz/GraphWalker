@@ -26,11 +26,10 @@
 package org.graphwalker.maven.plugin.test;
 
 import org.codehaus.plexus.util.SelectorUtils;
-import org.graphwalker.core.annotations.Execute;
-import org.graphwalker.core.annotations.GraphWalker;
-import org.graphwalker.core.conditions.StopCondition;
-import org.graphwalker.core.generator.PathGenerator;
-import org.graphwalker.core.machine.Execution;
+import org.graphwalker.core.PathGenerator;
+import org.graphwalker.core.StopCondition;
+import org.graphwalker.core.annotation.Execute;
+import org.graphwalker.core.annotation.GraphWalker;
 
 import java.util.*;
 

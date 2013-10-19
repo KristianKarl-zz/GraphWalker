@@ -1,7 +1,7 @@
 package org.graphwalker.example;
 
-import org.graphwalker.core.annotations.AfterExecution;
-import org.graphwalker.core.annotations.ExceptionHandler;
+import org.graphwalker.core.annotation.AfterExecution;
+import org.graphwalker.core.annotation.ExceptionHandler;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;

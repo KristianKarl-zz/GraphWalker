@@ -1,6 +1,6 @@
 /*
  * #%L
- * GraphWalker Maven Plugin
+ * GraphWalker Core
  * %%
  * Copyright (C) 2011 - 2013 GraphWalker
  * %%
@@ -23,46 +23,45 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.maven.plugin.source;
+package org.graphwalker.maven.plugin.model;
 
-import japa.parser.ast.body.MethodDeclaration;
 import org.graphwalker.core.Model;
-import org.graphwalker.core.model.Element;
 
-import java.util.HashSet;
 import java.util.Set;
 
 /**
  * @author Nils Olsson
  */
-public final class ChangeContext {
+public interface ModelFactory {
 
-    private final Set<String> methodNames;
-    private final Set<MethodDeclaration> methodDeclarations = new HashSet<MethodDeclaration>();
+    /**
+     * <p>accept.</p>
+     *
+     * @param file a {@link java.lang.String} object.
+     * @return a boolean.
+     */
+    boolean accept(String file);
 
-    public ChangeContext(Model model) {
-        methodNames = extractMethodNames(model);
-    }
+    /**
+     * <p>validate.</p>
+     *
+     * @param file a {@link java.lang.String} object.
+     * @return a boolean.
+     */
+    boolean validate(String file);
 
-    public Set<String> getMethodsName() {
-        return methodNames;
-    }
+    /**
+     * <p>create.</p>
+     *
+     * @param file a {@link java.lang.String} object.
+     * @return a {@link org.graphwalker.core.Model} object.
+     */
+    Model create(String file);
 
-    public void addMethodDeclaration(MethodDeclaration methodDeclaration) {
-        methodDeclarations.add(methodDeclaration);
-    }
-
-    public Set<MethodDeclaration> getMethodDeclarations() {
-        return methodDeclarations;
-    }
-
-    private Set<String> extractMethodNames(Model model) {
-        Set<String> methodNames = new HashSet<String>();
-        for (Element element: model.getElements()) {
-            if (null != element.getName() && !"Start".equalsIgnoreCase(element.getName())) {
-                methodNames.add(element.getName());
-            }
-        }
-        return methodNames;
-    }
+    /**
+     * <p>getSupportedFileTypes.</p>
+     *
+     * @return a {@link java.util.Set} object.
+     */
+    Set<String> getSupportedFileTypes();
 }

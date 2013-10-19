@@ -32,15 +32,17 @@ import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.codehaus.plexus.util.StringUtils;
+import org.graphwalker.core.Machine;
+import org.graphwalker.core.PathGenerator;
+import org.graphwalker.core.SimpleMachine;
+import org.graphwalker.core.StopCondition;
 import org.graphwalker.core.common.ResourceUtils;
-import org.graphwalker.core.machine.Execution;
 import org.graphwalker.core.machine.ExecutionContext;
 import org.graphwalker.core.machine.ExecutionStatus;
-import org.graphwalker.core.machine.Machine;
-import org.graphwalker.maven.plugin.test.Configuration;
+import org.graphwalker.core.model.Element;
+import org.graphwalker.maven.plugin.common.ReflectionUtils;
+import org.graphwalker.maven.plugin.test.*;
 import org.graphwalker.maven.plugin.test.Scanner;
-import org.graphwalker.maven.plugin.test.TestGroup;
-import org.graphwalker.maven.plugin.test.TestManager;
 
 import java.util.*;
 import java.util.concurrent.ExecutorService;
@@ -54,6 +56,7 @@ import java.util.concurrent.TimeUnit;
 @Execute(phase = LifecyclePhase.TEST_COMPILE, lifecycle = "graphwalker")
 public final class TestMojo extends AbstractTestMojo {
 
+    private final Map<ExecutionContext, Object> implementations = new HashMap<ExecutionContext, Object>();
     private final List<Machine> machines = new ArrayList<Machine>();
 
     /**
@@ -148,12 +151,37 @@ public final class TestMojo extends AbstractTestMojo {
     private void executeTests(TestManager manager) {
         if (!manager.getExecutionGroups().isEmpty()) {
             for (TestGroup group: manager.getExecutionGroups()) {
-                machines.add(new Machine(group.getExecutions()));
+                List<ExecutionContext> executionContexts = new ArrayList<ExecutionContext>();
+                for (Execution execution: group.getExecutions()) {
+                    try {
+                        String value = execution.getStopConditionValue();
+                        StopCondition stopCondition = execution.getStopCondition().getConstructor(String.class).newInstance(value);
+                        PathGenerator pathGenerator = execution.getPathGenerator().getConstructor(StopCondition.class).newInstance(stopCondition);
+                        Object implementation = execution.getTestClass().newInstance();
+                        ExecutionContext executionContext = new ExecutionContext(execution.getModel(), pathGenerator);
+                        implementations.put(executionContext, implementation);
+                        executionContexts.add(executionContext);
+                    } catch (Throwable t) {
+                        t.printStackTrace();
+                    }
+                }
+
+                machines.add(new SimpleMachine(executionContexts));
             }
             try {
                 ExecutorService executorService = Executors.newFixedThreadPool(machines.size());
-                for (Machine machine : machines) {
-                    executorService.execute(machine);
+                for (final Machine machine : machines) {
+                    executorService.execute(new Runnable() {
+                        public void run() {
+                            while (machine.hasNextStep()) {
+                                Element element = machine.getNextStep();
+                                if (!"Start".equals(element.getName())) {
+                                    ReflectionUtils.execute(implementations.get(machine.getCurrentExecutionContext())
+                                        , element.getName(), machine.getCurrentExecutionContext().getScriptContext());
+                                }
+                            }
+                        }
+                    });
                 }
                 executorService.shutdown();
                 executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.DAYS);
@@ -211,7 +239,7 @@ public final class TestMojo extends AbstractTestMojo {
                     String pathGenerator = context.getPathGenerator().getClass().getSimpleName();
                     String stopCondition = context.getPathGenerator().getStopCondition().getClass().getSimpleName();
                     String value = context.getPathGenerator().getStopCondition().getValue();
-                    getLog().info("  " + context.getImplementation().getClass().getName()+"("+pathGenerator+", "+stopCondition+", "+value+"): "+Math.round(100*fulfilment)+"%");
+                    getLog().info("  " + implementations.get(context).getClass().getName()+"("+pathGenerator+", "+stopCondition+", "+value+"): "+Math.round(100*fulfilment)+"%");
                 }
                 getLog().info("");
             }
