@@ -45,7 +45,7 @@ public final class RandomUnvisitedFirstPath extends BasePathGenerator  {
     }
 
     public Element getNextStep(ExecutionContext context) {
-        List<Element> elements = context.getCurrentModel().getElements(context.getCurrentElement());
+        List<Element> elements = context.getModel().getElements(context.getCurrentElement());
         if (elements.isEmpty()) {
             throw new NoPathFoundException();
         }
@@ -56,9 +56,9 @@ public final class RandomUnvisitedFirstPath extends BasePathGenerator  {
             }
         }
         if (0 < unvisitedElements.size()) {
-            return unvisitedElements.get(random.nextInt(unvisitedElements.size()));
+            return context.setCurrentElement(unvisitedElements.get(random.nextInt(unvisitedElements.size())));
         } else {
-            return elements.get(random.nextInt(elements.size()));
+            return context.setCurrentElement(elements.get(random.nextInt(elements.size())));
         }
     }
 }

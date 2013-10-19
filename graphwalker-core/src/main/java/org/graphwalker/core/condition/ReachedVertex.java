@@ -46,7 +46,7 @@ public final class ReachedVertex extends BaseStopCondition {
         if (getValue().equals(context.getCurrentElement().getName())) {
             return 1;
         } else {
-            Model model = context.getCurrentModel();
+            Model model = context.getModel();
             Vertex vertex = model.getVertex(getValue());
             int distance = model.getShortestDistance(context.getCurrentElement(), vertex);
             int max = model.getMaximumDistance(vertex);

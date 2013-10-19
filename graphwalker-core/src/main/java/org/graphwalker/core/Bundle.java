@@ -26,9 +26,10 @@
 package org.graphwalker.core;
 
 /**
- * <p>Bundle interface.</p>
+ * @author Nils Olsson
  */
 public interface Bundle {
+
     /** Constant <code>NAME="core"</code> */
     String NAME = "core";
 }

@@ -213,7 +213,9 @@ public final class SimpleModel extends EventSource<ModelSink> implements Model {
     }
 
     public List<Element> getElements(Element element) {
-        if (element instanceof Vertex) {
+        if (null == element) {
+            return new ArrayList<Element>(getStartVertices());
+        } else if (element instanceof Vertex) {
             Vertex vertex = (Vertex)element;
             return new ArrayList<Element>(getEdges(vertex));
         } else {

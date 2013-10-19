@@ -48,7 +48,7 @@ public final class RequirementCoverage extends BaseStopCondition {
     }
 
     public boolean isFulfilled(ExecutionContext context) {
-        double totalCount = context.getCurrentModel().getRequirements().size();
+        double totalCount = context.getModel().getRequirements().size();
         if (0 == totalCount) {
             return true;
         }
@@ -58,7 +58,7 @@ public final class RequirementCoverage extends BaseStopCondition {
     }
 
     public double getFulfilment(ExecutionContext context) {
-        double totalCount = context.getCurrentModel().getRequirements().size();
+        double totalCount = context.getModel().getRequirements().size();
         if (0 == totalCount) {
             return 1.0;
         }

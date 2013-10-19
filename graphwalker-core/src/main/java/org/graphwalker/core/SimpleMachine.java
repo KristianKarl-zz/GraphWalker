@@ -57,7 +57,7 @@ public final class SimpleMachine extends EventSource<MachineSink> implements Mac
         currentStep = context.getPathGenerator().getNextStep(context);
         if (currentStep instanceof Vertex) {
             Vertex vertex = (Vertex)currentStep;
-            execute(vertex.getExitActions());
+            execute(vertex.getEntryActions());
         } else {
             Edge edge = (Edge)currentStep;
             execute(edge.getActions());
@@ -80,7 +80,7 @@ public final class SimpleMachine extends EventSource<MachineSink> implements Mac
     }
 
     public Boolean hasNextStep() {
-        return context.getStopCondition().isFulfilled(context);
+        return !context.getStopCondition().isFulfilled(context);
     }
 
     public ScriptContext getScriptContext() {
@@ -88,7 +88,7 @@ public final class SimpleMachine extends EventSource<MachineSink> implements Mac
     }
 
     public void restart() {
-        //To change body of implemented methods use File | Settings | File Templates.
+        context.setCurrentElement(null);
     }
 
     public ExecutionContext getExecutionContext() {

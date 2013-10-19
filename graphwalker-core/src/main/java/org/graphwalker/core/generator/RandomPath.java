@@ -44,10 +44,10 @@ public final class RandomPath extends BasePathGenerator {
     }
 
     public Element getNextStep(ExecutionContext context) {
-        List<Element> elements = context.getCurrentModel().getElements(context.getCurrentElement());
+        List<Element> elements = context.getModel().getElements(context.getCurrentElement());
         if (elements.isEmpty()) {
             throw new NoPathFoundException();
         }
-        return elements.get(random.nextInt(elements.size()));
+        return context.setCurrentElement(elements.get(random.nextInt(elements.size())));
     }
 }

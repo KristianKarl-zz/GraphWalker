@@ -47,12 +47,12 @@ public final class AStarPath extends BasePathGenerator {
     }
 
     public Element getNextStep(ExecutionContext context) {
-        List<Element> elements = context.getCurrentModel().getElements(context.getCurrentElement());
+        List<Element> elements = context.getModel().getElements(context.getCurrentElement());
         if (elements.isEmpty()) {
             throw new NoPathFoundException();
         }
         Element target = null;
-        Model model = context.getCurrentModel();
+        Model model = context.getModel();
         if (null != model.getEdges(getStopCondition().getValue())) {
             int distance = Integer.MAX_VALUE;
             for (Edge edge: model.getEdges(getStopCondition().getValue())) {

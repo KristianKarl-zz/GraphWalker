@@ -46,47 +46,44 @@ public final class ExecutionContext {
 
     private final static String DEFAULT_SCRIPT_LANGUAGE = "JavaScript";
 
-    private final Set<Model> models;
+    private final Model model;
+    private Element currentElement;
     private final PathGenerator pathGenerator;
     private final ScriptEngine scriptEngine;
     private final ScriptContext context = new ScriptContext();
     private final ExecutionProfiler profiler = new ExecutionProfiler();
-    private final Map<Model, Element> currentSteps = new HashMap<Model, Element>();
-    private final Set<Requirement> requirements;
-    private Map<Requirement, RequirementStatus> requirementStatus = new HashMap<Requirement, RequirementStatus>();
-    private final Map<Element, Long> elementVisitCount = new HashMap<Element, Long>();
+    private final Map<Requirement, RequirementStatus> requirementStatus;
+    private final Map<Element, Long> elementVisitCount;
     private Long totalVisitCount = 0l;
     private Set<Edge> visitedEdges = new HashSet<Edge>();
     private Set<Vertex> visitedVertices = new HashSet<Vertex>();
 
     public ExecutionContext(Model model, PathGenerator pathGenerator) {
-        this(new HashSet<Model>(Arrays.asList(model)), pathGenerator);
+        this(model, pathGenerator, DEFAULT_SCRIPT_LANGUAGE);
     }
 
     public ExecutionContext(Model model, PathGenerator pathGenerator, String language) {
-        this(new HashSet<Model>(Arrays.asList(model)), pathGenerator, language);
-    }
-
-    public ExecutionContext(Set<Model> models, PathGenerator pathGenerator) {
-        this(models, pathGenerator, DEFAULT_SCRIPT_LANGUAGE);
-    }
-
-    public ExecutionContext(Set<Model> models, PathGenerator pathGenerator, String language) {
-        this.models = models;
+        this.model = model;
         this.pathGenerator = pathGenerator;
         this.scriptEngine = createScriptEngine(language);
-        this.requirements = aggregateRequirements();
+        this.requirementStatus = initializeRequirementStatus();
+        this.elementVisitCount = initializeVisitCount();
     }
 
-    private Set<Requirement> aggregateRequirements() {
-        Set<Requirement> requirements = new HashSet<Requirement>();
-        for (Model model: models) {
-            requirements.addAll(model.getRequirements());
-            for (Requirement requirement: model.getRequirements()) {
-                requirementStatus.put(requirement, RequirementStatus.NOT_COVERED);
-            }
+    private Map<Requirement, RequirementStatus> initializeRequirementStatus() {
+        Map<Requirement, RequirementStatus> requirementStatusMap = new HashMap<Requirement, RequirementStatus>();
+        for (Requirement requirement: model.getRequirements()) {
+            requirementStatusMap.put(requirement, RequirementStatus.NOT_COVERED);
         }
-        return requirements;
+        return requirementStatusMap;
+    }
+
+    private Map<Element, Long> initializeVisitCount() {
+        Map<Element, Long> visitCountMap = new HashMap<Element, Long>();
+        for (Element element: model.getElements()) {
+            visitCountMap.put(element, 0l);
+        }
+        return visitCountMap;
     }
 
     private ScriptEngine createScriptEngine(String language) {
@@ -116,21 +113,24 @@ public final class ExecutionContext {
         return profiler;
     }
 
-    public Model getCurrentModel() {
-        throw new RuntimeException();
+    public Model getModel() {
+        return model;
     }
 
     public Element getCurrentElement() {
-        throw new RuntimeException();
+        return currentElement;
     }
 
-    public List<Requirement> getRequirements() {
-        return new ArrayList<Requirement>(requirements);
+    public Element setCurrentElement(Element element) {
+        if (null != element) {
+            visit(element);
+        }
+        return currentElement = element;
     }
 
     public List<Requirement> getRequirements(RequirementStatus status) {
         Set<Requirement> requirements = new HashSet<Requirement>();
-        for (Requirement requirement: getRequirements()) {
+        for (Requirement requirement: model.getRequirements()) {
             if (requirementStatus.get(requirement).equals(status)) {
                 requirements.add(requirement);
             }

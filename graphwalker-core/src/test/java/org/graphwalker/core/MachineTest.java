@@ -28,10 +28,7 @@ package org.graphwalker.core;
 import org.graphwalker.core.condition.VertexCoverage;
 import org.graphwalker.core.generator.RandomPath;
 import org.graphwalker.core.machine.ExecutionContext;
-import org.graphwalker.core.model.Action;
-import org.graphwalker.core.model.Edge;
-import org.graphwalker.core.model.Requirement;
-import org.graphwalker.core.model.Vertex;
+import org.graphwalker.core.model.*;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -51,9 +48,9 @@ public class MachineTest {
         PathGenerator pathGenerator = new RandomPath(new VertexCoverage());
         ExecutionContext context = new ExecutionContext(model, pathGenerator);
         Machine machine = new SimpleMachine(context);
-        Deque<String> names = new ArrayDeque<String>(Arrays.asList("ERROR", "v2", "e1", "v1"));
+        Deque<String> names = new ArrayDeque<String>(Arrays.asList("v1", "e1", "v2", "ERROR"));
         while (machine.hasNextStep()) {
-            machine.getNextStep();
+            Element e = machine.getNextStep();
             Assert.assertEquals(names.pop(), machine.getCurrentStep().getName());
         }
     }
@@ -64,10 +61,10 @@ public class MachineTest {
         PathGenerator pathGenerator = new RandomPath(new VertexCoverage());
         ExecutionContext context = new ExecutionContext(model, pathGenerator);
         Machine machine = new SimpleMachine(context);
-        Deque<String> names = new ArrayDeque<String>(Arrays.asList("ERROR", "v2", "e1", "v1", "e1", "v1"));
+        Deque<String> names = new ArrayDeque<String>(Arrays.asList("v1", "e1", "v1", "e1", "v2", "ERROR"));
         Assert.assertEquals(names.pop(), machine.getNextStep().getName());
         Assert.assertEquals(names.pop(), machine.getNextStep().getName());
-        // if an error occurs or we "reach the end of the road", the reset function will restart the machine but keep current states
+        // e.g. if an error occurs or we "reach the end of the road", the reset function can restart the machine and keep the current states
         machine.restart();
         Assert.assertEquals(names.pop(), machine.getNextStep().getName());
         Assert.assertEquals(2, machine.getExecutionContext().getVisitCount(machine.getCurrentStep()).longValue());
@@ -85,7 +82,7 @@ public class MachineTest {
         Machine machine = new SimpleMachine(context);
         Assert.assertEquals("v1", machine.getNextStep().getName());
         Assert.assertEquals("e1", machine.getNextStep().getName());
-        Assert.assertEquals(3, machine.getScriptContext().getAttribute("i"));
+        Assert.assertEquals(3.0, machine.getScriptContext().getAttribute("i"));
     }
 
     @Test
@@ -97,13 +94,13 @@ public class MachineTest {
         ExecutionContext context = new ExecutionContext(model, pathGenerator);
         Machine machine = new SimpleMachine(context);
         Assert.assertNull(context.getScriptContext().getAttribute("i"));
-        Assert.assertEquals("v1", machine.getNextStep());
+        Assert.assertEquals("v1", machine.getNextStep().getName());
         Assert.assertNull(context.getScriptContext().getAttribute("i"));
-        Assert.assertEquals("e1", machine.getNextStep());
+        Assert.assertEquals("e1", machine.getNextStep().getName());
         Assert.assertNotNull(context.getScriptContext().getAttribute("i"));
-        Assert.assertEquals(1, context.getScriptContext().getAttribute("i"));
-        Assert.assertEquals("v2", machine.getNextStep());
-        Assert.assertEquals(2, context.getScriptContext().getAttribute("i"));
+        Assert.assertEquals(1.0, context.getScriptContext().getAttribute("i"));
+        Assert.assertEquals("v2", machine.getNextStep().getName());
+        Assert.assertEquals(2.0, context.getScriptContext().getAttribute("i"));
         Assert.assertFalse(machine.hasNextStep());
     }
 
