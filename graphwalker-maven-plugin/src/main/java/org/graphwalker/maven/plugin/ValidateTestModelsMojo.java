@@ -29,24 +29,13 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
-import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
-
-import java.io.File;
 
 /**
  * @author Nils Olsson
  */
-@Mojo(name = "generate-sources", defaultPhase = LifecyclePhase.GENERATE_SOURCES, requiresDependencyResolution = ResolutionScope.COMPILE, threadSafe = true)
-public final class GenerateMojo extends AbstractGenerateMojo {
-
-    @Parameter(defaultValue = "${project.build.directory}/generated-sources/graphwalker")
-    private File generatedSourcesDirectory;
-
-    @Override
-    protected File getGeneratedSourcesDirectory() {
-        return generatedSourcesDirectory;
-    }
+@Mojo(name = "validate-test-models", defaultPhase = LifecyclePhase.PROCESS_TEST_CLASSES, requiresDependencyResolution = ResolutionScope.TEST, threadSafe = true)
+public final class ValidateTestModelsMojo extends AbstractValidateMojo {
 
     /**
      *
@@ -54,9 +43,6 @@ public final class GenerateMojo extends AbstractGenerateMojo {
      * @throws MojoFailureException
      */
     public void execute() throws MojoExecutionException, MojoFailureException {
-        generate(getMavenProject().getResources());
-        if (getGeneratedSourcesDirectory().exists()) {
-            getMavenProject().addCompileSourceRoot(getGeneratedSourcesDirectory().getPath());
-        }
+        validate(getMavenProject().getTestResources());
     }
 }

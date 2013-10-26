@@ -121,7 +121,7 @@ public final class CodeGenerator extends VoidVisitorAdapter<ChangeContext> {
     private ClassOrInterfaceDeclaration getInterfaceName(SourceFile sourceFile) {
         ClassOrInterfaceDeclaration classOrInterfaceDeclaration = new ClassOrInterfaceDeclaration(ModifierSet.PUBLIC, false, sourceFile.getBaseName());
         List<MemberValuePair> memberValuePairs = new ArrayList<MemberValuePair>();
-        memberValuePairs.add(new MemberValuePair("file", new StringLiteralExpr(sourceFile.getInputFile().getPath())));
+        memberValuePairs.add(new MemberValuePair("file", new StringLiteralExpr(sourceFile.getInputPath())));
         List<AnnotationExpr> annotations = new ArrayList<AnnotationExpr>();
         annotations.add(new NormalAnnotationExpr(ASTHelper.createNameExpr("Model"), memberValuePairs));
         classOrInterfaceDeclaration.setAnnotations(annotations);
