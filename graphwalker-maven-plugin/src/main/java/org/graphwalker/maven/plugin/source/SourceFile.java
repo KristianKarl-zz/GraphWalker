@@ -52,7 +52,8 @@ public final class SourceFile extends File {
 
     public String getPackageName() {
         if (null == packageName) {
-            packageName = FileUtils.getPath(basePath.relativize(filePath).toFile().getPath()).replaceAll(File.separator, ".");
+            String pattern = "\\".equals(File.separator)?File.separator+File.separator:File.separator;
+            packageName = FileUtils.getPath(basePath.relativize(filePath).toFile().getPath()).replaceAll(pattern, ".");
         }
         return packageName;
     }
