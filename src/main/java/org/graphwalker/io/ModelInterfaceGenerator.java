@@ -189,7 +189,8 @@ public class ModelInterfaceGenerator {
 
     protected static String getRelativePath(File model, String part) {
         String absolutePath = model.getParentFile().getAbsolutePath();
-        return absolutePath.substring(absolutePath.lastIndexOf(part) + part.length() + 1);
+        int index = absolutePath.lastIndexOf(part) + part.length();
+        return index < absolutePath.length() ? absolutePath.substring(index + 1) : "";
     }
 
     protected static File getJavaFile(File model) {
