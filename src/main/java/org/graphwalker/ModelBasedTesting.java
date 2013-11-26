@@ -63,9 +63,9 @@ import org.json.simple.JSONObject;
 
 /**
  * The object handles the test case generation, both online and offline.
- * 
+ *
  * @author krikar
- * 
+ *
  */
 public class ModelBasedTesting extends Observable {
   private static Logger logger = Util.setupLogger(ModelBasedTesting.class);
@@ -201,7 +201,7 @@ public class ModelBasedTesting extends Observable {
 
   /**
    * Return the instance of the graph
-   * 
+   *
    * @return
    */
   public Graph getGraph() {
@@ -219,7 +219,7 @@ public class ModelBasedTesting extends Observable {
 
   /**
    * Returns the current future object in the test.
-   * 
+   *
    * @return
    */
   public Future<?> getFuture() {
@@ -229,7 +229,7 @@ public class ModelBasedTesting extends Observable {
   /**
    * Sets the future for the model. The execution of the path will be paused until the future is
    * done.
-   * 
+   *
    * @param future
    */
   public void setFuture(Future<?> future) {
@@ -238,7 +238,7 @@ public class ModelBasedTesting extends Observable {
 
   /**
    * Returns the value of an data object within the data space of the model.
-   * 
+   *
    * @param data The name of the data object, which value is to be retrieved.
    * @return The value of the data object. The value is always returned a s string. It is the
    *         calling parties task to parse the string and convert it to correct type.
@@ -255,7 +255,7 @@ public class ModelBasedTesting extends Observable {
 
   /**
    * Returns the value of an data object within the data space of the model.
-   * 
+   *
    * @param data The name of the data object, which value is to be retrieved.
    * @return The value of the data object. The value is always returned a s string. It is the
    *         calling parties task to parse the string and convert it to correct type.
@@ -273,7 +273,7 @@ public class ModelBasedTesting extends Observable {
 
   /**
    * Executes an action, and returns any outcome as a string.
-   * 
+   *
    * @param action The name of the data object and the method, which value is to be retrieved.
    * @return The value of the data object's method. The value is always returned a s string. It is
    *         the calling parties task to parse the string and convert it to correct type.
@@ -293,7 +293,7 @@ public class ModelBasedTesting extends Observable {
    * Tells mbt that a requirement (if any), has passed or failed. MBT will look at the most recent
    * vertex and check if they have requirement. All the requirements found will get the new value
    * according to the pass parameter and saved into the reqs hashmap inside the machine.
-   * 
+   *
    * @param pass Tells mbt if the requirement has pass (true), or failed (false).
    */
   public void passRequirement(boolean pass) {
@@ -960,7 +960,7 @@ public class ModelBasedTesting extends Observable {
     return parsedStr;
   }
 
-  protected void writePath(PrintStream out) throws InterruptedException {
+  public void writePath(PrintStream out) throws InterruptedException {
     if (this.machine == null) {
       getMachine();
     }
@@ -1035,7 +1035,7 @@ public class ModelBasedTesting extends Observable {
 
   /**
    * Changes the current vertex in the model.
-   * 
+   *
    * @param newVertex The name ({@link Keywords.LABEL_KEY}) of the new current vertex of the model.
    *        If null is given, or newVertex is empty, then the default value will be the START vertex
    *        in the model. If newVertex does not exist in the model, the method does nothing, and the
