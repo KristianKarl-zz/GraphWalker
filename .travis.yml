@@ -4,3 +4,4 @@ jdk:
   - openjdk7
   - openjdk6
 
+install: mvn install -DskipTests=true -Dgpg.skip=true
