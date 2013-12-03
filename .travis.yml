@@ -8,7 +8,11 @@ env:
     - secure: "IVcJyf13GCwLkpYKqygwTH9f3EG1YiqdmXWPCt5d9DXKKLjbSq/MFQ/nwdgfgfJAsgrSXN0I+6fIf8/INtI4YcKTpzAblXdeAkWdVrD4xpRSC7TpEHdEGMWEBtSWzJy8b92F2cxCXuk/QPDK4d8/QuelkFD9C9IztmgSqq7fQQg="
 
 
-install: mvn package -DskipTests=true -Dgpg.skip=true
+install:
+  mvn install -DskipTests=true -Dgpg.skip=true
+
+script:
+  mvn package -DskipTests=true -Dgpg.skip=true
 
 after_success:
   "sshpass -p $GW_PASSWORD scp target/graphwalker-*.jar $GW_USER@graphwalker.org:/var/www/data/uploads/"
