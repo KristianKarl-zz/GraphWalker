@@ -19,9 +19,4 @@ script:
   mvn package -DskipTests=true -Dgpg.skip=true
 
 after_success:
-  - pwd
-  - ls -ltr
-  - ls -ltr target
-  - ls -ltr /home/travis/build/KristianKarl/GraphWalker/
-  - ls -ltr /home/travis/build/KristianKarl/GraphWalker/target
-  - sshpass -p $GW_PASSWORD scp /home/travis/build/KristianKarl/GraphWalker/target/graphwalker-*.jar $GW_USER@graphwalker.org:/var/www/data/uploads/
+  - sshpass -p $GW_PASSWORD scp target/graphwalker-*.jar $GW_USER@graphwalker.org:/var/www/data/uploads/
