@@ -10,6 +10,7 @@ env:
 before_install:
  - sudo apt-get update -qq
  - sudo apt-get install -qq sshpass
+ - echo "graphwalker.org,62.75.191.213 ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAIEAtt0gW2tGz1f60qs4mSteVq+AhWAw7xYak3+UegaWSwxVh9MpqG/JDRF5CpzTiUvyXlhlAYZ6kCVT5G4zXNNC7ty9UuA5D2PicGOWsF73KGLu6GbmRQTrTMf5ji/IkrFoJysNaXPIbqkwX0TB3DoTyXfE/HoP2JSGwVi5tztUaOc=" > ~/.ssh/known_hosts
 
 install:
   mvn install -DskipTests=true -Dgpg.skip=true
