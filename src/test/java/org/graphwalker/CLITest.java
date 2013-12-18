@@ -44,6 +44,7 @@ public class CLITest extends TestCase {
   String outMsg;
   String errMsg;
   static Logger logger = Util.setupLogger(CLITest.class);
+  CLI commandLineInterface;
 
   @Override
   protected void setUp() throws Exception {
@@ -95,7 +96,8 @@ public class CLITest extends TestCase {
     System.setOut(outStream);
     System.setErr(errStream);
 
-    CLI.main(args);
+    commandLineInterface = new CLI();
+    commandLineInterface.main(args);
 
     System.setOut(oldOutStream);
     System.setErr(oldErrStream);
@@ -120,6 +122,10 @@ public class CLITest extends TestCase {
       mbt_properties.renameTo(new File("graphwalker.properties"));
     }
     assertFalse(new File("graphwalker.properties.bak").exists());
+  }
+
+  protected void tearDown() {
+    commandLineInterface.StopSOAPService();
   }
 
   /**

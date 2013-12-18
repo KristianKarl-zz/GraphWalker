@@ -16,7 +16,7 @@ install:
   mvn install -DskipTests=true -Dgpg.skip=true
 
 script:
-  mvn site package javadoc:javadoc -DskipTests=true -Dgpg.skip=true
+  mvn site package javadoc:javadoc -Dgpg.skip=true
 
 after_success:
  - cp target/graphwalker-*.jar target/graphwalker.jar
