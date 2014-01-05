@@ -15,5 +15,4 @@ install:
   mvn install -DskipTests=true -Dgpg.skip=true
 
 script:
-  mvn deploy -Dgpg.skip=true
-
+  mvn deploy -Dgpg.skip=true --settings deploy-snapshot.settings
