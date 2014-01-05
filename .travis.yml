@@ -2,23 +2,18 @@ language: java
 jdk:
   - openjdk7
 
+branches:
+  only:
+    - deploy-snapshot
+
 env:
   global:
-    - secure: "Si+FksmD04Qev09hkYqWYN4rYQderrvMt6/kZBTgEek/v4Bd8QVCcbkZemYQCLnfhm94fNJDVrvpbrZhkeSWhCXKnnsYMH9oaxQWSd4aUI55V9QAseVAWMod5d2TSD7kTIo1owV5xh9LHTLmwnv4v6WmV3dSHSQc0zQh09dFC/M="
-    - secure: "IVcJyf13GCwLkpYKqygwTH9f3EG1YiqdmXWPCt5d9DXKKLjbSq/MFQ/nwdgfgfJAsgrSXN0I+6fIf8/INtI4YcKTpzAblXdeAkWdVrD4xpRSC7TpEHdEGMWEBtSWzJy8b92F2cxCXuk/QPDK4d8/QuelkFD9C9IztmgSqq7fQQg="
-
-before_install:
- - sudo apt-get update -qq
- - sudo apt-get install -qq sshpass
- - echo "graphwalker.org,62.75.191.213 ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAIEAtt0gW2tGz1f60qs4mSteVq+AhWAw7xYak3+UegaWSwxVh9MpqG/JDRF5CpzTiUvyXlhlAYZ6kCVT5G4zXNNC7ty9UuA5D2PicGOWsF73KGLu6GbmRQTrTMf5ji/IkrFoJysNaXPIbqkwX0TB3DoTyXfE/HoP2JSGwVi5tztUaOc=" > ~/.ssh/known_hosts
+    - secure: "gey7ZBlMVYn8ZKDh4m8q6YbeFKS63vObq8AWJ9rGJmpFAteKMDymPPHjvRJoShw+8MvhR47zkRMI7PkM1gRHnl8uSYHDiz5yS2th2Ds/6U+83nDJ77yCy2P5vgiwqkEf6T6YwLhHWF8EfRZ5ekHejt5ELoGFMNMT1wwukEL3zCg="
+    - secure: "Tz5G74aAHUMmwD7FHWi02d+kIwDoIgL3DSWbPJnnJtK7H+y07n0JrPWl4O6HRhfNrB9LyOEIgD6I7kQSXac4RCl+6eT+Yx2V36NWS/U2fC8ZCPn0eyp8WmSS46bWIhCF+xCdDMa3wUpPwKIyZuE6+UK1AOvvEBZF3HM85lsbtac="
 
 install:
   mvn install -DskipTests=true -Dgpg.skip=true
 
 script:
-  mvn site package javadoc:javadoc -Dgpg.skip=true
+  mvn deploy -Dgpg.skip=true
 
-after_success:
- - cp target/graphwalker-*.jar target/graphwalker.jar
- - sshpass -p $GW_PASSWORD scp target/graphwalker*.jar $GW_USER@graphwalker.org:/var/www/data/uploads/
- - sshpass -p $GW_PASSWORD scp -r target/site/ $GW_USER@graphwalker.org:/var/www/data/uploads/
