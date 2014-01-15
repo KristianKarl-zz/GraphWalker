@@ -57,7 +57,6 @@ public class AnalyzeTest {
     assertTrue("The graph should be strongly connected", Analyze.isStronglyConnected(g));
   }
 
-
   /**
    *                  +-----+
    *                  |Start|
@@ -153,28 +152,27 @@ public class AnalyzeTest {
    *                     |
    *                     |E0
    *                     v
-   *                   +----+
-   *         +---------+ V1 +------+
-   *    E1   v         +----+      |
-   *       +----+        ^         |
-   *       | V2 |        |         |E4
-   *       +-+--+        |         |
-   *     E2  |           |         |
-   *         v           | E7      v
-   *       +----+        |      +----+
-   *       | V3 |        |      | V5 |
-   *       +-+--+        |      +-+--+
-   *         |         +-+---+    | E5
-   *         +-------->| V4  |<---+
-   *            E3     +--+--+
-   *                      |
-   *                      v E6
-   *                 +--------+
-   *                 |END_NODE|
-   *                 +--------+
+   *                  +----+
+   *         +--------+ V1 +
+   *     E1  v        +----+
+   *       +----+        ^
+   *       | V2 |        |
+   *       +-+--+        |
+   *     E2  |           |
+   *         v           | E4
+   *       +----+        |
+   *       | V3 |        |
+   *       +-+--+        |
+   *         |        +--+--+        +--+--+
+   *         +------->| V4  |------->| V5  |
+   *            E3    +--+--+  E5    +--+--+
+   *                     ^              |
+   *                     |              |
+   *                     +--------------+
+   *                           E6
    */
   @Test
-  public void notStronglyConnected_2() {
+  public void stronglyConnected_3() {
     Graph g = new Graph();
     HashMap<String, Vertex> v = new HashMap<String, Vertex>();
     HashMap<String, Edge> e = new HashMap<String, Edge>();
@@ -185,17 +183,15 @@ public class AnalyzeTest {
     v.put("V3", Util.addVertexToGraph(g, "V3"));
     v.put("V4", Util.addVertexToGraph(g, "V4"));
     v.put("V5", Util.addVertexToGraph(g, "V5"));
-    v.put("END_NODE", Util.addVertexToGraph(g, "END_NODE"));
 
     e.put("E0", Util.addEdgeToGraph(g, v.get("Start"), v.get("V1"), "E0", null, null, null));
     e.put("E1", Util.addEdgeToGraph(g, v.get("V1"), v.get("V2"), "E1", null, null, null));
     e.put("E2", Util.addEdgeToGraph(g, v.get("V2"), v.get("V3"), "E2", null, null, null));
     e.put("E3", Util.addEdgeToGraph(g, v.get("V3"), v.get("V4"), "E3", null, null, null));
-    e.put("E4", Util.addEdgeToGraph(g, v.get("V1"), v.get("V5"), "E4", null, null, null));
-    e.put("E5", Util.addEdgeToGraph(g, v.get("V5"), v.get("V4"), "E5", null, null, null));
-    e.put("E6", Util.addEdgeToGraph(g, v.get("V4"), v.get("END_NODE"), "E6", null, null, null));
-    e.put("E7", Util.addEdgeToGraph(g, v.get("V4"), v.get("V1"), "E7", null, null, null));
+    e.put("E4", Util.addEdgeToGraph(g, v.get("V4"), v.get("V1"), "E4", null, null, null));
+    e.put("E5", Util.addEdgeToGraph(g, v.get("V4"), v.get("V5"), "E5", null, null, null));
+    e.put("E6", Util.addEdgeToGraph(g, v.get("V5"), v.get("V4"), "E6", null, null, null));
 
-    assertFalse("The graph should not be strongly connected", Analyze.isStronglyConnected(g));
+    assertTrue("The graph should be strongly connected", Analyze.isStronglyConnected(g));
   }
 }
