@@ -41,4 +41,33 @@ public class Analyze {
     return str.toString();
   }
 
+  /**
+   * Test if it is possible to reach any node starting from any other node by
+   * traversing edges in the direction(s) in which they point.
+   *
+   * See also http://mathworld.wolfram.com/StronglyConnectedDigraph.html
+   * @param g Graph to be tested
+   * @return true if the graph g is strongly connected.
+   */
+  public static boolean isStronglyConnected(Graph g) {
+    for (Vertex source : g.getVertices()) {
+      if (source.getLabelKey().equalsIgnoreCase(Keywords.START_NODE)) {
+        continue;
+      }
+      for (Vertex target : g.getVertices()) {
+        if (target.getLabelKey().equalsIgnoreCase(Keywords.START_NODE)) {
+          continue;
+        }
+        if (target == source) {
+          continue;
+        }
+        List<Edge> dijkstraShortestPath = new DijkstraShortestPath<Vertex, Edge>(g).getPath(source, target);
+        if (dijkstraShortestPath.size() > 0) {
+          continue;
+        }
+        return false;
+      }
+    }
+    return true;
+  }
 }
