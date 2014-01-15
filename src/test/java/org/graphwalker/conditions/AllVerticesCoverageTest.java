@@ -144,12 +144,10 @@ public class AllVerticesCoverageTest extends TestCase {
 
     for (int i = 0; i<7; i++ ) {
       mbt.getNextStep();
-      System.out.println(mbt.getCurrentEdge());
       assertFalse("Expected the fulfillment to be false at i=" + i, mbt.getGenerator().getStopCondition().isFulfilled());
     }
 
     mbt.getNextStep();
-    System.out.println(mbt.getCurrentEdge());
     assertEquals(true, mbt.getGenerator().getStopCondition().isFulfilled());
   }
 
