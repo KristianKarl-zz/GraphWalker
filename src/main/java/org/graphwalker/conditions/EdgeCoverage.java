@@ -37,7 +37,7 @@ public class EdgeCoverage extends StopCondition {
   }
 
   public EdgeCoverage(double limit) throws StopConditionException {
-    if (limit > 1 || limit < 0) throw new StopConditionException("Excpeted an edge coverage between 0 and 100. Actual: " + limit * 100);
+    if (limit > 1 || limit < 0) throw new StopConditionException("Expected an edge coverage between 0 and 100. Actual: " + limit * 100);
     this.limit = limit;
   }
 
