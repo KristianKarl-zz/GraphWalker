@@ -56,7 +56,7 @@ public class FiniteStateMachine {
   private Vertex currentVertex = null;
   private boolean weighted = false;
   private Edge lastEdge = null;
-  private Stack<Edge> edgeStack;
+  private final Stack<Edge> edgeStack;
   private Stack<Integer> vertexStore;
   private int numberOfEdgesTravesed = 0;
   private HashMap<String, Boolean> reqs = new HashMap<String, Boolean>();
@@ -64,7 +64,7 @@ public class FiniteStateMachine {
   private int numOfCoveredEdges = 0;
   private int numOfCoveredVertices = 0;
 
-  private long start_time;
+  private final long start_time;
 
   private Hashtable<String, Integer> associatedRequirements;
 
@@ -168,6 +168,11 @@ public class FiniteStateMachine {
     return retur;
   }
 
+  public Set<Edge> getCurrentInEdges() {
+    Set<Edge> retur = new HashSet<Edge>(model.getInEdges(currentVertex));
+    return retur;
+  }
+
   public void setAsVisited(AbstractElement e) {
     if (e instanceof Edge) {
       if (e.getVisitedKey() < 1) {
@@ -258,7 +263,7 @@ public class FiniteStateMachine {
     int reqc = stats[6];
 
     return (req > 0 ? "RC: " + reqc + "/" + req + " => " + (100 * reqc) / req + "% " : "") + "EC: " + ec + "/" + e + " => " + (100 * ec) / e + "% "
-        + "SC: " + vc + "/" + v + " => " + (100 * vc) / v + "% " + "L: " + len;
+    + "SC: " + vc + "/" + v + " => " + (100 * vc) / v + "% " + "L: " + len;
   }
 
   public String getStatisticsString() {
@@ -275,7 +280,7 @@ public class FiniteStateMachine {
     if (e > 0 && v > 0) {
       str =
           "Coverage Edges: " + ec + "/" + e + " => " + (100 * ec) / e + "%\n" + "Coverage Vertices: " + vc + "/" + v + " => " + (100 * vc) / v
-              + "%\n" + "Unvisited Edges:  " + (e - ec) + "\n" + "Unvisited Vertices: " + (v - vc) + "\n" + "Test sequence length:  " + len;
+          + "%\n" + "Unvisited Edges:  " + (e - ec) + "\n" + "Unvisited Vertices: " + (v - vc) + "\n" + "Test sequence length:  " + len;
     } else if (req > 0) {
       str = "Coverage Requirements: " + reqc + "/" + req + " => " + (100 * reqc) / req + "%\n";
     } else {
@@ -289,8 +294,8 @@ public class FiniteStateMachine {
     Collection<Vertex> v = model.getVertices();
 
     int[] retur =
-        {e.size(), getEdgeCoverage(e), v.size(), getVertexCoverage(v), numberOfEdgesTravesed, getAllRequirements().size(),
-            getCoveredRequirements().size()};
+      {e.size(), getEdgeCoverage(e), v.size(), getVertexCoverage(v), numberOfEdgesTravesed, getAllRequirements().size(),
+       getCoveredRequirements().size()};
     return retur;
   }
 
