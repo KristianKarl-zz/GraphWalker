@@ -42,6 +42,7 @@ public interface Model {
     List<Vertex> getVertices();
     Vertex getVertex(String name);
     Vertex getVertex(Vertex vertex);
+    String getDescription();
     List<Element> getElements();
     List<Element> getElements(Element element);
     List<Element> getConnectedComponent(Element element);

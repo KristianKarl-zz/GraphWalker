@@ -208,6 +208,10 @@ public final class SimpleModel extends EventSource<ModelSink> implements Model {
         return vertices.get(vertex);
     }
 
+    public String getDescription() {
+        return null;
+    }
+
     public List<Element> getElements() {
         return elementCache;
     }
