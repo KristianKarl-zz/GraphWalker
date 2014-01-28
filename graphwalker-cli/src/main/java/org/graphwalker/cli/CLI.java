@@ -56,7 +56,9 @@ public class CLI {
     try {
       cli.run(args);
     } catch (Exception e) {
-      logger.log(Level.ALL, printGeneralHelpText(), e.getStackTrace());
+      System.err.println(e);
+      System.err.println(printGeneralHelpText());
+      logger.log(Level.ALL, e.toString(), e.getStackTrace());
     }
   }
 

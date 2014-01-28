@@ -205,7 +205,18 @@ public class CLITest {
 
   /**
    * Simulates
-   * java -jar graphwalker.jar offline -f graphml/reqtags/ExtendedMain.graphml -g A_STAR -s EDGE_COVERAGE:100
+   * java -jar graphwalker.jar offline -f graphml/UC01.graphml -g A_STAR -s EDGE_COVERAGE:100
+   */
+  @Test
+  public void testOfflineRandomEdgeCoverage100percent() {
+    String args[] = {"offline", "-f", "graphml/EFSM_with_REQTAGS.graphml", "-g", "A_STAR", "-s", "EDGE_COVERAGE:100"};
+    runCommand(args);
+    Assert.assertThat( "No error messages should occur", errMsg, is(""));
+  }
+
+  /**
+   * Simulates
+   * java -jar graphwalker.jar offline -f graphml/UC01.graphml -g A_STAR -s EDGE_COVERAGE:100
    */
   @Test
   public void testOfflineA_StarEdgeCoverage100percent() {
