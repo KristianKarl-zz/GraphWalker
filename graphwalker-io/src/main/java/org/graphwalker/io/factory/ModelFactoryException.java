@@ -2,7 +2,7 @@
  * #%L
  * GraphWalker Core
  * %%
- * Copyright (C) 2011 - 2013 GraphWalker
+ * Copyright (C) 2011 - 2012 GraphWalker
  * %%
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,46 +23,28 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.maven.plugin.model;
-
-import org.graphwalker.core.Model;
-
-import java.nio.file.Path;
-import java.util.Set;
+package org.graphwalker.io.factory;
 
 /**
  * @author Nils Olsson
  */
-public interface ModelFactory {
+public class ModelFactoryException extends RuntimeException {
 
     /**
-     * <p>accept.</p>
+     * <p>Constructor for ConfigurationException.</p>
      *
-     * @param path a {@link java.nio.file.Path} object.
-     * @return a boolean.
+     * @param e a {@link java.lang.Exception} object.
      */
-    boolean accept(Path path);
+    public ModelFactoryException(Exception e) {
+        super(e);
+    }
 
     /**
-     * <p>validate.</p>
+     * <p>Constructor for ConfigurationException.</p>
      *
-     * @param path a {@link java.nio.file.Path} object.
-     * @return a boolean.
+     * @param cause a {@link java.lang.String} object.
      */
-    boolean validate(Path path);
-
-    /**
-     * <p>create.</p>
-     *
-     * @param path a {@link java.nio.file.Path} object.
-     * @return a {@link org.graphwalker.core.Model} object.
-     */
-    Model create(Path path);
-
-    /**
-     * <p>getSupportedFileTypes.</p>
-     *
-     * @return a {@link java.util.Set} object.
-     */
-    Set<String> getSupportedFileTypes();
+    public ModelFactoryException(String cause) {
+        super(cause);
+    }
 }

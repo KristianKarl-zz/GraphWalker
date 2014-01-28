@@ -26,8 +26,8 @@
 package org.graphwalker.maven.plugin;
 
 import org.apache.maven.model.Resource;
-import org.graphwalker.maven.plugin.model.GraphMLModelFactory;
-import org.graphwalker.maven.plugin.model.ModelFactory;
+import org.graphwalker.io.factory.GraphMLModelFactory;
+import org.graphwalker.io.factory.ModelFactory;
 
 import java.io.File;
 import java.util.List;

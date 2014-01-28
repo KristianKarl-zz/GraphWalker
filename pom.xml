@@ -23,6 +23,7 @@
         <!--module>graphwalker-maven-plugin</module-->
         <!--module>graphwalker-example</module-->
         <module>graphwalker-cli</module>
+        <module>graphwalker-io</module>
     </modules>
 
     <organization>

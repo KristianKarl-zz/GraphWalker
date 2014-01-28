@@ -30,8 +30,8 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
 import org.graphwalker.core.Model;
-import org.graphwalker.maven.plugin.model.GraphMLModelFactory;
-import org.graphwalker.maven.plugin.model.ModelFactory;
+import org.graphwalker.io.factory.GraphMLModelFactory;
+import org.graphwalker.io.factory.ModelFactory;
 import org.graphwalker.maven.plugin.source.CodeGenerator;
 import org.graphwalker.maven.plugin.source.SourceFile;
 

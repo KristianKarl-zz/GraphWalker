@@ -23,7 +23,7 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.maven.plugin.model;
+package org.graphwalker.io.factory;
 
 import org.graphwalker.core.Bundle;
 import org.graphwalker.core.Model;

@@ -45,7 +45,7 @@
         </dependency>
         <dependency>
             <groupId>org.graphwalker</groupId>
-            <artifactId>graphwalker-maven-plugin</artifactId>
+            <artifactId>graphwalker-io</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

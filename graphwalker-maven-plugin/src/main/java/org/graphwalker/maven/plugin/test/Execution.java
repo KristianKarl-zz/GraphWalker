@@ -30,8 +30,8 @@ import org.graphwalker.core.PathGenerator;
 import org.graphwalker.core.SimpleModel;
 import org.graphwalker.core.StopCondition;
 import org.graphwalker.maven.plugin.common.AnnotationUtils;
-import org.graphwalker.maven.plugin.model.GraphMLModelFactory;
-import org.graphwalker.maven.plugin.model.ModelFactory;
+import org.graphwalker.io.factory.GraphMLModelFactory;
+import org.graphwalker.io.factory.ModelFactory;
 
 import java.lang.annotation.Annotation;
 import java.nio.file.Path;

@@ -2,7 +2,7 @@
  * #%L
  * GraphWalker Core
  * %%
- * Copyright (C) 2011 - 2012 GraphWalker
+ * Copyright (C) 2011 - 2013 GraphWalker
  * %%
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,28 +23,35 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.maven.plugin.model;
+package org.graphwalker.io.factory;
+
+
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Nils Olsson
  */
-public class ModelFactoryException extends RuntimeException {
+public abstract class AbstractModelFactory implements ModelFactory {
+
+    private final Set<String> supportedTypes = new HashSet<String>();
 
     /**
-     * <p>Constructor for ConfigurationException.</p>
+     * <p>Constructor for AbstractModelFactory.</p>
      *
-     * @param e a {@link java.lang.Exception} object.
+     * @param types a {@link java.lang.String} object.
      */
-    public ModelFactoryException(Exception e) {
-        super(e);
+    public AbstractModelFactory(String... types) {
+        Collections.addAll(supportedTypes, types);
     }
 
     /**
-     * <p>Constructor for ConfigurationException.</p>
+     * <p>getSupportedFileTypes.</p>
      *
-     * @param cause a {@link java.lang.String} object.
+     * @return a {@link java.util.Set} object.
      */
-    public ModelFactoryException(String cause) {
-        super(cause);
+    public Set<String> getSupportedFileTypes() {
+        return supportedTypes;
     }
 }

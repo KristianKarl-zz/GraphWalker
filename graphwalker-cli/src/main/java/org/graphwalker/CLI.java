@@ -36,7 +36,7 @@ import org.graphwalker.core.generator.AStarPath;
 import org.graphwalker.core.generator.RandomPath;
 import org.graphwalker.core.machine.ExecutionContext;
 import org.graphwalker.core.model.Element;
-import org.graphwalker.maven.plugin.model.GraphMLModelFactory;
+import org.graphwalker.io.factory.GraphMLModelFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -110,7 +110,7 @@ public class CLI {
 
     GraphMLModelFactory factory = new GraphMLModelFactory();
     Model model = factory.create(cl.getOptionValue("f"));
-    PathGenerator pathGenerator = new RandomPath(new EdgeCoverage());
+    PathGenerator pathGenerator = new AStarPath(new EdgeCoverage());
     ExecutionContext context = new ExecutionContext(model, pathGenerator);
     Machine machine = new SimpleMachine(context);
     while (machine.hasNextStep()) {
