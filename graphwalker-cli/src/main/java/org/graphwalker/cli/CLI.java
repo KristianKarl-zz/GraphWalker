@@ -23,7 +23,7 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker;
+package org.graphwalker.cli;
 
 import org.apache.commons.cli.*;
 import org.graphwalker.core.Machine;

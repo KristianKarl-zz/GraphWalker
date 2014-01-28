@@ -46,10 +46,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package org.graphwalker;
+package org.graphwalker.cli;
 
 import static org.graphwalker.RegexMatcher.matches;
 import static org.hamcrest.CoreMatchers.*;
+
+import org.graphwalker.cli.CLI;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -75,7 +77,7 @@ public class CLITest {
   String outMsg;
   String errMsg;
   static Logger logger = Logger.getAnonymousLogger();
-  private org.graphwalker.CLI commandLineInterface;
+  private CLI commandLineInterface;
 
   private OutputStream redirectOut() {
     return new OutputStream() {
