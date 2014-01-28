@@ -26,10 +26,9 @@
 package org.graphwalker.cli;
 
 import org.apache.commons.cli.*;
-import org.graphwalker.core.Machine;
-import org.graphwalker.core.Model;
-import org.graphwalker.core.PathGenerator;
-import org.graphwalker.core.SimpleMachine;
+import org.apache.commons.vfs2.FileSystemException;
+import org.graphwalker.core.*;
+import org.graphwalker.core.condition.BaseStopCondition;
 import org.graphwalker.core.condition.EdgeCoverage;
 import org.graphwalker.core.condition.VertexCoverage;
 import org.graphwalker.core.generator.AStarPath;
@@ -96,7 +95,7 @@ public class CLI {
       if (args[0].equalsIgnoreCase("offline")) {
         RunCommandOffline(cl);
       }
-    } catch (ParseException e) {
+    } catch (Exception e) {
       e.printStackTrace();
       logger.log(Level.ALL, printGeneralHelpText(), e.getStackTrace());
       System.err.println("Parsing of the command line failed");
@@ -105,14 +104,32 @@ public class CLI {
     }
   }
 
-  private void RunCommandOffline(CommandLine cl) {
+  private void RunCommandOffline(CommandLine cl) throws FileSystemException {
     if (helpNeeded("offline", !cl.hasOption("f"), "Missing the input graphml file (folder), See -f (--input_graphml)")
       || helpNeeded("offline", !cl.hasOption("s"), "A stop condition must be supplied, See option -s")
       || helpNeeded("offline", !cl.hasOption("g"), "Missing the generator, See option -g")) return;
 
     GraphMLModelFactory factory = new GraphMLModelFactory();
     Model model = factory.create(cl.getOptionValue("f"));
-    PathGenerator pathGenerator = new AStarPath(new EdgeCoverage());
+
+    StopCondition condition = null;
+    if ( cl.getOptionValue("s").equalsIgnoreCase("EDGE_COVERAGE") ) {
+      condition = new EdgeCoverage();
+    } else if ( cl.getOptionValue("s").equalsIgnoreCase("VERTEX_COVERAGE") ) {
+      condition = new VertexCoverage();
+    } else {
+      throw new IllegalArgumentException("No generator called: " + cl.getOptionValue("g"));
+    }
+
+    PathGenerator pathGenerator = null;
+    if ( cl.getOptionValue("g").equalsIgnoreCase("RANDOM") ) {
+      pathGenerator = new RandomPath(condition);
+    } else if ( cl.getOptionValue("g").equalsIgnoreCase("A_STAR") ) {
+      pathGenerator = new AStarPath(condition);
+    } else {
+      throw new IllegalArgumentException("No generator called: " + cl.getOptionValue("g"));
+    }
+
     ExecutionContext context = new ExecutionContext(model, pathGenerator);
     Machine machine = new SimpleMachine(context);
     while (machine.hasNextStep()) {

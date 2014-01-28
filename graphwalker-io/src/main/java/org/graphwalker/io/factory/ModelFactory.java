@@ -25,6 +25,7 @@
  */
 package org.graphwalker.io.factory;
 
+import org.apache.commons.vfs2.FileSystemException;
 import org.graphwalker.core.Model;
 
 import java.nio.file.Path;
