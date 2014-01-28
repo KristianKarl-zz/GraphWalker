@@ -43,7 +43,9 @@ public final class ReachedVertex extends BaseStopCondition {
     }
 
     public double getFulfilment(ExecutionContext context) {
-        if (getValue().equals(context.getCurrentElement().getName())) {
+        if (null == context.getCurrentElement()) {
+            return 0;
+        } else if (getValue().equals(context.getCurrentElement().getName())) {
             return 1;
         } else {
             Model model = context.getModel();

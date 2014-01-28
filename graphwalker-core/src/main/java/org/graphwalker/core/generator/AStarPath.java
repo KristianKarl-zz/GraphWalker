@@ -30,6 +30,7 @@ import org.graphwalker.core.StopCondition;
 import org.graphwalker.core.machine.ExecutionContext;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Element;
+import org.graphwalker.core.model.Path;
 
 import java.util.List;
 
@@ -42,14 +43,13 @@ public final class AStarPath extends BasePathGenerator {
         super(stopCondition);
     }
 
-    public Boolean hasNextStep() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
     public Element getNextStep(ExecutionContext context) {
         List<Element> elements = context.getModel().getElements(context.getCurrentElement());
         if (elements.isEmpty()) {
             throw new NoPathFoundException();
+        }
+        if (null == context.getCurrentElement()) {
+            context.setCurrentElement(elements.get(0));
         }
         Element target = null;
         Model model = context.getModel();
@@ -66,6 +66,8 @@ public final class AStarPath extends BasePathGenerator {
         if (null != model.getVertex(getStopCondition().getValue())) {
             target = model.getVertex(getStopCondition().getValue());
         }
-        return model.getShortestPath(context.getCurrentElement(), target).getFirst();
+        Path<Element> path = model.getShortestPath(context.getCurrentElement(), target);
+        path.pollFirst();
+        return context.setCurrentElement(path.getFirst());
     }
 }

@@ -25,26 +25,27 @@
  */
 package org.graphwalker.core.condition;
 
+import org.graphwalker.core.StopCondition;
 import org.graphwalker.core.machine.ExecutionContext;
 
 /**
  * @author Nils Olsson
  */
-public final class Never extends BaseStopCondition {
+public final class Never implements StopCondition {
 
-    public Never() {
-        this("");
+    @Override
+    public String getValue() {
+        return null;
     }
 
-    public Never(String value) {
-        super(value);
-    }
-
+    @Override
     public boolean isFulfilled(ExecutionContext context) {
         return false;
     }
 
+    @Override
     public double getFulfilment(ExecutionContext context) {
         return 0;
     }
+
 }

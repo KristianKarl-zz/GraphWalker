@@ -51,6 +51,14 @@ public final class Edge implements Element {
         this(name, source, target, new Guard("true"), new HashSet<Action>());
     }
 
+    public Edge(String name, Vertex source, Vertex target, Boolean blocked) {
+        this(name, source, target, new Guard("true"), new HashSet<Action>(), blocked, 1.0);
+    }
+
+    public Edge(String name, Vertex source, Vertex target, Boolean blocked, Double weight) {
+        this(name, source, target, new Guard("true"), new HashSet<Action>(), blocked, weight);
+    }
+
     public Edge(String name, Vertex source, Vertex target, Set<Action> actions) {
         this(name, source, target, new Guard("true"), actions, false);
     }

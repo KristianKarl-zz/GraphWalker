@@ -43,15 +43,17 @@ public final class ReachedEdge extends BaseStopCondition {
     }
 
     public double getFulfilment(ExecutionContext context) {
-        if (getValue().equals(context.getCurrentElement().getName())) {
+        if (null == context.getCurrentElement()) {
+            return 0;
+        } else if (getValue().equals(context.getCurrentElement().getName())) {
             return 1;
         } else {
             double maxFulfilment = 0;
             Model model = context.getModel();
-            for (Edge edge: model.getEdges(getValue())) {
+            for (Edge edge : model.getEdges(getValue())) {
                 int distance = model.getShortestDistance(context.getCurrentElement(), edge);
                 int max = model.getMaximumDistance(edge);
-                double fulfilment = 1 - (double)distance/max;
+                double fulfilment = 1 - (double) distance / max;
                 if (maxFulfilment < fulfilment) {
                     maxFulfilment = fulfilment;
                 }
