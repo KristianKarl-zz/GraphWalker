@@ -11,7 +11,7 @@
     </parent>
 
     <artifactId>graphwalker-io</artifactId>
-    <name>Input/Output</name>
+    <name>GraphWalker Input/Output</name>
     <dependencies>
         <dependency>
             <groupId>org.graphwalker</groupId>
