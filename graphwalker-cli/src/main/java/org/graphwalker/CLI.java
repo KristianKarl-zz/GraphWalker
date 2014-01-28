@@ -25,10 +25,25 @@
  */
 package org.graphwalker;
 
-import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.OptionBuilder;
-import org.apache.commons.cli.Options;
+import org.apache.commons.cli.*;
+import org.graphwalker.core.Machine;
+import org.graphwalker.core.Model;
+import org.graphwalker.core.PathGenerator;
+import org.graphwalker.core.SimpleMachine;
+import org.graphwalker.core.condition.EdgeCoverage;
+import org.graphwalker.core.condition.VertexCoverage;
+import org.graphwalker.core.generator.AStarPath;
+import org.graphwalker.core.generator.RandomPath;
+import org.graphwalker.core.machine.ExecutionContext;
+import org.graphwalker.core.model.Element;
+import org.graphwalker.maven.plugin.model.GraphMLModelFactory;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayDeque;
+import java.util.Arrays;
+import java.util.Deque;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -58,26 +73,100 @@ public class CLI {
       } else if (args[0].equalsIgnoreCase("offline")) {
         buildOfflineCLI();
       } else if (args[0].equals("-v") || args[0].equals("--version")) {
-        printVersionInformation();
+        System.out.println(printVersionInformation());
       } else if (args[0].equals("-h") || args[0].equals("--help")) {
-        printGeneralHelpText();
+        System.out.println(printGeneralHelpText());
       } else {
         System.err.println("Unknown command: " + args[0]);
         System.err.println("Type 'java -jar graphwalker.jar help' for usage.");
       }
     }
+
+    CommandLineParser parser = new PosixParser();
+    CommandLine cl = null;
+
+    try {
+      cl = parser.parse(opt, args);
+
+      /**
+       * Command: offline
+       */
+      if (args[0].equalsIgnoreCase("offline")) {
+        RunCommandOffline(cl);
+      }
+    } catch (ParseException e) {
+      e.printStackTrace();
+      logger.log(Level.ALL, printGeneralHelpText(), e.getStackTrace());
+      System.err.println("Parsing of the command line failed");
+      System.err.println(e.getMessage());
+      System.err.println("Type 'java -jar graphwalker.jar help " + args[0] + "' for help.");
+    }
+  }
+
+  private void RunCommandOffline(CommandLine cl) {
+    if (helpNeeded("offline", !cl.hasOption("f"), "Missing the input graphml file (folder), See -f (--input_graphml)")
+      || helpNeeded("offline", !cl.hasOption("s"), "A stop condition must be supplied, See option -s")
+      || helpNeeded("offline", !cl.hasOption("g"), "Missing the generator, See option -g")) return;
+
+    GraphMLModelFactory factory = new GraphMLModelFactory();
+    Model model = factory.create(cl.getOptionValue("f"));
+    PathGenerator pathGenerator = new RandomPath(new EdgeCoverage());
+    ExecutionContext context = new ExecutionContext(model, pathGenerator);
+    Machine machine = new SimpleMachine(context);
+    while (machine.hasNextStep()) {
+      Element e = machine.getNextStep();
+      System.out.println(e.getName());
+    }
   }
 
   private String printVersionInformation() {
-    String version = "org.graphwalker version " + System.getProperty("line.separator");
+    String version = "org.graphwalker version: " + getVersionString() + System.getProperty("line.separator");
     version +=  System.getProperty("line.separator");
 
-    version += "org.graphwalker is open source software licensed under MIT licens" + System.getProperty("line.separator");
+    version += "org.graphwalker is open source software licensed under MIT license" + System.getProperty("line.separator");
     version += "The software (and it's source) can be downloaded from http://graphwalker.org" + System.getProperty("line.separator");
     version += "For a complete list of this package software dependencies, see TO BE DEFINED" + System.getProperty("line.separator");
 
     return version;
   }
+
+  private String getVersionString() {
+    Properties properties = new Properties();
+    InputStream inputStream = null;
+    try {
+      inputStream = getClass().getResourceAsStream("/org/graphwalker/resources/version.properties");
+      properties.load(inputStream);
+      inputStream.close();
+    } catch (IOException e) {
+      logger.log(Level.ALL, printGeneralHelpText(), e.getStackTrace());
+    } finally {
+      if (inputStream != null) {
+        try {
+          inputStream.close();
+        } catch (Exception e) {
+          // ignore all exceptions
+        }
+      }
+    }
+    StringBuilder stringBuilder = new StringBuilder();
+    if (properties.containsKey("version.major")) {
+      stringBuilder.append(properties.getProperty("version.major"));
+    }
+    if (properties.containsKey("version.minor")) {
+      stringBuilder.append(".");
+      stringBuilder.append(properties.getProperty("version.minor"));
+    }
+    if (properties.containsKey("version.fix")) {
+      stringBuilder.append(".");
+      stringBuilder.append(properties.getProperty("version.fix"));
+    }
+    if (properties.containsKey("version.git.commit")) {
+      stringBuilder.append(", git commit ");
+      stringBuilder.append(properties.getProperty("version.git.commit"));
+    }
+    return stringBuilder.toString();
+  }
+
 
   private static String printGeneralHelpText() {
     String text = "";
@@ -157,5 +246,13 @@ public class CLI {
 
   private String generateListOfValidStopConditions() {
     return "";
+  }
+
+  private boolean helpNeeded(String module, boolean condition, String message) {
+    if (condition) {
+      System.out.println(message);
+      System.out.println("Type 'java -jar graphwalker.jar help " + module + "' for help.");
+    }
+    return condition;
   }
 }

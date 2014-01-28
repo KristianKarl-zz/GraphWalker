@@ -1,3 +1,28 @@
+/*
+ * #%L
+ * GraphWalker Command Line Interface
+ * %%
+ * Copyright (C) 2011 - 2014 GraphWalker
+ * %%
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ * #L%
+ */
 // This file is part of the GraphWalker java package
 // The MIT License
 //
@@ -23,6 +48,7 @@
 
 package org.graphwalker;
 
+import static org.graphwalker.RegexMatcher.matches;
 import static org.hamcrest.CoreMatchers.*;
 import org.junit.Assert;
 import org.junit.Test;
@@ -145,7 +171,7 @@ public class CLITest {
     String args[] = {"-v"};
     runCommand(args);
     Assert.assertThat( "No error messages should occur", errMsg, is(""));
-    Assert.assertThat( "Expected output", outMsg, is("^org\\.graphwalker version " + "VERSION.STRING"));
+    Assert.assertThat( "Expected output", outMsg, matches("^org.graphwalker version: [0-9]+\\.[0-9]+\\.[0-9]+"));
   }
 
   /**
@@ -181,11 +207,11 @@ public class CLITest {
    */
   @Test
   public void testOfflineA_StarEdgeCoverage100percent() {
-    String args[] = {"offline", "-f", "graphml/reqtags/ExtendedMain.graphml", "-g", "A_STAR", "-s", "EDGE_COVERAGE:100"};
+    String args[] = {"offline", "-f", "graphml/UC01.graphml", "-g", "A_STAR", "-s", "EDGE_COVERAGE:100"};
     runCommand(args);
     Assert.assertThat( "No error messages should occur", errMsg, is(""));
-    Assert.assertEquals("Expected 38 lines beginning with v_" , 38, getNumMatches(Pattern.compile("^v_").matcher(outMsg)));
-    Assert.assertEquals("Expected 38 lines beginning with e_" , 38, getNumMatches(Pattern.compile("^v_").matcher(outMsg)));
+    Assert.assertEquals("Expected 38 lines beginning with v_" , 38, getNumMatches(Pattern.compile("v_").matcher(outMsg)));
+    Assert.assertEquals("Expected 38 lines beginning with e_" , 38, getNumMatches(Pattern.compile("e_").matcher(outMsg)));
   }
 
   private int getNumMatches(Matcher m) {
