@@ -42,7 +42,7 @@ public abstract class BasePathGenerator implements PathGenerator {
     }
 
     public Boolean hasNextStep(ExecutionContext context) {
-        return stopCondition.isFulfilled(context);
+        return !stopCondition.isFulfilled(context);
     }
 
     public StopCondition getStopCondition() {

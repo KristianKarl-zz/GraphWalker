@@ -36,7 +36,7 @@ import java.util.Set;
 /**
  * @author Nils Olsson
  */
-public final class Vertex implements Element {
+public class Vertex implements Element {
 
     private final String name;
     private final Set<Requirement> requirements;

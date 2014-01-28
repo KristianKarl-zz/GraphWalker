@@ -47,9 +47,7 @@ public final class EdgeCoverage extends BaseStopCondition {
     }
 
     public boolean isFulfilled(ExecutionContext context) {
-        double totalEdgesCount = context.getModel().getEdges().size();
-        double visitedEdgesCount = context.getVisitedEdges().size();
-        return (visitedEdgesCount / totalEdgesCount) >= limit;
+        return getFulfilment(context) >= 1.0;
     }
 
     public double getFulfilment(ExecutionContext context) {
