@@ -17,6 +17,8 @@
 
     <modules>
         <module>graphwalker-core</module>
+        <module>graphwalker-soap</module>
+        <!--module>graphwalker-webrenderer</module-->
         <!--module>graphwalker-jenkins-plugin</module-->
         <module>graphwalker-maven-plugin</module>
         <module>graphwalker-example</module>
