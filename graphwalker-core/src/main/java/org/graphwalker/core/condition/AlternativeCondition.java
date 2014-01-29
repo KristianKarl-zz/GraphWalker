@@ -33,10 +33,14 @@ import java.util.Vector;
 
 public class AlternativeCondition implements StopCondition{
 
-  private Vector<StopCondition> conditions;
+  private Vector<StopCondition> conditions = new Vector<>();
 
   public void add(StopCondition condition) {
     this.conditions.add(condition);
+  }
+
+  public StopCondition getStopConditionAtIndex( int index) {
+    return conditions.elementAt(index);
   }
 
   public boolean isFulfilled(ExecutionContext context) {

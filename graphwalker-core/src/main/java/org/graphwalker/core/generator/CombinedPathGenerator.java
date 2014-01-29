@@ -34,7 +34,7 @@ import java.util.Vector;
 
 
 public class CombinedPathGenerator implements PathGenerator {
-  private Vector<PathGenerator> generatorList = new Vector<PathGenerator>();
+  private Vector<PathGenerator> generatorList = new Vector<>();
   StopCondition stopCondition = null;
   private int currentGenerator = 0;
 
@@ -42,8 +42,12 @@ public class CombinedPathGenerator implements PathGenerator {
     generatorList.add(generator);
   }
 
-  private PathGenerator getActivePathGenerator() {
+  public PathGenerator getActivePathGenerator() {
     return generatorList.get(currentGenerator);
+  }
+
+  public PathGenerator getPathGeneratorAtIndex( int index) {
+    return generatorList.elementAt(index);
   }
 
   private boolean hasPath() {

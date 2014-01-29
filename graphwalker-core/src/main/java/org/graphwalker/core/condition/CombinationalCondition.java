@@ -43,6 +43,10 @@ public class CombinationalCondition implements StopCondition{
     this.conditions.add(condition);
   }
 
+  public StopCondition getStopConditionAtIndex( int index) {
+    return conditions.elementAt(index);
+  }
+
   public boolean isFulfilled(ExecutionContext context) {
     for (StopCondition condition : conditions) {
       if (!condition.isFulfilled(context)) {
