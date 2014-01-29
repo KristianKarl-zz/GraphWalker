@@ -35,17 +35,24 @@ import org.graphwalker.core.machine.ExecutionContext;
  */
 public abstract class BasePathGenerator implements PathGenerator {
 
-    private final StopCondition stopCondition;
+    private StopCondition stopCondition;
 
-    public BasePathGenerator(StopCondition stopCondition) {
-        this.stopCondition = Validate.notNull(stopCondition);
-    }
+  public BasePathGenerator() {
+  }
 
-    public Boolean hasNextStep(ExecutionContext context) {
+  public BasePathGenerator(StopCondition stopCondition) {
+    this.stopCondition = Validate.notNull(stopCondition);
+  }
+
+  public Boolean hasNextStep(ExecutionContext context) {
         return !stopCondition.isFulfilled(context);
     }
 
-    public StopCondition getStopCondition() {
-        return stopCondition;
-    }
+  public StopCondition getStopCondition() {
+    return stopCondition;
+  }
+
+  public void setStopCondition(StopCondition stopCondition) {
+    this.stopCondition = stopCondition;
+  }
 }

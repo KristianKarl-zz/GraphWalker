@@ -39,11 +39,14 @@ public final class RandomPath extends BasePathGenerator {
 
     private final Random random = new Random(System.nanoTime());
 
-    public RandomPath(StopCondition stopCondition) {
-        super(stopCondition);
-    }
+  public RandomPath() {
+  }
 
-    public Element getNextStep(ExecutionContext context) {
+  public RandomPath(StopCondition stopCondition) {
+    super(stopCondition);
+  }
+
+  public Element getNextStep(ExecutionContext context) {
         List<Element> elements = context.getModel().getElements(context.getCurrentElement());
         if (elements.isEmpty()) {
             throw new NoPathFoundException();

@@ -31,7 +31,7 @@ import org.graphwalker.core.machine.ExecutionContext;
 import java.util.Iterator;
 import java.util.Vector;
 
-public class CombinationalCondition implements StopCondition{
+public class CombinationalCondition extends BaseStopCondition{
 
   private Vector<StopCondition> conditions;
 

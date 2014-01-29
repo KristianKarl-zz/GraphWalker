@@ -39,11 +39,14 @@ import java.util.List;
  */
 public final class AStarPath extends BasePathGenerator {
 
-    public AStarPath(StopCondition stopCondition) {
-        super(stopCondition);
-    }
+  public AStarPath() {
+  }
 
-    public Element getNextStep(ExecutionContext context) {
+  public AStarPath(StopCondition stopCondition) {
+    super(stopCondition);
+  }
+
+  public Element getNextStep(ExecutionContext context) {
         List<Element> elements = context.getModel().getElements(context.getCurrentElement());
         if (elements.isEmpty()) {
             throw new NoPathFoundException();

@@ -1,97 +1,122 @@
 package org.graphwalker.cli;
 
+import org.graphwalker.core.condition.*;
+import org.graphwalker.core.generator.AStarPath;
+import org.graphwalker.core.generator.RandomPath;
+
 import java.util.ArrayList;
-import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Lexer {
-  /*
-   * Given a String, and an index, get the atom starting at that index
-   */
-  public static String getAtom(String s, int i) {
-    int j = i;
-    for (; j < s.length(); ) {
-      if (Character.isJavaIdentifierPart(s.charAt(j))) {
-        j++;
-      } else {
-        return s.substring(i, j);
-      }
+  public static ArrayList<Token> lex(String input) {
+    // The tokens to return
+    ArrayList<Token> tokens = new ArrayList<Token>();
+
+    // Lexer logic begins here
+    StringBuffer tokenPatternsBuffer = new StringBuffer();
+    for (TokenType tokenType : TokenType.values())
+      tokenPatternsBuffer.append(String.format("|(?<%s>%s)", tokenType.name(), tokenType.pattern));
+    Pattern tokenPatterns = Pattern.compile(new String(tokenPatternsBuffer.substring(1)));
+
+    // Begin matching tokens
+    Matcher matcher = tokenPatterns.matcher(input);
+    while (matcher.find()) {
+      if (matcher.group(TokenType.RANDOMGENERATOR.name()) != null) {
+        tokens.add(new Token(TokenType.RANDOMGENERATOR, new RandomPath()));
+        continue;
+
+      } else if (matcher.group(TokenType.ASTARGENERATOR.name()) != null) {
+        tokens.add(new Token(TokenType.ASTARGENERATOR, new AStarPath()));
+        continue;
+
+      } else if (matcher.group(TokenType.NEVER.name()) != null) {
+        tokens.add(new Token(TokenType.NEVER, new Never()));
+        continue;
+
+      } else if (matcher.group(TokenType.EDGECOVERAGECONDITION.name()) != null) {
+        tokens.add(new Token(TokenType.EDGECOVERAGECONDITION, new EdgeCoverage()));
+        continue;
+
+      } else if (matcher.group(TokenType.VERTEXCOVERAGECONDITION.name()) != null) {
+        tokens.add(new Token(TokenType.VERTEXCOVERAGECONDITION, new VertexCoverage()));
+        continue;
+
+      } else if (matcher.group(TokenType.REACHEDEDGECONDITION.name()) != null) {
+        tokens.add(new Token(TokenType.REACHEDEDGECONDITION, new ReachedEdge()));
+        continue;
+
+      } else if (matcher.group(TokenType.REACHEDVERTEXCONDITION.name()) != null) {
+        tokens.add(new Token(TokenType.REACHEDVERTEXCONDITION, new ReachedVertex()));
+        continue;
+
+      } else if (matcher.group(TokenType.OR.name()) != null) {
+        tokens.add(new Token(TokenType.OR, matcher.group(TokenType.OR.name())));
+        continue;
+
+      } else if (matcher.group(TokenType.AND.name()) != null) {
+        tokens.add(new Token(TokenType.AND, matcher.group(TokenType.AND.name())));
+        continue;
+
+      } else if (matcher.group(TokenType.STRING.name()) != null) {
+        tokens.add(new Token(TokenType.STRING, matcher.group(TokenType.STRING.name())));
+        continue;
+
+      } else if (matcher.group(TokenType.NUMBER.name()) != null) {
+        tokens.add(new Token(TokenType.NUMBER, matcher.group(TokenType.NUMBER.name())));
+        continue;
+
+      } else if (matcher.group(TokenType.LPARENTHESES.name()) != null) {
+        tokens.add(new Token(TokenType.LPARENTHESES, matcher.group(TokenType.LPARENTHESES.name())));
+        continue;
+
+      } else if (matcher.group(TokenType.RPARENTHESES.name()) != null) {
+        tokens.add(new Token(TokenType.RPARENTHESES, matcher.group(TokenType.RPARENTHESES.name())));
+        continue;
+
+      } else if (matcher.group(TokenType.WHITESPACE.name()) != null)
+        continue;
     }
-    return s.substring(i, j);
+
+    return tokens;
   }
 
-  private static String getString(String s, int i) {
-    int j = i;
-    for (; j < s.length(); ) {
-      if (s.charAt(j) != '"') {
-        j++;
-      } else {
-        return s.substring(i, j);
-      }
-    }
-    return s.substring(i, j);
-  }
+  public static enum TokenType {
+    // Token types cannot have underscores
+    RANDOMGENERATOR("random"),
+    ASTARGENERATOR("a_star"),
+    EDGECOVERAGECONDITION("edge_coverage"),
+    VERTEXCOVERAGECONDITION("vertex_coverage"),
+    REACHEDEDGECONDITION("reached_edge"),
+    REACHEDVERTEXCONDITION("reached_vertex"),
+    NEVER("never"),
+    OR(" or "),
+    AND(" and "),
+    LPARENTHESES("[(]{1}"),
+    RPARENTHESES("[)]{1}"),
+    STRING("\"\\p{ASCII}+?\""),
+    NUMBER("-?[0-9]+"),
+    WHITESPACE("[\\s]+");
 
-  public static List<Token> lex(String input) {
-    List<Token> result = new ArrayList<Token>();
-    for (int i = 0; i < input.length(); ) {
-      switch (input.charAt(i)) {
-        case '(':
-          result.add(new Token(Type.LPAREN, "("));
-          i++;
-          break;
-        case ')':
-          result.add(new Token(Type.RPAREN, ")"));
-          i++;
-          break;
-        case ',':
-          result.add(new Token(Type.COMMA, ")"));
-          i++;
-          break;
-        default:
-          if (Character.isWhitespace(input.charAt(i))) {
-            i++;
-          } else  if (input.charAt(i) == '"') {
-            String string = getString(input, ++i);
-            result.add(new Token(Type.STRING, string));
-            i += string.length() + 1;
-          } else {
-            String atom = getAtom(input, i);
-            if (atom.equalsIgnoreCase("OR")) {
-              result.add(new Token(Type.OR, atom));
-            } else if (atom.equalsIgnoreCase("AND")) {
-              result.add(new Token(Type.AND, atom));
-            } else {
-              result.add(new Token(Type.ATOM, atom));
-            }
-            i += atom.length();
-          }
-          break;
-      }
-    }
-    return result;
-  }
+    public final String pattern;
 
-  public static enum Type {
-    LPAREN, RPAREN, OR, AND, ATOM, COMMA, STRING;
+    private TokenType(String pattern) {
+      this.pattern = pattern;
+    }
   }
 
   public static class Token {
-    public final Type t;
-    public final String c; // contents mainly for atom tokens
+    public TokenType type;
+    public Object data;
 
-    // could have column and line number fields too, for reporting errors later
-    public Token(Type t, String c) {
-      this.t = t;
-      this.c = c;
+    public Token(TokenType type, Object data) {
+      this.type = type;
+      this.data = data;
     }
 
+    @Override
     public String toString() {
-      if (t == Type.ATOM) {
-        return "ATOM<" + c + ">";
-      } else if (t == Type.STRING) {
-        return "STRING<" + c + ">";
-      }
-      return t.toString();
+      return String.format("(%s %s)", type.name(), data.toString());
     }
   }
 }

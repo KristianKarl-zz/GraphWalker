@@ -34,11 +34,14 @@ import org.graphwalker.core.model.Vertex;
  */
 public final class ReachedVertex extends BaseStopCondition {
 
-    public ReachedVertex(String value) {
-        super(value);
-    }
+  public ReachedVertex() {
+  }
 
-    public boolean isFulfilled(ExecutionContext context) {
+  public ReachedVertex(String value) {
+    super(value);
+  }
+
+  public boolean isFulfilled(ExecutionContext context) {
         return getFulfilment(context) >= FULFILLMENT_LEVEL;
     }
 

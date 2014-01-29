@@ -33,13 +33,20 @@ import org.graphwalker.core.StopCondition;
  */
 public abstract class BaseStopCondition implements StopCondition {
 
-    private final String value;
+    private String value;
 
-    public BaseStopCondition(String value) {
-        this.value = Validate.notEmpty(Validate.notNull(value));
-    }
+  public BaseStopCondition() {
+  }
 
-    public String getValue() {
-        return value;
-    }
+  public BaseStopCondition(String value) {
+    this.value = Validate.notEmpty(Validate.notNull(value));
+  }
+
+  public String getValue() {
+    return value;
+  }
+
+  public void setValue(String value) {
+    this.value = value;
+  }
 }

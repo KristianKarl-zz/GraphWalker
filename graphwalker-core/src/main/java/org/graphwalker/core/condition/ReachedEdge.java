@@ -34,11 +34,14 @@ import org.graphwalker.core.model.Edge;
  */
 public final class ReachedEdge extends BaseStopCondition {
 
-    public ReachedEdge(String value) {
-        super(value);
-    }
+  public ReachedEdge() {
+  }
 
-    public boolean isFulfilled(ExecutionContext context) {
+  public ReachedEdge(String value) {
+    super(value);
+  }
+
+  public boolean isFulfilled(ExecutionContext context) {
         return getFulfilment(context) >= FULFILLMENT_LEVEL;
     }
 
