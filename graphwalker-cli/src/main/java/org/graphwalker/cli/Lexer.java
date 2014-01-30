@@ -20,62 +20,54 @@ public class Lexer {
     Pattern tokenPatterns = Pattern.compile(new String(tokenPatternsBuffer.substring(1)));
 
     // Begin matching tokens
-    Matcher matcher = tokenPatterns.matcher(input);
+    Matcher matcher = tokenPatterns.matcher(input.toLowerCase());
     while (matcher.find()) {
       if (matcher.group(TokenType.RANDOMGENERATOR.name()) != null) {
         tokens.add(new Token(TokenType.RANDOMGENERATOR, new RandomPath()));
-        continue;
 
       } else if (matcher.group(TokenType.ASTARGENERATOR.name()) != null) {
         tokens.add(new Token(TokenType.ASTARGENERATOR, new AStarPath()));
-        continue;
 
       } else if (matcher.group(TokenType.NEVER.name()) != null) {
         tokens.add(new Token(TokenType.NEVER, new Never()));
-        continue;
 
       } else if (matcher.group(TokenType.EDGECOVERAGECONDITION.name()) != null) {
         tokens.add(new Token(TokenType.EDGECOVERAGECONDITION, new EdgeCoverage()));
-        continue;
 
       } else if (matcher.group(TokenType.VERTEXCOVERAGECONDITION.name()) != null) {
         tokens.add(new Token(TokenType.VERTEXCOVERAGECONDITION, new VertexCoverage()));
-        continue;
 
       } else if (matcher.group(TokenType.REACHEDEDGECONDITION.name()) != null) {
         tokens.add(new Token(TokenType.REACHEDEDGECONDITION, new ReachedEdge()));
-        continue;
 
       } else if (matcher.group(TokenType.REACHEDVERTEXCONDITION.name()) != null) {
         tokens.add(new Token(TokenType.REACHEDVERTEXCONDITION, new ReachedVertex()));
-        continue;
+
+      } else if (matcher.group(TokenType.TIMEDURATIONCONDITION.name()) != null) {
+        tokens.add(new Token(TokenType.TIMEDURATIONCONDITION, new TimeDuration()));
 
       } else if (matcher.group(TokenType.OR.name()) != null) {
         tokens.add(new Token(TokenType.OR, matcher.group(TokenType.OR.name())));
-        continue;
 
       } else if (matcher.group(TokenType.AND.name()) != null) {
         tokens.add(new Token(TokenType.AND, matcher.group(TokenType.AND.name())));
-        continue;
 
       } else if (matcher.group(TokenType.STRING.name()) != null) {
-        tokens.add(new Token(TokenType.STRING, matcher.group(TokenType.STRING.name())));
-        continue;
+        // Remove quotation marks
+        String str = matcher.group(TokenType.STRING.name());
+        tokens.add(new Token(TokenType.STRING, input.substring(matcher.start() + 1, matcher.end() - 1)));
 
       } else if (matcher.group(TokenType.NUMBER.name()) != null) {
         tokens.add(new Token(TokenType.NUMBER, matcher.group(TokenType.NUMBER.name())));
-        continue;
 
       } else if (matcher.group(TokenType.LPARENTHESES.name()) != null) {
         tokens.add(new Token(TokenType.LPARENTHESES, matcher.group(TokenType.LPARENTHESES.name())));
-        continue;
 
       } else if (matcher.group(TokenType.RPARENTHESES.name()) != null) {
         tokens.add(new Token(TokenType.RPARENTHESES, matcher.group(TokenType.RPARENTHESES.name())));
-        continue;
 
       } else if (matcher.group(TokenType.WHITESPACE.name()) != null)
-        continue;
+        ;
     }
 
     return tokens;
@@ -89,6 +81,7 @@ public class Lexer {
     VERTEXCOVERAGECONDITION("vertex_coverage"),
     REACHEDEDGECONDITION("reached_edge"),
     REACHEDVERTEXCONDITION("reached_vertex"),
+    TIMEDURATIONCONDITION("time_duration"),
     NEVER("never"),
     OR(" or "),
     AND(" and "),

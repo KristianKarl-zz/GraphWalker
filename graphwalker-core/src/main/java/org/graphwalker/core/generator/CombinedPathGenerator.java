@@ -33,7 +33,7 @@ import org.graphwalker.core.model.Element;
 import java.util.Vector;
 
 
-public class CombinedPathGenerator implements PathGenerator {
+public class CombinedPathGenerator extends BasePathGenerator {
   private Vector<PathGenerator> generatorList = new Vector<>();
   StopCondition stopCondition = null;
   private int currentGenerator = 0;

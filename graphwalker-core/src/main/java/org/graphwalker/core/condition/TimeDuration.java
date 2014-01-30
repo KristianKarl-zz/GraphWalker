@@ -32,10 +32,13 @@ import org.graphwalker.core.machine.ExecutionContext;
  */
 public final class TimeDuration extends BaseStopCondition {
 
-    private final long duration;
-    private final long timestamp;
+    private long duration;
+    private long timestamp;
 
-    public TimeDuration(String value) {
+  public TimeDuration() {
+  }
+
+  public TimeDuration(String value) {
         super(value);
         this.timestamp = System.currentTimeMillis();
         this.duration = Long.parseLong(value) * SECOND_SCALE;
@@ -48,4 +51,10 @@ public final class TimeDuration extends BaseStopCondition {
     public double getFulfilment(ExecutionContext context) {
         return (double) (System.currentTimeMillis() - timestamp) / duration;
     }
+
+  public void setValue( String value) {
+    super.setValue(value);
+    this.timestamp = System.currentTimeMillis();
+    this.duration = Long.parseLong(value) * SECOND_SCALE;
+  }
 }

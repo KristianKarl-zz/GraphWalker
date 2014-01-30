@@ -7,6 +7,7 @@ import org.graphwalker.core.condition.AlternativeCondition;
 import org.graphwalker.core.condition.BaseStopCondition;
 import org.graphwalker.core.condition.CombinationalCondition;
 import org.graphwalker.core.generator.BasePathGenerator;
+import org.graphwalker.core.generator.CombinedPathGenerator;
 
 import java.util.List;
 
@@ -14,7 +15,7 @@ import static org.graphwalker.cli.Lexer.lex;
 
 public class GeneratorParser {
 
-  private static void readStopConditions(BasePathGenerator generator, List<Lexer.Token> tokens, int i) {
+  private static int readStopConditions(BasePathGenerator generator, List<Lexer.Token> tokens, int i) {
 
     // Check parentheses
     if (tokens.get(i).type != Lexer.TokenType.LPARENTHESES) {
@@ -23,6 +24,8 @@ public class GeneratorParser {
     int numberOfTokens = 0;
     int parenthesesBalance = 0;
     for (; i < tokens.size(); i++) {
+      System.out.println(tokens.get(i).toString());
+
       if (tokens.get(i).type == Lexer.TokenType.LPARENTHESES) {
         parenthesesBalance++;
       } else if (tokens.get(i).type == Lexer.TokenType.RPARENTHESES) {
@@ -41,6 +44,7 @@ public class GeneratorParser {
 
     BaseStopCondition stopCondition = null;
 
+    // Check if whether we have single, alternative or combinatorial stop condition
     List<Lexer.Token> generatorTokens = tokens.subList(i - numberOfTokens, i);
     for (int x = 0; x < generatorTokens.size(); x++) {
       if (tokens.get(x).type == Lexer.TokenType.OR) {
@@ -53,21 +57,26 @@ public class GeneratorParser {
     }
 
     parenthesesBalance = 0;
+    BaseStopCondition currentConditon = null;
     for (int j = i - numberOfTokens; j < tokens.size(); j++) {
       if (tokens.get(j).data instanceof StopCondition) {
-        if (stopCondition instanceof AlternativeCondition ) {
-          ((AlternativeCondition)stopCondition).add((BaseStopCondition) tokens.get(j).data);
+        currentConditon = (BaseStopCondition) tokens.get(j).data;
+        if (stopCondition instanceof AlternativeCondition) {
+          ((AlternativeCondition) stopCondition).add(currentConditon);
         } else if (stopCondition instanceof CombinationalCondition) {
-          ((CombinationalCondition)stopCondition).add((BaseStopCondition) tokens.get(j).data);
+          ((CombinationalCondition) stopCondition).add(currentConditon);
         } else {
-          stopCondition = (BaseStopCondition) tokens.get(j).data;
+          currentConditon = stopCondition = (BaseStopCondition) tokens.get(j).data;
         }
+        continue;
       }
       if (tokens.get(j).type == Lexer.TokenType.NUMBER) {
-        stopCondition.setValue((String) tokens.get(j).data);
+        currentConditon.setValue((String) tokens.get(j).data);
+        continue;
       }
       if (tokens.get(j).type == Lexer.TokenType.STRING) {
-        stopCondition.setValue((String) tokens.get(j).data);
+        currentConditon.setValue((String) tokens.get(j).data);
+        continue;
       }
 
       if (tokens.get(j).type == Lexer.TokenType.LPARENTHESES) {
@@ -81,6 +90,8 @@ public class GeneratorParser {
       }
     }
     generator.setStopCondition(stopCondition);
+
+    return i;
   }
 
   public static PathGenerator parse(String str) {
@@ -88,13 +99,30 @@ public class GeneratorParser {
     BasePathGenerator generator = null;
     List<Lexer.Token> tokens = lex(str);
 
+    // Check if whether we have more than one generator
+    int numOfGenerators = 0;
+    for (Lexer.Token t : tokens) {
+      if (t.data instanceof PathGenerator) {
+        numOfGenerators++;
+        if (numOfGenerators >= 2) {
+          generator = new CombinedPathGenerator();
+          break;
+        }
+      }
+    }
+
     for (int i = 0; i < tokens.size(); i++) {
       System.out.println(tokens.get(i).toString());
 
       // First we expect a generator
       if (tokens.get(i).data instanceof PathGenerator) {
-        generator = (BasePathGenerator) tokens.get(i).data;
-        readStopConditions(generator, tokens, ++i);
+        if (generator instanceof CombinedPathGenerator) {
+          ((CombinedPathGenerator) generator).addPathGenerator((PathGenerator) tokens.get(i).data);
+        } else {
+          generator = (BasePathGenerator) tokens.get(i).data;
+        }
+        i = readStopConditions((BasePathGenerator) tokens.get(i).data, tokens, ++i);
+
       }
     }
 
