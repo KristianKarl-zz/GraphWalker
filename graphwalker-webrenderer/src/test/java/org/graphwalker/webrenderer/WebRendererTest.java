@@ -37,6 +37,7 @@ import org.webbitserver.handler.StaticFileHandler;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -58,16 +59,16 @@ public class WebRendererTest {
         Model model = new SimpleModel().addEdge(new Edge("e1", new Vertex("v1"), new Vertex("v2")));
         PathGenerator pathGenerator = new RandomPath(new VertexCoverage());
         ExecutionContext context = new ExecutionContext(model, pathGenerator);
-        Machine machine = new SimpleMachine(context);
+        Machine machine = new SimpleMachine(Arrays.asList(context, context));
 
         WebRenderer renderer = new WebRenderer(machine, 8080);
         renderer.add(new StaticFileHandler("src/main/resources"));
         renderer.start();
 
-        while (machine.hasNextStep()) {
-            machine.getNextStep();
-        }
+        //while (machine.hasNextStep()) {
+        //    machine.getNextStep();
+        //}
 
-        renderer.stop();
+        //renderer.stop();
     }
 }

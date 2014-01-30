@@ -28,11 +28,18 @@ package org.graphwalker.webrenderer;
 
 import org.graphwalker.core.Machine;
 import org.graphwalker.core.event.MachineSink;
+import org.graphwalker.core.machine.ExecutionContext;
+import org.graphwalker.webrenderer.geometry.Edge;
+import org.graphwalker.webrenderer.geometry.Point;
+import org.graphwalker.webrenderer.geometry.Vertex;
+import org.graphwalker.webrenderer.geometry.layout.SpringEmbedder;
 import org.json.simple.JSONObject;
 import org.webbitserver.*;
 import org.webbitserver.handler.EmbeddedResourceHandler;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -43,7 +50,6 @@ public class WebRenderer extends BaseWebSocketHandler implements MachineSink {
     private final Machine machine;
     private final WebServer server;
     private final Set<WebSocketConnection> connections = new HashSet<>();
-    private final JSONObject models;
 
     public WebRenderer(Machine machine) {
         this(machine, 9191);
@@ -55,7 +61,6 @@ public class WebRenderer extends BaseWebSocketHandler implements MachineSink {
 
     public WebRenderer(Machine machine, String path, int port) {
         this.machine = machine;
-        this.models = build(machine);
         this.server = WebServers.createWebServer(port);
         this.server.add(path, this);
         this.server.add(new EmbeddedResourceHandler(""));
@@ -77,123 +82,71 @@ public class WebRenderer extends BaseWebSocketHandler implements MachineSink {
     }
 
     private JSONObject build(Machine machine) {
-        JSONObject models = new JSONObject();
-        //models
-        return models;
+        JSONObject root = new JSONObject();
+        root.put("type", "initial");
+        List<JSONObject> models = new ArrayList<>();
+        for (ExecutionContext context : machine.getExecutionContexts()) {
+            SpringEmbedder embedder = new SpringEmbedder(context.getModel());
+            JSONObject model = new JSONObject();
+            model.put("state", "started");
+            model.put("id", "123");
+            model.put("name", "123");
+            List<JSONObject> vertices = new ArrayList<>();
+            for (Vertex vertex : embedder.getVertices()) {
+                JSONObject element = new JSONObject();
+                element.put("id", vertex.getId().toString());
+                element.put("state", "unvisited");
+                element.put("color", "#555555");
+                element.put("label", vertex.getName());
+                JSONObject geometry = new JSONObject();
+                geometry.put("x", vertex.getX());
+                geometry.put("y", vertex.getY());
+                geometry.put("width", vertex.getWidth());
+                geometry.put("height", vertex.getHeight());
+                element.put("geometry", geometry);
+                vertices.add(element);
+            }
+            model.put("nodes", vertices);
+            List<JSONObject> edges = new ArrayList<>();
+            for (Edge edge : embedder.getEdges()) {
+                JSONObject element = new JSONObject();
+                element.put("id", edge.getId().toString());
+                element.put("source", edge.getSource().getId().toString());
+                element.put("target", edge.getTarget().getId().toString());
+                element.put("state", "unvisited");
+                JSONObject edgeLabel = new JSONObject();
+                edgeLabel.put("x", edge.getLabel().getX());
+                edgeLabel.put("y", edge.getLabel().getY());
+                edgeLabel.put("label", edge.getLabel().getText());
+                JSONObject edgePath = new JSONObject();
+                edgePath.put("sx", 0);//edge.getPathSource().getX());
+                edgePath.put("sy", 0);//edge.getPathSource().getY());
+                edgePath.put("tx", 0);//edge.getPathTarget().getX());
+                edgePath.put("ty", 0);//edge.getPathTarget().getY());
+                List<JSONObject> pathPoints = new ArrayList<>();
+                for (Point point : edge.getPathPoints()) {
+                    JSONObject pathPoint = new JSONObject();
+                    pathPoint.put("x", point.getX());
+                    pathPoint.put("y", point.getY());
+                    pathPoints.add(pathPoint);
+                }
+                edgePath.put("points", pathPoints);
+                element.put("path", edgePath);
+                element.put("label", edgeLabel);
+                edges.add(element);
+            }
+            model.put("edges", edges);
+            model.put("variables", new ArrayList<JSONObject>());
+            models.add(model);
+        }
+        root.put("models", models);
+        return root;
     }
-
-
-//        allModels = new JSONObject();
-//        allModels.put("type", "initial");
-//
-//        // Models
-//        models = new ArrayList<JSONObject>();
-//
-//        // Loop over all the input models
-//        Set<Map.Entry<String, ModelBasedTesting>> s = mbts.entrySet();
-//        Iterator<Map.Entry<String, ModelBasedTesting>> it = s.iterator();
-//
-//        while (it.hasNext()) {
-//
-//            Map.Entry<String, ModelBasedTesting> m = (Map.Entry<String, ModelBasedTesting>) it.next();
-//            String name = (String) m.getKey();
-//            Graph g = (Graph) ((ModelBasedTesting) m.getValue()).getGraph();
-//
-//            model = new JSONObject();
-//
-//            model.put("state", "started");
-//            model.put("id", name);
-//            model.put("name", name);
-//
-//            // Node
-//            nodes = new ArrayList<JSONObject>();
-//            for (Vertex n : g.getVertices()) {
-//
-//                node = new JSONObject();
-//
-//                node.put("id", n.getIdKey()); // Unique node id
-//                node.put("state", "unvisited");
-//                node.put("color", "#" + Integer.toHexString(n.getFillColor().getRGB()).substring(2, 8).toUpperCase());
-//                node.put("label", n.getLabelKey());
-//
-//
-//                // Node info, geometry
-//                JSONObject geometry = new JSONObject(); // Object representing the yEd stored position
-//
-//                geometry.put("x", n.getLocation().getX()); // Left most value
-//                geometry.put("y", n.getLocation().getY()); // Top value
-//                geometry.put("width", n.getWidth());
-//                geometry.put("height", n.getHeight());
-//
-//                node.put("geometry", geometry);
-//                nodes.add(node);
-//
-//            }
-//
-//            // Edge
-//            edges = new ArrayList<JSONObject>();
-//            for (Edge e : g.getEdges()) {
-//
-//                edge = new JSONObject();
-//
-//                edge.put("id", e.getIdKey()); // Unique edge id
-//                edge.put("source", g.getSource(e).getIdKey()); // Source node id
-//                edge.put("target", g.getDest(e).getIdKey()); // Target node id
-//                edge.put("state", "unvisited");
-//
-//                // Edge info, label
-//                JSONObject edgeLabel = new JSONObject();
-//
-//                edgeLabel.put("x", e.getLabelLocation().getX()); // yEd stored label position
-//                edgeLabel.put("y", e.getLabelLocation().getY());
-//                edgeLabel.put("label", e.getLabelKey());
-//
-//                // Edge info, path
-//                JSONObject path = new JSONObject(); // Object representing yEd stored edge path
-//
-//                path.put("sx", e.getPathSourceLocation().getX()); // Source node offset position
-//                path.put("sy", e.getPathSourceLocation().getY());
-//                path.put("tx", e.getPathTargetLocation().getX()); // Target node offset position
-//                path.put("ty", e.getPathTargetLocation().getY());
-//
-//                // Path info, Points
-//                points = new ArrayList<JSONObject>(); // Array of additional points on the path
-//                for (Point2D p : e.getPathPoints()) {
-//                    point = new JSONObject();
-//
-//                    point.put("x", p.getX());
-//                    point.put("y", p.getY());
-//
-//                    points.add(point);
-//                }
-//
-//                // Putting the JSON together
-//                path.put("points", points);
-//                edge.put("path", path);
-//                edge.put("label", edgeLabel);
-//
-//                edges.add(edge);
-//            }
-//
-//            model.put("edges", edges);
-//            model.put("nodes", nodes);
-//            ArrayList<JSONObject> variables = new ArrayList<JSONObject>();
-//            model.put("variables", variables );
-//            models.add(model);
-//        }
-//
-//        allModels.put("models", models);
-//
-//        stringTest = allModels.toJSONString();
-//        return allModels;
-//    }
-
 
     @Override
     public void onOpen(WebSocketConnection connection) {
         connections.add(connection);
-        connection.send(models.toJSONString());
-        // send status
+        connection.send(build(machine).toJSONString());
     }
 
     @Override
