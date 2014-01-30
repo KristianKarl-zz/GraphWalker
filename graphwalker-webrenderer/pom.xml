@@ -10,18 +10,21 @@
         <version>3.0-BETA-SNAPSHOT</version>
     </parent>
 
-    <artifactId>graphwalker-core</artifactId>
-    <name>GraphWalker Core</name>
+    <artifactId>graphwalker-webrenderer</artifactId>
+    <name>GraphWalker Web Renderer</name>
 
     <dependencies>
         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
+            <groupId>org.graphwalker</groupId>
+            <artifactId>graphwalker-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
+        <groupId>org.webbitserver</groupId>
+            <artifactId>webbit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.googlecode.json-simple</groupId>
+            <artifactId>json-simple</artifactId>
         </dependency>
     </dependencies>
 

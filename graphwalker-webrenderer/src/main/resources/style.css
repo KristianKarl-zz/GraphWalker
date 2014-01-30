@@ -1,0 +1,185 @@
+/*
+ * #%L
+ * GraphWalker Web Renderer
+ * %%
+ * Copyright (C) 2011 - 2014 GraphWalker
+ * %%
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ * #L%
+ */
+.container {
+    background: lightgrey;
+    border-radius: 10px;
+    width: 700px;
+    height: 700px;
+    overflow: hidden;
+    margin: 10px;
+    float: left;
+    position: relative;
+}
+
+.container.activemodel {
+    -moz-box-shadow: inset 0 0 10px #000000;
+    -webkit-box-shadow: inset 0 0 10px #000000;
+}
+
+.model {
+    width: 700px;
+    height: 700px;
+    position: absolute;
+}
+
+.modelname {
+    font-family: "Lucida Sans Unicode", sans-serif;
+    position: absolute;
+    left: 300px;
+    top: 10px;
+    z-index: 2;
+    font-size: 20px;
+}
+
+.model.animated {
+    -webkit-transition: all 1s ease-in-out;
+    -moz-transition: all 1s ease-in-out;
+    -o-transition: all 1s ease-in-out;
+    transition: all 1s ease-in-out;
+}
+
+.line {
+    position:absolute;
+    transform-origin:0% 0%;
+    -ms-transform-origin:0% 0%;
+    -webkit-transform-origin:0% 0%;
+    -moz-transform-origin:0% 0%;
+    -o-transform-origin:0% 0%;
+}
+.edge {
+  z-index:0;
+  height: auto;
+}
+.edge.unvisited>.line {
+    border-left: 2px solid black;
+}
+.edge.active>.line {
+    border-left: 2px solid green;
+}
+.edge.failed>.line {
+    border-left: 2px solid red;
+}
+.edge.visited:not(.failed):not(.active)>.line {
+    border-left: 2px dashed gray;
+}
+.arrow-down {
+    width: 0;
+    height: 0;
+    bottom:0;
+    left:-7px;
+    position:absolute;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-top: 7px solid #000;
+}
+.node {
+    position: absolute;
+    color: black;
+    border-radius: 10px;
+    display: table;
+    z-index:1;
+}
+
+.node.active {
+    border:2px solid black;
+    background-image: -moz-linear-gradient(top, rgb(150, 228, 150), rgb(50, 128, 50));
+    background-image: -webkit-linear-gradient(top, rgb(150, 228, 150), rgb(50, 128, 50));
+}
+
+.node.failed {
+    background-image: -moz-linear-gradient(top, rgb(228, 150, 150), rgb(128, 50, 50));
+    background-image: -webkit-linear-gradient(top, rgb(228, 150, 150), rgb(128, 50, 50));
+}
+
+.node.visited:not(.failed):not(.active) {
+    background-image: -moz-linear-gradient(top, #AAAAAA, #666666);
+    background-image: -webkit-linear-gradient(top, #AAAAAA, #666666);
+}
+
+.zoomdiv {
+    position: relative;
+    top: 10px;
+    left: 10px;
+    z-index: 2;
+}
+
+.zoominput {
+    width:30px;
+    border-radius:5px;
+}
+
+p {
+    font-family: "Lucida Sans Unicode", sans-serif;
+}
+
+p.label {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    font-size:80%;
+}
+
+table.variables {
+    position: relative;
+    top: 15px;
+    left: 10px;
+    font-family: "Lucida Sans Unicode", sans-serif;
+    z-index: 2;
+    border-radius: 5px;
+    opacity: 0.8;
+    background: gray;
+    -webkit-transition: all 0.2s ease-in-out;
+    -moz-transition: all 0.2s ease-in-out;
+    -o-transition: all 0.2s ease-in-out;
+    transition: all 0.2s ease-in-out;
+}
+
+table.animate {
+    transform: scale(1.2);
+    -ms-transform: scale(1.2);
+    -webkit-transform: scale(1.2);
+    -moz-transform: scale(1.2);
+    -o-transform: scale(1.2);
+}
+
+input[type=text] {
+	font-family: Arial, Sans-Serif;
+	font-size: 13px;
+	margin: 5px;
+	display: block;
+	padding: 4px;
+	width: 200px;
+	border: solid 1px #85b1de;
+}
+
+input[type=text]:hover {
+	background:#F0F0F0;
+}
+
+input[type=text]:focus {
+	background:#F9F9F9;
+	border: solid 1px #373737;
+}
