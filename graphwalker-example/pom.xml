@@ -22,10 +22,10 @@
                 <version>${project.version}</version>
                 <executions>
                     <execution>
-                        <id>execute-generate-sources</id>
+                        <id>generate-test-sources</id>
                         <phase>generate-test-sources</phase>
                         <goals>
-                            <goal>generate-sources</goal>
+                            <goal>generate-test-sources</goal>
                         </goals>
                     </execution>
                     <execution>
