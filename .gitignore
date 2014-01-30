@@ -18,3 +18,7 @@ target/
 work/
 amps-standalone/
 
+# Mac stuff #
+#############
+.DS_Store
+
