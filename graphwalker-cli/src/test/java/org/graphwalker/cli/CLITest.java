@@ -76,6 +76,8 @@ public class CLITest {
   StringBuffer errOutput;
   String outMsg;
   String errMsg;
+  String usageMsg = "^Usage: java -jar graphwalker.jar .*";
+
   static Logger logger = Logger.getAnonymousLogger();
   private CLI commandLineInterface;
 
@@ -153,19 +155,6 @@ public class CLITest {
 
   /**
    * Simulates
-   * java -jar graphwalker.jar
-   */
-  @Test
-  public void testNoArgs() {
-    String args[] = {};
-    runCommand(args);
-    String output = "^Usage: java -jar graphwalker.jar .*";
-    Assert.assertThat( outMsg, matches(output));
-    Assert.assertThat( "Nothing should be written to standard output", errMsg, is(""));
-  }
-
-  /**
-   * Simulates
    * java -jar graphwalker.jar -v
    */
   @Test
@@ -181,14 +170,13 @@ public class CLITest {
    * java -jar graphwalker.jar
    */
   @Test
-  public void testNoMbtPropertiesFile() {
+  public void testNoArgs() {
     String args[] = {};
     moveMbtPropertiesFile();
     runCommand(args);
     restoreMbtPropertiesFile();
-    String output = "Type 'java -jar graphwalker.jar help' for usage." + System.getProperty("line.separator");
-    Assert.assertThat( "Expected output", errMsg, is(output));
-    Assert.assertThat( "Nothing should be written to standard output", outMsg, is(""));
+    Assert.assertThat( outMsg, matches(usageMsg));
+    Assert.assertThat( "Nothing should be written to standard output", errMsg, is(""));
   }
 
   /**
@@ -199,8 +187,8 @@ public class CLITest {
   public void testUnknownCommand() {
     String args[] = {"sputnik"};
     runCommand(args);
-    Assert.assertThat( "Expected output", errMsg, containsString("Expected a command, got sputnik"));
-    Assert.assertThat( "Nothing should be written to standard output", outMsg, is(""));
+    Assert.assertThat( errMsg, containsString("Expected a command, got sputnik"));
+    Assert.assertThat( outMsg, matches(usageMsg));
   }
 
   /**
@@ -209,9 +197,10 @@ public class CLITest {
    */
   @Test
   public void testOfflineRandomEdgeCoverage100percent() {
-    String args[] = {"offline", "-f", "graphml/EFSM_with_REQTAGS.graphml", "-g", "A_STAR", "-s", "EDGE_COVERAGE:100"};
+    String args[] = {"offline", "-m", "graphml/EFSM_with_REQTAGS.graphml", "-g", "random(edge_coverage(100))"};
     runCommand(args);
     Assert.assertThat( "No error messages should occur", errMsg, is(""));
+    Assert.assertThat( outMsg, matches(usageMsg));
   }
 
   /**
@@ -220,7 +209,7 @@ public class CLITest {
    */
   @Test
   public void testOfflineA_StarEdgeCoverage100percent() {
-    String args[] = {"offline", "-f", "graphml/UC01.graphml", "-g", "A_STAR", "-s", "EDGE_COVERAGE:100"};
+    String args[] = {"offline", "-m", "graphml/UC01.graphml", "-g", "a_star(edge_coverage(100))"};
     runCommand(args);
     Assert.assertThat( "No error messages should occur", errMsg, is(""));
     Assert.assertEquals("Expected 38 lines beginning with v_" , 38, getNumMatches(Pattern.compile("v_").matcher(outMsg)));

@@ -30,7 +30,10 @@ import com.beust.jcommander.Parameter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CommandLineArgs {
-  @Parameter(names = "--help", help = true, description = "Displays help text")
+public class Options {
+  @Parameter(names = "--help", help = true, description = "Prints help text")
   private boolean help;
+
+  @Parameter(names = { "--version", "-v" }, description = "Prints the version of graphwalker")
+  public boolean version = false;
 }

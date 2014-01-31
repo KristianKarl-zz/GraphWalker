@@ -26,102 +26,95 @@
 package org.graphwalker.cli;
 
 import com.beust.jcommander.JCommander;
-import org.graphwalker.cli.commands.CommandOffline;
+import org.graphwalker.cli.commands.Offline;
 import org.graphwalker.core.*;
-import org.graphwalker.core.condition.BaseStopCondition;
-import org.graphwalker.core.condition.EdgeCoverage;
-import org.graphwalker.core.condition.VertexCoverage;
-import org.graphwalker.core.generator.AStarPath;
-import org.graphwalker.core.generator.RandomPath;
 import org.graphwalker.core.machine.ExecutionContext;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.io.factory.GraphMLModelFactory;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayDeque;
-import java.util.Arrays;
-import java.util.Deque;
+import java.util.Iterator;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class CLI {
   JCommander jc;
-  CommandOffline offline;
+  Options options;
+  Offline offline;
 
   public static void main(String[] args) {
     CLI cli = new CLI();
     try {
       cli.run(args);
     } catch (Exception e) {
+      // We should have catched all exceptions up until here, but there
+      // might have been problems with the command parser for instance...
       System.err.println(e);
-      System.err.println(printGeneralHelpText());
     }
   }
 
+  /**
+   * Parses the command line.
+   *
+   * @param args
+   */
   private void run(String[] args) {
-    jc = new JCommander(new CommandLineArgs());
+    options = new Options();
+    jc = new JCommander(options);
     jc.setProgramName("java -jar graphwalker.jar");
 
-    offline = new CommandOffline();
+    offline = new Offline();
     jc.addCommand("offline", offline);
 
-    jc.parse(args);
-
     try {
-      if (jc.getParsedCommand()==null) {
-        jc.usage();
-      } else if (jc.getParsedCommand().equals("offline")) {
-        RunCommandOffline();
+      jc.parse(args);
+
+      // Parse for commands
+      if (jc.getParsedCommand() != null) {
+        if (jc.getParsedCommand().equals("offline")) {
+          RunCommandOffline();
+        }
       }
+
+      // Parse for arguments
+      else if (options.version) {
+        System.out.println(printVersionInformation());
+      }
+
+      // No commands or options were found
+      else {
+        jc.usage();
+      }
+
     } catch (Exception e) {
-      e.printStackTrace();
-      System.err.println("Parsing of the command line failed");
       System.err.println(e.getMessage());
-      System.err.println("Type 'java -jar graphwalker.jar help " + args[0] + "' for help.");
+      System.out.println();
+      jc.usage();
     }
   }
 
-  private void RunCommandOffline() {
-/*
-    if (helpNeeded("offline", !cl.hasOption("f"), "Missing the input graphml file (folder), See -f (--input_graphml)")
-      || helpNeeded("offline", !cl.hasOption("s"), "A stop condition must be supplied, See option -s")
-      || helpNeeded("offline", !cl.hasOption("g"), "Missing the generator, See option -g")) return;
-
+  private void RunCommandOffline()  throws Exception {
     GraphMLModelFactory factory = new GraphMLModelFactory();
-    Model model = factory.create(cl.getOptionValue("f"));
 
-    StopCondition condition = null;
-    if ( cl.getOptionValue("s").equalsIgnoreCase("EDGE_COVERAGE") ) {
-      condition = new EdgeCoverage();
-    } else if ( cl.getOptionValue("s").equalsIgnoreCase("VERTEX_COVERAGE") ) {
-      condition = new VertexCoverage();
-    } else {
-      throw new IllegalArgumentException("No generator called: " + cl.getOptionValue("g"));
+    Iterator itr = offline.model.iterator();
+    while(itr.hasNext()) {
+      Model model = factory.create((String)itr.next());
+      PathGenerator pathGenerator = GeneratorParser.parse((String)itr.next());
+
+      ExecutionContext context = new ExecutionContext(model, pathGenerator);
+      Machine machine = new SimpleMachine(context);
+      while (machine.hasNextStep()) {
+        Element e = machine.getNextStep();
+        System.out.println(e.getName());
+      }
     }
 
-    PathGenerator pathGenerator = null;
-    if ( cl.getOptionValue("g").equalsIgnoreCase("RANDOM") ) {
-      pathGenerator = new RandomPath(condition);
-    } else if ( cl.getOptionValue("g").equalsIgnoreCase("A_STAR") ) {
-      pathGenerator = new AStarPath(condition);
-    } else {
-      throw new IllegalArgumentException("No generator called: " + cl.getOptionValue("g"));
-    }
-
-    ExecutionContext context = new ExecutionContext(model, pathGenerator);
-    Machine machine = new SimpleMachine(context);
-    while (machine.hasNextStep()) {
-      Element e = machine.getNextStep();
-      System.out.println(e.getName());
-    }
-*/
   }
 
   private String printVersionInformation() {
     String version = "org.graphwalker version: " + getVersionString() + System.getProperty("line.separator");
-    version +=  System.getProperty("line.separator");
+    version += System.getProperty("line.separator");
 
     version += "org.graphwalker is open source software licensed under MIT license" + System.getProperty("line.separator");
     version += "The software (and it's source) can be downloaded from http://graphwalker.org" + System.getProperty("line.separator");
@@ -165,23 +158,6 @@ public class CLI {
       stringBuilder.append(properties.getProperty("version.git.commit"));
     }
     return stringBuilder.toString();
-  }
-
-
-  private static String printGeneralHelpText() {
-    String text = "";
-    text += "usage: 'java -jar graphwalker.jar <COMMAND> [OPTION] [ARGUMENT]" + System.getProperty("line.separator");
-    text += System.getProperty("line.separator");
-
-    text += "Type 'java -jar graphwalker.jar help <COMMAND>' to get specific help about a command." + System.getProperty("line.separator");
-    text += "Valid commands are:" + System.getProperty("line.separator");
-    text += "    help" + System.getProperty("line.separator");
-    text += "    offline" + System.getProperty("line.separator");
-    text += System.getProperty("line.separator");
-
-    text += "Type 'java -jar graphwalker.jar -v (--version)' for version information." + System.getProperty("line.separator");
-
-    return text;
   }
 
   private String generateListOfValidGenerators() {

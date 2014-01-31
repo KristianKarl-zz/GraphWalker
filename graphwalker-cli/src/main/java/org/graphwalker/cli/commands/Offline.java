@@ -28,11 +28,12 @@ package org.graphwalker.cli.commands;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Parameters(commandDescription = "Generate a test sequence offline. The sequence is printed to the standard output")
-public class CommandOffline {
+public class Offline {
 
-  @Parameter(description = "The list of models")
-  private List<String> files;
+  @Parameter(names = {"--model", "-m"}, required = true, arity = 2)
+  public List<String> model = new ArrayList<String>();
 }
