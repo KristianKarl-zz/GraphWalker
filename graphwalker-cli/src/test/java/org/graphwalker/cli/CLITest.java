@@ -199,7 +199,7 @@ public class CLITest {
   public void testUnknownCommand() {
     String args[] = {"sputnik"};
     runCommand(args);
-    Assert.assertThat( "Expected output", errMsg, containsString("Unknown command: sputnik"));
+    Assert.assertThat( "Expected output", errMsg, containsString("Expected a command, got sputnik"));
     Assert.assertThat( "Nothing should be written to standard output", outMsg, is(""));
   }
 
