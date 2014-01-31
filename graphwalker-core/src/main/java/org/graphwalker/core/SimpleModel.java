@@ -41,9 +41,9 @@ public final class SimpleModel extends EventSource<ModelSink> implements Model {
 
     private final Map<Vertex, Vertex> vertices;
     private final Map<Edge, Edge> edges;
-    private final AStar aStar;
-    private final DepthFirstSearch depthFirstSearch;
-    private final FloydWarshall floydWarshall;
+    private AStar aStar;
+    private DepthFirstSearch depthFirstSearch;
+    private FloydWarshall floydWarshall;
     private final List<Vertex> startVertices;
     private final List<Element> elementCache;
     private final Map<Vertex, List<Edge>> vertexEdgeCache;
@@ -51,10 +51,18 @@ public final class SimpleModel extends EventSource<ModelSink> implements Model {
     private final List<Requirement> requirementCache;
 
     public SimpleModel() {
-        this(new HashSet<Vertex>(), new HashSet<Edge>());
+        this(true);
+    }
+
+    public SimpleModel(boolean refresh) {
+        this(new HashSet<Vertex>(), new HashSet<Edge>(), refresh);
     }
 
     public SimpleModel(Set<Vertex> vertices, Set<Edge> edges) {
+        this(vertices, edges, true);
+    }
+
+    public SimpleModel(Set<Vertex> vertices, Set<Edge> edges, boolean refresh) {
         this.vertices = asUnmodifiableMap(vertices);
         this.edges = asUnmodifiableMap(edges);
         this.startVertices = findStartVertices();
@@ -62,6 +70,12 @@ public final class SimpleModel extends EventSource<ModelSink> implements Model {
         this.vertexEdgeCache = createVertexEdgeCache();
         this.edgeNameCache = createEdgeNameCache();
         this.requirementCache = aggregateRequirements();
+        if (refresh) {
+            refresh();
+        }
+    }
+
+    public void refresh() {
         this.aStar = new AStar(this);
         this.depthFirstSearch = new DepthFirstSearch(this);
         this.floydWarshall = new FloydWarshall(this);
@@ -138,6 +152,10 @@ public final class SimpleModel extends EventSource<ModelSink> implements Model {
     }
 
     public Model addModel(Model model) {
+        return addModel(model, true);
+    }
+
+    public Model addModel(Model model, boolean refresh) {
         Map<Vertex,Vertex> vertexMap = new HashMap<Vertex,Vertex>(vertices);
         for (Vertex vertex: model.getVertices()) {
             if (vertexMap.containsKey(vertex)) {
@@ -156,7 +174,7 @@ public final class SimpleModel extends EventSource<ModelSink> implements Model {
                 updateEdge(edge, edgeMap, vertexMap);
             }
         }
-        return new SimpleModel(new HashSet<Vertex>(vertexMap.values()), new HashSet<Edge>(edgeMap.values()));
+        return new SimpleModel(new HashSet<Vertex>(vertexMap.values()), new HashSet<Edge>(edgeMap.values()), refresh);
     }
 
     private void updateEdge(Edge edge, Map<Edge,Edge> edges, Map<Vertex,Vertex> vertices) {

@@ -33,8 +33,10 @@ import java.util.List;
  * @author Nils Olsson
  */
 public interface Model {
+    void refresh();
     Model addEdge(Edge edge);
     Model addModel(Model model);
+    Model addModel(Model model, boolean refresh);
     Model addVertex(Vertex vertex);
     List<Edge> getEdges();
     List<Edge> getEdges(String name);

@@ -79,10 +79,11 @@ public final class GraphMLModelFactory extends AbstractModelFactory {
         try {
             File file = ResourceUtils.getResourceAsFile(filename);
             if (file.isDirectory()) {
-                Model model = new SimpleModel();
+                Model model = new SimpleModel(false);
                 for (Object fileObject : FileUtils.listFiles(file, new String[]{FILE_TYPE}, true)) {
-                    model = model.addModel(parse(new FileInputStream((File) fileObject)));
+                    model = model.addModel(parse(new FileInputStream((File) fileObject)), false);
                 }
+                model.refresh();
                 return model;
             } else {
                 return parse(new FileInputStream(file));
