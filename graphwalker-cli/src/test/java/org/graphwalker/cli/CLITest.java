@@ -159,9 +159,9 @@ public class CLITest {
   public void testNoArgs() {
     String args[] = {};
     runCommand(args);
-    String output = "Type 'java -jar graphwalker.jar help' for usage." + System.getProperty("line.separator");
-    Assert.assertThat( "Expected output", errMsg, is(output));
-    Assert.assertThat( "Nothing should be written to standard output", outMsg, is(""));
+    String output = "^Usage: java -jar graphwalker.jar .*";
+    Assert.assertThat( outMsg, matches(output));
+    Assert.assertThat( "Nothing should be written to standard output", errMsg, is(""));
   }
 
   /**

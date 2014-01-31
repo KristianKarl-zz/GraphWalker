@@ -25,8 +25,9 @@
  */
 package org.graphwalker.cli;
 
-import org.apache.commons.cli.*;
+import com.beust.jcommander.JCommander;
 import org.apache.commons.vfs2.FileSystemException;
+import org.graphwalker.cli.commands.CommandOffline;
 import org.graphwalker.core.*;
 import org.graphwalker.core.condition.BaseStopCondition;
 import org.graphwalker.core.condition.EdgeCoverage;
@@ -47,8 +48,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class CLI {
-  static Logger logger = Logger.getAnonymousLogger();
-  private Options opt = new Options();
+  JCommander jc;
+  CommandOffline offline;
 
   public static void main(String[] args) {
     CLI cli = new CLI();
@@ -57,54 +58,34 @@ public class CLI {
     } catch (Exception e) {
       System.err.println(e);
       System.err.println(printGeneralHelpText());
-      logger.log(Level.ALL, e.toString(), e.getStackTrace());
     }
   }
 
   private void run(String[] args) {
-    if (args.length < 1) {
-      System.err.println("Type 'java -jar graphwalker.jar help' for usage.");
-    } else {
-      if (args[0].equals("help")) {
-        if (args.length == 1) {
-          printGeneralHelpText();
-        } else {
-          printHelpText(args[1]);
-        }
-      } else if (args[0].equalsIgnoreCase("offline")) {
-        buildOfflineCLI();
-      } else if (args[0].equals("-v") || args[0].equals("--version")) {
-        System.out.println(printVersionInformation());
-      } else if (args[0].equals("-h") || args[0].equals("--help")) {
-        System.out.println(printGeneralHelpText());
-      } else {
-        System.err.println("Unknown command: " + args[0]);
-        System.err.println("Type 'java -jar graphwalker.jar help' for usage.");
-      }
-    }
+    jc = new JCommander(new CommandLineArgs());
+    jc.setProgramName("java -jar graphwalker.jar");
 
-    CommandLineParser parser = new PosixParser();
-    CommandLine cl = null;
+    offline = new CommandOffline();
+    jc.addCommand("offline", offline);
+
+    jc.parse(args);
 
     try {
-      cl = parser.parse(opt, args);
-
-      /**
-       * Command: offline
-       */
-      if (args[0].equalsIgnoreCase("offline")) {
-        RunCommandOffline(cl);
+      if (jc.getParsedCommand()==null) {
+        jc.usage();
+      } else if (jc.getParsedCommand().equals("offline")) {
+        RunCommandOffline();
       }
     } catch (Exception e) {
       e.printStackTrace();
-      logger.log(Level.ALL, printGeneralHelpText(), e.getStackTrace());
       System.err.println("Parsing of the command line failed");
       System.err.println(e.getMessage());
       System.err.println("Type 'java -jar graphwalker.jar help " + args[0] + "' for help.");
     }
   }
 
-  private void RunCommandOffline(CommandLine cl) throws FileSystemException {
+  private void RunCommandOffline() throws FileSystemException {
+/*
     if (helpNeeded("offline", !cl.hasOption("f"), "Missing the input graphml file (folder), See -f (--input_graphml)")
       || helpNeeded("offline", !cl.hasOption("s"), "A stop condition must be supplied, See option -s")
       || helpNeeded("offline", !cl.hasOption("g"), "Missing the generator, See option -g")) return;
@@ -136,6 +117,7 @@ public class CLI {
       Element e = machine.getNextStep();
       System.out.println(e.getName());
     }
+*/
   }
 
   private String printVersionInformation() {
@@ -157,7 +139,7 @@ public class CLI {
       properties.load(inputStream);
       inputStream.close();
     } catch (IOException e) {
-      logger.log(Level.ALL, printGeneralHelpText(), e.getStackTrace());
+      ;
     } finally {
       if (inputStream != null) {
         try {
@@ -201,62 +183,6 @@ public class CLI {
     text += "Type 'java -jar graphwalker.jar -v (--version)' for version information." + System.getProperty("line.separator");
 
     return text;
-  }
-
-  private void printHelpText(String helpSection) {
-    String header;
-
-    if (helpSection.equalsIgnoreCase("offline")) {
-      buildOfflineCLI();
-      header = "Generate a test sequence offline. The sequence is printed to the standard output";
-    } else {
-      System.err.println("Type 'java -jar graphwalker.jar help' for usage.");
-      return;
-    }
-
-    HelpFormatter f = new HelpFormatter();
-    f.printHelp(100, "java -jar graphwalker.jar " + helpSection.toLowerCase(), header, opt, "", true);
-  }
-
-  @SuppressWarnings("static-access")
-  private void buildOfflineCLI() {
-    opt.addOption("x", false, "Use an extended finite state machine to handle the model.");
-    opt.addOption(OptionBuilder
-            .isRequired()
-            .withArgName("stop-condition")
-            .withDescription(
-                    "Defines the stop condition(s)." + System.getProperty("line.separator") +
-                            "Halts the generation after the specified stop-conditon(s) has been met. "
-                            + "At least 1 condition must be given. If more than 1 is given, the condition that meets "
-                            + "it's stop-condition first, will cause the generation to halt. "
-                            + "To separate multiple conditions, the separator pipe-character | is used. "
-                            + "A list of valid stop-conditions are:" + System.getProperty("line.separator")
-                            + " -------------------" + System.getProperty("line.separatr")
-                            + generateListOfValidStopConditions()
-                            + " -------------------" + System.getProperty("line.separator")
-                            + "For more extensive examples, " + "see http://mbt.tigris.org/wiki/All_about_stop_conditions").hasArg()
-            .create("s"));
-    opt.addOption(OptionBuilder
-            .isRequired()
-            .withArgName("generator")
-            .withDescription(
-                    "The generator to be used when traversing the model. At least 1 generator must be given. "
-                            + "To separate multiple generators, the separator pipe-character | is used. "
-                            + "A list of valid generators are:" + System.getProperty("line.separator")
-                            + " -------------------" + System.getProperty("line.separator")
-                            + generateListOfValidGenerators()
-                            + " -------------------" + System.getProperty("line.separator")
-                            + "For more extensive examples, " + "see http://graphwalker.org/syntax/generators/").hasArg().create("g"));
-    opt.addOption(OptionBuilder.isRequired().withArgName("file|folder").withDescription("The file (or folder) containing graphml formatted files.")
-            .hasArg().create("f"));
-    opt.addOption(OptionBuilder
-            .withArgName("seconds")
-            .withDescription(
-                    "Prints the test coverage of the graph during execution every <n second>. The printout goes to the logger file defined in "
-                            + "mbt.properties, and only, if at least INFO level is set in " + "that same file.").hasArg().create("o"));
-    opt.addOption("t", "report-template", true, "Optional report template to use. (Also requires option -r) (To be better documented)");
-    opt.addOption("r", "report-output", true, "Optional report filename to save report to. (Also requires option -t)  (To be better documented)");
-    opt.addOption("w", "weighted", false, "Use weighted values if they exist in the model, and the generator is RANDOM.");
   }
 
   private String generateListOfValidGenerators() {
