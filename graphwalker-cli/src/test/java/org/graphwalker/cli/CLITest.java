@@ -197,10 +197,31 @@ public class CLITest {
    */
   @Test
   public void testOfflineRandomEdgeCoverage100percent() {
-    String args[] = {"offline", "-m", "graphml/EFSM_with_REQTAGS.graphml", "-g", "random(edge_coverage(100))"};
+    String args[] = {"offline", "-m", "graphml/EFSM_with_REQTAGS.graphml", "random(edge_coverage(100))"};
     runCommand(args);
     Assert.assertThat( "No error messages should occur", errMsg, is(""));
     Assert.assertThat( outMsg, matches(usageMsg));
+  }
+
+  /**
+   * Simulates
+   * java -jar graphwalker.jar offline -f graphml/UC01.graphml -g A_STAR -s EDGE_COVERAGE:100
+   */
+  @Test
+  public void multipleModels() {
+    String args[] = {"offline", "-m", "graphml/switch_model/A.graphml", "random(edge_coverage(100))",
+            "-m", "graphml/switch_model/B.graphml","random(edge_coverage(100))"};
+    runCommand(args);
+    Assert.assertThat( "No error messages should occur", errMsg, is(""));
+    Assert.assertEquals("Expected 38 lines beginning with v_" , 38, getNumMatches(Pattern.compile("v_").matcher(outMsg)));
+    Assert.assertEquals("Expected 38 lines beginning with e_" , 38, getNumMatches(Pattern.compile("e_").matcher(outMsg)));
+  }
+
+  private int getNumMatches(Matcher m) {
+    int numMatches = 0;
+    while (m.find() == true)
+      numMatches++;
+    return numMatches;
   }
 
   /**
@@ -214,13 +235,6 @@ public class CLITest {
     Assert.assertThat( "No error messages should occur", errMsg, is(""));
     Assert.assertEquals("Expected 38 lines beginning with v_" , 38, getNumMatches(Pattern.compile("v_").matcher(outMsg)));
     Assert.assertEquals("Expected 38 lines beginning with e_" , 38, getNumMatches(Pattern.compile("e_").matcher(outMsg)));
-  }
-
-  private int getNumMatches(Matcher m) {
-    int numMatches = 0;
-    while (m.find() == true)
-      numMatches++;
-    return numMatches;
   }
 
 //  /**
