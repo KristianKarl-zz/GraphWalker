@@ -25,10 +25,10 @@
  */
 package org.graphwalker.io.factory;
 
-import org.apache.commons.vfs2.*;
 import org.graphwalker.core.Bundle;
 import org.graphwalker.core.Model;
 import org.graphwalker.core.SimpleModel;
+import org.graphwalker.core.common.ResourceException;
 import org.graphwalker.core.common.ResourceUtils;
 import org.graphwalker.core.model.*;
 import org.jdom.Document;
@@ -47,11 +47,6 @@ import java.util.regex.Pattern;
  * @author Nils Olsson
  */
 public final class GraphMLModelFactory extends AbstractModelFactory {
-
-    static {
-        System.setProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.NoOpLog");
-    }
-
 
     // TODO: Update support for keywords
 
@@ -80,17 +75,14 @@ public final class GraphMLModelFactory extends AbstractModelFactory {
      * <p>create.</p>
      */
     public Model create(String file) {
-      FileObject fo = null;
       try {
-        fo = VFS.getManager().resolveFile(file);
-      } catch (FileSystemException e) {
-        return parse(ResourceUtils.getResourceAsStream(file));
-      }
-
-      try {
-        return parse(new FileInputStream(new File(fo.getName().getPath())));
-      } catch (java.io.FileNotFoundException e) {
-        throw new ModelFactoryException(e);
+        return parse(new FileInputStream(ResourceUtils.getResourceAsFile(file)));
+      } catch (Exception e) {
+        try {
+          return parse(ResourceUtils.getResourceAsStream(file));
+        } catch (ResourceException x) {
+            throw new ModelFactoryException(x);
+        }
       }
     }
 

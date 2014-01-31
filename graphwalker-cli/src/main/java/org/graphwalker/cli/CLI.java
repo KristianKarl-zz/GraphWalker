@@ -26,7 +26,6 @@
 package org.graphwalker.cli;
 
 import com.beust.jcommander.JCommander;
-import org.apache.commons.vfs2.FileSystemException;
 import org.graphwalker.cli.commands.CommandOffline;
 import org.graphwalker.core.*;
 import org.graphwalker.core.condition.BaseStopCondition;
@@ -84,7 +83,7 @@ public class CLI {
     }
   }
 
-  private void RunCommandOffline() throws FileSystemException {
+  private void RunCommandOffline() {
 /*
     if (helpNeeded("offline", !cl.hasOption("f"), "Missing the input graphml file (folder), See -f (--input_graphml)")
       || helpNeeded("offline", !cl.hasOption("s"), "A stop condition must be supplied, See option -s")
