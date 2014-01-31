@@ -48,6 +48,11 @@ import java.util.regex.Pattern;
  */
 public final class GraphMLModelFactory extends AbstractModelFactory {
 
+    static {
+        System.setProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.NoOpLog");
+    }
+
+
     // TODO: Update support for keywords
 
     private static final String FILE_TYPE = "graphml";

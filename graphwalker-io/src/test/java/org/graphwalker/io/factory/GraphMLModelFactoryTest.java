@@ -36,13 +36,13 @@ import static org.hamcrest.core.Is.is;
 public class GraphMLModelFactoryTest {
 
   @Test
-  public void FileDoesNotExistsOnFileSystem() throws FileSystemException {
+  public void FileDoesNotExistsOnFileSystem() {
     GraphMLModelFactory factory = new GraphMLModelFactory();
     Model model = factory.create("graphml/LKHDIODSOSUBD.graphml");
   }
 
   @Test
-  public void FileExistsOnFileSystem() throws FileSystemException {
+  public void FileExistsOnFileSystem() {
     GraphMLModelFactory factory = new GraphMLModelFactory();
     Model model = factory.create("graphwalker-io/src/test/resources/graphml//UC01.graphml");
     Assert.assertThat("Number of vertices", model.getVertices().size(), is(8));
@@ -51,7 +51,7 @@ public class GraphMLModelFactoryTest {
   }
 
   @Test
-  public void UC01() throws FileSystemException {
+  public void UC01() {
     GraphMLModelFactory factory = new GraphMLModelFactory();
     Model model = factory.create("graphml/UC01.graphml");
     Assert.assertThat("Number of vertices", model.getVertices().size(), is(8));
@@ -60,7 +60,7 @@ public class GraphMLModelFactoryTest {
   }
 
   @Test
-  public void EFSM_with_REQTAGS() throws FileSystemException {
+  public void EFSM_with_REQTAGS() {
     GraphMLModelFactory factory = new GraphMLModelFactory();
     Model model = factory.create("graphml/EFSM_with_REQTAGS.graphml");
     Assert.assertThat("Number of vertices", model.getVertices().size(), is(7));
@@ -69,7 +69,7 @@ public class GraphMLModelFactoryTest {
   }
 
   @Test
-  public void largeNumberOfSubGraphs() throws FileSystemException {
+  public void largeNumberOfSubGraphs() {
     GraphMLModelFactory factory = new GraphMLModelFactory();
     Model model = factory.create("graphml/largeNumberOfSubGraphs");
     Assert.assertThat("Number of vertices are wrong", model.getVertices().size(), is(8));
