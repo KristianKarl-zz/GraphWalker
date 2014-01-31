@@ -19,12 +19,22 @@
             <artifactId>graphwalker-core</artifactId>
         </dependency>
         <dependency>
-        <groupId>org.webbitserver</groupId>
+            <groupId>org.webbitserver</groupId>
             <artifactId>webbit</artifactId>
         </dependency>
         <dependency>
             <groupId>com.googlecode.json-simple</groupId>
             <artifactId>json-simple</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.graphstream</groupId>
+            <artifactId>gs-core</artifactId>
+            <version>1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.graphstream</groupId>
+            <artifactId>gs-algo</artifactId>
+            <version>1.2</version>
         </dependency>
     </dependencies>
 

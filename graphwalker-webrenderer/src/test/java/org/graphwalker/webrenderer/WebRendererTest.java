@@ -56,7 +56,15 @@ public class WebRendererTest {
 
     public static void main(String[] args) throws InterruptedException, ExecutionException, IOException, URISyntaxException {
 
-        Model model = new SimpleModel().addEdge(new Edge("e1", new Vertex("v1"), new Vertex("v2")));
+        //Model model = new SimpleModel().addEdge(new Edge("e1", new Vertex("v1"), new Vertex("v2")));
+
+        Model model = new SimpleModel()
+                .addEdge(new Edge("e0", new Vertex("v0"), new Vertex("v1")))
+                .addEdge(new Edge("e1", new Vertex("v1"), new Vertex("v2")))
+                .addEdge(new Edge("e2", new Vertex("v1"), new Vertex("v3")))
+                .addEdge(new Edge("e3", new Vertex("v3"), new Vertex("v4")))
+                .addEdge(new Edge("e4", new Vertex("v4"), new Vertex("v1")));
+
         PathGenerator pathGenerator = new RandomPath(new VertexCoverage());
         ExecutionContext context = new ExecutionContext(model, pathGenerator);
         Machine machine = new SimpleMachine(Arrays.asList(context, context));
