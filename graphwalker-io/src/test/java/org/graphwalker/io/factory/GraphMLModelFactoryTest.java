@@ -69,9 +69,9 @@ public class GraphMLModelFactoryTest {
   @Test
   public void largeNumberOfSubGraphs() {
     GraphMLModelFactory factory = new GraphMLModelFactory();
-    Model model = factory.create("graphwalker-io/src/test/resources/graphml/largeNumberOfSubGraphs");
-    Assert.assertThat("Number of vertices are wrong", model.getVertices().size(), is(8));
-    Assert.assertThat("Number of edges are wrong", model.getEdges().size(), is(12));
+    Model model = factory.create("src/test/resources/graphml/largeNumberOfSubGraphs");
+    Assert.assertThat("Number of vertices are wrong", model.getVertices().size(), is(222));
+    Assert.assertThat("Number of edges are wrong", model.getEdges().size(), is(1975));
     //Assert.assertThat("Model description", model.getDescription(), is("This is a description of the test"));
   }
 }
