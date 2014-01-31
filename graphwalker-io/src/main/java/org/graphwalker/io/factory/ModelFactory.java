@@ -58,7 +58,7 @@ public interface ModelFactory {
      * @param path a {@link java.nio.file.Path} object.
      * @return a {@link org.graphwalker.core.Model} object.
      */
-    Model create(Path path);
+    Model create(String file);
 
     /**
      * <p>getSupportedFileTypes.</p>

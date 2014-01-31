@@ -74,11 +74,10 @@ public final class GraphMLModelFactory extends AbstractModelFactory {
      * <p/>
      * <p>create.</p>
      */
-    public Model create(String file) throws FileSystemException {
-      FileSystemManager fsManager = VFS.getManager();
+    public Model create(String file) {
       FileObject fo = null;
       try {
-        fo = fsManager.resolveFile(file);
+        fo = VFS.getManager().resolveFile(file);
       } catch (FileSystemException e) {
         return parse(ResourceUtils.getResourceAsStream(file));
       }
@@ -86,7 +85,7 @@ public final class GraphMLModelFactory extends AbstractModelFactory {
       try {
         return parse(new FileInputStream(new File(fo.getName().getPath())));
       } catch (java.io.FileNotFoundException e) {
-        throw new FileSystemException(e);
+        throw new ModelFactoryException(e);
       }
     }
 
