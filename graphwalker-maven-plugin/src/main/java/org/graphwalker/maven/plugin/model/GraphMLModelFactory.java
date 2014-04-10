@@ -176,8 +176,8 @@ public final class GraphMLModelFactory extends AbstractModelFactory {
     private Model parseEdge(Model model, String id, Vertex source, Vertex target, String text) {
         String name = null, comment = null;
         Boolean blocked = false;
-        Guard guard = null;
-        Set<Action> actions = null;
+        Guard guard = new Guard("true");
+        Set<Action> actions = new HashSet<Action>();
         if (null != text && !"".equals(text)) {
             Tupel<String, String> commentTupel = parseComment(text);
             comment = commentTupel.getValue();

@@ -175,7 +175,7 @@ public final class TestMojo extends AbstractTestMojo {
                         public void run() {
                             while (machine.hasNextStep()) {
                                 Element element = machine.getNextStep();
-                                if (!"Start".equals(element.getName())) {
+                                if (null != element.getName() && !"Start".equals(element.getName())) {
                                     ReflectionUtils.execute(implementations.get(machine.getCurrentExecutionContext())
                                         , element.getName(), machine.getCurrentExecutionContext().getScriptContext());
                                 }
