@@ -36,30 +36,31 @@ import java.nio.file.Paths;
  */
 public final class SourceFile extends File {
 
-    private final Path filePath;
-    private final Path basePath;
-    private final Path outputPath;
     private final String extension;
     private final String baseName;
     private final File inputFile;
     private final String packageName;
-    private File outputFile;
+    private final File outputFile;
 
     public SourceFile(File file, File baseDirectory, File outputDirectory) {
-        super(file.getAbsolutePath());
-        filePath = Paths.get(file.getAbsolutePath());
-        basePath = Paths.get(baseDirectory.getAbsolutePath());
-        outputPath = Paths.get(outputDirectory.getAbsolutePath());
-        extension = FileUtils.extension(getName());
-        baseName = FileUtils.removeExtension(getName());
-        inputFile = basePath.relativize(filePath).toFile();
-        packageName = FileUtils.getPath(inputFile.getPath()).replace(File.separator, ".");
-        //outputFile = outputPath.resolve(FileUtils.removeExtension(inputFile.getAbsolutePath()).concat(".java")).toFile();
-        outputFile = new File(FileUtils.removeExtension(outputPath.resolve(basePath.relativize(filePath)).toFile().getAbsolutePath()).concat(".java"));
+        this(file.toPath(), baseDirectory.toPath(), outputDirectory.toPath());
+    }
+
+    public SourceFile(Path filePath, Path basePath, Path outputPath) {
+        super(filePath.toFile().getAbsolutePath());
+        this.extension = FileUtils.extension(getName());
+        this.baseName = FileUtils.removeExtension(getName());
+        this.inputFile = basePath.relativize(filePath).toFile();
+        this.packageName = FileUtils.getPath(inputFile.getPath()).replace(File.separator, ".");
+        this.outputFile = new File(FileUtils.removeExtension(outputPath.resolve(basePath.relativize(filePath)).toFile().getAbsolutePath()).concat(".java"));
     }
 
     public String getPackageName() {
         return packageName;
+    }
+
+    public Path getOutputPath() {
+        return outputFile.toPath();
     }
 
     public File getOutputFile() {
