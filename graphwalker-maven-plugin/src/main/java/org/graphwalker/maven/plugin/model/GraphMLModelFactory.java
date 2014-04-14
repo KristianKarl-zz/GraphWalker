@@ -36,6 +36,7 @@ import org.jdom.filter.ElementFilter;
 import org.jdom.input.SAXBuilder;
 
 import java.io.InputStream;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -57,12 +58,12 @@ public final class GraphMLModelFactory extends AbstractModelFactory {
     }
 
     /** {@inheritDoc} */
-    public boolean accept(String file) {
-        return file.endsWith(FILE_TYPE);
+    public boolean accept(Path path) {
+        return path.toFile().toString().endsWith(FILE_TYPE);
     }
 
     /** {@inheritDoc} */
-    public boolean validate(String file) {
+    public boolean validate(Path path) {
         return true; // TODO: implement
     }
 
@@ -71,7 +72,8 @@ public final class GraphMLModelFactory extends AbstractModelFactory {
      * <p/>
      * <p>create.</p>
      */
-    public Model create(String file) {
+    public Model create(Path path) {
+        String file = path.toFile().toString();
         return parse(file, ResourceUtils.getResourceAsStream(file));
     }
 

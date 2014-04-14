@@ -34,6 +34,8 @@ import org.graphwalker.maven.plugin.model.GraphMLModelFactory;
 import org.graphwalker.maven.plugin.model.ModelFactory;
 
 import java.lang.annotation.Annotation;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * @author Nils Olsson
@@ -58,7 +60,7 @@ public final class Execution {
         Model model = new SimpleModel();
         ModelFactory factory = new GraphMLModelFactory();
         for (Annotation annotation: AnnotationUtils.getAnnotations(testClass, org.graphwalker.core.annotation.Model.class)) {
-            String file = ((org.graphwalker.core.annotation.Model)annotation).file();
+            Path file = Paths.get(((org.graphwalker.core.annotation.Model) annotation).file());
             if (factory.accept(file)) {
                 model = model.addModel(factory.create(file));
             }

@@ -36,6 +36,8 @@ import org.graphwalker.maven.plugin.source.CodeGenerator;
 import org.graphwalker.maven.plugin.source.SourceFile;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 
 /**
@@ -45,6 +47,8 @@ public abstract class AbstractGenerateMojo extends AbstractDefaultMojo {
 
     @Parameter(defaultValue = "${project.build.sourceEncoding}", required = true, readonly = true)
     private String sourceEncoding;
+
+    private final ModelFactory modelFactory = new GraphMLModelFactory();
 
     protected String getSourceEncoding() {
         return sourceEncoding;
@@ -71,28 +75,28 @@ public abstract class AbstractGenerateMojo extends AbstractDefaultMojo {
     }
 
     private void generate(SourceFile sourceFile) {
+        File outputFile = sourceFile.getOutputPath().toFile();
         try {
-            ModelFactory factory = new GraphMLModelFactory();
-            Model model = factory.create(sourceFile.getAbsolutePath());
+            Model model = modelFactory.create(Paths.get(sourceFile.getInputPath().toFile().getAbsolutePath()));
             String source = new CodeGenerator(sourceFile, model).generate();
-            if (sourceFile.getOutputFile().exists()) {
-                String existingSource = StringUtils.removeDuplicateWhitespace(FileUtils.fileRead(sourceFile.getOutputFile(), getSourceEncoding()));
-                if (existingSource.equals(StringUtils.removeDuplicateWhitespace(new String(source.getBytes(), getSourceEncoding())))) {
+            if (Files.exists(sourceFile.getOutputPath())) {
+                String existingSource = StringUtils.removeDuplicateWhitespace(FileUtils.fileRead(outputFile, sourceEncoding));
+                if (existingSource.equals(StringUtils.removeDuplicateWhitespace(new String(source.getBytes(), sourceEncoding)))) {
                     return;
                 }
             }
             if (getLog().isInfoEnabled()) {
-                getLog().info("Generate interface for " + sourceFile.getAbsolutePath());
+                getLog().info("Generate " + sourceFile.getInputPath());
             }
-            FileUtils.mkdir(sourceFile.getOutputFile().getParent());
-            FileUtils.fileDelete(sourceFile.getOutputFile().getAbsolutePath());
-            FileUtils.fileWrite(sourceFile.getOutputFile(), getSourceEncoding(), source);
+            FileUtils.mkdir(sourceFile.getOutputPath().getParent().toFile().getAbsolutePath());
+            FileUtils.fileDelete(outputFile.getAbsolutePath());
+            FileUtils.fileWrite(outputFile.getAbsolutePath(), sourceEncoding, source);
         } catch (Throwable t) {
             if (getLog().isInfoEnabled()) {
-                getLog().info("Error generate interface for " + sourceFile.getAbsolutePath());
+                getLog().info("Error: Generate " + sourceFile.getInputPath());
             }
             if (getLog().isDebugEnabled()) {
-                getLog().debug("Error generate interface for " + sourceFile.getAbsolutePath(), t);
+                getLog().debug("Error: Generate " + sourceFile.getInputPath(), t);
             }
         }
     }

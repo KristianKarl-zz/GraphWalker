@@ -29,57 +29,45 @@ import org.codehaus.plexus.util.FileUtils;
 
 import java.io.File;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 /**
  * @author Nils Olsson
  */
-public final class SourceFile extends File {
+public final class SourceFile {
 
-    private final String extension;
-    private final String baseName;
-    private final File inputFile;
+    private final Path inputPath;
+    private final Path relativePath;
+    private final Path outputPath;
     private final String packageName;
-    private final File outputFile;
 
     public SourceFile(File file, File baseDirectory, File outputDirectory) {
         this(file.toPath(), baseDirectory.toPath(), outputDirectory.toPath());
     }
 
-    public SourceFile(Path filePath, Path basePath, Path outputPath) {
-        super(filePath.toFile().getAbsolutePath());
-        this.extension = FileUtils.extension(getName());
-        this.baseName = FileUtils.removeExtension(getName());
-        this.inputFile = basePath.relativize(filePath).toFile();
-        this.packageName = FileUtils.getPath(inputFile.getPath()).replace(File.separator, ".");
-        this.outputFile = new File(FileUtils.removeExtension(outputPath.resolve(basePath.relativize(filePath)).toFile().getAbsolutePath()).concat(".java"));
+    public SourceFile(Path inputPath, Path basePath, Path outputPath) {
+        this.inputPath = inputPath;
+        this.relativePath = basePath.relativize(inputPath);
+        this.packageName = this.relativePath.getParent().toString().replace(File.separator, ".");
+        this.outputPath = outputPath.resolve(this.relativePath).resolveSibling(getFileName() + ".java");
     }
 
-    public String getPackageName() {
-        return packageName;
+    public Path getInputPath() {
+        return inputPath;
+    }
+
+    public Path getRelativePath() {
+        return relativePath;
     }
 
     public Path getOutputPath() {
-        return outputFile.toPath();
+        return outputPath;
     }
 
-    public File getOutputFile() {
-        return outputFile;
+    public String getPackageName() {
+        return this.packageName;
     }
 
-    public File getInputFile() {
-        return inputFile;
-    }
-
-    public String getInputPath() {
-        return inputFile.getPath().replace(File.separator, "/");
-    }
-
-    public String getExtension() {
-        return extension;
-    }
-
-    public String getBaseName() {
-        return baseName;
+    public String getFileName() {
+        return FileUtils.removeExtension(inputPath.getFileName().toString());
     }
 }

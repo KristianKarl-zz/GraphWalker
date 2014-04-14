@@ -27,6 +27,7 @@ package org.graphwalker.maven.plugin.model;
 
 import org.graphwalker.core.Model;
 
+import java.nio.file.Path;
 import java.util.Set;
 
 /**
@@ -34,29 +35,11 @@ import java.util.Set;
  */
 public interface ModelFactory {
 
-    /**
-     * <p>accept.</p>
-     *
-     * @param file a {@link java.lang.String} object.
-     * @return a boolean.
-     */
-    boolean accept(String file);
+    boolean accept(Path path);
 
-    /**
-     * <p>validate.</p>
-     *
-     * @param file a {@link java.lang.String} object.
-     * @return a boolean.
-     */
-    boolean validate(String file);
+    boolean validate(Path path);
 
-    /**
-     * <p>create.</p>
-     *
-     * @param file a {@link java.lang.String} object.
-     * @return a {@link org.graphwalker.core.Model} object.
-     */
-    Model create(String file);
+    Model create(Path path);
 
     /**
      * <p>getSupportedFileTypes.</p>

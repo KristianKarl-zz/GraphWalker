@@ -74,6 +74,7 @@ public class WatchMojo extends AbstractMojo {
     private WatchService watchService;
     private final Map<Path, File> resourceMap = new HashMap<>();
     private final Map<WatchKey, Path> watchKeyMap = new HashMap<>();
+    private final ModelFactory modelFactory = new GraphMLModelFactory();
 
     @SuppressWarnings("unchecked")
     private static <T> WatchEvent<T> cast(WatchEvent<?> event) {
@@ -164,32 +165,32 @@ public class WatchMojo extends AbstractMojo {
     }
 
     private boolean isSupportedFileType(Path path) throws IOException {
-        return Files.isRegularFile(path) && !Files.isHidden(path);
+        return modelFactory.accept(path);
     }
 
     private void generate(SourceFile sourceFile) {
+        File outputFile = sourceFile.getOutputPath().toFile();
         try {
-            ModelFactory factory = new GraphMLModelFactory();
-            Model model = factory.create(sourceFile.getAbsolutePath());
+            Model model = modelFactory.create(Paths.get(sourceFile.getInputPath().toFile().getAbsolutePath()));
             String source = new CodeGenerator(sourceFile, model).generate();
-            if (sourceFile.getOutputFile().exists()) {
-                String existingSource = StringUtils.removeDuplicateWhitespace(FileUtils.fileRead(sourceFile.getOutputFile(), sourceEncoding));
+            if (Files.exists(sourceFile.getOutputPath())) {
+                String existingSource = StringUtils.removeDuplicateWhitespace(FileUtils.fileRead(outputFile, sourceEncoding));
                 if (existingSource.equals(StringUtils.removeDuplicateWhitespace(new String(source.getBytes(), sourceEncoding)))) {
                     return;
                 }
             }
             if (getLog().isInfoEnabled()) {
-                getLog().info("Generate interface for " + sourceFile.getAbsolutePath());
+                getLog().info("Generate " + sourceFile.getInputPath());
             }
-            FileUtils.mkdir(sourceFile.getOutputFile().getParent());
-            FileUtils.fileDelete(sourceFile.getOutputFile().getAbsolutePath());
-            FileUtils.fileWrite(sourceFile.getOutputFile(), sourceEncoding, source);
+            FileUtils.mkdir(sourceFile.getOutputPath().getParent().toFile().getAbsolutePath());
+            FileUtils.fileDelete(outputFile.getAbsolutePath());
+            FileUtils.fileWrite(outputFile.getAbsolutePath(), sourceEncoding, source);
         } catch (Throwable t) {
             if (getLog().isInfoEnabled()) {
-                getLog().info("Error generate interface for " + sourceFile.getAbsolutePath());
+                getLog().info("Error: Generate " + sourceFile.getInputPath());
             }
             if (getLog().isDebugEnabled()) {
-                getLog().debug("Error generate interface for " + sourceFile.getAbsolutePath(), t);
+                getLog().debug("Error: Generate " + sourceFile.getInputPath(), t);
             }
         }
     }
@@ -208,15 +209,14 @@ public class WatchMojo extends AbstractMojo {
     }
 
     private void delete(Path root, Path path) throws IOException {
-        /* TODO: Clean up generated files and folders
         if (isSupportedFileType(path)) {
             SourceFile sourceFile = new SourceFile(path, root, resourceMap.get(root).toPath());
-
+            if (Files.exists(sourceFile.getOutputPath())) {
+                Files.delete(sourceFile.getOutputPath());
+                if (!Files.exists(sourceFile.getOutputPath())) {
+                    getLog().info("Delete " + path);
+                }
+            }
         }
-        Path outputPath = getOutputPath(root, path);
-        getLog().info("Delete: "+path);
-        getLog().info("- file: "+outputPath);
-        */
     }
-
 }

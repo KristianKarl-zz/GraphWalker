@@ -39,7 +39,9 @@ import japa.parser.ast.expr.*;
 import japa.parser.ast.visitor.VoidVisitorAdapter;
 import org.graphwalker.core.Model;
 
+import java.io.File;
 import java.lang.reflect.Modifier;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -68,9 +70,9 @@ public final class CodeGenerator extends VoidVisitorAdapter<ChangeContext> {
 
     private CompilationUnit getCompilationUnit() {
         CompilationUnit compilationUnit;
-        if (sourceFile.getOutputFile().exists()) {
+        if (Files.exists(sourceFile.getOutputPath())) {
             try {
-                compilationUnit = JavaParser.parse(sourceFile.getOutputFile());
+                compilationUnit = JavaParser.parse(sourceFile.getOutputPath().toFile());
             } catch (Throwable t) {
                 throw new RuntimeException(t);
             }
@@ -119,9 +121,9 @@ public final class CodeGenerator extends VoidVisitorAdapter<ChangeContext> {
     }
 
     private ClassOrInterfaceDeclaration getInterfaceName(SourceFile sourceFile) {
-        ClassOrInterfaceDeclaration classOrInterfaceDeclaration = new ClassOrInterfaceDeclaration(ModifierSet.PUBLIC, false, sourceFile.getBaseName());
+        ClassOrInterfaceDeclaration classOrInterfaceDeclaration = new ClassOrInterfaceDeclaration(ModifierSet.PUBLIC, false, sourceFile.getFileName().toString());
         List<MemberValuePair> memberValuePairs = new ArrayList<MemberValuePair>();
-        memberValuePairs.add(new MemberValuePair("file", new StringLiteralExpr(sourceFile.getInputPath())));
+        memberValuePairs.add(new MemberValuePair("file", new StringLiteralExpr(sourceFile.getRelativePath().toString().replace(File.separator, "/"))));
         List<AnnotationExpr> annotations = new ArrayList<AnnotationExpr>();
         annotations.add(new NormalAnnotationExpr(ASTHelper.createNameExpr("Model"), memberValuePairs));
         classOrInterfaceDeclaration.setAnnotations(annotations);

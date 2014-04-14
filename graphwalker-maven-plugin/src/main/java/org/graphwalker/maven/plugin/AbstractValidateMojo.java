@@ -57,7 +57,7 @@ public abstract class AbstractValidateMojo extends AbstractDefaultMojo {
             getLog().info("Validate: " + file.getAbsolutePath());
         }
         ModelFactory factory = new GraphMLModelFactory();
-        factory.validate(file.getAbsolutePath());
+        factory.validate(file.toPath());
         //TODO: this should log the validation errors and then return false
     }
 
