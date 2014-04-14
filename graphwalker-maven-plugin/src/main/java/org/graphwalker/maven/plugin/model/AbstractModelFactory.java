@@ -37,10 +37,20 @@ public abstract class AbstractModelFactory implements ModelFactory {
 
     private final Set<String> supportedTypes = new HashSet<String>();
 
+    /**
+     * <p>Constructor for AbstractModelFactory.</p>
+     *
+     * @param types a {@link java.lang.String} object.
+     */
     public AbstractModelFactory(String... types) {
         Collections.addAll(supportedTypes, types);
     }
 
+    /**
+     * <p>getSupportedFileTypes.</p>
+     *
+     * @return a {@link java.util.Set} object.
+     */
     public Set<String> getSupportedFileTypes() {
         return supportedTypes;
     }

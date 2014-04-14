@@ -35,10 +35,28 @@ import java.util.Set;
  */
 public interface ModelFactory {
 
+    /**
+     * <p>accept.</p>
+     *
+     * @param path a {@link java.nio.file.Path} object.
+     * @return a boolean.
+     */
     boolean accept(Path path);
 
+    /**
+     * <p>validate.</p>
+     *
+     * @param path a {@link java.nio.file.Path} object.
+     * @return a boolean.
+     */
     boolean validate(Path path);
 
+    /**
+     * <p>create.</p>
+     *
+     * @param path a {@link java.nio.file.Path} object.
+     * @return a {@link org.graphwalker.core.Model} object.
+     */
     Model create(Path path);
 
     /**

@@ -45,11 +45,14 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+import static com.sun.nio.file.SensitivityWatchEventModifier.HIGH;
 import static java.nio.file.StandardWatchEventKinds.*;
-import static com.sun.nio.file.SensitivityWatchEventModifier.*;
 
 /**
  * @author Nils Olsson
@@ -81,6 +84,7 @@ public class WatchMojo extends AbstractMojo {
         return (WatchEvent<T>)event;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         try {
@@ -120,6 +124,12 @@ public class WatchMojo extends AbstractMojo {
         }
     }
 
+    /**
+     * <p>Getter for the field <code>watchService</code>.</p>
+     *
+     * @return a {@link java.nio.file.WatchService} object.
+     * @throws java.io.IOException if any.
+     */
     public WatchService getWatchService() throws IOException {
         if (null == watchService) {
             watchService = FileSystems.getDefault().newWatchService();
@@ -180,17 +190,17 @@ public class WatchMojo extends AbstractMojo {
                 }
             }
             if (getLog().isInfoEnabled()) {
-                getLog().info("Generate " + sourceFile.getInputPath());
+                getLog().info("Generate: " + sourceFile.getOutputPath());
             }
             FileUtils.mkdir(sourceFile.getOutputPath().getParent().toFile().getAbsolutePath());
             FileUtils.fileDelete(outputFile.getAbsolutePath());
             FileUtils.fileWrite(outputFile.getAbsolutePath(), sourceEncoding, source);
         } catch (Throwable t) {
             if (getLog().isInfoEnabled()) {
-                getLog().info("Error: Generate " + sourceFile.getInputPath());
+                getLog().info("Error: Generate: " + sourceFile.getOutputPath());
             }
             if (getLog().isDebugEnabled()) {
-                getLog().debug("Error: Generate " + sourceFile.getInputPath(), t);
+                getLog().debug("Error: Generate: " + sourceFile.getOutputPath(), t);
             }
         }
     }
@@ -214,7 +224,7 @@ public class WatchMojo extends AbstractMojo {
             if (Files.exists(sourceFile.getOutputPath())) {
                 Files.delete(sourceFile.getOutputPath());
                 if (!Files.exists(sourceFile.getOutputPath())) {
-                    getLog().info("Delete " + path);
+                    getLog().info("Delete: " + sourceFile.getOutputPath());
                 }
             }
         }

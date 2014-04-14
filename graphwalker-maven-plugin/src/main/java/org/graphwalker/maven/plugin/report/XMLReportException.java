@@ -30,6 +30,11 @@ package org.graphwalker.maven.plugin.report;
  */
 public final class XMLReportException extends RuntimeException {
 
+    /**
+     * <p>Constructor for XMLReportException.</p>
+     *
+     * @param throwable a {@link java.lang.Throwable} object.
+     */
     public XMLReportException(Throwable throwable) {
         super(throwable);
     }

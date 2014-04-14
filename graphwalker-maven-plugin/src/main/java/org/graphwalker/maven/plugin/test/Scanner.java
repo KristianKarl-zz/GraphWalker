@@ -38,6 +38,12 @@ import java.util.Map;
  */
 public final class Scanner {
 
+    /**
+     * <p>scan.</p>
+     *
+     * @param directories a {@link java.io.File} object.
+     * @return a {@link java.util.Collection} object.
+     */
     public Collection<Class<?>> scan(File... directories) {
         Map<String, Class<?>> tests = new HashMap<String, Class<?>>();
         for (File directory: directories) {

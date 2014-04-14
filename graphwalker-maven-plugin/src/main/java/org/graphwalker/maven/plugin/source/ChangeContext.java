@@ -40,18 +40,38 @@ public final class ChangeContext {
     private final Set<String> methodNames;
     private final Set<MethodDeclaration> methodDeclarations = new HashSet<MethodDeclaration>();
 
+    /**
+     * <p>Constructor for ChangeContext.</p>
+     *
+     * @param model a {@link org.graphwalker.core.Model} object.
+     */
     public ChangeContext(Model model) {
         methodNames = extractMethodNames(model);
     }
 
+    /**
+     * <p>getMethodsName.</p>
+     *
+     * @return a {@link java.util.Set} object.
+     */
     public Set<String> getMethodsName() {
         return methodNames;
     }
 
+    /**
+     * <p>addMethodDeclaration.</p>
+     *
+     * @param methodDeclaration a {@link japa.parser.ast.body.MethodDeclaration} object.
+     */
     public void addMethodDeclaration(MethodDeclaration methodDeclaration) {
         methodDeclarations.add(methodDeclaration);
     }
 
+    /**
+     * <p>Getter for the field <code>methodDeclarations</code>.</p>
+     *
+     * @return a {@link java.util.Set} object.
+     */
     public Set<MethodDeclaration> getMethodDeclarations() {
         return methodDeclarations;
     }

@@ -41,6 +41,12 @@ public final class TestManager {
     private final Configuration configuration;
     private final Collection<TestGroup> executionGroups;
 
+    /**
+     * <p>Constructor for TestManager.</p>
+     *
+     * @param configuration a {@link org.graphwalker.maven.plugin.test.Configuration} object.
+     * @param testClasses a {@link java.util.Collection} object.
+     */
     public TestManager(Configuration configuration, Collection<Class<?>> testClasses) {
         this.configuration = configuration;
         this.executionGroups = createExecutionGroups(filterTestClasses(testClasses));
@@ -113,18 +119,38 @@ public final class TestManager {
         return false;
     }
 
+    /**
+     * <p>Getter for the field <code>executionGroups</code>.</p>
+     *
+     * @return a {@link java.util.Collection} object.
+     */
     public Collection<TestGroup> getExecutionGroups() {
         return executionGroups;
     }
 
+    /**
+     * <p>Getter for the field <code>configuration</code>.</p>
+     *
+     * @return a {@link org.graphwalker.maven.plugin.test.Configuration} object.
+     */
     public Configuration getConfiguration() {
         return configuration;
     }
 
+    /**
+     * <p>getGroupCount.</p>
+     *
+     * @return a int.
+     */
     public int getGroupCount() {
         return getExecutionGroups().size();
     }
 
+    /**
+     * <p>getTestCount.</p>
+     *
+     * @return a int.
+     */
     public int getTestCount() {
         int count = 0;
         for (TestGroup group: getExecutionGroups()) {

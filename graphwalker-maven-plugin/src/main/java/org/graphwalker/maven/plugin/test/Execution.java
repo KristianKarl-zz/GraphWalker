@@ -48,6 +48,14 @@ public final class Execution {
     private final String stopConditionValue;
     private final Model model;
 
+    /**
+     * <p>Constructor for Execution.</p>
+     *
+     * @param testClass a {@link java.lang.Class} object.
+     * @param pathGenerator a {@link java.lang.Class} object.
+     * @param stopCondition a {@link java.lang.Class} object.
+     * @param stopConditionValue a {@link java.lang.String} object.
+     */
     public Execution(final Class<?> testClass, final Class<? extends PathGenerator> pathGenerator, final Class<? extends StopCondition> stopCondition, String stopConditionValue) {
         this.testClass = testClass;
         this.stopCondition = stopCondition;
@@ -68,26 +76,56 @@ public final class Execution {
         return model;
     }
 
+    /**
+     * <p>getName.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getName() {
         return testClass.getName();
     }
 
+    /**
+     * <p>Getter for the field <code>testClass</code>.</p>
+     *
+     * @return a {@link java.lang.Class} object.
+     */
     public Class<?> getTestClass() {
         return testClass;
     }
 
+    /**
+     * <p>Getter for the field <code>pathGenerator</code>.</p>
+     *
+     * @return a {@link java.lang.Class} object.
+     */
     public Class<? extends PathGenerator> getPathGenerator() {
         return pathGenerator;
     }
 
+    /**
+     * <p>Getter for the field <code>stopCondition</code>.</p>
+     *
+     * @return a {@link java.lang.Class} object.
+     */
     public Class<? extends StopCondition> getStopCondition() {
         return stopCondition;
     }
 
+    /**
+     * <p>Getter for the field <code>stopConditionValue</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getStopConditionValue() {
         return stopConditionValue;
     }
 
+    /**
+     * <p>Getter for the field <code>model</code>.</p>
+     *
+     * @return a {@link org.graphwalker.core.Model} object.
+     */
     public Model getModel() {
         return model;
     }

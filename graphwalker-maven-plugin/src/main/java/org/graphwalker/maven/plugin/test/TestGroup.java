@@ -36,18 +36,38 @@ public final class TestGroup {
     private final String name;
     private final Set<Execution> executions = new HashSet<Execution>();
 
+    /**
+     * <p>Constructor for TestGroup.</p>
+     *
+     * @param name a {@link java.lang.String} object.
+     */
     public TestGroup(String name) {
         this.name = name;
     }
 
+    /**
+     * <p>Getter for the field <code>name</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * <p>addExecution.</p>
+     *
+     * @param execution a {@link org.graphwalker.maven.plugin.test.Execution} object.
+     */
     public void addExecution(Execution execution) {
         executions.add(execution);
     }
 
+    /**
+     * <p>Getter for the field <code>executions</code>.</p>
+     *
+     * @return a {@link java.util.Set} object.
+     */
     public Set<Execution> getExecutions() {
         return executions;
     }

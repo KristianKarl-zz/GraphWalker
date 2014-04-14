@@ -80,6 +80,14 @@ public final class ReflectionUtils {
         }
     }
 
+    /**
+     * <p>getConstructor.</p>
+     *
+     * @param clazz a {@link java.lang.Class} object.
+     * @param arguments a {@link java.lang.Object} object.
+     * @param <T> a T object.
+     * @return a {@link java.lang.reflect.Constructor} object.
+     */
     @SuppressWarnings("unchecked")
     public static <T> Constructor<T> getConstructor(Class<T> clazz, Object... arguments) {
         for (Constructor<?> constructor: clazz.getConstructors()) {

@@ -38,9 +38,10 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
 public final class ValidateModelsMojo extends AbstractValidateMojo {
 
     /**
+     * <p>execute.</p>
      *
-     * @throws MojoExecutionException
-     * @throws MojoFailureException
+     * @throws org.apache.maven.plugin.MojoExecutionException if any.
+     * @throws org.apache.maven.plugin.MojoFailureException if any.
      */
     public void execute() throws MojoExecutionException, MojoFailureException {
         validate(getMavenProject().getResources());

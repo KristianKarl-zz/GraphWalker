@@ -54,11 +54,22 @@ public final class CodeGenerator extends VoidVisitorAdapter<ChangeContext> {
     private final SourceFile sourceFile;
     private final Model model;
 
+    /**
+     * <p>Constructor for CodeGenerator.</p>
+     *
+     * @param sourceFile a {@link org.graphwalker.maven.plugin.source.SourceFile} object.
+     * @param model a {@link org.graphwalker.core.Model} object.
+     */
     public CodeGenerator(SourceFile sourceFile, Model model) {
         this.sourceFile = sourceFile;
         this.model = model;
     }
 
+    /**
+     * <p>generate.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String generate() {
         CompilationUnit compilationUnit = getCompilationUnit();
         ChangeContext changeContext = new ChangeContext(model);
@@ -108,6 +119,12 @@ public final class CodeGenerator extends VoidVisitorAdapter<ChangeContext> {
         }
     }
 
+    /**
+     * <p>visit.</p>
+     *
+     * @param methodDeclaration a {@link japa.parser.ast.body.MethodDeclaration} object.
+     * @param changeContext a {@link org.graphwalker.maven.plugin.source.ChangeContext} object.
+     */
     public void visit(MethodDeclaration methodDeclaration, ChangeContext changeContext) {
         if (changeContext.getMethodsName().contains(methodDeclaration.getName())) {
             changeContext.getMethodsName().remove(methodDeclaration.getName());
@@ -121,7 +138,7 @@ public final class CodeGenerator extends VoidVisitorAdapter<ChangeContext> {
     }
 
     private ClassOrInterfaceDeclaration getInterfaceName(SourceFile sourceFile) {
-        ClassOrInterfaceDeclaration classOrInterfaceDeclaration = new ClassOrInterfaceDeclaration(ModifierSet.PUBLIC, false, sourceFile.getFileName().toString());
+        ClassOrInterfaceDeclaration classOrInterfaceDeclaration = new ClassOrInterfaceDeclaration(ModifierSet.PUBLIC, false, sourceFile.getFileName());
         List<MemberValuePair> memberValuePairs = new ArrayList<MemberValuePair>();
         memberValuePairs.add(new MemberValuePair("file", new StringLiteralExpr(sourceFile.getRelativePath().toString().replace(File.separator, "/"))));
         List<AnnotationExpr> annotations = new ArrayList<AnnotationExpr>();

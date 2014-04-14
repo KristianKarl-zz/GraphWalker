@@ -109,34 +109,74 @@ public abstract class AbstractTestMojo extends AbstractDefaultMojo {
     @Parameter(property = "groups", defaultValue = "*")
     private String groups;
 
+    /**
+     * <p>Getter for the field <code>classpathElements</code>.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
     protected List<String> getClasspathElements() {
         return classpathElements;
     }
 
+    /**
+     * <p>Getter for the field <code>testClassesDirectory</code>.</p>
+     *
+     * @return a {@link java.io.File} object.
+     */
     protected File getTestClassesDirectory() {
         return testClassesDirectory;
     }
 
+    /**
+     * <p>Getter for the field <code>classesDirectory</code>.</p>
+     *
+     * @return a {@link java.io.File} object.
+     */
     protected File getClassesDirectory() {
         return classesDirectory;
     }
 
+    /**
+     * <p>Getter for the field <code>reportsDirectory</code>.</p>
+     *
+     * @return a {@link java.io.File} object.
+     */
     protected File getReportsDirectory() {
         return reportsDirectory;
     }
 
+    /**
+     * <p>Getter for the field <code>skipTests</code>.</p>
+     *
+     * @return a boolean.
+     */
     protected boolean getSkipTests() {
         return mavenTestSkip || graphwalkerTestSkip || skipTests;
     }
 
+    /**
+     * <p>Getter for the field <code>includes</code>.</p>
+     *
+     * @return a {@link java.util.Set} object.
+     */
     protected Set<String> getIncludes() {
         return includes;
     }
 
+    /**
+     * <p>Getter for the field <code>excludes</code>.</p>
+     *
+     * @return a {@link java.util.Set} object.
+     */
     protected Set<String> getExcludes() {
         return excludes;
     }
 
+    /**
+     * <p>Getter for the field <code>test</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     protected String getTest() {
         if (System.getProperties().containsKey("test")) {
             return System.getProperty("test");
@@ -144,6 +184,11 @@ public abstract class AbstractTestMojo extends AbstractDefaultMojo {
         return test;
     }
 
+    /**
+     * <p>Getter for the field <code>groups</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     protected String getGroups() {
         if (System.getProperties().containsKey("groups")) {
             return System.getProperty("groups");
@@ -151,6 +196,12 @@ public abstract class AbstractTestMojo extends AbstractDefaultMojo {
         return groups;
     }
 
+    /**
+     * <p>createClassLoader.</p>
+     *
+     * @return a {@link java.lang.ClassLoader} object.
+     * @throws org.apache.maven.plugin.MojoExecutionException if any.
+     */
     protected ClassLoader createClassLoader() throws MojoExecutionException {
         try {
             return new URLClassLoader(convertToURL(getClasspathElements()), getClass().getClassLoader());
@@ -167,12 +218,23 @@ public abstract class AbstractTestMojo extends AbstractDefaultMojo {
         return urlList.toArray(new URL[urlList.size()]);
     }
 
+    /**
+     * <p>switchClassLoader.</p>
+     *
+     * @param newClassLoader a {@link java.lang.ClassLoader} object.
+     * @return a {@link java.lang.ClassLoader} object.
+     */
     protected ClassLoader switchClassLoader(ClassLoader newClassLoader) {
         ClassLoader oldClassLoader = Thread.currentThread().getContextClassLoader();
         Thread.currentThread().setContextClassLoader(newClassLoader);
         return oldClassLoader;
     }
 
+    /**
+     * <p>createProperties.</p>
+     *
+     * @return a {@link java.util.Properties} object.
+     */
     protected Properties createProperties() {
         Properties properties = (Properties) System.getProperties().clone();
         properties.putAll((Properties) getMavenProject().getProperties().clone());
@@ -182,6 +244,12 @@ public abstract class AbstractTestMojo extends AbstractDefaultMojo {
         return properties;
     }
 
+    /**
+     * <p>switchProperties.</p>
+     *
+     * @param properties a {@link java.util.Properties} object.
+     * @return a {@link java.util.Properties} object.
+     */
     protected Properties switchProperties(Properties properties) {
         Properties oldProperties = (Properties) System.getProperties().clone();
         System.setProperties(properties);

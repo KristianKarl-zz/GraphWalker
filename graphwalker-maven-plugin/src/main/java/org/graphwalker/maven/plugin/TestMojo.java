@@ -60,9 +60,10 @@ public final class TestMojo extends AbstractTestMojo {
     private final List<Machine> machines = new ArrayList<Machine>();
 
     /**
+     * <p>execute.</p>
      *
-     * @throws MojoExecutionException
-     * @throws MojoFailureException
+     * @throws org.apache.maven.plugin.MojoExecutionException if any.
+     * @throws org.apache.maven.plugin.MojoFailureException if any.
      */
     public void execute() throws MojoExecutionException, MojoFailureException {
         if (!getSkipTests()) {

@@ -44,14 +44,28 @@ public final class XMLReport {
     private final File directory;
     private ObjectFactory factory = new ObjectFactory();
 
+    /**
+     * <p>Constructor for XMLReport.</p>
+     *
+     * @param directory a {@link java.io.File} object.
+     */
     public XMLReport(File directory) {
         this.directory = directory;
     }
 
+    /**
+     * <p>writeReport.</p>
+     */
     public void writeReport() {
 
     }
 
+    /**
+     * <p>writeReport.</p>
+     *
+     * @param context a {@link org.graphwalker.core.machine.ExecutionContext} object.
+     * @param implementation a {@link java.lang.Object} object.
+     */
     public void writeReport(ExecutionContext context, Object implementation) {
         String name = implementation.getClass().getName();
         Testsuite testsuite = factory.createTestsuite();

@@ -40,6 +40,13 @@ public final class AnnotationUtils {
 
     private AnnotationUtils() {}
 
+    /**
+     * <p>getAnnotations.</p>
+     *
+     * @param clazz a {@link java.lang.Class} object.
+     * @param annotation a {@link java.lang.Class} object.
+     * @return a {@link java.util.Set} object.
+     */
     public static Set<Annotation> getAnnotations(final Class<?> clazz, final Class<? extends Annotation> annotation) {
         Set<Annotation> annotations = new HashSet<Annotation>();
         for (Class<?> interfaceClass: clazz.getInterfaces()) {
@@ -50,6 +57,13 @@ public final class AnnotationUtils {
         return annotations;
     }
 
+    /**
+     * <p>execute.</p>
+     *
+     * @param annotation a {@link java.lang.Class} object.
+     * @param executionContext a {@link org.graphwalker.core.machine.ExecutionContext} object.
+     * @param implementation a {@link java.lang.Object} object.
+     */
     public static void execute(Class<? extends Annotation> annotation, ExecutionContext executionContext, Object implementation) {
         for (Method method: implementation.getClass().getMethods()) {
             if (method.isAnnotationPresent(annotation)) {
@@ -58,6 +72,13 @@ public final class AnnotationUtils {
         }
     }
 
+    /**
+     * <p>execute.</p>
+     *
+     * @param executionContext a {@link org.graphwalker.core.machine.ExecutionContext} object.
+     * @param implementation a {@link java.lang.Object} object.
+     * @param throwable a {@link java.lang.Throwable} object.
+     */
     public static void execute(ExecutionContext executionContext, Object implementation, Throwable throwable) {
         for (Method method: implementation.getClass().getMethods()) {
             if (method.isAnnotationPresent(ExceptionHandler.class)) {

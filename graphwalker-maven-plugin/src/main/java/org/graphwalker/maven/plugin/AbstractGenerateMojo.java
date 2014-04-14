@@ -50,18 +50,38 @@ public abstract class AbstractGenerateMojo extends AbstractDefaultMojo {
 
     private final ModelFactory modelFactory = new GraphMLModelFactory();
 
+    /**
+     * <p>Getter for the field <code>sourceEncoding</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     protected String getSourceEncoding() {
         return sourceEncoding;
     }
 
+    /**
+     * <p>getGeneratedSourcesDirectory.</p>
+     *
+     * @return a {@link java.io.File} object.
+     */
     protected abstract File getGeneratedSourcesDirectory();
 
+    /**
+     * <p>generate.</p>
+     *
+     * @param resources a {@link java.util.List} object.
+     */
     protected void generate(List<Resource> resources) {
         for (Resource resource: resources) {
             generate(resource);
         }
     }
 
+    /**
+     * <p>generate.</p>
+     *
+     * @param resource a {@link org.apache.maven.model.Resource} object.
+     */
     protected void generate(Resource resource) {
         File baseDirectory = new File(resource.getDirectory());
         ModelFactory factory = new GraphMLModelFactory();
@@ -70,6 +90,13 @@ public abstract class AbstractGenerateMojo extends AbstractDefaultMojo {
         }
     }
 
+    /**
+     * <p>generate.</p>
+     *
+     * @param file a {@link java.io.File} object.
+     * @param baseDirectory a {@link java.io.File} object.
+     * @param outputDirectory a {@link java.io.File} object.
+     */
     protected void generate(File file, File baseDirectory, File outputDirectory) {
         generate(new SourceFile(file, baseDirectory, outputDirectory));
     }

@@ -37,6 +37,11 @@ import java.util.List;
  */
 public abstract class AbstractValidateMojo extends AbstractDefaultMojo {
 
+    /**
+     * <p>validate.</p>
+     *
+     * @param resources a {@link java.util.List} object.
+     */
     protected void validate(List<Resource> resources) {
         for (Resource resource: resources) {
             validate(resource);
@@ -44,6 +49,11 @@ public abstract class AbstractValidateMojo extends AbstractDefaultMojo {
         // TODO: if any execution of the sub method returns false this method should throw a new exception
     }
 
+    /**
+     * <p>validate.</p>
+     *
+     * @param resource a {@link org.apache.maven.model.Resource} object.
+     */
     protected void validate(Resource resource) {
         ModelFactory factory = new GraphMLModelFactory();
         for (File file: findFiles(factory.getSupportedFileTypes(), null, new File(resource.getDirectory()))) {

@@ -40,53 +40,116 @@ public final class Configuration {
     private File reportsDirectory;
     private Set<String> groups;
 
+    /**
+     * <p>Constructor for Configuration.</p>
+     */
     public Configuration() {
     }
 
+    /**
+     * <p>Getter for the field <code>includes</code>.</p>
+     *
+     * @return a {@link java.util.Set} object.
+     */
     public Set<String> getIncludes() {
         return includes;
     }
 
+    /**
+     * <p>Setter for the field <code>includes</code>.</p>
+     *
+     * @param includes a {@link java.util.Set} object.
+     */
     public void setIncludes(Set<String> includes) {
         this.includes = includes;
     }
 
+    /**
+     * <p>Getter for the field <code>excludes</code>.</p>
+     *
+     * @return a {@link java.util.Set} object.
+     */
     public Set<String> getExcludes() {
         return excludes;
     }
 
+    /**
+     * <p>Setter for the field <code>excludes</code>.</p>
+     *
+     * @param excludes a {@link java.util.Set} object.
+     */
     public void setExcludes(Set<String> excludes) {
         this.excludes = excludes;
     }
 
+    /**
+     * <p>Getter for the field <code>testClassesDirectory</code>.</p>
+     *
+     * @return a {@link java.io.File} object.
+     */
     public File getTestClassesDirectory() {
         return testClassesDirectory;
     }
 
+    /**
+     * <p>Setter for the field <code>testClassesDirectory</code>.</p>
+     *
+     * @param testClassesDirectory a {@link java.io.File} object.
+     */
     public void setTestClassesDirectory(File testClassesDirectory) {
         this.testClassesDirectory = testClassesDirectory;
     }
 
+    /**
+     * <p>Getter for the field <code>classesDirectory</code>.</p>
+     *
+     * @return a {@link java.io.File} object.
+     */
     public File getClassesDirectory() {
         return classesDirectory;
     }
 
+    /**
+     * <p>Setter for the field <code>classesDirectory</code>.</p>
+     *
+     * @param classesDirectory a {@link java.io.File} object.
+     */
     public void setClassesDirectory(File classesDirectory) {
         this.classesDirectory = classesDirectory;
     }
 
+    /**
+     * <p>Getter for the field <code>reportsDirectory</code>.</p>
+     *
+     * @return a {@link java.io.File} object.
+     */
     public File getReportsDirectory() {
         return reportsDirectory;
     }
 
+    /**
+     * <p>Setter for the field <code>reportsDirectory</code>.</p>
+     *
+     * @param reportsDirectory a {@link java.io.File} object.
+     */
     public void setReportsDirectory(File reportsDirectory) {
         this.reportsDirectory = reportsDirectory;
     }
 
+    /**
+     * <p>Getter for the field <code>groups</code>.</p>
+     *
+     * @return a {@link java.util.Set} object.
+     */
     public Set<String> getGroups() {
         return groups;
     }
 
+    /**
+     * <p>Setter for the field <code>groups</code>.</p>
+     *
+     * @param groups a {@link java.util.Set} object.
+     */
     public void setGroups(Set<String> groups) {
         this.groups = groups;
     }

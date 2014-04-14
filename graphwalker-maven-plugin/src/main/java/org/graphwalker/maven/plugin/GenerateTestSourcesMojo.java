@@ -43,15 +43,17 @@ public final class GenerateTestSourcesMojo extends AbstractGenerateMojo {
     @Parameter(defaultValue = "${project.build.directory}/generated-test-sources/graphwalker")
     private File generatedSourcesDirectory;
 
+    /** {@inheritDoc} */
     @Override
     protected File getGeneratedSourcesDirectory() {
         return generatedSourcesDirectory;
     }
 
     /**
+     * <p>execute.</p>
      *
-     * @throws MojoExecutionException
-     * @throws MojoFailureException
+     * @throws org.apache.maven.plugin.MojoExecutionException if any.
+     * @throws org.apache.maven.plugin.MojoFailureException if any.
      */
     public void execute() throws MojoExecutionException, MojoFailureException {
         generate(getMavenProject().getTestResources());

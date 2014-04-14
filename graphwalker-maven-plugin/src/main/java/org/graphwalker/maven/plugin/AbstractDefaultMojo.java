@@ -47,10 +47,20 @@ public abstract class AbstractDefaultMojo extends AbstractMojo {
     @Component
     private MavenProject mavenProject;
 
+    /**
+     * <p>Getter for the field <code>session</code>.</p>
+     *
+     * @return a {@link org.apache.maven.execution.MavenSession} object.
+     */
     protected MavenSession getSession() {
         return session;
     }
 
+    /**
+     * <p>Getter for the field <code>mavenProject</code>.</p>
+     *
+     * @return a {@link org.apache.maven.project.MavenProject} object.
+     */
     protected MavenProject getMavenProject() {
         return mavenProject;
     }
@@ -62,10 +72,26 @@ public abstract class AbstractDefaultMojo extends AbstractMojo {
         return StringUtils.join(set.toArray(new String[set.size()]), ",");
     }
 
+    /**
+     * <p>findFiles.</p>
+     *
+     * @param includes a {@link java.util.Set} object.
+     * @param excludes a {@link java.util.Set} object.
+     * @param directories a {@link java.io.File} object.
+     * @return a {@link java.util.Set} object.
+     */
     protected Set<File> findFiles(Set<String> includes, Set<String> excludes, File... directories) {
         return findFiles(toString(includes), toString(excludes), directories);
     }
 
+    /**
+     * <p>findFiles.</p>
+     *
+     * @param includes a {@link java.lang.String} object.
+     * @param excludes a {@link java.lang.String} object.
+     * @param directories a {@link java.io.File} object.
+     * @return a {@link java.util.Set} object.
+     */
     protected Set<File> findFiles(String includes, String excludes, File... directories) {
         Set<File> files = new HashSet<File>();
         for (File directory : directories) {
