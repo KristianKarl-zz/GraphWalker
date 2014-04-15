@@ -70,4 +70,10 @@ public @interface Execute {
      */
     public String stopConditionValue() default "100";
 
+    /**
+     * <p>language.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
+    public String language() default "JavaScript";
 }

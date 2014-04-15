@@ -158,8 +158,9 @@ public final class TestMojo extends AbstractTestMojo {
                         String value = execution.getStopConditionValue();
                         StopCondition stopCondition = execution.getStopCondition().getConstructor(String.class).newInstance(value);
                         PathGenerator pathGenerator = execution.getPathGenerator().getConstructor(StopCondition.class).newInstance(stopCondition);
+                        String language = execution.getLanguage();
                         Object implementation = execution.getTestClass().newInstance();
-                        ExecutionContext executionContext = new ExecutionContext(execution.getModel(), pathGenerator);
+                        ExecutionContext executionContext = new ExecutionContext(execution.getModel(), pathGenerator, language);
                         implementations.put(executionContext, implementation);
                         executionContexts.add(executionContext);
                     } catch (Throwable t) {

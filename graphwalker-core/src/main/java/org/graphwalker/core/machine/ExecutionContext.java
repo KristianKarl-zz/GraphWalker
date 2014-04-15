@@ -40,7 +40,7 @@ import javax.script.ScriptEngineManager;
 import java.util.*;
 
 /**
- * @author Nils Olsson                                                            s
+ * @author Nils Olsson
  */
 public final class ExecutionContext {
 

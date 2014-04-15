@@ -46,6 +46,7 @@ public final class Execution {
     private final Class<? extends PathGenerator> pathGenerator;
     private final Class<? extends StopCondition> stopCondition;
     private final String stopConditionValue;
+    private final String language;
     private final Model model;
 
     /**
@@ -56,11 +57,12 @@ public final class Execution {
      * @param stopCondition a {@link java.lang.Class} object.
      * @param stopConditionValue a {@link java.lang.String} object.
      */
-    public Execution(final Class<?> testClass, final Class<? extends PathGenerator> pathGenerator, final Class<? extends StopCondition> stopCondition, String stopConditionValue) {
+    public Execution(final Class<?> testClass, final Class<? extends PathGenerator> pathGenerator, final Class<? extends StopCondition> stopCondition, String stopConditionValue, String language) {
         this.testClass = testClass;
         this.stopCondition = stopCondition;
         this.pathGenerator = pathGenerator;
         this.stopConditionValue = stopConditionValue;
+        this.language = language;
         this.model = createModel(testClass);
     }
 
@@ -119,6 +121,15 @@ public final class Execution {
      */
     public String getStopConditionValue() {
         return stopConditionValue;
+    }
+
+    /**
+     * <p>Getter for the field <code>language</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
+    public String getLanguage() {
+        return language;
     }
 
     /**

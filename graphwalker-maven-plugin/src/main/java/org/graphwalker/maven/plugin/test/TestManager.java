@@ -89,7 +89,8 @@ public final class TestManager {
                     Class<? extends PathGenerator> pathGenerator = (Class<? extends PathGenerator>)Execute.class.getMethod("pathGenerator").getDefaultValue();
                     Class<? extends StopCondition> stopCondition = (Class<? extends StopCondition>)Execute.class.getMethod("stopCondition").getDefaultValue();
                     String stopConditionValue = (String)Execute.class.getMethod("stopConditionValue").getDefaultValue();
-                    Execution execution = new Execution(testClass, pathGenerator, stopCondition, stopConditionValue);
+                    String language = (String)Execute.class.getMethod("language").getDefaultValue();
+                    Execution execution = new Execution(testClass, pathGenerator, stopCondition, stopConditionValue, language);
                     groups.put(groupName, new TestGroup(groupName));
                     groups.get(groupName).addExecution(execution);
                 } catch (NoSuchMethodException e) {
@@ -101,7 +102,7 @@ public final class TestManager {
                         if (!groups.containsKey(execute.group())) {
                             groups.put(execute.group(), new TestGroup(execute.group()));
                         }
-                        Execution execution = new Execution(testClass, execute.pathGenerator(), execute.stopCondition(), execute.stopConditionValue());
+                        Execution execution = new Execution(testClass, execute.pathGenerator(), execute.stopCondition(), execute.stopConditionValue(), execute.language());
                         groups.get(execute.group()).addExecution(execution);
                     }
                 }
