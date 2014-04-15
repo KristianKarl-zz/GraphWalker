@@ -112,11 +112,30 @@ public final class CodeGenerator extends VoidVisitorAdapter<ChangeContext> {
     private void generateMethods(CompilationUnit compilationUnit, ChangeContext changeContext) {
         ClassOrInterfaceDeclaration body = (ClassOrInterfaceDeclaration)compilationUnit.getTypes().get(0);
         for (String methodName: changeContext.getMethodsName()) {
-            MethodDeclaration method = new MethodDeclaration(Modifier.INTERFACE, ASTHelper.VOID_TYPE, methodName);
-            Parameter parameter = ASTHelper.createParameter(ASTHelper.createReferenceType("ScriptContext", 0), "context");
-            ASTHelper.addParameter(method, parameter);
-            ASTHelper.addMember(body, method);
+            if (isValidName(methodName)) {
+                MethodDeclaration method = new MethodDeclaration(Modifier.INTERFACE, ASTHelper.VOID_TYPE, methodName);
+                Parameter parameter = ASTHelper.createParameter(ASTHelper.createReferenceType("ScriptContext", 0), "context");
+                ASTHelper.addParameter(method, parameter);
+                ASTHelper.addMember(body, method);
+            } else {
+                // TODO: Warn
+            }
         }
+    }
+
+    private boolean isValidName(String name) {
+        if (null == name || name.isEmpty()) {
+            return false;
+        }
+        boolean valid = true;
+        for (int i = 0; i < name.length(); i++) {
+            if (0 == i) {
+                valid &= Character.isJavaIdentifierStart(name.charAt(i));
+            } else {
+                valid &= Character.isJavaIdentifierPart(name.charAt(i));
+            }
+        }
+        return valid;
     }
 
     /**
