@@ -176,7 +176,7 @@ public class CLITest {
     runCommand(args);
     restoreMbtPropertiesFile();
     Assert.assertThat( outMsg, matches(usageMsg));
-    Assert.assertThat( "Nothing should be written to standard output", errMsg, is(""));
+    Assert.assertThat( "Nothing should be written to standard err", errMsg, is(""));
   }
 
   /**
@@ -193,14 +193,14 @@ public class CLITest {
 
   /**
    * Simulates
-   * java -jar graphwalker.jar offline -f graphml/UC01.graphml -g A_STAR -s EDGE_COVERAGE:100
+   * java -jar graphwalker.jar offline -m graphml/UC01.graphml "random(edge_coverage(100))"
    */
   @Test
   public void testOfflineRandomEdgeCoverage100percent() {
-    String args[] = {"offline", "-m", "graphml/EFSM_with_REQTAGS.graphml", "random(edge_coverage(100))"};
+    String args[] = {"offline", "-m", "graphml/UC01.graphml", "random(edge_coverage(100))"};
     runCommand(args);
-//    Assert.assertThat( "No error messages should occur", errMsg, is(""));
-//    Assert.assertThat( outMsg, matches(usageMsg));
+    Assert.assertThat( "No error messages should occur", errMsg, is(""));
+    Assert.assertThat( outMsg, matches("^Start\n.*"));
   }
 
   /**
