@@ -26,6 +26,7 @@
 package org.graphwalker.core.script;
 
 import javax.script.SimpleScriptContext;
+import java.util.Map;
 
 /**
  * @author Nils Olsson
@@ -34,5 +35,9 @@ public final class ScriptContext extends SimpleScriptContext {
 
     public void setAttribute(String key, Object value) {
         setAttribute(key, value, ENGINE_SCOPE);
+    }
+
+    public Map<String, Object> getAttributes() {
+        return getBindings(ENGINE_SCOPE);
     }
 }
