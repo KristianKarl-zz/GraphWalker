@@ -48,7 +48,7 @@ public class CLI {
     try {
       cli.run(args);
     } catch (Exception e) {
-      // We should have catched all exceptions up until here, but there
+      // We should have caught all exceptions up until here, but there
       // might have been problems with the command parser for instance...
       System.err.println(e);
     }
