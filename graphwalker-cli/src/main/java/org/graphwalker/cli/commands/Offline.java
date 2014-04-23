@@ -34,6 +34,8 @@ import java.util.List;
 @Parameters(commandDescription = "Generate a test sequence offline. The sequence is printed to the standard output")
 public class Offline {
 
-  @Parameter(names = {"--model", "-m"}, required = true, arity = 2)
+  @Parameter(names = {"--model", "-m"}, required = true, arity = 2,
+          description = "The model, as a graphml file followed by generator with stop condition. " +
+                  "The format is GENERATOR(STOP_CONDITION) See HTML DOC")
   public List<String> model = new ArrayList<String>();
 }
