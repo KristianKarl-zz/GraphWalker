@@ -31,7 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Options {
-  @Parameter(names = "--help", help = true, description = "Prints help text")
+  @Parameter(names = { "--help", "-h" }, help = true, description = "Prints help text")
   private boolean help;
 
   @Parameter(names = { "--version", "-v" }, description = "Prints the version of graphwalker")
