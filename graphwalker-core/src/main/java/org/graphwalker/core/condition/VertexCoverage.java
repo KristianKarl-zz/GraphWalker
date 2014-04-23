@@ -47,9 +47,7 @@ public final class VertexCoverage extends BaseStopCondition {
     }
 
     public boolean isFulfilled(ExecutionContext context) {
-        double totalVertexCount = context.getModel().getVertices().size();
-        double visitedVertexCount = context.getVisitedVertices().size();
-        return (visitedVertexCount / totalVertexCount) >= limit;
+        return getFulfilment(context) >= 1.0;
     }
 
     public double getFulfilment(ExecutionContext context) {
