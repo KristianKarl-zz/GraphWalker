@@ -49,7 +49,7 @@ public class AlternativeCondition extends BaseStopCondition{
         return true;
       }
     }
-    return true;
+    return false;
   }
 
   public double getFulfilment(ExecutionContext context) {
