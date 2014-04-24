@@ -36,8 +36,8 @@ import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
 import org.graphwalker.core.Model;
-import org.graphwalker.maven.plugin.model.GraphMLModelFactory;
-import org.graphwalker.maven.plugin.model.ModelFactory;
+import org.graphwalker.io.factory.GraphMLModelFactory;
+import org.graphwalker.io.factory.ModelFactory;
 import org.graphwalker.maven.plugin.source.CodeGenerator;
 import org.graphwalker.maven.plugin.source.SourceFile;
 
@@ -181,7 +181,7 @@ public class WatchMojo extends AbstractMojo {
     private void generate(SourceFile sourceFile) {
         File outputFile = sourceFile.getOutputPath().toFile();
         try {
-            Model model = modelFactory.create(Paths.get(sourceFile.getInputPath().toFile().getAbsolutePath()));
+            Model model = modelFactory.create(sourceFile.getInputPath().toFile().getAbsolutePath());
             String source = new CodeGenerator(sourceFile, model).generate();
             if (Files.exists(sourceFile.getOutputPath())) {
                 String existingSource = StringUtils.removeDuplicateWhitespace(FileUtils.fileRead(outputFile, sourceEncoding));

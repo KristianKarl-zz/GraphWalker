@@ -72,7 +72,7 @@ public final class Execution {
         for (Annotation annotation: AnnotationUtils.getAnnotations(testClass, org.graphwalker.core.annotation.Model.class)) {
             Path file = Paths.get(((org.graphwalker.core.annotation.Model) annotation).file());
             if (factory.accept(file)) {
-                model = model.addModel(factory.create(file));
+                model = model.addModel(factory.create(file.toString()));
             }
         }
         return model;
