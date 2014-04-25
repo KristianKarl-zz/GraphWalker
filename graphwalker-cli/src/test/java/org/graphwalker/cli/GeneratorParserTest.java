@@ -116,7 +116,7 @@ public class GeneratorParserTest {
 
   @Test // 2 stop condition, logical AND'd, and with white spaces in expression
   public void test10() {
-    PathGenerator generator = GeneratorParser.parse("random( edge_coverage(100) or time_duration(500) ), a_star(reached_vertex(\"v_ABC\"))");
+    PathGenerator generator = GeneratorParser.parse("random( edge_coverage(100) or time_duration(500) ) a_star(reached_vertex(\"v_ABC\"))");
     Assert.assertThat(generator, instanceOf(CombinedPathGenerator.class));
     Assert.assertThat(generator.getStopCondition(), instanceOf(AlternativeCondition.class) );
 

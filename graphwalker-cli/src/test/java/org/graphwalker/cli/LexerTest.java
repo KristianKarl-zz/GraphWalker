@@ -57,7 +57,7 @@ public class LexerTest {
   @Test
   public void simple3() {
 
-    List<Lexer.Token> tokens = lex("random(edge_coverage(100) and never), a_star(reached_vertex(\"v_SomeName\") or edge_coverage(90))");
+    List<Lexer.Token> tokens = lex("random(edge_coverage(100) and never) a_star(reached_vertex(\"v_SomeName\") or edge_coverage(90))");
     for(Lexer.Token t : tokens) {
       System.out.println(t);
     }
