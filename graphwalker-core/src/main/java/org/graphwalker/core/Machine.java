@@ -42,4 +42,5 @@ public interface Machine {
     void restart();
     ExecutionContext getCurrentExecutionContext();
     List<ExecutionContext> getExecutionContexts();
+    void failCurrentStep();
 }

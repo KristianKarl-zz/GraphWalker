@@ -118,6 +118,10 @@ public final class ExecutionContext {
         return executionStatus;
     }
 
+    public void setExecutionStatus(ExecutionStatus executionStatus) {
+        this.executionStatus = executionStatus;
+    }
+
     public Model getModel() {
         return model;
     }

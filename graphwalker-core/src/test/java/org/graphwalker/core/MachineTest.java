@@ -26,8 +26,10 @@
 package org.graphwalker.core;
 
 import org.graphwalker.core.condition.VertexCoverage;
+import org.graphwalker.core.generator.NoPathFoundException;
 import org.graphwalker.core.generator.RandomPath;
 import org.graphwalker.core.machine.ExecutionContext;
+import org.graphwalker.core.machine.ExecutionStatus;
 import org.graphwalker.core.model.*;
 import org.junit.Assert;
 import org.junit.Test;
@@ -48,9 +50,9 @@ public class MachineTest {
         PathGenerator pathGenerator = new RandomPath(new VertexCoverage());
         ExecutionContext context = new ExecutionContext(model, pathGenerator);
         Machine machine = new SimpleMachine(context);
-        Deque<String> names = new ArrayDeque<String>(Arrays.asList("v1", "e1", "v2", "ERROR"));
+        Deque<String> names = new ArrayDeque<>(Arrays.asList("v1", "e1", "v2", "ERROR"));
         while (machine.hasNextStep()) {
-            Element e = machine.getNextStep();
+            machine.getNextStep();
             Assert.assertEquals(names.pop(), machine.getCurrentStep().getName());
         }
     }
@@ -61,7 +63,7 @@ public class MachineTest {
         PathGenerator pathGenerator = new RandomPath(new VertexCoverage());
         ExecutionContext context = new ExecutionContext(model, pathGenerator);
         Machine machine = new SimpleMachine(context);
-        Deque<String> names = new ArrayDeque<String>(Arrays.asList("v1", "e1", "v1", "e1", "v2", "ERROR"));
+        Deque<String> names = new ArrayDeque<>(Arrays.asList("v1", "e1", "v1", "e1", "v2", "ERROR"));
         Assert.assertEquals(names.pop(), machine.getNextStep().getName());
         Assert.assertEquals(names.pop(), machine.getNextStep().getName());
         // e.g. if an error occurs or we "reach the end of the road", the reset function can restart the machine and keep the current states
@@ -76,7 +78,7 @@ public class MachineTest {
     @Test
     public void executeAction() {
         Model model = new SimpleModel().addEdge(new Edge("e1", new Vertex("v1"), new Vertex("v2")
-                , new HashSet<Action>(Arrays.asList(new Action("var i = 3;")))));
+                , new HashSet<>(Arrays.asList(new Action("var i = 3;")))));
         PathGenerator pathGenerator = new RandomPath(new VertexCoverage());
         ExecutionContext context = new ExecutionContext(model, pathGenerator);
         Machine machine = new SimpleMachine(context);
@@ -88,8 +90,8 @@ public class MachineTest {
     @Test
     public void executeVertexActions() {
         Model model = new SimpleModel().addEdge(new Edge("e1"
-                , new Vertex("v1", new HashSet<Requirement>(), new HashSet<Action>(), new HashSet<Action>(Arrays.asList(new Action("var i = 1;"))))
-                , new Vertex("v2", new HashSet<Requirement>(), new HashSet<Action>(Arrays.asList(new Action("i = 2;"))))));
+                , new Vertex("v1", new HashSet<Requirement>(), new HashSet<Action>(), new HashSet<>(Arrays.asList(new Action("var i = 1;"))))
+                , new Vertex("v2", new HashSet<Requirement>(), new HashSet<>(Arrays.asList(new Action("i = 2;"))))));
         PathGenerator pathGenerator = new RandomPath(new VertexCoverage());
         ExecutionContext context = new ExecutionContext(model, pathGenerator);
         Machine machine = new SimpleMachine(context);
@@ -102,6 +104,51 @@ public class MachineTest {
         Assert.assertEquals("v2", machine.getNextStep().getName());
         Assert.assertEquals(2.0, context.getScriptContext().getAttribute("i"));
         Assert.assertFalse(machine.hasNextStep());
+    }
+
+    @Test(expected = NoPathFoundException.class)
+    public void executeFail() {
+        Model model = new SimpleModel().addEdge(new Edge("e1", new Vertex("v1"), new Vertex("v2")))
+                .addEdge(new Edge("e2", new Vertex("v1"), new Vertex("v3")));
+        PathGenerator pathGenerator = new RandomPath(new VertexCoverage());
+        ExecutionContext context = new ExecutionContext(model, pathGenerator);
+        Machine machine = new SimpleMachine(context);
+        while (machine.hasNextStep()) {
+            machine.getNextStep();
+        }
+    }
+
+    @Test
+    public void verifyExecutionStatus() {
+        Model model = new SimpleModel().addEdge(new Edge("e1", new Vertex("v1"), new Vertex("v2")));
+        PathGenerator pathGenerator = new RandomPath(new VertexCoverage());
+        ExecutionContext context = new ExecutionContext(model, pathGenerator);
+        Machine machine = new SimpleMachine(context);
+        Assert.assertEquals(ExecutionStatus.NOT_EXECUTED, machine.getCurrentExecutionContext().getExecutionStatus());
+        while (machine.hasNextStep()) {
+            machine.getNextStep();
+            Assert.assertEquals(ExecutionStatus.EXECUTING, machine.getCurrentExecutionContext().getExecutionStatus());
+        }
+        Assert.assertEquals(ExecutionStatus.COMPLETED, machine.getCurrentExecutionContext().getExecutionStatus());
+    }
+
+    @Test
+    public void verifyFailedExecutionStatus() {
+        Model model = new SimpleModel().addEdge(new Edge("e1", new Vertex("v1"), new Vertex("v2")))
+                .addEdge(new Edge("e2", new Vertex("v1"), new Vertex("v3")));
+        PathGenerator pathGenerator = new RandomPath(new VertexCoverage());
+        ExecutionContext context = new ExecutionContext(model, pathGenerator);
+        Machine machine = new SimpleMachine(context);
+        Assert.assertEquals(ExecutionStatus.NOT_EXECUTED, machine.getCurrentExecutionContext().getExecutionStatus());
+        try {
+            while (machine.hasNextStep()) {
+                machine.getNextStep();
+                Assert.assertEquals(ExecutionStatus.EXECUTING, machine.getCurrentExecutionContext().getExecutionStatus());
+            }
+        } catch (Throwable t) {
+            machine.failCurrentStep();
+        }
+        Assert.assertEquals(ExecutionStatus.FAILED, machine.getCurrentExecutionContext().getExecutionStatus());
     }
 
     @Test

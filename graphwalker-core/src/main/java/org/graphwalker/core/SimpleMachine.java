@@ -28,6 +28,7 @@ package org.graphwalker.core;
 import org.graphwalker.core.event.EventSource;
 import org.graphwalker.core.event.MachineSink;
 import org.graphwalker.core.machine.ExecutionContext;
+import org.graphwalker.core.machine.ExecutionStatus;
 import org.graphwalker.core.model.Action;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Element;
@@ -53,7 +54,11 @@ public final class SimpleMachine extends EventSource<MachineSink> implements Mac
         this.executionContexts = Collections.unmodifiableList(executionContexts);
     }
 
+    @Override
     public Element getNextStep() {
+        if (ExecutionStatus.NOT_EXECUTED.equals(getCurrentExecutionContext().getExecutionStatus())) {
+            getCurrentExecutionContext().setExecutionStatus(ExecutionStatus.EXECUTING);
+        }
         Element currentStep = getCurrentExecutionContext().getCurrentElement();
         if (currentStep instanceof Vertex) {
             Vertex vertex = (Vertex)currentStep;
@@ -80,22 +85,35 @@ public final class SimpleMachine extends EventSource<MachineSink> implements Mac
         }
     }
 
+    @Override
     public Element getCurrentStep() {
         return getCurrentExecutionContext().getCurrentElement();
     }
 
+    @Override
     public Boolean hasNextStep() {
-        return !getCurrentExecutionContext().getStopCondition().isFulfilled(getCurrentExecutionContext());
+        boolean isFulfilled = getCurrentExecutionContext().getStopCondition().isFulfilled(getCurrentExecutionContext());
+        if (isFulfilled && ExecutionStatus.EXECUTING.equals(getCurrentExecutionContext().getExecutionStatus())) {
+            getCurrentExecutionContext().setExecutionStatus(ExecutionStatus.COMPLETED);
+        }
+        return !isFulfilled;
     }
 
+    @Override
     public ScriptContext getScriptContext() {
         return getCurrentExecutionContext().getScriptContext();
+    }
+
+    @Override
+    public void failCurrentStep() {
+        getCurrentExecutionContext().setExecutionStatus(ExecutionStatus.FAILED);
     }
 
     public void restart() {
         getCurrentExecutionContext().setCurrentElement(null);
     }
 
+    @Override
     public ExecutionContext getCurrentExecutionContext() {
         if (null == currentExecutionContext) {
             currentExecutionContext = getExecutionContexts().get(0);
@@ -103,6 +121,7 @@ public final class SimpleMachine extends EventSource<MachineSink> implements Mac
         return currentExecutionContext;
     }
 
+    @Override
     public List<ExecutionContext> getExecutionContexts() {
         return executionContexts;
     }

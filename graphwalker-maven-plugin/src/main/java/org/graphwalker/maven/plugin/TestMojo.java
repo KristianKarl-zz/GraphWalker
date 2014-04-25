@@ -38,6 +38,7 @@ import org.graphwalker.core.SimpleMachine;
 import org.graphwalker.core.StopCondition;
 import org.graphwalker.core.annotation.AfterExecution;
 import org.graphwalker.core.annotation.BeforeExecution;
+import org.graphwalker.core.annotation.ExceptionHandler;
 import org.graphwalker.core.common.ResourceUtils;
 import org.graphwalker.core.machine.ExecutionContext;
 import org.graphwalker.core.machine.ExecutionStatus;
@@ -182,8 +183,13 @@ public final class TestMojo extends AbstractTestMojo {
                             while (machine.hasNextStep()) {
                                 Element element = machine.getNextStep();
                                 if (null != element.getName() && !"Start".equals(element.getName())) {
-                                    ReflectionUtils.execute(implementations.get(machine.getCurrentExecutionContext())
-                                        , element.getName(), machine.getCurrentExecutionContext().getScriptContext());
+                                    try {
+                                        ReflectionUtils.execute(implementations.get(machine.getCurrentExecutionContext())
+                                                , element.getName(), machine.getCurrentExecutionContext().getScriptContext());
+                                    } catch (Throwable throwable) {
+                                        machine.failCurrentStep();
+                                        AnnotationUtils.execute(machine.getCurrentExecutionContext(), implementations.get(machine.getCurrentExecutionContext()), throwable);
+                                    }
                                 }
                             }
                             AnnotationUtils.execute(AfterExecution.class, machine.getCurrentExecutionContext(), implementations.get(machine.getCurrentExecutionContext()));
