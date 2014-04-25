@@ -36,10 +36,13 @@ import org.graphwalker.core.Machine;
 import org.graphwalker.core.PathGenerator;
 import org.graphwalker.core.SimpleMachine;
 import org.graphwalker.core.StopCondition;
+import org.graphwalker.core.annotation.AfterExecution;
+import org.graphwalker.core.annotation.BeforeExecution;
 import org.graphwalker.core.common.ResourceUtils;
 import org.graphwalker.core.machine.ExecutionContext;
 import org.graphwalker.core.machine.ExecutionStatus;
 import org.graphwalker.core.model.Element;
+import org.graphwalker.maven.plugin.common.AnnotationUtils;
 import org.graphwalker.maven.plugin.common.ReflectionUtils;
 import org.graphwalker.maven.plugin.test.*;
 import org.graphwalker.maven.plugin.test.Scanner;
@@ -175,6 +178,7 @@ public final class TestMojo extends AbstractTestMojo {
                 for (final Machine machine : machines) {
                     executorService.execute(new Runnable() {
                         public void run() {
+                            AnnotationUtils.execute(BeforeExecution.class, machine.getCurrentExecutionContext(), implementations.get(machine.getCurrentExecutionContext()));
                             while (machine.hasNextStep()) {
                                 Element element = machine.getNextStep();
                                 if (null != element.getName() && !"Start".equals(element.getName())) {
@@ -182,6 +186,7 @@ public final class TestMojo extends AbstractTestMojo {
                                         , element.getName(), machine.getCurrentExecutionContext().getScriptContext());
                                 }
                             }
+                            AnnotationUtils.execute(AfterExecution.class, machine.getCurrentExecutionContext(), implementations.get(machine.getCurrentExecutionContext()));
                         }
                     });
                 }
