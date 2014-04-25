@@ -217,6 +217,17 @@ public class CLITest {
 //    Assert.assertEquals("Expected 38 lines beginning with e_" , 38, getNumMatches(Pattern.compile("e_").matcher(outMsg)));
   }
 
+  /**
+   * Simulates
+   */
+  @Test
+  public void testOffline2generators() {
+    String args[] = {"offline", "-m", "graphml/switch_model/A.graphml", "random(edge_coverage(100)) random(vertex_coverage(100))"};
+    runCommand(args);
+    Assert.assertThat( "No error messages should occur", errMsg, is(""));
+  }
+
+
   private int getNumMatches(Matcher m) {
     int numMatches = 0;
     while (m.find() == true)
