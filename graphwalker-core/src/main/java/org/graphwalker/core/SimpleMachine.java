@@ -46,7 +46,7 @@ public final class SimpleMachine extends EventSource<MachineSink> implements Mac
     private ExecutionContext currentExecutionContext;
 
     public SimpleMachine(ExecutionContext executionContext) {
-        this(new ArrayList<ExecutionContext>(Arrays.asList(executionContext)));
+        this(new ArrayList<>(Arrays.asList(executionContext)));
     }
 
     public SimpleMachine(List<ExecutionContext> executionContexts) {

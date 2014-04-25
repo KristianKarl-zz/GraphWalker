@@ -50,12 +50,12 @@ public final class RandomLeastVisitedPath extends BasePathGenerator  {
             throw new NoPathFoundException();
         }
         long leastVisitedCount = Long.MAX_VALUE;
-        List<Element> leastVisitedElements = new ArrayList<Element>();
+        List<Element> leastVisitedElements = new ArrayList<>();
         for (Element element: elements) {
             long visitCount = context.getVisitCount(element);
             if (visitCount < leastVisitedCount) {
                 leastVisitedCount = visitCount;
-                leastVisitedElements = new ArrayList<Element>();
+                leastVisitedElements = new ArrayList<>();
                 leastVisitedElements.add(element);
             } else if (visitCount == leastVisitedCount) {
                 leastVisitedElements.add(element);

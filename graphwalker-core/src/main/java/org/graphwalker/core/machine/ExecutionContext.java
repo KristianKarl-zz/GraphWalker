@@ -55,8 +55,8 @@ public final class ExecutionContext {
     private final Map<Requirement, RequirementStatus> requirementStatus;
     private final Map<Element, Long> elementVisitCount;
     private Long totalVisitCount = 0l;
-    private Set<Edge> visitedEdges = new HashSet<Edge>();
-    private Set<Vertex> visitedVertices = new HashSet<Vertex>();
+    private Set<Edge> visitedEdges = new HashSet<>();
+    private Set<Vertex> visitedVertices = new HashSet<>();
     private ExecutionStatus executionStatus = ExecutionStatus.NOT_EXECUTED;
 
     public ExecutionContext(Model model, PathGenerator pathGenerator) {
@@ -72,7 +72,7 @@ public final class ExecutionContext {
     }
 
     private Map<Requirement, RequirementStatus> initializeRequirementStatus() {
-        Map<Requirement, RequirementStatus> requirementStatusMap = new HashMap<Requirement, RequirementStatus>();
+        Map<Requirement, RequirementStatus> requirementStatusMap = new HashMap<>();
         for (Requirement requirement: model.getRequirements()) {
             requirementStatusMap.put(requirement, RequirementStatus.NOT_COVERED);
         }
@@ -80,7 +80,7 @@ public final class ExecutionContext {
     }
 
     private Map<Element, Long> initializeVisitCount() {
-        Map<Element, Long> visitCountMap = new HashMap<Element, Long>();
+        Map<Element, Long> visitCountMap = new HashMap<>();
         for (Element element: model.getElements()) {
             visitCountMap.put(element, 0l);
         }
@@ -134,13 +134,13 @@ public final class ExecutionContext {
     }
 
     public List<Requirement> getRequirements(RequirementStatus status) {
-        Set<Requirement> requirements = new HashSet<Requirement>();
+        Set<Requirement> requirements = new HashSet<>();
         for (Requirement requirement: model.getRequirements()) {
             if (requirementStatus.get(requirement).equals(status)) {
                 requirements.add(requirement);
             }
         }
-        return new ArrayList<Requirement>(requirements);
+        return new ArrayList<>(requirements);
     }
 
     public RequirementStatus getRequirementStatus(Requirement requirement) {
@@ -164,11 +164,11 @@ public final class ExecutionContext {
     }
 
     public List<Edge> getVisitedEdges() {
-        return new ArrayList<Edge>(visitedEdges);
+        return new ArrayList<>(visitedEdges);
     }
 
     public List<Vertex> getVisitedVertices() {
-        return new ArrayList<Vertex>(visitedVertices);
+        return new ArrayList<>(visitedVertices);
     }
 
     public void visit(Element element) {

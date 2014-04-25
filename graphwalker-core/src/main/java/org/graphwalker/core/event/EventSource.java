@@ -33,7 +33,7 @@ import java.util.Set;
  */
 public class EventSource<T extends EventSink> {
 
-    private final Set<T> sinks = new HashSet<T>();
+    private final Set<T> sinks = new HashSet<>();
 
     public void addSink(T sink) {
         sinks.add(sink);

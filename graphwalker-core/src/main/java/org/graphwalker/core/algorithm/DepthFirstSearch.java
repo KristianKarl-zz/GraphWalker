@@ -48,7 +48,7 @@ public final class DepthFirstSearch implements Algorithm {
     }
 
     private Map<Element, ElementStatus> createElementStatusMap(List<Element> elements) {
-        Map<Element, ElementStatus> elementStatusMap = new HashMap<Element, ElementStatus>();
+        Map<Element, ElementStatus> elementStatusMap = new HashMap<>();
         for (Element element: elements) {
             elementStatusMap.put(element, ElementStatus.UNREACHABLE);
             if (element instanceof Edge) {
@@ -62,8 +62,8 @@ public final class DepthFirstSearch implements Algorithm {
     }
 
     private List<Element> createConnectedComponent(Map<Element, ElementStatus> elementStatusMap, Element root) {
-        List<Element> connectedComponent = new ArrayList<Element>();
-        Deque<Element> stack = new ArrayDeque<Element>();
+        List<Element> connectedComponent = new ArrayList<>();
+        Deque<Element> stack = new ArrayDeque<>();
         stack.push(root);
         while (!stack.isEmpty()) {
             Element element = stack.pop();

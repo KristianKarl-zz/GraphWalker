@@ -49,7 +49,7 @@ public final class RandomUnvisitedFirstPath extends BasePathGenerator  {
         if (elements.isEmpty()) {
             throw new NoPathFoundException();
         }
-        List<Element> unvisitedElements = new ArrayList<Element>();
+        List<Element> unvisitedElements = new ArrayList<>();
         for (Element element : elements) {
             if (!context.isVisited(element)) {
                 unvisitedElements.add(element);

@@ -82,14 +82,14 @@ public final class SimpleModel extends EventSource<ModelSink> implements Model {
     }
 
     private Map<Vertex, List<Edge>> createVertexEdgeCache() {
-        Map<Vertex, List<Edge>> vertexEdgeCache = new HashMap<Vertex, List<Edge>>();
+        Map<Vertex, List<Edge>> vertexEdgeCache = new HashMap<>();
         for (Vertex vertex: vertices.values()) {
             vertexEdgeCache.put(vertex, new ArrayList<Edge>());
         }
         for (Edge edge: edges.values()) {
             vertexEdgeCache.get(edge.getSourceVertex()).add(edge);
         }
-        Map<Vertex, List<Edge>> unmodifiableVertexEdgeCache = new HashMap<Vertex, List<Edge>>();
+        Map<Vertex, List<Edge>> unmodifiableVertexEdgeCache = new HashMap<>();
         for (Vertex vertex: vertexEdgeCache.keySet()) {
             unmodifiableVertexEdgeCache.put(vertex, Collections.unmodifiableList(vertexEdgeCache.get(vertex)));
         }
@@ -97,14 +97,14 @@ public final class SimpleModel extends EventSource<ModelSink> implements Model {
     }
 
     private Map<String, List<Edge>> createEdgeNameCache() {
-        Map<String, List<Edge>> edgeNameCache = new HashMap<String, List<Edge>>();
+        Map<String, List<Edge>> edgeNameCache = new HashMap<>();
         for (Edge edge: edges.keySet()) {
             if (!edgeNameCache.containsKey(edge.getName())) {
                 edgeNameCache.put(edge.getName(), new ArrayList<Edge>());
             }
             edgeNameCache.get(edge.getName()).add(edge);
         }
-        Map<String, List<Edge>> unmodifiableEdgeNameCache = new HashMap<String, List<Edge>>();
+        Map<String, List<Edge>> unmodifiableEdgeNameCache = new HashMap<>();
         for (String name: edgeNameCache.keySet()) {
             unmodifiableEdgeNameCache.put(name, Collections.unmodifiableList(edgeNameCache.get(name)));
         }
@@ -112,30 +112,30 @@ public final class SimpleModel extends EventSource<ModelSink> implements Model {
     }
 
     private List<Element> createElementCache() {
-        Set<Element> elementSet = new HashSet<Element>();
+        Set<Element> elementSet = new HashSet<>();
         elementSet.addAll(vertices.values());
         elementSet.addAll(edges.values());
-        return Collections.unmodifiableList(new ArrayList<Element>(elementSet));
+        return Collections.unmodifiableList(new ArrayList<>(elementSet));
     }
 
     private List<Vertex> findStartVertices() {
-        Set<Vertex> vertexSet = new HashSet<Vertex>(vertices.values());
+        Set<Vertex> vertexSet = new HashSet<>(vertices.values());
         for (Edge edge: edges.values()) {
             vertexSet.remove(edge.getTargetVertex());
         }
-        return Collections.unmodifiableList(new ArrayList<Vertex>(vertexSet));
+        return Collections.unmodifiableList(new ArrayList<>(vertexSet));
     }
 
     private List<Requirement> aggregateRequirements() {
-        Set<Requirement> requirements = new HashSet<Requirement>();
+        Set<Requirement> requirements = new HashSet<>();
         for (Vertex vertex: vertices.keySet()) {
             requirements.addAll(vertex.getRequirements());
         }
-        return Collections.unmodifiableList(new ArrayList<Requirement>(requirements));
+        return Collections.unmodifiableList(new ArrayList<>(requirements));
     }
 
     private <T> Map<T,T> asUnmodifiableMap(Set<T> set) {
-        Map<T,T> map = new HashMap<T, T>();
+        Map<T,T> map = new HashMap<>();
         for (T entry: set) {
             map.put(entry, entry);
         }
@@ -143,12 +143,12 @@ public final class SimpleModel extends EventSource<ModelSink> implements Model {
     }
 
     public Model addEdge(Edge edge) {
-        return addModel(new SimpleModel(new HashSet<Vertex>(Arrays.asList(edge.getSourceVertex()
-                , edge.getTargetVertex())), new HashSet<Edge>(Arrays.asList(edge))));
+        return addModel(new SimpleModel(new HashSet<>(Arrays.asList(edge.getSourceVertex()
+                , edge.getTargetVertex())), new HashSet<>(Arrays.asList(edge))));
     }
 
     public Model addVertex(Vertex vertex) {
-        return addModel(new SimpleModel(new HashSet<Vertex>(Arrays.asList(vertex)), new HashSet<Edge>()));
+        return addModel(new SimpleModel(new HashSet<>(Arrays.asList(vertex)), new HashSet<Edge>()));
     }
 
     public Model addModel(Model model) {
@@ -156,7 +156,7 @@ public final class SimpleModel extends EventSource<ModelSink> implements Model {
     }
 
     public Model addModel(Model model, boolean refresh) {
-        Map<Vertex,Vertex> vertexMap = new HashMap<Vertex,Vertex>(vertices);
+        Map<Vertex,Vertex> vertexMap = new HashMap<>(vertices);
         for (Vertex vertex: model.getVertices()) {
             if (vertexMap.containsKey(vertex)) {
                 Vertex merged = merge(vertex.getName(), vertexMap.get(vertex), vertex);
@@ -165,7 +165,7 @@ public final class SimpleModel extends EventSource<ModelSink> implements Model {
                 vertexMap.put(vertex, vertex);
             }
         }
-        Map<Edge, Edge> edgeMap = new HashMap<Edge,Edge>();
+        Map<Edge, Edge> edgeMap = new HashMap<>();
         for (Edge edge: edges.keySet()) {
             updateEdge(edge, edgeMap, vertexMap);
         }
@@ -174,7 +174,7 @@ public final class SimpleModel extends EventSource<ModelSink> implements Model {
                 updateEdge(edge, edgeMap, vertexMap);
             }
         }
-        return new SimpleModel(new HashSet<Vertex>(vertexMap.values()), new HashSet<Edge>(edgeMap.values()), refresh);
+        return new SimpleModel(new HashSet<>(vertexMap.values()), new HashSet<>(edgeMap.values()), refresh);
     }
 
     private void updateEdge(Edge edge, Map<Edge,Edge> edges, Map<Vertex,Vertex> vertices) {
@@ -191,9 +191,9 @@ public final class SimpleModel extends EventSource<ModelSink> implements Model {
     }
 
     private Vertex merge(String name, Vertex... vertices) {
-        Set<Requirement> requirements = new HashSet<Requirement>();
-        Set<Action> entryActions = new HashSet<Action>();
-        Set<Action> exitActions = new HashSet<Action>();
+        Set<Requirement> requirements = new HashSet<>();
+        Set<Action> entryActions = new HashSet<>();
+        Set<Action> exitActions = new HashSet<>();
         for (Vertex vertex: vertices) {
             requirements.addAll(vertex.getRequirements());
             entryActions.addAll(vertex.getEntryActions());
@@ -203,7 +203,7 @@ public final class SimpleModel extends EventSource<ModelSink> implements Model {
     }
 
     public List<Edge> getEdges() {
-        return new ArrayList<Edge>(edges.values());
+        return new ArrayList<>(edges.values());
     }
 
     public List<Edge> getEdges(Vertex vertex) {
@@ -215,7 +215,7 @@ public final class SimpleModel extends EventSource<ModelSink> implements Model {
     }
 
     public List<Vertex> getVertices() {
-        return new ArrayList<Vertex>(vertices.values());
+        return new ArrayList<>(vertices.values());
     }
 
     public Vertex getVertex(String name) {

@@ -36,7 +36,7 @@ public class CombinationalCondition extends BaseStopCondition{
   private Vector<StopCondition> conditions;
 
   public CombinationalCondition() {
-    this.conditions = new Vector<StopCondition>();
+    this.conditions = new Vector<>();
   }
 
   public void add(StopCondition condition) {

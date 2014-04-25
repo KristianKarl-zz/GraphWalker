@@ -43,9 +43,9 @@ public final class AStar implements Algorithm {
     }
 
     public Path<Element> getShortestPath(Element origin, Element destination) {
-        Map<Element, AStarNode> openSet = new HashMap<Element, AStarNode>();
-        PriorityQueue<AStarNode> queue = new PriorityQueue<AStarNode>(10, new AStarNodeComparator());
-        Map<Element, AStarNode> closeSet = new HashMap<Element, AStarNode>();
+        Map<Element, AStarNode> openSet = new HashMap<>();
+        PriorityQueue<AStarNode> queue = new PriorityQueue<>(10, new AStarNodeComparator());
+        Map<Element, AStarNode> closeSet = new HashMap<>();
         AStarNode sourceNode = new AStarNode(origin, 0, model.getShortestDistance(origin, destination));
         openSet.put(origin, sourceNode);
         queue.add(sourceNode);
@@ -79,7 +79,7 @@ public final class AStar implements Algorithm {
             }
         }
         if (null != targetNode) {
-            List<Element> path = new ArrayList<Element>();
+            List<Element> path = new ArrayList<>();
             path.add(targetNode.getElement());
             AStarNode node = targetNode.getParent();
             while(null != node) {
@@ -88,7 +88,7 @@ public final class AStar implements Algorithm {
             }
 
             Collections.reverse(path);
-            return new Path<Element>(path);
+            return new Path<>(path);
         }
         throw new NoPathFoundException();
     }
