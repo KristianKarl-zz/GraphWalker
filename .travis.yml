@@ -9,6 +9,6 @@ env:
 
 before_install:
  - sudo apt-get update -qq
-
+
 install:
-  mvn install
+  mvn -q clean install -DskipTests=true
