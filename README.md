@@ -1,5 +1,7 @@
 # GraphWalker
 
+[![Build Status](https://travis-ci.org/nilols/GraphWalker.png)](https://travis-ci.org/nilols/GraphWalker)
+
 GraphWalker is a Model-Based Testing tool. It parses models and generates test sequences.
 
 ## Table of Contents
