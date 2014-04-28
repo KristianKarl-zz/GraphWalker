@@ -37,6 +37,7 @@ import org.graphwalker.core.statistics.ExecutionProfiler;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 import java.util.*;
 
 /**
@@ -195,5 +196,27 @@ public final class ExecutionContext {
         if (!visitedVertices.contains(vertex)) {
             visitedVertices.add(vertex);
         }
+    }
+
+    public List<Element> getElements(Element element) {
+        List<Element> elements = new ArrayList<>();
+        if (null == element) {
+            elements.addAll(getModel().getStartVertices());
+        } else if (element instanceof Vertex) {
+            Vertex vertex = (Vertex)element;
+            for (Edge edge: getModel().getEdges(vertex)) {
+                try {
+                    if (edge.getGuard().isFulfilled(getScriptEngine())) {
+                        elements.add(edge);
+                    }
+                } catch (ScriptException e) {
+                    e.printStackTrace();
+                }
+            }
+        } else {
+            Edge edge = (Edge)element;
+            elements.add(edge.getTargetVertex());
+        }
+        return elements;
     }
 }

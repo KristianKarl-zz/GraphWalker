@@ -47,7 +47,7 @@ public final class AStarPath extends BasePathGenerator {
   }
 
   public Element getNextStep(ExecutionContext context) {
-        List<Element> elements = context.getModel().getElements(context.getCurrentElement());
+        List<Element> elements = context.getElements(context.getCurrentElement());
         if (elements.isEmpty()) {
             throw new NoPathFoundException();
         }
