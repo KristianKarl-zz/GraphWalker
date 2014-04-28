@@ -57,7 +57,7 @@ public class Vertex implements Element {
     }
 
     public Vertex(String name, Set<Requirement> requirements, Set<Action> entryActions, Set<Action> exitActions) {
-        this.name = Validate.notEmpty(Validate.notNull(name));
+        this.name = name;
         this.requirements = Collections.unmodifiableSet(Validate.notNull(requirements));
         this.entryActions = Collections.unmodifiableSet(Validate.notNull(entryActions));
         this.exitActions = Collections.unmodifiableSet(Validate.notNull(exitActions));

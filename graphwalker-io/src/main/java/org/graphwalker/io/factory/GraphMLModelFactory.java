@@ -139,7 +139,7 @@ public final class GraphMLModelFactory extends AbstractModelFactory {
     private Model parseVertex(Model model, String id, String text) {
         String name = null, switchModelId = null, comment = null;
         Boolean blocked = false;
-        Set<Requirement> requirements = null;
+        Set<Requirement> requirements = new HashSet<>();
         if (null != text && !"".equals(text)) {
             Tupel<String, String> commentTupel = parseComment(text);
             comment = commentTupel.getValue();
@@ -225,7 +225,7 @@ public final class GraphMLModelFactory extends AbstractModelFactory {
     }
 
     private Tupel<Guard, String> parseEdgeGuard(String text) {
-        Pattern pattern = Pattern.compile("\\[(.+)\\]");
+        Pattern pattern = Pattern.compile("\\[(.+)\\]", Pattern.DOTALL);
         Matcher matcher = pattern.matcher(text);
         Guard guard = new Guard("true");
         if (matcher.find()) {

@@ -75,6 +75,7 @@ public final class SimpleModel extends EventSource<ModelSink> implements Model {
         }
     }
 
+    @Override
     public void refresh() {
         this.aStar = new AStar(this);
         this.depthFirstSearch = new DepthFirstSearch(this);
@@ -142,19 +143,23 @@ public final class SimpleModel extends EventSource<ModelSink> implements Model {
         return Collections.unmodifiableMap(map);
     }
 
+    @Override
     public Model addEdge(Edge edge) {
         return addModel(new SimpleModel(new HashSet<>(Arrays.asList(edge.getSourceVertex()
                 , edge.getTargetVertex())), new HashSet<>(Arrays.asList(edge))));
     }
 
+    @Override
     public Model addVertex(Vertex vertex) {
         return addModel(new SimpleModel(new HashSet<>(Arrays.asList(vertex)), new HashSet<Edge>()));
     }
 
+    @Override
     public Model addModel(Model model) {
         return addModel(model, true);
     }
 
+    @Override
     public Model addModel(Model model, boolean refresh) {
         Map<Vertex,Vertex> vertexMap = new HashMap<>(vertices);
         for (Vertex vertex: model.getVertices()) {
@@ -202,38 +207,47 @@ public final class SimpleModel extends EventSource<ModelSink> implements Model {
         return new Vertex(name, requirements, entryActions, exitActions);
     }
 
+    @Override
     public List<Edge> getEdges() {
         return new ArrayList<>(edges.values());
     }
 
+    @Override
     public List<Edge> getEdges(Vertex vertex) {
         return vertexEdgeCache.get(vertex);
     }
 
+    @Override
     public List<Edge> getEdges(String name) {
         return edgeNameCache.get(name);
     }
 
+    @Override
     public List<Vertex> getVertices() {
         return new ArrayList<>(vertices.values());
     }
 
+    @Override
     public Vertex getVertex(String name) {
         return getVertex(new Vertex(name));
     }
 
+    @Override
     public Vertex getVertex(Vertex vertex) {
         return vertices.get(vertex);
     }
 
+    @Override
     public String getDescription() {
         return null;
     }
 
+    @Override
     public List<Element> getElements() {
         return elementCache;
     }
 
+    @Override
     public List<Element> getElements(Element element) {
         if (null == element) {
             return new ArrayList<Element>(getStartVertices());
@@ -246,26 +260,32 @@ public final class SimpleModel extends EventSource<ModelSink> implements Model {
         }
     }
 
+    @Override
     public List<Element> getConnectedComponent(Element element) {
         return depthFirstSearch.getConnectedComponent(element);
     }
 
+    @Override
     public Path<Element> getShortestPath(Element origin, Element destination) {
         return aStar.getShortestPath(origin, destination);
     }
 
+    @Override
     public int getShortestDistance(Element origin, Element destination) {
         return floydWarshall.getShortestDistance(origin, destination);
     }
 
+    @Override
     public int getMaximumDistance(Element destination) {
         return floydWarshall.getMaximumDistance(destination);
     }
 
+    @Override
     public List<Vertex> getStartVertices() {
         return startVertices;
     }
 
+    @Override
     public List<Requirement> getRequirements() {
         return requirementCache;
     }

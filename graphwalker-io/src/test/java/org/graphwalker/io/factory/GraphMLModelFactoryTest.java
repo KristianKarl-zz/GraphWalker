@@ -26,6 +26,9 @@
 package org.graphwalker.io.factory;
 
 import org.graphwalker.core.Model;
+import org.graphwalker.core.model.Edge;
+import org.graphwalker.core.model.Guard;
+import org.graphwalker.core.model.Vertex;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -45,7 +48,6 @@ public class GraphMLModelFactoryTest {
     Model model = factory.create("src/test/resources/graphml/UC01.graphml");
     Assert.assertThat("Number of vertices", model.getVertices().size(), is(8));
     Assert.assertThat("Number of edges", model.getEdges().size(), is(12));
-    //Assert.assertThat("Model description", model.getDescription(), is("This is a description of the test"));
   }
 
   @Test
@@ -54,15 +56,25 @@ public class GraphMLModelFactoryTest {
     Model model = factory.create("graphml/UC01.graphml");
     Assert.assertThat("Number of vertices", model.getVertices().size(), is(8));
     Assert.assertThat("Number of edges", model.getEdges().size(), is(12));
-    //Assert.assertThat("Model description", model.getDescription(), is("This is a description of the test"));
   }
 
   @Test
-  public void efsmRithReqtags() {
+  public void efsmWithReqtags() {
     GraphMLModelFactory factory = new GraphMLModelFactory();
     Model model = factory.create("graphml/EFSM_with_REQTAGS.graphml");
     Assert.assertThat("Number of vertices", model.getVertices().size(), is(7));
     Assert.assertThat("Number of edges", model.getEdges().size(), is(19));
-    //Assert.assertThat("Model description", model.getDescription(), is("This is a description of the test"));
+  }
+
+  @Test
+  public void guards() {
+    GraphMLModelFactory factory = new GraphMLModelFactory();
+    Model model = factory.create("graphml/Guards.graphml");
+    Assert.assertThat("Number of vertices", model.getVertices().size(), is(3));
+    Assert.assertThat("Number of edges", model.getEdges().size(), is(2));
+    Vertex startVertex = model.getStartVertices().get(0);
+    Edge edgeWithGuard = model.getEdges(startVertex).get(0);
+    Assert.assertEquals(null, edgeWithGuard.getName());
+    Assert.assertNotEquals(edgeWithGuard.getGuard(), new Guard("true"));
   }
 }

@@ -109,6 +109,7 @@ public final class SimpleMachine extends EventSource<MachineSink> implements Mac
         getCurrentExecutionContext().setExecutionStatus(ExecutionStatus.FAILED);
     }
 
+    @Override
     public void restart() {
         getCurrentExecutionContext().setCurrentElement(null);
     }

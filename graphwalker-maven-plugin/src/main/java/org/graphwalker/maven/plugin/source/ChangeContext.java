@@ -38,7 +38,7 @@ import java.util.Set;
 public final class ChangeContext {
 
     private final Set<String> methodNames;
-    private final Set<MethodDeclaration> methodDeclarations = new HashSet<MethodDeclaration>();
+    private final Set<MethodDeclaration> methodDeclarations = new HashSet<>();
 
     /**
      * <p>Constructor for ChangeContext.</p>
@@ -50,11 +50,11 @@ public final class ChangeContext {
     }
 
     /**
-     * <p>getMethodsName.</p>
+     * <p>getMethodNames.</p>
      *
      * @return a {@link java.util.Set} object.
      */
-    public Set<String> getMethodsName() {
+    public Set<String> getMethodNames() {
         return methodNames;
     }
 
@@ -77,7 +77,7 @@ public final class ChangeContext {
     }
 
     private Set<String> extractMethodNames(Model model) {
-        Set<String> methodNames = new HashSet<String>();
+        Set<String> methodNames = new HashSet<>();
         for (Element element: model.getElements()) {
             if (null != element.getName() && !"Start".equalsIgnoreCase(element.getName())) {
                 methodNames.add(element.getName());

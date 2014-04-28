@@ -54,7 +54,7 @@ public class ModelTest {
         new Edge("", new Vertex("vertex1"), new Vertex("vertex2"));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void emptyVertexName() {
         new Vertex("");
     }
@@ -180,7 +180,7 @@ public class ModelTest {
         new Edge("abc", new Vertex("vertex1"), null);
     }
 
-    @Test(expected = Throwable.class)
+    @Test
     public void nullVertex() {
         new Vertex(null);
     }

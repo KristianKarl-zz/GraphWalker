@@ -38,6 +38,9 @@ import java.util.Set;
  */
 public final class Edge implements Element {
 
+    private final static Set<Action> NO_ACTIONS = Collections.unmodifiableSet(new HashSet<Action>());
+    private final static Guard NO_GUARD = new Guard("true");
+
     private final String name;
     private final Vertex source;
     private final Vertex target;
@@ -48,19 +51,23 @@ public final class Edge implements Element {
     private final int cachedHashCode;
 
     public Edge(String name, Vertex source, Vertex target) {
-        this(name, source, target, new Guard("true"), new HashSet<Action>());
+        this(name, source, target, NO_GUARD, NO_ACTIONS);
     }
 
     public Edge(String name, Vertex source, Vertex target, Boolean blocked) {
-        this(name, source, target, new Guard("true"), new HashSet<Action>(), blocked, 1.0);
+        this(name, source, target, NO_GUARD, NO_ACTIONS, blocked, 1.0);
     }
 
     public Edge(String name, Vertex source, Vertex target, Boolean blocked, Double weight) {
-        this(name, source, target, new Guard("true"), new HashSet<Action>(), blocked, weight);
+        this(name, source, target, NO_GUARD, NO_ACTIONS, blocked, weight);
     }
 
     public Edge(String name, Vertex source, Vertex target, Set<Action> actions) {
-        this(name, source, target, new Guard("true"), actions, false);
+        this(name, source, target, NO_GUARD, actions, false);
+    }
+
+    public Edge(String name, Vertex source, Vertex target, Guard guard) {
+        this(name, source, target, guard, NO_ACTIONS, false);
     }
 
     public Edge(String name, Vertex source, Vertex target, Guard guard, Set<Action> actions) {

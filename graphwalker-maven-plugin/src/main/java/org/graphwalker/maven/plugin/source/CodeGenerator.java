@@ -111,7 +111,7 @@ public final class CodeGenerator extends VoidVisitorAdapter<ChangeContext> {
 
     private void generateMethods(CompilationUnit compilationUnit, ChangeContext changeContext) {
         ClassOrInterfaceDeclaration body = (ClassOrInterfaceDeclaration)compilationUnit.getTypes().get(0);
-        for (String methodName: changeContext.getMethodsName()) {
+        for (String methodName: changeContext.getMethodNames()) {
             if (isValidName(methodName)) {
                 MethodDeclaration method = new MethodDeclaration(Modifier.INTERFACE, ASTHelper.VOID_TYPE, methodName);
                 Parameter parameter = ASTHelper.createParameter(ASTHelper.createReferenceType("ScriptContext", 0), "context");
@@ -145,8 +145,8 @@ public final class CodeGenerator extends VoidVisitorAdapter<ChangeContext> {
      * @param changeContext a {@link org.graphwalker.maven.plugin.source.ChangeContext} object.
      */
     public void visit(MethodDeclaration methodDeclaration, ChangeContext changeContext) {
-        if (changeContext.getMethodsName().contains(methodDeclaration.getName())) {
-            changeContext.getMethodsName().remove(methodDeclaration.getName());
+        if (changeContext.getMethodNames().contains(methodDeclaration.getName())) {
+            changeContext.getMethodNames().remove(methodDeclaration.getName());
         } else {
             changeContext.addMethodDeclaration(methodDeclaration);
         }
