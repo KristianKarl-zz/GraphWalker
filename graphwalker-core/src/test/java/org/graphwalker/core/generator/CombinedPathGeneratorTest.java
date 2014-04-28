@@ -25,7 +25,6 @@
  */
 package org.graphwalker.core.generator;
 
-import com.sun.corba.se.spi.orbutil.fsm.FSM;
 import org.graphwalker.core.Machine;
 import org.graphwalker.core.Model;
 import org.graphwalker.core.SimpleMachine;
