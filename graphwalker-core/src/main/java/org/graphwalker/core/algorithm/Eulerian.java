@@ -1,5 +1,3 @@
-package org.graphwalker.core.algorithm;
-
 /*
  * #%L
  * GraphWalker Core
@@ -25,6 +23,7 @@ package org.graphwalker.core.algorithm;
  * THE SOFTWARE.
  * #L%
  */
+package org.graphwalker.core.algorithm;
 
 import org.graphwalker.core.Model;
 import org.graphwalker.core.model.Edge;
@@ -32,7 +31,7 @@ import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Path;
 import org.graphwalker.core.model.Vertex;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -95,7 +94,7 @@ public final class Eulerian implements Algorithm {
 
     public Path<Element> getEulerPath() {
         // TODO:
-        return new Path<Element>(Collections.EMPTY_LIST);
+        return new Path<>(new ArrayList<Element>());
     }
 
     class PolarityCounter {

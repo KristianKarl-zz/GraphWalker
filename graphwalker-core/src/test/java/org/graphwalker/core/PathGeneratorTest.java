@@ -65,7 +65,6 @@ public class PathGeneratorTest {
             path.push(machine.getNextStep().getName());
             Assert.assertEquals(expectedPath.pop(), path.peek(), path.toString());
         }
-        System.out.println(path.toArray());
     }
 
     @Test
@@ -86,7 +85,6 @@ public class PathGeneratorTest {
             path.push(machine.getNextStep().getName());
             Assert.assertEquals(expectedPath.pop(), path.peek(), path.toString());
         }
-        System.out.println(path.toArray());
     }
 
     @Test
