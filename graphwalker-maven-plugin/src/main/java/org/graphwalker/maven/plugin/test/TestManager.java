@@ -78,6 +78,11 @@ public final class TestManager {
         return false;
     }
 
+    @SuppressWarnings("unchecked")
+    private static <T> Class<T> cast(Object event) {
+        return (Class<T>)event;
+    }
+
     private Collection<TestGroup> createExecutionGroups(Collection<Class<?>> testClasses) {
         Map<String, TestGroup> groups = new HashMap<String, TestGroup>();
         for (Class<?> testClass: testClasses) {
@@ -86,8 +91,8 @@ public final class TestManager {
                 try {
                     // if no Execute parameter is supplied the we create a default
                     String groupName = (String)Execute.class.getMethod("group").getDefaultValue();
-                    Class<? extends PathGenerator> pathGenerator = (Class<? extends PathGenerator>)Execute.class.getMethod("pathGenerator").getDefaultValue();
-                    Class<? extends StopCondition> stopCondition = (Class<? extends StopCondition>)Execute.class.getMethod("stopCondition").getDefaultValue();
+                    Class<? extends PathGenerator> pathGenerator = cast(Execute.class.getMethod("pathGenerator").getDefaultValue());
+                    Class<? extends StopCondition> stopCondition = cast(Execute.class.getMethod("stopCondition").getDefaultValue());
                     String stopConditionValue = (String)Execute.class.getMethod("stopConditionValue").getDefaultValue();
                     String language = (String)Execute.class.getMethod("language").getDefaultValue();
                     Execution execution = new Execution(testClass, pathGenerator, stopCondition, stopConditionValue, language);
