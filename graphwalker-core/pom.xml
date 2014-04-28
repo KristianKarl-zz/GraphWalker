@@ -25,4 +25,31 @@
         </dependency>
     </dependencies>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>cobertura-maven-plugin</artifactId>
+                <configuration>
+                    <check>
+                        <haltOnFailure>true</haltOnFailure>
+                        <branchRate>0</branchRate>
+                        <lineRate>0</lineRate>
+                        <totalBranchRate>0</totalBranchRate>
+                        <totalLineRate>0</totalLineRate>
+                        <packageLineRate>0</packageLineRate>
+                        <packageBranchRate>0</packageBranchRate>
+                    </check>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>clean</goal>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>
