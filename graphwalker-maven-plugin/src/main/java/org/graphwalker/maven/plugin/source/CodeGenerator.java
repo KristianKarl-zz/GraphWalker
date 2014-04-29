@@ -95,6 +95,8 @@ public final class CodeGenerator extends VoidVisitorAdapter<ChangeContext> {
             }
             compilationUnit.setImports(Arrays.asList(
                     new ImportDeclaration(new NameExpr("org.graphwalker.core.annotation.Model"), false, false),
+                    new ImportDeclaration(new NameExpr("org.graphwalker.core.annotation.Vertex"), false, false),
+                    new ImportDeclaration(new NameExpr("org.graphwalker.core.annotation.Edge"), false, false),
                     new ImportDeclaration(new NameExpr("org.graphwalker.core.script.ScriptContext"), false, false)
             ));
             ASTHelper.addTypeDeclaration(compilationUnit, getInterfaceName(sourceFile));
@@ -114,6 +116,15 @@ public final class CodeGenerator extends VoidVisitorAdapter<ChangeContext> {
         for (String methodName: changeContext.getMethodNames()) {
             if (isValidName(methodName)) {
                 MethodDeclaration method = new MethodDeclaration(Modifier.INTERFACE, ASTHelper.VOID_TYPE, methodName);
+                List<AnnotationExpr> annotations = new ArrayList<>();
+                if (methodName.startsWith("v_")) {
+                    List<MemberValuePair> memberValuePairs = new ArrayList<>();
+                    annotations.add(new NormalAnnotationExpr(ASTHelper.createNameExpr("Vertex"), memberValuePairs));
+                } else {
+                    List<MemberValuePair> memberValuePairs = new ArrayList<>();
+                    annotations.add(new NormalAnnotationExpr(ASTHelper.createNameExpr("Edge"), memberValuePairs));
+                }
+                method.setAnnotations(annotations);
                 Parameter parameter = ASTHelper.createParameter(ASTHelper.createReferenceType("ScriptContext", 0), "context");
                 ASTHelper.addParameter(method, parameter);
                 ASTHelper.addMember(body, method);
