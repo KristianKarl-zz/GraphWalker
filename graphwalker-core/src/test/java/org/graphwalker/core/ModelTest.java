@@ -195,7 +195,7 @@ public class ModelTest {
                 , new Vertex("vertex1")
                 , new Vertex("vertex2")
                 , new Guard("i > 0")
-                , new HashSet<>(Arrays.<Action>asList(new Action("i++"))));
+                , new HashSet<>(Arrays.asList(new Action("i++"))));
         Assert.assertEquals("edge2", edge2.getName());
         Assert.assertFalse(edge2.getGuard().isFulfilled(scriptEngine));
         // execute actions
@@ -211,9 +211,9 @@ public class ModelTest {
         // create script engine, and execute entry and exit actions
         ScriptEngine scriptEngine = createScriptEngine("JavaScript");
         Vertex vertex2 = new Vertex("vertex2"
-                , new HashSet<>(Arrays.<Requirement>asList(new Requirement("123")))
-                , new HashSet<>(Arrays.<Action>asList(new Action("var x = 5;")))
-                , new HashSet<>(Arrays.<Action>asList(new Action("x = 10;"))));
+                , new HashSet<>(Arrays.asList(new Requirement("123")))
+                , new HashSet<>(Arrays.asList(new Action("var x = 5;")))
+                , new HashSet<>(Arrays.asList(new Action("x = 10;"))));
         // execute entry actions
         for (Action action : vertex2.getEntryActions()) {
             action.execute(scriptEngine);
@@ -253,11 +253,11 @@ public class ModelTest {
         Model scenario1 = new SimpleModel();
         scenario1 = scenario1.addVertex(new Vertex("vertex1"));
         scenario1 = scenario1.addVertex(new Vertex("vertex2"
-                , new HashSet<>(Arrays.<Requirement>asList(new Requirement("123")))));
+                , new HashSet<>(Arrays.asList(new Requirement("123")))));
         scenario1 = scenario1.addEdge(new Edge("edge1", scenario1.getVertex("vertex1"), scenario1.getVertex("vertex2")));
         Model scenario2 = new SimpleModel();
         scenario2 = scenario2.addVertex(new Vertex("vertex2"
-                , new HashSet<>(Arrays.<Requirement>asList(new Requirement("123"), new Requirement("456")))));
+                , new HashSet<>(Arrays.asList(new Requirement("123"), new Requirement("456")))));
         scenario2 = scenario2.addVertex(new Vertex("vertex3"));
         scenario2 = scenario2.addEdge(new Edge("edge2", scenario2.getVertex("vertex2"), scenario2.getVertex("vertex3")));
         Model merged = scenario1.addModel(scenario2);

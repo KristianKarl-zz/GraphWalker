@@ -25,14 +25,6 @@
  */
 package org.graphwalker.core.model;
 
-import org.apache.commons.lang3.Validate;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-
 public final class StartVertex extends Vertex {
 
     public StartVertex() {
