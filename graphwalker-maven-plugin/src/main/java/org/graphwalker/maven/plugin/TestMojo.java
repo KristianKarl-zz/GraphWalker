@@ -38,7 +38,7 @@ import org.graphwalker.core.SimpleMachine;
 import org.graphwalker.core.StopCondition;
 import org.graphwalker.core.annotation.AfterExecution;
 import org.graphwalker.core.annotation.BeforeExecution;
-import org.graphwalker.core.common.ResourceUtils;
+import org.graphwalker.io.common.ResourceUtils;
 import org.graphwalker.core.machine.ExecutionContext;
 import org.graphwalker.core.machine.ExecutionStatus;
 import org.graphwalker.core.model.Element;

@@ -27,7 +27,7 @@ package org.graphwalker.maven.plugin.common;
 
 import org.graphwalker.core.Bundle;
 import org.graphwalker.core.StopCondition;
-import org.graphwalker.core.common.ResourceUtils;
+import org.graphwalker.io.common.ResourceUtils;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;

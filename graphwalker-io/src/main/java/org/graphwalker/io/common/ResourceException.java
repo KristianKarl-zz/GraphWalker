@@ -23,7 +23,7 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.core.common;
+package org.graphwalker.io.common;
 
 /**
  * @author Nils Olsson

@@ -27,7 +27,7 @@ package org.graphwalker.maven.plugin;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.Parameter;
-import org.graphwalker.core.common.ResourceUtils;
+import org.graphwalker.io.common.ResourceUtils;
 
 import java.io.File;
 import java.net.MalformedURLException;
