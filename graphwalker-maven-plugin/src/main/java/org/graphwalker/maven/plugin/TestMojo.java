@@ -38,7 +38,6 @@ import org.graphwalker.core.SimpleMachine;
 import org.graphwalker.core.StopCondition;
 import org.graphwalker.core.annotation.AfterExecution;
 import org.graphwalker.core.annotation.BeforeExecution;
-import org.graphwalker.core.annotation.ExceptionHandler;
 import org.graphwalker.core.common.ResourceUtils;
 import org.graphwalker.core.machine.ExecutionContext;
 import org.graphwalker.core.machine.ExecutionStatus;
@@ -60,8 +59,8 @@ import java.util.concurrent.TimeUnit;
 @Execute(phase = LifecyclePhase.TEST_COMPILE, lifecycle = "graphwalker")
 public final class TestMojo extends AbstractTestMojo {
 
-    private final Map<ExecutionContext, Object> implementations = new HashMap<ExecutionContext, Object>();
-    private final List<Machine> machines = new ArrayList<Machine>();
+    private final Map<ExecutionContext, Object> implementations = new HashMap<>();
+    private final List<Machine> machines = new ArrayList<>();
 
     /**
      * <p>execute.</p>
@@ -100,8 +99,8 @@ public final class TestMojo extends AbstractTestMojo {
             configuration.setIncludes(getIncludes());
             configuration.setExcludes(getExcludes());
         } else {
-            Set<String> include = new HashSet<String>();
-            Set<String> exclude = new HashSet<String>();
+            Set<String> include = new HashSet<>();
+            Set<String> exclude = new HashSet<>();
             for (String test: getTest().split(",")) {
                 test = test.trim();
                 if (StringUtils.isNotBlank(test)) {
@@ -121,7 +120,7 @@ public final class TestMojo extends AbstractTestMojo {
         configuration.setClassesDirectory(getClassesDirectory());
         configuration.setTestClassesDirectory(getTestClassesDirectory());
         configuration.setReportsDirectory(getReportsDirectory());
-        Set<String> groups = new HashSet<String>();
+        Set<String> groups = new HashSet<>();
         for (String group: getGroups().split(",")) {
             groups.add(group.trim());
         }
@@ -156,7 +155,7 @@ public final class TestMojo extends AbstractTestMojo {
     private void executeTests(TestManager manager) {
         if (!manager.getExecutionGroups().isEmpty()) {
             for (TestGroup group: manager.getExecutionGroups()) {
-                List<ExecutionContext> executionContexts = new ArrayList<ExecutionContext>();
+                List<ExecutionContext> executionContexts = new ArrayList<>();
                 for (Execution execution: group.getExecutions()) {
                     try {
                         String value = execution.getStopConditionValue();
@@ -165,6 +164,7 @@ public final class TestMojo extends AbstractTestMojo {
                         String language = execution.getLanguage();
                         Object implementation = execution.getTestClass().newInstance();
                         ExecutionContext executionContext = new ExecutionContext(execution.getModel(), pathGenerator, language);
+                        executionContext.getScriptContext().setAttribute("impl", implementation);
                         implementations.put(executionContext, implementation);
                         executionContexts.add(executionContext);
                     } catch (Throwable t) {
@@ -225,7 +225,7 @@ public final class TestMojo extends AbstractTestMojo {
             getLog().info(ResourceUtils.getText(Bundle.NAME, "result.label"));
             getLog().info("");
             long groups = manager.getGroupCount(), tests = manager.getTestCount(), completed = 0, failed = 0, notExecuted = 0;
-            List<ExecutionContext> failedExecutions = new ArrayList<ExecutionContext>();
+            List<ExecutionContext> failedExecutions = new ArrayList<>();
             for (Machine machine: machines) {
                 for (ExecutionContext context: machine.getExecutionContexts()) {
                     switch (context.getExecutionStatus()) {

@@ -211,7 +211,7 @@ public abstract class AbstractTestMojo extends AbstractDefaultMojo {
     }
 
     private URL[] convertToURL(List<String> elements) throws MalformedURLException {
-        List<URL> urlList = new ArrayList<URL>();
+        List<URL> urlList = new ArrayList<>();
         for (String element : elements) {
             urlList.add(new File(element).toURI().toURL());
         }

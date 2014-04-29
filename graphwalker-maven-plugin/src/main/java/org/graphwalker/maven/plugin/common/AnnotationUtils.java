@@ -48,7 +48,7 @@ public final class AnnotationUtils {
      * @return a {@link java.util.Set} object.
      */
     public static Set<Annotation> getAnnotations(final Class<?> clazz, final Class<? extends Annotation> annotation) {
-        Set<Annotation> annotations = new HashSet<Annotation>();
+        Set<Annotation> annotations = new HashSet<>();
         for (Class<?> interfaceClass: clazz.getInterfaces()) {
             if (interfaceClass.isAnnotationPresent(annotation)) {
                 annotations.add(interfaceClass.getAnnotation(annotation));

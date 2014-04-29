@@ -91,6 +91,7 @@ public class WatchMojo extends AbstractMojo {
             addResources(mavenProject.getResources(), sourcesDirectory);
             addResources(mavenProject.getTestResources(), testSourcesDirectory);
             watch(resourceMap.keySet());
+            //noinspection InfiniteLoopStatement
             for (;;) {
                 WatchKey watchKey = getWatchService().take();
                 Path path = watchKeyMap.get(watchKey);

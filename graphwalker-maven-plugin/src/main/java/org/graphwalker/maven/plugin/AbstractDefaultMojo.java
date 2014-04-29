@@ -93,7 +93,7 @@ public abstract class AbstractDefaultMojo extends AbstractMojo {
      * @return a {@link java.util.Set} object.
      */
     protected Set<File> findFiles(String includes, String excludes, File... directories) {
-        Set<File> files = new HashSet<File>();
+        Set<File> files = new HashSet<>();
         for (File directory : directories) {
             if (directory.exists()) {
                 try {

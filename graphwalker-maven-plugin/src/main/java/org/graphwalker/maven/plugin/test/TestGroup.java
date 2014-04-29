@@ -34,7 +34,7 @@ import java.util.Set;
 public final class TestGroup {
 
     private final String name;
-    private final Set<Execution> executions = new HashSet<Execution>();
+    private final Set<Execution> executions = new HashSet<>();
 
     /**
      * <p>Constructor for TestGroup.</p>

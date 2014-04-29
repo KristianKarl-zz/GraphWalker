@@ -53,9 +53,7 @@ public final class ReflectionUtils {
     public static <T> T newInstance(Class<T> clazz) {
         try {
             return clazz.newInstance();
-        } catch (InstantiationException e) {
-            throw new ReflectionException(ResourceUtils.getText(Bundle.NAME, "exception.class.instantiation", clazz.getName()), e);
-        } catch (IllegalAccessException e) {
+        } catch (InstantiationException | IllegalAccessException e) {
             throw new ReflectionException(ResourceUtils.getText(Bundle.NAME, "exception.class.instantiation", clazz.getName()), e);
         }
     }
@@ -71,11 +69,7 @@ public final class ReflectionUtils {
     public static <T> T newInstance(Class<T> clazz, Object... arguments) {
         try {
             return getConstructor(clazz, arguments).newInstance(arguments);
-        } catch (InvocationTargetException e) {
-            throw new ReflectionException(ResourceUtils.getText(Bundle.NAME, "exception.class.instantiation", clazz.getName()), e);
-        } catch (InstantiationException e) {
-            throw new ReflectionException(ResourceUtils.getText(Bundle.NAME, "exception.class.instantiation", clazz.getName()), e);
-        } catch (IllegalAccessException e) {
+        } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
             throw new ReflectionException(ResourceUtils.getText(Bundle.NAME, "exception.class.instantiation", clazz.getName()), e);
         }
     }
@@ -88,7 +82,6 @@ public final class ReflectionUtils {
      * @param <T> a T object.
      * @return a {@link java.lang.reflect.Constructor} object.
      */
-    @SuppressWarnings("unchecked")
     public static <T> Constructor<T> getConstructor(Class<T> clazz, Object... arguments) {
         for (Constructor<?> constructor: clazz.getConstructors()) {
             Class<?>[] types = constructor.getParameterTypes();
@@ -98,13 +91,17 @@ public final class ReflectionUtils {
                     foundMatchingConstructor &= types[i].isInstance(arguments[i]);
                 }
                 if (foundMatchingConstructor) {
-                    return (Constructor<T>)constructor;
+                    return cast(constructor);
                 }
             }
         }
         throw new ReflectionException(ResourceUtils.getText(Bundle.NAME, "exception.class.instantiation", clazz.getName()));
     }
 
+    @SuppressWarnings("unchecked")
+    private static <T> Constructor<T> cast(Constructor<?> constructor) {
+        return (Constructor<T>)constructor;
+    }
 
     /**
      * <p>execute.</p>
@@ -177,7 +174,7 @@ public final class ReflectionUtils {
     }
 
     private static Class<?>[] getTypes(Object... arguments) {
-        List<Class<?>> types = new ArrayList<Class<?>>();
+        List<Class<?>> types = new ArrayList<>();
         for (Object argument : arguments) {
             if (argument instanceof StopCondition) {
                 types.add(StopCondition.class);

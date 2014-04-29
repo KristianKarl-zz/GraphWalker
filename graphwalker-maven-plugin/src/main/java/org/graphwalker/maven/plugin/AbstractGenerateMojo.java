@@ -37,7 +37,6 @@ import org.graphwalker.maven.plugin.source.SourceFile;
 
 import java.io.File;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.List;
 
 /**

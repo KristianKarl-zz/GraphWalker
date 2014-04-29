@@ -54,7 +54,7 @@ public final class TestManager {
 
 
     private Collection<Class<?>> filterTestClasses(Collection<Class<?>> testClasses) {
-        Set<Class<?>> filteredClasses = new HashSet<Class<?>>(testClasses.size());
+        Set<Class<?>> filteredClasses = new HashSet<>(testClasses.size());
         for (Class<?> testClass: testClasses) {
             if (isIncluded(testClass)) {
                 filteredClasses.add(testClass);
@@ -84,7 +84,7 @@ public final class TestManager {
     }
 
     private Collection<TestGroup> createExecutionGroups(Collection<Class<?>> testClasses) {
-        Map<String, TestGroup> groups = new HashMap<String, TestGroup>();
+        Map<String, TestGroup> groups = new HashMap<>();
         for (Class<?> testClass: testClasses) {
             Execute[] executions = testClass.getAnnotation(GraphWalker.class).value();
             if (0 == executions.length) {

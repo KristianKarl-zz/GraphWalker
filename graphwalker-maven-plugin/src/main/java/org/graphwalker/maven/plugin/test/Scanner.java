@@ -45,7 +45,7 @@ public final class Scanner {
      * @return a {@link java.util.Collection} object.
      */
     public Collection<Class<?>> scan(File... directories) {
-        Map<String, Class<?>> tests = new HashMap<String, Class<?>>();
+        Map<String, Class<?>> tests = new HashMap<>();
         for (File directory: directories) {
             scan(tests, directory);
         }
