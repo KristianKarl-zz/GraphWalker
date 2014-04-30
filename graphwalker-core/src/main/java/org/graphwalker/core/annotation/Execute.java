@@ -47,33 +47,33 @@ public @interface Execute {
      *
      * @return a {@link java.lang.String} object.
      */
-    public String group() default "default";
+    String group() default "default";
 
     /**
      * <p>pathGenerator.</p>
      *
      * @return a {@link java.lang.Class} object.
      */
-    public Class<? extends PathGenerator> pathGenerator() default RandomPath.class;
+    Class<? extends PathGenerator> pathGenerator() default RandomPath.class;
 
     /**
      * <p>stopCondition.</p>
      *
      * @return a {@link java.lang.Class} object.
      */
-    public Class<? extends StopCondition> stopCondition() default EdgeCoverage.class;
+    Class<? extends StopCondition> stopCondition() default EdgeCoverage.class;
 
     /**
      * <p>stopConditionValue.</p>
      *
      * @return a {@link java.lang.String} object.
      */
-    public String stopConditionValue() default "100";
+    String stopConditionValue() default "100";
 
     /**
      * <p>language.</p>
      *
      * @return a {@link java.lang.String} object.
      */
-    public String language() default "JavaScript";
+    String language() default "JavaScript";
 }

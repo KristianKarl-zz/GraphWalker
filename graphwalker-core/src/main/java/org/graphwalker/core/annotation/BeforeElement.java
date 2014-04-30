@@ -41,6 +41,6 @@ public @interface BeforeElement {
      *
      * @return a {@link java.lang.String} object.
      */
-    public String filter() default "";
+    String filter() default "";
 
 }

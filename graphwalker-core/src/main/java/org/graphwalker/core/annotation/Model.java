@@ -42,6 +42,6 @@ public @interface Model {
      *
      * @return a {@link java.lang.String} object.
      */
-    public String file();
+    String file();
 
 }
