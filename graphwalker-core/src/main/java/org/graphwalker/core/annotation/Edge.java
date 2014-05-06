@@ -36,9 +36,9 @@ import java.lang.annotation.Target;
 @Target(java.lang.annotation.ElementType.METHOD)
 public @interface Edge {
 
-    String source();
+    String source() default "";
 
-    String target();
+    String target() default "";
 
     String guard() default "true";
 }
