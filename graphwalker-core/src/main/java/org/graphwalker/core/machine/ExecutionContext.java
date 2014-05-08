@@ -206,7 +206,7 @@ public final class ExecutionContext {
             Vertex vertex = (Vertex)element;
             for (Edge edge: getModel().getEdges(vertex)) {
                 try {
-                    if (edge.getGuard().isFulfilled(getScriptEngine())) {
+                    if (!edge.isBlocked() && edge.getGuard().isFulfilled(getScriptEngine())) {
                         elements.add(edge);
                     }
                 } catch (ScriptException e) {
