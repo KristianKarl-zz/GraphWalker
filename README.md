@@ -1,3 +1,10 @@
+
+# <strong>Deprecated</strong>, all development is now @ https://github.com/graphwalker
+
+
+
+
+
 # GraphWalker
 
 [![Build Status](https://travis-ci.org/nilols/GraphWalker.png)](https://travis-ci.org/nilols/GraphWalker)
