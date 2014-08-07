@@ -160,7 +160,7 @@ public class ModelInterfaceGenerator {
 
         String content = baos.toString();
         content = content.replace("INTERFACE_NAME", getBaseName(output.getName()));
-        content = content.replace("PACKAGE", getRelativePath(output, javaFolder).replace('/', '.'));
+        content = content.replace("PACKAGE", getRelativePath(output, javaFolder).replace(File.separatorChar, '.'));
         content = TRAILING_SPACES.matcher(content).replaceAll("");
         writeStringToFile(output, content);
     }
@@ -194,8 +194,8 @@ public class ModelInterfaceGenerator {
     }
 
     protected static File getJavaFile(File model) {
-        return new File(javaFolder, packageName.replace('.', '/') + "/"
-                + getRelativePath(model, modelFolder) + "/"
+        return new File(javaFolder, packageName.replace('.', File.separatorChar) + File.separatorChar
+                + getRelativePath(model, modelFolder) + File.separatorChar
                 + getBaseName(model.getName()) + ".java");
     }
 
@@ -206,8 +206,8 @@ public class ModelInterfaceGenerator {
                     "<model-folder> <java-folder> <package-name> [<model-template-path>]");
         }
 
-        modelFolder = args[0];
-        javaFolder = args[1];
+        modelFolder = new File( args[0] ).getPath();
+        javaFolder = new File( args[1] ).getPath();
         packageName = args[2];
 
         if (args.length > 3) {
