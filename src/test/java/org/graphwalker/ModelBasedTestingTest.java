@@ -82,7 +82,7 @@ public class ModelBasedTestingTest extends TestCase {
     if (ge.isHeadless()) return;
 
     ModelBasedTesting mbt = Util.loadMbtFromXml(Util.getFile("xml/reqtags/mbt_init3.xml"));
-    assertEquals("RANDOM{EC>=10}\nRANDOM{(SC>=30 AND EC>=10)}", mbt.toString());
+    assertEquals("RANDOM{EC>=10}"+System.lineSeparator()+"RANDOM{(SC>=30 AND EC>=10)}", mbt.toString());
   }
 
   @SuppressWarnings("static-access")
