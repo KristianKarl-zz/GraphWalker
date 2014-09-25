@@ -20,5 +20,5 @@ script:
 
 after_success:
  - cp target/graphwalker-*.jar target/graphwalker.jar
- - sshpass -p $GW_PASSWORD scp target/graphwalker*.jar $GW_USER@graphwalker.org:/var/www/data/uploads/
- - sshpass -p $GW_PASSWORD scp -r target/site/ $GW_USER@graphwalker.org:/var/www/data/uploads/
+ - sshpass -p $GW_PASSWORD scp target/graphwalker*.jar $GW_USER@graphwalker.org:/var/www/old_site/data/uploads/
+ - sshpass -p $GW_PASSWORD scp -r target/site/ $GW_USER@graphwalker.org:/var/www/old_site/data/uploads/
